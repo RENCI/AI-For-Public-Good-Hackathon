@@ -1,7 +1,7 @@
 # ── Paths ──────────────────────────────────────────────────────────────────────
-DATASET_DIR: "~/dataset"
-CODING_RULES_DIR: "~/coding_rules"
-MANUALS_DIR: "~/manuals"
+DATASET_DIR: "./dataset"
+CODING_RULES_DIR: "./coding_rules"
+MANUALS_DIR: "./manuals"
 
 # ── Model ──────────────────────────────────────────────────────────────────────
 AVAILABLE_MODELS: ["DeepSeek-V3.2", "gpt-4.1", "gpt-4.1-mini", "gpt-4o-mini", "gpt-5", "mistral-document-ai-2512", "o1-mini"]

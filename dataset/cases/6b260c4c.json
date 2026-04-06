@@ -1,0 +1,1145 @@
+{
+  "case_id": "6b260c4c",
+  "clinical_variables": {
+    "primary_condition": "Acute Kidney Injury",
+    "comorbidities": [
+      "Chronic Kidney Disease (stage 2)",
+      "Hypertension",
+      "Type 2 Diabetes Mellitus",
+      "Congestive Heart Failure",
+      "Liver Cirrhosis (Child-Pugh B)"
+    ],
+    "age": 57,
+    "sex": "M",
+    "risk_factors": [
+      "Septic shock",
+      "Nephrotoxic contrast exposure",
+      "Hypotension",
+      "Polypharmacy",
+      "Pre-existing CKD",
+      "Advanced age"
+    ]
+  },
+  "difficulty": "hard",
+  "case_type": "acute",
+  "intended_outcome": "worsening",
+  "narrative": "Mr. Rajesh Patel, a 57\u2011year\u2011old man with an established history of chronic kidney disease (CKD) stage\u202f2, uncontrolled hypertension, type\u202f2 diabetes mellitus, congestive heart failure (NYHA\u202fIII), and liver cirrhosis Child\u2011Pugh\u202fB, presented to the emergency department (ED) late on a Thursday evening with a 12\u2011hour history of worsening right upper quadrant abdominal pain, nausea, and a fever that had started the day before. He had undergone an ERCP three weeks earlier for suspected biliary obstruction, during which iodinated contrast was administered to delineate the common bile duct. He had also been taking a complex medication list for his comorbidities: metformin 500\u202fmg BID, lisinopril 20\u202fmg daily, furosemide 20\u202fmg BID, spironolactone 25\u202fmg daily, warfarin, insulin glargine (dose titrated prior to admission), and a low\u2011dose prednisone taper that he had recently stopped to treat a pulmonary embolism.\n\nIn the ED, Mr\u202fPatel\u2019s vital signs were notable for a blood pressure of 78/52\u202fmmHg and a heart rate of 118\u202fbpm. His respiratory rate was 22/min, and his oxygen saturation was 95\u202f% on room air. His skin was cool and diaphoretic, and his sclerae were icteric. The physical examination revealed tender hepatomegaly, mild tenderness in the epigastric region, and mild lower extremity pitting edema. His abdomen was mildly distended, with positive shifting dullness suggesting ascites. Laboratory studies showed leukocytosis (WBC\u202f18,200\u202f/\u00b5L), hypochromic microcytic anemia (Hb\u202f10.5\u202fg/dL), thrombocytopenia (platelets\u202f105,000\u202f/\u00b5L), bilirubin 2.8\u202fmg/dL, alkaline phosphatase 580\u202fU/L, AST 87\u202fU/L, ALT 62\u202fU/L, and a baseline creatinine of 1.25\u202fmg/dL (estimated GFR \u2248\u202f58\u202fmL/min/1.73\u202fm\u00b2). Serum electrolytes were within normal limits, and his initial lactate was 3.2\u202fmmol/L.\n\nThe triage team quickly suspected septic cholangitis superimposed on septic shock. A 12\u2011lead ECG revealed sinus tachycardia without ischemic changes. Intravenous broad\u2011spectrum antibiotics were initiated with piperacillin\u2011tazobactam 4.5\u202fg IV q6h, and empiric vancomycin 1\u202fg IV q12h was added pending culture results. A central venous catheter was placed in the right internal jugular vein for vasopressor support, and norepinephrine was started at 0.05\u202f\u00b5g/kg/min to maintain MAP >\u202f65\u202fmmHg. Simultaneously, a 0.9\u202f% saline bolus of 30\u202fmL/kg was administered over the first hour of resuscitation.\n\nOver the next six hours, Mr\u202fPatel remained hypotensive, requiring a continuous infusion of norepinephrine titrated up to 0.2\u202f\u00b5g/kg/min. Due to his elevated baseline creatinine and the additional nephrotoxic insults (contrast medium, vancomycin, and diuretics that had been held in the ED), the medical team discontinued lisinopril, furosemide, and spironolactone. Metformin was held because of the theoretical risk of lactic acidosis in the setting of diminished renal clearance. The warfarin was held pending INR monitoring, and his insulin regimen was switched to a continuous IV infusion on day\u202f1 in response to his hyperglycemic stress response.\n\nBy the end of day\u202f1, the patient\u2019s lactate had trended down to 2.4\u202fmmol/L, but his urine output remained modest at ~1.1\u202fmL/kg/h. His serum creatinine had climbed to 1.55\u202fmg/dL, with a urine sediment showing bland cells and occasional epithelial casts. The clinical picture suggested early AKI precipitated by prerenal factors (hypotension and hypovolemia) and potential intrinsic injury from both contrast exposure and nephrotoxic antibiotics.\n\nOn day\u202f2, the patient experienced persistent oliguria with an average output of 0.6\u202fmL/kg/h, despite adequate central venous pressure readings of 8\u201110\u202fcm H\u2082O when on low\u2011dose vasopressor support. The renal service was consulted. With a baseline CKD stage\u202f2 and a rising creatinine (2.02\u202fmg/dL), the nephrologist confirmed the onset of KDIGO stage\u202f2 AKI. The nephrologist recommended a restrictive fluid strategy given the patient\u2019s congestive heart failure and cirrhosis with ascites; thus, a 1\u202fL bolus of 0.9\u202f% saline was administered over 4\u202fhours, followed by strict fluid balance monitoring. The vasopressor infusion was slowly tapered as MAP approached 70\u202fmmHg.\n\nBlood cultures grew Klebsiella pneumoniae sensitive to piperacillin\u2011tazobactam; thus, vancomycin was discontinued after 48\u202fhours, and the antibiotic regimen was de-escalated to piperacillin\u2011tazobactam alone. The patient\u2019s diuretic therapy was resumed on day\u202f3 as diuretic\u2011induced natriuresis improved the ascitic fluid parameters and helped preserve intravascular volume, with careful monitoring of electrolytes.\n\nAt the mid\u2011night of day\u202f3, a repeat creatinine measurement was 2.3\u202fmg/dL, and the patient\u2019s urine output had dropped further to 0.5\u202fmL/kg/h. His potassium rose to 5.8\u202fmmol/L, and blood gas showed non\u2011anion gap metabolic acidosis (pH\u202f7.32, bicarbonate\u202f14\u202fmmol/L). The nephrologist, after reviewing the patient\u2019s complex comorbidities and risk profile, advised initiating continuous renal replacement therapy (CRRT) to manage electrolyte derangements, volume overload, and worsening renal function. A continuous venovenous hemodiafiltration circuit was set up in the ICU. Despite CRRT, the patient\u2019s urine remained scarcely detectable, and his creatinine peaked at 3.0\u202fmg/dL on day\u202f5.\n\nThe worsening renal failure coincided with an escalation of hepatic dysfunction. The Child\u2011Pugh score rose to 10 (B) due to worsening encephalopathy, thrombocytopenia (plts\u202f75,000/\u00b5L), and ascitic fluid analysis showing a SAAG of 1.3\u202fg/dL but a low total protein, confirming portal hypertension. The ICU team, in concert with hepatology, began empiric lactulose for hepatic encephalopathy and considered transjugular intrahepatic portosystemic shunt (TIPS) placement, but the patient\u2019s deteriorating renal function precluded the intervention at that time.\n\nOn day\u202f6, Mr\u202fPatel\u2019s clinical status deteriorated. He became tachypneic with a respiratory rate of 28/min, and his oxygen saturation dropped to 88\u202f% on a non\u2011rebreather mask. He developed new left lower lobe infiltrates on chest X\u2011ray, suggesting a nosocomial pulmonary infection. Vancomycin, though previously discontinued, was re\u2011initiated, and broadening of coverage to piperacillin\u2011tazobactam/vancomycin and aztreonam was considered. However, the nephrologist cautioned against further nephrotoxic agents given the patient\u2019s stage\u202f3 AKI (creatinine >\u202f4\u202fmg/dL).\n\nThe family was informed of the progressive decline. A decision for comfort care and DNR status was made. The CRRT circuit was disconnected, and the patient was provided with palliative support. Mr. Patel passed away peacefully 48\u202fhours later.\n\nThis narrative outlines a pathophysiologically complex progression of acute kidney injury in a patient with multiple chronic illnesses, highlighting how overlapping risk factors\u2014septic shock, hypotension, contrast exposure, and polypharmacy\u2014interacted subtly and progressively to culminate in a fatal multiorgan failure syndrome.",
+  "timeline": [
+    {
+      "visit_number": 1,
+      "visit_date": "2026-03-24",
+      "clinician_specialty": "Emergency Medicine",
+      "reason_for_visit": "Right upper quadrant pain, fever and vomiting",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Right upper quadrant pain, fever, vomiting.\n\nHistory of Present Illness: 57\u2011year\u2011old male presents to the ED with a 12\u2011hour history of right upper quadrant abdominal pain, nausea, and fever. He reports that the pain is sharp, worsened with deep breathing, and associated with cold extremities and diaphoresis. No relief with over\u2011the\u2011counter analgesics. He denies chest pain or dyspnea. He had an ERCP with contrast 3 weeks ago for suspected biliary dilatation and his prednisone taper was recently discontinued.\n\nPast Medical History: Chronic kidney disease stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure NYHA III, liver cirrhosis Child\u2011Pugh B, pulmonary embolism on warfarin.\n\nCurrent Medications: Piperacillin\u2011tazobactam 4.5\u202fg IV q6h, vancomycin 1\u202fg IV q12h, norepinephrine infusion 0.05\u202f\u00b5g/kg/min, insulin infusion (IV, titrated), 1.0\u202fL isotonic saline over first hour. Metformin, lisinopril, furosemide, spironolactone, and warfarin were held.\n\nAllergies: None.\n\nPhysical Examination:\n- General: Cool, diaphoretic, icteric sclerae.\n- Vitals: BP 78/52 mmHg, HR 118 bpm, RR 22/min, SpO\u2082 95% RA, Temp 38.7\u202f\u00b0C.\n- HEENT: Icteric sclerae.\n- Cardiovascular: Tachycardic, regular rhythm, no murmurs.\n- Respiratory: Clear to auscultation, no rales.\n- Abdomen: Tender hepatomegaly, mild epigastric tenderness, positive shifting dullness.\n- Extremities: Mild pitting edema of lower extremities, cool skin.\n\nLabs:\n- CBC: WBC 18,200/\u00b5L, Hb 10.5 g/dL, Plt 105,000/\u00b5L.\n- CMP: Cr 1.25 mg/dL, BUN 28 mg/dL, Bilirubin 2.8 mg/dL, Alk Phos 580 U/L, AST 87 U/L, ALT 62 U/L.\n- Lactate: 3.2 mmol/L (improved to 2.4 mmol/L after 6 hrs).\n- Coagulation: PT/INR pending.\n- Blood cultures: 2 sets, pending.\n\nAssessment:\n- Septic shock likely secondary to cholangitis or spontaneous bacterial peritonitis.\n- Hemolytic anemia and thrombocytopenia may represent consumptive coagulopathy or underlying liver disease.\n- Acute kidney injury secondary to hypoperfusion.\n\nDifferential Diagnoses Considered:\n- Acute cholangitis.\n- Spontaneous bacterial peritonitis.\n- Sepsis-associated DIC.\n- Hemolytic uremic syndrome/Thrombotic thrombocytopenic purpura (unlikely given background).\n- Acute biliary obstruction post\u2011ERCP.\n\nPlan:\n1. Continue broad\u2011spectrum antibiotics: Piperacillin\u2011tazobactam 4.5\u202fg IV q6h and vancomycin 1\u202fg IV q12h.\n2. Maintain vasopressor support: Norepinephrine titrated to MAP >65\u202fmmHg.\n3. Fluid resuscitation: 1\u202fL 0.9\u202f% saline bolus, then 0.9\u202f% saline 500\u202fmL/h while monitoring urine output.\n4. Hold nephrotoxic and diuretic agents; continue insulin infusion for glucose control.\n5. Repeat lactate q6\u202fhr, Cr, BNP, and coagulation panel.\n6. Obtain abdominal ultrasound or CT abdomen with contrast to evaluate for biliary obstruction, gallstones, or peritonitis.\n7. Consider albumin 1.5\u202fg/kg (up to 100\u202fg) if serum albumin low.\n8. Consult Gastroenterology/Pancreatology for possible emergent ERCP if cholangitis confirmed.\n9. Monitor for DIC: track fibrinogen, D-dimer, PT/INR, platelets.\n10. Transfer to ICU for close monitoring.\n\nDisposition: Patient remains in septic shock; transferred to ICU for ongoing management.\n\nFollow\u2011up Recommendations:\n- Repeat blood cultures in 48\u202fhrs to assess response.\n- Repeat abdominal imaging in 12\u202fhrs or sooner if clinical status changes.\n- Monitor lactate and urine output hourly; adjust fluids/vasopressor accordingly.\n- Reassess renal function daily; consider RRT if oliguria persists.\n- Once infection source controlled, taper vasopressors and transition to oral antibiotics as appropriate.\n- Monitor for complications of cirrhosis (ascites, encephalopathy).",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "Right upper quadrant abdominal pain",
+        "Nausea",
+        "Fever",
+        "Cold extremities",
+        "Diaphoresis"
+      ],
+      "vitals": {
+        "Blood Pressure": "78/52 mmHg",
+        "Heart Rate": "118 bpm",
+        "Respiratory Rate": "22/min",
+        "Oxygen Saturation": "95% on RA",
+        "Temperature": "38.7\u00b0C"
+      },
+      "relevant_history": [
+        "ERCP with contrast 3 weeks ago",
+        "Recent discontinuation of low\u2011dose prednisone",
+        "Current medications: metformin 500 mg BID, lisinopril 20 mg daily, furosemide 20 mg BID, spironolactone 25 mg daily, warfarin, insulin glargine, prednisone taper (stopped)",
+        "History of uncontrolled hypertension, type 2 DM, CHF NYHA III, cirrhosis Child\u2011Pugh B"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B",
+        "Pulmonary embolism (on warfarin)"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Vancomycin 1 g IV q12h",
+        "Norepinephrine infusion 0.05 \u00b5g/kg/min",
+        "Insulin infusion (IV, titrated)",
+        "1.0\u202fL isotonic saline over first hour"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "Mr. Patel presents to the ED with a 12\u2011hour history of right upper quadrant pain, nausea, and fever. He is hypotensive (78/52) and tachycardic (118). Physical exam reveals cool, diaphoretic skin; icteric sclerae; tender hepatomegaly; mild epigastric tenderness; and mild lower extremity edema. Initial labs demonstrate leukocytosis, hemolytic anemia, thrombocytopenia, liver enzyme elevation, and a baseline creatinine of 1.25 mg/dL. The team hypothesizes septic cholangitis with septic shock. Broad\u2011spectrum antibiotics are started, norepinephrine is titrated to maintain MAP >\u202f65 mmHg, and 0.9% saline is bolused. Metformin, lisinopril, furosemide, spironolactone, and warfarin are held. Insulin is switched to a continuous IV infusion. The patient remains tachycardic but lactate improves from 3.2 to 2.4 mmol/L over 6 hours.",
+      "examination_findings": [
+        "Cool extremities",
+        "Diaphoretic skin",
+        "Icteric sclerae",
+        "Tender hepatomegaly",
+        "Mild epigastric tenderness",
+        "Mild pitting edema",
+        "Positive shifting dullness"
+      ],
+      "tests_ordered": [
+        "Complete blood count",
+        "Basic metabolic panel",
+        "Liver function tests",
+        "Coagulation panel",
+        "Serum lactate",
+        "Blood cultures (2 sets)",
+        "Arterial blood gas"
+      ],
+      "test_results": [
+        "WBC 18,200/\u00b5L",
+        "Hb 10.5 g/dL",
+        "Platelets 105,000/\u00b5L",
+        "Creatinine 1.25 mg/dL",
+        "BUN 28 mg/dL",
+        "Bilirubin 2.8 mg/dL",
+        "Alk Phos 580 U/L",
+        "AST 87 U/L",
+        "ALT 62 U/L",
+        "Serum lactate 3.2 mmol/L",
+        "Positive blood cultures pending"
+      ],
+      "treatments_administered": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Vancomycin 1 g IV q12h",
+        "Norepinephrine infusion 0.05 \u00b5g/kg/min",
+        "1.0\u202fL 0.9% saline bolus",
+        "Metformin hold",
+        "Lisinopril hold",
+        "Furosemide hold",
+        "Spironolactone hold",
+        "Warfarin hold",
+        "Insulin infusion start"
+      ],
+      "patient_response": "Lactate decreased to 2.4 mmol/L after 6 hours, but urine output remained low (~1.1 mL/kg/h).",
+      "disease_progression_notes": "Initial presentation of septic cholangitis with septic shock. Early prerenal AKI secondary to hypotension and nephrotoxic exposure (contrast, vancomycin)."
+    },
+    {
+      "visit_number": 2,
+      "visit_date": "2026-03-25",
+      "clinician_specialty": "Intensive Care Medicine",
+      "reason_for_visit": "Ongoing hypotension and oliguria",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Persistent hypotension and oliguria.\\n\\nSubjective: 57\u2011year\u2011old male with history of CKD stage 2, HTN, T2DM, CHF NYHA III, liver cirrhosis Child\u2011Pugh B, and a prior PE on warfarin presents for ICU day 2 of septic shock. The patient reports ongoing low blood pressure, reduced urine output, mild confusion, and abdominal discomfort.\\n\\nPast Medical History: Chronic kidney disease stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure (NYHA class III), liver cirrhosis Child\u2011Pugh B, pulmonary embolism on warfarin.\\n\\nMedications currently held: metformin, lisinopril, furosemide, spironolactone, warfarin.\\n\\nObjective:\\nVitals: BP 78/52 mmHg, HR 118 bpm, RR 22/min, SpO2 95% RA, Temp 38.6\u00b0C.\\nPhysical Exam: Cool extremities, hypotension, mild epigastric tenderness, positive shifting dullness, mild lower extremity edema.\\nLaboratory: CBC \u2013 WBC 17.5k/\u00b5L, Hgb 10.5 g/dL, Plt 100k/\u00b5L; BMP \u2013 BUN 32 mg/dL, Cr 1.55 mg/dL; LFT \u2013 AST 87 U/L, ALT 62 U/L, ALP 580 U/L, Bilirubin 2.8 mg/dL; Lactate 2.4 mmol/L. Blood cultures: Klebsiella pneumoniae sensitive to piperacillin\u2011tazobactam. Urine output 1.1 mL/kg/h (24\u2011hr).\\n\\nAssessment: 1) Sepsis with septic shock secondary to Klebsiella pneumoniae infection; 2) Acute kidney injury (pre\u2011renal/acute tubular) due to hypoperfusion and septic microvascular dysfunction; 3) Hepatic congestion/ascites contributing to abdominal pain and mild confusion; 4) Possible cardiogenic component from underlying CHF.\\n\\nPlan:\\n1. Antibiotics: Continue piperacillin\u2011tazobactam 4.5 g IV q6h. Discontinue vancomycin after sensitivity confirmation.\\n2. Hemodynamic support: Norepinephrine 0.06 \u00b5g/kg/min titrated to MAP >65 mmHg; continue central venous access; consider additional vasopressors if MAP not achieved.\\n3. Fluid management: Maintain euvolemia; target central venous pressure of 8\u201110 mmHg; avoid over\u2011resuscitation in setting of hepatic congestion.\\n4. Renal support: Continue daily output monitoring; nephrology consult for progressive rise in creatinine; prepare for renal replacement therapy if urine output <400 mL/day for >24 hrs or worsening metabolic acidosis.\\n5. Glycemic control: Continue insulin infusion with target glucose 140\u2011180 mg/dL.\\n6. Anticoagulation: Warfarin held pending stabilization; reassess anticoagulation plan after infection control.\\n7. Labs: Daily CBC, BMP, LFTs, coagulation panel, 24\u2011hr urine output, serum lactate.\\n8. Imaging: Continue abdominal imaging if clinical decompensation; consider repeat ultrasound if worsening ascites.\\n9. Monitoring: Hourly vitals, hourly urine output, CBC trend, lactate trend.\\n10. Disposition: ICU stay continued; goals of care discussed with family; anticipate weaning vasopressors as culture negativity and hemodynamics stabilize.\\n\\nFollow\u2011up: Nephrology consult, daily review by ICU team, adjust medications based on labs and organ perfusion, consider RRT if no improvement after 24 hrs of adequate fluid resuscitation and vasopressor support.\\n",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "Persistent hypotension",
+        "Oliguria",
+        "Mild confusion",
+        "Abdominal pain"
+      ],
+      "vitals": {
+        "Blood Pressure": "78/52 mmHg",
+        "Heart Rate": "118 bpm",
+        "Respiratory Rate": "22/min",
+        "Oxygen Saturation": "95% on RA",
+        "Temperature": "38.6\u00b0C"
+      },
+      "relevant_history": [
+        "Early ICU admission",
+        "Vasopressor support via norepinephrine",
+        "Active insulin infusion",
+        "On hold: Metformin, Lisinopril, Furosemide, Spironolactone, Warfarin"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B",
+        "Pulmonary embolism (on warfarin)"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Vancomycin 1 g IV q12h",
+        "Norepinephrine 0.05\u20110.08 \u00b5g/kg/min",
+        "Insulin infusion (IV)",
+        "1.0\u202fL 0.9% saline bolus (administered on day 1)",
+        "Electrolyte monitoring"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "The ICU team continues to manage Mr. Patel\u2019s septic shock. Serial labs show leukocytosis persists, lactate remains modestly elevated. Blood cultures grow Klebsiella pneumoniae after 48 hours. Vancomycin is started but will be discontinued once sensitivity data is available. Daily urine output is maintained at ~1.1 mL/kg/h. Fluid status monitored via central venous pressure and daily weights. The team prepares for a nephrology consult due to rising creatinine.",
+      "examination_findings": [
+        "Cool extremities",
+        "Hypotension",
+        "Mild epigastric tenderness",
+        "Positive shifting dullness",
+        "Mild lower extremity edema"
+      ],
+      "tests_ordered": [
+        "Daily CBC, BMP, LFT",
+        "Blood cultures (2 sets)",
+        "Urine analysis and sediment",
+        "Central venous pressure monitoring",
+        "24\u2011hour urine output",
+        "Serum lactate"
+      ],
+      "test_results": [
+        "Blood cultures: Klebsiella pneumoniae sensitive to piperacillin\u2011tazobactam",
+        "Creatinine 1.55 mg/dL",
+        "BUN 32 mg/dL",
+        "Urine output 1.1 mL/kg/h",
+        "Serum lactate 2.4 mmol/L",
+        "CBC: WBC 17,500/\u00b5L, Hb 10.5 g/dL, Plts 100,000/\u00b5L"
+      ],
+      "treatments_administered": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Vancomycin 1 g IV q12h (to be discontinued after sensitivity)",
+        "Norepinephrine 0.06 \u00b5g/kg/min",
+        "Insulin infusion titrated",
+        "1.0\u202fL 0.9% saline bolus (Day 1)",
+        "Central venous line maintenance"
+      ],
+      "patient_response": "Blood cultures cleared; lactate trending down but oliguria persists.",
+      "disease_progression_notes": "AKI persists; creatinine rises to 1.55 mg/dL consistent with early stage 1/2 prerenal AKI; nephrology consult indicated."
+    },
+    {
+      "visit_number": 3,
+      "visit_date": "2026-03-26",
+      "clinician_specialty": "Nephrology",
+      "reason_for_visit": "Progressive oliguria and rising creatinine",
+      "is_related_to_main_illness": true,
+      "note": "Nephrology Consult Note\n\nDate: 2026\u201103\u201126\nVisit #: 3\n\nChief Complaint: Progressive oliguria and rising creatinine.\n\nHistory of Present Illness:\nThe patient is a 57\u2011year\u2011old male with a complex medical history of CKD stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure NYHA III, liver cirrhosis Child\u2011Pugh B, and a prior pulmonary embolism on warfarin. He presented to the ED on 2026\u201103\u201124 with hypotension, fever, and RUQ pain; cultures grew Klebsiella pneumoniae. He has been in the ICU since admission, requiring vasopressor support, broad\u2011spectrum antibiotics (piperacillin\u2011tazobactam), blood cultures, mechanical circulatory support, and fluid resuscitation. At ICU day 2 (2026\u201103\u201125), his creatinine had risen to 1.55\u00a0mg/dL with oliguria (1.1\u00a0mL/kg/h). Today\u2019s visit reveals continued oliguria (0.6\u00a0mL/kg/h), a creatinine of 2.02\u00a0mg/dL, and a BUN of 38\u00a0mg/dL. Vital signs show a mild persistent fever (38.4\u00a0\u00b0C), tachycardia, and MAP around 60\u00a0mmHg on norepinephrine 0.04\u00a0\u00b5g/kg/min.\n\nAssessment:\n- Acute Kidney Injury (AKI) most likely due to septic shock with prerenal etiology progressing to acute tubular necrosis (ATN). \n- Hepatorenal syndrome type 1 is a consideration given the underlying cirrhosis and rapid rise in creatinine. \n- Volume depletion from aggressive resuscitation is a pre\u2011renal contributor; current restrictive fluid strategy is appropriate given CHF and ascites. \n- No evidence of obstruction on ultrasound; urine sediment bland with occasional epithelial casts consistent with ATN.\n\nPlan:\n1. Continue piperacillin\u2011tazobactam 4.5\u00a0g IV q6h for documented Klebsiella bacteremia. \n2. Taper norepinephrine to 0.02\u20110.04\u00a0\u00b5g/kg/min as MAP >65\u00a0mmHg; discontinue when MAP stable >65\u00a0mmHg for \u226524\u00a0h. \n3. Maintain insulin infusion to keep glucose 140\u2011180\u00a0mg/dL; adjust per CGM.\n4. Fluid management: target neutral balance; avoid over\u2011resuscitation. 1\u00a0L 0.9% saline given today; reassess daily fluid status.\n5. Daily labs: BMP, LFT, CBC, INR, urinary output, serum creatinine, BUN. Monitor trend.\n6. Consider loop diuretic (furosemide 40\u201380\u202fmg IV) if urine output remains <0.5\u202fmL/kg/h for >12\u00a0h and the patient is euvolemic.\n7. Consult hepatology for possible vasoconstrictive therapy (terlipressin) if HRS\u20111 is confirmed.\n8. Discuss initiation of renal replacement therapy (RRT) if oliguria <0.3\u202fmL/kg/h for >24\u00a0h or creatinine rises >2.0\u00d7 baseline.\n9. Continue withholding metformin, lisinopril, furosemide, spironolactone; resume once renal function stabilizes.\n10. Monitor warfarin therapy in context of liver dysfunction; hold until INR <1.5 and hepatic synthetic function improves.\n\nFollow\u2011up: ICU monitoring for renal function; bedside nephrology review at 6\u2011hour intervals until stabilization. If creatinine stabilizes, plan transition to step\u2011down unit with daily nephrology input. Discharge planning to commence once stable renal parameters, infection control, and hemodynamic stability are achieved.\n\n-- Nephrology Service",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "Oliguria",
+        "Abdominal discomfort",
+        "Mild confusion"
+      ],
+      "vitals": {
+        "Blood Pressure": "84/54 mmHg",
+        "Heart Rate": "110 bpm",
+        "Respiratory Rate": "21/min",
+        "Oxygen Saturation": "96% on RA",
+        "Temperature": "38.4\u00b0C"
+      },
+      "relevant_history": [
+        "Vancomycin discontinued after sensitivity data",
+        "No diuretic therapy yet",
+        "Continued norepinephrine at 0.06 \u00b5g/kg/min"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B",
+        "Pulmonary embolism (on warfarin)"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Norepinephrine 0.06 \u00b5g/kg/min",
+        "Insulin infusion (IV)",
+        "Electrolyte monitoring"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "The nephrology consult reviews the rising creatinine. The patient now meets KDIGO stage 2 AKI criteria (creatinine 2.02 mg/dL, oliguria <0.5 mL/kg/h). A restrictive fluid strategy is recommended in the setting of CHF and ascites. The team administers a 1\u2011L bolus of 0.9% saline over 4\u202fh, closely monitoring hemodynamics. Vasopressor support is gradually tapered as MAP improves. No diuretics are started yet due to concern about intravascular volume depletion.",
+      "examination_findings": [
+        "Stable vital signs",
+        "Mild abdominal distention",
+        "Positive shifting dullness",
+        "No new edema",
+        "Clear lung fields"
+      ],
+      "tests_ordered": [
+        "BMP, LFT, CBC",
+        "Urine sediment",
+        "Chest X\u2011ray (baseline)",
+        "Renal ultrasound (baseline)"
+      ],
+      "test_results": [
+        "Creatinine 2.02 mg/dL",
+        "BUN 38 mg/dL",
+        "Urine output 0.6 mL/kg/h",
+        "Urine sediment: bland cells, occasional epithelial casts",
+        "Chest X\u2011ray: clear lungs",
+        "Renal ultrasound: kidneys slightly enlarged, no obstruction"
+      ],
+      "treatments_administered": [
+        "1.0\u202fL 0.9% saline over 4\u202fh",
+        "Norepinephrine tapered to 0.04 \u00b5g/kg/min",
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Insulin infusion continue"
+      ],
+      "patient_response": "Stable hemodynamics; urine output remains oliguria but no rise in creatinine.",
+      "disease_progression_notes": "AKI stage 2 confirmed; fluid restriction implemented; vasopressor support reduced. Kidney injury likely due to combined prerenal and direct contrast nephropathy."
+    },
+    {
+      "visit_number": 4,
+      "visit_date": "2026-03-27",
+      "clinician_specialty": "Nephrology/Intensive Care",
+      "reason_for_visit": "Acute worsening of renal function and electrolyte derangements",
+      "is_related_to_main_illness": true,
+      "note": "**Clinical Note \u2013 ICU day 3**\n\n**Subjective:**\n- 57\u2011yr\u2011old male with CKD stage 2, HTN, T2DM, CHF NYHA III, Child\u2011Pugh B cirrhosis, prior PE on warfarin.  On day 3 of ICU stay, patient is alert only to voice, appears mildly confused.\n- Reports increased abdominal distention and feels \u201cfull.\u201d\n- Urine output continues to be low (~0.5\u202fmL/kg/h).  He is on furosemide 20\u202fmg IV q12h and CRRT.\n- No new complaints of chest pain, shortness of breath beyond baseline.  No new rash or drug reactions.\n\n**Objective:**\n- Vitals: BP\u202f80/52\u202fmmHg; HR\u202f112\u202fbpm; RR\u202f22/min; SpO\u2082\u202f95% RA; T\u202f38.2\u202f\u00b0C.\n- Cardiac: tachycardic, weak peripheral pulses; no murmurs.\n- Respiratory: clear to auscultation; no rales.\n- Abdomen: distended, shifting dullness positive, mild tenderness to palpation, ascitic fluid palpable.\n- Extremities: +2 pitting edema, weak pulses.\n- Neurologic: oriented to person, time, place; slight disorientation; NIHSS 0.5.\n- RRT: CRRT (CVVHDF) running, effluent volume 25\u202fmL/kg/h.\n- Labs: Cr 2.3\u202fmg/dL, BUN 42\u202fmg/dL, K\u202f5.8\u202fmEq/L, pH\u202f7.32, bicarb 14\u202fmEq/L, albumin 2.9\u202fg/dL, platelets 75K, INR\u202f2.2, LFTs showing elevated ALP (680\u202fU/L), ALT 78, AST 92, bilirubin 2.8\u202fmg/dL.\n- Urine: color light yellow, mild froth.\n\n**Assessment:**\nThe patient has developed acute kidney injury (AKI) on day 3 of ICU stay in the setting of septic shock, multi\u2011organ dysfunction, and underlying CKD. The primary drivers of AKI are:\n1. **Sepsis\u2011associated acute tubular necrosis (ATN):** Persistent hypotension, high inflammatory markers, and leukocytosis, with evidence of tissue hypoperfusion.\n2. **Hepatorenal syndrome type\u202f1** secondary to advanced cirrhosis and ongoing vasodilatory state.\n3. **Volume depletion secondary to diuresis & ongoing capillary leak** \u2013 contributing to pre\u2011renal component.\n4. **Metabolic acidosis and hyperkalemia** reflecting reduced renal excretion.\nLiver encephalopathy grade\u202fII appears to be improving with lactulose, and improvement in mental status aligns with decreased ammonia load.\n\nThe patient is receiving continuous venovenous hemodiafiltration (CVVHDF) to correct electrolyte derangements and support volume. Despite CRRT, urine output remains minimal and creatinine continues to climb, underscoring the need to maintain RRT until renal function recovers or until a more definitive indication for permanent dialysis is established.\n\n**Plan:**\n1. **Continue CRRT**: maintain current effluent dose; monitor fluid balance, electrolytes, and acid\u2013base status every 4\u202fh.\n2. **Medication Review**:\n   - Piperacillin\u2011tazobactam 4.5\u202fg IV q6h (continue; sensitivity to Klebsiella confirmed).\n   - Insulin infusion (continue; target glucose 140\u2013180\u202fmg/dL).\n   - Furosemide 20\u202fmg IV q12h (continue; monitor diuresis; adjust as needed.)\n   - Lactulose 20\u202fg PO q6h (continue; monitor stools, abdominal girth.)\n   - IV potassium binders (e.g., patiromer 8.4\u202fg PO daily) to control hyperkalemia.\n   - Norepinephrine titrated to maintain MAP 65\u202fmmHg; continue tapering to 0.02\u202f\u00b5g/kg/min as tolerated.\n   - Hold warfarin until INR <1.5; consider resumption if bleeding risk acceptable.\n3. **Monitoring**:\n   - CBC, BMP, LFT, INR, coagulation profile every 12\u202fh.\n   - Arterial blood gas q6h for acid\u2011base management.\n   - Daily urine output and weight.\n   - Daily abdominal girth; if ascites worsens, consider paracentesis.\n   - Continuous hemodynamic monitoring; adjust vasopressors accordingly.\n4. **Infectious Disease**:\n   - Continue antibiotic coverage; review cultures on day 5, adjust therapy accordingly.\n5. **Consultations**:\n   - Nephrology follow\u2011up for RRT duration and need for dialysis.\n   - Hepatology for evaluation of hepatocellular function and potential listing for transplant.\n6. **Education & Family Counseling**:\n   - Explain RRT process, prognosis, and need for potential dialysis.\n   - Discuss possibility of liver transplant evaluation.\n\n**Disposition:** Patient remains in ICU; RRT continues; close monitoring of renal function and electrolytes; reassess on day 5 for potential weaning of CRRT.\n\n**Follow\u2011up Recommendations:**\n- Repeat BMP, LFT, CBC, INR, ABG every 12\u202fh.\n- Daily assessment of urine output, fluid balance, and weight.\n- Evaluate for early weaning from CRRT if creatinine trends downward and urine output improves (>0.5\u202fmL/kg/h) for >24\u202fh.\n- Continue anti\u2011septic antibiotic therapy; reassess once cultures and sensitivities return.\n- Hold warfarin until INR <1.5; hold further until bleeding risk assessed.\n- Consider renal replacement therapy escalation or conversion to intermittent hemodialysis if CRRT complications occur.\n- Continue lactulose titration to manage encephalopathy.\n- Hepatology consult for transplant work\u2011up and management of cirrhosis complications.",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "Increased abdominal distention",
+        "Low urine output",
+        "Hyperkalemia",
+        "Metabolic acidosis",
+        "Confusion"
+      ],
+      "vitals": {
+        "Blood Pressure": "80/52 mmHg",
+        "Heart Rate": "112 bpm",
+        "Respiratory Rate": "22/min",
+        "Oxygen Saturation": "95% on RA",
+        "Temperature": "38.2\u00b0C"
+      },
+      "relevant_history": [
+        "CRRT initiation planned",
+        "Liver encephalopathy grade II noted",
+        "Furosemide 20 mg IV q12h started",
+        "Lactulose 20 g PO q6h initiated"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B",
+        "Pulmonary embolism (on warfarin)"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Continuous venovenous hemodiafiltration (CRRT)",
+        "Furosemide 20 mg IV q12h",
+        "Lactulose 20 g PO q6h",
+        "Insulin infusion (IV)",
+        "Norepinephrine 0.04 \u00b5g/kg/min (tapering)"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "On ICU day 3 the patient demonstrates worsening renal failure (creatinine 2.3 mg/dL) coupled with hyperkalemia (K 5.8 mEq/L) and non\u2011anion\u2011gap metabolic acidosis (pH 7.32, bicarbonate 14). Given oliguria (~0.5 mL/kg/h) and the rising creatinine, the team starts continuous venovenous hemodiafiltration to control electrolytes and volume. The patient\u2019s liver encephalopathy grade II is managed with lactulose, and diuretic therapy is resumed to aid ascitic fluid control while monitoring intravascular volume. Vasopressor support is gradually weaned.",
+      "examination_findings": [
+        "Mild confusion",
+        "Positive shifting dullness",
+        "Lower extremity edema",
+        "Clear lungs",
+        "Weak peripheral pulses"
+      ],
+      "tests_ordered": [
+        "BMP, LFT, CBC",
+        "Arterial blood gas",
+        "CRRT effluent output",
+        "Liver function panel",
+        "Full metabolic panel including electrolytes"
+      ],
+      "test_results": [
+        "Creatinine 2.3 mg/dL",
+        "K 5.8 mEq/L",
+        "pH 7.32",
+        "Bicarbonate 14 mEq/L",
+        "BUN 42 mg/dL",
+        "Albumin 2.9 g/dL",
+        "Liver enzymes: ALT 78, AST 92, ALP 680",
+        "Platelets 75,000/\u00b5L",
+        "INR 2.2"
+      ],
+      "treatments_administered": [
+        "CRRT initiation (CVVHDF)",
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Furosemide 20 mg IV q12h",
+        "Lactulose 20 g PO q6h",
+        "Insulin infusion continue",
+        "Norepinephrine tapered to 0.02 \u00b5g/kg/min",
+        "Electrolyte correction (IV potassium binders)"
+      ],
+      "patient_response": "CRRT controls rising potassium; urine output remains minimal. Patient shows slight improvement in mental status after lactulose, but renal function continues to decline.",
+      "disease_progression_notes": "Stage 3 AKI; CRRT initiated. Concomitant hepatic dysfunction worsening (Child\u2011Pugh B). Multiorgan failure emerging."
+    },
+    {
+      "visit_number": 5,
+      "visit_date": "2026-03-29",
+      "clinician_specialty": "Hepatology",
+      "reason_for_visit": "Progressive hepatic decompensation",
+      "is_related_to_main_illness": true,
+      "note": "**Chief Complaint:** Progressive hepatic decompensation.\n\n**History of Present Illness:** 57\u2011year\u2011old male with known cirrhosis Child\u2011Pugh B (now 10), CKD stage 2, CHF NYHA III, type 2 DM, and chronic warfarin therapy for prior PE is in ICU for septic cholangitis and worsening hepatic encephalopathy. During ICU day\u202f5, LFTs show rising bilirubin (4.0\u202fmg/dL), moderately elevated transaminases (AST\u202f92\u202fU/L, ALT\u202f78\u202fU/L), high alkaline phosphatase (720\u202fU/L), low albumin (2.8\u202fg/dL), and INR 2.5. The patient has been on Piperacillin\u2011Tazobactam 4.5\u202fg q6h, CRRT, furosemide 20\u202fmg IV q8h, lactulose 30\u202fg PO q6h, insulin infusion, and norepinephrine 0.02\u202f\u00b5g/kg/min. A large paracentesis of 5000\u202fmL was performed, yielding ascitic fluid with SAAG 1.5\u202fg/dL and total protein 1.2\u202fg/dL, consistent with portal hypertension. Symptoms include increasing fatigue, worsening confusion (encephalopathy grade\u202fII), ascites, and concern for bacterial superinfection.\n\n**Physical Examination:** BP 92/60\u202fmmHg, HR 106\u202fbpm, RR 23/min, SpO\u2082\u202f93\u202f% RA, temperature 38.0\u202f\u00b0C. Encephalopathy grade\u202fII, large abdominal distention, coalescent lower\u2011extremity edema, mild tachypnea, clear lung fields. \n\n**Assessment:**\n1. Cirrhosis with progressive decompensation (Child\u2011Pugh B, score\u202f10). \n2. Hepatorenal syndrome type\u202f1, evidenced by rising creatinine (3.0\u202fmg/dL) and oliguria despite CRRT. \n3. Ongoing sepsis secondary to cholangitis. \n4. Bacterial translocation/possible SBP (ascitic fluid low total protein). \n5. Hepatic encephalopathy grade\u202fII, partially responsive to lactulose.\n\n**Plan:**\n- Continue Piperacillin\u2011Tazobactam 4.5\u202fg IV q6h. Vancomycin was already discontinued. Continue CRRT with effluent rate 25\u202fmL/kg/h. \n- Increase lactulose to 45\u202fg PO q6h (or until 2\u20133 soft bowel movements per day). Add rifaximin 550\u202fmg PO BID once enteral feedings resume.\n- Repeat abdominal paracentesis (2\u20133\u202fL) if clinical ascites worsens, with albumin 20\u201325\u202fg per 1\u202fL of fluid removed.\n- Furosemide 20\u202fmg IV q8h; consider spironolactone 25\u202fmg PO q12h if sodium levels permit. Monitor serum electrolytes closely.\n- Maintain norepinephrine at 0.02\u202f\u00b5g/kg/min; prepare for possible escalation if MAP <65\u202fmmHg.\n- Initiate terlipressin 2\u202fmg IV q24h with albumin 20\u202fg IV daily plus 10\u202fg per 1\u202fL ascitic fluid removed (if HRS\u20111 confirmed). Hold if no response after 3\u202fdays.\n- Withdraw warfarin as INR >2.5; consider vitamin K 10\u202fmg IV daily until INR <1.5.\n- Order ascitic fluid cell count with Gram stain, culture, and serum\u2011ascites albumin gradient repeat in 48\u202fh. \n- Order abdominal Doppler US (portal and hepatic veins) to assess portal pressures; repeat in 48\u201372\u202fh.\n- Refer for urgent transplant evaluation; discuss TIPS contraindications given instability and CRRT.\n- Continue daily labs: CBC, CMP, coagulation panel, electrolytes, LFTs, and urine output.\n- Monitor mental status hourly; call hepatology if encephalopathy worsens to grade\u202fIII/IV.\n- Consider prophylactic antibiotics for SBP only if confirmed.\n\n**Education & Family Discussion:** Family informed of declining liver function, need for possible transplant, and the high risk associated with current therapies. Discussed the urgency and potential morbidity of advanced interventions.\n\n**Follow\u2011up Recommendations:** See above.\n",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "Increasing fatigue",
+        "Worsening confusion",
+        "Ascites",
+        "Bacterial superinfection risk"
+      ],
+      "vitals": {
+        "Blood Pressure": "92/60 mmHg",
+        "Heart Rate": "106 bpm",
+        "Respiratory Rate": "23/min",
+        "Oxygen Saturation": "93% on RA",
+        "Temperature": "38.0\u00b0C"
+      },
+      "relevant_history": [
+        "CRRT ongoing",
+        "Lactulose continued",
+        "Diuretic therapy ongoing",
+        "No new antibiotics started"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B (now Child\u2011Pugh score 10)",
+        "Pulmonary embolism (on warfarin)",
+        "Sepsis secondary to cholangitis"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "CRRT ongoing",
+        "Furosemide 20 mg IV q12h",
+        "Lactulose 20 g PO q6h",
+        "Insulin infusion (IV)",
+        "Norepinephrine 0.02 \u00b5g/kg/min (continued)"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "On ICU day 5 the hepatology team evaluates the patient\u2019s decompensated cirrhosis. LFT panel shows rising bilirubin (4.0 mg/dL), worsening transaminases, and decreasing albumin. The Child\u2011Pugh score has risen to 10 (class B). Ascitic fluid analysis shows SAAG >1.5 g/dL with low total protein, consistent with portal hypertension. TIPS is discussed but deemed unsafe given the patient\u2019s deteriorating renal function and CRRT. Lactulose dosing is increased to address worsening encephalopathy. The team initiates routine paracentesis for symptomatic ascites and continues diuretic therapy to balance intravascular volume.",
+      "examination_findings": [
+        "Encephalopathy grade II",
+        "Large ascites",
+        "Coalescent lower extremity edema",
+        "Mild tachypnea",
+        "Clear lungs"
+      ],
+      "tests_ordered": [
+        "Full LFT panel",
+        "Coagulation profile",
+        "Serum albumin",
+        "Platelet count",
+        "Ascitic fluid analysis",
+        "Ultrasonography for portal pressures"
+      ],
+      "test_results": [
+        "Bilirubin 4.0 mg/dL",
+        "AST 92 U/L",
+        "ALT 78 U/L",
+        "Alk Phos 720 U/L",
+        "Albumin 2.8 g/dL",
+        "INR 2.5",
+        "Platelets 60,000/\u00b5L",
+        "Ascitic fluid SAAG 1.5 g/dL, total protein 1.2 g/dL"
+      ],
+      "treatments_administered": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "CRRT continued",
+        "Furosemide 20 mg IV q8h",
+        "Lactulose 30 g PO q6h",
+        "Insulin infusion titrated",
+        "Norepinephrine 0.02 \u00b5g/kg/min",
+        "Paracentesis (5000 mL ascitic fluid drained)"
+      ],
+      "patient_response": "Encephalopathy slightly improves with higher lactulose; ascites reduces after paracentesis but reaccumulates quickly. Renal function remains worsened (creatinine 3.0 mg/dL).",
+      "disease_progression_notes": "Further hepatic decompensation; Child\u2011Pugh score 10. Kidneys remain in stage\u202f3 AKI on CRRT. Multiorgan failure persists."
+    },
+    {
+      "visit_number": 6,
+      "visit_date": "2026-03-30",
+      "clinician_specialty": "Infectious Disease",
+      "reason_for_visit": "New pulmonary infiltrate and potential ventilator\u2011associated pneumonia",
+      "is_related_to_main_illness": true,
+      "note": "Visit #6 (2026-03-30)\n\nChief Complaint: New pulmonary infiltrate, worsening hypoxia, consistent with nosocomial pneumonia.\n\nHistory of Present Illness:\nThe patient is a 57\u2011year\u2011old male with CKD stage 2, HTN, T2DM, HF NYHA III, Child\u2011Pugh B liver cirrhosis, and a history of pulmonary embolism on warfarin. He was admitted to the ICU on 2026\u201103\u201124 following septic shock due to biliary source, and has been receiving Piperacillin\u2011Tazobactam, CRRT, vasopressor support, and multidisciplinary management as detailed in visits 1\u20115.\n\nOn ICU Day 6 (2026\u201103\u201130), a repeat chest X\u2011ray showed a new left lower lobe infiltrate. The patient\u2019s respiratory status has deteriorated: RR\u202f28/min, SpO\u2082\u202f88% on a non\u2011rebreather, and the patient remains febrile (38.6\u202f\u00b0C). Vitals: BP\u202f85/53\u202fmmHg, HR\u202f115\u202fbpm, RR\u202f28\u202f/min, SpO\u2082\u202f88%, Temp\u202f38.6\u202f\u00b0C. Examination revealed mild wheezes, diffuse crackles in the left lower lung field, positive shifting dullness, grade\u202fIII encephalopathy, and weak peripheral pulses.\n\nThe ID team expanded empiric coverage to Aztreonam 2\u202fg IV q8h for atypical coverage while limiting nephrotoxicity. The nephrology team cautioned against additional nephrotoxic agents; CRRT continues.\n\nLaboratory results: ABG pH\u202f7.28, PaO\u2082\u202f55\u202fmmHg, PaCO\u2082\u202f30\u202fmmHg, HCO\u2083\u202f14\u202fmEq/L; Creatinine\u202f4.0\u202fmg/dL; Potassium\u202f6.0\u202fmEq/L; Bicarbonate\u202f14\u202fmEq/L; CBC WBC\u202f19,000/\u00b5L, Plts\u202f60,000/\u00b5L; Liver panel unchanged.\n\nAssessment:\n1. Hospital\u2011acquired (nosocomial) pneumonia \u2013 likely ventilator\u2011associated pneumonia despite no invasive ventilation, presenting with new infiltrate, fever, hypoxia.\n2. Septic shock \u2013 persistent hypotension requiring norepinephrine 0.02\u202f\u00b5g/kg/min.\n3. Acute renal failure on top of CKD stage\u202f2 \u2013 creatinine >4.0\u202fmg/dL; managed with CRRT.\n4. Decompensated liver cirrhosis \u2013 Child\u2011Pugh B, encephalopathy grade\u202fIII.\n5. Multiorgan dysfunction syndrome (MODS) secondary to overwhelming infection.\n\nPlan:\n- Continue current antibiotic regimen (Aztreonam 2\u202fg IV q8h + Piperacillin\u2011Tazobactam 4.5\u202fg IV q6h) for 48\u202fh; reassess clinical response.\n- Maintain CRRT and vasopressor support; titrate norepinephrine to goal MAP\u202f>65\u202fmmHg if tolerated.\n- Continue insulin infusion to control hyperglycemia.\n- Provide oxygenation support; high\u2011flow nasal cannula 12\u202fL/min; consider escalation to mechanical ventilation only if rapid respiratory decompensation occurs.\n- Repeat blood cultures, sputum culture, and daily labs (BMP, LFT, CBC) as ordered.\n- Fluid management remains conservative; avoid fluid overload.\n- Initiate palliative care consultation; family discussion confirms shift toward comfort care and DNR status.\n- Discontinue antibiotics after 48\u202fh of treatment if no clinical improvement and comfort care goals are in place.\n- Monitor for complications: hemodynamic instability, arrhythmias, electrolyte derangements.\n\nDisposition: Patient to remain on ICU support with comfort\u2011oriented therapies; no escalation of care anticipated.\n\nFollow\u2011up: Continuous monitoring of vitals and labs, daily assessment by palliative care team, and regular family updates.",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "New left lower lobe infiltrate",
+        "Increasing tachypnea",
+        "Fever",
+        "Worsening oxygenation"
+      ],
+      "vitals": {
+        "Blood Pressure": "85/53 mmHg",
+        "Heart Rate": "115 bpm",
+        "Respiratory Rate": "28/min",
+        "Oxygen Saturation": "88% on non\u2011rebreather",
+        "Temperature": "38.6\u00b0C"
+      },
+      "relevant_history": [
+        "CRRT ongoing",
+        "Recent broad\u2011spectrum antibiotics",
+        "No new antiviral or antifungal agents"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B (score 10)",
+        "Pulmonary embolism (on warfarin)",
+        "Sepsis secondary to cholangitis",
+        "Stage 3 AKI on CRRT"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "CRRT ongoing",
+        "Furosemide 20 mg IV q8h",
+        "Lactulose 30 g PO q6h",
+        "Insulin infusion",
+        "Norepinephrine 0.02 \u00b5g/kg/min",
+        "Aztreonam 2 g IV q8h (added for pneumonia, nephrotoxicity risk considered)"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "On ICU day 6, a chest X\u2011ray demonstrates a new left lower lobe infiltrate consistent with nosocomial pneumonia. The ID team expands antibiotic coverage to include aztreonam to target atypicals while limiting nephrotoxicity. The nephrology team cautions against additional nephrotoxic agents; CRRT is continued to mitigate renal injury. The patient's oxygenation worsens; high\u2011flow nasal cannula is trialed but he remains hypoxic. The family is informed of the deteriorating clinical picture and the shift toward comfort care is initiated.",
+      "examination_findings": [
+        "Mild wheezes",
+        "Diffuse crackles in left lower lung field",
+        "Positive shifting dullness",
+        "Encephalopathy grade III",
+        "Weak peripheral pulses"
+      ],
+      "tests_ordered": [
+        "Chest X\u2011ray",
+        "Sputum culture",
+        "Blood cultures (repeat)",
+        "ABG",
+        "Daily labs (BMP, LFT, CBC)"
+      ],
+      "test_results": [
+        "Chest X\u2011ray: left lower lobe infiltrate",
+        "ABG: pH 7.28, PaO2 55 mmHg, PaCO2 30 mmHg, HCO3 14",
+        "Creatinine 4.0 mg/dL",
+        "Potassium 6.0 mEq/L",
+        "Bicarbonate 14 mEq/L",
+        "CBC: WBC 19,000/\u00b5L, Plts 75,000/\u00b5L",
+        "Platelets 60,000/\u00b5L",
+        "Liver panel unchanged"
+      ],
+      "treatments_administered": [
+        "Aztreonam 2 g IV q8h",
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "High\u2011flow nasal cannula 12 L/min",
+        "CRRT continued",
+        "Insulin infusion",
+        "Norepinephrine 0.02 \u00b5g/kg/min",
+        "Supportive care (fluids conservative)"
+      ],
+      "patient_response": "No clinical improvement; respiratory status deteriorates. Comfort care discussion initiated; DNR order placed.",
+      "disease_progression_notes": "Stage 3 AKI progressed to severe oliguria; CRRT continues. Pulmonary infection adds to multiorgan failure. Multidisciplinary team shifts toward palliative approach."
+    },
+    {
+      "visit_number": 7,
+      "visit_date": "2026-03-31",
+      "clinician_specialty": "Palliative Care",
+      "reason_for_visit": "Transition to comfort care",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Transition to comfort care\n\nAssessment: The patient is a 57\u2011year\u2011old male with chronic kidney disease stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure NYHA III, liver cirrhosis Child\u2011Pugh B (score 10), and recent pulmonary embolism on warfarin. He has developed sepsis secondary to cholangitis with multiorgan failure. Despite aggressive ICU measures, his condition has deteriorated to a point where the family, multidisciplinary team and provider have agreed to discontinue renal replacement therapy and initiate comfort\u2011directed care. DNR/DNI orders are in effect.\n\nVital signs: BP 80/50\u202fmmHg, HR 110\u202fbpm, RR 26/min, SpO2 90% on a non\u2011rebreather, temperature 38.0\u202f\u00b0C.\n\nPhysical exam: Grade III encephalopathy, mild pallor, weak peripheral pulses, diaphoresis, clear lung fields.\n\nLaboratory findings: CBC shows leukocytosis (18,000/\u00b5L) and thrombocytopenia (70,000/\u00b5L). BMP indicates hyperkalemia (K\u202f6.0\u202fmmol/L), metabolic acidosis (HCO3\u202f12\u202fmEq/L), creatinine 4.2\u202fmg/dL. LFT panel shows worsening cholestatic pattern: bilirubin 4.3\u202fmg/dL, AST 90, ALT 80, ALP 750\u202fU/L. Glucose 140\u202fmg/dL. These results support ongoing cholangitis\u2011related sepsis, acute on chronic liver failure, and acute renal failure.\n\nClinical reasoning: The patient remains hypotensive, hypoxic, and encephalopathic despite maximal supportive measures. His multi\u2011organ failure (hepatic, renal, cardiovascular, respiratory) has progressed to a stage where curative therapy is unlikely to alter the inevitable trajectory. Therefore, a palliative approach focused on symptom control and quality of life is appropriate.\n\nPlan:\n1. Continue scheduled hydromorphone for pain; titrate analgesic regimen to achieve a pain score \u22643/10.\n2. Continue lorazepam PRN for agitation and comfort.\n3. Maintain insulin subcutaneous BID with adjustments based on glucose monitoring to keep glucose 140\u2011180\u202fmg/dL.\n4. Keep furosemide 20\u202fmg IV q8h for fluid balance as per current regimen.\n5. Continue lactulose 30\u202fg PO q6h for hepatic encephalopathy.\n6. Maintain oxygen 15\u202fL/min via non\u2011rebreather to keep SpO2 \u226588%.\n7. Discontinue piperacillin\u2011tazobactam after last dose if patient\u2019s life expectancy <24\u202fh to avoid unnecessary IV therapy.\n8. No further antibiotics or anticoagulation; warfarin already discontinued.\n9. Reassess comfort measures daily; adjust medications as needed.\n10. Provide emotional support and facilitate family discussions on goals of care.\n11. Consider hospice referral and transition to home or inpatient hospice if desired.\n12. Document all interventions and communicate with primary team and ICU.\n\nFollow\u2011up: Continue to monitor vitals, analgesic and sedative needs, glucose, and electrolytes daily. Contact palliative/hospice team within 24\u202fhrs to evaluate patient status and discuss family wishes. Encourage family to engage in advance care planning and spiritual support services.\n\nOverall, the plan is to provide maximal comfort, minimize distressing interventions, and support the patient and family through end\u2011of\u2011life care.",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "Persistent hypoxia",
+        "Severe fatigue",
+        "Encephalopathy",
+        "Increased pain"
+      ],
+      "vitals": {
+        "Blood Pressure": "80/50 mmHg",
+        "Heart Rate": "110 bpm",
+        "Respiratory Rate": "26/min",
+        "Oxygen Saturation": "90% on non\u2011rebreather",
+        "Temperature": "38.0\u00b0C"
+      },
+      "relevant_history": [
+        "CRRT discontinued",
+        "DNR/DNI status documented",
+        "Piperacillin\u2011Tazobactam continued, Aztreonam halted",
+        "Family present for decision support"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B (score 10)",
+        "Pulmonary embolism (on warfarin)",
+        "Sepsis secondary to cholangitis",
+        "Stage 3 AKI with CRRT discontinued"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Furosemide 20 mg IV q8h",
+        "Lactulose 30 g PO q6h",
+        "Insulin (subcutaneous)",
+        "Opioid analgesic (hydromorphone PRN)",
+        "Benzodiazepine (lorazepam 1 mg PRN)",
+        "Norepinephrine tapered to 0.02 \u00b5g/kg/min",
+        "Vitamin supplements"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "On ICU day 7, the family and multidisciplinary team decide to discontinue CRRT and transition to comfort measures. DNR/DNI orders are placed. The patient receives scheduled opioids for pain control, benzodiazepines for agitation, and subcutaneous insulin to maintain glucose. Oxygen support is maintained via non\u2011rebreather. No further antibiotics are given. The palliative care team provides emotional support for family and documents end\u2011of\u2011life care plan.",
+      "examination_findings": [
+        "Mild pallor",
+        "Weak peripheral pulses",
+        "Encephalopathy grade III",
+        "Diaphoresis",
+        "Clear lungs"
+      ],
+      "tests_ordered": [
+        "CBC",
+        "BMP",
+        "LFT panel",
+        "Blood glucose monitoring",
+        "Serum electrolytes"
+      ],
+      "test_results": [
+        "CBC: WBC 18,000/\u00b5L, Plts 70,000/\u00b5L",
+        "BMP: Na 135, K 6.0, Cl 100, HCO3 12, Creatinine 4.2 mg/dL",
+        "LFT: Bilirubin 4.3 mg/dL, AST 90, ALT 80, ALP 750",
+        "Glucose: 140 mg/dL"
+      ],
+      "treatments_administered": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h (last dose 1 h prior)",
+        "Furosemide 20 mg IV q8h",
+        "Lactulose 30 g PO q6h",
+        "Hydromorphone PRN for pain",
+        "Lorazepam 1 mg PRN for agitation",
+        "Subcutaneous insulin (BID), titrated",
+        "Norepinephrine 0.02 \u00b5g/kg/min (minimal dose)",
+        "Oxygen 15 L/min non\u2011rebreather"
+      ],
+      "patient_response": "Pain well controlled; patient sedated for comfort. No further organ support initiated.",
+      "disease_progression_notes": "Transition to palliative care. CRRT discontinued. Kidney injury remains severe with negligible urine output. Disease trajectory deemed terminal."
+    },
+    {
+      "visit_number": 8,
+      "visit_date": "2026-04-01",
+      "clinician_specialty": "Nephrology/ICU",
+      "reason_for_visit": "Death of patient",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Death of patient.\n\nHistory of Present Illness:\nMr. Patel, 57\u2011year\u2011old male with a complex comorbid history (CKD stage\u00a02, HTN, T2DM, CHF\u00a0NYHA\u00a0III, Child\u2011Pugh\u00a0B cirrhosis, prior PE on warfarin, stage\u00a03 AKI) was admitted to the ICU on 24\u00a0March 2026 for septic shock secondary to cholangitis. Over the course of his ICU stay, he developed progressive multi\u2011organ dysfunction including oliguria, hyperkalemia, metabolic acidosis, liver decompensation, and severe sepsis. He was placed on CRRT and broad\u2011spectrum antibiotics (piperacillin\u2011tazobactam). Despite aggressive support (vasopressors, diuretics, antibiotics, continuous renal replacement therapy, and palliative\u2011care measures), his condition deteriorated.\n\nOn 30\u00a0March he had a new pulmonary infiltrate and remained septic; antibiotics were broadened to aztreonam. On 31\u00a0March palliative care was activated, CRRT discontinued, antibiotics stopped, and a comfort\u2011directed medication regimen was instituted. On 1\u00a0April, 48\u00a0hours after the decision to withdraw CRRT, Mr. Patel died peacefully. The ICU team completed a formal death certificate. Post\u2011mortem labs (obtained at the family\u2019s request) showed persistent hyperkalemia (K\u00a06.2\u202fmEq/L) and severe metabolic acidosis (bicarbonate\u00a012\u202fmEq/L) with a creatinine of 4.5\u202fmg/dL.\n\nPhysical Examination at Time of Death:\n- Pallor, cold extremities\n- Unresponsive\n- Weak peripheral pulses\n\nInterventions on the day of death:\n- Hydromorphone PRN for comfort\n- Lorazepam PRN for sedation\n- Norepinephrine 0.02\u202f\u00b5g/kg/min until 2\u202fh prior to death\n- Oxygen 15\u202fL/min via non\u2011rebreather\n\nAssessment:\nThe patient died of refractory septic shock with acute multi\u2011organ failure (renal, hepatic, respiratory) in the setting of advanced CKD, liver cirrhosis, and diabetes. Persistent hyperkalemia and metabolic acidosis indicate ongoing metabolic derangements. The primary reason for death was progressive organ failure in the context of sepsis and underlying chronic disease.\n\nPlan:\n1. Completion of all required documentation, including formal death certificate and transfer of hospice or bereavement counseling services.\n2. Discontinue all non\u2011essential monitoring and invasive lines.\n3. Family meeting with palliative care and ICU team to discuss grief resources and bereavement counseling.\n4. No further interventions are indicated.\n\nThis note summarizes the end\u2011of\u2011life care and confirms the transition from active treatment to comfort care.\n\nPrepared by: Dr. A. Smith, MD \u2013 Nephrology/ICU",
+      "patient_age": 57,
+      "patient_sex": "Male",
+      "symptoms": [
+        "None (patient deceased)"
+      ],
+      "vitals": {
+        "Blood Pressure": "75/45 mmHg",
+        "Heart Rate": "105 bpm",
+        "Respiratory Rate": "24/min",
+        "Oxygen Saturation": "92% on non\u2011rebreather",
+        "Temperature": "37.8\u00b0C"
+      },
+      "relevant_history": [
+        "DNR/DNI status",
+        "CRRT discontinued 24 h prior",
+        "Last antibiotic dose 5 h prior"
+      ],
+      "known_conditions": [
+        "Chronic kidney disease stage 2",
+        "Hypertension",
+        "Type 2 diabetes mellitus",
+        "Congestive heart failure NYHA III",
+        "Liver cirrhosis Child\u2011Pugh B (score 10)",
+        "Pulmonary embolism (on warfarin)",
+        "Stage 3 AKI"
+      ],
+      "current_medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Furosemide 20 mg IV q8h",
+        "Lactulose 30 g PO q6h",
+        "Hydromorphone PRN",
+        "Lorazepam PRN",
+        "Subcutaneous insulin",
+        "Norepinephrine 0.02 \u00b5g/kg/min",
+        "Oxygen non\u2011rebreather"
+      ],
+      "allergies": [
+        "No known drug allergies"
+      ],
+      "visit_scenario": "The ICU team confirms that Mr. Patel passed away peacefully on April 1, 2026, approximately 48 hours after the decision to withdraw CRRT and shift to comfort care. A formal death certificate is completed. Post\u2011mortem labs (if performed) show persistent hyperkalemia and metabolic acidosis. The family is supported by the palliative care team. Documentation of end\u2011of\u2011life event is finalized and care is transitioned to bereavement counseling.",
+      "examination_findings": [
+        "Pallor",
+        "Cold extremities",
+        "Unresponsive",
+        "Weak peripheral pulses"
+      ],
+      "tests_ordered": [
+        "Post\u2011mortem labs (optional)"
+      ],
+      "test_results": [
+        "Post\u2011mortem creatinine 4.5 mg/dL",
+        "Post\u2011mortem potassium 6.2 mEq/L",
+        "Post\u2011mortem bicarbonate 12 mEq/L"
+      ],
+      "treatments_administered": [
+        "Supportive care until death",
+        "Opioid for comfort",
+        "Benzodiazepine for sedation"
+      ],
+      "patient_response": "Death confirmed.",
+      "disease_progression_notes": "Terminal multiorgan failure secondary to severe AKI, sepsis, liver cirrhosis, and CHF. All organ support withdrawn as per DNR/DNI."
+    }
+  ],
+  "notes": [
+    {
+      "visit_number": 1,
+      "clinician_specialty": "Emergency Medicine",
+      "note_date": "2026-03-24",
+      "content": "Chief Complaint: Right upper quadrant pain, fever, vomiting.\n\nHistory of Present Illness: 57\u2011year\u2011old male presents to the ED with a 12\u2011hour history of right upper quadrant abdominal pain, nausea, and fever. He reports that the pain is sharp, worsened with deep breathing, and associated with cold extremities and diaphoresis. No relief with over\u2011the\u2011counter analgesics. He denies chest pain or dyspnea. He had an ERCP with contrast 3 weeks ago for suspected biliary dilatation and his prednisone taper was recently discontinued.\n\nPast Medical History: Chronic kidney disease stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure NYHA III, liver cirrhosis Child\u2011Pugh B, pulmonary embolism on warfarin.\n\nCurrent Medications: Piperacillin\u2011tazobactam 4.5\u202fg IV q6h, vancomycin 1\u202fg IV q12h, norepinephrine infusion 0.05\u202f\u00b5g/kg/min, insulin infusion (IV, titrated), 1.0\u202fL isotonic saline over first hour. Metformin, lisinopril, furosemide, spironolactone, and warfarin were held.\n\nAllergies: None.\n\nPhysical Examination:\n- General: Cool, diaphoretic, icteric sclerae.\n- Vitals: BP 78/52 mmHg, HR 118 bpm, RR 22/min, SpO\u2082 95% RA, Temp 38.7\u202f\u00b0C.\n- HEENT: Icteric sclerae.\n- Cardiovascular: Tachycardic, regular rhythm, no murmurs.\n- Respiratory: Clear to auscultation, no rales.\n- Abdomen: Tender hepatomegaly, mild epigastric tenderness, positive shifting dullness.\n- Extremities: Mild pitting edema of lower extremities, cool skin.\n\nLabs:\n- CBC: WBC 18,200/\u00b5L, Hb 10.5 g/dL, Plt 105,000/\u00b5L.\n- CMP: Cr 1.25 mg/dL, BUN 28 mg/dL, Bilirubin 2.8 mg/dL, Alk Phos 580 U/L, AST 87 U/L, ALT 62 U/L.\n- Lactate: 3.2 mmol/L (improved to 2.4 mmol/L after 6 hrs).\n- Coagulation: PT/INR pending.\n- Blood cultures: 2 sets, pending.\n\nAssessment:\n- Septic shock likely secondary to cholangitis or spontaneous bacterial peritonitis.\n- Hemolytic anemia and thrombocytopenia may represent consumptive coagulopathy or underlying liver disease.\n- Acute kidney injury secondary to hypoperfusion.\n\nDifferential Diagnoses Considered:\n- Acute cholangitis.\n- Spontaneous bacterial peritonitis.\n- Sepsis-associated DIC.\n- Hemolytic uremic syndrome/Thrombotic thrombocytopenic purpura (unlikely given background).\n- Acute biliary obstruction post\u2011ERCP.\n\nPlan:\n1. Continue broad\u2011spectrum antibiotics: Piperacillin\u2011tazobactam 4.5\u202fg IV q6h and vancomycin 1\u202fg IV q12h.\n2. Maintain vasopressor support: Norepinephrine titrated to MAP >65\u202fmmHg.\n3. Fluid resuscitation: 1\u202fL 0.9\u202f% saline bolus, then 0.9\u202f% saline 500\u202fmL/h while monitoring urine output.\n4. Hold nephrotoxic and diuretic agents; continue insulin infusion for glucose control.\n5. Repeat lactate q6\u202fhr, Cr, BNP, and coagulation panel.\n6. Obtain abdominal ultrasound or CT abdomen with contrast to evaluate for biliary obstruction, gallstones, or peritonitis.\n7. Consider albumin 1.5\u202fg/kg (up to 100\u202fg) if serum albumin low.\n8. Consult Gastroenterology/Pancreatology for possible emergent ERCP if cholangitis confirmed.\n9. Monitor for DIC: track fibrinogen, D-dimer, PT/INR, platelets.\n10. Transfer to ICU for close monitoring.\n\nDisposition: Patient remains in septic shock; transferred to ICU for ongoing management.\n\nFollow\u2011up Recommendations:\n- Repeat blood cultures in 48\u202fhrs to assess response.\n- Repeat abdominal imaging in 12\u202fhrs or sooner if clinical status changes.\n- Monitor lactate and urine output hourly; adjust fluids/vasopressor accordingly.\n- Reassess renal function daily; consider RRT if oliguria persists.\n- Once infection source controlled, taper vasopressors and transition to oral antibiotics as appropriate.\n- Monitor for complications of cirrhosis (ascites, encephalopathy).",
+      "symptoms_reported": [
+        "Right upper quadrant abdominal pain",
+        "Nausea",
+        "Fever",
+        "Cold extremities",
+        "Diaphoresis"
+      ],
+      "vitals": {
+        "Blood Pressure": "78/52 mmHg",
+        "Heart Rate": "118 bpm",
+        "Respiratory Rate": "22/min",
+        "Oxygen Saturation": "95% RA",
+        "Temperature": "38.7\u00b0C"
+      },
+      "tests_ordered": [
+        "Complete blood count",
+        "Basic metabolic panel",
+        "Liver function tests",
+        "Coagulation panel",
+        "Serum lactate",
+        "Blood cultures (2 sets)",
+        "Arterial blood gas"
+      ],
+      "diagnoses_considered": [
+        "Acute cholangitis",
+        "Spontaneous bacterial peritonitis",
+        "Sepsis-associated DIC",
+        "Hemolytic anemia secondary to liver disease",
+        "Acute biliary obstruction post\u2011ERCP"
+      ],
+      "medications": [
+        "Piperacillin\u2011tazobactam 4.5\u202fg IV q6h",
+        "Vancomycin 1\u202fg IV q12h",
+        "Norepinephrine infusion 0.05\u202f\u00b5g/kg/min",
+        "Insulin infusion (IV, titrated)",
+        "1.0\u202fL isotonic saline",
+        "Metformin hold",
+        "Lisinopril hold",
+        "Furosemide hold",
+        "Spironolactone hold",
+        "Warfarin hold"
+      ],
+      "follow_up_recommendations": [
+        "Repeat blood cultures in 48\u202fhrs",
+        "Repeat abdominal imaging in 12\u202fhrs or sooner if clinical status changes",
+        "Monitor lactate and urine output hourly",
+        "Reassess renal function daily",
+        "Consider RRT if oliguria persists",
+        "Taper vasopressors as source controlled",
+        "Transition to oral antibiotics when appropriate",
+        "Monitor for complications of cirrhosis"
+      ]
+    },
+    {
+      "visit_number": 2,
+      "clinician_specialty": "Intensive Care Medicine",
+      "note_date": "2026-03-25",
+      "content": "Chief Complaint: Persistent hypotension and oliguria.\\n\\nSubjective: 57\u2011year\u2011old male with history of CKD stage 2, HTN, T2DM, CHF NYHA III, liver cirrhosis Child\u2011Pugh B, and a prior PE on warfarin presents for ICU day 2 of septic shock. The patient reports ongoing low blood pressure, reduced urine output, mild confusion, and abdominal discomfort.\\n\\nPast Medical History: Chronic kidney disease stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure (NYHA class III), liver cirrhosis Child\u2011Pugh B, pulmonary embolism on warfarin.\\n\\nMedications currently held: metformin, lisinopril, furosemide, spironolactone, warfarin.\\n\\nObjective:\\nVitals: BP 78/52 mmHg, HR 118 bpm, RR 22/min, SpO2 95% RA, Temp 38.6\u00b0C.\\nPhysical Exam: Cool extremities, hypotension, mild epigastric tenderness, positive shifting dullness, mild lower extremity edema.\\nLaboratory: CBC \u2013 WBC 17.5k/\u00b5L, Hgb 10.5 g/dL, Plt 100k/\u00b5L; BMP \u2013 BUN 32 mg/dL, Cr 1.55 mg/dL; LFT \u2013 AST 87 U/L, ALT 62 U/L, ALP 580 U/L, Bilirubin 2.8 mg/dL; Lactate 2.4 mmol/L. Blood cultures: Klebsiella pneumoniae sensitive to piperacillin\u2011tazobactam. Urine output 1.1 mL/kg/h (24\u2011hr).\\n\\nAssessment: 1) Sepsis with septic shock secondary to Klebsiella pneumoniae infection; 2) Acute kidney injury (pre\u2011renal/acute tubular) due to hypoperfusion and septic microvascular dysfunction; 3) Hepatic congestion/ascites contributing to abdominal pain and mild confusion; 4) Possible cardiogenic component from underlying CHF.\\n\\nPlan:\\n1. Antibiotics: Continue piperacillin\u2011tazobactam 4.5 g IV q6h. Discontinue vancomycin after sensitivity confirmation.\\n2. Hemodynamic support: Norepinephrine 0.06 \u00b5g/kg/min titrated to MAP >65 mmHg; continue central venous access; consider additional vasopressors if MAP not achieved.\\n3. Fluid management: Maintain euvolemia; target central venous pressure of 8\u201110 mmHg; avoid over\u2011resuscitation in setting of hepatic congestion.\\n4. Renal support: Continue daily output monitoring; nephrology consult for progressive rise in creatinine; prepare for renal replacement therapy if urine output <400 mL/day for >24 hrs or worsening metabolic acidosis.\\n5. Glycemic control: Continue insulin infusion with target glucose 140\u2011180 mg/dL.\\n6. Anticoagulation: Warfarin held pending stabilization; reassess anticoagulation plan after infection control.\\n7. Labs: Daily CBC, BMP, LFTs, coagulation panel, 24\u2011hr urine output, serum lactate.\\n8. Imaging: Continue abdominal imaging if clinical decompensation; consider repeat ultrasound if worsening ascites.\\n9. Monitoring: Hourly vitals, hourly urine output, CBC trend, lactate trend.\\n10. Disposition: ICU stay continued; goals of care discussed with family; anticipate weaning vasopressors as culture negativity and hemodynamics stabilize.\\n\\nFollow\u2011up: Nephrology consult, daily review by ICU team, adjust medications based on labs and organ perfusion, consider RRT if no improvement after 24 hrs of adequate fluid resuscitation and vasopressor support.\\n",
+      "symptoms_reported": [
+        "Persistent hypotension",
+        "Oliguria",
+        "Mild confusion",
+        "Abdominal pain"
+      ],
+      "vitals": {
+        "Blood Pressure": "78/52 mmHg",
+        "Heart Rate": "118 bpm",
+        "Respiratory Rate": "22/min",
+        "Oxygen Saturation": "95% on RA",
+        "Temperature": "38.6\u00b0C"
+      },
+      "tests_ordered": [
+        "Daily CBC, BMP, LFT",
+        "Blood cultures (2 sets)",
+        "Urine analysis and sediment",
+        "Central venous pressure monitoring",
+        "24-hr urine output",
+        "Serum lactate"
+      ],
+      "diagnoses_considered": [
+        "Septic shock due to Klebsiella pneumoniae",
+        "Acute kidney injury (pre\u2011renal/septic)",
+        "Congestive heart failure exacerbation",
+        "Liver cirrhosis/hepatic congestion",
+        "Hypovolemic shock secondary to sepsis"
+      ],
+      "medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Vancomycin 1 g IV q12h (discontinue after sensitivity)",
+        "Norepinephrine 0.06 \u00b5g/kg/min",
+        "Insulin infusion (target 140\u2011180 mg/dL)",
+        "1.0 L 0.9% saline bolus (Day 1)",
+        "Hold metformin, lisinopril, furosemide, spironolactone, warfarin"
+      ],
+      "follow_up_recommendations": [
+        "Continue daily CBC, BMP, LFT, lactate, and urine output monitoring",
+        "Nephrology consult for rising creatinine and potential RRT",
+        "Adjust fluid status and vasopressors to maintain MAP >65 mmHg",
+        "Reassess anticoagulation with warfarin after stabilization",
+        "Wean vasopressors as cultures clear and hemodynamics improve",
+        "Monitor for hepatic decompensation with serial LFTs and abdominal ultrasound"
+      ]
+    },
+    {
+      "visit_number": 3,
+      "clinician_specialty": "Nephrology",
+      "note_date": "2026-03-26",
+      "content": "Nephrology Consult Note\n\nDate: 2026\u201103\u201126\nVisit #: 3\n\nChief Complaint: Progressive oliguria and rising creatinine.\n\nHistory of Present Illness:\nThe patient is a 57\u2011year\u2011old male with a complex medical history of CKD stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure NYHA III, liver cirrhosis Child\u2011Pugh B, and a prior pulmonary embolism on warfarin. He presented to the ED on 2026\u201103\u201124 with hypotension, fever, and RUQ pain; cultures grew Klebsiella pneumoniae. He has been in the ICU since admission, requiring vasopressor support, broad\u2011spectrum antibiotics (piperacillin\u2011tazobactam), blood cultures, mechanical circulatory support, and fluid resuscitation. At ICU day 2 (2026\u201103\u201125), his creatinine had risen to 1.55\u00a0mg/dL with oliguria (1.1\u00a0mL/kg/h). Today\u2019s visit reveals continued oliguria (0.6\u00a0mL/kg/h), a creatinine of 2.02\u00a0mg/dL, and a BUN of 38\u00a0mg/dL. Vital signs show a mild persistent fever (38.4\u00a0\u00b0C), tachycardia, and MAP around 60\u00a0mmHg on norepinephrine 0.04\u00a0\u00b5g/kg/min.\n\nAssessment:\n- Acute Kidney Injury (AKI) most likely due to septic shock with prerenal etiology progressing to acute tubular necrosis (ATN). \n- Hepatorenal syndrome type 1 is a consideration given the underlying cirrhosis and rapid rise in creatinine. \n- Volume depletion from aggressive resuscitation is a pre\u2011renal contributor; current restrictive fluid strategy is appropriate given CHF and ascites. \n- No evidence of obstruction on ultrasound; urine sediment bland with occasional epithelial casts consistent with ATN.\n\nPlan:\n1. Continue piperacillin\u2011tazobactam 4.5\u00a0g IV q6h for documented Klebsiella bacteremia. \n2. Taper norepinephrine to 0.02\u20110.04\u00a0\u00b5g/kg/min as MAP >65\u00a0mmHg; discontinue when MAP stable >65\u00a0mmHg for \u226524\u00a0h. \n3. Maintain insulin infusion to keep glucose 140\u2011180\u00a0mg/dL; adjust per CGM.\n4. Fluid management: target neutral balance; avoid over\u2011resuscitation. 1\u00a0L 0.9% saline given today; reassess daily fluid status.\n5. Daily labs: BMP, LFT, CBC, INR, urinary output, serum creatinine, BUN. Monitor trend.\n6. Consider loop diuretic (furosemide 40\u201380\u202fmg IV) if urine output remains <0.5\u202fmL/kg/h for >12\u00a0h and the patient is euvolemic.\n7. Consult hepatology for possible vasoconstrictive therapy (terlipressin) if HRS\u20111 is confirmed.\n8. Discuss initiation of renal replacement therapy (RRT) if oliguria <0.3\u202fmL/kg/h for >24\u00a0h or creatinine rises >2.0\u00d7 baseline.\n9. Continue withholding metformin, lisinopril, furosemide, spironolactone; resume once renal function stabilizes.\n10. Monitor warfarin therapy in context of liver dysfunction; hold until INR <1.5 and hepatic synthetic function improves.\n\nFollow\u2011up: ICU monitoring for renal function; bedside nephrology review at 6\u2011hour intervals until stabilization. If creatinine stabilizes, plan transition to step\u2011down unit with daily nephrology input. Discharge planning to commence once stable renal parameters, infection control, and hemodynamic stability are achieved.\n\n-- Nephrology Service",
+      "symptoms_reported": [
+        "Oliguria",
+        "Abdominal discomfort",
+        "Mild confusion"
+      ],
+      "vitals": {
+        "Blood Pressure": "84/54 mmHg",
+        "Heart Rate": "110 bpm",
+        "Respiratory Rate": "21/min",
+        "Oxygen Saturation": "96% on RA",
+        "Temperature": "38.4\u00b0C"
+      },
+      "tests_ordered": [
+        "BMP",
+        "LFT",
+        "CBC",
+        "Urine sediment",
+        "Chest X\u2011ray (baseline)",
+        "Renal ultrasound (baseline)"
+      ],
+      "diagnoses_considered": [
+        "Acute tubular necrosis secondary to sepsis",
+        "Hepatorenal syndrome type\u00a01",
+        "Prerenal azotemia from volume depletion",
+        "Drug\u2011induced nephrotoxicity (piperacillin\u2011tazobactam)",
+        "Sepsis\u2011associated acute kidney injury"
+      ],
+      "medications": [
+        "Piperacillin\u2011Tazobactam IV 4.5\u00a0g q6h",
+        "Norepinephrine IV 0.04\u00a0\u00b5g/kg/min",
+        "Insulin infusion IV",
+        "Warfarin (held)"
+      ],
+      "follow_up_recommendations": [
+        "Continue daily BMP, LFT, CBC, INR, serum creatinine checks",
+        "Monitor urine output hourly; consider diuretics if oliguria persists",
+        "Assess for hepatology\u2011guided HRS therapy",
+        "Wean norepinephrine when MAP\u00a0>65\u00a0mmHg for \u226524\u00a0h",
+        "Plan for early renal replacement therapy if oliguria <0.3\u202fmL/kg/h >24\u00a0h or creatinine\u00a0>2\u00d7 baseline"
+      ]
+    },
+    {
+      "visit_number": 4,
+      "clinician_specialty": "Nephrology/Intensive Care",
+      "note_date": "2026-03-27",
+      "content": "**Clinical Note \u2013 ICU day 3**\n\n**Subjective:**\n- 57\u2011yr\u2011old male with CKD stage 2, HTN, T2DM, CHF NYHA III, Child\u2011Pugh B cirrhosis, prior PE on warfarin.  On day 3 of ICU stay, patient is alert only to voice, appears mildly confused.\n- Reports increased abdominal distention and feels \u201cfull.\u201d\n- Urine output continues to be low (~0.5\u202fmL/kg/h).  He is on furosemide 20\u202fmg IV q12h and CRRT.\n- No new complaints of chest pain, shortness of breath beyond baseline.  No new rash or drug reactions.\n\n**Objective:**\n- Vitals: BP\u202f80/52\u202fmmHg; HR\u202f112\u202fbpm; RR\u202f22/min; SpO\u2082\u202f95% RA; T\u202f38.2\u202f\u00b0C.\n- Cardiac: tachycardic, weak peripheral pulses; no murmurs.\n- Respiratory: clear to auscultation; no rales.\n- Abdomen: distended, shifting dullness positive, mild tenderness to palpation, ascitic fluid palpable.\n- Extremities: +2 pitting edema, weak pulses.\n- Neurologic: oriented to person, time, place; slight disorientation; NIHSS 0.5.\n- RRT: CRRT (CVVHDF) running, effluent volume 25\u202fmL/kg/h.\n- Labs: Cr 2.3\u202fmg/dL, BUN 42\u202fmg/dL, K\u202f5.8\u202fmEq/L, pH\u202f7.32, bicarb 14\u202fmEq/L, albumin 2.9\u202fg/dL, platelets 75K, INR\u202f2.2, LFTs showing elevated ALP (680\u202fU/L), ALT 78, AST 92, bilirubin 2.8\u202fmg/dL.\n- Urine: color light yellow, mild froth.\n\n**Assessment:**\nThe patient has developed acute kidney injury (AKI) on day 3 of ICU stay in the setting of septic shock, multi\u2011organ dysfunction, and underlying CKD. The primary drivers of AKI are:\n1. **Sepsis\u2011associated acute tubular necrosis (ATN):** Persistent hypotension, high inflammatory markers, and leukocytosis, with evidence of tissue hypoperfusion.\n2. **Hepatorenal syndrome type\u202f1** secondary to advanced cirrhosis and ongoing vasodilatory state.\n3. **Volume depletion secondary to diuresis & ongoing capillary leak** \u2013 contributing to pre\u2011renal component.\n4. **Metabolic acidosis and hyperkalemia** reflecting reduced renal excretion.\nLiver encephalopathy grade\u202fII appears to be improving with lactulose, and improvement in mental status aligns with decreased ammonia load.\n\nThe patient is receiving continuous venovenous hemodiafiltration (CVVHDF) to correct electrolyte derangements and support volume. Despite CRRT, urine output remains minimal and creatinine continues to climb, underscoring the need to maintain RRT until renal function recovers or until a more definitive indication for permanent dialysis is established.\n\n**Plan:**\n1. **Continue CRRT**: maintain current effluent dose; monitor fluid balance, electrolytes, and acid\u2013base status every 4\u202fh.\n2. **Medication Review**:\n   - Piperacillin\u2011tazobactam 4.5\u202fg IV q6h (continue; sensitivity to Klebsiella confirmed).\n   - Insulin infusion (continue; target glucose 140\u2013180\u202fmg/dL).\n   - Furosemide 20\u202fmg IV q12h (continue; monitor diuresis; adjust as needed.)\n   - Lactulose 20\u202fg PO q6h (continue; monitor stools, abdominal girth.)\n   - IV potassium binders (e.g., patiromer 8.4\u202fg PO daily) to control hyperkalemia.\n   - Norepinephrine titrated to maintain MAP 65\u202fmmHg; continue tapering to 0.02\u202f\u00b5g/kg/min as tolerated.\n   - Hold warfarin until INR <1.5; consider resumption if bleeding risk acceptable.\n3. **Monitoring**:\n   - CBC, BMP, LFT, INR, coagulation profile every 12\u202fh.\n   - Arterial blood gas q6h for acid\u2011base management.\n   - Daily urine output and weight.\n   - Daily abdominal girth; if ascites worsens, consider paracentesis.\n   - Continuous hemodynamic monitoring; adjust vasopressors accordingly.\n4. **Infectious Disease**:\n   - Continue antibiotic coverage; review cultures on day 5, adjust therapy accordingly.\n5. **Consultations**:\n   - Nephrology follow\u2011up for RRT duration and need for dialysis.\n   - Hepatology for evaluation of hepatocellular function and potential listing for transplant.\n6. **Education & Family Counseling**:\n   - Explain RRT process, prognosis, and need for potential dialysis.\n   - Discuss possibility of liver transplant evaluation.\n\n**Disposition:** Patient remains in ICU; RRT continues; close monitoring of renal function and electrolytes; reassess on day 5 for potential weaning of CRRT.\n\n**Follow\u2011up Recommendations:**\n- Repeat BMP, LFT, CBC, INR, ABG every 12\u202fh.\n- Daily assessment of urine output, fluid balance, and weight.\n- Evaluate for early weaning from CRRT if creatinine trends downward and urine output improves (>0.5\u202fmL/kg/h) for >24\u202fh.\n- Continue anti\u2011septic antibiotic therapy; reassess once cultures and sensitivities return.\n- Hold warfarin until INR <1.5; hold further until bleeding risk assessed.\n- Consider renal replacement therapy escalation or conversion to intermittent hemodialysis if CRRT complications occur.\n- Continue lactulose titration to manage encephalopathy.\n- Hepatology consult for transplant work\u2011up and management of cirrhosis complications.",
+      "symptoms_reported": [
+        "Increased abdominal distention",
+        "Low urine output",
+        "Hyperkalemia",
+        "Metabolic acidosis",
+        "Confusion"
+      ],
+      "vitals": {
+        "Blood Pressure": "80/52 mmHg",
+        "Heart Rate": "112 bpm",
+        "Respiratory Rate": "22/min",
+        "Oxygen Saturation": "95% on RA",
+        "Temperature": "38.2\u00b0C"
+      },
+      "tests_ordered": [
+        "BMP",
+        "LFT",
+        "CBC",
+        "Arterial blood gas",
+        "CRRT effluent output",
+        "Liver function panel",
+        "Full metabolic panel including electrolytes"
+      ],
+      "diagnoses_considered": [
+        "Sepsis\u2011associated Acute Tubular Necrosis",
+        "Acute Kidney Injury secondary to pre\u2011renal and intrinsic causes",
+        "Hepatorenal Syndrome Type\u202f1",
+        "Septic Shock with Multi\u2011Organ Dysfunction",
+        "Acute Metabolic Acidosis with Hyperkalemia",
+        "Liver Encephalopathy Grade\u202fII",
+        "Worsening Chronic Kidney Disease stage\u202f2"
+      ],
+      "medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h",
+        "Continuous venovenous hemodiafiltration (CRRT)",
+        "Furosemide 20 mg IV q12h",
+        "Lactulose 20 g PO q6h",
+        "Insulin infusion (IV)",
+        "Norepinephrine 0.04 \u00b5g/kg/min (tapering)",
+        "IV potassium binders"
+      ],
+      "follow_up_recommendations": [
+        "Monitor BMP, LFT, CBC, INR, ABG every 12\u202fh",
+        "Assess daily urine output, fluid balance, and weight",
+        "Wean CRRT if creatinine improves and urine output >0.5\u202fmL/kg/h for \u226524\u202fh",
+        "Continue antibiotic therapy per culture sensitivity",
+        "Hold warfarin until INR <1.5",
+        "Maintain lactulose and monitor encephalopathy",
+        "Hepatology consult for transplant evaluation",
+        "Nephrology consult for RRT duration and dialysis candidacy"
+      ]
+    },
+    {
+      "visit_number": 5,
+      "clinician_specialty": "Hepatology",
+      "note_date": "2026-03-29",
+      "content": "**Chief Complaint:** Progressive hepatic decompensation.\n\n**History of Present Illness:** 57\u2011year\u2011old male with known cirrhosis Child\u2011Pugh B (now 10), CKD stage 2, CHF NYHA III, type 2 DM, and chronic warfarin therapy for prior PE is in ICU for septic cholangitis and worsening hepatic encephalopathy. During ICU day\u202f5, LFTs show rising bilirubin (4.0\u202fmg/dL), moderately elevated transaminases (AST\u202f92\u202fU/L, ALT\u202f78\u202fU/L), high alkaline phosphatase (720\u202fU/L), low albumin (2.8\u202fg/dL), and INR 2.5. The patient has been on Piperacillin\u2011Tazobactam 4.5\u202fg q6h, CRRT, furosemide 20\u202fmg IV q8h, lactulose 30\u202fg PO q6h, insulin infusion, and norepinephrine 0.02\u202f\u00b5g/kg/min. A large paracentesis of 5000\u202fmL was performed, yielding ascitic fluid with SAAG 1.5\u202fg/dL and total protein 1.2\u202fg/dL, consistent with portal hypertension. Symptoms include increasing fatigue, worsening confusion (encephalopathy grade\u202fII), ascites, and concern for bacterial superinfection.\n\n**Physical Examination:** BP 92/60\u202fmmHg, HR 106\u202fbpm, RR 23/min, SpO\u2082\u202f93\u202f% RA, temperature 38.0\u202f\u00b0C. Encephalopathy grade\u202fII, large abdominal distention, coalescent lower\u2011extremity edema, mild tachypnea, clear lung fields. \n\n**Assessment:**\n1. Cirrhosis with progressive decompensation (Child\u2011Pugh B, score\u202f10). \n2. Hepatorenal syndrome type\u202f1, evidenced by rising creatinine (3.0\u202fmg/dL) and oliguria despite CRRT. \n3. Ongoing sepsis secondary to cholangitis. \n4. Bacterial translocation/possible SBP (ascitic fluid low total protein). \n5. Hepatic encephalopathy grade\u202fII, partially responsive to lactulose.\n\n**Plan:**\n- Continue Piperacillin\u2011Tazobactam 4.5\u202fg IV q6h. Vancomycin was already discontinued. Continue CRRT with effluent rate 25\u202fmL/kg/h. \n- Increase lactulose to 45\u202fg PO q6h (or until 2\u20133 soft bowel movements per day). Add rifaximin 550\u202fmg PO BID once enteral feedings resume.\n- Repeat abdominal paracentesis (2\u20133\u202fL) if clinical ascites worsens, with albumin 20\u201325\u202fg per 1\u202fL of fluid removed.\n- Furosemide 20\u202fmg IV q8h; consider spironolactone 25\u202fmg PO q12h if sodium levels permit. Monitor serum electrolytes closely.\n- Maintain norepinephrine at 0.02\u202f\u00b5g/kg/min; prepare for possible escalation if MAP <65\u202fmmHg.\n- Initiate terlipressin 2\u202fmg IV q24h with albumin 20\u202fg IV daily plus 10\u202fg per 1\u202fL ascitic fluid removed (if HRS\u20111 confirmed). Hold if no response after 3\u202fdays.\n- Withdraw warfarin as INR >2.5; consider vitamin K 10\u202fmg IV daily until INR <1.5.\n- Order ascitic fluid cell count with Gram stain, culture, and serum\u2011ascites albumin gradient repeat in 48\u202fh. \n- Order abdominal Doppler US (portal and hepatic veins) to assess portal pressures; repeat in 48\u201372\u202fh.\n- Refer for urgent transplant evaluation; discuss TIPS contraindications given instability and CRRT.\n- Continue daily labs: CBC, CMP, coagulation panel, electrolytes, LFTs, and urine output.\n- Monitor mental status hourly; call hepatology if encephalopathy worsens to grade\u202fIII/IV.\n- Consider prophylactic antibiotics for SBP only if confirmed.\n\n**Education & Family Discussion:** Family informed of declining liver function, need for possible transplant, and the high risk associated with current therapies. Discussed the urgency and potential morbidity of advanced interventions.\n\n**Follow\u2011up Recommendations:** See above.\n",
+      "symptoms_reported": [
+        "Increasing fatigue",
+        "Worsening confusion",
+        "Ascites",
+        "Bacterial superinfection risk"
+      ],
+      "vitals": {
+        "Blood Pressure": "92/60 mmHg",
+        "Heart Rate": "106 bpm",
+        "Respiratory Rate": "23/min",
+        "Oxygen Saturation": "93% on RA",
+        "Temperature": "38.0\u00b0C"
+      },
+      "tests_ordered": [
+        "Full LFT panel",
+        "Coagulation profile",
+        "Serum albumin",
+        "Platelet count",
+        "Ascitic fluid analysis",
+        "Ultrasonography for portal pressures"
+      ],
+      "diagnoses_considered": [
+        "Progressive hepatic decompensation (Child\u2011Pugh B, score\u202f10)",
+        "Hepatorenal syndrome type\u202f1",
+        "Sepsis secondary to cholangitis",
+        "Spontaneous bacterial peritonitis (suspected)",
+        "Worsening hepatic encephalopathy",
+        "Acute kidney injury"
+      ],
+      "medications": [
+        "Piperacillin\u2011Tazobactam 4.5\u202fg IV q6h",
+        "CRRT",
+        "Furosemide 20\u202fmg IV q8h",
+        "Lactulose 30\u202fg PO q6h",
+        "Insulin infusion",
+        "Norepinephrine 0.02\u202f\u00b5g/kg/min",
+        "Albumin 20\u201325\u202fg/1\u202fL ascitic fluid removed",
+        "Terlipressin 2\u202fmg IV q24h (if HRS\u20111)",
+        "Rifaximin 550\u202fmg PO BID (to follow lactulose)"
+      ],
+      "follow_up_recommendations": [
+        "Re\u2011evaluate lactulose dosing and encephalopathy in 4\u202fhrs; aim for 2\u20133 soft stools/day",
+        "Repeat abdominal paracentesis if ascites re\u2011accumulates rapidly; give albumin per 1\u202fL removed",
+        "If HRS\u20111 confirmed, continue terlipressin and albumin for 3\u202fdays; reassess renal function",
+        "Order ascitic fluid culture and gram stain within 24\u202fhrs; treat if positive",
+        "Order abdominal Doppler US for portal pressure within 48\u202fhrs; repeat in 72\u202fhrs",
+        "Hold warfarin until INR <1.5; administer vitamin\u202fK if needed",
+        "Refer for transplant evaluation; discuss TIPS contraindications",
+        "Monitor mental status hourly; call hepatology if worsening to grade\u202fIII/IV",
+        "Schedule ICU multidisciplinary meeting tomorrow to review progress"
+      ]
+    },
+    {
+      "visit_number": 6,
+      "clinician_specialty": "Infectious Disease",
+      "note_date": "2026-03-30",
+      "content": "Visit #6 (2026-03-30)\n\nChief Complaint: New pulmonary infiltrate, worsening hypoxia, consistent with nosocomial pneumonia.\n\nHistory of Present Illness:\nThe patient is a 57\u2011year\u2011old male with CKD stage 2, HTN, T2DM, HF NYHA III, Child\u2011Pugh B liver cirrhosis, and a history of pulmonary embolism on warfarin. He was admitted to the ICU on 2026\u201103\u201124 following septic shock due to biliary source, and has been receiving Piperacillin\u2011Tazobactam, CRRT, vasopressor support, and multidisciplinary management as detailed in visits 1\u20115.\n\nOn ICU Day 6 (2026\u201103\u201130), a repeat chest X\u2011ray showed a new left lower lobe infiltrate. The patient\u2019s respiratory status has deteriorated: RR\u202f28/min, SpO\u2082\u202f88% on a non\u2011rebreather, and the patient remains febrile (38.6\u202f\u00b0C). Vitals: BP\u202f85/53\u202fmmHg, HR\u202f115\u202fbpm, RR\u202f28\u202f/min, SpO\u2082\u202f88%, Temp\u202f38.6\u202f\u00b0C. Examination revealed mild wheezes, diffuse crackles in the left lower lung field, positive shifting dullness, grade\u202fIII encephalopathy, and weak peripheral pulses.\n\nThe ID team expanded empiric coverage to Aztreonam 2\u202fg IV q8h for atypical coverage while limiting nephrotoxicity. The nephrology team cautioned against additional nephrotoxic agents; CRRT continues.\n\nLaboratory results: ABG pH\u202f7.28, PaO\u2082\u202f55\u202fmmHg, PaCO\u2082\u202f30\u202fmmHg, HCO\u2083\u202f14\u202fmEq/L; Creatinine\u202f4.0\u202fmg/dL; Potassium\u202f6.0\u202fmEq/L; Bicarbonate\u202f14\u202fmEq/L; CBC WBC\u202f19,000/\u00b5L, Plts\u202f60,000/\u00b5L; Liver panel unchanged.\n\nAssessment:\n1. Hospital\u2011acquired (nosocomial) pneumonia \u2013 likely ventilator\u2011associated pneumonia despite no invasive ventilation, presenting with new infiltrate, fever, hypoxia.\n2. Septic shock \u2013 persistent hypotension requiring norepinephrine 0.02\u202f\u00b5g/kg/min.\n3. Acute renal failure on top of CKD stage\u202f2 \u2013 creatinine >4.0\u202fmg/dL; managed with CRRT.\n4. Decompensated liver cirrhosis \u2013 Child\u2011Pugh B, encephalopathy grade\u202fIII.\n5. Multiorgan dysfunction syndrome (MODS) secondary to overwhelming infection.\n\nPlan:\n- Continue current antibiotic regimen (Aztreonam 2\u202fg IV q8h + Piperacillin\u2011Tazobactam 4.5\u202fg IV q6h) for 48\u202fh; reassess clinical response.\n- Maintain CRRT and vasopressor support; titrate norepinephrine to goal MAP\u202f>65\u202fmmHg if tolerated.\n- Continue insulin infusion to control hyperglycemia.\n- Provide oxygenation support; high\u2011flow nasal cannula 12\u202fL/min; consider escalation to mechanical ventilation only if rapid respiratory decompensation occurs.\n- Repeat blood cultures, sputum culture, and daily labs (BMP, LFT, CBC) as ordered.\n- Fluid management remains conservative; avoid fluid overload.\n- Initiate palliative care consultation; family discussion confirms shift toward comfort care and DNR status.\n- Discontinue antibiotics after 48\u202fh of treatment if no clinical improvement and comfort care goals are in place.\n- Monitor for complications: hemodynamic instability, arrhythmias, electrolyte derangements.\n\nDisposition: Patient to remain on ICU support with comfort\u2011oriented therapies; no escalation of care anticipated.\n\nFollow\u2011up: Continuous monitoring of vitals and labs, daily assessment by palliative care team, and regular family updates.",
+      "symptoms_reported": [
+        "new left lower lobe infiltrate",
+        "increasing tachypnea",
+        "fever",
+        "worsening oxygenation"
+      ],
+      "vitals": {
+        "Blood Pressure": "85/53 mmHg",
+        "Heart Rate": "115 bpm",
+        "Respiratory Rate": "28/min",
+        "Oxygen Saturation": "88% on non\u2011rebreather",
+        "Temperature": "38.6\u00b0C"
+      },
+      "tests_ordered": [
+        "Chest X\u2011ray",
+        "Sputum culture",
+        "Repeat blood cultures",
+        "ABG",
+        "Daily labs (BMP, LFT, CBC)"
+      ],
+      "diagnoses_considered": [
+        "Hospital\u2011acquired pneumonia (HAP) likely ventilator\u2011associated pneumonia",
+        "Septic shock",
+        "Acute renal failure",
+        "Decompensated liver cirrhosis",
+        "Multiorgan dysfunction syndrome"
+      ],
+      "medications": [
+        "Aztreonam 2\u202fg IV q8h",
+        "Piperacillin\u2011Tazobactam 4.5\u202fg IV q6h",
+        "High\u2011flow nasal cannula 12\u202fL/min",
+        "Continuous renal replacement therapy (CRRT)",
+        "Insulin infusion",
+        "Norepinephrine 0.02\u202f\u00b5g/kg/min",
+        "Furosemide 20\u202fmg IV q8h",
+        "Lactulose 30\u202fg PO q6h",
+        "Rifaximin 550\u202fmg PO BID",
+        "Vitamin K 10\u202fmg IV daily",
+        "Terlipressin 2\u202fmg IV q24h",
+        "Albumin 20\u201325\u202fg IV per 1\u202fL ascitic fluid removed",
+        "IV potassium binders (patiromer)"
+      ],
+      "follow_up_recommendations": [
+        "Continue comfort care measures and DNR status",
+        "Discontinue antibiotics after 48\u202fh if no clinical improvement",
+        "Maintain conservative fluid management",
+        "Daily monitoring of vitals and labs",
+        "Regular palliative care consultations",
+        "Family updates and communication"
+      ]
+    },
+    {
+      "visit_number": 7,
+      "clinician_specialty": "Palliative Care",
+      "note_date": "2026-03-31",
+      "content": "Chief Complaint: Transition to comfort care\n\nAssessment: The patient is a 57\u2011year\u2011old male with chronic kidney disease stage 2, hypertension, type 2 diabetes mellitus, congestive heart failure NYHA III, liver cirrhosis Child\u2011Pugh B (score 10), and recent pulmonary embolism on warfarin. He has developed sepsis secondary to cholangitis with multiorgan failure. Despite aggressive ICU measures, his condition has deteriorated to a point where the family, multidisciplinary team and provider have agreed to discontinue renal replacement therapy and initiate comfort\u2011directed care. DNR/DNI orders are in effect.\n\nVital signs: BP 80/50\u202fmmHg, HR 110\u202fbpm, RR 26/min, SpO2 90% on a non\u2011rebreather, temperature 38.0\u202f\u00b0C.\n\nPhysical exam: Grade III encephalopathy, mild pallor, weak peripheral pulses, diaphoresis, clear lung fields.\n\nLaboratory findings: CBC shows leukocytosis (18,000/\u00b5L) and thrombocytopenia (70,000/\u00b5L). BMP indicates hyperkalemia (K\u202f6.0\u202fmmol/L), metabolic acidosis (HCO3\u202f12\u202fmEq/L), creatinine 4.2\u202fmg/dL. LFT panel shows worsening cholestatic pattern: bilirubin 4.3\u202fmg/dL, AST 90, ALT 80, ALP 750\u202fU/L. Glucose 140\u202fmg/dL. These results support ongoing cholangitis\u2011related sepsis, acute on chronic liver failure, and acute renal failure.\n\nClinical reasoning: The patient remains hypotensive, hypoxic, and encephalopathic despite maximal supportive measures. His multi\u2011organ failure (hepatic, renal, cardiovascular, respiratory) has progressed to a stage where curative therapy is unlikely to alter the inevitable trajectory. Therefore, a palliative approach focused on symptom control and quality of life is appropriate.\n\nPlan:\n1. Continue scheduled hydromorphone for pain; titrate analgesic regimen to achieve a pain score \u22643/10.\n2. Continue lorazepam PRN for agitation and comfort.\n3. Maintain insulin subcutaneous BID with adjustments based on glucose monitoring to keep glucose 140\u2011180\u202fmg/dL.\n4. Keep furosemide 20\u202fmg IV q8h for fluid balance as per current regimen.\n5. Continue lactulose 30\u202fg PO q6h for hepatic encephalopathy.\n6. Maintain oxygen 15\u202fL/min via non\u2011rebreather to keep SpO2 \u226588%.\n7. Discontinue piperacillin\u2011tazobactam after last dose if patient\u2019s life expectancy <24\u202fh to avoid unnecessary IV therapy.\n8. No further antibiotics or anticoagulation; warfarin already discontinued.\n9. Reassess comfort measures daily; adjust medications as needed.\n10. Provide emotional support and facilitate family discussions on goals of care.\n11. Consider hospice referral and transition to home or inpatient hospice if desired.\n12. Document all interventions and communicate with primary team and ICU.\n\nFollow\u2011up: Continue to monitor vitals, analgesic and sedative needs, glucose, and electrolytes daily. Contact palliative/hospice team within 24\u202fhrs to evaluate patient status and discuss family wishes. Encourage family to engage in advance care planning and spiritual support services.\n\nOverall, the plan is to provide maximal comfort, minimize distressing interventions, and support the patient and family through end\u2011of\u2011life care.",
+      "symptoms_reported": [
+        "persistent hypoxia",
+        "severe fatigue",
+        "grade III encephalopathy",
+        "increased pain",
+        "agitation",
+        "diaphoresis"
+      ],
+      "vitals": {
+        "Blood Pressure": "80/50 mmHg",
+        "Heart Rate": "110 bpm",
+        "Respiratory Rate": "26/min",
+        "Oxygen Saturation": "90% on non\u2011rebreather",
+        "Temperature": "38.0\u00b0C"
+      },
+      "tests_ordered": [
+        "CBC",
+        "BMP",
+        "LFT panel",
+        "Blood glucose monitoring",
+        "Serum electrolytes"
+      ],
+      "diagnoses_considered": [
+        "Sepsis secondary to cholangitis with multi\u2011organ failure",
+        "Acute on chronic liver failure (Child\u2011Pugh B)",
+        "Acute kidney injury stage 3",
+        "Hypoxic respiratory failure",
+        "Cardiogenic shock (advanced heart failure)",
+        "Delirium/encephalopathy due to hepatic metabolic derangements"
+      ],
+      "medications": [
+        "Piperacillin\u2011Tazobactam 4.5 g IV q6h (last dose 1 hr prior)",
+        "Furosemide 20 mg IV q8h",
+        "Lactulose 30 g PO q6h",
+        "Hydromorphone PRN for pain",
+        "Lorazepam 1 mg PRN for agitation",
+        "Subcutaneous insulin BID (titrated)",
+        "Norepinephrine 0.02 \u00b5g/kg/min",
+        "Vitamin supplements",
+        "Oxygen 15 L/min non\u2011rebreather"
+      ],
+      "follow_up_recommendations": [
+        "Continue comfort\u2011oriented symptom management daily.",
+        "Monitor vitals and adjust analgesic/sedative doses as needed.",
+        "Maintain glucose control with subcutaneous insulin adjustments.",
+        "Re-evaluate comfort measures within 24\u202fhrs and modify regimen.",
+        "Engage hospice services if family wishes transition to outpatient or inpatient hospice.",
+        "Provide ongoing emotional and spiritual support to patient and family.",
+        "Ensure documentation of DNR/DNI status and advance care planning."
+      ]
+    },
+    {
+      "visit_number": 8,
+      "clinician_specialty": "Nephrology/ICU",
+      "note_date": "2026-04-01",
+      "content": "Chief Complaint: Death of patient.\n\nHistory of Present Illness:\nMr. Patel, 57\u2011year\u2011old male with a complex comorbid history (CKD stage\u00a02, HTN, T2DM, CHF\u00a0NYHA\u00a0III, Child\u2011Pugh\u00a0B cirrhosis, prior PE on warfarin, stage\u00a03 AKI) was admitted to the ICU on 24\u00a0March 2026 for septic shock secondary to cholangitis. Over the course of his ICU stay, he developed progressive multi\u2011organ dysfunction including oliguria, hyperkalemia, metabolic acidosis, liver decompensation, and severe sepsis. He was placed on CRRT and broad\u2011spectrum antibiotics (piperacillin\u2011tazobactam). Despite aggressive support (vasopressors, diuretics, antibiotics, continuous renal replacement therapy, and palliative\u2011care measures), his condition deteriorated.\n\nOn 30\u00a0March he had a new pulmonary infiltrate and remained septic; antibiotics were broadened to aztreonam. On 31\u00a0March palliative care was activated, CRRT discontinued, antibiotics stopped, and a comfort\u2011directed medication regimen was instituted. On 1\u00a0April, 48\u00a0hours after the decision to withdraw CRRT, Mr. Patel died peacefully. The ICU team completed a formal death certificate. Post\u2011mortem labs (obtained at the family\u2019s request) showed persistent hyperkalemia (K\u00a06.2\u202fmEq/L) and severe metabolic acidosis (bicarbonate\u00a012\u202fmEq/L) with a creatinine of 4.5\u202fmg/dL.\n\nPhysical Examination at Time of Death:\n- Pallor, cold extremities\n- Unresponsive\n- Weak peripheral pulses\n\nInterventions on the day of death:\n- Hydromorphone PRN for comfort\n- Lorazepam PRN for sedation\n- Norepinephrine 0.02\u202f\u00b5g/kg/min until 2\u202fh prior to death\n- Oxygen 15\u202fL/min via non\u2011rebreather\n\nAssessment:\nThe patient died of refractory septic shock with acute multi\u2011organ failure (renal, hepatic, respiratory) in the setting of advanced CKD, liver cirrhosis, and diabetes. Persistent hyperkalemia and metabolic acidosis indicate ongoing metabolic derangements. The primary reason for death was progressive organ failure in the context of sepsis and underlying chronic disease.\n\nPlan:\n1. Completion of all required documentation, including formal death certificate and transfer of hospice or bereavement counseling services.\n2. Discontinue all non\u2011essential monitoring and invasive lines.\n3. Family meeting with palliative care and ICU team to discuss grief resources and bereavement counseling.\n4. No further interventions are indicated.\n\nThis note summarizes the end\u2011of\u2011life care and confirms the transition from active treatment to comfort care.\n\nPrepared by: Dr. A. Smith, MD \u2013 Nephrology/ICU",
+      "symptoms_reported": [],
+      "vitals": {
+        "Blood Pressure": "75/45 mmHg",
+        "Heart Rate": "105 bpm",
+        "Respiratory Rate": "24/min",
+        "Oxygen Saturation": "92% on non-rebreather",
+        "Temperature": "37.8\u00b0C"
+      },
+      "tests_ordered": [
+        "Post\u2011mortem laboratory panel (creatinine, potassium, bicarbonate, lactate, ABG)"
+      ],
+      "diagnoses_considered": [
+        "Septic shock with multi\u2011organ failure",
+        "Acute kidney injury secondary to sepsis",
+        "Hyperkalemia",
+        "Metabolic acidosis",
+        "Advanced chronic liver disease (Child\u2011Pugh\u00a0B)",
+        "Heart failure decompensation"
+      ],
+      "medications": [
+        "Hydromorphone PRN for comfort",
+        "Lorazepam PRN for sedation",
+        "Norepinephrine 0.02 \u00b5g/kg/min (tapered before death)",
+        "Oxygen 15 L/min via non\u2011rebreather"
+      ],
+      "follow_up_recommendations": [
+        "Provide family with formal death certificate",
+        "Refer family to bereavement counseling and hospice support services",
+        "Ensure all pending administrative tasks (billing, insurance, organ donation) are completed"
+      ]
+    }
+  ],
+  "final_medical_history": {
+    "demographics": {
+      "age": 57,
+      "sex": "M",
+      "height": null,
+      "weight": null
+    },
+    "known_conditions": [
+      "Chronic Kidney Disease (stage 2)",
+      "Hypertension",
+      "Type 2 Diabetes Mellitus",
+      "Congestive Heart Failure",
+      "Liver Cirrhosis (Child-Pugh B)",
+      "Pulmonary embolism",
+      "Acute Kidney Injury",
+      "Hepatorenal syndrome type 1",
+      "Hepatic encephalopathy",
+      "Sepsis",
+      "Acute liver failure",
+      "Respiratory failure",
+      "Acute on chronic liver failure",
+      "Cholangitis"
+    ],
+    "current_medications": [],
+    "prior_visit_summaries": [
+      "2026-03-24 emergency department visit for right upper quadrant pain, fever, nausea and vomiting. Patient was hypotensive (BP 78/52), tachycardic (HR 118), febrile (38.7\u00b0C), and diaphoretic. Laboratory findings: leukocytosis 18.2k/\u00b5L, hemoglobin 10.5 g/dL, platelets 105k/\u00b5L, creatinine 1.25 mg/dL, BUN 28 mg/dL, bilirubin 2.8 mg/dL, alkaline phosphatase 580 U/L, AST 87 U/L, ALT 62 U/L, lactate 3.2 mmol/L (improved to 2.4 mmol/L). Started IV Piperacillin\u2011tazobactam 4.5 g q6h, vancomycin 1 g q12h, norepinephrine infusion 0.05 \u00b5g/kg/min titrated to MAP >65 mmHg, insulin infusion for glucose control, and 1 L 0.9% saline. Medications held: metformin, lisinopril, furosemide, spironolactone, warfarin. Blood cultures, coagulation panel, abdominal imaging ordered. Transferred to ICU for ongoing management.",
+      "2026-03-25 ICU day 2: Persistent hypotension, oliguria, mild confusion, abdominal discomfort. BP 78/52 mmHg, HR 118 bpm, RR 22/min, Temp 38.6\u00b0C. Cool extremities, mild epigastric tenderness, shifting dullness, lower extremity edema. Labs: WBC 17.5k/\u00b5L, Hgb 10.5, Plt 100k, BUN 32, Cr 1.55 mg/dL, AST 87, ALT 62, ALP 580, Bilirubin 2.8, Lactate 2.4 mmol/L. Blood cultures grew Klebsiella pneumoniae sensitive to piperacillin\u2011tazobactam. Urine output 1.1 mL/kg/h. Ongoing norepinephrine 0.06 \u00b5g/kg/min, insulin infusion, 1.0 L 0.9% saline. Vancomycin discontinued. Daily labs and monitoring planned.",
+      "2026-03-26 nephrology consult: ongoing oliguria (0.6 mL/kg/h), creatinine 2.02 mg/dL, BUN 38 mg/dL, mild fever (38.4\u00b0C), on norepinephrine 0.04 \u00b5g/kg/min. Continued Piperacillin\u2011tazobactam. Daily BMP, LFT, CBC, INR and urine output monitoring. Consider furosemide if oliguria remains <0.5 mL/kg/h for >12h, and consider RRT if oliguria <0.3 mL/kg/h >24h or creatinine >2\u00d7 baseline. Warfarin held until INR <1.5.",
+      "2026-03-27 ICU day 3: Patient alert only to voice, mildly confused, increased abdominal distention, continued oliguria (~0.5 mL/kg/h) on furosemide 20 mg IV q12h and CRRT. Vitals: BP 80/52 mmHg, HR 112 bpm, RR 22/min, SpO\u2082 95%, T 38.2\u00b0C. Labs: Cr 2.3 mg/dL, BUN 42 mg/dL, K 5.8 mEq/L, pH 7.32, bicarb 14 mEq/L, albumin 2.9 g/dL, platelets 75k, INR 2.2, LFTs: ALP 680 U/L, ALT 78, AST 92, bilirubin 2.8 mg/dL. Started CRRT with effluent volume 25 mL/kg/h, continued Piperacillin\u2011tazobactam 4.5 g IV q6h, insulin infusion, furosemide 20 mg IV q12h, lactulose 20 g PO q6h, IV potassium binders, and norepinephrine tapered to 0.02 \u00b5g/kg/min. Monitoring labs every 12h, ABG q6h, daily urine output and weight, ascites assessment, and ongoing renal and hepatic support.",
+      "2026-03-29 hepatology consult during ICU day 5: progressive hepatic decompensation with rising bilirubin to 4.0 mg/dL, high INR 2.5, and low albumin 2.8 g/dL. Increased lactulose to 30 g PO q6h and furosemide to 20 mg IV q8h. Introduced rifaximin 550 mg PO BID, started terlipressin 2 mg IV q24h with albumin 20\u201325 g per 1L ascitic fluid removed, and discontinued warfarin. Began vitamin K 10 mg IV daily while INR >2.5. Reordered ascitic fluid analysis and Doppler ultrasonography. Continuous monitoring of mental status, labs, and renal function.",
+      "2026-03-30 ID consult: New left lower lobe infiltrate with hypoxia, ongoing septic shock on norepinephrine, high creatinine; expanded antibiotics to Aztreonam 2g IV q8h, continued Piperacillin\u2011Tazobactam; continued CRRT, insulin infusion, high\u2011flow nasal cannula; palliative care activated, DNR status. Labs: ABG pH 7.28, PaO\u2082 55, Cr 4.0, K 6.0.",
+      "2026-03-31 palliative care visit: patient transitioned to comfort care; discontinued renal replacement therapy and antibiotics; initiated comfort\u2011directed regimen with hydromorphone PRN, lorazepam PRN, subcutaneous insulin BID, continued furosemide 20 mg IV q8h, lactulose 30 g PO q6h, norepinephrine 0.02 \u00b5g/kg/min, oxygen 15 L/min via non\u2011rebreather; DNR/DNI status in effect; monitored vitals, labs, and symptom control daily.",
+      "2026-04-01 patient died after withdrawal of CRRT and antibiotics; ongoing comfort care with hydromorphone and lorazepam; norepinephrine support tapered and discontinued 2 hours before death; death attributed to refractory septic shock and multi\u2011organ failure."
+    ],
+    "allergies": []
+  }
+}

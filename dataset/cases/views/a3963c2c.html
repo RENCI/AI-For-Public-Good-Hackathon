@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case a3963c2c</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: a3963c2c</h1><div class="subtitle">Metastatic, Poorly Differentiated Squamous Cell Carcinoma of the Left Lower Lobe of the Lung | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic Obstructive Pulmonary Disease, Emphysema, Chronic Bronchitis, Pulmonary Fibrosis, History of Lung Infections</div><div class="meta-line">Risk Factors: Tobacco Smoking (current or former), Asbestos Exposure, Radon Exposure, Air Pollution, Prior Chest Radiotherapy, Family History of Lung Cancer, Age &gt; 55</div></div>
+<details><summary>Narrative <span class="preview-text">**Clinical Narrative – Metastatic Poorly Differentiated Squamous Cell Carcinoma of the Left Lower Lobe, 68‑Year‑Old Male...</span></summary><div class="section-body"><p>**Clinical Narrative – Metastatic Poorly Differentiated Squamous Cell Carcinoma of the Left Lower Lobe, 68‑Year‑Old Male**</p><p>---</p><p>**Background**</p><p>Thomas Carter is a 68‑year‑old man who has spent most of his adult life smoking one pack a day for 45 years. He worked as an industrial plumber on a petrochemical plant for 25 years, exposing him to asbestos fibers and ambient air pollution. In his early thirties, a routine home indoor‑air quality test revealed slightly elevated radon levels, but no remedial action was taken. He was also a former radiotherapy patient: in 1985 a chest‑wall radiotherapy course was delivered for a malignant melanoma on his right shoulder, with a cumulative 20 Gy delivered in 10 fractions. Thomas’s family history is notable — his mother died of lung cancer at 69. His comorbid conditions include chronic obstructive pulmonary disease (COPD) with emphysema and chronic bronchitis, idiopathic pulmonary fibrosis (diagnosed 10 years ago), recurrent pneumonia (2×/year), and mild anemia of chronic disease.</p><p>---</p><p>### **Timeline**</p><p>| Day | Event | Clinical Course &amp; Decision Point |
+|-----|-------|-----------------------------------|
+| **0** | **Initial Complaint** | Thomas first presents to his primary care physician with a new‑onset, productive cough (yellow sputum) and a vague, intermittent chest pressure of 2 weeks’ duration. He reports a 3‑lb weight loss and worsened fatigue. No hemoptysis or fever. |
+| **2** | **Physical Examination &amp; Labs** | Auscultation reveals scattered wheezes, occasional crackles at lung bases, and a basal end‑expiration rhonchi. Vital signs: HR 104, RR 22, BP 130/78, SpO₂ 92% on room air. CBC shows Hb 11.2 g/dL, WBC 11 k/µL (neutrophilia). Baseline LDH 180 U/L. |
+| **3** | **Chest X‑ray** | Portable chest film shows a subtle left lower lobe opacity and right upper lobe fibrosis, but no overt mass. The radiologist notes “possible subsolid nodule” in the left lower lobe. |
+| **5** | **Pulmonary Function Test (PFT)** | FEV₁ 1.5 L (45% predicted), FVC 2.6 L (55% predicted), DLCO 35% predicted. The poor diffusion capacity is consistent with his known fibrosis and emphysema. |
+| **7** | **Referral to Pulmonology** | A pulmonologist recommends a high‑resolution CT (HR‑CT) of the chest for the suspicious nodule. |
+| **9** | **HR‑CT and PET‑CT** | HR‑CT shows a 2.3 × 3.0 cm spiculated mass in the left lower lobe with central cavitation. Multiple subcentimeter nodules in the right lower lobe, mediastinal lymphadenopathy (stations 5,6), and a small pleural effusion on the left. PET‑CT demonstrates FDG uptake in the primary tumor (SUV 10.2) and several pulmonary nodules, hepatic lesions (2 cm), and a para‑aortic node. |
+| **12** | **Bronchoscopy with Biopsy** | Transbronchial needle aspiration of the left lower lobe mass shows poorly differentiated squamous cell carcinoma (positive CK5/6, p40, negative TTF‑1). Immunostaining for EGFR, ALK, ROS1 negative. |
+| **13** | **Initial Oncologic Assessment** | Stage IVa (T3N2M1). The oncologist informs Thomas and his wife that the disease meets criteria for metastatic lung cancer. Emphysema and pulmonary fibrosis will limit tolerability of aggressive therapy. The plan is a palliative intent approach with short‑course platinum‑based chemotherapy combined with a PD‑1 inhibitor, along with symptom control and close monitoring. |
+| **15** | **First Chemotherapy Cycle (Carboplatin + Pemetrexed + Nivolumab)** | Pre‑medication with prednisone to reduce infusion reactions. The patient receives the first cycle while receiving supplemental oxygen at 2 L/min. He tolerates the infusion; mild nausea managed with ondansetron. |
+| **20** | **Post‑Treatment Visit** | SpO₂ drops to 89% on room air, HR 110, mild dyspnea at rest. He reports worsening coughing with pink sputum but denies frank hemoptysis. Mild edema of lower extremities. Labs: LDH up to 270 U/L, Cr 1.2 mg/dL (baseline 1.0). A decision is made to start low‑dose prednisone 10 mg/d to help control dyspnea, and a brief course of antibiotics (azithromycin) due to suspicion of bacterial superinfection. |
+| **25** | **First Hospitalization (Acute Dyspnea, Pleural Effusion)** | Thomas is admitted with acute respiratory distress. Chest x‑ray shows increased left pleural effusion and worsening consolidation in the left lower lobe. Thoracentesis yields 500 mL sanguineous fluid. Cytology shows malignant squamous cells. The effusion is drained, and a pleural catheter is placed. He begins diuretics (furosemide 40 mg BID) and supplemental oxygen titrated to maintain SpO₂ &gt; 92%. |
+| **30** | **Second Chemotherapy Cycle** | Considering the modest response to chemo and severe dyspnea, the oncology team discusses alternative regimens. Due to underlying fibrosis and anticipated cardiopulmonary toxicity, they favor a single‑agent PD‑1 inhibitor (nivolumab 240 mg IV every 2 weeks) combined with best supportive care. Thomas consented. |
+| **35** | **Recurrent Hospitalization (Pneumothorax)** | While on the pleural catheter, Thomas develops sudden chest pain and worsening dyspnea. CXR shows a left-sided pneumothorax with air under the mediastinum and a small air leak from the pleural catheter. A chest tube is inserted, and the catheter is removed. He is extubated after two days of high‑flow nasal cannula oxygen. The event prompts review of the tumor’s proximity to the pleural surface and the risk of fistula formation. |
+| **42** | **Progression of Disease** | The oncology team notes stable disease on imaging, but clinically Thomas’s performance status drops from 1 to 2. He can no longer perform his usual light chores and must rely on home oxygen support. His weight decreases further to 165 lb (from 175 lb). Symptoms of cough, dyspnea, and anemia intensify.|
+| **49** | **Multidisciplinary Conference** | Pulmonology, oncology, palliative care, and social work evaluate Thomas. The consensus is that aggressive systemic therapy would likely cause more harm than benefit given his comorbidities. A hospice referral is discussed as a realistic goal‑setting option. |
+| **55** | **Palliative Care Initiation** | Hospice is accepted. Hospice nurse visits daily. Pain managed with scheduled oxycodone 5 mg PRN. Antiedema therapy and dietary counseling for malnutrition are provided. A decision is made to discontinue the nivolumab infusion, focus on comfort measures. |
+| **60** | **Rapid Clinical Deterioration** | Thomas returns to the ER with fever (39°C) and productive cough. CXR shows new right lower lobe consolidation and worsening pleural effusion with a left diaphragmatic hernia suspected due to prior radiotherapy scarring. Cultures grow *Streptococcus pneumoniae* and *Pseudomonas aeruginosa*. He is started on broad‑spectrum antibiotics (cefepime + azithromycin). However, his oxygen requirement escalates to 6 L/min, and he becomes tachypneic (RR 30).|
+| **62** | **Intubation and ICU Admission** | Persistent hypoxia and impending respiratory failure lead to intubation. The ICU team notes septic shock with hypotension requiring norepinephrine. Despite aggressive resuscitation, he develops multi‑organ failure.|
+| **65** | **Outcome** | After a prolonged ICU course marked by refractory sepsis, hypoxic respiratory failure, and right‑heart overload, Thomas dies peacefully at home with his family on the next day. |</p><p>---</p><p>### **Narrative in Detail**</p><p>When Thomas reached his late sixties, the first sign of a silent, relentless disease manifested as a persistent, frothy cough and an uneasy heaviness across the left chest. With a lifetime of smoking and his history of asbestos work, these symptoms seemed typical for his COPD exacerbation or pneumonia. The family physician’s initial workup highlighted a subtle lung opacity. The persistent “weight loss” and lack of fever, however, were red flags—Thomas had lost five pounds in two weeks, his appetite had dwindled, and his energy level plummeted. He also complained of “tiredness that never goes away” even after his usual rest.</p><p>Given his known emphysema and pulmonary fibrosis, a bronchodilator rescue trial yielded only marginal improvement. The physician ordered a chest X‑ray; the film showed a faint left lower lobe opacity, and the radiologist warned of a small possible nodule. On the next visit, Thomas’s wheezes persisted, and his SpO₂ dropped to 92% on room air—an alarming figure given his baseline of 96% with supplemental O₂. Pulmonology was requested for a high‑resolution CT, which revealed a 2.3 × 3.0 cm spiculated mass that had previously gone unnoticed. The central cavitation suggested an aggressive cell type. The suspicion grew that this was not just a COPD flare.</p><p>The rapid progression of imaging led to the first oncology appointment. The doctor explained, in plain language, that Thomas’s mass was malignant and had already metastasized to the lungs, liver, and lymph nodes. The metastatic nature meant that “cure” was unlikely; instead, the plan was for palliative therapy aimed at prolonging life and relieving symptoms. The oncologist balanced the need for systemic therapy against Thomas’s fragile pulmonary reserve. “We’re going to give you a chemotherapy regimen that is powerful yet mindful of your breathing difficulties,” she explained, a calm authority that carried the weight of the situation.</p><p>Thomas received the first carboplatin/pemetrexed infusion coupled with nivolumab. The chemo was met with the expected nausea and mild fatigue. However, two weeks later, he found himself at the doorstep of the ER with a feeling of tightness, yellow‑tinged sputum, and a drop in his resting SpO₂ to 89%. The doctor suspected a pleural effusion—an accumulation of fluid that can happen in lung cancer. A chest tube was placed, draining more than half a liter of sanguineous fluid, a stark reminder that the tumor had breached the pleural lining, a fact later confirmed by cytology.</p><p>The pleural catheter, intended to divert future fluid, turned into a source of complications. A week after placement, Thomas suffered a spontaneous left pneumothorax—a dangerous situation where air leaks into the pleural space, collapsing the lung. The chest tube was revised, but the event underscored that the disease’s proximity to the pleural surface made standard management perilous. The oncology team paused the dual therapy. Instead, the decision was made to switch to single‑agent immunotherapy—nivolumab alone—because of the limited tolerance for aggressive regimens in a pulmonary fibrosis patient.</p><p>Despite these adjustments, the cancer’s biological aggression did not relent. On the fourth month, Thomas presented to the ER with fever and a new right lower lobe opacity that hinted at bacterial pneumonia. His labs revealed rising lactate and low blood pressure, signs of sepsis. Culturally from sputum, *Pseudomonas* and *Streptococcus* were isolated. His hospital course spiraled: he needed intubation, vasopressors, he became edematous, and his oxygen needs skyrocketed. His pre‑existing pulmonary fibrosis and emphysema left no margin for error. The ICU team worked around the clock; but as his organ support failed, the family met with hospice to focus on comfort rather than curative measures.</p><p>The final days were spent mostly in the presence of loved ones. Thomas’s breath slowed gradually, his pain was managed with opioids, and his family received bereavement counseling. He passed peacefully, a testament to the heavy price that a long history of smoking, asbestos exposure, and radiotherapy can exact, even long after the exposure has ceased.</p><p>---</p><p>### **Clinical Decision Points Summary**</p><p>| Decision | Context | Rationale | Outcome |
+|----------|---------|-----------|---------|
+| Initiate palliative platinum‑based chemo with nivolumab | Metastatic SCC with poor differentiation | Standard first‑line palliative for squamous lung cancer; balancing efficacy &amp; tolerability | Partial symptomatic relief but rapid toxicities |
+| Switch to single agent nivolumab | Pleural catheter complications; pulmonary reserve | Reduce cytotoxic burden, preserve lung function | Minimal clinical benefit; further progression |
+| Hospice referral | Deteriorating QoL, limited therapeutic options | Align care with patient goals | Improved comfort, decreased hospital visits |
+| Broad‑spectrum antibiotics on septic presentation | Fever, new consolidation | Rapid infection control | Temporary stabilization, but underlying disease progressed |</p><p>---</p><p>**Key Takeaway**</p><p>Thomas’s case exemplifies the complex interplay of environmental exposures, comorbid pulmonary disease, and an aggressive primary lung cancer. Even with timely diagnosis and appropriate palliative management, the disease’s natural history can outpace interventions when the organ reserve is severely compromised. The patient’s course highlights the importance of early palliative involvement and careful monitoring for complications such as pleural effusion and pneumothorax that are unique to the interplay of cancer and fibrosis.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-01</h3><div class="visit-meta">Primary Care Physician | Reason: New‑onset productive cough and chest pressure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 68‑year‑old male with new onset productive cough and chest pressure.
+
+**History of Present Illness:** Mr. Thomas Carter presents with a 2‑week history of productive yellow sputum, mild chest pressure, a 3‑lb unintentional weight loss, and persistent fatigue. He reports increased wheezing and a feeling of “tightness” in the chest. No fever, chills, or dyspnea while awake, but he notes his oxygen saturation at home has begun to drop below his usual 96% on 2 L SO₂. He has a long smoking history (≈55 pack‑years) and former asbestos exposure. He has received chest radiotherapy in 1985 for an unrelated malignancy.
+
+**Past Medical History:** COPD with emphysema and chronic bronchitis, pulmonary fibrosis (10 yr), recurrent pneumonia (2×/yr), mild anemia of chronic disease.
+
+**Medications:** None currently.
+
+**Allergies:** NKDA.
+
+**Social History:** Former smoker, ceased 2 yr ago. Lives with wife, no alcohol or illicit drug use.
+
+**Review of Systems:** Positive for cough, sputum production, chest pressure, weight loss, fatigue. Negative for fever, hemoptysis, orthopnea, edema.
+
+**Physical Examination:**
+- **Vital Signs:** HR 104, RR 22, BP 130/78, SpO₂ 92% RA.
+- **General:** Alert, mildly tachycardic, oriented.
+- **Chest:** Scattered expiratory wheezes bilaterally, occasional basal crackles, no rales or egophony. No cyanosis.
+- **Cardiac:** Regular rhythm, no murmurs.
+- **Extremities:** No peripheral edema, pulses +2.
+
+**Labs:**
+- CBC: Hb 11.2 g/dL, WBC 11,000/µL with neutrophilia, Hct 34%.
+- BMP: within normal limits.
+- LDH: 180 U/L (norm 100‑190).
+
+**Imaging:** Portable CXR shows subtle opacity in left lower lobe, known right upper lobe fibrosis, no mass lesions.
+
+**Assessment &amp; Plan:**
+1. **Community‑Acquired Pneumonia (CAP)** – most likely given productive cough, neutrophilia, left lower lobe opacity, and history of recurrent pneumonia.
+   - Start empirical antibiotic: Amoxicillin‑clavulanate 875 mg/125 mg PO BID for 7 days (adjust for renal function). If beta‑lactam allergy, offer Azithromycin 500 mg PO daily for 5 days.
+   - Instruct patient on completing full course.
+   - Provide inhaled albuterol (2 puffs PRN, up to 8 per day).
+   - Recommend inhaled tiotropium BID as maintenance for COPD.
+2. **COPD Exacerbation** – increase albuterol use, consider short‑course prednisone (Prednisone 40 mg PO daily for 5 days) to reduce airway inflammation, taper as appropriate. Monitor for improvement in cough and oxygen demand.
+3. **Pulmonary Fibrosis** – no acute change; continue monitoring. Counsel on pneumococcal and influenza vaccinations.
+4. **Weight Loss &amp; Fatigue** – likely secondary to increased work of breathing and infection; encourage high‑protein diet, consider nutritional counseling.
+5. **Supplemental Oxygen** – he will continue 2 L O₂ at home; advise use during exertion or at night if SpO₂ dips below 90%.
+6. **Follow‑Up** – schedule return visit in 2 weeks for symptom review, repeat CBC/CRP, repeat CXR if no clinical improvement. If symptoms worsen sooner, advise to come in or call clinic.
+7. **Sputum Culture** – obtain sputum sample today for Gram stain and culture to tailor antibiotics if initial empiric therapy fails.
+8. **Vaccinations** – administer pneumococcal conjugate (PCV15) and influenza vaccine if not given this season.
+9. **Smoking Cessation Counseling** – reinforce past cessation; offer nicotine replacement or varenicline if desired.
+10. **Education** – patient instructed to maintain symptom diary, track oxygen saturation, and note sputum color. Emphasized importance of adherence to inhaler technique and medication schedule.
+
+**Follow‑Up Recommendations:**
+- 2‑week PCP follow‑up
+- Phone call if oxygen saturation &lt;90% RA, sudden increase in dyspnea, or new fever.
+- Pulmonology referral if no improvement after 1 week of antibiotics.
+- Consider CT chest if infiltrate persists or expands.
+
+---
+
+**Signature:**
+[Provider Name], MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">productive cough with yellow sputum</span><span class="pill">intermittent chest pressure</span><span class="pill">3‑lb weight loss</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>104</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>BP</td><td>130/78</td></tr><tr><td>SpO₂</td><td>92%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>scattered expiratory wheezes</li><li>occasional basal crackles</li><li>SpO₂ 92% on room air</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>LDH</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 11.2 g/dL, WBC 11,000/µL (neutrophilia), Hct 34%</li><li>LDH 180 U/L (norm 100‑190)</li><li>Chest X‑ray: subtle left lower lobe opacity, right upper lobe fibrosis, no overt mass</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated the visit and was instructed on inhaler use. He noted slight improvement in wheezing after albuterol but persisted with cough and weight loss.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD with emphysema</span><span class="pill">chronic bronchitis</span><span class="pill">pulmonary fibrosis</span><span class="pill">history of pneumonia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol sulfate 90 mcg inhaler PRN</li><li>ipratropium bromide 18 mcg inhaler PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>55+ years smoking history (1 pack/day), former asbestos exposure, prior chest radiotherapy in 1985</li><li>COPD with emphysema and chronic bronchitis, pulmonary fibrosis diagnosed 10 years ago</li><li>history of recurrent pneumonia (2×/year)</li><li>mild anemia of chronic disease</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas Carter presented to his primary care clinic with a two‑week history of productive yellow sputum, mild chest pressure, 3‑lb weight loss, and ongoing fatigue. On physical exam, scattered wheezes were heard bilaterally with occasional crackles at lung bases; no rales or egophony. Baseline SpO₂ on room air was 92%, lower than his usual 96% on 2‑L supplemental oxygen. The clinician ordered a CBC, BMP, LDH, and a portable chest X‑ray to rule out infection or new infiltrate. The patient was advised to increase albuterol use and to schedule a follow‑up in two weeks. He accepted a 2‑L oxygen trial at home.</p><p>Examination found wheezing, minimal rhonchi, no cyanosis. No peripheral edema. The doctor explained that the weight loss and fatigue could be due to his COPD exacerbation, infection, or a possible malignancy given his history. He was told to maintain follow‑up for diagnostic imaging.</p><p>The patient was reassured and scheduled for a pulmonology referral to investigate the lung opacity on X‑ray. He was encouraged to keep records of sputum color and daily symptom diary.</p><p>The visit noted the beginning of suspicion for an underlying lung neoplasm.</p><p>Disease progression notes: baseline data; initial suspicion of new pulmonary lesion; potential cancer due to risk factors.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline respiratory status established, suspicion of new lung lesion raised; early imaging documented.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-08</h3><div class="visit-meta">Pulmonology | Reason: Evaluation of suspicious left lower lobe opacity and persistent symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation of suspicious left lower lobe (LLL) opacity and persistent respiratory symptoms.
+
+Subjective: 68‑year‑old male presents for routine follow‑up of a subtle left lower lobe opacity noted on prior chest X‑ray. He reports a 3‑week history of productive cough (yellow sputum), dyspnea on exertion, intermittent chest pressure, and a 7‑lb weight loss. Denies fever, chills, hemoptysis, or night sweats. He completed a 7‑day course of amoxicillin‑clavulanate for a presumed bacterial pneumonia and is currently on a low‑dose prednisone taper. No new medications added since last visit.
+
+Objective:
+- Vital signs: HR 102/min, RR 20/min, BP 128/76 mmHg, SpO₂ 94% on 2 L/min oxygen.
+- General: Mild respiratory distress, afebrile.
+- Respiratory: Mild tachypnea. Bilateral wheezes and basal crackles; no lymphadenopathy.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Abdomen: Soft, non‑tender.
+
+Assessment:
+1. Suspicious left lower lobe opacity—likely multifactorial. Differential includes:
+   - Early lung cancer (mass or nodule)
+   - Infectious consolidation (e.g., atypical pneumonia, TB, fungal infection)
+   - Fibrosis‑related pulmonary nodule or emphysematous pseudoduct
+2. COPD with emphysema and chronic bronchitis—stable on inhaled bronchodilators.
+3. Weight loss—concerning for malignancy or advanced chronic disease.
+
+Plan:
+- Imaging: Order high‑resolution CT (HRCT) of chest to characterize lesion, assess air trapping, and rule out malignancy.
+- Pulmonary function: Schedule PFTs to quantify lung function decline and guide future management.
+- Medications: Continue current inhaled therapy (tiotropium 18 µg BID, albuterol 90 µg PRN, ipratropium 18 µg PRN). Start low‑dose prednisone taper (e.g., 20 mg PO daily tapering over 7 days).
+- Supportive: Continue 2 L/min supplemental O₂ as needed, dietary counseling for weight loss, smoking cessation reinforcement (none reported).
+- Referral: If imaging suggests a resectable or actionable lesion, refer to thoracic oncology/surgery.
+- Follow‑up: Return in 4 weeks to review HRCT and PFT results; sooner if new symptoms or worsening status.
+
+Patient education: Discussed the importance of imaging for the left lower lobe opacity, potential indications for surgical evaluation, and limitations due to underlying fibrosis and emphysema. Advised monitoring for weight loss aggravation and signs of infection.
+
+The patient consented to the plan and agreed to have the HRCT and PFTs performed on the same appointment day.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">productive cough</span><span class="pill">weight loss</span><span class="pill">dyspnea on exertion</span><span class="pill">intermittent chest pressure</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>102</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>BP</td><td>128/76</td></tr><tr><td>SpO₂</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild tachypnea</li><li>SpO₂ 94% on 2 L</li><li>mild wheezes and basal crackles</li><li>no lymphadenopathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>High‑Resolution CT of chest</li><li>Pulmonary Function Test</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated medications, noted no new symptoms beyond cough. He completed the CT today; PFT results pending.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD with emphysema</span><span class="pill">chronic bronchitis</span><span class="pill">pulmonary fibrosis</span><span class="pill">history of pneumonia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol sulfate 90 mcg inhaler PRN</li><li>ipratropium bromide 18 mcg inhaler PRN</li><li>prednisone 30 mg daily for recent exacerbation (taper ongoing)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>prior PCP visit with Chest X‑ray, subtle left lower lobe opacity</li><li>COPD exacerbation</li><li>persistent cough</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pulmonologist reviewed Thomas’ recent chest X‑ray and noted a subtle left lower lobe opacity. A high‑resolution CT scan was ordered to characterize the lesion and assess for air trapping, which might suggest malignancy or infection. PFTs were scheduled to quantify his lung function decline. The visit emphasized the need for imaging due to his prolonged weight loss and baseline comorbidities. The patient was explained that the CT would help determine if surgical options were viable, although his fibrosis and emphysema limited such potential.</p><p>On exam, he was afebrile, with mild respiratory distress, SpO₂ 94% on 2 L. Auscultation revealed mild wheezes and basal crackles. No lymphadenopathy noted. The pulmonologist advised continuation of baseline inhaled therapy and a low‑dose prednisone taper.</p><p>The patient agreed to imaging and PFT on the same day.</p><p>Disease progression notes: CT planned; suspicion of malignancy high; COPD exacerbation ongoing but improving; PFT results to evaluate functional reserve.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Suspected solitary lesion; pulmonary reserve compromised by fibrosis and emphysema. Awaiting definitive imaging and PFT. No definitive staging yet.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-14</h3><div class="visit-meta">Medical Oncology | Reason: Initial oncologic assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initial assessment.
+
+History of Present Illness: 68‑year‑old male with known COPD/emphysema and pulmonary fibrosis presented for first oncologic evaluation. He reports persistent cough, progressive dyspnea, and 7‑lb weight loss over the past 3 weeks. Imaging with HR‑CT demonstrates a 2.3 × 3.0 cm spiculated left lower lobe mass with central cavitation. PET‑CT shows high FDG uptake (SUV 10.2) and mediastinal lymphadenopathy.
+
+Past Medical History: COPD with emphysema, chronic bronchitis, pulmonary fibrosis, history of pneumonia.
+
+Medications: tiotropium 18 µg PO BID, albuterol 90 µg PRN, ipratropium 18 µg PRN, low‑dose prednisone taper 20 mg PO daily (7‑day taper), home O₂ 2 L/min.
+
+Allergies: NKDA.
+
+Physical Examination: Vitals: HR 100, RR 21, BP 126/74, SpO₂ 93% on 2 L O₂. Mild tachypnea, mild expiratory wheeze, basal crackles bilaterally, no focal tenderness.
+
+Assessment: Suspicion for stage III/IV non‑small‑cell lung carcinoma (likely squamous cell) with mediastinal nodal involvement. Differential includes infectious etiologies (TB, bacterial abscess), benign pulmonary nodule, metastatic disease.
+
+Plan:
+1. Baseline labs: CBC, CMP, LDH, Type &amp; Crossmatch – results pending.
+2. Oncologic therapy: Discussed palliative chemotherapy regimen of carboplatin 400 mg/m² IV q3 weeks, pemetrexed 500 mg/m² IV q3 weeks, and nivolumab 240 mg IV q2 weeks. Alternatively, single‑agent nivolumab considered if poor tolerability.
+3. Ondansetron 4 mg IV pre‑infusion prophylaxis administered today.
+4. Schedule pre‑infusion visit on 2026‑03‑22 with repeat labs 2 days before first cycle.
+5. Continue home O₂, inhaler therapy, and finish prednisone taper.
+6. Educated patient about potential side effects: myelosuppression, neuropathy, endocrine dysfunction, immune‑related adverse events, and signs requiring urgent care.
+7. Nutritional counseling and weight monitoring.
+
+Disposition: Patient consented to treatment plan and will return for first infusion.
+
+Follow‑up: 3 weeks after first infusion to assess tolerance; repeat PET‑CT after 3 cycles; ongoing symptom management.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span><span class="pill">dyspnea</span><span class="pill">weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>100</td></tr><tr><td>RR</td><td>21</td></tr><tr><td>BP</td><td>126/74</td></tr><tr><td>SpO₂</td><td>93%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild tachypnea</li><li>SpO₂ 93% on 2 L</li><li>no focal tenderness on thoracic exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>LDH</li><li>Type &amp; Crossmatch</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 10.8 g/dL, WBC 9,200/µL</li><li>LDH 180 U/L</li><li>CMP: BUN 18, Cr 1.0, Na 138, K 4.2</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>ondansetron 4 mg IV pre‑infusion</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed relief that a plan was in place; accepted the chemotherapy approach. No acute adverse events noted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD with emphysema</span><span class="pill">chronic bronchitis</span><span class="pill">pulmonary fibrosis</span><span class="pill">history of pneumonia</span><span class="pill">metastatic poorly differentiated squamous cell carcinoma of the lung</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol 90 mcg inhaler PRN</li><li>ipratropium 18 mcg inhaler PRN</li><li>prednisone 5 mg daily for COPD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>HR‑CT with 2.3 × 3.0 cm spiculated left lower lobe mass, central cavitation</li><li>PET‑CT with FDG uptake SUV 10.2</li><li>Metastatic pulmonary nodules, hepatic lesions 2 cm</li><li>mediastinal lymphadenopathy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist reviewed the HR‑CT and PET‑CT images, confirming a spiculated, cavitating mass in the left lower lobe with sub‑centimeter nodules in the right lower lobe and liver metastases. The oncology panel determined the disease to be stage IVa (T3N2M1). The patient was reminded of his comorbid pulmonary fibrosis, which would limit tolerance to aggressive cytotoxic regimens.</p><p>On exam, he displayed mild tachypnea, SpO₂ 93% on 2 L supplemental oxygen. The physical exam was otherwise unremarkable. The oncologist discussed a palliative chemotherapy plan with a combination of carboplatin, pemetrexed, and nivolumab, emphasizing the expected modest survival benefit and the risk of toxicities. They also discussed the possibility of single‑agent immunotherapy if toxicities escalated.</p><p>The patient consented to the regimen. Baseline labs (CBC, CMP, LDH) were ordered, and pre‑infusion chemotherapy visits were scheduled. He was advised on potential side effects and given prophylactic ondansetron.</p><p>Disease progression notes: confirmed Stage IVa SCC; plan palliative intent therapy; baseline pulmonary reserve limited.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IVa SCC with poor prognosis; baseline pulmonary status precarious. First chemo cycle scheduled.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-16</h3><div class="visit-meta">Medical Oncology | Reason: First chemotherapy cycle and post‑treatment evaluation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Patient:** 68‑year‑old male with stage IV lung adenocarcinoma (left lower lobe mass 2.3×3.0 cm) and COPD (emphysema, chronic bronchitis, pulmonary fibrosis), history of pneumonia.  
+
+**Chief Complaint:** First chemotherapy cycle administered and post‑treatment evaluation.  
+
+**History of Present Illness:**  
+- 2026‑03‑01 (day 15): Received carboplatin (AUC 5), pemetrexed 500 mg/m², and nivolumab 240 mg IV following pre‑medication with prednisone 20 mg PO and ondansetron 4 mg PO.  
+- Mild nausea during infusion, controlled with ondansetron.  
+- Immediately post‑infusion SpO₂ dropped to 89 % on room air; O₂ increased to 4 L/min and remained stable.  
+- Over the next 5 days patient reports persistent cough, pink frothy sputum, and fatigue.  
+- Maintains 2 L O₂ at home and continues albuterol, ipratropium, tiotropium, and daily prednisone 5 mg.  
+
+**Physical Exam (2026‑03‑16):**  
+- SpO₂ 89 % on room air; HR 106 bpm; RR 23/min; BP 124/72 mmHg.  
+- Mild tachypnea.  
+- Scattered wheezes, mild bibasilar crackles.  
+- Pink, frothy sputum on expectoration.  
+- Mild bilateral lower‑extremity pitting edema up to mid‑calf.  
+
+**Labs:**  
+- CBC: Hb 10.2 g/dL, WBC 12,200/µL (neutrophilic predominance).  
+- LDH 270 U/L.  
+- CMP pending.  
+- Blood cultures drawn.  
+- Chest X‑ray: mild left pleural effusion.  
+
+**Assessment &amp; Differential:**  
+- Suspected bacterial superinfection/pneumonia superimposed on underlying COPD exacerbation and possible chemotherapy‑related pulmonary toxicity.  
+- Other considerations: drug‑induced pneumonitis (pemetrexed/nivolumab), tumor progression with pleural effusion, pulmonary edema, exacerbation of pulmonary fibrosis.  
+
+**Plan:**  
+1. **Prednisone:** 10 mg PO daily; taper 10 mg days 1‑5, 5 mg days 6‑7, discontinue.  
+2. **Azithromycin:** 500 mg PO daily for 5 days for presumed bacterial pneumonia.  
+3. **Hydrochlorothiazide:** 25 mg PO daily to address pitting edema.  
+4. **O₂:** Continue 2 L/min at home; increase to 4 L/min if SpO₂ &lt;92 %.  
+5. **Repeat Labs/Imaging:** CBC, CMP, repeat chest X‑ray in 7 days.  
+6. **Urgent Review:** If SpO₂ remains &lt;90 % on 4 L O₂, or if dyspnea, chest pain, or fever worsens, arrange urgent CT chest and possible bronchoscopy.  
+7. **Inhaler Therapy:** albuterol PRN, ipratropium PRN, tiotropium BID.  
+8. **Patient Education:** Signs of worsening infection, when to seek emergent care, importance of medication adherence.  
+
+**Follow‑up:**  
+- Clinic review in 7 days (2026‑03‑23).  
+- Discuss status for next chemotherapy cycle contingent on clinical improvement and imaging findings.  
+- Continue home oxygen and inhaler regimen as indicated.  
+
+***Signature***  
+
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild nausea from prior day</span><span class="pill">cough continued</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>106</td></tr><tr><td>RR</td><td>23</td></tr><tr><td>BP</td><td>124/72</td></tr><tr><td>SpO₂</td><td>92%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>SpO₂ 89% on room air</li><li>mild tachypnea</li><li>pink sputum</li><li>lower extremity pitting edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC Day 20</li><li>CMP</li><li>Blood cultures</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 10.2 g/dL, WBC 12,200/µL</li><li>LDH 270 U/L</li><li>Chest X‑ray: Mild pleural fluid left hemithorax</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>prednisone 10 mg PO daily</li><li>azithromycin 500 mg PO daily</li><li>hydrochlorothiazide 25 mg PO daily for edema</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported decreased dyspnea after prednisone, but still experienced pink sputum and mild fatigue. Advised to increase O₂ to 4 L if SpO₂ &lt;92%.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD with emphysema</span><span class="pill">chronic bronchitis</span><span class="pill">pulmonary fibrosis</span><span class="pill">history of pneumonia</span><span class="pill">stage IVa SCC</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol 90 mcg inhaler PRN</li><li>ipratropium 18 mcg inhaler PRN</li><li>prednisone 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CARBOPILATIN + PEMETREXED + Nivolumab infusion on day15</li><li>prednisone 5 mg daily</li><li>2 L supplemental oxygen</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas received his first cycle of carboplatin (AUC 5) plus pemetrexed 500 mg/m² and nivolumab 240 mg IV under standard monitoring. He had pre‑medication with prednisone 20 mg and ondansetron 4 mg. During infusion, he experienced mild nausea, managed with ondansetron, and had stable vitals. Post‑infusion, his SpO₂ dropped to 89% while on room air; supplemental oxygen was increased to 4 L for the remainder of the visit. He reported persistent coughing and some pink sputum, suggesting irritation of the airways.</p><p>The oncology team monitored his CBC 2 days post‑treatment; results were pending. The patient was instructed to maintain 2 L O₂ at home, continue inhaled bronchodilators, and report any worsening dyspnea.</p><p>Five days later (day 20), he was seen in clinic: SpO₂ 89% on room air, mild dyspnea at rest, HR 110, pink sputum. CBC showed Hg 10.2, LDH 270. There was mild lower extremity edema. The team added low‑dose prednisone 10 mg daily for dyspnea, and prescribed azithromycin 500 mg PO daily for 5 days due to suspicion of bacterial superinfection. A repeat CBC would be done in a week.</p><p>Disease progression notes: Chemotherapy tolerated; early signs of pleural effusion and airway irritation; slight rise in LDH; potential infection.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Emerging pleural effusion; airway irritation; slight rise in LDH suggests tumor burden or infection. Worsening dyspnea, still tolerable.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-03-26</h3><div class="visit-meta">Pulmonology | Reason: Hospitalization for acute dyspnea and pleural effusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 5
+Date: 2026-03-26
+Specialty: Pulmonology
+
+Chief Complaint: Acute dyspnea and pleural effusion leading to hospital admission.
+
+History of Present Illness:
+68‑year‑old male with COPD with emphysema, pulmonary fibrosis and prior pneumonia has been receiving carboplatin, pemetrexed and nivolumab chemotherapy with a concomitant prednisone taper. He presented with worsening shortness of breath for 3 days, a productive cough with pink sputum, mild fever (99.5 °F) and lower‑extremity pitting edema. SpO₂ was 85 % on 2 L O₂ upon arrival. Transferred to ICU, placed on HFNC 50 % O₂ at 10 L/min, bedside CXR showed moderate left pleural effusion and consolidation of the left lower lobe. Thoracentesis yielded 500 mL sanguineous fluid; cytology revealed squamous cells consistent with likely malignant effusion. A pleural catheter was placed for ongoing drainage. During the procedure the patient reported sharp chest pain and increased dyspnea; post‑thoracentesis SpO₂ improved to 92 % on HFNC. ICU team started furosemide 40 mg IV q12h and broadened antibiotics to ceftriaxone 1 g IV daily for fever.
+
+Current Medications:
+– Tiotropium 18 µg PO BID
+– Albuterol 90 µg inhalation PRN
+– Ipratropium 18 µg inhaler PRN
+– Ondansetron 4 mg IV pre‑infusion prophylaxis
+– Carboplatin 400 mg/m² IV q3 weeks
+– Pemetrexed 500 mg/m² IV q3 weeks
+– Nivolumab 240 mg IV q2 weeks
+– Prednisone 10 mg PO daily taper (10 mg days 1‑5, 5 mg days 6‑7)
+– Azithromycin 500 mg PO daily (5 days)
+– Hydrochlorothiazide 25 mg PO daily
+
+Allergies: NKDA
+
+Physical Examination:
+Vital signs: HR 112 bpm, RR 26 bpm, BP 118/70 mmHg, SpO₂ 85 % on 2 L O₂ (now 92 % on HFNC)
+Pulmonary: bilateral wheezes, basal crackles, left‑sided chest tenderness with sharp pain
+Extremities: pitting edema of both lower extremities to mid‑shins
+
+Laboratory/Imaging:
+– CXR: moderate left pleural effusion, left lower lobe consolidation
+– Thoracentesis: 500 mL sanguineous fluid, cytology positive for squamous cells
+– Blood cultures: pending
+– CMP: pending
+
+Assessment:
+1) Malignant pleural effusion secondary to primary lung squamous cell carcinoma – most likely cause of sanguineous effusion and symptoms.
+2) Parapneumonic effusion/empyema secondary to recent pneumonia exacerbation – supported by consolidation and fever.
+3) Hemothorax from pleural intervention.
+4) COPD flare with possible pulmonary exacerbation.
+5) Congestive heart failure exacerbation – considered but less likely.
+6) Pulmonary embolism – not excluded but less likely.
+
+Plan:
+• Continue furosemide 40 mg IV q12h for 24 h; convert to oral 20 mg q12h once stable.
+• Ceftriaxone 1 g IV daily for 5 days pending blood culture results.
+• Continue prednisone taper as scheduled.
+• Continue azithromycin 500 mg PO daily for 5 days per protocol.
+• Continue hydrochlorothiazide 25 mg PO daily.
+• Pain management: ibuprofen 400 mg PO q6h PRN and acetaminophen 650 mg PO q6h PRN for chest pain.
+• Monitor pleural catheter output; perform ultrasound 24 h post‑drainage to assess residual fluid.
+• Discontinue HFNC once SpO₂ ≥90 % on 4 L/min; resume home oxygen device.
+• Outpatient pulmonary clinic follow‑up in 7 days for pleural cytology results and repeat imaging.
+• Contact ED immediately if catheter site dislodges, swelling worsens, fever &gt;100.4 °F, or pain increases.
+• Prepare for next oncology pre‑infusion visit next week; discuss chemotherapy schedule.
+• Reinforce smoking cessation counseling and advise hydration and weight monitoring.
+
+Disposition: Discharged with pleural catheter care instructions, continued diuretics, antibiotics, and home oxygen. Patient to return to hospital immediately if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe dyspnea</span><span class="pill">cough with pink sputum</span><span class="pill">fever 99.5°F</span><span class="pill">lower limb swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>112</td></tr><tr><td>RR</td><td>26</td></tr><tr><td>BP</td><td>118/70</td></tr><tr><td>SpO₂</td><td>85% on 2 L O₂</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>SpO₂ 85% on 2 L O₂</li><li>tachypnea, RR 26</li><li>sharp chest pain</li><li>pitting edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Thoracentesis fluid analysis</li><li>Cytology</li><li>Blood cultures</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: moderate left pleural effusion, LL consolidation</li><li>Thoracentesis: 500 mL sanguineous fluid</li><li>Cytology: malignant squamous cells</li><li>Blood cultures: pending</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>furosemide 40 mg IV q12h</li><li>ceftriaxone 1 g IV daily</li><li>HFNC 50% O₂ at 10 L/min</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported improved breathlessness after drainage but continued chest discomfort. Advised to rest and monitor catheter output.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD with emphysema</span><span class="pill">pulmonary fibrosis</span><span class="pill">history of pneumonia</span><span class="pill">stage IVa SCC</span><span class="pill">acute pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol 90 mcg inhaler PRN</li><li>ipratropium 18 mcg inhaler PRN</li><li>prednisone 10 mg daily</li><li>azithromycin 500 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous pleural effusion seen on chest X‑ray</li><li>prednisone 10 mg daily</li><li>azithromycin ongoing</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas was admitted to the hospital with acute respiratory distress. His SpO₂ dropped to 85% on 2 L O₂; he was transferred to the ICU for high‑flow nasal cannula (HFNC) support. A bedside chest X‑ray confirmed a moderate left pleural effusion and consolidation of the left lower lobe. Thoracentesis was performed, draining 500 mL sanguineous fluid. Cytology revealed malignant squamous cells. A pleural catheter was placed for ongoing drainage.</p><p>During the procedure, the patient reported sharp chest pain and increased dyspnea. Post‑thoracentesis, SpO₂ improved to 92% on HFNC. The ICU team initiated diuretics (furosemide 40 mg BID) to manage fluid overload. Antibiotics were broadened to ceftriaxone 1 g IV daily due to fever.</p><p>The patient was weaned to 4 L O₂ over 48 hrs, remaining stable on a home oxygen device. He was discharged with instructions for catheter care, diuretic therapy, and a plan for a second oncology visit next week.</p><p>Disease progression notes: malignant pleural effusion confirmed, pleural catheter in place; increased tumor burden; ongoing chemotherapy toxicity.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed malignant pleural effusion; pleural catheter placed. Tumor burden increases; respiratory reserve remains low.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-04-05</h3><div class="visit-meta">Pulmonology | Reason: Recurrent pneumothorax and chemotherapy discussion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #6 – 2026-04-05
+Chief Complaint: Recurrent pneumothorax and chemotherapy discussion
+
+History of Present Illness:
+A 68‑year‑old male with known pulmonary fibrosis, emphysematous COPD, and malignant pleural effusion maintained by a pleural catheter presented with sudden sharp left chest pain, worsening dyspnea, and lightheadedness. While the catheter was in place, he developed a small left spontaneous pneumothorax with subcutaneous emphysema identified on chest X‑ray. A chest tube was inserted, the pleural catheter removed, and the patient required high‑flow nasal cannula (HFNC) oxygen for 48 h before stepping down to 4 L/min. His SpO₂ on HFNC remained 80 % with HR 120/min, RR 28/min, and BP 114/68 mmHg.
+
+Assessment:
+1. Secondary spontaneous pneumothorax with pleural air leak likely due to tumor‑near pleural surface fistulization.
+2. Air leak from previously placed pleural catheter.
+3. Compensatory COPD exacerbation in the setting of advanced lung cancer.
+4. Possible cumulative pulmonary toxicity from earlier carboplatin/pemetrexed therapy.
+
+Plan:
+- Discontinue carboplatin/pemetrexed; continue single‑agent nivolumab 240 mg IV q2 weeks.
+- Continue prednisone taper (10 mg PO daily for 5 days, 5 mg PO daily 2 days).
+- Administer hydrocortisone 100 mg IV q8 h for acute inflammation.
+- Continue baseline inhaler therapy (tiotropium 18 µg BID, albuterol 90 µg PRN, ipratropium 18 µg PRN).
+- Maintain pleural effusion management: diuretics (furosemide 40 mg IV q12 h) and antihypertensives (hydrochlorothiazide 25 mg PO daily).
+- Continue anti‑emetic prophylaxis (ondansetron 4 mg IV).  
+- Continue empiric infection coverage (ceftriaxone 1 g IV daily) until cultures return.
+- Provide NSAID (ibuprofen 400 mg PO q6h PRN) and acetaminophen 650 mg PO q6h PRN for pain.
+- Refer to palliative care for symptom management and psychosocial support.
+- Order labs: CBC, CMP, renal panel, electrolytes, CRP, and BNP.
+- Plan follow‑up chest X‑ray in 4 weeks to assess resolution of pneumothorax and pleural status.
+
+Follow‑up:
+- Next nivolumab infusion in 2 weeks.
+- Pulmonary clinic review in 4 weeks with repeat imaging and labs.
+- Immediate evaluation for sudden chest pain, worsening dyspnea, or hemodynamic instability.
+- Continue home O₂ at 2 L/min; adjust as needed based on SpO₂.
+- Follow pleural catheter care instructions; monitor for recurrent effusion or infection.
+
+Signed: Dr. ________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sudden chest pain</span><span class="pill">worsening dyspnea</span><span class="pill">lightheadedness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>120</td></tr><tr><td>RR</td><td>28</td></tr><tr><td>BP</td><td>114/68</td></tr><tr><td>SpO₂</td><td>80% on HFNC</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>SpO₂ 80% on HFNC</li><li>tachypnea, RR 28</li><li>chest pain, tenderness on left side</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: small left pneumothorax, air under mediastinum</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>chest tube insertion</li><li>vent tube removal</li><li>hydrocortisone 100 mg IV every 8 hrs for inflammation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported relief after chest tube insertion, but remained anxious. No new symptoms reported aside from mild fatigue.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">stage IVa SCC</span><span class="pill">pulmonary fibrosis</span><span class="pill">COPD with emphysema</span><span class="pill">pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>furosemide 40 mg BID</li><li>ceftriaxone 1 g IV daily</li><li>prednisone 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pleural catheter in place</li><li>Recent chemo with carboplatin/pemetrexed/nivolumab</li><li>Prednisone 10 mg</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>While on the pleural catheter, Thomas developed sudden sharp chest pain and marked dyspnea. A chest X‑ray showed a small left pneumothorax with air under the mediastinum and a small air leak from the pleural catheter. A chest tube was inserted; the catheter was removed. He required high‑flow nasal cannula oxygen for two days, then stepped down to 4 L O₂. The pulmonologist noted that the tumor’s proximity to the pleural surface had likely created a fistula, leading to the air leak. The oncology team was reassessed; considering the cumulative toxicity and limited pulmonary reserve, the team decided to discontinue carboplatin/pemetrexed and switch to single‑agent nivolumab 240 mg IV every 2 weeks.</p><p>The patient was informed about the change to a less toxic regimen. He agreed, and the next dose was scheduled. He was also referred to palliative care for symptom management.</p><p>Disease progression notes: tumor has created pleuro‑parietal fistula; pleural catheter removed; shift to monotherapy. Pulmonary reserve remains fragile.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Tumor‑induced fistula, pleural catheter removed. Pulmonary function further compromised. Shift to immunotherapy only.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-04-22</h3><div class="visit-meta">Multidisciplinary Team (Oncology, Pulmonology, Palliative Care, Social Work) | Reason: Reassessment and hospice referral discussion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Disposition**
+
+Multidisciplinary team (oncology, pulmonology, palliative care and social work) convened to review Thomas’s clinical trajectory. CT imaging and clinical assessment demonstrate stable disease but progressive symptomatic burden. Consensus: continued systemic therapy would confer minimal benefit and increase toxicity.
+
+**Decision**
+
+Patient and family elected to discontinue nivolumab and pursue hospice‑based, palliative‑intent care focused on comfort.
+
+**Clinical Summary**
+
+- Severe dyspnea (RR 30, SpO₂ 88% on 4 L O₂)
+- Progressive weight loss (10 lb over 2 months, current weight 165 lb)
+- Fatigue noted on exam
+- Increasing productive cough
+
+Vital signs: HR 118, RR 30, BP 112/70, SpO₂ 88% on 4 L O₂.
+
+Physical exam was consistent with cachexia, mild edema, and tachypnea; respiratory exam showed diminished breath sounds due to cachexia but no new crackles.
+
+**Assessment**
+
+1. Stage IV squamous cell lung carcinoma with malignant pleural effusion – progressive symptomatic disease.
+2. Chronic obstructive pulmonary disease/emphysema with chronic bronchitis – exacerbation of dyspnea.
+3. Pulmonary fibrosis – contributing to restrictive lung impairment.
+4. Cachexia and significant weight loss – likely a paraneoplastic and disease‑related effect.
+5. Secondary pulmonary infections – ongoing risk given history of repeated pneumonias and previous pleural catheter.
+
+**Plan**
+
+1. **Hospice referral** – Activate in‑hospital hospice services. Provide comfort‑focused care plan.
+2. **Medication adjustments** –
+   - Discontinue nivolumab and any additional cytotoxic agents.
+   - Continue home O₂ at 4 L/min.
+   - Tiotropium 18 µg PO BID; Albuterol 90 µg inhalation PRN as needed.
+   - Ipratropium 18 µg inhaler PRN.
+   - **Methylprednisolone 16 mg PO daily** for dyspnea and inflammation.
+   - **Oxycodone 5 mg PO PRN** for breakthrough pain (max 4 doses/day, not exceeding 20 mg/day).
+   - Continue low‑dose diuretics: Furosemide 40 mg IV q12h (switch to PO 20 mg BID if stable) and Hydrochlorothiazide 25 mg PO daily.
+   - Maintain oral nutrition support; refer dietician for high‑calorie, high‑protein plan.
+   - Stop ceftriaxone and azithromycin unless new infection develops.
+   - Hydrocortisone 100 mg IV q8h can be tapered off once sufficient control with methylprednisolone.
+3. **Symptom control** –
+   - Initiate low‑dose acetaminophen 650 mg PO q6h PRN and ibuprofen 400 mg PO q6h PRN for minor aches (caution with renal function).
+   - Monitor for opioiderelated respiratory depression and adjust dosing.
+   - Offer non‑pharmacologic measures: positioning, gentle breathing exercises, and counseling.
+4. **Monitoring** – Daily observation of vitals, oxygen saturation, intake/output, and weight by hospice nurse.
+5. **Family support** – Social work to facilitate family meetings, advance care planning, spiritual counseling.
+6. **Education** – Explain expectations of hospice, symptom management, O₂ usage, and when to call for assistance.
+
+**Follow‑up** – Hospice nurse will visit daily for assessment, medication reconciliation, and comfort review. Palliative care team will visit biweekly; dietitian will meet monthly. Family will have weekly visits with social worker. Any acute changes in dyspnea, pain, or new symptoms prompt 24‑hour hospital evaluation.
+
+**Disposition** – Transfer to hospice care with comfort plan in place. Continue palliative goals and frequent symptom monitoring.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe dyspnea</span><span class="pill">weight loss 10 lb</span><span class="pill">fatigue</span><span class="pill">increasing cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>118</td></tr><tr><td>RR</td><td>30</td></tr><tr><td>BP</td><td>112/70</td></tr><tr><td>SpO₂</td><td>88% on 4 L O₂</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>SpO₂ 88% on 4 L O₂</li><li>tachypnea RR 30</li><li>cachexia, weight 165 lb</li><li>mild edema</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>discontinued nivolumab</li><li>adjusted opioids to oxycodone 5 mg PRN for pain</li><li>started methylprednisolone 16 mg daily to reduce dyspnea</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported appreciation for the decision, expressed fatigue but accepted hospice care. Family members were present during discussion.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">stage IVa SCC</span><span class="pill">pulmonary fibrosis</span><span class="pill">COPD with emphysema</span><span class="pill">pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>furosemide 40 mg BID</li><li>prednisone 10 mg daily</li><li>acetaminophen 650 mg PO q8h</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Palliative nivolumab monotherapy ongoing</li><li>Repeated infections, pleural effusion management</li><li>Significant weight loss</li><li>Declining performance status 2</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The multidisciplinary team met to review Thomas’s clinical trajectory. On review of his vitals, physical exam, and recent imaging (CT shows stable disease but symptomatic progression), the consensus was that further systemic therapy would likely provide limited benefit and increase toxicity. The team recommended palliative intent care and hospice referral. The patient and family agreed to focus on comfort, declining continuation of nivolumab. A hospice nurse was activated, and goals of care were revisited.</p><p>The team also reassessed his medication regimen, simplifying to maintain fluid balance, reduce opioid use to minimize respiratory depression, and manage analgesia. A dietary plan to address malnutrition was developed.</p><p>Disease progression notes: Hospice entered; systemic therapy discontinued; focus on comfort; ongoing supportive care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to hospice; no further systemic therapy; symptomatic decline but goals of care aligned with comfort.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-05-02</h3><div class="visit-meta">Intensive Care Unit | Reason: Sepsis and respiratory failure leading to ICU admission</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Sepsis and respiratory failure
+
+History of Present Illness:
+68‑year‑old male with stage IVa squamous cell carcinoma of the lung, pulmonary fibrosis, and chronic obstructive pulmonary disease was brought to the emergency department by EMS due to a 2‑day history of high fever, productive cough, dyspnea, and confusion. He had a known history of recurrent pneumonia with *Streptococcus pneumoniae* and *Pseudomonas aeruginosa* and a complex right pleural effusion from prior radiation fibrosis, with an incidental diaphragmatic hernia. On arrival, he was febrile (39 °C), tachypneic (RR 34), tachycardic (HR 130), hypotensive (BP 90/60 mmHg) and SpO₂ 80 % on 6 L/min O₂. He was confused but arousable. Empiric broad‑spectrum antibiotics were initiated (cefepime 2 g IV q8 h and azithromycin 500 mg IV q24 h), and he was intubated for hypoxic respiratory failure. Central venous access was established, and norepinephrine infusion was started at 0.05 µg/kg/min for septic shock. Repeat chest X‑ray demonstrated new right lower lobe consolidation and an increasing pleural effusion associated with the diaphragmatic hernia. Blood cultures grew *S. pneumoniae* and *P. aeruginosa*. Despite aggressive resuscitation, the patient developed multi‑organ failure (renal dysfunction, metabolic acidosis). Family was consulted, and a decision was made to withdraw life‑support measures after a brief discussion with palliative care.
+
+Review of Systems:
+- General: Fever, chills, weight loss.
+- Respiratory: Productive cough, dyspnea, non‑productive aspiration.
+- Cardiovascular: No chest pain.
+- Neurologic: Confusion, decreased mental status.
+- Renal: No urinary output noted.
+
+Physical Examination (prior to intubation):
+- Vitals: HR 130 bpm, RR 34 /min, BP 90/60 mmHg, SpO₂ 80 % on 6 L O₂.
+- General: Aroused but confused.
+- HEENT: No focal deficits.
+- Respiratory: Bilateral crackles with a right lower lobe prominent murmur; decreased breath sounds over right lower lung field.
+- Cardiovascular: Tachycardia, weak pulses, capillary refill &lt;2 sec.
+- Abdomen: Soft, non‑tender.
+- Extremities: No peripheral edema.
+
+Assessment:
+1. Sepsis secondary to community‑acquired bacterial pneumonia co‑infected with *S. pneumoniae* and *P. aeruginosa*.
+2. Septic shock with refractory hypotension.
+3. Hypoxic respiratory failure requiring mechanical ventilation.
+4. Multi‑organ failure: acute kidney injury (Cr 1.8 mg/dL), metabolic acidosis.
+5. Persistent right pleural effusion due to prior radiation fibrosis and diaphragmatic hernia.
+6. Underlying stage IVa lung cancer, pulmonary fibrosis, and COPD exacerbation.
+
+Plan:
+- Continue empiric cefepime 2 g IV q8 h and azithromycin 500 mg IV q24 h for 7 days or until cultures negative and clinical stability.
+- Maintain norepinephrine until goal MAP &gt;65 mmHg; however, patient/family have elected to withdraw support.
+- Continue supportive measures: mechanical ventilation with lung protective strategy; maintain central line for vasoactive therapy; insert arterial line for BP monitoring and frequent ABGs.
+- DVT prophylaxis modified due to low platelet count and coagulopathy: consider intermittent pneumatic compression.
+- Continue current home medications via nurse‑administered routes: furosemide 40 mg BID, prednisone 10 mg daily, acetaminophen 650 mg q6 h PRN, oxycodone 5 mg PRN for breakthrough pain.
+- Initiate low‐dose hydrocortisone 100 mg IV q8 h if septic shock persists.
+- Close monitoring of renal function; consider dialysis if refractory AKI.
+- Family counseling: Discuss prognosis, advance directives, and coordinate with hospice and palliative care.
+- Documentation of goals‑of‑care discussion and withdrawal of life support per family request.
+
+Disposition:
+Family decided to transition to palliative care/hospice; we will arrange for hospice home visit, provide comfort measures, and remove invasive lines as per comfort care plan.
+
+Follow‑up: None due to withdrawal of support. Hospice team will contact family daily; palliative care will assess for breakthrough symptoms.
+
+Signature: ____________________________
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever 39°C</span><span class="pill">productive cough</span><span class="pill">dyspnea</span><span class="pill">confusion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>130</td></tr><tr><td>RR</td><td>34</td></tr><tr><td>BP</td><td>90/60</td></tr><tr><td>SpO₂</td><td>80% on 6 L O₂</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>SpO₂ 80% on 6 L O₂</li><li>tachycardia HR 130</li><li>hypotension BP 90/60</li><li>respiratory distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Blood cultures</li><li>Chest X‑ray</li><li>Arterial blood gas</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 18,000/µL</li><li>CMP: BUN 35, Cr 1.8, Na 128</li><li>Chest X‑ray: new right lower lobe consolidation</li><li>Blood cultures: S. pneumoniae, Pseudomonas</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>intubation</li><li>ventilatory support</li><li>norepinephrine 0.05 µg/kg/min</li><li>cefepime 2 g IV q8h</li><li>azithromycin 500 mg IV q24h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient could not provide subjective response due to sedation; family noted relief when medication pain control was applied.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">stage IVa SCC</span><span class="pill">pulmonary fibrosis</span><span class="pill">COPD emphysema</span><span class="pill">sepsis</span><span class="pill">multi‑organ failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>furosemide 40 mg BID</li><li>prednisone 10 mg daily</li><li>acetaminophen 650 mg</li><li>oxycodone 5 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Husband’s hospice care, low O₂ tolerance</li><li>recent infections with *S. pneumoniae* and *Pseudomonas*</li><li>pleural effusion</li><li>inflammatory pleural catheter removed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas presented to the emergency department with high fever, productive cough, and confusion. Repeat chest X‑ray revealed a new right lower lobe consolidation and increasing pleural effusion with a diaphragmatic hernia due to prior radiation fibrosis. Blood cultures grew *Streptococcus pneumoniae* and *Pseudomonas aeruginosa*. He was intubated for hypoxic respiratory failure, fluid resuscitated, and started on broad‑spectrum antibiotics: cefepime 2 g IV q8h and azithromycin 500 mg IV q24h. Vasopressor support (norepinephrine) was initiated for septic shock. Despite aggressive ICU care, multi-organ failure progressed, and the family elected to withdraw support.</p><p>Disease progression notes: fatal sepsis, refractory respiratory failure; tumor burden unchanged but systemic decline irrecoverable.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Severe sepsis complicated by COPD, pulmonary fibrosis, and metastatic SCC; multi‑organ system failure led to death.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Obstructive Pulmonary Disease</span><span class="pill">Emphysema</span><span class="pill">Chronic Bronchitis</span><span class="pill">Pulmonary Fibrosis</span><span class="pill">History of Lung Infections</span><span class="pill">Squamous cell carcinoma</span><span class="pill">Malignant pleural effusion</span><span class="pill">Hemothorax</span><span class="pill">Pneumothorax</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>furosemide 40 mg BID</li><li>prednisone 10 mg daily</li><li>acetaminophen 650 mg q6h PRN</li><li>oxycodone 5 mg PRN</li><li>hydrocortisone 100 mg IV q8h</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with 2‑week productive cough, yellow sputum, chest pressure, 3‑lb weight loss, and fatigue; SpO₂ 92, HR 104. Examination revealed scattered wheezes and basal crackles. CBC showed mild anemia, neutrophilia; chest X‑ray showed left lower lobe opacity. Initiated amoxicillin‑clavulanate 875/125 mg PO BID for 7 days, inhaled albuterol PRN, tiotropium 18 µg BID, and optional prednisone 40 mg PO daily for 5 days. Continued 2 L home oxygen. Received pneumococcal and influenza vaccinations, sputum culture obtained, and nutritional counseling requested. Follow‑up scheduled in 2 weeks.</li><li>Patient returned for follow‑up evaluation of persistent left lower lobe opacity. Symptoms: 3‑week productive cough, dyspnea on exertion, intermittent chest pressure, 7‑lb weight loss. Vitals: HR 102, RR 20, BP 128/76, SpO₂ 94% on 2 L/min O₂. Exam: mild respiratory distress, bilateral wheezes and basal crackles. Home oxygen continued. High‑resolution CT of chest and Pulmonary Function Test ordered. Medications: continue tiotropium 18 µg BID, albuterol 90 µg PRN, ipratropium 18 µg PRN, and low‑dose prednisone taper 20 mg PO daily tapering over 7 days. Patient educated regarding imaging and weight management.</li><li>Patient presented for initial oncologic evaluation with persistent cough, dyspnea, and 7‑lb weight loss. Imaging revealed 2.3×3.0 cm spiculated left lower lobe mass with central cavitation and mediastinal lymphadenopathy. Baseline labs (CBC, CMP, LDH, crossmatch) pending. Initiated ondansetron pre‑infusion prophylaxis. Planned chemotherapy regimen includes carboplatin, pemetrexed, and nivolumab. Continuation of home oxygen, inhaler therapy, and prednisone taper. Follow‑up pre‑infusion visit scheduled 2026‑03‑22 and subsequent 3‑week post‑first cycle assessment.</li><li>Patient underwent first cycle of carboplatin, pemetrexed, and nivolumab. Post‑infusion hypoxia treated with supplemental oxygen and prednisone taper 10 mg. Prescribed azithromycin 500 mg daily for 5 days and hydrochlorothiazide 25 mg daily for edema. Labs showed mild anemia (Hb 10.2 g/dL) and leukocytosis; chest X‑ray revealed mild left pleural effusion. Patient maintained home oxygen and inhaler regimen. Follow‑up scheduled in 7 days to reassess for next chemotherapy cycle.</li><li>Patient admitted for acute dyspnea and moderate left pleural effusion. ICU care with HFNC, thoracentesis yielding 500 mL sanguineous fluid with cytology positive for squamous cells, consistent with malignant pleural effusion. Pleural catheter placed. Started furosemide 40 mg IV q12 h, ceftriaxone 1 g IV daily, plus ongoing prednisone taper, azithromycin, and diuretics. Pain managed with ibuprofen and acetaminophen PRN. Discharged with pleural catheter care instructions, ongoing diuretics, antibiotics, prednisone taper, and home oxygen.</li><li>Patient presented with sudden left chest pain, worsening dyspnea, and lightheadedness. Imaging demonstrated a small left spontaneous pneumothorax with subcutaneous emphysema; a chest tube was inserted and the pleural catheter removed. The patient required high‑flow nasal cannula for 48 h, then stepped down to 2 L/min oxygen. SpO₂ remained 80 % on HFNC, HR 120/min, RR 28/min. Discontinued carboplatin and pemetrexed; continuing nivolumab 240 mg IV q2 weeks. Prednisone taper continued (10 mg for 5 days, 5 mg for 2 days) and hydrocortisone 100 mg IV q8 h started. Baseline inhaler therapy continued; diuretics and antihypertensives maintained. Ceftriaxone 1 g IV daily continued as empiric coverage. Follow‑up chest X‑ray scheduled in 4 weeks and next nivolumab infusion in 2 weeks. Patient referred to palliative care for symptom management.</li><li>Visit 7 (2026-04-22): Patient reviewed with multidisciplinary team and hospice care initiated. Discontinued nivolumab and pending chemotherapy. Continued home oxygen 4 L/min. Medications adjusted: tiotropium 18 µg PO BID, albuterol 90 µg inhalation PRN, ipratropium 18 µg inhaler PRN, methylprednisolone 16 mg PO daily, oxycodone 5 mg PO PRN for breakthrough pain, furosemide 40 mg IV q12h, hydrochlorothiazide 25 mg PO daily, acetaminophen 650 mg PO q6h PRN, ibuprofen 400 mg PO q6h PRN, hydrocortisone 100 mg IV q8h tapered. Ceftriaxone and azithromycin discontinued. Physical exam noted cachexia, mild edema, tachypnea; SpO₂ 88% on 4 L O₂. Hospice nurse to provide daily visits; palliative care biweekly.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

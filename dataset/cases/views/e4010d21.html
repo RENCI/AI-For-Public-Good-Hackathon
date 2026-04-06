@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case e4010d21</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: e4010d21</h1><div class="subtitle">Thyroid Storm | Female, 45</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Graves&#x27; disease, Hypertension, Type II diabetes mellitus, Obesity (BMI 32), Chronic kidney disease stage 2, Mild asthma</div><div class="meta-line">Risk Factors: Untreated hyperthyroidism, Abrupt discontinuation of antithyroid medication, Severe infection (pneumonia), Postpartum status within 6 weeks of delivery, Recent laparoscopic cholecystectomy (3 weeks ago)</div></div>
+<details><summary>Narrative <span class="preview-text">When the first light of sunrise filtered through the curtains of her modest apartment, Maya—45, a newly minted mother, a...</span></summary><div class="section-body"><p>When the first light of sunrise filtered through the curtains of her modest apartment, Maya—45, a newly minted mother, a recent laparoscopic cholecystectomy survivor, and a woman living with Graves’ disease, hypertension, type‑II diabetes, obesity (BMI 32), chronic kidney disease stage 2, and mild persistent asthma—woke with an uncharacteristic tremor of her fingertips and a racing pulse that seemed to echo against her chest. Her baby, a healthy blue‑eyed infant she’d delivered three weeks earlier via a breech presentation that required a cesarean section followed by a swift laparoscopic removal of a gallstone the week after, still lay on the cot, breathing its newborn sighs.</p><p>For most of those weeks, Maya had been careful to keep her antithyroid medication on board. But the weight of a new infant, sleepless nights, and the fear of hormone‑laden drugs while breastfeeding led her to stop Propylthiouracil (PTU) abruptly about ten days after delivery. She assumed the abrupt cessation would not be dangerous; her husband had reassured her that the body would adjust. However, the thyroid, unmoored from its medication, began to roar.</p><p>Two days after stopping PTU—two weeks postpartum—she felt a fluttering in her chest that she mistook for excitement. Her appetite had dipped, she had lost a modest amount of weight, and she complained of mild daytime tiredness that faded in the evenings. She made an appointment with her obstetrician, hoping the flutter would subside. The OB, noting her BMI and hypertension but attributing the palpitations to postpartum anxiety, instructed her to return if symptoms intensified but did not review her thyroid panel again. Maya left the clinic feeling relieved, yet a gnawing unease lingered in her chest.</p><p>By the tenth postpartum day, a sudden, sharp cough rose from her throat, accompanied by a low‑grade fever. The new cough worsened over the next 48 hours, and her breathing became progressively labored, especially when she lay flat, as her chest tightness mirrored the early whispers of asthma that had flared for a few days in the past year. She brushed it off as a mild viral upper respiratory infection, but a week later—at the twenty‑first postpartum day—she was in the urgent‑care clinic, gasping for air, sweating, and clutching her chest as the nurse measured a heart rate of 120 bpm and a respiratory rate of 28 breaths per minute.</p><p>They sent her X‑ray, which showed bilateral patchy infiltrates suggestive of pneumonia, and placed her on ceftriaxone and azithromycin. Her blood sugar spiked to 300 mg/dL, and her BP dipped to 90/55 mmHg, prompting her primary care provider to give her insulin sliding‑scale and fluids. The infection seemed to be resolved after three days of antibiotics, but Maya’s pulse stayed high, her diurnal temperature oscillated between 98.6°F and 100.3°F, and she reported persistent night sweats that left her sheets damp. She felt disorientated after a few late‑night hours of restlessness—an insomnia that made her feel she “was not in control.”</p><p>On the twenty‑fifth postpartum day, a sudden surge of dizziness and tremor came over her; she saw the world tilt, her heartbeat thundered against her sternum, and a bright, almost electric, heat enveloped her skin. Her husband saw her stumble into the hallway, her eyes wide with panic, and grabbed the phone for an emergency call. The ambulance was dispatched, and Maya arrived at the emergency department with a heart rate of 168 bpm, a temperature of 104°F, blood pressure of 88/50 mmHg, and a sweaty, clammy complexion. Her breathing was rapid and shallow, chest X‑ray now showing bilateral bronchopneumonia that had worsened. Her serum electrolytes were deranged: potassium 3.2 mmol/L, sodium 132 mmol/L, and her blood glucose was 450 mg/dL. The emergency team noted her glucose crisis, tachycardia, and febrile state, but the initial differential diagnosis was sepsis and acute asthma exacerbation, not a thyroid storm—its subtle presentation was missed in the frenetic moment.</p><p>The attending physician, after examining her thyroid, remembered that earlier lab results had shown a TSH of 0.02 µIU/mL, free T4 of 3.8 ng/dL, and free T3 of 8.1 pg/mL. He was alarmed but cautious. He ordered a repeat TSH, T4, T3 panel and a TSH‑receptor antibody screen. While awaiting those results, they started her on propranolol 60 mg IV slow‑bolus, then 40 mg oral q4h, and ceftriaxone for pneumonia. The patient’s vitals began to shift: the heart rate decreased to 145 bpm but blood pressure remained low; insulin infusion became necessary for her hyperglycemia. The next morning, TSH came back suppressed at &lt;0.01 µIU/mL, free T4 at 4.7 ng/dL—elevated, and T3 was 7.8 pg/mL, confirming thyrotoxicosis. The TSH‑receptor antibody test returned positive at 3.0 IU/L (normal &lt;1.0). A diagnosis of thyroid storm was made.</p><p>Maya was transferred to the intensive care unit. The ICU team, now aware of a precipitated thyroid storm—a severe, hypermetabolic crisis often triggered by infection, postpartum state, or discontinuation of antithyroid medication—commenced a full therapeutic protocol: propylthiouracil (PTU) 600 mg IV loading dose, then 200 mg IV q6h (the dose was carefully titrated given her CKD stage 2 and risk of hepatotoxicity), iodine solution (Lugol’s iodine) 5 mL orally four times daily, high‑dose intravenous hydrocortisone (100 mg q8h) to blunt peripheral conversion of T4 to T3, and aggressive cooling measures to curb her hyperthermia. Continuous cardiac telemetry revealed frequent premature atrial complexes, followed by a non‑sustained atrial tachycardia, then a short episode of ventricular tachycardia that resolved with amiodarone, but the arrhythmias persisted despite anti‑arrhythmic therapy. Her blood pressure remained precarious, necessitating phenylephrine and later norepinephrine infusions to maintain MAP above 65 mmHg. Her metabolic panel revealed rising creatinine—from 1.0 to 1.6 mg/dL—suggesting acute on chronic kidney injury, and liver enzymes skyrocketing within 48 hours of ICU admission (AST 350 IU/L, ALT 420 IU/L), raising concern for hepatic injury secondary to both PTU metabolism and the thyrotoxic crisis. Urine output fell to 0.2 mL/kg/h, and the decision was made to initiate continuous renal replacement therapy (CRRT) to manage rising creatinine and fluid overload.</p><p>Concurrent with the endocrine management, her infection was worsening. A sputum culture yielded Methicillin‑Sensitive *Staphylococcus aureus* (MSSA), prompting a switch from ceftriaxone to nafcillin and later linezolid when her renal function deteriorated. Despite antibiotics, her fever remained high; chest CT revealed a cavitary lesion within the right lower lobe that likely represented a septic embolus from a bacteremia flare. Her oxygenation status deteriorated further; despite high‑flow nasal cannula support at 50 L/min and FiO₂ 80 %, her PaO₂ remained stubbornly low. A decision was made to intubate her and place her on mechanical ventilation to protect her airway and reduce metabolic demand.</p><p>Within 4 days of ICU admission, Maya’s clinical picture had worsened: her heart rate peaked at 180 bpm, blood pressure plummeted to 78/55 mmHg with escalating vasopressor requirements, her serum bicarbonate fell to 16 mmol/L (indicating metabolic acidosis), and lactate levels rose to 6.5 mmol/L. On day 7 of ICU stay, her liver enzymes peaked again, and her INR climbed to 2.2, suggesting coagulopathy. The multidisciplinary team deliberated whether to proceed with total thyroidectomy, but the patient’s unstable condition and ongoing multi‑organ failure made it too high a risk; thus the decision to revert to PTU was maintained, but the dose was carefully monitored so as not to exacerbate her hepatic injury. Her urinary catheter remained in place, but she was no longer producing adequate urine; CRRT was up to 12 hours each day, yet her creatinine rose to 2.0 mg/dL.</p><p>Her parents arrived during the third ICU night, anxious and helpless. Maya’s mother could no longer feel her chest; instead, the monitors buzzed with an erratic rhythm. The endocrinologist consulted the hospital’s thyroid surgery service, who admitted that a subtotal thyroidectomy would probably benefit a patient with a thyrotoxic crisis but the patient&#x27;s comorbidities—obesity, hypertension, diabetes, and CKD stage 2—made surgery perilous in the setting of active sepsis.</p><p>On the eighth ICU day, a sudden cardiac arrest occurred: sudden loss of pulse, pallor, and unresponsiveness. CPR was started, and after three rounds of chest compressions, she regained spontaneous circulation with a pulse of 80 bpm, but her rhythm was in a ventricular tachycardic arrest that required defibrillation and epinephrine. Even after resuscitation, her labs were dire: electrolytes deranged (K+ 2.8 mmol/L, Mg2+ 1.4 mmol/L), creatinine 2.5 mg/dL, liver enzymes skyrocketed to AST 600 IU/L and ALT 750 IU/L, and CRP surged to 200 mg/L. Her blood glucose skyrocketed again to 600 mg/dL, controlled only by a high‑dose insulin infusion. The ICU team increased vasopressors to norepinephrine 0.4 µg/kg/min and vasopressin 0.03 U/min with little improvement in MAP. Her airway was maintained, but the ventilator settings had to be increased to FiO₂ 100 % and PEEP 15 cm H₂O, yet her oxygenation deficit persisted (PaO₂ 55 mmHg on 100 % FiO₂). The picture was now one of septic shock secondary to a persisting pneumonia, a thyrotoxic crisis, and a multi‑organ failure cascade.</p><p>As her condition plateaued, a discussion with the family and the palliative care team was held. Maya’s neurological exam remained flat: she had a Glasgow Coma Scale of 7—eyes closed, no response to pain, with only minimal spontaneous movements. She could no longer swallow or speak. Her blood pressure was unresponsive to vasopressors. The renal replacement therapy was being administered incessantly for fluid overload, but her kidneys had failed to recover. The liver functions had deteriorated beyond reversal. Her end‑stage diabetic control flared again, and despite aggressive insulin therapy, her blood glucose remained chaotic.</p><p>In the days that followed, the ICU team adjusted her medications: lowering PTU due to hepatic impairment, continuing steroids to suppress peripheral T4→T3 conversion, and using beta‑blockers to blunt the sympathetic surge. The ventilator team managed sedatives to keep her comfortable, while the palliative care team kept her family informed. They noted that her mother held Maya’s hand, whispering that she knew the pain she was ending. Maya’s father, a retired electrician, spoke softly to her, asking if she could hear the sound of a distant train, a memory he recalled with her from childhood.</p><p>On the fifteenth ICU day, Maya’s condition stopped improving. Her cardiac arrhythmias became incessant, her metabolic acidosis progressed, and her liver enzymes climbed to AST 800 IU/L, ALT 900 IU/L, bilirubin 5 mg/dL. The family, after many tears and difficult conversations, decided to pull back the life support. The ventilator was removed, the dialysis catheter was disconnected, and all pharmacologic interventions were ceased. The room quieted, and a single breath remained in the air weaved around the monitors, now silent.</p><p>Maya’s story is a somber reminder of how the convergence of untreated Graves’ disease, abrupt medication withdrawal, a severe post‑operative infection, the physical stress of postpartum physiology, and an array of comorbidities can lead to a catastrophic thyroid storm—a disease that, if not recognized early and treated aggressively, can spiral into multi‑system failure. Her journey—from mild palpitations to a fulsome, life‑threatening endocrine crisis—highlights both the importance of vigilance and the tragic consequences when the warning signs are muted and easily mistaken for other common ailments. Her path through the crisis, through days of relentless physiologic collapse, and finally to the moment of cessation, provides a stark illustration of a “hard” case of thyroid storm that ultimately worsened, underscoring the disease’s potential severity when compounded by other health challenges.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-17</h3><div class="visit-meta">Obstetrics &amp; Gynecology | Reason: Palpitations and mild daytime fatigue</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Palpitations and mild daytime fatigue.
+
+**History of Present Illness:** Maya is a 45‑year‑old woman who presents for a routine postpartum visit, currently 3 weeks postpartum. She reports a trembling sensation in her hands accompanied by a racing heart during the day, mild fatigue, and loss of appetite. She is a known case of Graves’ disease, which was treated with Propylthiouracil (PTU) and was discontinued 10 days ago. She also underwent a laparoscopic cholecystectomy 3 weeks ago. No fever, chest pain, SOB, or neurologic symptoms are reported.
+
+**Past Medical History:**
+- Graves’ disease
+- Hypertension
+- Type II diabetes mellitus
+- Obesity (BMI 32)
+- Chronic kidney disease stage 2
+- Mild asthma
+
+**Medications:** None (antithyroid was stopped)
+
+**Allergies:** NKDA
+
+**Social History:** Patient is a postpartum mother of one newborn. She reports adequate sleep but increased anxiety related to infant care.
+
+**Review of Systems:** Negative for fever, cough, congestion, chest pain, dyspnea, wheezing, syncope, rash, arthralgia, abdominal pain, urinary symptoms.
+
+**Vital Signs:**
+- Heart rate: 110 bpm
+- Blood pressure: 135/85 mmHg
+- Respiratory rate: 18 breaths/min
+- Temperature: 98.6°F
+- Oxygen saturation: 97%
+
+**Physical Examination:**
+- General: well‑appearing, anxious but oriented.
+- HEENT: no facial swelling, no goiter palpated.
+- Cardiovascular: tachycardia, regular rhythm, no murmurs.
+- Respiratory: clear bilateral breath sounds.
+- Abdomen: soft, non‑tender, no hepatosplenomegaly.
+- Extremities: tremors in distal hands.
+- Skin: no rash or petechiae.
+
+**Assessment:**
+- **Most likely**: Relapse or worsening of hyperthyroidism due to abrupt discontinuation of PTU, manifesting as palpitations, tremor, tachycardia, and fatigue.
+- **Other considerations**: Anemia, hypoglycemia, medication side effects from recent surgery, or postpartum anxiety.
+
+**Plan:**
+1. **Laboratory Evaluation** – Order:
+   - Serum thyroid function panel: TSH, Free T4, Free T3
+   - Thyroid receptor antibody (TRAb)
+   - Complete blood count (CBC) with differential
+   - Comprehensive metabolic panel (CMP) including electrolytes, renal function
+   - Fasting glucose and HbA1c
+   - Lipid panel
+2. **Symptomatic Management** – Initiate a low‑dose beta‑blocker (propranolol 10 mg PO twice daily) to alleviate palpitations and tremor while awaiting thyroid labs.
+3. **Antithyroid Therapy** – If labs confirm hyperthyroidism (TSH low, free T4/T3 elevated), start methimazole 10 mg PO once daily (or PTU if contraindicated to methimazole). Discuss medication safety in the postpartum period, as well as the need for close monitoring.
+4. **Monitoring and Follow‑Up** – Recheck vital signs and review laboratory results in 1 week. If thyroid function remains abnormal, adjust antithyroid dose accordingly. Continue to monitor glucose and blood pressure given her comorbidities.
+5. **Patient Education** – Discuss the significance of thyroid dysfunction, potential symptoms of worsening disease (e.g., chest pain, shortness of breath, weight loss, increased appetite). Emphasize the importance of medication adherence and regular follow‑up.
+6. **Supportive Care** – Encourage adequate sleep, balanced diet, and stress management techniques. Provide referral to a postpartum support group if anxiety persists.
+
+**Disposition:** Patient agrees to initiate propranolol and will return in one week for labs and reassessment. She is instructed to seek immediate care if she experiences worsening palpitations, chest pain, shortness of breath, fainting, or signs of thyroid storm.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Tremor of fingertips</span><span class="pill">Rapid heartbeat</span><span class="pill">Daytime fatigue</span><span class="pill">Loss of appetite</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>110</td></tr><tr><td>Blood Pressure (mmHg)</td><td>135/85</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>18</td></tr><tr><td>Temperature (F)</td><td>98.6</td></tr><tr><td>Oxygen Saturation (%)</td><td>97</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tremor of distal extremities</li><li>Tachycardia, HR 110</li><li>Clear lung fields</li><li>No facial swelling or thyromegaly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Chronic kidney disease stage 2</span><span class="pill">Mild asthma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg twice daily</li><li>Albuterol inhaler PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>3-week postpartum period</li><li>Abrupt discontinuation of Propylthiouracil (PTU) 10 days ago</li><li>Recent laparoscopic cholecystectomy 3 weeks ago</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived for a routine postpartum visit. She reported a trembling sensation in her hands and a racing heart during the day. The OB performed a brief exam, noting a heart rate of 110 bpm, normal blood pressure, and a BMI of 32. No fever or respiratory complaints were noted. The OB attributed her symptoms to postpartum anxiety, offered reassurance, and advised that she return if palpitations worsened. No laboratory work was ordered and no medication changes were made.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Hyperthyroidism likely unmasked by abrupt PTU cessation; symptoms mild, no immediate intervention.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-25</h3><div class="visit-meta">Urgent Care | Reason: Cough, shortness of breath, low‑grade fever</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 45‑year‑old female presents with worsening cough, shortness of breath, low‑grade fever, and night sweats.
+
+**History of Present Illness:** Patient is 45 y/o female with Graves’ disease, hypertension, type II diabetes mellitus, obesity, CKD stage 2, mild asthma, and a recent laparoscopic cholecystectomy. She discontinued propylthiouracil (PTU) 10 days ago. She reports a productive cough and progressive dyspnea over the past 3 days, low‑grade fever (100.5 °F), and night sweats. She has been on her usual medications: lisinopril 10 mg daily, metformin 500 mg BID, propranolol 10 mg BID, and albuterol PRN.
+
+**Vital Signs:**
+- HR: 120 bpm (tachycardia)
+- BP: 90/55 mmHg (hypotension)
+- RR: 28 breaths/min (tachypnea)
+- Temp: 100.5 °F (low‑grade fever)
+- SpO₂: 90 % on room air
+
+**Physical Examination:**
+- General: Appears mildly ill, mildly diaphoretic.
+- HEENT: No neck stiffness, no thyromegaly noted.
+- Cardiovascular: Regular tachycardia, no murmurs, no PMI shift.
+- Respiratory: Diffuse crackles bilaterally, mild wheeze on inspiration.
+- Abdomen: Soft, non‑distended, no rebound.
+- Extremities: No edema.
+- Neurologic: Alert and oriented.
+
+**Laboratory and Imaging Findings:**
+- Chest X‑ray: Bilateral patchy infiltrates suggestive of community‑acquired pneumonia.
+- CBC with differential: WBC 14,000/mm³, neutrophils 82 %.
+- BMP: Cr 1.0 mg/dL.
+- Blood glucose: 300 mg/dL.
+- Note: No ketoacidosis (no ketones noted). 
+
+**Assessment:**
+1. Community‑acquired pneumonia (bilateral infiltrates, leukocytosis, fever, productive cough).
+2. Possible thyrotoxic crisis or thyroid storm (history of Graves’, recent PTU discontinuation, persistent tachycardia &gt;110 bpm, night sweats, low‑grade fever).  
+3. Hyperglycemic crisis (random glucose 300 mg/dL) likely secondary to infection; no diabetic ketoacidosis.
+4. Hypotension secondary to sepsis and volume depletion.
+
+**Plan:**
+- **Antibiotics:** Continue ceftriaxone 1 g IV daily for 7 days; azithromycin 500 mg PO daily for 5 days.  
+- **Fluid Resuscitation:** Isotonic saline 1 L bolus; continue maintenance fluids as needed.
+- **Glucose Management:** Initiate insulin sliding‑scale protocol; monitor glucose hourly for first 6 h, then every 4 h.  
+- **Thyroid Management:** Obtain TSH, Free T4, Free T3, TRAb on same day.  Discuss urgent referral to endocrinology if labs indicate severe hyperthyroidism or thyrotoxic crisis; consider starting methimazole pending labs.
+- **Cardiovascular:** Re‑assess propranolol dose; titrate if heart rate remains &gt;110 bpm and BP stabilizes.  Monitor for hypotension.
+- **Respiratory:** Continue albuterol PRN; consider nebulized hypertonic saline if hypoxia persists.
+- **Follow‑up Tests:** Repeat CBC and BMP in 24 h.  Repeat chest X‑ray in 48–72 h or sooner if clinical deterioration.
+- **Disposition:** Admit to the hospital for close monitoring of vitals, glucose control, and response to antibiotics; consider ICU if deteriorating.
+- **Disposition Note:** Patient is to be admitted for evaluation of possible thyrotoxic crisis and management of sepsis.  On discharge, repeat thyroid panel in two weeks.
+- **Patient Education:** Discuss importance of glucose monitoring, completing full antibiotic course, signs of worsening infection (increasing dyspnea, fever &gt;101 °F, chest pain).  Educate on keeping medication appointments.
+
+**Follow‑Up Recommendations:**
+- Immediate admission to evaluate for sepsis and thyrotoxic crisis.
+- Repeat CBC, BMP, glucose every 12 h; thyroid panel at 24 h.
+- Repeat chest X‑ray at day 2 or if clinical status worsens.
+- Adjust beta‑blocker dose after endocrine consult.
+- Reassess blood pressure and heart rate in 24 h; if stable, consider transfer to observation unit.
+- Educate patient to return to urgent care or ER if dyspnea worsens, persistent fever &gt;101 °F, or significant hypotension.
+- Schedule endocrinology follow‑up in 1 week post‑discharge.
+
+**Medications Administered / Prescribed:**
+- Ceftriaxone 1 g IV q24h
+- Azithromycin 500 mg PO q24h
+- Insulin sliding‑scale (per protocol)
+- Isotonic saline 0.9 % 1 L over 1 h
+- Continue: Lisinopril 10 mg daily, Metformin 500 mg BID, Albuterol PRN, Propranolol 10 mg BID
+
+**Disposition:** Admit to acute care unit with multidisciplinary input (endocrinology, infectious disease).  Continuous monitoring for hemodynamic stability and response to therapy.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Productive cough</span><span class="pill">Shortness of breath</span><span class="pill">Low‑grade fever</span><span class="pill">Night sweats</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>120</td></tr><tr><td>Blood Pressure (mmHg)</td><td>90/55</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>28</td></tr><tr><td>Temperature (F)</td><td>100.5</td></tr><tr><td>Oxygen Saturation (%)</td><td>90</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tachycardia, HR 120</li><li>Tachypnea, RR 28</li><li>Diffuse crackles bilaterally</li><li>Mild fever</li><li>No overt thyromegaly</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>CBC with differential</li><li>BMP</li><li>Blood glucose</li><li>Insulin sliding‑scale protocol</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: Bilateral patchy infiltrates</li><li>CBC: WBC 14,000, neutrophils 82%</li><li>BMP: Serum creatinine 1.0 mg/dL</li><li>Blood glucose 300 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ceftriaxone 1 g IV q24h</li><li>Azithromycin 500 mg PO q24h</li><li>Insulin sliding‑scale</li><li>Isotonic saline 0.9% 1 L over 1 h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Infection improved over 3 days; fever resolved, but heart rate remained &gt;110 bpm. Night sweats persisted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Albuterol inhaler PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent laparoscopic cholecystectomy</li><li>Postpartum weight gain</li><li>PTU discontinued 10 days ago</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented with worsening cough and dyspnea; the clinician noted tachycardia, tachypnea, and mild hypoxia. A chest X‑ray revealed bilateral patchy infiltrates suggestive of community‑acquired pneumonia. A complete blood count showed leukocytosis (WBC 14,000). Blood glucose was 300 mg/dL; insulin sliding‑scale was initiated, along with isotonic fluids. Empiric antibiotics ceftriaxone 1 g IV daily and azithromycin 500 mg PO daily were started. The patient was offered a repeat CBC and a basic metabolic panel the following day.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Hyperthyroid state likely contributing to persistent tachycardia. Awaiting thyroid panel results.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-01-28</h3><div class="visit-meta">Emergency Medicine | Reason: Severe dizziness, tremor, fever, heart rate 168</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe dizziness, tremor, fever, heart rate 168 bpm.
+
+History of Present Illness: Maya, a 45‑year‑old female with a history of Graves&#x27; disease, hypertension, Type II diabetes mellitus, obesity, CKD stage 2, mild asthma and concurrent pneumonia presented to the ED with acute onset of profound dizziness, trembling hands, profuse sweating and a temperature of 104°F. On arrival she was diaphoretic, hypotensive (BP 88/50 mmHg) and tachycardic (HR 168 bpm).
+
+Past Medical History: Graves&#x27; disease (PTU discontinued 2 weeks ago), hypertension, T2DM, obesity, CKD stage 2, mild asthma, community‑acquired pneumonia, laparoscopic cholecystectomy 3 weeks ago.
+
+Medications: Ceftriaxone 1 g IV q24h, Azithromycin 500 mg PO q24h, Insulin sliding‑scale, Lisinopril 10 mg daily, Metformin 500 mg BID.
+
+Allergies: NKDA.
+
+Physical Examination:
+- Vitals: HR 168 bpm, BP 88/50 mmHg, RR 34/min, Temp 104°F, SpO₂ 88% on room air.
+- General: Diaphoretic, restless, tremulous hands and trunk.
+- Head/Neck: Tired, no cervical lymphadenopathy.
+- Cardiovascular: Rapid, regular rhythm, no murmurs.
+- Respiratory: Coarse crackles bilaterally; diminished breath sounds at bases.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema.
+- Neurologic: Alert, oriented, no focal deficits.
+
+Laboratory and Imaging: TSH 0.02 µIU/mL (suppressed), Free T4 3.8 ng/dL (elevated), Free T3 8.1 pg/mL (elevated), TRAb 3.0 IU/L (positive). CBC: WBC 16,000/µL. BMP: Cr 1.0 mg/dL. LFTs: AST 45 U/L, ALT 50 U/L. Chest X‑ray: Bilateral bronchopneumonia. Blood cultures obtained.
+
+Assessment:
+- Thyroid storm secondary to unopposed thyrotoxicosis after PTU discontinuation.
+- Sepsis from community‑acquired pneumonia contributing to hemodynamic instability.
+- Potential adrenal insufficiency unmasked by hyperthyroid crisis.
+
+Plan:
+1. Endocrinology consult for definitive management of thyroid storm.
+2. Continue beta‑blockade: Propranolol 60 mg IV slow‑bolus, then 5 mg q6 h IV; titrate to HR &lt;120 bpm.
+3. Initiate high‑dose IV glucocorticoids: Hydrocortisone 100 mg IV q6 h.
+4. Add IV iodine solution (Lugol’s) 5 mL IV 1 h after hydrocortisone if no contraindications.
+5. Restart antithyroid therapy; start Propylthiouracil 10 mg PO q6 h (or methimazole 10 mg PO daily if unavailable).
+6. Continue broad‑spectrum antibiotics for pneumonia: Ceftriaxone 1 g IV q24h and Azithromycin 500 mg PO q24h; reassess after culture results.
+7. Intensify fluid resuscitation with 0.9 % saline; consider vasopressor support if MAP &lt;65 mmHg despite fluids.
+8. Tight glucose control with insulin infusion per sliding‑scale protocol.
+9. Continuous cardiac monitoring and hourly vitals until stable.
+10. Repeat TFTs, CBC, BMP, LFTs every 4 h for first 24 h.
+11. Transfer to ICU for close monitoring.
+12. Discharge planning: schedule follow‑up with endocrinology and nephrology in 48 h; educate on medication adherence and recognition of hyperthyroid symptoms.
+
+Disposition: Immediate transfer to ICU for management of thyroid storm and sepsis.
+
+Provider: [Name]
+
+Signature: [Signature]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe tremor</span><span class="pill">Dizziness</span><span class="pill">Profound sweating</span><span class="pill">High heart rate</span><span class="pill">Fever 104 °F</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>168</td></tr><tr><td>Blood Pressure (mmHg)</td><td>88/50</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>34</td></tr><tr><td>Temperature (F)</td><td>104</td></tr><tr><td>Oxygen Saturation (%)</td><td>88</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tremor of hands and trunk</li><li>Rapid heart rate 168 bpm</li><li>Sweaty, clammy skin</li><li>Low blood pressure</li><li>Lungs with coarse crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>TSH</li><li>Free T4</li><li>Free T3</li><li>TSH‑receptor antibody</li><li>CBC</li><li>BMP</li><li>LFTs</li><li>Chest X‑ray</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TSH 0.02 µIU/mL</li><li>Free T4 3.8 ng/dL</li><li>Free T3 8.1 pg/mL</li><li>TSH‑receptor antibody 3.0 IU/L</li><li>Chest X‑ray: Bilateral bronchopneumonia</li><li>CBC: WBC 16,000</li><li>BMP: Creatinine 1.0 mg/dL</li><li>LFTs: AST 45 U/L, ALT 50 U/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Propranolol 60 mg IV slow‑bolus</li><li>Ceftriaxone 1 g IV q24h</li><li>Azithromycin 500 mg PO q24h</li><li>Insulin sliding‑scale</li><li>IV fluids 0.9% saline</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Heart rate decreased to 145 bpm but remained high; blood pressure remained &lt;90 mmHg; patient remained sweaty and anxious.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Pneumonia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ceftriaxone 1 g IV q24h</li><li>Azithromycin 500 mg PO q24h</li><li>Insulin sliding‑scale</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Two weeks of pneumonia</li><li>Recent cessation of PTU</li><li>Recent laparoscopic cholecystectomy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Upon arrival, Maya was diaphoretic with tremulous hands and hypotension. A chest X‑ray confirmed bilateral bronchopneumonia. The emergency physician ordered a comprehensive thyroid panel (TSH, free T4, free T3), TSH‑receptor antibody screen, CBC, BMP, liver function tests, and blood cultures. Empiric propranolol 60 mg IV was administered to reduce sympathetic outflow. Ceftriaxone continued. As the labs returned, TSH was markedly suppressed, free T4 and T3 were elevated, and TRAb was positive. A diagnosis of thyroid storm was made. The patient was transferred to the ICU for aggressive endocrine therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Thyroid storm confirmed; impending ICU admission for full endocrine and infectious disease management.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-01-29</h3><div class="visit-meta">Intensive Care Medicine | Reason: Intensive care admission for thyroid storm and septic shock</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 45‑year‑old female admitted to ICU for septic shock secondary to pneumonia and thyrotoxic crisis. Past medical history includes Graves’ disease, hypertension, type II diabetes mellitus, obesity, CKD stage 2, mild asthma. On presentation she was hypotensive (BP 95/55 mmHg), tachycardic (HR 145 bpm), febrile (102 °F), and hypoxic (SpO₂ 85% on 50 L high‑flow). She required phenylephrine infusion (5 µg/min) and had ongoing capillary leak necessitating CRRT.
+
+Assessment: 1) Septic shock due to community‑acquired pneumonia with ongoing hypoperfusion (lactate 4.2 mmol/L, metabolic acidosis). 2) Thyrotoxic crisis (thyroid storm) evidenced by suppressed TSH, elevated free T4/T3, TRAb positivity, refractory tachycardia, fever, tremor. 3) Acute hepatic injury likely secondary to PTU hepatotoxicity (AST 350, ALT 420). 4) Acute kidney injury (Cr 1.6 mg/dL, worsening despite CRRT) secondary to sepsis, hypoperfusion, and drug toxicity. 5) Atrial arrhythmias (premature atrial complexes and non‑sustained atrial tachycardia) managed with amiodarone infusion.
+
+Plan: • Continue PTU 200 mg IV q6h (monitor LFTs q12h). • Continue oral iodine 5 µg/mL q6h. • High‑dose hydrocortisone 100 mg IV q8h. • Maintain propranolol 60 mg IV bolus then 40 mg PO q4h; titrate to achieve HR &lt;120 bpm while monitoring for bradycardia and hypotension. • Maintain phenylephrine infusion; consider adding norepinephrine if MAP &lt;65 mmHg once hemodynamics stabilize. • Continue amiodarone infusion 5 mg/h; monitor for QT prolongation. • Continue ceftriaxone 1 g IV q24h and azithromycin 500 mg PO q24h. • Continue insulin infusion for glycemic control; target glucose 140–180 mg/dL. • CRRT 4 hrs daily, monitor output, adjust ultrafiltration as needed. • High‑flow nasal cannula 50 L, FiO₂ 80%; reassess for escalation to mechanical ventilation if SpO₂ &lt;88% despite FiO₂ &gt;0.6 or increasing work of breathing. • Serial labs: BMP, CMP, LFT panel every 12 h; ABG/venous blood gas q6h; TSH, free T4, free T3, TRAb q24h. • Cardiac telemetry continuous; monitor for arrhythmias. • Repeat chest X‑ray in 24 h. • Endocrinology consult for evaluation of optimal antithyroid strategy and potential initiation of levothyroxine tapering once crisis mitigated. • ICU review of fluid balance; consider vasopressor weaning once stable. • Discharge plan: after stabilization, transition to oral methimazole if patient remains hyperthyroid; planned step‑down antibiotics to ceftriaxone 1 g IV q24h for total 7 days, then switch to oral agent. • Plan for outpatient follow up with endocrinology and infectious disease within 1–2 weeks post‑discharge.
+
+Disposition: Patient will remain in ICU until hemodynamic stabilization, oxygenation improvement, and resolution of metabolic perturbations. Safety measures include strict monitoring of liver enzymes, renal function, ECG changes, and glucose levels.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistently high heart rate</span><span class="pill">Hypotension</span><span class="pill">Respiratory distress</span><span class="pill">Metabolic acidosis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>145</td></tr><tr><td>Blood Pressure (mmHg)</td><td>95/55</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>32</td></tr><tr><td>Temperature (F)</td><td>102</td></tr><tr><td>Oxygen Saturation (%)</td><td>85</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tremor of hands and trunk</li><li>Rapid heart rate 145</li><li>Diaphoretic skin</li><li>Bilateral crackles</li><li>Weak peripheral pulses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>BMP</li><li>CMP</li><li>LFT panel</li><li>ABG</li><li>ECG</li><li>Venous blood gas</li><li>CRRT output rate</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Creatinine 1.6 mg/dL</li><li>AST 350 U/L</li><li>ALT 420 U/L</li><li>Bicarbonate 15 mmol/L</li><li>pH 7.25</li><li>Lactate 4.2 mmol/L</li><li>ECG: frequent premature atrial complexes</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>PTU 200 mg IV q6h</li><li>Iodine 5 mL oral q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 60 mg IV then 40 mg PO q4h</li><li>Phenylephrine infusion 5 µg/min</li><li>CRRT 4 hrs daily</li><li>Amiodarone infusion 5 mg/h</li><li>High‑flow nasal cannula</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in heart rate (~140 bpm) but persistent hypotension requiring vasopressors. LFTs continued to rise; renal function worsened.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Septic shock</span><span class="pill">Pneumonia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>PTU 600 mg IV loading dose</li><li>PTU 200 mg IV q6h</li><li>Iodine 5 mL oral q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 40 mg PO q4h</li><li>Ceftriaxone 1 g IV q24h</li><li>Azithromycin 500 mg PO q24h</li><li>Insulin infusion</li><li>Phenylephrine infusion 5 µg/min</li><li>CRRT 4 hrs daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Septic shock from pneumonia</li><li>Recent thyroid storm diagnosis</li><li>CKD stage 2</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya was admitted to the ICU with a diagnosis of thyroid storm complicated by septic shock. Initial labs showed rising creatinine (1.6 mg/dL), AST/ALT (AST 350 U/L, ALT 420 U/L), and metabolic acidosis (bicarbonate 15 mmol/L). A large‑volume blood loss due to capillary leak necessitated CRRT. PTU was started at a reduced dose (200 mg IV q6h) to mitigate hepatotoxicity. Iodine therapy was given orally. High-dose hydrocortisone was initiated to inhibit peripheral conversion of T4 to T3. Propranolol was started IV then PO. Vasopressor support with phenylephrine was maintained. The patient was placed on high‑flow nasal cannula and titrated to 50 L/min, FiO₂ 80%. Continuous cardiac telemetry monitored for arrhythmias. The ICU team noted frequent premature atrial complexes and non‑sustained atrial tachycardia; amiodarone infusion was started after arrhythmias persisted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute on chronic kidney injury, hepatic injury from PTU, severe thyrotoxic state, septic shock. Arrhythmogenic substrate identified; anti‑arrhythmic therapy added.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-01-31</h3><div class="visit-meta">Intensive Care Medicine | Reason: Clinical deterioration: worsening infection and cardiopulmonary instability</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Clinical deterioration with worsening infection and cardiopulmonary instability.
+
+History of Present Illness:
+The patient is a 45-year-old female with a history of Graves&#x27; disease, hypertension, type 2 diabetes mellitus, obesity, CKD stage 2, and mild asthma, currently admitted to the ICU for severe MSSA pneumonia progressing to septic shock. She was intubated on ICU day 3 after progressive hypoxia and respiratory failure. At the time of this encounter (ICU day 5) she remains febrile, tachycardic, hypotensive, and has worsening transaminases (AST 500, ALT 550) with mild hyponatremia (125 mmol/L). A new right-lower-lobe cavitary lesion was identified on chest CT, consistent with septic embolus. Antibiotics were escalated to nafcillin 2 g IV q8h with linezolid 600 mg PO q12h; however, the patient’s fever has persisted.
+
+Past Medical History &amp; Medications:
+- Graves&#x27; disease – PTU 200 mg IV q6h, iodine 5 mL PO q6h, hydrocortisone 100 mg IV q8h, propranolol 40 mg PO q4h
+- Hypertension – lisinopril 10 mg daily; dose adjustments pending
+- Type 2 diabetes mellitus – insulin infusion
+- CKD stage 2 – CRRT 12 hrs daily
+- Mild asthma – albuterol PRN
+
+Allergies: NKDA
+
+Physical Examination:
+- Vitals: HR 160 bpm, BP 78/55 mmHg, RR 30, Temp 101 F, SpO₂ 80 % on FiO₂ 100 %, PEEP 15 cm H₂O
+- General: Agitated, uncomfortable, signs of shock
+- HEENT: No jugular venous distention
+- Cardiac: Tachycardic with regular rhythm, no murmurs
+- Respiratory: Bilateral coarse crackles, use of accessory muscles; lungs are poorly aerated
+- Abdomen: Soft, diffusely tender with prominent RUQ tenderness, no rebound or guarding
+- Extremities: Diffuse pitting edema
+- Skin: Warm, mottled; no rash
+
+Laboratory &amp; Imaging:
+- CBC: leukocytosis; WBC 18 k/µL
+- BMP: Cr 1.8 mg/dL
+- LFT panel: AST 500, ALT 550, Alk Phos 120, total bilirubin 1.4 mg/dL
+- Coagulation: INR 1.4
+- Blood cultures: Pending
+- Chest CT: Right lower lobe cavitary lesion
+- Abdominal ultrasound: No gallstone recurrence
+- CXR: Bilateral infiltrates
+
+Assessment:
+1. Septic pulmonary embolism from MSSA pneumonia – ongoing infection despite appropriate antimicrobials.
+2. Acute severe hepatic injury – likely multifactorial (transient ischemia, linezolid hepatotoxicity, PTU).
+3. Septic shock with refractory hypotension – requires optimization of vasopressors and fluid resuscitation.
+4. Acute kidney injury – contributing to fluid overload and electrolyte derangements.
+
+Plan:
+- Continue nafcillin 2 g IV q8h and linezolid 600 mg PO q12h; consider adding a third agent (e.g., cefazolin) if cultures evolve.
+- Increase norepinephrine to 0.07 µg/kg/min; taper phenylephrine as MAP &gt;65 mmHg.
+- Maintain CRRT 12 hrs/day; target urine output 0.3 mL/kg/h; adjust fluid balance accordingly.
+- Hydrocortisone dose unchanged; continue propranolol 40 mg PO q4h; consider tapering when cardiopulmonary status improves.
+- Insert central venous catheter (if not in place) for goal‑directed fluid therapy.
+- Obtain repeat blood cultures (2 sets) and consider catheter‑related bloodstream infection surveillance.
+- Daily labs: CBC, CMP, LFT, coagulation, serum lactate.
+- Daily chest X‑ray; consider repeat CT if clinical deterioration.
+- Endocrinology consult to evaluate for thyroid storm and adjust anti‑thyroid regimen.
+- Infectious diseases consult for antimicrobial stewardship and potential addition of rifampin or daptomycin if source persists.
+- Monitor renal function; consider nephrology involvement for dialysis planning if AKI worsens.
+- Weaning plan: prepare for extubation once PaO₂/FiO₂ &gt;150, adequate muscle strength, and no vasopressor need.
+
+Follow‑up Recommendations:
+- ICU continuous monitoring; adjust vasopressors and CRRT per daily labs.
+- Re‑evaluate for hepatic decompensation; consider hepatology consult if AST/ALT &gt;1000 or clinical signs of hepatic failure.
+- Review insulin infusion goal (tight glycemic control) to avoid hyperglycemia‑induced immunosuppression.
+- Plan for early mobilization and physical therapy as tolerated.
+- Provide family education regarding critical illness course and potential outcomes.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increased dyspnea</span><span class="pill">Persistent fever</span><span class="pill">Episodes of tachycardia</span><span class="pill">Abdominal pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>160</td></tr><tr><td>Blood Pressure (mmHg)</td><td>78/55</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>30</td></tr><tr><td>Temperature (F)</td><td>101</td></tr><tr><td>Oxygen Saturation (%)</td><td>80</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Respiratory distress: use of accessory muscles</li><li>Tachycardia 160</li><li>Hypotension 78/55</li><li>Diffuse edema</li><li>Abdominal tenderness in RUQ</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Sputum culture</li><li>Chest CT</li><li>Abdominal ultrasound</li><li>CXR</li><li>LFT panel</li><li>CBC</li><li>BMP</li><li>Coagulation profile</li><li>Urine output monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Sputum culture: MSSA sensitive to nafcillin</li><li>Chest CT: right lower lobe cavitary lesion</li><li>Abdominal US: no gallstone recurrence</li><li>LFTs: AST 500, ALT 550</li><li>Coagulation: INR 1.4</li><li>BMP: Creatinine 1.8 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Nafcillin 2 g IV q8h</li><li>Linezolid 600 mg PO q12h</li><li>Intubation and mechanical ventilation</li><li>High‑flow nasal cannula prior</li><li>CRRT 12 hrs daily</li><li>Propionate insulin infusion</li><li>Norepinephrine infusion 0.07 µg/kg/min</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Respiratory status stabilized after intubation, but hemodynamics remained precarious. LFTs continued to rise; sodium dropped to 125 mmol/L.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Septic shock</span><span class="pill">Pneumonia</span><span class="pill">CRRT</span><span class="pill">Atrioventricular conduction abnormalities</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>PTU 200 mg IV q6h</li><li>Iodine 5 mL oral q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 40 mg PO q4h</li><li>Nafcillin 2 g IV q8h</li><li>Linezolid 600 mg PO q12h</li><li>Insulin infusion</li><li>Phenylephrine 5 µg/min</li><li>Norepinephrine 0.05 µg/kg/min</li><li>CRRT 12 hrs daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pneumonia with MSSA culture</li><li>CRRT ongoing</li><li>Recent thyroid storm therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sputum culture returned Methicillin‑Sensitive *Staphylococcus aureus*, prompting a switch from ceftriaxone to nafcillin and subsequent addition of linezolid due to emerging renal dysfunction. The ICU team noted a new right‑lower‑lobe cavitary lesion on CT chest, consistent with septic embolus. Despite escalating antibiotics, the patient&#x27;s fever persisted. LFTs continued to climb (AST 500, ALT 550). The patient remained hypotensive; norepinephrine was increased. She required intubation on the morning of admission to ICU day 3 due to escalating respiratory failure. The ventilator was set to a lung‑protective strategy with PEEP 15 cm H₂O and FiO₂ 100%. CRRT was intensified to 12 hrs each day with a target urine output of 0.3 mL/kg/h.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Ongoing multi‑organ failure: acute renal failure requiring CRRT, worsening hepatic injury, persistent sepsis from MSSA pneumonia. Thyroid storm still active; anti‑arrhythmic therapy not fully effective.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-02-04</h3><div class="visit-meta">Intensive Care Medicine | Reason: Review of surgical feasibility and ongoing organ failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of surgical feasibility and ongoing organ failure.
+
+History of Present Illness: 45‑year‑old female with Graves’ disease, type II diabetes mellitus, hypertension, morbid obesity, chronic kidney disease stage II, mild asthma, and a recent history of septic shock and pneumonia requiring CRRT and mechanical ventilation. She has been in the ICU for 8 days and remains sedated, intubated, and on maximum vasopressor support. The multidisciplinary ICU conference reviewed the rapidly worsening transaminases (AST 800 U/L, ALT 900 U/L), INR 2.2, persistent hypotension despite phenylephrine 10 µg/min and norepinephrine 0.12 µg/kg/min, and the patient’s active septic picture. Surgical risk was deemed prohibitive due to the combination of morbid obesity, uncontrolled diabetes, CKD, ongoing septic shock, and multiorgan failure.
+
+Current Management: Hydrocortisone 100 mg IV q8 h, naf­cillin 2 g IV q8 h, linezolid 600 mg PO q12 h, insulin infusion, phenylephrine 10 µg/min, norepinephrine 0.12 µg/kg/min, CRRT 12 hrs/day, amiodarone infusion 5 mg/h, 0.9 % saline IV fluids, albuterol PRN, lisinopril 10 mg daily, metformin 500 mg BID. Electrolytes are low (K+ 3.2 mmol/L, Na+ 132 mmol/L), and creatinine has risen to 2.5 mg/dL.
+
+Assessment: The patient is in refractory septic shock with multi‑organ dysfunction. The liver injury is most consistent with a combination of ischemic hepatitis secondary to hypotension, septic-mediated microcirculatory dysfunction, and possible drug‑induced hepatotoxicity (nafcillin, linezolid, amiodarone). Renal failure requires ongoing CRRT. Persistent hyperglycemia is managed with an insulin infusion. The arrhythmia (biventricular, atrio‑ventricular) is being treated with amiodarone. The patient remains critically ill; emergent surgery is not feasible.
+
+Differential Diagnoses:
+1. Sepsis‑associated multiple organ dysfunction syndrome (MODS) with acute hepatic failure.
+2. Ischemic hepatitis (“shock liver”).
+3. Drug‑induced hepatotoxicity from antibiotics, amiodarone, or steroids.
+4. Thyrotoxic crisis or severe thyrotoxicosis contributing to cardiovascular instability.
+5. Acute tubular necrosis secondary to sepsis and hypotension.
+6. Refractory vasoplegic shock despite vasopressors.
+
+Plan:
+1. Continue current pharmacologic regimen; re‑evaluate steroid dosing if adrenal insufficiency is suspected.
+2. Add potassium chloride 20 mEq IV q6h to correct hypokalemia (K+ &lt; 3.5 mmol/L) and monitor serum K+ every 4 hrs.
+3. Monitor serum electrolytes, CBC, LFTs, INR, and creatinine q6 hrs; adjust CRRT prescription as needed.
+4. Maintain insulin infusion with bedside glucose monitoring q1‑hr; titrate to target 140–180 mg/dL.
+5. Continue norepinephrine and phenylephrine; titrate to MAP &gt;65 mmHg; consider adding vasopressin if MAP remains sub‑optimal.
+6. Consult hepatology for potential support/therapy (e.g., N‑acetylcysteine, plasma exchange) and transplant evaluation.
+7. Consult nephrology for CRRT optimization.
+8. Re‑assess antimicrobial coverage: evaluate cultures and consider de‑escalation or adjustment as infection evolves.
+9. Consider prophylactic anticoagulation if no contraindication and INR can be normalized.
+10. Encourage daily re‑assessment of fluid balance and urine output.
+11. Discuss palliative care consultation given the high morbidity and mortality risk.
+
+Follow‑up Recommendations:
+- Daily LFTs, bilirubin, INR, and renal panel.
+- Continuous hemodynamic monitoring with arterial line.
+- Daily assessment of fluid status and CRRT adequacy.
+- Repeat thyroid panel in 24 hrs and adjust antithyroid therapy accordingly.
+- Discuss possible transfer to a liver transplant center if hepatic function worsens.
+- Re‑evaluate need for emergent surgery in 48 hrs if clinical status improves.
+- Family meeting regarding prognosis and goals of care within 24 hrs.
+
+Disposition: Continue in ICU with close monitoring; anticipate possible escalation of care measures.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continued tachycardia</span><span class="pill">Hypotension</span><span class="pill">Prolonged fever</span><span class="pill">Liver enzyme elevation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>150</td></tr><tr><td>Blood Pressure (mmHg)</td><td>70/45</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>32</td></tr><tr><td>Temperature (F)</td><td>100.5</td></tr><tr><td>Oxygen Saturation (%)</td><td>78</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Sedated, intubated</li><li>Weak peripheral pulses</li><li>Liver edge palpable</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>LFT panel</li><li>Coagulation profile</li><li>BMP</li><li>Urine output monitoring</li><li>Hemodynamic monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AST 800 U/L</li><li>ALT 900 U/L</li><li>INR 2.2</li><li>Creatinine 2.5 mg/dL</li><li>K+ 3.2 mmol/L</li><li>Na+ 132 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>PTU 200 mg IV q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 40 mg PO q4h</li><li>Nafcillin 2 g IV q8h</li><li>Linezolid 600 mg PO q12h</li><li>Insulin infusion</li><li>Phenylephrine 10 µg/min</li><li>Norepinephrine 0.12 µg/kg/min</li><li>CRRT 12 hrs/day</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Persistent hypotension despite maximum vasopressor support. LFTs continued to climb; hyperglycemia remained difficult to control.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Septic shock</span><span class="pill">Pneumonia</span><span class="pill">CRRT</span><span class="pill">Biventricular arrhythmias</span><span class="pill">Hepatic dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>PTU 200 mg IV q6h (dose still maintained)</li><li>Iodine 5 mL oral q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 40 mg PO q4h</li><li>Nafcillin 2 g IV q8h</li><li>Linezolid 600 mg PO q12h</li><li>Insulin infusion</li><li>Phenylephrine 5 µg/min</li><li>Norepinephrine 0.1 µg/kg/min</li><li>CRRT 12 hrs daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT ongoing</li><li>Intubated</li><li>Atrioventricular arrhythmias</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the daily ICU multidisciplinary conference, the endocrinologist reviewed the escalating LFT trend (AST 800 U/L, ALT 900 U/L) and INR 2.2, questioning the feasibility of an emergent subtotal thyroidectomy. Given the patient&#x27;s morbid obesity, uncontrolled hypertension, diabetic milieu, renal impairment, and active septic picture, the surgical team deemed the operative risk prohibitive. The decision was made to persist with medical management: PTU dose cautiously continued, hydrocortisone maintained, beta‑blocker therapy upheld, and vasopressors escalated. The ICU team optimized CRRT to 12 hrs/day to address rising creatinine (2.5 mg/dL), and intensified insulin protocols to manage severe hyperglycemia. The patient remained sedated, mechanically ventilated, and in a persistent, refractory hypotensive state.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Critical organ failure: hepatic failure, renal failure requiring CRRT, ongoing thyrotoxic crisis, uncontrolled sepsis. Surgery ruled out; maximum medical therapy pursued.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-02-05</h3><div class="visit-meta">Intensive Care Medicine | Reason: Cardiac arrest resuscitation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">ICU Day 7 – 05 Feb 2023
+
+Patient: 45‑year‑old female with complex medical history including Graves’ disease, hypertension, type II diabetes mellitus, obesity, CKD stage 2, mild asthma, septic shock, community‑acquired pneumonia, continuous renal replacement therapy, biventricular arrhythmias, and hepatic dysfunction.
+
+Chief complaint: Sudden cardiac arrest requiring resuscitation.
+
+Summary of events:
+- 02:00 hrs: Bedside nurse noted abrupt loss of pulse. Immediate CPR was initiated. After 12 min of high‑quality CPR, pulseless ventricular tachycardia was documented on monitor. 200 J synchronized cardioversion restored sinus rhythm.
+- 1 mg of IV epinephrine was administered and aggressive fluid resuscitation began. Post‑resuscitation labs drawn: K⁺ 2.8 mmol/L, Mg²⁺ 1.4 mg/dL, lactate 7.2 mmol/L, creatinine 2.5 mg/dL, AST 600 U/L, ALT 750 U/L, INR 2.4, glucose 600 mg/dL.
+- The patient was intubated (if not already) and ventilated (FiO₂ 100 %, PEEP 15 cm H₂O). Vasopressor support escalated to norepinephrine 0.2 µg/kg/min and vasopressin 0.03 U/min. Phenylephrine was continued 20 µg/min. High‑dose insulin infusion and 1 g IV magnesium sulfate were added. Sedation deepened.
+- Over the next 6 hours, vital signs remained labile with persistent ventricular ectopy and multiple episodes of non‑sustained VT. Organ failure progressed despite maximal support, with rising transaminases, worsening INR, hyperglycemia, and worsening renal function.
+
+Assessment:
+- Hypokalemic, hypomagnesemic, severe metabolic acidosis contributing to refractory ventricular arrhythmias.
+- Septic shock with multiorgan failure (hepatic dysfunction, acute kidney injury, respiratory failure).
+- Possible thyroid storm precipitated by infection and exacerbated by high catecholamine demand.
+- Drug‑induced cardiotoxicity (propylthiouracil, amiodarone) may contribute.
+- Overall, the patient appears to be on a trajectory toward irreversible organ failure.
+
+Plan:
+1. Continue current antimicrobial regimen (nafcillin 2 g IV q8h, linezolid 600 mg PO q12h) and corticosteroid support (hydrocortisone 100 mg IV q8h).
+2. Titrate insulin infusion to maintain glucose 130–180 mg/dL; continue KCl supplementation to target serum K⁺ 4.0–4.5 mmol/L. Resume magnesium sulfate 1 g IV q6h to maintain Mg²⁺ 1.7–2.0 mg/dL.
+3. Maintain vasopressor support; titrate norepinephrine to MAP 65–70 mmHg; vasopressin 0.03 U/min; consider addition of vasopressor or inotrope if MAP remains &lt;65 mmHg.
+4. Continue CRRT 12 hrs/day; adjust dialysate composition to correct electrolyte imbalances.
+5. Stop amiodarone infusion pending review of benefit vs. risk; discontinue if no arrhythmia persists.
+6. Continue deep sedation, analgesia, and neuromuscular blockade as needed.
+7. Daily labs: CBC, BMP, LFTs, coagulation, arterial blood gas, and glucose monitoring.
+8. Reassess goals of care: discuss prognosis with family, offer palliative care consult, and evaluate for potential transition to comfort measures if irreversible failure persists.
+9. If the family elects to continue aggressive therapy, schedule repeat echocardiography and consider cardiac MRI if clinically stable.
+
+Follow‑up: Daily ICU team review; weekly multidisciplinary rounds (ICU, endocrinology, infectious disease, nephrology, hepatology, palliative care).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden loss of consciousness</span><span class="pill">Color change</span><span class="pill">Respiratory arrest</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>0</td></tr><tr><td>Blood Pressure (mmHg)</td><td>0</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>0</td></tr><tr><td>Temperature (F)</td><td>100.8</td></tr><tr><td>Oxygen Saturation (%)</td><td>0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive to pain stimulus</li><li>Absence of spontaneous breathing</li><li>No peripheral pulses</li><li>Skin cool, mottled</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Cardiac monitor</li><li>ABG</li><li>Serum electrolytes</li><li>CBC</li><li>BMP</li><li>Coagulation profile</li><li>Lactate</li><li>Insulin and glucose monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Potassium 2.8 mmol/L</li><li>Magnesium 1.4 mg/dL</li><li>Lactate 7.2 mmol/L</li><li>Creatinine 2.5 mg/dL</li><li>AST 600 U/L</li><li>ALT 750 U/L</li><li>INR 2.4</li><li>Glucose 600 mg/dL</li><li>Hb 8.2 g/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CPR (12 min)</li><li>Defibrillation 200 J</li><li>Epinephrine 1 mg</li><li>High‑dose insulin infusion</li><li>Magnesium sulfate 1 g IV</li><li>Mechanical ventilation</li><li>Norepinephrine 0.2 µg/kg/min</li><li>Vasopressin 0.03 U/min</li><li>Phenylephrine 20 µg/min</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Transient return of pulse; however, hemodynamic instability persisted. Organ failure continued to progress.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Septic shock</span><span class="pill">Pneumonia</span><span class="pill">CRRT</span><span class="pill">Biventricular arrhythmias</span><span class="pill">Hepatic dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>PTU 200 mg IV q6h</li><li>Iodine 5 mL oral q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 40 mg PO q4h</li><li>Nafcillin 2 g IV q8h</li><li>Linezolid 600 mg PO q12h</li><li>Insulin infusion</li><li>Phenylephrine 20 µg/min</li><li>Norepinephrine 0.15 µg/kg/min</li><li>CRRT 12 hrs daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Septic shock, multiorgan failure</li><li>Intubated and mechanically ventilated</li><li>CRRT ongoing</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At approximately 02:00 hours, the bedside nurse reported an abrupt loss of pulse. Cardiopulmonary resuscitation was initiated immediately. After 12 minutes of CPR, pulseless ventricular tachycardia was documented; a synchronized cardioversion of 200 J restored sinus rhythm. A 1 mg dose of epinephrine was given, along with IV fluids. Post‑resuscitation labs were drawn: serum potassium 2.8 mmol/L, magnesium 1.4 mg/dL, lactate 7.2 mmol/L, creatinine 2.5 mg/dL, AST 600 U/L, ALT 750 U/L, INR 2.4, glucose 600 mg/dL. The patient was stabilized on mechanical ventilation (FiO₂ 100%, PEEP 15 cm H₂O) and vasopressors (norepinephrine 0.2 µg/kg/min, vasopressin 0.03 U/min). The ICU team increased insulin infusion and added magnesium sulfate. Sedation was deepened. Over the next 6 hours, vital signs remained labile; the patient exhibited persistent ventricular ectopy and episodes of non‑sustained VT. The team recognized the irreversible trajectory of organ failure despite aggressive support.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Reversible arrhythmia unmasked; but multi‑organ failure now irreversible. The patient is at the cusp of irreversible critical end‑stage failure.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-02-07</h3><div class="visit-meta">Intensive Care Medicine | Reason: Reassessing goals of care and ongoing organ failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective**
+
+Visit #8 – Feb 07 2023. Patient is a 45‑year‑old female with known Graves&#x27; disease, severe multi‑organ failure secondary to septic shock, pneumonia, acute liver injury, CKD stage 2 on CRRT, and recent cardiac arrest. The family was counseled on the high probability of death and futility of further aggressive therapy. A multidisciplinary ICU team and palliative care reviewed the patient’s status. The decision was made to forgo additional invasive interventions and focus on comfort.
+
+**Objective**
+
+Vitals: HR 85 bpm; MAP 68/42 mmHg on continuous norepinephrine 0.15 µg/kg/min, phenylephrine 30 µg/min, vasopressin 0.03 U/min; RR 22 breaths/min; Temp 99.5 °F; SpO₂ 80 % on ventilator.
+
+Physical exam (sedated, intubated):
+- No response to painful stimuli; GCS 7; pupils nondilated.
+- Weak femoral pulses.
+- Weak peripheral perfusion.
+
+Labs (most recent): AST 800 U/L, ALT 900 U/L, INR 2.7, creatinine 2.5 mg/dL, bicarbonate 14 mmol/L, lactate 6.5 mmol/L.
+
+**Assessment** 
+
+1. Refractory septic shock with multiorgan failure (liver, kidney, respiratory, cardiovascular).  
+2. Acute hepatic failure (transaminitis &gt; 800 U/L, coagulopathy).  
+3. Acute renal failure on CRRT.  
+4. Severe hypoxemia due to pneumonia and ARDS.  
+5. Persistent hypoperfusion with metabolic acidosis and hyperlactatemia.  
+
+The clinical picture indicates a catastrophic failure of organ support, with no physiologic improvement after exhaustive resuscitation. The family and care team have agreed to shift to comfort care.
+
+**Plan**
+- Continue CRRT 12 hrs/day for fluid balance and toxin removal.
+- Maintain current vasopressor ladder (norepinephrine, phenylephrine, vasopressin) as needed for MAP &gt; 65 mmHg.
+- Hydrocortisone 100 mg IV q8h for adrenal insufficiency/vasopressor support.
+- Continue anti‑thyroid therapy (PTU 200 mg IV q6h, iodine 5 µg/mL orally q6h) considering potential thyroid storm.
+- Continue broad‑spectrum antibiotics: nafcillin 2 g IV q8h, linezolid 600 mg PO q12h.
+- Ongoing insulin infusion for hyperglycemia.
+- Magnesium sulfate 1 g IV; potassium KCl 20 mEq IV q6h.
+- Continue supportive mechanical ventilation; consider weaning if possible.
+- Engage palliative care for goals‑of‑care discussions, symptom management, and family support.
+- Monitor daily CBC, BMP, coagulation profile, ABG, LFTs, lactate, urine output.
+- Document comfort measures and end‑of‑life status.
+
+**Follow‑up Recommendations**
+- Family meeting to review comfort care plan and advance directives.
+- Daily interdisciplinary review with ICU, cardiology, hepatology, nephrology, endocrinology, and palliative care.
+- No further aggressive interventions; focus on symptom control and dignity of death.
+- Post‑mortem autopsy discussion with family if requested.
+- Documentation in EMR and family communication.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent hypotension</span><span class="pill">Low flow state</span><span class="pill">No meaningful neurologic response</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>85</td></tr><tr><td>Blood Pressure (mmHg)</td><td>68/42</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>22</td></tr><tr><td>Temperature (F)</td><td>99.5</td></tr><tr><td>Oxygen Saturation (%)</td><td>80</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Sedated, intubated</li><li>No response to painful stimuli</li><li>Pupils nondilated</li><li>Weak femoral pulses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>Coagulation profile</li><li>Lactate</li><li>LFTs</li><li>ABG</li><li>Urine output</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AST 800 U/L</li><li>ALT 900 U/L</li><li>INR 2.7</li><li>Creatinine 2.5 mg/dL</li><li>Bicarbonate 14 mmol/L</li><li>Lactate 6.5 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CRRT 12 hrs/day</li><li>Norepinephrine 0.15 µg/kg/min</li><li>Phenylephrine 30 µg/min</li><li>Hydrocortisone 100 mg IV q8h</li><li>PTU 200 mg IV q6h</li><li>Iodine 5 mL oral q6h</li><li>Insulin infusion</li><li>Linezolid 600 mg PO q12h</li><li>Nafcillin 2 g IV q8h</li><li>Palliative care interventions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No significant improvement. Organ failure continues to advance.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Septic shock</span><span class="pill">Pneumonia</span><span class="pill">CRRT</span><span class="pill">Biventricular arrhythmias</span><span class="pill">Hepatic dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>PTU 200 mg IV q6h</li><li>Iodine 5 mL oral q6h</li><li>Hydrocortisone 100 mg IV q8h</li><li>Propranolol 40 mg PO q4h</li><li>Nafcillin 2 g IV q8h</li><li>Linezolid 600 mg PO q12h</li><li>Insulin infusion</li><li>Phenylephrine 30 µg/min</li><li>Norepinephrine 0.15 µg/kg/min</li><li>CRRT 12 hrs daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Cardiac arrest previous day</li><li>Severe liver injury</li><li>Chronic renal failure requiring CRRT</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The multidisciplinary ICU team convened to discuss the lack of physiologic improvement despite exhaustive resuscitative efforts. The patient’s neurological exam remained incongruent with meaningful consciousness (GCS 7), while metabolic acidosis (bicarbonate 14 mmol/L) and lactate 6.5 mmol/L persisted. Continuous CRRT and vasopressor support were sustained, but MAP rarely exceeded 65 mmHg. Coagulation further worsened (INR 2.7). The family was counseled on the high probability of death and the futility of further aggressive care. palliative care was consulted, and the decision to forego additional invasive interventions was reached.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>End stage multi‑organ failure. Decision to consider transition to comfort measures.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2023-02-12</h3><div class="visit-meta">Intensive Care Medicine &amp; Palliative Care | Reason: Withdrawal of life‑support</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #9 – 12 February 2023
+
+Chief Complaint: Withdrawal of life‑support.
+
+HPI: A 45‑year‑old female with a complex medical history of Graves&#x27; disease, hypertension, type II diabetes, obesity, CKD stage 2, mild asthma, septic shock, pneumonia, renal replacement therapy, biventricular arrhythmias, and hepatic dysfunction was admitted to the ICU following a severe septic shock episode. Over the course of her ICU stay she developed refractory septic shock, multiorgan failure, hepatic failure (AST 800, ALT 900, INR 2.7), and acute kidney injury (Cr 3.0 mg/dL). Despite aggressive management with broad‑spectrum antibiotics, anti‑thyroid therapy, vasopressor support, high‑dose insulin infusion, and CRRT, her condition deteriorated. The patient suffered a cardiopulmonary arrest on ICU day 7 and was resuscitated; however, her organ function remained critically impaired. On ICU day 9, following multidisciplinary discussions and family‑centered decision making, the care team agreed to transition to comfort care and discontinue all life‑support measures.
+
+Medications at time of withdrawal: All pharmacotherapy was stopped, including antibiotics, anti‑thrombotic agents, vasopressors, CRRT, insulin infusion, and anti‑thyroid agents. Comfort medications were administered to ensure symptom control (details per local palliative protocol).
+
+Assessment: This patient had multiorgan failure secondary to refractory septic shock complicated by acute hepatic and renal failure, hyperthyroid crisis, and arrhythmogenic cardiomyopathy. The decision to withdraw life‑support was made in accordance with the patient&#x27;s best interests and in consultation with the family.
+
+Plan:
+• All life‑support measures withdrawn at 12:00 hrs on 12 Feb 2023.
+• Comfort care continued until death at 12:30 hrs.
+• Bereavement support offered to family.
+• No further diagnostics or treatments required.
+
+Disposition: Patient expired peacefully. Family present throughout.
+
+Follow‑up: No further medical follow‑up necessary. Family may contact palliative or bereavement services if desired.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None, patient passed away</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate (bpm)</td><td>0</td></tr><tr><td>Blood Pressure (mmHg)</td><td>0</td></tr><tr><td>Respiratory Rate (breaths/min)</td><td>0</td></tr><tr><td>Temperature (F)</td><td>98.6</td></tr><tr><td>Oxygen Saturation (%)</td><td>0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive, no pupils</li><li>No breathing</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discontinuation of all medications</li><li>Comfort medication</li><li>Ventilator disconnection</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expired peacefully.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 2</span><span class="pill">Mild asthma</span><span class="pill">Septic shock</span><span class="pill">Pneumonia</span><span class="pill">CRRT</span><span class="pill">Biventricular arrhythmias</span><span class="pill">Hepatic dysfunction</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Multiple organ failure</li><li>Cardiac arrest two days prior</li><li>Prolonged ICU stay</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After a thorough meeting with the family and the palliative care team, the decision was made to withdraw all ventilatory assistance, discontinue CRRT, and cease all pharmacotherapy. The ventilator was unplugged; the patient was placed on a blanket and given comfort medications for symptom relief. The family remained present throughout the final moments. When the ventilator circuit stopped generating airflow and the patient showed no spontaneous respirations, the family confirmed release of life‑support. The patient peacefully expired. Post‑mortem laboratory confirmation: liver enzymes peaked (AST 800, ALT 900), coagulation deranged, creatinine 3.0 mg/dL.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cause of death: multi‑organ failure secondary to untreated thyroid storm precipitated by infection, postpartum stress, and abrupt antithyroid drug cessation.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 45</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Graves&#x27; disease</span><span class="pill">Hypertension</span><span class="pill">Type II diabetes mellitus</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Chronic kidney disease stage 2</span><span class="pill">Mild asthma</span></div></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-01-17: Routine postpartum visit, 3 weeks postpartum. Patient reported palpitations, tremor of fingertips, tachycardia (HR 110), mild daytime fatigue, and loss of appetite. Vitals: HR 110 bpm, BP 135/85 mmHg, RR 18, Temp 98.6°F, SpO2 97%. No fever, chest pain, SOB, or neurologic symptoms reported. Started low‑dose propranolol 10 mg PO BID for symptomatic relief. Ordered thyroid function panel (TSH, Free T4, Free T3), Thyroid receptor antibody (TRAb), CBC with differential, Comprehensive Metabolic Panel, fasting glucose &amp; HbA1c, lipid panel. Plan to initiate methimazole 10 mg PO once daily if labs confirm hyperthyroidism. Follow‑up in one week to review labs and symptoms.</li><li>2023-01-25: Urgent care visit for cough, shortness of breath, low‑grade fever; findings: fever 100.5°F, tachycardia HR 120, hypotension BP 90/55, tachypnea RR 28, SpO2 90%. Chest X‑ray bilateral patchy infiltrates. Labs: CBC WBC 14,000, glucose 300 mg/dL, Cr 1.0. Admitted for community‑acquired pneumonia, sepsis, hyperglycemia, possible thyrotoxic crisis. Started ceftriaxone 1 g IV q24h, azithromycin 500 mg PO q24h, insulin sliding‑scale protocol, isotonic saline 1 L bolus; thyroid panel ordered; propranolol continued; lisinopril 10 mg daily, metformin 500 mg BID, albuterol PRN maintained. Follow‑up: endocrinology consult, repeat labs, repeat chest X‑ray.</li><li>2023-01-28: Emergency department visit for severe dizziness, tremor, fever, and tachycardia. Patient presented with BP 88/50, HR 168, RR 34, Temp 104°F, SpO2 88%. Labs revealed suppressed TSH, elevated free T4 and T3 levels, positive TRAb, leukocytosis. Chest X‑ray confirmed bilateral bronchopneumonia. Management included IV propranolol bolus and infusion, IV hydrocortisone, initiation of propylthiouracil, continuation of ceftriaxone and azithromycin, insulin sliding‑scale, IV fluids, and transfer to ICU for close monitoring.</li><li>2023-01-31: ICU day 5, patient remained febrile, tachycardic, hypotensive with worsening transaminases (AST 500, ALT 550). Intubated with FiO2 100%, PEEP 15 cm H2O. New right lower lobe cavitary lesion on chest CT. Antibiotics escalated to nafcillin 2 g IV q8h and linezolid 600 mg PO q12h; norepinephrine 0.07 µg/kg/min started, phenylephrine tapered. CRRT continued at 12 hrs daily. Continued hydrocortisone, propranolol, insulin infusion, and IV fluids. Labs showed leukocytosis, elevated liver enzymes, creatinine 1.8 mg/dL. Ongoing monitoring and consults planned.</li><li>2023-02-04: ICU review. Patient sedated, intubated, on vasopressors phenylephrine 10 µg/min and norepinephrine 0.12 µg/kg/min, CRRT 12 hrs/day. Labs: AST 800 U/L, ALT 900 U/L, INR 2.2, creatinine 2.5 mg/dL. Managed with continued hydrocortisone 100 mg IV q8h, nafcillin 2 g IV q8h, linezolid 600 mg PO q12h, insulin infusion, amiodarone infusion 5 mg/h, and added potassium chloride 20 mEq IV q6h. Monitoring includes daily LFTs, coagulation, electrolytes, renal panel; consults with hepatology, nephrology, and palliative care discussed.</li><li>2023-02-05: ICU day 7: sudden cardiac arrest; CPR for 12 min, pulseless VT, restored sinus rhythm with 200‑J cardioversion. 1 mg IV epinephrine, high‑dose insulin infusion, 1 g IV magnesium sulfate added. Vasopressors up‑titrated to norepinephrine 0.2 µg/kg/min, phenylephrine 20 µg/min, vasopressin 0.03 U/min. Labs: K 2.8 mmol/L, Mg 1.4 mg/dL, lactate 7.2 mmol/L, creatinine 2.5 mg/dL, AST 600 U/L, ALT 750 U/L, INR 2.4, glucose 600 mg/dL. Patient intubated, ventilated at FiO2 100%, PEEP 15 cm H2O. Arrhythmias and multiorgan failure progressed. Amiodarone infusion stopped. Continued nafcillin, linezolid, hydrocortisone, CRRT 12 hrs/day. Daily labs and multidisciplinary reviews planned.</li><li>2023-02-07: ICU reassessment with persistent refractory septic shock and multiorgan failure; decision to transition to comfort care. Vitals: HR 85 bpm, MAP 68/42 mmHg on norepinephrine 0.15 µg/kg/min, phenylephrine 30 µg/min, vasopressin 0.03 U/min; RR 22 breaths/min, SpO2 80% on ventilator. Labs: AST 800 U/L, ALT 900 U/L, INR 2.7, creatinine 2.5 mg/dL, bicarbonate 14 mmol/L, lactate 6.5 mmol/L. Continued CRRT 12 hrs/day, vasopressor support, hydrocortisone 100 mg IV q8h, anti‑thyroid therapy (PTU 200 mg IV q6h, iodine 5 µg/mL orally q6h), broad‑spectrum antibiotics (nafcillin 2 g IV q8h, linezolid 600 mg PO q12h), insulin infusion for hyperglycemia, magnesium sulfate 1 g IV, potassium chloride 20 mEq IV q6h. Focus on symptom control and palliative measures with multidisciplinary review and family discussions regarding end‑of‑life care.</li><li>2023-02-12: Withdrawal of life‑support and death; comfort care administered; all pharmacotherapy and vasopressors discontinued. Patient expired at 12:30 hrs. Bereavement support offered to family.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

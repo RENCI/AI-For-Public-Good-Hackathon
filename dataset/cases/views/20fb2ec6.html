@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 20fb2ec6</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 20fb2ec6</h1><div class="subtitle">Acute Fibromyalgia Flare | Female, 35</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Major Depressive Disorder, Generalized Anxiety Disorder, Irritable Bowel Syndrome, Migraine, Temporomandibular Joint Disorder, Chronic Fatigue Syndrome, Obesity, Metabolic Syndrome, Sleep Apnea</div><div class="meta-line">Risk Factors: Psychosocial Stress, Sleep Deprivation, Physical Injury, Emotional Trauma, Hormonal Fluctuations, Genetic Predisposition, Autoimmune Disorder</div></div>
+<details><summary>Narrative <span class="preview-text">**Maya’s Unnamed Pain**  Maya was a 35‑year‑old graphic designer who had always felt the weight of her own body. Weighin...</span></summary><div class="section-body"><p>**Maya’s Unnamed Pain**</p><p>Maya was a 35‑year‑old graphic designer who had always felt the weight of her own body. Weighing in at 190 pounds, she carried a history of metabolic syndrome—high blood pressure, insulin resistance, and a cholesterol profile that hovered on the edge of danger. She was an early morning person, but sleep had become a chore; nightly oxygen saturation dips and frequent pauses had landed her a diagnosis of obstructive sleep apnea one year ago, and a CPAP machine was an uncomfortable companion in the dark.</p><p>Her mental health ran a parallel line through her life. A clinical diagnosis of major depressive disorder (MDD) and generalized anxiety disorder (GAD) followed her through adolescence and into adulthood. The last six months had seen her pulled between a looming deadline at work, a divorce that shook the foundations of her relationship, and the looming fear of a childless future. All of these psychosocial stresses had begun to accumulate like sediment, slowly thickening the cloud of anxiety that had already been in her mind for years.</p><p>The other chronic conditions that defined Maya were the more hidden ones. She had been living with irritable bowel syndrome (IBS) since her early twenties. She suffered migraines that erupted when she missed a meal or the sun felt too bright. Her temporomandibular joint (TMJ) had clicked every time she opened her mouth wide—an occasional nuisance that had become a ritual of self‑care. She told her doctors about a “never‑ending fatigue” that made stretching from bed seem a herculean task; a chronic fatigue syndrome (CFS)‑like pallor had been noted in her past medical chart but never formally treated. Her family carried a genetic predisposition to autoimmune disease—cousins with lupus and hypothyroidism were a constant reminder of her own biological wiring. Hormonal fluctuations over the menstrual cycle had historically been a source of headaches and mood shifts.</p><p>---</p><p>**Day Zero: A Quiet Spark**</p><p>Maya’s first flare began in a seemingly innocent gray morning of March 2nd. She had woken to feel an odd dull ache that started in her lower back—just a mild, almost imperceptible throb at the base of the lumbar spine. By noon, it had spread to her calves, knees, shoulders, and the tender spots on her left foot that she had always known from a childhood injury. The pain was not sharp; it was a low‑grade pressure like the world was being held together by a hand that didn&#x27;t quite fit.</p><p>She chalked it up to a “bad night’s sleep” and tried to distract herself with work. But the ache didn&#x27;t fade. In the evening, she found herself unable to kneel to tie her shoes because the pain in her lower back became a kind of “soft” but present pain that pressed against her every bend. A headache bloomed in her temples, sour as a dull migraine but without the usual pounding. The pain spread to her jaw; the teeth clicking she often noticed became more pronounced. Her stomach started to churn – a slight discomfort in tandem with her IBS symptoms that she had shrugged off as a “tummy bug” during her lunch break.</p><p>Her first response was to sit on the couch and use a heating pad, hoping the warmth would ease the ache. She turned on the news and began to ruminate over the day’s events. The anxiety bubbled up; a thought crossed her mind – what if this was a sign of something serious? That was the first step in the long, winding path that would ultimately culminate in an undiagnosed flare of fibromyalgia.</p><p>---</p><p>**A Day of Clinic Visits (March 5th)**</p><p>Maya scheduled an appointment with her primary care physician (PCP) that same week. She described the “all‑over bodily ache,” and how her jaw was “clicking more.” She also explained the headaches, the chronic fatigue, and the IBS–type stomach distension that had intensified. Even her CPAP usage was mentioned; she admitted she had been leaving the machine off in those moments when she felt too tired to put it on.</p><p>The provider took a comprehensive history but did not consider fibromyalgia at this point. Instead, he focused on immediate concerns: “Could this be something like an infection? Have you had any fevers?” Maya’s answer was a no. In labs, he ordered a CBC, CMP, ESR, ANA panel, and a quick thyroid panel given her personal history of autoimmune disease. He suggested a modest dose of acetaminophen for the back pain and recommended she keep a pain diary.</p><p>In the interim, Maya spent the day at a coffee shop, scrolling through her phone, feeling her chest tighten as the hours stretched on. She realized it had become difficult to keep her composure at the office – the constant fatigue and the low‑grade back pain made standing in a meeting feel like an uphill battle. She began to anticipate how these small but persistent pains might influence her work.</p><p>---</p><p>**Tendon Clicking and a New Appointment (March 12th)**</p><p>The next week, the pain moved to her jaw with the same intensity it had on March 5th. The clicking was no longer a passive observation; it became something she felt in her bones each time she opened her teeth, like a metal hinge trying to slide. She booked an appointment with a dentist that promised to run a TMJ evaluation. The dentist found a reduced range of motion, mild inflammation, and recommended a mouth guard and a physical‑therapy protocol.</p><p>By mid‑March, Maya had a back injury to add to the list: she had slipped a few steps on a porch when returning from a grocery run, landing her on her left hip. That day she visited an urgent‑care clinic. The physician examined her left hip, the pain was located in the gluteus medius, the area just below the hip. An x‑ray of her pelvis and left femur ruled out a fracture. She was given a prescription for ibuprofen and a recommendation to refrain from heavy bending or lifting for the next week. Pain persisted, the new injury had added to a list of &quot;minor&quot; aches that seemed to compound rather than resolve.</p><p>---</p><p>**The Gastroenterologist’s Lens (April 1st)**</p><p>By early April, Maya’s IBS had become an escalating issue. She began to experience “cramping” in her abdomen that lasted 1–2 minutes, followed by urgent constipation that made her stomach feel “tight, like a balloon that won’t pop.” Once the night’s CPAP was used the next morning, she woke with a pounding headache that seemed to be triggered by the pressure differences she experienced each hour of a typical sleep cycle.</p><p>She called her gastroenterology and scheduled a colonoscopy. The procedure was uneventful and returned normal; the endoscopy report simply noted that no ulcers or polyps were seen, “the colon appears normal.” The physician suggested a high‑fiber diet, low‑FODMAP options, and a trial of a probiotic. Maya wrote the suggestion into her pain diary, noting down the correlation (or lack thereof) between each bowel episode and overall pain.</p><p>---</p><p>**Neurologic Exploration (April 5th)**</p><p>Three days later, Maya endured her first major migraine of the year. It started as a throbbing ache along the right temple that rapidly progressed to intense, unilateral pain. Vision flickered. She left her office early, unable to cope with the brightness. She went to a neurologist. A brain MRI and CT scan were ordered to rule out vascular abnormalities. The results were normal. The neurologist prescribed a prophylactic triptan, suggesting migraine meds and lifestyle changes.</p><p>In the meantime, the headaches had become a recurring villain in the plot of Maya’s life. She started to wonder if something more systemic was at work, because the headaches seemed to appear not as a function of stress or sleep deprivation alone but in concert with the all‑over aches.</p><p>---</p><p>**The Sleep Study and CPAP (April 10th)**</p><p>Two days after her neurologic appointment, the sleep clinic set up an overnight polysomnography for Maya at 9 pm. She went to bed early, determined to catch a clear picture of her sleep. The study discovered moderate to severe obstructive sleep apnea: an apnea–hypopnea index (AHI) of 24 on average over the night. She was discharged with a CPAP prescription, and the clinic offered counseling on fitting and compliance.</p><p>Maya, while thrilled the cause of her sleep disturbances had finally been identified, also felt the weight of yet one more medical label. The CPAP was uncomfortable, and she began to experience more headaches the next morning, which she recorded meticulously in her diary along with her daily pain scores and mood.</p><p>---</p><p>**The Rheumatology Consultation (April 20th)**</p><p>A month into her escalating pain, Maya finally agreed to the rheumatology referral the PCP had suggested. The rheumatologist, an experienced internist, first took a careful history and performed a physical exam. The exam revealed 11 tender points scattered across neck, shoulders, hips, and back. The patient complained that “the worst parts were in my hips and shoulders and that every time I went a little farther, the pain would intensify.”</p><p>The rheumatologist considered fibromyalgia as a possibility but also noted the potential confounding factor of her many comorbidities. He ordered a thorough array of labs: CRP, ESR, rheumatoid factor, anti‑CCP, complement levels, ANA, ACE, and CBC. The results were largely negative—CRP and ESR were within normal limits, ANAs negative. The doctor explained the “clinical picture can be tricky because we’re looking for patterns, not just one singular finding.” He advised a trial of duloxetine (an SNRI) to address both pain and mood, and recommended a gradual physiotherapy program focusing on low‑impact aerobic exercise.</p><p>Maya’s first dose of duloxetine had mixed results. She felt less intrusive pain, but the medication also caused an early nausea that was hard to tolerate. She noted a feeling of “numbness” in her hands and left a half‑filled box of duloxetine at home – a sign that the medication was not a long‑term solution. She kept attending physiotherapy sessions with an enthusiastic focus, but the persistent, dull pain remained.</p><p>---</p><p>**The Undiagnosed Plateau (May – July)**</p><p>After the initial rheumatology visit, Maya cycled through a host of symptom‑targeted treatments: a low‑dose tricyclic antidepressant for nighttime pain, a topical lidocaine patch for the jaw, prescription NSAIDs, and even a trial of low‑dose gabapentin. Each had a short‑lived benefit paired with side effects, and none of them fully resolved the all‑over ache that had become her constant companion.</p><p>During this period, the medical narrative for Maya drifted between a multitude of “possible” diagnoses. She often found herself as a patient and a lab test recipient — a “mystery patient” in a busy clinic waiting list. When her migraine flared on Tuesday afternoons, the neurologist was on hand; when her IBS worsened, a gastroenterology consult found the bowel to be structurally normal. The sleep apnea remained the core diagnosis that gave her a clear path forward, but the rest of her pain and fatigue remained in a grey zone.</p><p>She did not receive a clear label. She did, however, receive a prescription for a medication that, while not targeted at a specific pathology, was meant to modulate pain pathways and improve sleep architecture. She used it as a way to get a &quot;treatable thing&quot; on her chart, an artifact of being a patient rather than a disease.</p><p>In the summer months, Maya’s pain had a cyclic pattern: the days after a stressful meeting she would feel a spike in pain intensity; the days after a weekend trip she would find her body “tight as a new shoe.” This unpredictabile pattern further made it difficult for her physicians to find a single diagnosis that fit all the variables.</p><p>---</p><p>**The Final Narrative (July)**</p><p>July finds Maya at an urgent‑care clinic after a sudden intensification of pain. She had been standing at a grocery line for longer than usual, and she felt a sharp pang in her whole body. She described a &quot;pain so full that it’s like being on a treadmill that never stops.&quot; She asked, “Is this like a flare? Am I going insane? Have you ever heard of fibromyalgia?” The nurse asked about other symptoms, her menstrual cycle, and a comprehensive history. The doctor ordered a quick CBC and metabolic panel for acute changes; both returned normal. No urgent issues were found.</p><p>Maya left feeling “like a patient, not a diagnosis.” She went home, added her current pain to her diary, and called her PCP. The PCP suggested that they revisit her physiotherapy plan and consider a multidisciplinary care team approach: a pain psychologist, a sleep specialist, a physical therapist, and a nutritionist. Maya sighed — the cycle would repeat.</p><p>She still goes to work, uses her CPAP nightly, and takes her medication. Every morning she opens her phone to a new list of tasks: &quot;pain level 6/10,&quot; &quot;jaw clicking,&quot; &quot;stomach cramps.&quot; At night she writes a short entry: *“This still isn’t normal. Still not a diagnosis. Still wondering if someone will notice.”*</p><p>---</p><p>**The Story’s End**</p><p>There are no diagnostic words emblazoned on her medical chart: “fibromyalgia flare” is not written because, despite a physician’s speculation, her disease does not fit the strict criteria of the American College of Rheumatology. Her tender points are present, but the pain is interspersed with IBS, migraine, and a chronic fatigue‑like syndrome that has remained unaddressed. Her laboratory work, imaging studies, and specialist conversations have all contributed to an evolving, but incomplete, picture. Her story is a tangled chronicle of overlapping pathologies, each masked by the next, leaving her in a medical limbo—her condition—an acute fibromyalgia flare, undiagnosed and unlabeled.</p><p>In this narrative, every clinic visit, therapy session, and medication trial is a step in a puzzle with no final picture. Maya keeps documenting, hoping that one day the pieces will align, but for now, she lives in the uncertain space between the known and the unknown, continuing to fight a silent surge of pain that refuses to be named.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-03-05</h3><div class="visit-meta">Primary Care Physician | Reason: Widespread body aches, jaw clicking, headache, fatigue, and abdominal discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient reports widespread body aches, jaw clicking and low‑grade headache beginning early in the morning, accompanied by fatigue, difficulty standing and abdominal discomfort.\n\nHistory: 35‑year‑old female with known metabolic syndrome, obesity (BMI 31.9), obstructive sleep apnea, major depressive disorder, generalized anxiety disorder, irritable bowel syndrome, migraine, temporomandibular joint disorder and chronic fatigue syndrome. No current medications.\n\nReview of Systems: Positive for diffuse musculoskeletal pain radiating to lower back, calves, knees, shoulders and left foot; low‑grade temple headache; increased audible jaw clicking; daytime fatigue; abdominal discomfort resembling IBS flare. Denies fever, weight loss, rash or neurological deficits.\n\nVitals: BP 138/82, HR 78, Temp 98.6°F, RR 16, SpO₂ 96%.\n\nPhysical Examination: Mild lumbar tenderness, localized left hip and left foot tenderness. Generalized muscle tightness. Left shoulder ROM 30°. TMJ exam: audible clicking with reduced mandibular opening (≈30°). Normal reflexes, no focal neuro findings.\n\nLaboratory Results: CBC, CMP and TSH normal. ESR 12 mm/hr (slightly above upper limit). ANA negative.\n\nAssessment: Symptoms, exam findings, and basic labs are most consistent with a diagnosis of fibromyalgia or myofascial pain syndrome, compounded by TMJ dysfunction and sleep apnea‑related fatigue. Chronic inflammatory myositis, systemic lupus erythematosus, and depression/anxiety are considered but presently less likely based on normal labs and acute inflammatory markers.\n\nPlan:\n1. Pain Management – Acetaminophen 500 mg PO every 6 h as needed, up to 3 doses/day.\n2. Continue CPAP use nightly and review adherence.\n3. Pain Diary – Record daily pain scores (0‑10), trigger factors, medications taken and sleep quality.\n4. Physical Therapy Referral – For myofascial release, TMJ exercises, and gentle stretching.\n5. Weight Management – Counsel on diet and moderate exercise to address obesity and metabolic syndrome.\n6. Follow‑up – Return in 4 weeks; earlier if pain &gt;6/10 or no improvement. Consider rheumatology referral if ESR remains elevated or no response to conservative therapy.\n7. Monitor for new symptoms such as fever, rash, night sweats that would warrant additional workup.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Widespread dull ache radiating to lower back, calves, knees, shoulders, and left foot</span><span class="pill">Low‑grade headache in temples</span><span class="pill">Jaw clicking more pronounced</span><span class="pill">Fatigue and difficulty standing for prolonged periods</span><span class="pill">Abdominal discomfort resembling IBS flare</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.6</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness in lumbar spine, left hip, and left foot</li><li>Reduced mandibular opening to 30 cm</li><li>Normal reflexes and neurological exam</li><li>No focal neurological deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>ESR</li><li>ANA panel</li><li>TSH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP normal</li><li>ESR 12 mm/hr (upper limit 10 mm/hr)</li><li>ANA negative</li><li>TSH 1.8 mIU/L (normal)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Mild pain relief after one hour; pain persisted at 6 / 10 on the diary.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metabolic syndrome with hypertension and insulin resistance</li><li>Obesity (BMI 31.9)</li><li>Obstructive sleep apnea diagnosed 1 year ago, occasional CPAP use</li><li>Major depressive disorder and generalized anxiety disorder</li><li>Irritable bowel syndrome</li><li>Migraine history</li><li>Temporomandibular joint dysfunction</li><li>Chronic fatigue syndrome‑like symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived to describe an all‑over body ache that had begun at 2 a.m. and progressed through the day. Physical exam revealed mild lumbar tenderness, generalized muscle tightness, and a 30‑degree range of motion in the left shoulder. The TMJ exam noted audible clicking on opening and a reduced mandibular range. The PCP reviewed her past metabolic and psychosocial history and requested routine labs. A pain diary was advised. The patient was prescribed acetaminophen 500 mg PO every 6 hours as needed, with a goal of 3 doses per day. She was instructed to keep the CPAP on nightly and to document pain scores daily.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial flare characterized by diffuse musculoskeletal pain with no laboratory evidence of systemic inflammation. Differential included early fibromyalgia, stress‑related myofascial tenderness, or a nonspecific musculoskeletal syndrome.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-03-12</h3><div class="visit-meta">Dentist / Oral Medicine | Reason: Exacerbated jaw pain and increased TMJ clicking</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**S (Subjective):**
+Patient is a 35‑year‑old female with a longstanding diagnosis of TMJ disorder who presents today with exacerbated jaw pain and increased metallic clicking. She reports pain primarily during chewing, a noted increase in clicking with mouth opening and lateral deviation, mild swelling over the left preauricular area, and limited maximum mouth opening (28 cm). She reports similar symptoms have been present since early adulthood, and recently she noted increased stress at work. She denies fever, ear pain, or recent trauma. Current medications include acetaminophen 500 mg PO PRN. She has no known drug allergies.
+
+**O (Objective):**
+- **Vitals:** BP 135/80 mmHg; HR 76 bpm; Temp 98.4 °F; RR 16/min; SpO2 98% on room air.
+- **Extra‑oral exam:** mild preauricular tenderness left side; slight swelling over the left preauricular region.
+- **Mandibular function:** Maximum incisal opening 28 cm (limited); audible clicking on opening, especially on lateral deviation; audible clicking with opening and on deviation to left.
+- **Palpation:** tenderness over left masseter and medial pterygoid; positive lateral head trauma test.
+- **Panoramic radiograph:** no fracture, no dislocation, joint spaces within normal limits.
+
+**A (Assessment):**
+1. Chronic TMJ disorder with probable disc displacement without reduction, complicated by muscular myofascial pain.
+2. Mild secondary inflammation of the preauricular soft tissues.
+3. Possible migraine exacerbation secondary to TMJ tension, given her history and recent stress.
+
+**P (Plan):**
+- Prescribed a custom night‑guard (splint therapy) to reduce joint loading.
+- Refer to physiotherapist specializing in myofascial release for guided soft‑tissue therapy and joint mobilizations.
+- Continue acetaminophen 500 mg PO PRN for pain flare‑ups; consider ibuprofen 400 mg if pain persists after 72 hrs.
+- Advise patient to wear the night‑guard nightly and to monitor pain and clicking in her diary.
+- Encourage stress‑reduction techniques (deep breathing, short walks during breaks, CPAP adherence).
+- Schedule follow‑up in 4 weeks or sooner if pain &gt;5/10, swelling worsens, or new neurological symptoms appear.
+- If no improvement after 6 weeks of splint therapy and physiotherapy, consider referral to oral surgeon or orthopedic specialist.
+- No new imaging needed at this time.
+**Signature:**
+
+Dental Team</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Jaw pain during chewing</span><span class="pill">Increased metallic clicking with opening</span><span class="pill">Mild swelling in the left preauricular area</span><span class="pill">Limited mouth opening to 28 cm</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/80</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temperature</td><td>98.4</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Limited mandibular opening (28 cm)</li><li>Mild preauricular tenderness</li><li>Clicking on opening and lateral movement</li><li>Positive lateral head trauma test</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Panoramic X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>No fracture or dislocation; joint spaces normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Night‑guard prescription</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reported some reduction in clicking when wearing the guard after a week; pain remained 5/10.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous TMJ complaints since early adulthood</li><li>History of mild migraine triggered by bright lights</li><li>Recent stress at work</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The dentist performed a comprehensive TMJ evaluation, noting limited mouth opening, a slight preauricular swelling, and a clicking sound that intensified with deviation. A panoramic radiograph was taken, showing no fracture or dislocation. The dentist prescribed a custom night‑guard for splint therapy and referred Maya to a physiotherapist specializing in myofascial release. The patient was advised to continue acetaminophen for mild flare‑up and to monitor progress in her pain diary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Findings consistent with myofascial TMJ disorder; no evidence of arthritis or structural damage. Pain flare may be influenced by psychosocial stress and sleep deprivation.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-03-18</h3><div class="visit-meta">Urgent Care | Reason: Left hip and gluteus medius pain after a fall</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**S: / Subjective**
+
+35‑year‑old female presenting to urgent care with a chief complaint of sharp left hip and gluteal pain following a fall (stepping down a porch). She reports a &quot;stabbing&quot; sensation in the left gluteal region and soreness that worsens with walking, rising from sitting, and any heavy bending or lifting. Pain intensity was 8/10 at presentation and has reduced to 5/10 after 3 doses of ibuprofen 400 mg PO q6h PRN, but recurred after stopping ibuprofen. She denies fever, weight loss, numbness, tingling, or recent trauma to the lower extremities besides the noted fall.
+
+Past medical history: metabolic syndrome, obesity, obstructive sleep apnea, major depressive disorder, generalized anxiety disorder, irritable bowel syndrome, migraine, temporomandibular joint disorder, chronic fatigue syndrome, and a childhood hip injury.
+
+Current medications: acetaminophen 500 mg PO PRN, CPAP nightly.
+
+Allergies: NKDA.
+
+**O: / Objective**
+
+Vitals: BP 132/78 mmHg, HR 80 bpm, Temp 98.5 °F, RR 18/min, SpO₂ 97% on room air.
+
+Physical exam: 
+- Left hip: tenderness over gluteus medius and greater trochanteric region.
+- Trendelenburg sign positive: patient shows noticeable drop of pelvis when standing on left leg.
+- Range of motion: full passive hip flexion, extension, abduction, adduction, internal and external rotation; active ROM limited by pain.
+- Neurovascular: intact distal pulses, motor, and sensation.
+
+**L: / Labs / Imaging**
+- Pelvis and left femur X‑ray: No fracture, dislocation, or obvious osseous abnormality.
+
+**A: / Assessment**
+
+Primary diagnosis: Acute gluteus medius strain/sprain, likely secondary to acute eccentric loading during the fall. Differential diagnoses considered:
+1. Greater trochanteric bursitis.
+2. Lumbar radiculopathy from a transient disc bulge.
+3. Hip labral tear (unlikely given normal imaging and acute context).
+4. Subtle femoral neck fracture (ruled out by imaging).
+
+Given the acute onset, tenderness over the gluteus medius, positive Trendelenburg sign, and negative imaging, an acute soft‑tissue strain is the most likely explanation.
+
+**P: / Plan**
+1. **Medications**: Ibuprofen 400 mg PO every 6 hours as needed for pain and inflammation. Continue acetaminophen 500 mg PO PRN if additional analgesia is required.
+2. **Rest &amp; activity modification**: Avoid heavy bending, lifting, or prolonged standing for 7 days. Encourage gentle range‑of‑motion exercises once pain allows.
+3. **Therapeutic modalities**: Use ice packs 15–20 minutes every 2–3 hours during the first 48–72 hours.
+4. **Pain diary**: Continue to record pain levels, activities, and medication use.
+5. **Education**: Discuss importance of gradual return to activity, proper body mechanics, and weight‑bearing status.
+6. **Follow‑up**:
+   - Return to urgent care clinic in 5–7 days if pain exceeds 5/10, worsens, or if new neurological symptoms develop.
+   - Consider referral to orthopedic or sports medicine if no improvement after 2–3 weeks.
+   - If pain improves markedly, no further urgent care visits are required; monitor in primary care setting.
+
+**Patient understanding**: I explained the diagnosis, treatment plan, and red‑flag symptoms that warrant prompt re‑evaluation. Patient verbalized understanding and agreed to follow the plan.
+
+**Signature**
+
+---
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp left hip pain after stepping down a porch</span><span class="pill">Sensation of “stabbing” and soreness in gluteal region</span><span class="pill">Pain exacerbated by walking and rising from seated position</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/78</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temperature</td><td>98.5</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2_Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness over left gluteus medius</li><li>Positive Trendelenburg gait</li><li>Full passive motion of left hip</li><li>No neurovascular deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvis and left femur X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>No fracture, dislocation, or osteophytes</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen 400 mg PO every 6 hours PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain decreased to 5/10 after 3 doses, but pain resumed after 12 hours when ibuprofen was stopped.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous hip injury in childhood</li><li>Chronic pain syndromes</li><li>Recent increased physical strain at work</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urgent‑care provider performed a focused musculoskeletal exam of the hip, revealing tenderness over the left gluteus medius, positive Trendelenburg sign, and limited range of motion due to pain. An X‑ray of the pelvis and left femur was obtained to rule out fracture, which returned negative. The clinician prescribed ibuprofen 400 mg PO every 6 hours PRN and instructed Maya to avoid heavy bending or lifting for 7 days. She was told to continue the pain diary and to report any worsening or new symptoms.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute musculoskeletal injury adds to diffuse pain burden; no systemic indicators of inflammation seen. Pain pattern suggests central sensitization may be amplifying discrete nociceptive input.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-04-01</h3><div class="visit-meta">Gastroenterologist | Reason: Escalating abdominal cramps and constipation after CPAP use</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient Maya, 35‑year‑old female, presents for follow‑up of escalating abdominal cramps and constipation noted after increased CPAP use. 
+Chief complaint: Sudden, 1‑2 minute abdominal cramping with urgent constipation and bloating after morning CPAP session.
+History of present illness: Maya reports intermittent left‑lower‑quadrant cramping lasting 1–2 minutes, coupled with urgent constipation episodes. The pain appears shortly after CPAP usage and resolves within a few minutes. She has a longstanding diagnosis of IBS (constipation predominant) in her early twenties, with alternating constipation and diarrhea. No nausea, vomiting, fever, blood in stool, or weight loss reported. 
+Past medical history: Metabolic syndrome, obesity, obstructive sleep apnea, major depressive disorder, generalized anxiety disorder, IBS, migraine, temporomandibular joint disorder, chronic fatigue syndrome. 
+Medications: Acetaminophen 500 mg PO PRN, Ibuprofen 400 mg PO PRN.
+Allergies: NKDA.
+Review of systems: Positive for abdominal cramps, constipation; negative for abdominal pain lasting &gt;2 h, periumbilical pain, vomiting, diarrhea, melena, hematochezia, weight change.
+Physical exam: Vitals within normal limits. Abdomen soft, non‑distended, mild tenderness in the left lower quadrant; bowel sounds normal; no guarding or rebound.
+Diagnostics: Colonoscopy under conscious sedation – normal mucosa, no polyps, ulcers, or inflammation. Upper GI endoscopy performed same day – normal gastric mucosa.
+Assessment: The temporal relationship between CPAP use and abdominal cramps suggests CPAP‑related bowel motility disturbance superimposed on her baseline IBS‑C. Colonoscopy and EGD are unremarkable, ruling out organic colonic or gastric pathology.
+Plan: 1) Dietitian referral for guidance on high‑fiber, low‑FODMAP diet and meal timing around CPAP use. 2) Daily probiotic supplementation (e.g., Lactobacillus rhamnosus GG 10 billion CFU). 3) Keep a symptom diary including dietary intake, stool form (Bristol scale), pain scores, and CPAP hours. 4) Consider pharmacologic therapy (lubiprostone or linaclotide) if constipation persists or if pain scores &gt;5/10 with inadequate response to diet. 5) Continue CPAP usage as prescribed. 6) Reassess in 6 weeks; consider abdominal imaging or motility study if symptoms do not improve.
+Follow‑up: Patient scheduled for follow‑up in 6 weeks or sooner if pain worsens, or new GI symptoms appear.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden cramping abdominal pain lasting 1–2 minutes</span><span class="pill">Urgent constipation episodes</span><span class="pill">Feeling of abdominal bloating and discomfort after morning CPAP session</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/76</td></tr><tr><td>HR</td><td>77</td></tr><tr><td>Temperature</td><td>98.3</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Abdomen soft, non‑distended, mild tenderness in left lower quadrant</li><li>No guarding or rebound tenderness</li><li>Bowel sounds normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Colonoscopy and upper GI scope (performed same day)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Normal colon mucosa; no polyps or inflammatory changes</li><li>Upper GI scope showed normal gastric mucosa</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No immediate change; continued to experience intermittent cramping post‑CPAP.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO as needed</li><li>Ibuprofen 400 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>IBS diagnosed in early twenties with alternating constipation and diarrhea</li><li>Recent increase in CPAP usage</li><li>History of chronic fatigue</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The gastroenterologist reviewed Maya’s bowel history and noted the correlation between CPAP sessions and abdominal cramping. A colonoscopy was performed under conscious sedation; the mucosa appeared normal with no polyps, ulcers, or obvious inflammation. The procedure was uncomplicated. The physician discussed dietary triggers and recommended a high‑fiber diet, low‑FODMAP approach, and daily probiotic supplementation. No pharmacologic treatment was initiated at this visit. Maya was advised to log dietary intake, stool patterns, and pain scores.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>IBS flare suspected; possible overlap with sleep apnea‑related hypoxia affecting gut motility. No evidence of inflammatory bowel disease.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-04-05</h3><div class="visit-meta">Neurologist | Reason: New severe unilateral migraine with visual aura</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 35‑year‑old female presents to Neurology with a new episode of severe unilateral migraine with visual aura.
+
+**History of Present Illness:** Patient reports a throbbing, right‑temporal headache that began mid‑afternoon and has worsened over the last 12 hours. She describes classic migraine aura—transient visual flickering and blurring lasting several minutes. She also reports photophobia, phonophobia, nausea, and a brief episode of vomiting. Pain intensity is 7/10 at presentation. Patient denies trauma, recent infections, or new medications. She notes increased occupational stress with impending project deadlines.
+
+**Past Medical History:** Metabolic syndrome, obesity, obstructive sleep apnea (ongoing CPAP), major depressive disorder, generalized anxiety disorder, irritable bowel syndrome, chronic fatigue syndrome, chronic migraine, temporomandibular joint disorder.
+
+**Medications (current):** Acetaminophen 500 mg PO q6h PRN, Ibuprofen 400 mg PO q6h PRN, Probiotic (Lactobacillus rhamnosus GG 10×10^9 CFU) daily, CPAP nightly.
+
+**Allergies:** NKDA.
+
+**Review of Systems:** Focus on neurologic, gastrointestinal, and musculoskeletal symptoms as described above; otherwise unremarkable.
+
+**Physical Examination:** Vitals stable: BP 130/78 mmHg, HR 75 bpm, Temp 98.4 °F, RR 16 /min, O₂ sat 97 %. Neurologic exam: normal cranial nerves (I–XII) with intact sensation and ocular movements; strength 5/5 bilaterally; deep tendon reflexes 2+ symmetrical; gait normal; no dysmetria or ataxia; no cranial sensory deficits; no focal motor weakness.
+
+**Imaging and Tests Ordered:** Brain MRI and head CT were obtained to exclude vascular or structural causes of headache. Both studies were unremarkable (no mass, ischemia, hemorrhage, or vascular malformation).
+
+**Assessment:** Acute migraine with aura. Differential diagnosis: (1) Occipital neuralgia (unlikely given exam), (2) Temporal arteritis (age &lt;50, no visual loss, normal ESR), (3) Brain tumor/vascular lesion (ruled out by imaging), (4) Cervicogenic headache (no neck pain/cord signs).
+
+**Plan:
+1. Initiate topiramate 25 mg PO at bedtime for prophylaxis (titrated to 50 mg nightly after 2 weeks if tolerated). Counsel about possible paresthesias, cognitive effects, and weight loss.
+2. Prescribe sumatriptan 50 mg PO at onset of headache if pain &gt;4/10 and visual aura has resolved; advise to take with caffeine if tolerated.
+3. Continue acetaminophen and ibuprofen PRN for breakthrough pain.
+4. Counsel on migraine trigger avoidance: maintain sleep hygiene, consistent meal timing, reduce caffeine, hydrate, stress management with biofeedback or mindfulness.
+5. Continue CPAP compliance monitoring.
+6. Instruct patient to keep a headache diary, noting aura, medication timing, possible triggers, and severity.
+7. Monitor for topiramate side‑effects; expect mild dizziness initially.
+8. Provide educational handouts on migraine management.
+
+**Follow-up Recommendations:** Return to Neurology within 4 weeks or sooner if headache frequency increases, new focal neurologic symptoms develop, or adverse effects from topiramate are intolerable. Consider referral to pain management if headaches remain refractory after 3 months of topiramate therapy.
+
+**Signature:** Dr. [Name], MD
+
+**Date:** 2024‑04‑05</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Throbbing right‑temporal headache starting mid‑afternoon</span><span class="pill">Visual flickering and transient blurring</span><span class="pill">Sensitivity to light and sound</span><span class="pill">Nausea</span><span class="pill">Vomiting, brief</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78</td></tr><tr><td>HR</td><td>75</td></tr><tr><td>Temperature</td><td>98.4</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal cranial nerves</li><li>Full strength 5/5 bilaterally</li><li>Normal reflexes</li><li>No focal deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Brain MRI</li><li>CT scan of the head</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Brain MRI normal, no mass or ischemia</li><li>CT scan normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Topiramate 25 mg PO nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reported nausea resolved but had mild dizziness during first week of topiramate. Headache frequency unchanged.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO as needed</li><li>Ibuprofen 400 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Migraine history with aura</li><li>Previous tension headaches</li><li>Recent increased stress at work</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The neurologist performed a thorough neurologic exam, confirming normal cranial nerve function, normal strength, and reflexes. Given the acute unilateral migraine with aura, a brain MRI was ordered to rule out vascular or structural pathology. The MRI returned normal. The physician prescribed topiramate 25 mg nightly as a prophylactic and advised a triptan for acute attacks if pain surpassed 4/10. The patient was educated on migraine triggers, sleep hygiene, and coping strategies for stress. She signed a headache diary to track triggers.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Migraine remains frequent; prophylaxis initiated but not yet effective. Overlap with fibromyalgia‑like pain may be part of a central sensitization spectrum.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-04-10</h3><div class="visit-meta">Sleep Medicine | Reason: Assessment of sleep quality and CPAP compliance</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Assessment of sleep quality and CPAP compliance.
+
+History of Present Illness: 35‑year‑old female with known metabolic syndrome, obesity, and moderate OSA (diagnosed 1 year ago) presents for routine follow‑up. She reports frequent nighttime awakenings, daytime sleepiness persistently despite CPAP, morning headaches, and non‑productive CPAP use with intermittent discomfort. Recent stressors appear to heighten her symptom burden.
+
+Past Medical History: Metabolic syndrome, obesity, OSA, major depressive disorder, generalized anxiety disorder, irritable bowel syndrome, migraine, temporomandibular joint disorder, chronic fatigue syndrome.
+
+Medications: Acetaminophen 500 mg PO PRN; Ibuprofen 400 mg PO PRN; Topiramate 25 mg PO nightly; Probiotic (Lactobacillus rhamnosus GG 10b CFU) daily; Sumatriptan 50 mg PO at onset of headache if pain &gt;4/10; CPAP nightly.
+
+Allergies: NKDA.
+
+Social History: Non‑smoker, occasional alcohol, moderate exercise.
+
+Physical Examination:
+- Vital signs: BP 134/80 mmHg, HR 78 bpm, Temp 98.5°F, RR 17/min, SpO₂ 95% on room air.
+- Head/Neck: No cranial or neck abnormalities.
+- Chest: Normal auscultation.
+
+Polysomnography (performed 9 pm): AHI 24 events/hr (moderate OSA). Desaturation &gt;3% in 15% of total sleep time. CPAP titration completed; therapeutic pressure set at 12 cmH₂O. Mask fit, humidification, and positional therapy counseling provided.
+
+Assessment:
+1. Moderate obstructive sleep apnea – residual AHI 24 at therapeutic pressure.
+2. CPAP non‑compliance primarily due to mask discomfort and possible leak.
+3. Morning headache likely secondary to sleep fragmentation and residual hypoxia.
+4. Overlap of anxiety/depression contributing to sleepiness and poor adherence.
+
+Plan:
+- Continue CPAP at 12 cmH₂O nightly; reinforce mask hygiene, proper seal, use of humidifier.
+- Encourage positional therapy (side‐sleep) and regular adjustment of mask straps.
+- Use sleep app to log nightly usage and troubleshoot leaks.
+- Re‑evaluate CPAP pressure or consider different mask type (full‑facial or nasal‑seal) at next visit.
+- Reinforce adherence strategies: set reminders, gradual increase time on machine, involve partner.
+- Maintain current medications; consider titrating topiramate to 50 mg nightly if migraine frequency &gt;2/month.
+- Counsel on stress management techniques (breathing exercises, CBT‑based interventions) to enhance sleep quality.
+- Review weight management plan with dietician to potentially reduce OSA severity.
+- No new pharmacologic therapy initiated today.
+
+Follow‑up: Return in 4 weeks or sooner if symptoms worsen. Review CPAP compliance data prior to appointment. Contact sleep technician for mask fit review if leak persists.
+
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Frequent nighttime awakenings</span><span class="pill">Daytime sleepiness despite CPAP</span><span class="pill">Morning headaches</span><span class="pill">Non‑productive CPAP use</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>134/80</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.5</td></tr><tr><td>RR</td><td>17</td></tr><tr><td>O2_Saturation</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No cranial or neck abnormalities</li><li>Chest auscultation normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Polysomnography</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AHI 24/hour; oxygen desaturation &gt;3% in 15% of total sleep time</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CPAP prescription 12 cmH₂O</li><li>Mask fit counseling</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reports improved sleep when using CPAP; still experiences morning headache after first week.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO as needed</li><li>Ibuprofen 400 mg PO PRN</li><li>Topiramate 25 mg PO nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obstructive sleep apnea diagnosed 1 year ago</li><li>CPAP non‑compliance due to discomfort</li><li>Recent increase in stress levels</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>An overnight polysomnography was performed at 9 pm. The study revealed an apnea–hypopnea index (AHI) of 24 events per hour, moderate sleep‑disordered breathing. A CPAP titration was completed, prescribing 12 cmH₂O for therapeutic effect. Counseling on mask fit, humidification, and positional therapy was offered. The patient was encouraged to resume full nightly usage and to track compliance with the sleep app. No pharmacologic therapy was initiated at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Sleep apnea confirmed; ongoing poor sleep hygiene may be driving both central pain and mood disturbances. CPAP adherence is critical to overall management.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-04-20</h3><div class="visit-meta">Rheumatologist | Reason: Evaluation of widespread pain and multiple tender points</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">S: 35‑year‑old female presents for evaluation of widespread musculoskeletal pain and multiple tender points.  Chief complaint: persistent low‑grade pain in hips, shoulders, neck, and lower back, worsened by movement, with morning stiffness lasting 10‑15 minutes and ongoing fatigue.  History of metabolic syndrome, obesity, obstructive sleep apnea, major depressive disorder, generalized anxiety disorder, irritable bowel syndrome, migraine, temporomandibular joint disorder, and chronic fatigue syndrome.
+
+HPI: Patient reports persistent widespread pain for &gt;6 months with 11 tender points identified on exam.  Pain intensity was 6/10 at baseline, decreased to 5/10 after 2 weeks of duloxetine 30 mg daily (current medication).  Mild nausea in first week of duloxetine.  No new symptoms of fever, rash, swollen joints, or weight loss.
+
+PMH: chronic fatigue syndrome, metabolic syndrome, obesity, OSA, MDD, GAD, IBS, migraine, TMJ, chronic widespread pain.  Meds: acetaminophen 500 mg PRN, ibuprofen 400 mg PRN, topiramate 25 mg nightly, CPAP 12 cmH2O.  NKDA.
+
+ROS: positive for widespread pain, fatigue, depression/anxiety, constipation, headaches. Negative for vision changes, rash, arthralgia in limited joints, fever, night sweats.
+
+PE: Vital signs: BP 136/82, HR 79, Temp 98.3°F, RR 16, SpO2 97%.  Neurologic: normal reflexes, intact sensory, normal gait.  Musculoskeletal: 11 tender points ≥4/10 pressure pain across cervical, shoulder, thoracolumbar, hip regions.  No swelling, erythema, or deformity.  ROM full passive, slight limitation with active motion due to pain.  TMJ exam: mild clicking, no swelling.  No synovitis.
+
+Labs: CRP 1.2 mg/dL, ESR 8 mm/hr, ANA negative, RF negative, anti‑CCP negative, ACE 30 U/L, CBC normal, CMP normal.
+
+Assessment: Evidence consistent with fibromyalgia syndrome (FM) per ACR 2010 criteria – widespread pain (&gt;3/6 body quadrants) with ≥11 tender points and normal inflammatory markers. Other causes excluded: inflammatory arthritis (seronegative), connective tissue disease (negative ANA), polymyalgia rheumatica (low ESR, no proximal muscle pain), thyroid disease (not ordered yet; normal TSH on previous visit), medication side effects (unlikely). The chronic fatigue and psychiatric comorbidities likely contribute to pain and sleep disturbance; CPAP appears adequate.
+
+Plan:
+1. Medication: Continue duloxetine 30 mg PO daily for analgesia and mood.  Monitor for nausea, GI upset, headache.  Continue acetaminophen 500 mg PO PRN, ibuprofen 400 mg PO PRN as needed.  Consider titration to 60–120 mg PO daily if pain not controlled and tolerating.  Discuss potential weight gain, monitor weight.
+2. Exercise: Initiate gradual low‑impact aerobic exercise – walking 20‑30 min 3×/week, progressing to 45 min 5×/week as tolerated.  Add stretching, core strengthening.
+3. Physical therapy: PT referral for graded exercise, manual therapy, ergonomic education.
+4. Sleep &amp; CPAP: Reinforce CPAP use, mask comfort, address nighttime awakenings.  Consider sleep diary and compliance check.
+5. Weight management: Counsel dietitian for calorie deficit, physical activity, consider motivational interviewing given depression/anxiety.
+6. Psychiatric: Encourage continued therapy, consider adjustment of topiramate dose if migraine persists.  Reinforce medication adherence, monitor psychiatric symptoms.
+7. Monitoring: Repeat pain diary, use 0‑10 scale daily.  Review side effects.  Reassess labs if new symptoms.
+8. Follow‑up: Return to office in 4 weeks or sooner if pain worsens &gt;1 point, new swelling, rash or significant side effects.  PT follow‑up as per referral.
+
+Disposition: Patient verbalized understanding, expressed hope for pain relief but anxiety about side effects.  Will obtain baseline weight and mood scale at next visit.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent low‑grade pain in hips, shoulders, neck, and lower back</span><span class="pill">Pain worsens with movement</span><span class="pill">Joint stiffness in morning lasting 10‑15 minutes</span><span class="pill">Ongoing fatigue</span><span class="pill">History of widespread tender points</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/82</td></tr><tr><td>HR</td><td>79</td></tr><tr><td>Temperature</td><td>98.3</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>11 tender points &gt; 4/10 pressure pain</li><li>Normal gait and posture</li><li>No synovitis or swelling</li><li>Normal reflexes and neuro exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CRP</li><li>ESR</li><li>RF</li><li>Anti-CCP</li><li>ACE</li><li>ANA</li><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CRP 1.2 mg/dL</li><li>ESR 8 mm/hr</li><li>RF negative</li><li>Anti‑CCP negative</li><li>ACE 30 U/L</li><li>ANA negative</li><li>CBC normal</li><li>CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 30 mg PO daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Mild nausea in first week; reported decreased pain from 6/10 to 5/10 after 2 weeks.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO as needed</li><li>Ibuprofen 400 mg PO PRN</li><li>Topiramate 25 mg PO nightly</li><li>CPAP 12 cmH₂O</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metabolic syndrome</li><li>Obesity</li><li>Obstructive sleep apnea</li><li>Major depressive disorder</li><li>Generalized anxiety disorder</li><li>Irritable bowel syndrome</li><li>Migraine</li><li>Temporomandibular joint disorder</li><li>Chronic fatigue syndrome</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The rheumatologist performed a comprehensive tender point exam, identifying 11 tender points across the cervical, shoulder, thoracolumbar, and hip regions. Reflex testing was normal. The exam confirmed widespread hyperalgesia but no swelling or joint deformity. The clinician considered fibromyalgia as a diagnosis but noted the absence of generalized arthralgia and significant systemic symptoms. An extensive laboratory panel was ordered to exclude inflammatory or autoimmune etiologies. Results: CRP 1.2 mg/dL (normal), ESR 8 mm/hr, ANA negative, RF negative, anti‑CCP negative, ACE normal, CBC normal. The rheumatologist prescribed duloxetine 30 mg PO daily, recommended gradual low‑impact aerobic exercise, and referred for physiotherapy. The patient expressed hope for pain relief but also fear of medication side effects.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosis tentatively fibromyalgia‑like syndrome; central sensitization likely driving widespread pain. No objective inflammatory markers; exclusion of other rheumatologic diseases supported by labs.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-05-15</h3><div class="visit-meta">Primary Care Physician | Reason: Follow‑up on duloxetine tolerability and pain management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up on duloxetine tolerability and pain management.
+
+History of Present Illness: 35‑year‑old female with metabolic syndrome, obesity, OSA, major depressive disorder, generalized anxiety disorder, IBS, migraine, TMJD, and chronic fatigue syndrome presents for follow‑up. She reports persistent low‑grade musculoskeletal pain, occasional nausea 1–2 days after duloxetine, ongoing fatigue, and sleep issues. CPAP has slightly improved sleep quality but next‑day grogginess persists. Mood remains variable.
+
+Review of Systems: Positive for fatigue, low‑grade diffuse pain, GI discomfort and constipation (controlled with LAM and dietitian guidance), and mild nausea post‑duloxetine. Denies headache, vision changes, or new neurological deficits.
+
+Medications: Duloxetine 30 mg PO daily; Acetaminophen 500 mg PO PRN; Ibuprofen 400 mg PO PRN; Topiramate 25 mg PO nightly; CPAP 12 cmH₂O nightly; newly prescribed Gabapentin 300 mg PO nightly; Amitriptyline 25 mg PO nightly.
+
+Physical Exam: Normal gait; no acute tenderness; BP 133/80, HR 77, Temp 98.4 °F, RR 16, SpO₂ 98%. Mildly elevated BP relative to her metabolic syndrome targets but within acceptable range.
+
+Assessment: 1) Chronic musculoskeletal pain likely central sensitization/subclinical fibromyalgia. 2) Medication‑induced nausea from duloxetine—symptom resolved after 3 days. 3) Persistent fatigue—chronic fatigue syndrome, OSA, and depression contributory. 4) Sleep disturbances—improved with CPAP; residual daytime sleepiness and sleep‑induced grogginess likely from CPAP use and medication sleep‑promoting effects.
+
+Plan: 
+- Continue duloxetine 30 mg daily for pain and mood. 
+- Initiate Gabapentin 300 mg PO nightly to address neuropathic pain and improve sleep.  
+- Add Amitriptyline 25 mg PO nightly as sleep aid; monitor for sedation. 
+- Continue acetaminophen and ibuprofen PRN as needed for pain. 
+- No new labs ordered; continue current CMP, CBC as per standard metabolic syndrome care. 
+- Reinforce CPAP adherence and mask hygiene; schedule sleep‑medicine follow‑up if symptoms persist. 
+- Lifestyle counseling: exercise (walk 30 min daily), dietitian follow‑up for weight management and IBS-friendly diet. 
+- Patient instructed to monitor sedation, sleep quality, and any new GI side‑effects from gabapentin/amit. 
+- Return in 4 weeks for medication review and pain diary analysis.
+
+Education: Reviewed side‑effects of gabapentin and amitriptyline, importance of adherence to CPAP, sleep hygiene techniques, and lifestyle modifications.
+
+Signature: __________________ 
+
+(Clinical documentation prepared by a primary care provider)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent low‑grade pain</span><span class="pill">Occasional nausea after taking duloxetine</span><span class="pill">Persistent fatigue</span><span class="pill">Sleep quality slightly improved with CPAP</span><span class="pill">Mood fluctuations</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>133/80</td></tr><tr><td>HR</td><td>77</td></tr><tr><td>Temperature</td><td>98.4</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal gait</li><li>No acute tenderness</li><li>BP slightly elevated but within acceptable range for metabolic syndrome</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed Gabapentin 300 mg PO nightly</li><li>Prescribed Amitriptyline 25 mg PO nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Says nausea has subsided after 3 days; reports improved sleep at night, although next‑day grogginess persists.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 30 mg PO daily</li><li>Acetaminophen 500 mg PO as needed</li><li>Ibuprofen 400 mg PO PRN</li><li>Topiramate 25 mg PO nightly</li><li>CPAP 12 cmH₂O</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent start of duloxetine 30 mg daily</li><li>Ongoing CPAP compliance</li><li>Use of topiramate for migraines</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The PCP reviewed medication tolerability and pain diary entries. The patient reported mild nausea (1‑2 days after dosing) and persistent fatigue. The provider decided to add low‑dose gabapentin 300 mg nightly and a trial of amitriptyline 25 mg nightly for sleep aid. The patient was advised to take gabapentin at bedtime, monitor for sedation, and continue CPAP usage. A lifestyle counseling session on exercise and diet was scheduled for the next visit. No new lab work was ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Medication regime now includes duloxetine, gabapentin, amitriptyline, and topiramate. Pain intensity modestly decreased but remains chronic. Central pain sensitization remains the dominant hypothesis.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-07-05</h3><div class="visit-meta">Urgent Care | Reason: Sudden intense whole‑body pain after prolonged grocery line</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 35‑year‑old female presenting to urgent care with sudden, severe whole‑body pain that began after standing in a grocery line for 45 minutes. She describes the pain as a “treadmill that never stops” with a rating of 8/10; pain is sharp, diffuse, and associated with fatigue and jaw clicking. She has a long history of chronic pain conditions—including fibromyalgia, temporomandibular joint disorder (TMJD), and chronic fatigue syndrome—as well as psychiatric comorbidities (major depressive disorder, generalized anxiety disorder) and metabolic syndrome. Current medications include duloxetine 30 mg daily, gabapentin 300 mg nightly, amitriptyline 25 mg nightly, topiramate 25 mg nightly, acetaminophen 500 mg PRN, ibuprofen 400 mg PRN, and CPAP 12 cmH₂O nightly.
+
+Physical Examination:
+- Vitals: BP 135/80, HR 82, T 98.3 °F, RR 16, SpO₂ 97%
+- General: alert, anxious, no acute distress.
+- Musculoskeletal: diffuse tenderness over all major muscle groups; no focal swelling, erythema, or deformity. No focal neurological deficits; strength 5/5, sensation intact, gait normal.
+- Temporomandibular: mild preauricular tenderness, normal range of motion, clicking noted.
+- No abdominal tenderness.
+
+Labs: CBC and CMP ordered; both returned normal.
+
+Assessment: Acute flare of widespread musculoskeletal pain likely related to a combination of fibromyalgia and TMJD exacerbation, precipitated by prolonged standing and psychosocial stress. No evidence of acute infection, inflammation, or metabolic derangement.
+
+Plan:
+1. Continue current multimodal pain regimen.  Provide additional dose of acetaminophen 650 mg PO.
+2. Prescribe ibuprofen 400 mg PO every 6 hours PRN for pain and inflammation (maximum 2400 mg/day). Advise to take with food to reduce GI irritation.
+3. Continue duloxetine 30 mg daily (for pain and mood), gabapentin 300 mg nightly, amitriptyline 25 mg nightly, topiramate 25 mg nightly.
+4. Counsel on stress‑management techniques; provide referral to a pain psychologist. A follow‑up with a pain specialist is recommended.
+5. Reinforce CPAP adherence and sleep hygiene.
+6. Instruct patient to keep a pain diary and to avoid prolonged standing or other exacerbating activities.
+7. If pain remains &gt;5/10 or if new neurological symptoms develop, return to urgent care or neurology.
+
+Follow‑up: Pain specialist in 7‑10 days; urgent care if pain worsens or new acute symptoms arise.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp, all‑body pain rated 8/10 after standing in line for 45 min</span><span class="pill">Feeling of pain “like a treadmill that never stops”</span><span class="pill">Jaw clicking remains</span><span class="pill">Fatigue and diffuse muscle soreness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/80</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temperature</td><td>98.3</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2_Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diffuse muscle tenderness</li><li>No acute swelling or erythema</li><li>Normal neuro exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 650 mg PO</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reports temporary relief from acetaminophen; still experiencing high overall pain level the following day.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Obstructive sleep apnea</span><span class="pill">Major depressive disorder</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Irritable bowel syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular joint disorder</span><span class="pill">Chronic fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 30 mg PO daily</li><li>Gabapentin 300 mg PO nightly</li><li>Amitriptyline 25 mg PO nightly</li><li>Topiramate 25 mg PO nightly</li><li>Acetaminophen 500 mg PO as needed</li><li>Ibuprofen 400 mg PO PRN</li><li>CPAP 12 cmH₂O</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>All prior diagnoses</li><li>Current medications including duloxetine, gabapentin, amitriptyline, topiramate, CPAP</li><li>History of episodic flares</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urgent‑care provider performed a rapid musculoskeletal exam, noting diffuse tenderness across all major muscle groups and no focal deficits. CBC and CMP were obtained to rule out acute infection or metabolic derangements; results were within normal limits. The patient was given an additional dose of acetaminophen 650 mg PO and instructed to continue current regimen. A supportive counseling session on stress management was offered, and the provider suggested a follow‑up with a pain specialist. Maya left with a prescription for a non‑steroidal anti‑inflammatory and a referral to a pain psychologist.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continued flare demonstrates ongoing central sensitization and inability to contain diffuse pain with current pharmacologic strategy. Multimodal approach remains necessary.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Irritable Bowel Syndrome</span><span class="pill">Migraine</span><span class="pill">Temporomandibular Joint Disorder</span><span class="pill">Chronic Fatigue Syndrome</span><span class="pill">Obesity</span><span class="pill">Metabolic Syndrome</span><span class="pill">Sleep Apnea</span><span class="pill">Fibromyalgia syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PO PRN</li><li>Ibuprofen 400 mg PO PRN</li><li>Topiramate 25 mg PO nightly</li><li>Probiotic (Lactobacillus rhamnosus GG 10b CFU) daily</li><li>Sumatriptan 50 mg PO at onset of headache if pain &gt;4/10</li><li>CPAP nightly at 12 cmH2O</li><li>Duloxetine 30 mg PO daily</li><li>Gabapentin 300 mg PO nightly</li><li>Amitriptyline 25 mg PO nightly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit 1: Presented with widespread musculoskeletal aches, jaw clicking, mild low‑grade headache, fatigue, and abdominal discomfort. Exam revealed diffuse muscle tightness, reduced mandibular opening (~30°), moderate lumbar tenderness, and normal neurological status. ESR slightly elevated (12 mm/hr); CBC, CMP, TSH, ANA normal. Prescribed acetaminophen 500 mg PRN, continued CPAP use, pain diary, physical therapy referral, weight management counseling. Follow‑up scheduled in 4 weeks.</li><li>Visit 2 (2024-03-12): Patient reported worsening jaw pain and increased metallic clicking. Physical exam showed limited mouth opening (28 cm), mild preauricular tenderness, audible clicking on opening and lateral deviation, tenderness over left masseter and medial pterygoid, and a positive lateral head trauma test. Panoramic radiograph was normal. Prescribed a custom night‑guard (splint), referred to a physiotherapist for myofascial release and joint mobilizations, continued acetaminophen 500 mg PO PRN with consideration of ibuprofen 400 mg PO if pain persists beyond 72 hrs. Advised nightly night‑guard use, stress‑reduction techniques, CPAP adherence, and a pain diary. Follow‑up in 4 weeks or sooner if pain &gt;5/10, swelling worsens, or new neurological symptoms arise.</li><li>Visit 3 (2024-03-18): Presented with sharp left hip and gluteal pain after stepping down a porch. Physical exam revealed tenderness over gluteus medius, positive Trendelenburg sign, full passive ROM, and intact neurovascular status. Pelvis and femur X‑ray showed no fracture or dislocation. Prescribed ibuprofen 400 mg PO every 6 hours PRN for pain and inflammation, continued acetaminophen 500 mg PO PRN, advised rest, activity modification, ice packs, and follow‑up in 5–7 days if pain worsens.</li><li>Visit 4 (2024-04-01): Follow‑up by gastroenterologist for escalating abdominal cramps and constipation after increased CPAP use. Findings: left lower quadrant cramping 1–2 minutes, urgent constipation, bloating, mildly tender LLQ, soft non‑distended abdomen, normal bowel sounds. Colonoscopy and upper GI endoscopy both normal. Plan: dietitian referral for high‑fiber, low‑FODMAP diet and meal timing relative to CPAP; daily probiotic supplementation (Lactobacillus rhamnosus GG 10b CFU); symptom diary; consider lubiprostone or linaclotide if constipation persists or pain &gt;5/10; CPAP continued as prescribed. Follow‑up in 6 weeks or sooner if symptoms worsen.</li><li>Visit 5 (2024-04-05): Neurology assessment of acute severe unilateral migraine with visual aura. Patient reported throbbing right‑temporal headache, pain 7/10, transient visual aura, photophobia, phonophobia, nausea, vomiting, no trauma. Vitals stable. Neurologic exam normal. Brain MRI and CT unremarkable. Initiated prophylactic topiramate 25 mg at bedtime; plan to titrate to 50 mg night after 2 weeks. Prescribed sumatriptan 50 mg PO at onset of headache if pain &gt;4/10 and aura resolved. Continued acetaminophen and ibuprofen PRN. Advised trigger avoidance, sleep hygiene, hydration, stress management. Follow‑up in 4 weeks.</li><li>Visit 6 (2024-04-10): Sleep Medicine evaluation. Patient reports frequent nighttime awakenings, daytime sleepiness despite CPAP, morning headaches, and mask discomfort. Polysomnography AHI 24 events/hr, desaturation &gt;3% 15% of total sleep time. CPAP pressure set 12 cmH2O, mask fit and humidification instructions given. Plan: continue CPAP, reinforce mask hygiene, positional therapy, use sleep app for compliance, consider mask change or pressure adjustment, titrate topiramate to 50 mg nightly if migraine &gt;2/month. No new medications prescribed. Follow‑up in 4 weeks or sooner if symptoms worsen.</li><li>Visit 7 (2024-04-20): Patient reported persistent low‑grade widespread musculoskeletal pain with 11 tender points, normal inflammatory markers. Labs: CRP 1.2 mg/dL, ESR 8 mm/hr, ANA negative, RF negative, anti‑CCP negative. Added duloxetine 30 mg PO daily for pain/mood; continue acetaminophen, ibuprofen PRN. Initiated graded exercise program, physical therapy referral, CPAP compliance review, weight management counseling.</li><li>Visit 9 (2024-07-05): Patient 35‑year‑old female presented to urgent care with sudden, severe diffuse whole‑body pain (8/10) after standing in a grocery line for 45 min. Pain described as sharp, “treadmill that never stops,” associated with fatigue and jaw clicking. Physical exam showed diffuse muscle tenderness, mild preauricular tenderness, normal range of motion, no focal neurological deficits. Vital signs were within normal limits. CBC and CMP returned normal. Prescribed ibuprofen 400 mg PO q6h PRN (max 2400 mg/day). Patient was advised to continue existing multimodal regimen (duloxetine 30 mg daily, gabapentin 300 mg nightly, amitriptyline 25 mg nightly, topiramate 25 mg nightly, acetaminophen 500 mg PRN). Counseling on stress‑management, referral to a pain psychologist, pain diary maintenance, and CPAP adherence reinforcement were ordered. Follow‑up with a pain specialist within 7–10 days and urgent care if pain worsens or new neurological symptoms develop.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

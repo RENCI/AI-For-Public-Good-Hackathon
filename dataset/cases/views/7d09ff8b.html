@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 7d09ff8b</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 7d09ff8b</h1><div class="subtitle">Gastroesophageal Reflux Disease presenting as chest pain mimicking cardiac ischemia | Male, 55</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Erosive esophagitis, Barrett’s esophagus, Esophageal stricture, Hiatal hernia, Gastritis, Anxiety disorder, Type 2 Diabetes, Obesity</div><div class="meta-line">Risk Factors: Helicobacter pylori infection, Obesity, Smoking, Alcohol use, NSAID use, Certain trigger foods (spicy, fatty, citrus, chocolate), Sedentary lifestyle, Stress, Poor antacid compliance</div></div>
+<details><summary>Narrative <span class="preview-text">**A Tale of Silent Burning and Misled Heartbeats**  A 55‑year‑old accountant named Thomas had always carried his weight—...</span></summary><div class="section-body"><p>**A Tale of Silent Burning and Misled Heartbeats**</p><p>A 55‑year‑old accountant named Thomas had always carried his weight—an 8‑point BMI increase over the last decade—behind a job that kept him glued to his desk, often at the expense of healthy meals. In the evenings he would take a quick drive to the corner café and order a steak sandwich slathered in a creamy sauce, because that was what comfort food tasted like to him. He also smoked a pack a day, drank a bottle of wine every Friday night, and used ibuprofen whenever the joints complained. “It’s just a little discomfort,” he told himself, and it was just that.</p><p>It began on a rainy Wednesday. Thomas had stayed late at work, finished a report, and then returned home. He settled on the couch with a cup of coffee and, two minutes after his final bite of a greasy pizza, a sudden wave of pressure rushed up his mid‑chest. The sensation was sharp, almost like a knife slicing through the sternum, and it didn’t subside. His heart rate spiked, his breathing shallow, and his mind screamed—this was an attack. He drove to the nearest emergency department on a hunch that his heart was failing.</p><p>At the ER, the nurse’s voice was calm and efficient. Thomas presented with left‑hand tingling and a tightness in the chest that he described as “it feels like my heart is in pain.” The ECG was clean, the cardiac enzymes (troponin‑I) were undetectable, and the chest X‑ray produced no lesions. A nitroglycerin tablet was given, and within minutes Thomas’s chest pain eased like a sudden release. He was sent home with a 24‑hour supply of sublingual nitro and a prescription for a low‑dose calcium channel blocker, along with an “anti‑anxiety” label from the ER physician. Thomas left the hospital feeling relieved that his heart was fine, yet oddly unsettled by the relief.</p><p>The next week, he called his primary care provider (PCP) to report the “heart episode.” The visit, conducted over the phone due to a clinic backlog, was perfunctory. The PCP mentioned that his blood pressure was elevated, recommended reducing salt in his diet, and gently suggested he might be “over‑reacting.” There was no mention of gastro‑oesophageal reflux, and the only medication prescribed was the calcium channel blocker for “anxiety‑related chest discomfort.” Thomas left the call with a prescription for a low‑dose beta blocker, but the recommendation to start a daily proton‑pump inhibitor (PPI) was merely a polite inquiry, not a directive.</p><p>The next several weeks brought only more of the same. Thomas’s chest pressure always seemed to flare after dinners—a pattern of burning that began roughly 30–45 minutes after the meal—though he often dismissed it as “stomach upset” or “stress.” His doctor told him to “cut back on the alcohol and try not to smoke,” but he stayed smokes and drinks, believing the former were the only real culprits he could control. The chest pain persisted, though it was now a recurring rhythm in his evenings, never quite resolving for longer than a few minutes.</p><p>At two months into this loop, Thomas had a third episode. A “stress‑related cardiac event” was again the label given. He was once more given nitroglycerin and an additional dose of the beta blocker. This time the ER physician was a bit more detailed, explaining that “the chest pressure could be a response to anxiety, but also could be due to esophageal irritation. We’ll need to monitor it.” Thomas was advised to schedule a gastroenterology appointment, and a referral slip was mailed to him. He tried to fit the appointment in but kept missing it, citing work deadlines and the fact that it felt like an unnecessary appointment. Meanwhile, the discomfort never went away; it sometimes was tinged with hoarseness as if his voice had been pulled tight.</p><p>One night, weeks later, Thomas woke with a severe nausea and a cramp‑like pain in the middle of his abdomen that kept him from sleeping. “It’s like the stomach’s burning,” he told himself. He called urgent care. The practitioner asked if he had eaten a large meal before bed and if he had any gastrointestinal history. Thomas mentioned the pizza, the greasy coffee, and the fact that he’d been taking ibuprofen. No tests were done, but a prescription for a stronger H2 blocker was handed over before they closed. He was told to “take as needed after meals” and to consider reducing NSAID use.</p><p>By the third month, the pattern sharpened. Every time he ate anything spicy, fatty, or acidic, his chest would tighten and sometimes his throat would feel constricted. He began to limit his food choices to bland, low‑fat items. His weight, which had been hovering at 240 pounds, began a slow decline as he started avoiding the very foods that had made the most “stomach burn.” Yet, with this unplanned diet, he also lost his appetite, and nights without food left him feeling dizzy.</p><p>There was a brief moment of hope on the fourth month. Thomas drove to an ENT clinic to address a strange, low‑grade hoarseness that had begun during his chest episodes. The ENT specialist performed a flexible laryngoscopy and noticed “redness in the pharynx” and a “subtle laryngeal reflux.” He recommended a proton‑pump inhibitor “at night” and added that a “future endoscopy could help clarify what’s going on.” Thomas left with a new prescription for a once‑daily esomeprazole 40 mg. Still, the bottle sat unopened in a drawer for weeks. The idea of a gastric endoscopy seemed to him a needless intrusion.</p><p>Within half a year, Thomas had been through the ER twice, urgent care twice, seen his PCP four times, cardiology once, a gastroenterologist twice (the second time he missed the appointment due to the high cost), and an ENT once. He was on a low‑dose calcium channel blocker, a beta blocker, an H2 blocker, and at random, a PPI. None of the medications fully relieved the pressure in his chest. His anxiety spikes with each episode of chest pain like a loop—he feels something is wrong, he gets relief from nitro, he ends up worried again when the ache resurfaces after a meal.</p><p>The fifth month saw a subtle but critical development: an occasional difficulty in swallowing a plain piece of bread. He attributed it to “being tired” or “maybe my shoulders are tight.” When it came to a thin liquid, he felt a “slip” at the back of his throat, prompting a call to his PCP. The doctor suggested a barium swallow, citing the possibility of a narrowing. The test was ordered but the appointment got postponed due to a scheduling error. Thomas kept on a diet of watery soups and smoothies, partially because swallowing foods was uncomfortable, but this also meant he gained less weight and his energy dipped further.</p><p>At the eighth month, Thomas’s chest pain felt different. It was less the sudden, “heart‑burn” flare that used to hit 30 minutes after eating; it was now an all‑enveloping pressure that sometimes lasted several hours, often triggered by sitting quietly after the office clock beeped its final minute. He had begun to lose weight—now 225 pounds—and he had developed a “slow‑bloating” abdomen that would stay that way for days. That night, after a solitary tuna sandwich, he went to the ER again. Here the staff administered aspirin and heparin for “possible cardiac concern” and ordered serial cardiac troponin. The results stayed negative. He was given a short‑term aspirin and a short‑term beta blocker, sent home with a sternum‑sensitive reassurance note from the ER.</p><p>By nine months into the loop, Thomas began to have episodes of vomiting after lunch. He told a nearby urgent‑care clinic that he suspected an ulcer. The triage nurse ordered an abdominal CT scan to rule out any perforation or obstruction. The scan was normal; the radiologist described “no acute intra‑abdominal pathology, but some mild gastric wall thickening that could be chronic.” Thomas left with a 5‑day course of antibiotics against the possibility of a gastritis secondary infection and a note to follow up with his PCP. He was again advised to cut back on NSAIDs and to reduce alcohol use.</p><p>At ten months, his PCP asked whether “maybe your chest pain is all gastrointestinal.” Thomas replied, “No, I think my heart is fine.” The physician tried to gently bring up the idea of a work‑up for reflux or esophageal disease but felt his patient was more concerned about “heart things” than a potential chronic digestive disorder. The office tried to refer him to a gastroenterology office, but Thomas cancelled the appointment citing “not enough time” and “too expensive.” The PCP left a note suggesting a “trial of PPI for 8 weeks” and a recommendation to keep a food diary.</p><p>One wintery evening, Thomas was having a steak—yes, his favorite—when the chest pressure started again. The pressure was not immediate; it came two hours after eating, and it was accompanied by a sour taste that lingered in his mouth. He got on his phone, dialled his doctor, and requested a prescription for a new class of medication. A pharmacist called him back to confirm that he would be written a prescription for a transdermal nitroglycerin patch to use when chest pain flared. Thomas clung to this new option, thinking it was another “cardiac” solution. He used the patch as he was told; the chest pressure eased, but he never told anyone that the relief was purely local. He left the patch on the night of the flare because he felt the chest pain wasn’t returning.</p><p>In the story’s quieter moments, Thomas tried to take care of the other conditions that lurked behind the scenes of his daily life. He took his type‑2 diabetes medication, but the blood glucose readings were erratic due to irregular meals. He took the occasional antidepressant for his anxiety, but the side‑effects were drowsiness and poor appetite. When he saw a health‑coach for “weight loss,” the coach recommended “cut down on carbs and focus on lean proteins,” which Thomas attempted but struggled to maintain.</p><p>Through all the months and years, Thomas’s chest pain never got the label it deserved. It kept oscillating between being called anxiety, heartburn, esophageal irritation, and even a “minor stroke” when an ER doctor noted a brief transient loss of vision. His doctors, busy and overwhelmed, each offered a plausible explanation and a quick fix. At some visits, a PPI was prescribed and not repeated. At others, a cardiology visit was recommended and postponed. The chest pain remained a nagging undercurrent that never gave up its grip.</p><p>The patient’s narrative ends in a dimly lit office of a gastroenterologist that never was visited. Thomas had the potential to have had an esophagoscopy, but the cost was too high, and the insurance paperwork too daunting. The esophageal narrowing (stricture) that he developed around the distal oesophagus never got confirmed. The Barrett’s mucosa that had been in the background, invisible and subtle, never got biopsied. The Helicobacter pylori infection he carried was only identified once upon a random breath test that never happened because he never went for that test. He lived with the anxiety of uncertain diagnosis, a chest that might mean heart or might mean something else.</p><p>In the end, Thomas&#x27;s chest pain persisted. He managed it with medications that alleviated the sensations intermittently, but he never received a definitive diagnosis. The course of his disease remains undiagnosed, echoing a pattern that is subtle, atypical, and frustrating—an enduring reminder of a condition that masquerades as a heart attack and resolves only with reassurance that the heart is fine. The narrative of his disease is a chronicle of missed connections, of symptoms that are not easily categorized, and of a medical journey that, despite many visits, circles in an endless loop without a conclusive end.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-01-01</h3><div class="visit-meta">Emergency Medicine | Reason: Chest pain after dinner</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 55‑year‑old male presents to ED with sudden onset sharp mid‑chest pressure radiating to left hand, tingling, and shortness of breath after greasy pizza. He reports the discomfort began 30 minutes prior to arrival.
+
+History of Present Illness: Patient describes crescendo of pressure, transient tingling in left hand, mild dyspnea. No diaphoresis, no nausea/vomiting. No previous episodes of similar pain. No recent trauma or exercise. Denies chest trauma.
+
+Past Medical History: Erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, Type 2 diabetes mellitus (HbA1c 7.8%), obesity (BMI 33 kg/m²). No known cardiac disease.
+
+Social History: Smokes 1 pack/day, occasional NSAID use (ibuprofen), weekly wine, sedentary. Non‑current alcohol. No recreational drug use.
+
+Review of Systems: Positive for chest pain, tingling, dyspnea; negative for fever, orthopnea, palpitations, syncope.
+
+Physical Examination: 
+- Vital signs: BP 160/95 mmHg, HR 112 bpm, RR 20 /min, Temp 98.7 °F, SpO₂ 98% RA. 
+- General: Alert, mildly anxious, sitting posture forward.
+- Head/Neck: No JVD.
+- Cardiovascular: Regular rhythm, no murmurs or gallops, radial pulses 2/4.
+- Respiratory: Lungs clear bilaterally, no wheezes.
+- Gastrointestinal: Mild epigastric tenderness, no abdominal distension.
+- Neurologic: No focal deficits.
+
+Diagnostics: 
+- ECG: Sinus rhythm, HR 112 bpm, PR 160 ms, QRS 80 ms, QTc 420 ms. No ST/T‑wave changes.
+- Troponin I: &lt;0.01 ng/mL (baseline). Repeat in 3 h.
+- Chest X‑ray: Normal cardiac silhouette, mild hiatal hernia indent, no acute infiltrate.
+
+Assessment: Acute chest pain with normal cardiac workup. Differential includes esophageal origin (spasm, reflux), anxiety/panic disorder, musculoskeletal, and ruled‑out acute coronary syndrome.
+
+Plan: 1) Administer sublingual nitroglycerin 0.4 mg; pain alleviated. Provide 24‑hour supply for home use. 2) Prescribe verapamil 5 mg PO BID PRN for chest discomfort or as anti‑anxiety. 3) Initiate high‑dose H₂ blocker (ranitidine 150 mg PO BID) and advise proton pump inhibitor (omeprazole 20 mg PO daily) to address reflux disease. 4) Counsel smoking cessation, dietary modifications (low fat, no late meals), weight reduction, and regular exercise. 5) Arrange cardiology follow‑up if any recurrence of symptoms or if troponin rises. 6) Schedule gastroenterology review for Barrett’s surveillance and possible dilation if stricture symptomatic. 7) Psychological support and anxiety management; consider evaluation by mental health for anxiety disorder.
+
+Disposition: Discharged after reassurance. Instructions to seek immediate care if chest pain returns, becomes pressure/tingling worsening, or if shortness of breath escalates.
+
+Follow‑up: 1) Primary care visit within 1 week to review medication adherence and lifestyle changes. 2) Cardiology consult if symptoms recur or troponin abnormal. 3) Gastroenterology follow‑up in 12 months for Barrett surveillance or sooner if symptoms.
+
+Patient education: Provided verbal instructions and written material on smoking cessation, GERD management, and when to call 911.
+
+Signature: ED Physician</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sharp mid‑chest pressure, tingling in left hand, shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>160/95</td></tr><tr><td>HR</td><td>112 bpm</td></tr><tr><td>RR</td><td>20/min</td></tr><tr><td>Temp</td><td>98.7°F</td></tr><tr><td>O2</td><td>98% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Auscultation normal, no murmurs</li><li>Chest clear, mild epigastric tenderness</li><li>Sitting posture mildly forward</li><li>No jugular venous distention</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ECG</li><li>Serial troponin I</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ECG: sinus rhythm, normal intervals</li><li>Troponin I: &lt;0.01 ng/mL (baseline)</li><li>Chest X‑ray: normal cardiac silhouette, mild hiatal hernia</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sublingual nitroglycerin 0.4 mg</li><li>Verapamil 5 mg PO BID as needed</li><li>Prescribed 24‑hour nitroglycerin supply</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Chest pressure resolved after nitroglycerin; he felt anxiety from event but relieved by prescription.</p></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>smokes 1 pack/day</li><li>weekly wine use</li><li>over-the-counter ibuprofen often</li><li>obesity (BMI 33)</li><li>type 2 diabetes (BP 140/85)</li><li>chronic tension headaches</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas drove himself to the ED after a crescendo of chest pressure that began 30 minutes after finishing a greasy pizza. The triage nurse noted his tachycardia and reported a history of smoking and occasional NSAID use. The ED team performed an ECG, which was truly sinus rhythm with no ischemic changes. Serial cardiac troponin I were drawn; the first sample was &lt;0.01 ng/mL. A chest X‑ray showed a normal heart contour but small hiatal hernia indent. A nitroglycerin sublingual tablet was given, and within minutes his pressure eased. He was given a low‑dose calcium channel blocker (verapamil 5 mg PO daily, “anti‑anxiety” label) to take as needed if chest discomfort recurred. The ER physician also prescribed a 24‑hour supply of nitroglycerin sublingual tablets. He left the ED after reassurance that his heart was fine.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial event likely reflux‑related esophageal spasm; no cardiac pathology detected. Patient will require follow‑up on symptom etiology. No GERD diagnosis yet; potential hiatal hernia noted.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-01-08</h3><div class="visit-meta">Primary Care | Reason: Follow‑up after chest episode</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Follow‑up after chest episode
+
+**History of Present Illness:**
+Thomas, a 55‑year‑old male, calls the clinic reporting a “heart episode” experienced within the past week. He describes mild chest discomfort that tends to occur after meals, accompanied by occasional tingling sensations. He has a history of a prior ER visit for chest pain. He denies any current shortness of breath, diaphoresis, or radiating pain. He reports that the discomfort is mild and resolves with rest. He is a current smoker, uses alcohol occasionally, and takes NSAIDs regularly.
+
+**Past Medical History:**
+- Erosive esophagitis
+- Barrett’s esophagus
+- Esophageal stricture
+- Hiatal hernia
+- Gastritis
+- Anxiety disorder
+- Type 2 diabetes mellitus poorly controlled
+- Obesity (BMI &gt;30)
+
+**Medications:**
+- Sublingual nitroglycerin 0.4 mg PRN (24‑hour supply)
+- Verapamil 5 mg PO BID PRN
+- Ranitidine 150 mg PO BID
+- Omeprazole 20 mg PO daily
+
+**Allergies:** NKDA
+
+**Review of Systems:**
+- Cardiovascular: chest discomfort after meals, no diaphoresis or dizziness
+- Respiratory: no dyspnea
+- GI: occasional heartburn, no dysphagia
+- Musculoskeletal: no joint pain
+- Psychiatric: anxiety, no panic attacks
+
+**Vitals (telephonic phone visit + nurse check):**
+- BP: 158/90 mmHg
+- HR: 90 bpm
+- RR: 18/min
+- Temp: 98.4 °F
+- SpO₂: 99% on room air
+
+**Physical Examination (in‑office):**
+- General: well‑appearing male
+- Cardiovascular: normal heart sounds, no murmurs, resting pulse 88 bpm
+- Respiratory: clear to auscultation
+- Abdomen: soft, non‑tender, no lymphadenopathy
+- Extremities: no edema
+
+**Assessment:**
+1. Chest discomfort likely related to esophageal reflux and anxiety; no acute ischemic event at this time. The patient’s recent nitroglycerin response and absence of troponin elevation during the prior ED visit support a benign etiology.
+2. Uncontrolled hypertension (BP 158/90)
+3. Uncontrolled type 2 diabetes
+4. Anxiety disorder presenting with somatic chest symptoms
+5. Lifestyle factors (smoking, alcohol, NSAID use) contributing to reflux and cardiovascular risk.
+
+**Plan:**
+- Initiate metoprolol 25 mg PO daily as a beta‑blocker to address anxiety‑related chest discomfort and modest blood pressure reduction. Reinforce monitoring for bradycardia or hypotension.
+- Continue current OTC regimen: nitroglycerin PRN for symptomatic chest pain, verapamil PRN, omeprazole 20 mg daily, ranitidine 150 mg BID.
+- Counsel on smoking cessation and alcohol moderation; provide resources for cessation programs.
+- Advise a salt‑restricted diet and encourage regular physical activity as tolerated.
+- Order basic laboratory work (fasting glucose, HbA1c, lipid panel) to reassess diabetes and cardiovascular risk profile.
+- Educate patient on maintaining a symptom diary to identify triggers and correlate diary entries with BP readings.
+- Schedule follow‑up in 4 weeks to review BP, heart rate, symptom diary, and consider adjustment of antihypertensive therapy. If chest pain recurs or worsens, advise return to ED.
+- Refer to a smoking cessation program and consider gastroenterology follow‑up for Barrett’s esophagus surveillance.
+
+**Disposition:** Patient verbalized understanding of plan and will initiate metoprolol. No additional acute interventions warranted.
+
+**Signature:**
+[Primary Care Provider]
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild chest discomfort after meals, occasional tingling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>158/90</td></tr><tr><td>HR</td><td>90 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O2</td><td>99% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal CV exam, resting pulse 88 bpm</li><li>No abdominal tenderness</li><li>No lymphadenopathy</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg PO QD</li><li>Advised daily lifestyle measures</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Thomas said he would start the beta‑blocker and keep notes on symptom triggers.</p></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>previous ED visit for chest pain</li><li>current verapamil use</li><li>ongoing smoking, alcohol, NSAID use</li><li>high BMI</li><li>diabetes poorly controlled</li><li>anxiety with occasional worry about heart</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas called the office to report a “heart episode” within the past week. The nurse recorded his vitals and the brief phone encounter concluded with a telephonic review of his chest symptoms. The PCP noted his elevated blood pressure and offered dietary salt reduction. A gentle recommendation for daily proton‑pump inhibitor was mentioned but not strictly ordered. A beta‑blocker (metoprolol 25 mg PO QD) was prescribed for anxiety‑related chest discomfort. No specific assessment for reflux was performed. Patient was advised to keep a symptom diary and monitor for patterns.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Symptoms remain unexplained; ER evaluations not diagnostic. Probable GERD not considered; risk factors high. Awaiting further investigations.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-02-15</h3><div class="visit-meta">Emergency Medicine | Reason: Chest pain recurrence</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 55‑year‑old male presents to ED with recurrent chest pressure that began 30 minutes after dinner.
+
+**History of Present Illness:** The patient reports sudden chest pressure radiating to his left arm with tingling and a sensation of shortness of breath. The pain began after dinner, lasted ~30 minutes, and resolved after sublingual nitroglycerin. He has had two prior ED visits for similar chest pain; all work‑ups were non‑ischemic. He now reports being able to tolerate only occasional episodes but worries about recurrence.
+
+**Past Medical History:** Erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes, obesity.
+
+**Medications:** 
+- Sublingual nitroglycerin 0.4 mg PRN (24‑hour supply) 
+- Verapamil 5 mg PO BID PRN 
+- Ranitidine 150 mg PO BID 
+- Omeprazole 20 mg PO daily 
+- Metoprolol 25 mg PO daily
+
+**Allergies:** NKDA
+
+**Social History:** Current smoker (5 pack‑years), weekly wine, regular NSAID use for back pain, BMI: 34 kg/m².
+
+**Vital Signs:**
+- BP: 165/92 mmHg
+- HR: 108 bpm
+- RR: 22/min
+- Temp: 98.3 °F
+- SpO₂: 97% on room air
+
+**Physical Examination:**
+- General: Alert, mild distress.
+- Cardiac: regular rhythm, no murmurs, systolic ejection click. 
+- Pulmonary: clear bilaterally, no adventitious sounds.
+- Abdomen: mild epigastric tenderness, soft, no guarding.
+- Neck: soft, no jugular venous distension.
+
+**Diagnostic Work‑up:**
+- ECG: Sinus rhythm, normal axis, no ST/T changes.
+- Serial troponin I: &lt;0.01 ng/mL.
+- Bedside echocardiogram: Normal EF, no wall‑motion abnormalities.
+- Chest X‑ray: No acute infiltrate.
+
+**Assessment:**
+The clinical picture is most consistent with esophageal origin of chest pain (likely reflux‑related spasm or esophagitis) rather than acute coronary syndrome; extensive cardiac work‑up is negative. Anxiety and NSAID use may contribute. The patient’s known esophageal pathology (Barrett’s, stricture, hiatal hernia) predisposes to esophageal pain with meals.
+
+**Differential Diagnosis Considered:**
+1. Esophageal reflux/spasm or motility disorder
+2. Esophagitis / Barrett’s esophagus ulceration
+3. Musculoskeletal chest wall pain
+4. Anxiety‑related chest discomfort
+5. Coronary ischemia (ruled out by EKG, troponin, echo)
+
+**Plan:**
+1. **Medication Management** – Continue current GERD regimen; initiate a transdermal nitroglycerin patch 0.4 mg/h for future episodes (prescribed 24‑hour supply). Reinforce use of sublingual nitro 0.4 mg PRN for acute pain. Continue metoprolol 25 mg PO daily; hold verapamil until cardiology evaluation. Continue omeprazole 20 mg daily; consider omitting ranitidine in favor of PPI monotherapy.
+2. **Lifestyle Modifications** – Aggressive smoking cessation counseling (offer nicotine replacement, discuss cessation program). Limit alcohol to &lt;1 drink/day, avoid NSAIDs if possible; consider acetaminophen for analgesia. Encourage weight loss with dietitian referral and structured exercise plan.
+3. **Follow‑up** – Reschedule missed cardiology appointment within 2 weeks to confirm non‑ischemic etiology and manage blood‑pressure. Plan gastroenterology follow‑up (12‑month surveillance endoscopy for Barrett’s). Arrange primary‑care visit in 1 week to review BP, HR, medication adherence, and symptom diary.
+4. **Education** – Discuss differentiation of esophageal vs. cardiac chest pain, warning signs of myocardial infarction (persistent pain &gt;10 min, radiation, diaphoresis) and when to seek immediate care.
+5. **Documentation** – Note that troponin remains negative; record that EKG and echo are normal.
+
+The patient verbally agrees to the plan and understands the importance of follow‑up and lifestyle changes.
+
+**Disposition:** Discharged home with a prescription for a 24‑hour transdermal nitro patch and instructions for use during future episodes. Patient advised to return to ED if chest pain persists &gt;10 min, worsens, or is accompanied by diaphoresis, presyncope, or new syncope.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden chest pressure, tingling left arm, shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>165/92</td></tr><tr><td>HR</td><td>108 bpm</td></tr><tr><td>RR</td><td>22/min</td></tr><tr><td>Temp</td><td>98.3°F</td></tr><tr><td>O2</td><td>97% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Heart rate 106 bpm, regular rhythm</li><li>Chest clear, mild epigastric tenderness</li><li>Neck soft, no JVD</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ECG</li><li>Serial troponin I</li><li>Bedside echo</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ECG: sinus rhythm, normal axis</li><li>Troponin I: &lt;0.01 ng/mL</li><li>Echo: normal EF, no wall motion abnormality</li><li>Chest X‑ray: no acute infiltrate</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV metoprolol 1 mg</li><li>Sublingual nitroglycerin 0.4 mg</li><li>Prescribed 24‑hour nitro patch</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Chest pressure eased with nitro; he felt relieved but worried about recurrence.</p></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>two prior ED visits for chest pain</li><li>recent metoprolol use</li><li>consistent smoking</li><li>weekly wine</li><li>NSAID use</li><li>high BMI</li><li>diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas presented to ED after chest pressure that began 30 minutes post dinner. The ER team repeated the workup: ECG normal, serial troponin I remained &lt;0.01 ng/mL. In this visit, a bedside echocardiogram appeared normal. The attending gave an additional dose of beta‑blocker (metoprolol 25 mg PO, IV 1 mg) and a nitroglycerin patch (0.4 mg/h) was prescribed for any future episodes. The cardiology consultant was consulted but deemed a cardiac event unlikely. The patient was sent home with instructions to use nitro patch during flare and an appointment with cardiology scheduled, which he later missed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continued negative cardiac workup suggests non‑cardiac chest pain; possible esophageal reflux/stricture. No definitive diagnosis yet. Pending gastroenterology referral.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-03-05</h3><div class="visit-meta">Urgent Care | Reason: Abdominal pain and nausea after dinner</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe epigastric pain and nausea after dinner.
+
+History of Present Illness: 55‑year‑old man presents via phone for acute abdominal discomfort following a large meal (pizza and coffee). Patient reports severe nausea, epigastric cramping, loss of appetite, and recent use of NSAIDs. He denies chest pain at intake but expresses concern about potential cardiac involvement due to past episodes.
+
+Past Medical History: Erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes mellitus, obesity.
+
+Medications: Sublingual nitroglycerin 0.4 mg PRN, Verapamil 5 mg PO BID PRN (held pending cardiology), Ranitidine 150 mg PO BID, Omeprazole 20 mg PO daily, Metoprolol 25 mg PO daily, Transdermal nitroglycerin patch 0.4 mg/h.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for nausea, epigastric pain, anorexia. Denies vomiting, hematemesis, melena, chest pain, dyspnea. No recent syncope or leg swelling.
+
+Vital Signs: BP 152/88 mmHg, HR 92 bpm, RR 20/min, Temp 98.6°F, SpO₂ 98% on room air.
+
+Physical Examination: General: Alert, no acute distress. HEENT: No oral lesions. Neck: No jugular venous distention. Cardiac: Regular rate and rhythm, no murmurs. Lung: Clear to auscultation bilaterally. Abdomen: Tense, mild epigastric tenderness on palpation, no rebound or guarding. No organomegaly. Extremities: No edema.
+
+Assessment: Acute gastritis/GERD flare likely precipitated by recent NSAID use and large, fatty meal. Differential includes esophageal irritation/spasm, peptic ulcer disease, and, given history, cardiac ischemia remains a consideration; however, prior negative serial troponins and lack of acute chest pain support low probability of acute coronary syndrome at this time.
+
+Plan:
+1. Medications: Famotidine 20 mg PO at bedtime PRN for symptomatic relief.
+2. Continue Omeprazole 20 mg PO daily as maintenance for GERD and Barrett’s surveillance.
+3. Counsel patient on NSAID avoidance; advise over‑the‑counter ibuprofen should be discontinued.
+4. Dietary modifications: small, frequent meals; avoid late meals, caffeine, alcohol, spicy or fatty foods.
+5. Encourage weight loss and smoking cessation (follow‑up with PCP for resources).
+6. Monitor blood glucose per diabetes management plan.
+7. Patient education: Recognize red‑flag symptoms (persistent chest pain, dyspnea, syncope, or worsening abdominal pain) and seek emergent care.
+8. Follow‑up: Schedule PCP appointment in 1 week; cardiology review in 2 weeks if chest discomfort recurs; gastroenterology surveillance colonoscopy in 12 months as per Barrett’s protocol.
+
+Disposition: Patient discharged with written instructions, famotidine prescription, and advised to call urgent care or PCP if symptoms do not improve or new symptoms develop.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe nausea, epigastric cramp, loss of appetite</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>152/88</td></tr><tr><td>HR</td><td>92 bpm</td></tr><tr><td>RR</td><td>20/min</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tense epigastrium, mild rebound tenderness none</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Famotidine 20 mg PO HS PRN</li><li>Advised NSAID reduction</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Relieved after famotidine, but still concerned about heart involvement.</p></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent NSAID use</li><li>history of chest pain</li><li>heavy meal before symptoms</li><li>diabetes</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas called urgent‑care during the evening after severe nausea and epigastric pain. The nurse took vitals and asked about recent food intake; he ate pizza and coffee. No labs were drawn; the exam was normal except mild epigastric tenderness. The provider prescribed famotidine 20 mg PO HS PRN and advised limiting NSAIDs. Patient left with a prescription and instructions to contact PCP if symptoms persisted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Symptom suggests gastritis or reflux; no objective finding. H2 blocker prescription added. Consider chronic reflux pathology.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-04-01</h3><div class="visit-meta">Otolaryngology | Reason: Hoarseness and throat irritation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 5
+Date: 2025-04-01
+Location: ENT Clinic
+
+Patient: 55‑year‑old male with known erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety, type 2 diabetes, and obesity.
+
+Subjective:
+- Chief complaint: Low‑grade hoarseness and throat discomfort that worsened after meals.
+- History of present illness: Hoarseness began shortly after meals, associated with a mild, non‑painful sensation of throat irritation. No dysphagia, odynophagia, or recent upper trauma. Patient reports chronic heart‑burn‑like chest pressure after large meals.
+- He has been on omeprazole 20 mg daily with partial benefit and is hesitant to obtain the newly prescribed esomeprazole. He has delayed his scheduled revisit due to time constraints.
+
+Past medical history: Erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes mellitus, obesity. Current medications include sublingual nitroglycerin 0.4 mg PRN, verapamil 5 mg PO BID PRN (held pending cardiology), ranitidine 150 mg PO BID, omeprazole 20 mg PO daily, metoprolol 25 mg PO daily, transdermal nitroglycerin patch 0.4 mg/h, famotidine 20 mg PO at bedtime PRN. No known drug allergies.
+
+Objective:
+Vitals: BP 147/86, HR 88 bpm, RR 18/min, Temp 98.5 °F, SpO₂ 99%.
+Flexible laryngoscopy: Mild erythema of the pharynx, mild laryngeal edema, no vocal fold immobility or nodules.
+
+Assessment:
+1. Laryngopharyngeal reflux (LPR) with mild post‑meal hoarseness and laryngeal edema – likely secondary to chronic gastroesophageal reflux disease (GERD) and existing esophageal pathology.
+2. Persistent GERD symptoms despite omeprazole 20 mg daily; escalation to higher‑dose PPI recommended.
+
+Plan:
+- Initiate esomeprazole 40 mg PO at bedtime to replace/augment current omeprazole, aiming for higher acid suppression.
+- Counsel patient on dietary modifications: avoid late meals, spicy/acidic foods, alcohol, caffeine; elevate head of bed; lose weight.
+- Strongly encourage completion of prescription; provide verbal and written instructions.
+- Consider future upper endoscopy (EGD) to re‑evaluate Barrett’s esophagus, strictures, and rule out malignancy once symptom control is achieved.
+- No evidence of vocal cord paralysis or neoplasm at this time.
+- Continue current cardiac and diabetes medications as ordered.
+- Follow up in 4–6 weeks to assess symptom response and adjust therapy; if worsening hoarseness, consider ENT referral for repeat laryngoscopy.
+
+The patient remains educated about the importance of adhering to follow‑up for both ENT and gastroenterology surveillance. He was advised to contact the office earlier if symptoms worsen or if he experiences dysphagia or new chest pain.
+
+Disposition: Outpatient; no acute interventions required at this time.
+
+Signed:
+[ENT Physician Name], MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Low‑grade hoarseness, throat discomfort after meals</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>147/86</td></tr><tr><td>HR</td><td>88 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Laryngeal edema, erythema, no vocal fold immobility</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Flexible laryngoscopy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Laryngoscopy: mild erythema, micro‑laryngeal reflux signs</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Esomeprazole 40 mg PO BID night</li><li>Advised avoidance of late meals</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He was hopeful the PPI would help but did not fill the prescription immediately.</p></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Famotidine 20 mg PO HS PRN</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic heart‑burn like chest pressure</li><li>recent coughish hoarseness</li><li>no recent upper trauma</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas presented to ENT with a subtle hoarseness that began after his chest flares. The ENT performed a flexible laryngoscopy. Findings included erythema of the pharynx and mild laryngeal edema, consistent with micro‑laryngopharyngeal reflux. A prescription for esomeprazole 40 mg PO daily was given, to be taken at bedtime. The ENT advised considering a future endoscopy to evaluate gastric pathology. A follow‑up was scheduled; Thomas delayed the appointment citing time constraints.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Reflux suspected to involve esophagus and larynx. PPI started; awaiting patient adherence. No definitive pathology yet.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-05-01</h3><div class="visit-meta">Primary Care | Reason: Routine follow‑up and symptom diary review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Thomas, a 55‑year‑old man with a history of obesity (BMI 31) and type 2 diabetes, presented for a routine follow‑up and review of his symptom diary. He reports persistent chest pressure after meals, occasional dysphagia to plain bread, and mild nausea. No chest pain with exertion or orthopnea, and no diaphoresis noted.
+
+Subjective: Thomas reports that the chest pressure typically occurs 30–60 minutes after meals and does not improve with sublingual nitroglycerin. He has had similar post‑meal discomfort since his last visit in March and notes difficulty swallowing a plain slice of bread. He denies fever, weight loss, or change in bowel habits.
+
+Objective: Vitals: BP 155/90, HR 92, RR 19, Temperature 98.4 °F, SpO₂ 99 % on room air. Physical exam reveals mild epigastric soreness but no abdominal tenderness. Muffled, non‑painful swallow noted; no dysphonia or stridor.
+
+Assessment: The differential for post‑meal chest pressure and dysphagia includes gastro‑oesophageal reflux disease (GERD) with esophagitis or early stricturing, esophageal motility disorder, hiatal hernia, and cardiac ischemia. The patient’s poor adherence to PPI therapy, ongoing smoking, and weight status increase his risk for GERD complications. Cardiac evaluation remains low‑yield given normal troponins and absence of exertional symptoms.
+
+Plan:
+1. Order a barium swallow to assess for esophageal structural abnormalities.
+2. Reinforce consistent use of prescription esomeprazole 40 mg PO at bedtime; counsel on timing and adherence. Continue esomeprazole/ranitidine as needed.
+3. Refer to gastroenterology for esophagogastroduodenoscopy (EGD) within 4 weeks if dysphagia worsens or if barium swallow shows stricturing.
+4. Continue current cardiac regimen: verapamil 5 mg PO BID, metoprolol 25 mg PO daily, and sublingual nitroglycerin 0.4 mg PRN for chest symptoms.
+5. Lifestyle modifications: smoking cessation counseling, weight‑loss goal of 10 % body weight, dietary changes (small, frequent meals, avoid late and large meals), elevate head of bed.
+6. If chest pressure persists or worsens, consider cardiology re‑evaluation.
+
+Patient is aware of scheduled barium swallow; he expressed intent to schedule promptly.
+
+Follow‑up: Re‑evaluate in 4 weeks or sooner if symptoms exacerbate. Await barium swallow results and GI referral.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Chest pressure post meals, occasional dysphagia, mild nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>155/90</td></tr><tr><td>HR</td><td>92 bpm</td></tr><tr><td>RR</td><td>19/min</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Muffled, non‑painful swallow, mild epigastric soreness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Barium swallow</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to gastroenterology</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He delayed the barium swallow due to time, but will try to schedule it.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 31)</span><span class="pill">Type 2 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Famotidine 20 mg PO HS PRN</li><li>Nitroglycerin 0.4 mg sublingual PRN</li><li>Esomeprazole 40 mg PO BID night (untaken)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior GERD symptoms, PPI prescription not adhered to</li><li>continued smoking</li><li>diabetes medication (metformin 1000 mg BID)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a brief office visit, Thomas reported that his chest pressure remained after meals, and he was having difficulty swallowing a plain slice of bread. The PCP ordered a barium swallow to evaluate for possible stricturing. The patient was instructed to adhere to the PPI. A referral to a gastroenterologist was given with a note to schedule an EGD within 4 weeks if swallowing issues worsen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Swallow difficulty suggests possible upper esophageal stricture or severe reflux injury; Barium swallow pending. GERD ongoing.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-06-01</h3><div class="visit-meta">Gastroenterology | Reason: Evaluation of dysphagia and chest pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+- 55‑year‑old male presents for ongoing dysphagia and post‑prandial chest pressure.
+- Reports progressive difficulty swallowing solid foods over the last 4 months, with associated chest pressure occurring 30‑60 min after meals.
+- Reports unintentional weight loss of ~5 lb over the past 6 weeks.
+- Denies vomiting, abdominal pain, or recent fever.
+- Chronic illnesses: obesity, type 2 diabetes mellitus poorly controlled, hypertension.
+- Medications: verapamil 5 mg PO BID, metoprolol 25 mg PO QD, esomeprazole 40 mg PO BID at bedtime, nitroglycerin 0.4 mg sublingual PRN, famotidine 20 mg PRN.
+- Known allergy: NKDA.
+- Social: smoker 1 pack/day for 30 years, occasional alcohol.
+- Patient admits delayed acquisition of PPI due to financial constraints; missed scheduled upper endoscopy.
+Objective:
+- Vital signs: BP 150/88 mmHg, HR 90 bpm, RR 18/min, Temp 98.5 °F, SpO₂ 99 %.  
+- General: overweight, normal activity level.  
+- Head/Neck: oral mucosa clear, no pharyngeal erythema noted.
+- Cardiovascular: regular rhythm, no murmurs.
+- Respiratory: clear to auscultation bilaterally.
+- Abdomen: soft, non‑tender, no organomegaly.
+- Extremities: no edema.
+Assessment:
+1. Dysphagia to solids with post‑prandial chest pressure and weight loss—concerning for upper GI structural pathology (eg, esophageal stricture, malignancy, eosinophilic esophagitis, or advanced GERD).
+2. GERD—esomeprazole prescribed; however, non‑adherence due to cost may exacerbate symptoms.
+3. Possible cardiac ischemia—previous episodes of chest pressure, but serial troponins negative and EKGs nonspecific. Continue surveillance.
+Plan:
+- Reinforce importance of daily esomeprazole dosing; offer prescription assistance programs and pharmacy discounts.
+- Schedule upper endoscopy (upper GI series) at earliest convenience, ideally within 4 weeks; if financial barriers remain, explore low‑cost or community clinic options.
+- Order inflammatory markers: ESR and CRP to assess for eosinophilic esophagitis or other inflammatory processes.
+- Re‑review barium swallow results and consider esophagram review.
+- Continue current pharmacotherapy:
+   • Esomeprazole 40 mg PO at bedtime - continue
+   • Verapamil 5 mg PO BID - continue
+   • Metoprolol 25 mg PO QD - continue
+   • Nitroglycerin 0.4 mg sublingual PRN - continue
+   • Famotidine 20 mg PRN - continue
+- Counsel on lifestyle modifications: weight‑loss regimen, smoking cessation, head‑of‑bed elevation, reduction of alcohol, low‑acid, low‑fat meals.
+- Advise patient to call clinic immediately if dysphagia worsens, new odynophagia, rapid weight loss (&gt;10 lb), or chest pain not relieved by nitroglycerin.
+Follow‑up:
+- Return visit in 4 weeks for review of test results and symptom diary.
+- If endoscopy not completed within 6 weeks, consider alternative imaging (CT/MRI esophagus) and referral to tertiary center.
+- Maintain cardiology follow‑up if chest pressure recurs.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dysphagia for solids, chest pressure after meals, weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/88</td></tr><tr><td>HR</td><td>90 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Oral cavity clear, no stricture on physical exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Erythrocyte Sedimentation Rate</li><li>C‑reactive protein</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reinforced PPI therapy, advised to buy medication</li><li>Scheduled EGD</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He postponed due to financial concerns.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Esomeprazole 40 mg PO BID night</li><li>Nitroglycerin 0.4 mg sublingual PRN</li><li>Famotidine 20 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Barium swallow pending</li><li>history of GERD symptoms</li><li>chest pain episodes</li><li>diabetes poorly controlled</li><li>smoking, alcohol use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas finally met with a gastroenterologist after persistent symptoms. The consult noted his unfilled PPI, chronic reflux symptoms, and possible esophageal stricture. An esophagogastroduodenoscopy (EGD) was scheduled, but the patient was advised that insurance would cover only if the endoscopy showed objective obstruction. He postponed the EGD citing cost and time, then canceled. The gastroenterology office contacted him to reconfirm appointment; he missed it again.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Suspected Barrett’s esophagus, reflux esophagitis, possible stricture but no histologic confirmation. Cost barrier delaying definitive diagnosis.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-07-15</h3><div class="visit-meta">Emergency Medicine | Reason: Chest pain and abdominal bloating</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 55‑year‑old male presents with 3‑hour episode of chest pressure after lunch and abdominal bloating.
+
+**History of Present Illness:** Patient was brought by ambulance after experiencing sustained chest pressure over the left chest wall for ~3 h post‑tuna sandwich. He also described a sense of fullness and early satiety, with a single episode of vomiting the following day. He reports chronic esophageal symptoms including post‑prandial chest discomfort and occasional dysphagia to plain bread. Past medical history significant for erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes mellitus, obesity, laryngopharyngeal reflux, and chronic esophageal dysphagia. He is non‑compliant with chronic PPI therapy and has intermittent NSAID use.
+
+**Relevant History/Medications:** Sublingual nitroglycerin 0.4 mg PRN, verapamil 5 mg PO BID, ranitidine 150 mg BID, omeprazole 20 mg daily, metoprolol 25 mg daily, transdermal nitroglycerin 0.4 mg/h, famotidine 20 mg PO at bedtime PRN, esomeprazole 40 mg PO at bedtime, pantoprazole 40 mg daily. No known drug allergies.
+
+**Vitals:** BP 162/90 mmHg, HR 112 bpm, RR 20/min, Temp 98.6 °F, SpO₂ 97 % on room air.
+
+**Physical Examination:** BMI 28.5. Cardiac exam: tachycardic at 110 bpm, regular rhythm, no murmurs. Respiratory exam: clear to auscultation bilaterally. Abdomen: epigastric fullness with soft, non‑tender, no guarding or rebound.
+
+**Laboratory/Imaging:** Serial cardiac troponin I &lt;0.01 ng/mL (normal). Chest X‑ray: normal cardiac silhouette, no free air. Abdominal ultrasound: normal gallbladder and liver. ECG (not documented in current record) was reported as sinus rhythm with no ST/T‑wave changes.
+
+**Assessment:** Non‑cardiac chest pain most consistent with esophageal dysmotility/GERD flare complicated by transient esophageal spasm and reflux. Differential includes:
+1. Reflux esophagitis/Barrett’s progression
+2. Esophageal spasm
+3. Esophageal stricture-related dysphagia
+4. Hiatal hernia
+5. Anxiety‑related somatic chest discomfort
+6. Acute coronary syndrome (ruled out by negative troponin and normal ECG)
+
+**Plan:**
+1. **GI Management** – Initiate high‑dose PPI therapy: Esomeprazole 40 mg PO nightly, discontinue pantoprazole and omeprazole. Continue famotidine PRN for breakthrough symptoms. Reinforce strict adherence to daily PPI dosing and avoid missed doses.
+2. **Antispasmodic Therapy** – Resume verapamil 5 mg PO BID (subject to cardiology clearance) or consider nifedipine 30 mg PO BID if cardiac function stable.
+3. **Adjunctive Measures** – Low‑fat, small‑meal diet; head‑of‑bed elevation 30°. Counsel on weight‑loss, smoking cessation, and limiting alcohol/NSAIDs.
+4. **Diagnostic Workup** – Order esophagogastroduodenoscopy (EGD) within 4 weeks to assess Barrett’s mucosal status, stricture severity, and rule out dysplasia/malignancy. Refer to gastroenterology for EGD scheduling.
+5. **Cardiac Follow‑up** – Advise cardiology review within 2 weeks given BP 162/90 mmHg and persistent post‑prandial chest pressure. Consider repeat ECG and possible Holter monitoring.
+6. **Diabetes &amp; Metabolic Control** – Order fasting glucose, HbA1c (if not recent), and lipid panel. Reinforce glucose monitoring and diet.
+7. **Anxiety Management** – Discuss psychological support; consider starting low‑dose SSRI (e.g., sertraline 25 mg PO daily) if anxiety remains significant and not contraindicated.
+8. **Education &amp; Compliance** – Provide written instructions on medication schedules, emphasize the importance of taking the PPI each night before bed. Offer medication synchronization aid.
+9. **Follow‑up Scheduling** – Primary care in 1 week for BP, HR, and medication review; gastroenterology in 4 weeks for EGD; cardiology in 2 weeks.
+10. **Re‑visit** – Patient instructed to return to ED immediately if chest pain sharp, lasts &gt;30 min, or associated with diaphoresis, dyspnea, or syncope.
+
+**Disposition:** Discharged home with pantoprazole 40 mg PO daily for 30 days (to be replaced with esomeprazole 40 mg nightly). Prescribed nitro patch 0.4 mg/h PRN for chest pressure. Provided 2‑week repeat of vitals and medication reconciliation.
+
+**Signature:** Dr. [Name], Emergency Medicine</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Prolonged chest pressure 3 hrs, bloating after lunch</span><span class="pill">Occasional vomiting next day</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>162/90</td></tr><tr><td>HR</td><td>112 bpm</td></tr><tr><td>RR</td><td>20/min</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 28.5, heart rate 110 bpm, mild epigastric fullness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serial troponin I</li><li>Chest X‑ray</li><li>Abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Troponin I: &lt;0.01 ng/mL</li><li>Chest X‑ray: normal heart size, no free air</li><li>Ultrasound: normal gallbladder and liver</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Aspirin 325 mg PO</li><li>Heparin 5000 units IV q8h</li><li>Nitroglycerin patch 0.4 mg/h</li><li>Pantoprazole 40 mg PO daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain subsided after nitro and PPI, but bloating persisted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Esomeprazole 40 mg PO BID night</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent NSAID use, chronic PPI use not adhered to</li><li>chronic chest discomfort</li><li>sudden bloating</li><li>diabetes</li><li>obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas was brought in by ambulance after a 3‑hour chest pressure, which he had felt post‑lunch after a tuna sandwich. This time, he also complained of abdominal bloating and a sense of fullness. The ED team gave aspirin 325 mg PO, 500 mg heparin IV, and a nitro patch. Serial troponins remained &lt;0.01 ng/mL. An abdominal ultrasound was ordered: it returned normal. The ED physician considered a possible esophageal or gastric motility disorder. The patient was given a 30‑day course of pantoprazole 40 mg PO daily and sent home with a follow‑up with cardiology, which he missed again.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Increased suspicion for esophageal stricture or motility disorder; negative cardiac workup persists. Ongoing GERD refractory to H2 blocker; need for endoscopy.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2025-08-01</h3><div class="visit-meta">Primary Care | Reason: Review of ongoing symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of ongoing symptoms.\n\nHistory of Present Illness: Thomas, a 55‑year‑old man with a complex gastroesophageal history (erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, laryngopharyngeal reflux, and dysphagia), reports persistent chest pressure lasting several hours after meals and occasional vomiting after lunch. He describes mild dysphagia to plain bread and regurgitation, though not to solids. He has been taking Pantoprazole 40 mg PO daily, Verapamil 5 mg PO BID, Metoprolol 25 mg PO QD, and sublingual Nitroglycerin 0.4 mg PRN. Despite counseling, he remains non‑compliant with aggressive weight loss and smoking cessation.\n\nPast Medical History: Erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes, obesity, LPR, dysphagia.\n\nMedications: Pantoprazole 40 mg PO daily (will be increased to 80 mg PO BID), Verapamil 5 mg PO BID, Metoprolol 25 mg PO QD, Nitroglycerin 0.4 mg sublingual PRN.\n\nPast Surgical &amp; GI: Ongoing uncompleted EGD; recent barium swallow ordered.\n\nAllergies: NKDA.\n\nFamily History: Unknown significant cardiovascular or gastrointestinal cancer history.\n\nSocial History: Smokers, alcohol use, non‑compliant with weight loss plan.\n\nReview of Systems: Positive for post‑prandial chest pressure, occasional vomiting, mild dysphagia, regurgitation. Negative for dyspnea, chest pain radiating to arm, palpitations.\n\nPhysical Examination: Vital signs normal except systolic hypertension. No dysphagia on bedside swallow. Mild epigastric tenderness noted.\n\nImpression/Assessment: 1. Persistent reflux‑related chest pressure likely due to refractory GERD complicated by esophageal stricture and Barrett’s esophagus. 2. Unresolved dysphagia suggests possible progression of stricture or dysplastic changes. 3. Cardiac ischemia unlikely given prior negative cardiac workup and stable vitals. 4. Lifestyle factors (smoking, obesity, alcohol) contributing to symptom persistence.\n\nPlan: 1. Initiate high‑dose PPI trial: Pantoprazole 80 mg PO BID (replace current 40 mg dose). 2. Re‑order barium swallow (second order) to assess stricture length, severity, and possible lumen narrowing. 3. Contact gastroenterology office to explore reduced‑cost or financial assistance options for EGD; schedule as soon as coverage resolved. 4. Continue current cardiac regimen: Verapamil 5 mg PO BID, Metoprolol 25 mg PO QD, Nitroglycerin 0.4 mg sublingual PRN. 5. Strongly recommend and refer to a weight‑loss program and smoking cessation counseling; consider enrolling in a structured cessation clinic. 6. Counsel on dietary modifications: small frequent meals, avoid acid triggers, head‑of‑bed elevation. 7. Plan follow‑up in 2 weeks to review barium results, re‑evaluate symptoms, and discuss EGD scheduling. 8. If symptoms persist, consider referral to cardiology urgently for repeat evaluation.\n\nPatient Education: Discussed that persistent chest pressure is likely due to GERD and esophageal changes; high‑dose PPI and EGD are essential. Emphasized importance of weight loss and smoking cessation to reduce reflux and risk for esophageal adenocarcinoma. Advised to monitor BP and report any worsening chest symptoms, dyspnea, or palpitations immediately.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent chest pressure after meals, occasional regurgitation, mild dysphagia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>154/87</td></tr><tr><td>HR</td><td>90 bpm</td></tr><tr><td>RR</td><td>17/min</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No dysphagia on bedside swallow test, mild epigastric tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Barium swallow (second order)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pantoprazole 80 mg PO BID</li><li>Referral for high‑dose PPI trial</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He said he would consider a cost‑saving plan but was unsure about EGD.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Pantoprazole 40 mg PO daily</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent EGD referred but not completed</li><li>ongoing PPI use</li><li>chronic NSAID use, smoking, alcohol</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At a scheduled 15‑minute office visit, Thomas reported that his chest pressure still lasted several hours after meals, and he had started to vomit after lunch occasionally. The PCP reviewed the unperformed EGD, noted that insurance denied coverage for the procedure at the proposed dose, and advised contacting the gastroenterology office for a possible reduced‑cost option. A repeat barium swallow was ordered, and a trial of high‑dose pantoprazole (80 mg PO BD) was prescribed. The PCP advised aggressive weight loss and smoking cessation, but Thomas was non‑compliant.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>High‑dose PPI trial planned; still no definitive diagnosis. GERD refractory; suspect esophageal stricture. Barium swallow pending.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2025-09-01</h3><div class="visit-meta">Urgent Care | Reason: Vomiting after lunch</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Repeated vomiting after lunch.
+
+History of Present Illness:
+Patient Thomas, a 55‑year‑old male with a significant GI and cardiology history, called the urgent‑care clinic reporting multiple episodes of forceful vomiting that began after lunch today. He reports associated epigastric pain and nausea. He denies chest pain, fever, or changes in bowel habits. He has chronic chest pressure episodes post‑meal, well‑controlled type 2 diabetes, obesity (BMI ~32), and is taking verapamil, metoprolol, pantoprazole 80 mg BID, and nitroglycerin PRN for esophageal dysphagia and reflux. No current NSAID usage except a recent short course for musculoskeletal pain; he stopped them after calling.
+
+Past Medical History: BMI 32, T2DM, obesity, erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety, LPR, dysphagia.
+
+On Arrival:
+Vitals: BP 148/85, HR 94, RR 19, Temp 98.6°F, SpO₂ 99% on room air.
+Physical Examination: Abdomen soft, epigastric tenderness without rebound or guarding. No guarding, guarding absent. No ascites, no organomegaly. Cardiac exam: regular rhythm, no murmurs. Lungs clear.
+
+Assessment and Plan:
+
+1. Acute gastric mucosal inflammation likely related to recent NSAID exposure – most consistent with NSAID‑induced gastritis/ulcer flare. The CT abdomen was unremarkable except mild gastric wall thickening, which can be seen in gastritis.
+2. Differential:
+   - NSAID‑induced gastritis/erosive gastritis
+   - Acute peptic ulcer disease flare
+   - H. pylori‑mediated gastritis – given high risk factors and current triple regimen.
+   - Esophageal obstruction/stricture exacerbation – CT negative for obstruction.
+   - Viral or bacterial gastroenteritis – less likely given no diarrhea.
+
+Treatments:
+ • Discontinue all NSAIDs.
+ • Continue pantoprazole 80 mg PO BID.
+ • Prescribe Amoxicillin 500 mg PO BID and Clarithromycin 250 mg PO QD for 5 days (triple therapy for suspected H. pylori infection) – patient already on PPI.
+ • Advise patient to maintain antiemetic therapy as needed (e.g., ondansetron 4 mg PO PRN.
+ • Encourage small, bland meals, head‑of‑bed elevation, and avoidance of trigger foods.
+
+Monitoring: Patient tolerated antibiotics and displayed slight improvement. Will monitor for resolution of vomiting and epigastric pain.
+
+Follow‑Up:
+ • PCP in one week for symptom review; if vomiting persists or epigastric pain worsens, refer to gastroenterology for repeat EGD.
+ • Continue verapamil 5 mg BID, metoprolol 25 mg daily, nitroglycerin PRN.
+ • Discuss weight‑loss program and continue smoking cessation counseling.
+ • If symptoms recur or new dysphagia develops, schedule barium swallow.
+
+Patient education: Explained that NSAID use can injure gastric mucosa especially in presence of reflux disease; advised strict avoidance. Informed about signs of bleeding (black tarry stools, vomiting blood). Advised to keep a symptom diary.
+
+Disposition: Referred to PCP for follow‑up and advised to return to urgent care or ED if severe chest pain, syncope, or worsening vomiting.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Repeated vomiting, epigastric pain, nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>148/85</td></tr><tr><td>HR</td><td>94 bpm</td></tr><tr><td>RR</td><td>19/min</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Epigastric tenderness without rebound</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT abdomen: mild gastric wall thickening, no perforation</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Amoxicillin 500 mg PO BID</li><li>Clarithromycin 250 mg PO QD</li><li>Advised NSAID cessation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He tolerated antibiotics; symptoms improved slightly.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Pantoprazole 80 mg PO BID</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic chest pain episodes</li><li>recent NSAID use</li><li>diabetes</li><li>obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas called urgent‑care after vomiting multiple times after lunch. The clinician obtained an abdominal CT, which was normal; no perforation or obstruction was seen. The CT noted mild gastric wall thickening, suggesting chronic gastritis. The urgent‑care physician prescribed a 5‑day course of amoxicillin 500 mg PO BID and clarithromycin 250 mg PO QD, suspecting a possible H. pylori infection, and advised to stop NSAIDs. He was reminded to follow up with PCP for persistent symptoms.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Possible H. pylori infection suggested; pending breath or stool test. Gastritis confirmed by imaging.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2025-10-01</h3><div class="visit-meta">Primary Care | Reason: Assessment after antibiotic course</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #11 – 2025-10-01 – Primary Care\nChief Complaint: Assessment after antibiotic course.\n\nHistory of Present Illness:\n55‑year‑old male with longstanding GERD, erosive esophagitis, Barrett’s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes, obesity, and laryngopharyngeal reflux. Recently completed a 14‑day H. pylori triple therapy (amoxicillin 500 mg PO BID, clarithromycin 250 mg PO QD, pantoprazole 80 mg PO BID). Residual post‑prandial chest discomfort, mild nausea, and mild weight loss continue. Patient smokes and drinks alcohol; poorly adherent to smoking cessation and weight‑loss counseling.\n\nPast Medical History: includes all above conditions.\n\nMedications:\n- Sublingual nitroglycerin 0.4 mg PRN\n- Verapamil 5 mg PO BID\n- Metoprolol 25 mg PO daily\n- Pantoprazole 40 mg PO BID (new step‑down trial)\n- Amoxicillin 500 mg PO BID\n- Clarithromycin 250 mg PO QD\n\nPhysical Examination:\nVital signs: 149/88 mmHg, HR 88 bpm, RR 18/min, Temp 98.7°F, SpO₂ 99%.\nWeight 225 lb, BMI 27.8.\n\nAssessment:\nSymptoms are most compatible with persistent GERD with erosive esophagitis and possible mechanical limitation from esophageal stricture. Differential includes progression of Barrett’s disease, stricture‑related dysphagia, medication‑induced gastritis, functional dyspepsia, and less likely cardiac ischemia.\n\nPlan:\n1. Initiate a PPI step‑down trial: pantoprazole 40 mg PO BID for 4 weeks.\n2. Order repeat barium swallow to further evaluate stricture dynamics.\n3. Re‑emphasize smoking cessation and weight‑loss counseling; refer to a structured weight‑loss program and discuss financial assistance for gastroenterology services.\n4. Schedule EGD within 4 weeks after the PPI trial; if patient cancels again, arrange for insurance prior authorization and local endoscopy options.\n5. Continue current antihypertensive and cardiac medications; monitor blood glucose and HbA1c given diabetes.\n6. Instruct patient to report any worsening chest pain, new dysphagia, weight loss &gt;10 lbs, or signs of GI bleeding immediately.\n\nDisposition:\nPatient left the office with prescriptions and counseling notes. Follow‑up scheduled in 4 weeks or sooner if symptoms deteriorate.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Chest discomfort after meals, mild nausea, mild weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>149/88</td></tr><tr><td>HR</td><td>88 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>98.7°F</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Weight 225 lb, BMI 27.8</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Proton pump inhibitor step‑down trial</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pantoprazole 40 mg PO BID</li><li>Counseling on smoking cessation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He agreed to review medication but remained uncertain about future endoscopy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Pantoprazole 80 mg PO BID</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed antibiotic triple therapy for suspected H. pylori</li><li>continued chest pain after meals</li><li>smoking, alcohol use</li><li>diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The PCP reviewed the recent antibiotic therapy and noted that symptoms had not resolved. A repeat PPI trial (pantoprazole 40 mg PO BID) was prescribed because prior dose may have been excessive. The PCP also reviewed that the patient remained non‑adherent to smoking cessation and weight‑loss recommendations. A decision was made to refer to a gastroenterology service for an EGD. The gastroenterologist scheduled the procedure but patient canceled citing costs again. A PPI dosage taper plan was also discussed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Persistent esophageal reflux symptoms; no objective evidence yet. H. pylori likely cleared; still suspicion for Barrett’s or stricture. Await EGD if patient consents.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2025-11-01</h3><div class="visit-meta">Primary Care | Reason: Final follow‑up after repeated failures</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">History of present illness:\nThe patient presents for a final follow‑up after multiple ER visits and repeated investigations for persistent post‑prandial chest discomfort and intermittent dysphagia. He reports ongoing chest pain lasting 5‑15 minutes after meals, associated with mild nausea and occasional regurgitation. He notes a 5‑lb weight loss over the past 3 months and reports low energy. The patient states considerable frustration and confusion regarding his care trajectory and expresses concern about the cost of additional evaluations. He denies fever or recent weight gain.\nReview of systems:\nCardiovascular: no diaphoresis, palpitations or orthostatic symptoms. Respiratory: no dyspnea. GI: epigastric discomfort, intermittent dysphagia, nausea, and weight loss. Psychosocial: anxiety symptoms; no panic attacks reported.\nPast medical history:\nErosive esophagitis, Barrett&#x27;s esophagus, esophageal stricture, hiatal hernia, gastritis, anxiety disorder, type 2 diabetes mellitus (HbA1c 7.2%), obesity (BMI 27.8). Medications: sublingual nitroglycerin 0.4 mg PRN, verapamil 5 mg PO BID, metoprolol 25 mg PO daily, pantoprazole 40 mg PO BID. Allergies: NKDA.\nPhysical exam:\nVital signs: BP 152/90, HR 90 bpm, RR 20, Temp 98.5°F, SpO₂ 98% RA. General: alert, oriented, appears anxious. HEENT: mild throat erythema, no edema. Cardiovascular: regular rate and rhythm, normal S1/S2, no murmurs. Respiratory: clear to auscultation. Abdomen: soft, mild epigastric tenderness, no rebound. Extremities: no edema.\nAssessment:\n1. Non‑cardiogenic chest pain secondary to gastroesophageal reflux disease (GERD) with possible esophageal dysmotility from longstanding strictures and Barrett’s esophagus.\n2. Anxiety disorder contributing to pain perception and exacerbation.\n3. Persistent esophageal dysphagia, possibly from progressive fibrosis within a stricture.\n4. Uncertain pathophysiology of esophageal stricture expansion; current evidence does not confirm malignant transformation.\nPlan:\n- Continue current medication regimen unchanged: sublingual nitroglycerin PRN, verapamil 5 mg PO BID, metoprolol 25 mg PO daily, pantoprazole 40 mg PO BID. Reinforce strict adherence.\n- Initiate structured dietary modification: low‑acid, low‑fat meals, smaller frequent portions, avoid late meals, head of bed elevated 6 inches.\n- Emphasize importance of smoking cessation; consider referral to weight‑loss program (BMI 27.8) to improve reflux symptoms.\n- Arrange a referral to a clinical psychologist or psychiatrist for anxiety management; provide a list of community resources and address potential cost concerns.\n- No new laboratory or imaging studies at this visit; however, schedule a repeat upper endoscopy in 6‑12 months or sooner if symptoms worsen or dysphagia progresses.\n- Educate patient on red‑flag symptoms: worsening chest pain, inability to swallow food, vomiting blood, sudden weight loss &gt;10 lbs; instruct to seek urgent care if noted.\n- Follow‑up: scheduled in 3 months at primary care; patient to contact sooner if chest pain increases in frequency/severity or if new symptoms develop. Repeat barium swallow or endoscopy as indicated by gastroenterology.\n- Encourage self‑monitoring with a symptom diary to track triggers and medication response; bring diary to next visit.\nDisposition:\nThe patient was reassured, agreed to continue current therapy and the above plan, and expressed willingness to pursue psychologist referral. He was advised to contact the office or gastroenterology promptly if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continued chest discomfort, occasional dysphagia, weight loss</span><span class="pill">low energy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>152/90</td></tr><tr><td>HR</td><td>90 bpm</td></tr><tr><td>RR</td><td>20/min</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slight epigastric tenderness, no weight‑bearing limitation</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reinforced PPI regimen</li><li>Counseling for stress management</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He felt relieved by reassurance but uncertain about future diagnoses.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 diabetes</span><span class="pill">Hypertension (controlled with verapamil)</span><span class="pill">Chronic anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO QD</li><li>Pantoprazole 40 mg PO BID</li><li>Nitroglycerin 0.4 mg sublingual PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Multiple ER visits with negative cardiac workup</li><li>Repeated gastrointestinal workup pending</li><li>no definitive diagnosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a 30‑minute office encounter, Thomas expressed frustration over persistent chest pain and confusion about the medical journey. The PCP reiterated that the chest pains were most likely caused by severe reflux or esophageal injury, reinforced the importance of PPI adherence, and recommended a structured dietary plan with low‑acid, low‑fat meals. The PCP also offered a referral to a psychologist for anxiety management, noting that his chest pains were often triggered by stress. No new tests were ordered at this time; the PCP emphasized close monitoring and a follow‑up in 3 months, or sooner if worsened. Thomas agreed to continue medications but remained uncertain about paying for EGD and was unlikely to visit a gastroenterologist again.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>No definitive diagnosis achieved after 12 visits. Continued functional chest pain likely from chronic GERD with possible esophageal stricturing. Unresolved anxiety concerning chest symptoms. Endoscopic evaluation deferred due to financial and adherence barriers.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Erosive esophagitis</span><span class="pill">Barrett’s esophagus</span><span class="pill">Esophageal stricture</span><span class="pill">Hiatal hernia</span><span class="pill">Gastritis</span><span class="pill">Anxiety disorder</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Laryngopharyngeal reflux</span><span class="pill">Esophageal dysphagia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sublingual nitroglycerin 0.4 mg PRN</li><li>Verapamil 5 mg PO BID</li><li>Metoprolol 25 mg PO daily</li><li>Pantoprazole 40 mg PO BID</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>55‑year‑old male presented with acute chest pain after dinner. Vitals: BP 160/95, HR 112, RR 20, Temp 98.7°F, SpO₂ 98%. ECG showed sinus rhythm, no ST/T‑wave changes. Troponin I &lt;0.01 ng/mL, chest X‑ray normal. Administered sublingual nitroglycerin 0.4 mg with pain relief; prescribed verapamil 5 mg PO BID PRN, ranitidine 150 mg PO BID, and omeprazole 20 mg PO daily. Discharged with 24‑hour nitroglycerin supply, smoking cessation counseling, dietary and weight‑reduction recommendations, and exercise plan. Follow‑up scheduled with primary care in 1 week, cardiology if symptoms recur, and gastroenterology in 12 months.</li><li>Follow‑up visit on 2025‑01‑08. Patient reported mild post‑meal chest discomfort. Telephonic vitals: BP 158/90, HR 90. In‑office exam normal. Initiated metoprolol 25 mg daily; continued prior GERD and symptom‑management medications. Counselled on smoking cessation, diet, and activity. Ordered fasting glucose, HbA1c, and lipid panel. Scheduled follow‑up in 4 weeks to review BP, heart rate, and symptom diary.</li><li>2025-02-15 ED visit for recurrent chest pressure after dinner. Vitals: BP 165/92 mmHg, HR 108 bpm, RR 22, Temp 98.3°F, SpO₂ 97%. ECG sinus rhythm, normal. Serial troponin I &lt;0.01 ng/mL. Bedside echocardiogram normal EF; chest X‑ray normal. Physical exam: mild epigastric tenderness. Patient received sublingual nitroglycerin for acute relief. Prescribed 24‑hour transdermal nitro patch 0.4 mg/h; continued metoprolol 25 mg daily, omeprazole 20 mg daily, ranitidine 150 mg BID; verapamil held pending cardiology. Advised smoking cessation, weight loss, NSAID avoidance, and follow‑up with cardiology within 2 weeks, primary care in 1 week, and gastroenterology surveillance in 12 months.</li><li>2025-03-05 Urgent Care visit for severe epigastric pain and nausea after a large meal. Vitals: BP 152/88, HR 92, RR 20, Temp 98.6°F, SpO₂ 98%. Physical exam: tense abdomen with mild epigastric tenderness, no rebound or guarding. Treated with famotidine 20 mg PO at bedtime PRN, continued omeprazole 20 mg daily. Advised NSAID avoidance, dietary modifications, smoking cessation, and weight loss. No acute cardiac symptoms noted; no abnormal labs or imaging. Follow‑up: PCP in 1 week, cardiology in 2 weeks if chest discomfort recurs, gastroenterology surveillance colonoscopy in 12 months.</li><li>2025-04-01 ENT visit for low‑grade hoarseness and throat discomfort after meals. Vitals: BP 147/86, HR 88, RR 18, Temp 98.5°F, SpO₂ 99%. Flexible laryngoscopy showed mild pharyngeal erythema and mild laryngeal edema. Initiated esomeprazole 40 mg PO at bedtime; continued sublingual nitroglycerin, verapamil hold, ranitidine, omeprazole 20 mg daily, metoprolol, transdermal nitro, famotidine PRN. Advised dietary modifications, weight loss, head‑of‑bed elevation. Follow‑up ENT in 4–6 weeks; planned upper endoscopy soon.</li><li>2025-05-01 primary care visit: routine follow‑up; patient reported persistent chest pressure after meals (30–60 min post‑meal), occasional dysphagia to plain bread, mild nausea. Vitals BP 155/90, HR 92, RR 19, Temp 98.4°F, SpO₂ 99% on room air. Physical exam showed mild epigastric soreness, no abdominal tenderness, muffled but non‑painful swallow. No acute cardiac symptoms. Barium swallow ordered to evaluate esophageal structure. Reinforced consistent esomeprazole 40 mg PO at bedtime; reiterated PPI adherence. Continued verapamil 5 mg PO BID, metoprolol 25 mg PO daily, sublingual nitro 0.4 mg PRN, and transdermal nitro patch. Lifestyle counseling on smoking cessation, weight‑loss, dietary changes, head‑of‑bed elevation. Re‑evaluate in 4 weeks or sooner if symptoms worsen.</li><li>2025-06-01 Gastroenterology evaluation for progressive dysphagia to solids and post‑prandial chest pressure with weight loss. BP 150/88, HR 90. Physical exam unremarkable. Re‑emphasized daily esomeprazole dosing; offered financial assistance. Ordered ESR and CRP. Scheduled upper endoscopy within 4 weeks; plan to review barium swallow. Continuation of verapamil, metoprolol, nitroglycerin, famotidine. Lifestyle counseling. Follow‑up in 4 weeks.</li><li>2025-07-15 EM visit: 55‑year‑old male presented with 3‑hour episode of chest pressure after lunch and abdominal bloating. Vitals: BP 162/90, HR 112, RR 20, Temp 98.6°F, SpO₂ 97%. Physical exam revealed epigastric fullness, tachycardia, otherwise normal. Serial troponin I &lt;0.01 ng/mL, chest X‑ray and abdominal ultrasound normal, ECG sinus rhythm. Treated with nitro patch PRN. Discharged on pantoprazole 40 mg PO daily for 30 days, esomeprazole 40 mg nightly, verapamil 5 mg PO BID, metoprolol 25 mg daily, famotidine PRN. Advised cardiology follow‑up in 2 weeks, gastroenterology EGD in 4 weeks, primary care in 1 week.</li><li>2025-08-01: Primary Care review of GERD symptoms; persistent postprandial chest pressure, occasional vomiting, mild dysphagia, regurgitation. BP 154/87, HR 90. Mild epigastric tenderness on exam; no dysphagia. Initiated high‑dose pantoprazole 80 mg PO BID, ordered second barium swallow, referred for weight‑loss program and smoking cessation, plan follow‑up in 2 weeks.</li><li>2025-09-01 55‑year‑old male presented with repeated vomiting and epigastric pain after lunch. Vitals were stable (BP 148/85, HR 94, RR 19, Temp 98.6°F, SpO₂ 99%). Physical examination revealed a soft abdomen with epigastric tenderness but no rebound or guarding, no organomegaly, normal cardiac and pulmonary findings. An abdominal CT showed mild gastric wall thickening consistent with gastric mucosal inflammation; no obstruction or perforation. The patient was advised to discontinue all NSAIDs. Treatment was initiated with amoxicillin 500 mg PO twice daily and clarithromycin 250 mg PO once daily (H. pylori triple therapy) while continuing pantoprazole 80 mg PO twice daily. Symptom relief was noted. Patient was counseled on avoidance of NSAIDs, use of ondansetron 4 mg PO PRN for nausea, small bland meals, head‑of‑bed elevation, and monitoring for signs of bleeding. Follow‑up with primary care in one week was recommended; gastroenterology Endoscopy was advised if vomiting persists or epigastric pain worsens. Current cardiac medications (verapamil 5 mg PO BID, metoprolol 25 mg PO daily, nitroglycerin 0.4 mg sublingual PRN) were continued.</li><li>2025-10-01 Primary Care visit: patient evaluated after completing H. pylori therapy; persistent post‑meal chest discomfort, mild nausea, mild weight loss noted. Vitals stable (BP 149/88, HR 88, RR 18, Temp 98.7°F, SpO₂ 99%) with weight 225lb (BMI 27.8). Medication adjustment initiated: pantoprazole stepped down to 40 mg PO BID for four weeks. Current antihypertensive and cardiac medications (sublingual nitro 0.4 mg PRN, verapamil 5 mg PO BID, metoprolol 25 mg PO daily) were continued. A repeat barium swallow was ordered to evaluate esophageal stricture dynamics. Counselled on smoking cessation, weight‑loss program referral, and diabetes monitoring. Follow‑up scheduled in four weeks or sooner if symptoms worsen.</li><li>2025-11-01 Primary Care visit: patient presented for final follow‑up. Reported continued post‑prandial chest discomfort lasting 5‑15 min with mild nausea, occasional dysphagia, 5‑lb weight loss, and low energy. Vitals: BP 152/90 mmHg, HR 90. Physical exam unremarkable except mild epigastric tenderness. No new labs or imaging. Medications remained unchanged: sublingual nitroglycerin 0.4 mg PRN, verapamil 5 mg BID, metoprolol 25 mg daily, pantoprazole 40 mg BID. Plan: continue medications, structured dietary modification, smoking cessation, psychologist referral for anxiety, repeat upper endoscopy in 6‑12 months, symptom diary, follow‑up in 3 months.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

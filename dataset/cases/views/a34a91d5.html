@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case a34a91d5</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: a34a91d5</h1><div class="subtitle">T4 N+ Prostate Cancer (extension through the prostate capsule into the bladder/rectum) | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia, Hypertension, Type 2 diabetes, Obesity, Metabolic syndrome, Cardiovascular disease</div><div class="meta-line">Risk Factors: Advanced age (≥50 years), African‑American ethnicity, Family history of prostate cancer, Obesity, High‑fat diet, Low fruit/vegetable intake, Genetic predisposition (e.g., BRCA2 mutation)</div></div>
+<details><summary>Narrative <span class="preview-text">On the cusp of his seventh decade, Harold Jenkins was a 68‑year‑old mechanic who had spent more of his life beneath the ...</span></summary><div class="section-body"><p>On the cusp of his seventh decade, Harold Jenkins was a 68‑year‑old mechanic who had spent more of his life beneath the hood of cars than at the pharmacy. He was robust in his own way; the few inches of excess weight that clung to his hips and waist were the stubborn remnants of a lifetime of manual labor, a high‑fat diet sprinkled with the occasional bar of dark chocolate, and a family history that whispered of prostate woes. His father had been diagnosed with prostate cancer at 62 and his brother—only 55—was still in the second year of adjuvant therapy after a radical prostatectomy years ago. Harold knew the risks: African‑American ancestry, the BRCA2 mutation his geneticist had identified in 2016, metabolic syndrome undercut by poorly controlled type 2 diabetes and hypertension, and a heavy, smoked‑out diet that could only describe the slow burning of his risk factors.</p><p>The first red flag appeared three weeks before his last routine visit to Mr. Ramirez, the family physician at the downtown clinic, when Harold began to notice that the urine he exhaled from his bladder felt “thicker” and took a little longer to finish. He dismissed it as a benign consequence of an aging prostate. But when he began to experience a “sticking” sensation, a constant post‑void pressure in the lower abdomen, and a need to double‑void after his bathroom visits, he decided to make an appointment with Dr. Ramirez. The visit was brief; Mr. Ramirez noted that Harold’s blood pressure readings had been hovering in the 130s/80s over the last month and that his fasting glucose had slipped to 140 mg/dL, a hint that his diabetes was slipping out of control. Harold complained of an intermittent nocturia that had become more frequent and “unbearable.” “It’s a sign, I reckon,” Harold muttered before leaving, “they’ll have to do more than just give me a tamsulosin again.”</p><p>Two days later Harold was brought to the emergency department by his wife as a new symptom emerged—a sharp, tearing pain radiating from his perineum into his lower back while standing up from a seated position. “Feels like a ribbon cutting through my belly,” he told the nurse. He also reported noticing “dark‑brown streaks” in his urine over the past week. Physical exam revealed a firm, slightly enlarged prostate on digital rectal exam, though it was difficult to differentiate from his known benign prostatic hyperplasia (BPH). The attending, Dr. Patel, ordered a PSA (Prostate‑Specific Antigen) test, which came back markedly elevated at 23 ng/mL—far higher than the age‑adjusted reference range of less than 2.5 ng/mL. A urinalysis confirmed hematuria, and a basic metabolic panel confirmed hyperglycemia and mild renal dysfunction.</p><p>The patient was scheduled for a transrectal ultrasound‑guided needle biopsy of the prostate the following week. On the day of the procedure, Harold’s breath was still heavy, but he seemed relatively stable: his blood pressure was 138/84, his pulse 106 bpm, and his oxygen saturation 97 %. During the biopsy, multiple suspicious nodules were noted in the posterior left lobe. The pathologist, after a brief consultation, reported a Gleason score of 5 + 4 = 9, suggestive of a high‑grade, aggressive tumor. Furthermore, immunohistochemical staining for BRCA2 mutation was positive, confirming a genetic underpinning to his aggressive disease.</p><p>He was admitted for definitive staging. Urgent magnetic resonance imaging (MRI) of the pelvis revealed a mass protruding from the prostate into the bladder neck and a second extension into the rectal wall—a T4 staging. The MRI also showed an enlarged, suspicious right external iliac lymph node. A staging CT scan of the chest, abdomen, and pelvis revealed no distant metastases at that point. His multidisciplinary tumor board, presided over by Dr. Lin, a radiation oncologist, and Dr. Moreno, a urologic oncologist, convened over the next day to chart a course. Harold’s comorbidities—especially his uncontrolled blood sugar, hypertension, and cardiovascular disease—warranted a careful deliberation on the feasibility of radical prostatectomy versus definitive radiotherapy.</p><p>Given the extent of local invasion, the team recommended a combined modality approach. The plan was for a radical cystoprostatectomy with en bloc resection of the bladder and rectal involvement, reconstructed with a continent ileal conduit. In addition, adjuvant external beam radiotherapy to the pelvis and androgen deprivation therapy (ADT) with leuprolide would be initiated postoperatively. Harold was counseled regarding the high morbidity associated with such an operation, including potential urinary incontinence, sexual dysfunction, and the risk of de novo decompensation of his cardiovascular status.</p><p>Harold was scheduled for surgery on October 5. Preoperative labs showed an elevated serum creatinine of 1.7 mg/dL. Dr. Patel&#x27;s cardiology team conducted a quick stress test to screen for any occult coronary disease. The test came back with a non‑ischemic pattern but an abnormal diastolic function; his heart failure status was stage II. The anesthesia team adjusted medication doses accordingly, anticipating difficult fluid management because of his diabetes and pre‑existing renal impairment. On the day of surgery, his blood pressure fluctuated between 110/70 and 150/92; his hemoglobin was 13 g/dL.</p><p>The operation lasted 9 hours, with significant blood loss—over 1.5 liters, necessitating two units of packed red blood cells. Intraoperative monitoring revealed a sudden drop in blood pressure, temporarily controlled with vasopressors and crystalloid bolus. Post‑op, he was transported to the surgical ICU, where his vital signs stabilized. He was extubated on postoperative day 2. His first weeks following recovery were marked by gradual improvements in urinary control, yet he struggled with the newly reconstructed ileal conduit, requiring intermittent percutaneous catheter drainage to manage intermittent obstruction at the conduit outlet.</p><p>During his early convalescence, his diabetes remained poorly controlled, and his HbA1c was 9.8 %. The endocrinologist added a basal insulin regimen and a continuous glucose monitor. Despite this, the patient’s energy levels were low, and he expressed frustration at having to rely heavily on his wife for daily care. His cardiovascular team noted that his left ventricular ejection fraction had dropped to 45 % over a month, and he was started on low‑dose bisoprolol and spironolactone. The patient’s serum PSA on postoperative day 30 remained at 18 ng/mL, indicative of residual cancer or recurrence.</p><p>The radiation oncology team slated him for external beam radiotherapy over a 6‑week period, with a total dose of 78 Gy delivered in 1.8 Gy fractions. However, Harold’s persistent leukopenia (total WBC 3.2 K/µL) and anemia (Hgb 10.2 g/dL) made him a marginal candidate. On the 18th day of radiotherapy, he suffered a sudden onset of severe flank pain that did not improve with opioids. Urgent CT imaging revealed a ruptured left external iliac lymph node containing a sizable mass that had extended into the iliac vein, with partial occlusion of the venous drainage. This manifested as a left leg swelling and tenderness. An urgent interventional radiology procedure was performed: placement of a covered stent across the node, and a left femoral vein filter to prevent embolic events. The procedure was complicated by a minor hemoperitoneum, requiring another transfusion and further ICU monitoring.</p><p>While in ICU, Dr. Moreno visited and noted that his PSA levels had climbed to 31 ng/mL—signaling failure of local therapy and likely distant metastasis. The oncology team, realizing the window for curative intervention had closed, pivoted to a palliative management plan. Harold’s family was counseled about the high likelihood of disease progression, and the options of palliative external beam radiotherapy, chemotherapy with docetaxel, and possible enrollment in a clinical trial involving PARP inhibitors given his BRCA2 mutation were discussed.</p><p>Despite the patient’s reluctance to accept the loss of curative intent, he consented to a course of docetaxel every 3 weeks with growth factor support, along with continued ADT. He also began palliative endocrine support with a second‑generation anti‑androgen. His general condition began to worsen: a progressive fatigue that made it difficult to leave the couch, intermittent fevers that spiked to 101°F without clear source, and a new onset of neuropathic pain in the lower extremities.</p><p>His urinary conduit became intermittently obstructed, leading to several episodes of hematuria. The oncologist decided to switch him to hemodialysis for a brief period to manage fluid overload and hyperkalemia; the nephrologist noted that his serum potassium had risen to 6.3 mEq/L, a dangerous elevation in the context of his congestive heart failure.</p><p>On a bleak Sunday morning in late February, Harold awoke to a pounding migraine-like headache and the sudden loss of sensation in the medial aspect of his left leg. An urgent MRI of the brain indicated a small, ischemic infarct in the right parietal lobe. The neurology team attributed it to a hypercoagulable state precipitated by his cancer and recent vascular injury. He was started on low‑dose warfarin, but his INR oscillated widely due to his fluctuating hepatic function and poorly controlled diabetes.</p><p>By the end of March, his PSA was 75 ng/mL, and his bone scan displayed multiple hot spots along the lumbar spine, sacrum, and pelvis, indicating osseous metastasis. He was not a candidate for aggressive systemic therapy due to his declining performance status, and the palliative care team was brought in to focus on symptom control, hospice counseling, and the logistical aspects of end‑of‑life care for Harold.</p><p>Within the month that followed, Harold’s disease trajectory followed the expected pattern of an advanced, highly aggressive T4, N+ prostate cancer that had invaded the bladder and rectum, caused regional lymph node involvement, and subsequently disseminated to the bone and brain. His comorbidities—chiefly uncontrolled diabetes, hypertension, obesity, and cardiovascular disease—had compounded the toxicities of his treatments, while his limited social support and the stress of his family&#x27;s involvement contributed to his deteriorating mood. In this acute case, each intervention was executed with the best clinical judgment given the constraints of the disease’s aggressiveness and the patient’s overall frailty, yet the inevitable outcome remained a progressive decline until eventual demise.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-08-01</h3><div class="visit-meta">Family Medicine | Reason: Increased urinary frequency and nocturia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 68‑year‑old male reports a 3‑week history of increased urinary frequency and mild nocturia. Patient describes the urine as &quot;thicker&quot;. 
+
+History of Present Illness: The urgency and frequency began 3 weeks ago with a sensation of residual urine. No dysuria, hematuria, fever, or flank pain. No recent travel or antibiotic use.
+
+Past Medical History: Hypertension, Type 2 Diabetes Mellitus, Obesity, Metabolic syndrome, Cardiovascular disease. No known urologic malignancies. Family history of prostate cancer; African‑American ethnicity.
+
+Medications: None (currently not on antihypertensive or glucose‑lowering agents).
+
+Allergies: NKDA.
+
+Review of Systems: Positive for urinary frequency, nocturia. Negative for pain, hematuria, fever, weight loss.
+
+Physical Examination:
+- General: Alert, oriented. BMI: 32.4.
+- Cardiovascular: Regular rate and rhythm; BP 130/78, HR 78.
+- Respiratory: Clear to auscultation; RR 16.
+- Abdomen: Soft, non‑tender. DRE: Soft, enlarged prostate without nodularity.
+- Genitourinary: No suprapubic tenderness.
+
+Labs: CBC, BMP, fasting glucose ordered; results pending.
+
+Assessment:
+1. Benign prostatic hyperplasia (BPH) – most likely cause of urinary frequency and nocturia given age, DRE findings, and symptom profile.
+2. Urinary tract infection (fevers absent; urinary symptoms mild) – considered but less likely.
+3. Diabetic nephropathy – monitor renal labs once available.
+4. Early prostate cancer – low suspicion but family history warrants PSA screening at next visit.
+
+Plan:
+- Start tamsulosin 0.4 mg orally once daily at bedtime to relieve obstructive symptoms.
+- Counsel on lifestyle modifications: 2–3 L fluid intake during daytime, limit caffeine/alcohol, scheduled bathroom breaks, weight loss.
+- Repeat CBC, BMP, fasting glucose in 4–6 weeks or sooner if symptomatic.
+- Obtain PSA level during next visit (baseline) and consider repeat prostate ultrasound if symptoms persist.
+- Encourage strict BP and glucose monitoring; discuss initiation of antihypertensive and antidiabetic therapy if indicated.
+- Return to clinic in 4 weeks for symptom review and lab assessment or sooner if worsening frequency, urinary retention, or new pain.
+- Educated patient on red‑flag symptoms (pain, fever, flank pain, inability to void) and instructed to seek urgent care if these occur.
+
+Disposition: Outpatient. Patient verbalized understanding of treatment plan and agreed to follow up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increased frequency of urination</span><span class="pill">Mild nocturia</span><span class="pill">Feeling of thick urine</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft, enlarged prostate on DRE</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>Fasting glucose</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>tamsulosin 0.4 mg daily</li><li>Lifestyle counseling</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient agreed to start medication and will follow up if symptoms worsen.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>Type 2 Diabetes</li><li>Obesity</li><li>Family history of prostate cancer</li><li>African American ethnicity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Harold presented with a 3‑week history of increased urinary frequency and nocturia, describing the urine as &quot;thicker&quot;. The physical exam was unremarkable except for a soft, enlarged prostate on DRE. Initial labs were ordered – CBC, BMP, fasting glucose. A diagnosis of BPH was made; a trial of tamsulosin 0.4 mg daily was started and the patient was advised on lifestyle modifications.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of BPH; no evidence of malignancy yet; monitoring for prostate-specific antigen not yet performed.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-08-20</h3><div class="visit-meta">Emergency Medicine | Reason: Sharp perineal pain and visible hematuria</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective**
+
+68‑year‑old male presents to the ED with sudden onset of sharp, tearing perineal pain that worsens when standing. He reports pain radiating to the lower back, dark‑brown hematuria, increased urinary frequency, and post‑void dribbling. No fever, chills, or known trauma. He reports prior BPH treated with tamsulosin. He is anxious but pain is now moderate with oral morphine.
+
+**Objective**
+
+- Vitals: BP 138/84, HR 106, RR 18, Temp 98.6 °F
+- General: Alert, mildly distressed
+- Abdomen: Soft, non‑tender
+- Pelvic exam: Firm, slightly enlarged prostate, no external masses
+- Urinalysis: Gross hematuria, negative for infection
+- Labs: PSA 23 ng/mL, Hgb 13 g/dL, WBC 7.5 k/µL, Creatinine 1.5 mg/dL
+
+**Assessment**
+
+Acute perineal pain with hematuria and a markedly elevated PSA in a patient with known BPH raises concern for several potential diagnoses:
+1. Acute prostatitis or prostate abscess (pain, PSA elevation)
+2. Prostatocapsular rupture or other prostate injury/necrosis
+3. Bladder neck or urethral injury with gross hematuria
+4. Possible prostate carcinoma with spontaneous bleeding
+5. Acute urinary retention secondary to BPH contributing to pain and hematuria
+
+The absence of fever and leukocytosis makes acute bacterial prostatitis less likely but cannot be excluded. The high PSA warrants prompt evaluation for prostate malignancy.
+
+**Plan**
+- Admit to the hospital for urologic evaluation and further imaging.
+- Order CT abdomen and pelvis with IV contrast to assess for prostate injury, bladder or urethral pathology, and rule out pelvic fracture.
+- Obtain pelvic ultrasound if CT contraindicated.
+- Continue current home medications: tamsulosin 0.4 mg OD, metformin 1000 mg BID, lisinopril 10 mg OD, atorvastatin 20 mg OD, aspirin 81 mg OD.
+- Continue pain control with morphine 5 mg PO q6h prn; assess response and consider scheduled dosing if breakthrough pain.
+- Consider starting prophylactic broad‑spectrum antibiotics (e.g., ciprofloxacin 500 mg PO BID) pending culture results if prostatitis suspected.
+- Evaluate renal function and adjust medication dosages accordingly; hold metformin if creatinine &gt;1.4 mg/dL.
+- Foley catheter placement if urinary retention suspected.
+- Urology consult within 24 h.
+- Repeat PSA in 6 months; if suspicious imaging, proceed to prostate biopsy.
+- Educate patient on red‑flag symptoms: worsening pain, fever, inability to void.
+- Arrange outpatient follow‑up with urology and primary care clinic.
+
+
+**Disposition**
+
+Patient admitted for further evaluation, analgesia, and monitoring.
+
+**Signature**
+
+EM Physician
+
+**Note**
+
+This note reflects clinical judgment based on the information available. Further data may alter the differential and management plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp, tearing perineal pain radiating to lower back</span><span class="pill">Hematuria with dark‑brown streaks</span><span class="pill">Increased frequency and post‑void dribbling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>106</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm, slightly enlarged prostate</li><li>No external masses</li><li>Normal abdominal exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>Urinalysis</li><li>CBC</li><li>BMP</li><li>Creatinine</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA 23 ng/mL</li><li>UA gross hematuria</li><li>CBC Hgb 13 g/dL WBC 7.5 k/µL</li><li>BMP creatinine 1.5 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 5 mg PO q6h prn</li><li>Advised to follow up with urology</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain managed to moderate level; patient anxious about possible cancer.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BPH on tamsulosin</li><li>Hypertension (BP 130s/80s)</li><li>Type 2 Diabetes (fasting glucose 140 mg/dL)</li><li>Prior history of nocturia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient arrived with sudden tearing perineal pain that worsened when standing. A focused bladder and rectal exam was performed revealing a firm, slightly enlarged prostate. Urinalysis showed gross hematuria. A PSA test was ordered emergently. The pain was managed with oral morphine 5 mg PO q6h prn. The patient was admitted for urology evaluation and further imaging.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Elevated PSA and hematuria suggest possible prostatic neoplasm; need confirm with biopsy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-08-27</h3><div class="visit-meta">Urology | Reason: Transrectal ultrasound‑guided prostate biopsy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transrectal ultrasound‑guided prostate biopsy.\n\nHistory of Present Illness: A 68‑year‑old male with a past medical history of benign prostatic hyperplasia, hypertension, type 2 diabetes, obesity, and an elevated PSA of 23 ng/mL presented for a TRUS‑guided core needle biopsy under local anesthesia. Multiple suspicious nodules were identified in the posterior left lobe. The specimen was sent for pathology. The patient tolerated the procedure without immediate complications. Pathology returned Gleason 5+4=9, with BRCA2 mutation positivity on immunohistochemistry. Repeat PSA remained 23 ng/mL. The patient reports persistent perineal pain and notes that hematuria resolved after 2 days of medical therapy. The patient remains concerned about the findings but understands staging imaging is required. \n\nPast Medical History: BPH, hypertension, type 2 diabetes, obesity. \nPast Surgical History: None relevant. \nMedications: lisinopril 10 mg daily, atorvastatin 20 mg daily, aspirin 81 mg daily, metformin 1000 mg BID, tamsulosin 0.4 mg daily, morphine 5 mg PO q6h prn. \nAllergies: NKDA. \n\nReview of Systems: Significant for perineal pain, resolved hematuria; urinary symptoms improved on tamsulosin. Neurologic, cardiovascular, GI, genitourinary, and endocrine systems otherwise unremarkable. \n\nPhysical Examination: Vital signs – BP 138/84, HR 108, RR 16, Temp 98.6°F; HEENT, lungs, heart, abdomen, and neuro examination unremarkable. No gross hematuria present. \n\nAssessment: 1.  High‑grade prostate adenocarcinoma (Gleason 9) with BRCA2 mutation – likely metastatic. 2.  Persistent perineal pain secondary to biopsy or tumor. 3.  Stable hypertension, type 2 diabetes, and chronic BPH. \n\nPlan: 1. Order contrast‑enhanced CT chest/abdomen/pelvis for staging; order a bone scan to evaluate for osseous metastases. 2. Refer to medical oncology for discussion of definitive therapy (radical prostatectomy vs radiation therapy ± androgen deprivation therapy; consider dose‑sparing pelvic radiation for BRCA2‐positive disease). 3. Offer genetic counseling for BRCA2 mutation. 4. Continue current antihypertensive, lipid‑lowering, antiplatelet, and glycemic agents; maintain tamsulosin for lower urinary tract symptoms. 5. Manage perineal pain with PRN opioids and NSAIDs as needed; consider gabapentin if neuropathic component suspected. 6. Monitor PSA trend and symptomatology; schedule follow‑up visit in 2 weeks to review imaging results and refine treatment plan. 7. Educate patient on signs of progression or complications (new urinary retention, hematuria, bone pain).\n\nDisposition: Patient will return for imaging in 15 days; if imaging shows localized disease, may be a candidate for definitive local therapy; if metastatic disease is present, discuss systemic therapy options.\n</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent perineal pain</span><span class="pill">Hematuria resolved after 2 days of medical therapy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>108</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No gross hematuria</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Prostate biopsy pathology review</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Gleason 5+4=9</li><li>BRCA2 mutation positive</li><li>PSA 23 ng/mL</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient concerned about aggressive disease; understands next step is imaging for staging.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Elevated PSA 23 ng/mL</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent PSA 23 ng/mL</li><li>Urinary symptoms improved</li><li>Stable BP and glucose</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under local anesthesia, a transrectal ultrasound‑guided needle biopsy was performed. Multiple suspicious nodules were found in the posterior left lobe. The specimen was sent for pathology. The patient tolerated the procedure with no immediate complications. Pathology reported Gleason 5+4=9 indicating high‑grade disease, with BRCA2 mutation positive on immunohistochemistry. A repeat PSA of 23 ng/mL was noted. The patient was counseled that staging imaging is necessary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>High‑grade T2 disease noted; potential for extraprostatic extension.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-09-03</h3><div class="visit-meta">Radiation Oncology | Reason: Staging MRI and multidisciplinary tumor board review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Staging MRI and multidisciplinary tumor board review.
+
+Patient: 68‑year‑old male with high‑grade prostate cancer, benign prostatic hyperplasia, hypertension, type 2 diabetes, obesity. Current medications include lisinopril 10 mg daily, atorvastatin 20 mg daily, aspirin 81 mg daily, metformin 1000 mg BID, and tamsulosin 0.4 mg daily. No known allergies.
+
+History of Present Illness: After TRUS‑guided biopsy confirming adenocarcinoma (PSA 23 ng/mL), the patient has undergone staging imaging. Pelvic MRI shows a mass originating from the prostate extending through the bladder neck and into the rectal wall. A right external iliac node measures 7 mm. CT chest, abdomen, and pelvis demonstrate no distant metastatic disease. Bone scan is negative.
+
+Physical Examination: Vital signs – BP 136/82 mmHg, HR 103 bpm, RR 16, Temp 98.4°F. Abdomen is soft with no palpable masses. Digital rectal exam reveals an enlarged, non‑nodular prostate.
+
+Assessment: Stage T4 N1 M0 high‑grade prostate adenocarcinoma with extraprostatic extension to the bladder and rectum, and a single small regional node. Differential diagnosis includes benign prostatic hyperplasia and, less likely, primary bladder or rectal carcinoma.
+
+Plan:
+1. Pre‑operative cardiology assessment to optimize cardiac risk.
+2. Initiate neoadjuvant androgen deprivation therapy (leuprolide 3.75 mg IM monthly) for 3 months before definitive surgery.
+3. After response evaluation, proceed with definitive surgical management – radical prostatectomy with bladder‑neck resection and possible partial cystectomy or abdominoperineal resection if margins are involved.
+4. Continue current antihypertensive, lipid‑lowering, antiplatelet, glycemic, and BPH therapies.
+5. Manage pain with acetaminophen ± low‑dose oxycodone PRN.
+6. Maintain fluid‑restriction and dietary counseling.
+7. Follow‑up PSA in 3 weeks after ADT initiation; multidisciplinary tumor board review following surgery.
+8. Monitor blood pressure, glucose, renal function, and treatment toxicity.
+
+Follow‑up Recommendations:
+- Return in 4 weeks for cardiology clearance and to discuss surgical scheduling.
+- Repeat PSA and complete metabolic panel 3 weeks after starting ADT.
+- Contact urology for operative planning once cardiology cleared.
+- Continue routine visits for hypertension, diabetes, and BPH management.
+- Encourage weight loss, increased physical activity, and adherence to dietary modifications.
+- Contact clinic immediately for new urinary bleeding, worsening pain, or signs of infection.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Stable pain, no new hematuria</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/82</td></tr><tr><td>HR</td><td>103</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No abdominal masses palpable</li><li>Normal rectal exam apart from prostate enlargement</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvic MRI</li><li>CT chest/abdomen/pelvis</li><li>Bone scan (baseline)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: T4 with bladder &amp; rectal invasion</li><li>CT: No distant mets</li><li>Bone scan: negative</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Accepts surgical plan; concerned about surgical morbidity.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">High‑grade prostate cancer (Gleason 9)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prostate biopsy Gleason 9</li><li>High PSA 23 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After MRI pelvis and CT chest/abdomen/pelvis, the MRI showed a mass extending from the prostate into the bladder neck and rectal wall, consistent with T4. A right external iliac node was enlarged (7 mm). No distant metastases. The tumor board reviewed the case and recommended a combined modality approach: radical cystoprostatectomy with en bloc resection and post‑operative external beam radiotherapy plus androgen deprivation therapy. The patient was scheduled for a pre‑operative cardiology assessment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>T4 N1 disease staged; decision for surgery + adjuvant therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-09-10</h3><div class="visit-meta">Cardiology | Reason: Pre‑operative cardiac evaluation before major surgery</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint/Reason for Visit: 68‑year‑old male presents for routine pre‑operative cardiac evaluation prior to major urologic surgery for high‑grade prostate adenocarcinoma. The patient is anxious about anesthesia but reports no cardiac symptoms (no chest pain, dyspnea, palpitations, or syncope).
+
+History of Present Illness: The patient has a longstanding history of hypertension, type‑2 diabetes mellitus, obesity, benign prostatic hyperplasia, and known coronary artery disease managed with aspirin. He also has stage II diastolic dysfunction on prior echocardiography. He is scheduled for radical prostatectomy with general anesthesia.
+
+Past Medical History: Hypertension, Type‑2 DM, BPH, Stage II diastolic dysfunction, coronary artery disease.
+
+Medications: Lisinopril 10 mg daily, Atorvastatin 20 mg daily, Aspirin 81 mg daily, Metformin 1000 mg BID, Tamsulosin 0.4 mg daily. Added bisoprolol 2.5 mg daily today.
+
+Allergies: NKDA.
+
+Physical Examination: Vitals - BP 138/84 mmHg, HR 108 bpm, RR 16/min, Temp 98.7 °F. Cardiac exam: regular rate and rhythm, no murmurs, rubs, or gallops. No peripheral edema. General exam unremarkable.
+
+Diagnostic Testing: Electrocardiogram: sinus rhythm, HR 108, no ST‑segment or T‑wave abnormalities. Stress echocardiography: mild exercise‑induced tachycardia, no ischemic changes, ejection fraction 55 %, grade II diastolic dysfunction persisted. Transthoracic echocardiogram: EF 55 %, diastolic function Grade II.
+
+Assessment: Stable ischemic heart disease (on aspirin), controlled hypertension, well‑controlled diabetes, and stage II diastolic dysfunction. Pre‑operative status is satisfactory; no evidence of ischemia or decompensated heart failure. Elevated resting heart rate of 108 beats/min indicates that beta‑blocker therapy may reduce peri‑operative cardiac risk.
+
+Plan:
+1. Continue lisinopril 10 mg daily.
+2. Add bisoprolol 2.5 mg once daily (initiate today). Re‑evaluate HR after 1–2 weeks; target HR 60–70 bpm.
+3. Continue atorvastatin 20 mg, aspirin 81 mg, metformin, tamsulosin.
+4. Coordinate with anesthesia: anticipate careful fluid management and beta‑blocker hold on morning of surgery if HR &gt;100.
+5. Pre‑operative labs: CBC, BMP, HbA1c, fasting lipid profile, renal function.
+6. Educate patient on anxiety; encourage relaxation techniques and pre‑operative counseling.
+7. Follow‑up cardiology visit 2 weeks after surgery or sooner if new cardiac symptoms develop.
+
+Disposition: Patient will proceed with scheduled general anesthesia. He is medically cleared for surgery.
+
+Follow‑up Recommendations: Monitor BP, HR during pre‑op clinic and immediately post‑op. Adjust bisoprolol dose or add second‑line antihypertensives if BP remains above target 130/80 mmHg. Repeat outpatient ECG and echocardiogram 6 weeks post‑op to reassess diastolic function. Continue routine follow‑up for prostate cancer treatment as per urology/oncology oncology schedule.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None reported; patient anxious about surgery</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>108</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Heart sounds normal</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ECG</li><li>Stress echo</li><li>Echocardiogram</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ECG: sinus rhythm, no ST changes</li><li>Stress echo: non‑ischemic, EF 55%</li><li>ECHO: diastolic dysfunction grade II</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Start bisoprolol 2.5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Will comply with medication changes; worried about anesthesia.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Stage II diastolic dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Known coronary artery disease on aspirin</li><li>Recent MRI shows large pelvic mass</li><li>Diabetes, hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>An exercise stress test with echo was performed. ECG shows normal sinus rhythm, no ischemia. Stress echo shows non‑ischemic pattern but diastolic dysfunction (stage II), ejection fraction 55%. Recommendations: Continue ACE inhibitor, add low‑dose bisoprolol 2.5 mg qd, maintain current insulin regimen pending postoperative. Plan for general anesthesia with careful fluid management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cardiac risk stratified; patient cleared for surgery with precautions.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-10-05</h3><div class="visit-meta">Urologic Oncology | Reason: Radical cystoprostatectomy with reconstruction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Radical cystoprostatectomy with ileal conduit reconstruction – postoperative assessment on postoperative day 5.
+
+History of Present Illness: The patient underwent a planned radical cystoprostatectomy with en bloc bladder removal and creation of an ileal conduit under general anesthesia. Intra‑operatively, estimated blood loss was 1.5 L and required transfusion of two units of PRBC. Post‑operative course has been uncomplicated apart from expected postoperative pain and drainage from the ileal conduit. He reports controlled pain with current analgesia regimen but notes a sense of fatigue and occasional obstruction of the ileal conduit.
+
+Review of Systems: Positive for postoperative pain, bowel motility changes, fatigue, intermittent sensation of obstruction in the conduit; no fever, chills, hematuria, or dysuria reported.
+
+Physical Examination: Vital signs stable (BP 110/70 mmHg, HR 98 bpm, RR 16/min, Temp 98.2°F, SpO2 97%). Tachycardia resolved post‑transfusion. Extubated on POD2. Current state: Intact surgical sutures, drainage catheter positioned in ileal conduit, Foley catheter removed on POD7. Abdomen soft and non‑tender. No erythema or swelling at incision sites.
+
+Labs/Imaging: Post‑operative CBC – Hgb 12.5 g/dL; BMP – Cr 1.8 mg/dL; PSA – 18 ng/mL (1 month postoperative).
+
+Assessment: 1) Post‑operative status following radical cystoprostatectomy with ileal conduit. Pain well controlled, hemodynamics stable. 2) Elevated creatinine – likely postoperative acute kidney injury due to intra‑operative hypotension and IV fluid shifts; close monitoring required. 3) High PSA on 1‑month postoperative check – expected transient rise post‑surgery; trend needed. 4) Possible ileal conduit obstruction – patient reports intermittent obstruction; will monitor output volumes and patient symptoms.
+
+Plan:
+- Continue current antihypertensive, lipid‑lowering, antidiabetic, antiplatelet, and BPH medication regimen: lisinopril 10 mg daily, atorvastatin 20 mg daily, aspirin 81 mg daily, metformin 1000 mg BID, tamsulosin 0.4 mg daily, bisoprolol 2.5 mg daily. 
+- Continue postoperative analgesia: acetaminophen 650 mg PO q6h PRN, oxycodone 5 mg PO q6h PRN for breakthrough pain. 
+- Initiate antiemetic prophylaxis: ondansetron 4 mg PO q8h as needed. 
+- Encourage adequate hydration and early mobilisation; consider mild laxative to support bowel motility. 
+- Monitor drain output; educate patient to report any sudden decrease in output or signs of urinary blockage.
+- Schedule drain removal in 2 weeks (POD14). 
+- Repeat PSA in 4 weeks to assess trend, BMP and renal panel in 1 week, and CBC in 1 week. 
+- Plan follow‑up urology visit in 2 weeks for drain removal, review PSA trend, renal function, and conduit evaluation. Discuss long‑term surveillance strategy for prostate cancer, including imaging and PSA monitoring per oncologic guidelines.
+- Counsel on signs of surgical site infection (fever, increasing pain, drainage changes) and ileal conduit obstruction (abdominal pain, failure to drain). Advise prompt return if these symptoms arise.
+
+Disposition: Stable, discharged home with instructions to follow up at the urology clinic in 2 weeks.
+
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Postoperative pain, ileal conduit drainage</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/70</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tachycardia resolved after transfusion</li><li>Sutures intact</li><li>Drainage catheter in place</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Post‑op CBC</li><li>BMP</li><li>PSA (1 month postoperative)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hgb 12.5 g/dL</li><li>BMP: creatinine 1.8</li><li>PSA 18 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>PRBC 2 units</li><li>Vasopressor (phenylephrine)</li><li>Crystalloid bolus 1 L</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable, pain controlled, but reporting fatigue and occasional obstruction of ileal conduit.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Post‑operative status</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li><li>bisoprolol 2.5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>T4 N1 disease</li><li>Major surgery planned</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under general anesthesia, a radical cystoprostatectomy with en bloc resection of bladder and rectal invasion was performed. An ileal conduit was created. Intra‑operative blood loss was 1.5 L requiring two units of PRBC. Vasopressors and crystalloid bolus maintained blood pressure. Post‑operative course: patient in SICU, intubated, then extubated POD2. Antibiotics per protocol. Foley catheter removed POD7 and temporary drainage catheter left in ileal conduit for 2 weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Resected tumor, but PSA still elevated indicating residual disease or recurrence; plan post‑op RT and ADT.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-10-15</h3><div class="visit-meta">Endocrinology | Reason: Post‑operative metabolic management and endocrine review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑operative metabolic management and endocrine review.
+
+S: 68‑year‑old male postoperative day 10 after radical prostatectomy with ileal conduit. Reports mild dizziness, fatigue, intermittent ileal conduit obstruction. Anxious but compliant. Current medications include lisinopril 10 mg daily, atorvastatin 20 mg daily, aspirin 81 mg daily, metformin 1000 mg BID (to be discontinued), tamsulosin 0.4 mg daily, bisoprolol 2.5 mg daily, acetaminophen 650 mg PO q6h PRN, oxycodone 5 mg PO q6h PRN, leuprolide 3.75 mg monthly IM, ondansetron 4 mg PO q8h.
+
+O: Vital signs: BP 130/80 mmHg, HR 90 bpm, RR 16 bpm, Temp 98.4 °F, SpO₂ 98 %. Neuro exam normal. Jugular venous distension minimal. Sutures intact; drain catheter functioning. Labs: fasting glucose 250 mg/dL, HbA1c 9.8 %, LDL 120 mg/dL, creatinine 1.8 mg/dL, PSA 18 ng/mL.
+
+A: Primary diagnosis: Uncontrolled type 2 diabetes mellitus exacerbated by postoperative stress and renal impairment; insulin glargine 20 U SC daily initiated. Secondary issues: mild orthostatic symptoms likely fluid‑shift related, intermittent ileal conduit obstruction likely due to edema, risk of hyperkalemia with spironolactone, acute kidney injury (creatinine 1.8 mg/dL), hypertension, metabolic syndrome, obesity, benign prostatic hyperplasia, prostate adenocarcinoma, cardiomyopathy.
+
+P: 1. Continue insulin glargine 20 U SC daily; titrate as per SMBG (target fasting 80–110 mg/dL). 2. Discontinue metformin immediately due to eGFR &lt;45 mL/min/1.73 m². 3. Continue spironolactone 25 mg daily for fluid balance; monitor potassium twice weekly and renal function. 4. Reinforce diabetes education: carbohydrate counting, hypoglycemia recognition, SMBG twice daily. 5. Maintain current cardiovascular meds (lisinopril, bisoprolol, atorvastatin, aspirin). 6. Continue tamsulosin for BPH symptoms. 7. Pain managed with acetaminophen and PRN oxycodone; avoid long‑term opioids. 8. Schedule leuprolide 22.5 mg SC monthly starting 4 weeks post‑op. 9. Order follow‑up labs: CMP, fasting glucose, HbA1c in 3 months; BMP and K+ in 1 week. 10. Refer urology for evaluation of intermittent ileal conduit obstruction in 2 weeks. 11. Provide written instructions and contact for hypoglycemia symptoms.
+
+Plan for next appointment: endocrinology in 1 week for insulin titration; urology in 2 weeks for conduit evaluation; oncology in 4 weeks for ADT initiation.
+
+Patient verbalized understanding and agreed to plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild dizziness, fatigue, intermittent ileal conduit obstruction</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal neuro exam</li><li>Slight jugular venous distension],</li><li>Sutures intact</li><li>Drainage catheter functioning</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>Fasting glucose</li><li>CBC</li><li>BMP</li><li>PSA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 9.8%</li><li>Fasting glucose 250 mg/dL</li><li>PSA 18 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 U daily</li><li>Spironolactone 25 mg daily</li><li>Leuprolide 22.5 mg SC (scheduled)</li><li>Pain meds</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient is anxious but compliant; feels some improvement in blood sugars but still low energy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Post‑operative ileal conduit</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li><li>bisoprolol 2.5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Surgery 10 days prior, transfusions</li><li>Current insulin therapy not started yet</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Baseline labs were drawn: fasting glucose 250 mg/dL, HbA1c 9.8%, LDL 120 mg/dL, creatinine 1.8. Insulin glargine 20 U subcutaneously daily was started to achieve glycemic control. Spironolactone 25 mg daily added for fluid balance. Continued tamsulosin. Pain managed with acetaminophen and short‑acting opioids as needed. Discussed ADT initiation; patient agreed to start leuprolide 22.5 mg SC month‑1 starting 4 weeks post‑op. PSA reviewed: 18 ng/mL at 30 days postoperative.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑operative residual PSA elevation; endocrine control optimized; ADT planned.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-11-10</h3><div class="visit-meta">Radiation Oncology | Reason: Start of external beam radiotherapy and management of lymph node rupture</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: 68‑year‑old male evaluated for start of external beam radiotherapy (EBRT) and acute management of ruptured left external iliac lymph node after 18 fractions of IMRT.
+
+**History of Present Illness**: Patient underwent radical cystoprostatectomy with ileal conduit 5 days prior (10‑05 visit) and began adjuvant EBRT on 10‑10 for residual disease and positive iliac node. After 18 fractions (day 18, 11‑10), patient developed worsening flank pain and progressive left lower‑extremity edema. Urgent CT abdomen/pelvis identified a ruptured left external iliac lymph node infiltrating the left common iliac vein with partial venous occlusion. Interventional radiology deployed a covered stent across the node and placed a filter in the left femoral vein. The procedure produced minor hemoperitoneum; patient received 2 units PRBC and 1 unit platelets. PSA rose to 31 ng/mL from 18 ng/mL pre‑operation. Hematologic parameters worsened: WBC dropped to 3.0 ×10^3/µL and Hgb to 9.8 g/dL. EBRT was paused to allow hematologic recovery.
+
+**Past Medical History**: BPH, HTN, T2DM, obesity, left iliac node enlargement, anemia, leukopenia, post‑op AKI (Cr 1.8 mg/dL), BRCA2 mutation. 
+
+**Medications**: Lisinopril 10 mg PO daily, Atorvastatin 20 mg PO daily, Aspirin 81 mg PO daily, Tamsulosin 0.4 mg PO nightly, Bisoprolol 2.5 mg PO daily, Acetaminophen 650 mg PO q6h PRN, Oxycodone 5 mg PO q6h PRN, Leuprolide 22.5 mg SC monthly, Ondansetron 4 mg PO q8h, Insulin glargine 20 U SC daily, Spironolactone 25 mg PO daily.
+
+**Allergies**: NKDA.
+
+**Review of Systems**: Positive for fatigue, mild lower‑back pain, flank pain, left leg swelling, intermittent ileal conduit obstruction. Negative for fever, chills, hematuria, dyspnea.
+
+**Vitals**: BP 128/78 mm Hg, HR 100 bpm, RR 16 /min, Temp 98.7 °F, SpO₂ 97 % RA.
+
+**Physical Examination**: Left leg edema with tenderness; mild flank tenderness. Drainage catheter functioning. Incision intact.
+
+**Assessment**:
+1. *Radiation‑related left external iliac node rupture with venous invasion* – likely precipitated by dose‑dependent perivascular fibrosis and node expansion. Clinically manifested as flank pain, lower‑extremity edema, and partial venous occlusion.
+2. *Venous thrombosis/obstruction* secondary to node rupture – stent and filter placed; ongoing risk of lower‑extremity DVT and pulmonary embolism.
+3. *Progressive metastatic prostate adenocarcinoma* – PSA climbed to 31 ng/mL, suggesting disease activity.
+4. *Radiation‑induced pancytopenia* – leukopenia (WBC 3.0 k/µL) and anemia (Hgb 9.8 g/dL) likely from marrow suppression and blood loss.
+5. *Post‑operative AKI* – creatinine remains elevated at 1.8 mg/dL; monitor renal function closely.
+
+**Plan**:
+- **EBRT**: Hold current course until CBC shows WBC &gt; 3.5 k/µL and Hgb &gt; 10 g/dL. Re‑assess in 3 days. Once counts recover, resume 1.8 Gy per fraction with cumulative dose adjustment to limit late toxicity.
+- **Hematology**: Consult for evaluation of marrow suppression; consider growth factor support (e.g., G‑CSF) if counts do not recover within 10 days.
+- **Vascular**: Continue duplex ultrasound of left lower extremity in 2 weeks to evaluate stent patency and filter position. Maintain anticoagulation per interventional radiology recommendation (e.g., low‑dose enoxaparin 40 mg SC BID until stent matured). Monitor for signs of PE.
+- **Pain Control**: Continue acetaminophen 650 mg q6h PRN; consider introducing gabapentin 300 mg PO q12h for neuropathic component, titrated to 300 mg BID as tolerated. Re‑evaluate opioid requirement.
+- **Nutritional/Fluid**: Encourage high‑protein intake; monitor for electrolyte disturbance due to spiro‑ and insulin therapy. Check BMP daily until stable.
+- **Endocrinology**: Review insulin regimen given new hypertension and fluid shifts; adjust basal insulin if needed.
+- **Urology**: Monitor ileal conduit for obstruction; schedule urology review in 1 week. Keep catheter and stoma care instructions.
+- **Imaging**: Repeat CT chest/abdomen/pelvis in 2 months to reassess nodal disease and rule out distant metastases.
+- **Follow‑up Visits**: Return to oncology in 3 days for CBC/BMP, consider hematology consult; re‑open radiation if counts adequate. If any new neurologic deficits, abdominal pain, or respiratory symptoms, call immediately.
+
+**Patient Education**: Discussed potential radiation complications, signs of DVT/PE, neutropenic fever, and importance of early reporting of new symptoms. Reinforced medication adherence and dietary recommendations.
+
+**Disposition**: Admit for close monitoring of blood counts and renal function; oncology will coordinate multidisciplinary approach.
+
+***Sign***: [Radiation Oncologist]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue, mild lower back pain, new left leg swelling after 18 days of radiation therapy begun November 10, flank pain</span><span class="pill">Intermittent obstruction of ileal conduit</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/78</td></tr><tr><td>HR</td><td>100</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left leg edema and tenderness</li><li>Flank tenderness</li><li>Drainage catheter functioning</li><li>Sutures intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>PSA</li><li>CT abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC WBC 3.0 k/µL</li><li>Hgb 9.8 g/dL</li><li>PSA 31 ng/mL</li><li>CT: ruptured iliac node with venous involvement</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>External beam RT 1.8 Gy per fraction</li><li>Covered stent placement</li><li>Femoral vein filter</li><li>PRBC 2 units</li><li>Platelets 1 unit</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Flank pain improved after stent, but continues to need opioids; hematologic counts remain low, requiring frequent monitoring.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Residual prostatic cancer (T4 N1), post‑op</span><span class="pill">Anemia, leukopenia</span><span class="pill">Left iliac node enlargement</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Residual PSA 18 ng/mL 30 days post‑op</li><li>Leuprolide started 1 month ago</li><li>Leukopenia (WBC 3.2k) and anemia (Hgb 10.2) now present</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>External beam radiotherapy was initiated using IMRT, delivering 1.8 Gy per fraction over 6 weeks. On day 18, the patient developed severe flank pain and left leg edema. Urgent CT abdomen/pelvis revealed a ruptured left external iliac lymph node with extension into the left iliac vein, partially occluding venous outflow. Interventional radiology placed a covered stent across the node and deployed a filter in the left femoral vein to prevent embolization. The patient received a transfusion of 2 units PRBC and 1 unit platelets due to minor hemoperitoneum noted on post‑procedure CT. PSA climbed to 31 ng/mL over that period, suggesting recurrence. The patient’s leukopenia worsened to 3.0 k/µL and Hgb dropped to 9.8; the radiation oncologist paused treatment to allow hematologic recovery.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Local recurrence with vascular invasion; PSA rising, hematologic suppression indicates therapy‑related marrow toxicity.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-02-28</h3><div class="visit-meta">Neurology | Reason: Sudden left leg numbness and headache; evaluation for possible stroke</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Sudden left leg paresthesia and migraine‑like headache; fever 101°F.
+History of Present Illness: 68‑year‑old male with known BPH, hypertension, type 2 diabetes, obesity, metabolic syndrome, cardiovascular disease, diastolic dysfunction, acute kidney injury, anemia, leukopenia, DVT, radiation‑induced pancytopenia now presents with acute onset of left leg numbness and headache. Vital signs are BP 125/75 mmHg, HR 92 bpm, RR 18 /min, Temp 101.0 °F, SpO₂ 96% on room air. Exam shows decreased sensation below the knee on the left with no motor deficit. MRI of the brain demonstrates a small focal hypodensity in the right parietal lobe consistent with an acute ischemic infarct. Labs reveal INR 3.2, K 5.5 mEq/L, WBC 2.8 k/µL.
+Assessment: Acute right parietal ischemic stroke likely secondary to hypercoagulable state exacerbated by recent vascular stent placement. Differential includes cerebral venous sinus thrombosis, post‑radiation neurotoxicity, infection/abscess (unlikely given imaging), and metabolic encephalopathy.
+Plan: • Anticoagulation – started warfarin 5 mg daily with close INR monitoring; transitioned to enoxaparin 40 mg SC BID for acute phase.
+ • Pain control – acetaminophen 650 mg PO q6h PRN; low‑dose oxycodone 5 mg PO q6h PRN for breakthrough pain.
+ • Edema – low‑dose steroids as previously started.
+ • Hyperkalaemia – insulin‑glucose drip to bring K &lt;5.5 mEq/L; consider loop diuretic.
+ • Infection workup – repeat CBC, BMP, cultures, chest X‑ray given persistent fevers.
+ • Continue gabapentin 300 mg PO q12h for neuropathic pain.
+ • Hold aspirin 81 mg daily until INR stable.
+ • Physical and occupational therapy referral for mobility and self‑care support.
+ • Neuro‑rehabilitation referral for cognitive and functional assessment.
+ • Discuss hospice advance care planning given limited performance status.
+ • Follow‑up: INR daily until therapeutic (target 2.0–3.0), then twice weekly; BMP and CBC every 48 h; monitor for hemorrhagic conversion on brain imaging if clinical status worsens.
+
+Disposition: Admit to neurology service for monitoring and initiation of above plan.
+Signature: Dr. [Name], Neurology.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left leg paraesthesia, migraine‑like headache, fever 101°F</span><span class="pill">Previous neuropathic pain in lower extremities</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>125/75</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temperature</td><td>101.0°F</td></tr><tr><td>SpO2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right parietal area with small hypodensity on MRI</li><li>Left leg decreased sensation below knee</li><li>No motor weakness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Brain MRI</li><li>INR</li><li>BMP</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Brain MRI: right parietal infarct</li><li>INR 3.2</li><li>WBC 2.8 k/µL</li><li>K 5.5 mEq/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Warfarin 5 mg daily</li><li>Enoxaparin 40 mg bid (acute)</li><li>Acetaminophen</li><li>Acetazolamide (if needed)</li><li>Low‑dose steroids</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Develops confusion after stroke, requires assistance for daily activities; accepts hospice referral.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BPH</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Residual T4 prostate cancer, bone metastases</span><span class="pill">Multiple bone lesions</span><span class="pill">Brain metastasis or infarct risk</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 10 mg daily</li><li>atorvastatin 20 mg daily</li><li>aspirin 81 mg daily</li><li>metformin 1000 mg BID</li><li>tamsulosin 0.4 mg daily</li><li>bisoprolol 2.5 mg daily</li><li>spironolactone 25 mg daily</li><li>insulin glargine 20 U daily</li><li>leuprolide 22.5 mg SC monthly</li><li>warfarin 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing cancer treatment with ADT and previous radiotherapy</li><li>Recent vascular stent placement</li><li>History of anemia, leukopenia</li><li>Hypertension, diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A brain MRI was performed, revealing a small right parietal‑lobe infarct. INR measured 3.2, K 5.5. The patient was started on low‑dose warfarin (5 mg daily) with close INR monitoring and transitioned to low‑dose enoxaparin for acute phase. Acetaminophen and short‑acting opioids managed headache; steroids were added for cerebral edema. The oncology team discussed palliative intent, and the patient agreed to hospice counseling. Neurology noted that the infarct was likely hypercoagulable from the malignancy and recent vascular injury. The patient continues to have intermittent fevers and neuropathic pain, with a performance status now limited to minimal self‑care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Advanced metastatic disease with CNS involvement; end‑of‑life care initiated.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Prostate adenocarcinoma</span><span class="pill">Diastolic dysfunction</span><span class="pill">Acute kidney injury</span><span class="pill">Anemia</span><span class="pill">Leukopenia</span><span class="pill">Deep vein thrombosis</span><span class="pill">Radiation-induced pancytopenia</span><span class="pill">Acute ischemic stroke</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg daily</li><li>Tamsulosin 0.4 mg daily</li><li>Bisoprolol 2.5 mg daily</li><li>Acetaminophen 650 mg PO q6h PRN</li><li>Oxycodone 5 mg PO q6h PRN</li><li>Leuprolide 22.5 mg SC monthly</li><li>Ondansetron 4 mg PO q8h</li><li>Insulin glargine 20 U SC daily</li><li>Spironolactone 25 mg daily</li><li>Gabapentin 300 mg PO q12h</li><li>Enoxaparin 40 mg SC BID</li><li>Warfarin 5 mg daily</li><li>Steroids (low-dose)</li><li>Insulin-glucose drip</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-08-01: 68-year-old male presented with 3-week history of increased urinary frequency, mild nocturia, and a sensation of thick urine. Physical exam revealed a soft, enlarged prostate on DRE without nodularity. Vital signs: BP 130/78 mmHg, HR 78 bpm, RR 16/min. Started tamsulosin 0.4 mg orally once daily at bedtime. Counselled on fluid intake, caffeine/alcohol restriction, scheduled bathroom breaks, and weight loss. Ordered CBC, BMP, fasting glucose labs; plan to repeat these in 4–6 weeks. Baseline PSA to be obtained at next visit. Advised on red‑flag symptoms and scheduled follow‑up in 4 weeks.</li><li>2023-08-20: 68-year-old male presented to ED with acute perineal pain, hematuria, and urinary frequency; admitted; started morphine 5 mg PO q6h prn; continued home meds (tamsulosin, metformin, lisinopril, atorvastatin, aspirin); ordered CT abdomen/pelvis with contrast, CBC, BMP, creatinine; urology consult scheduled; plan to monitor pain, renal function, repeat PSA in 6 months.</li><li>2023-08-27: 68-year-old male underwent TRUS-guided prostate biopsy revealing Gleason 5+4=9 adenocarcinoma with BRCA2 mutation. PSA remained 23 ng/mL. Hematuria resolved after 2 days. Persistent perineal pain continues. Contrast‑enhanced CT chest/abdomen/pelvis and bone scan ordered for staging. Referred to oncology and advised genetic counseling. Continue current antihypertensive, lipid‑lowering, antiplatelet, glycemic agents, tamsulosin, and PRN opioids for pain.</li><li>2023-09-03: Staging MRI demonstrated tumor extending from prostate through bladder neck into rectal wall, with a 7 mm right external iliac node; CT chest/abdomen/pelvis and bone scan negative for distant metastasis. Vitals: BP 136/82, HR 103. Pain stable; no hematuria. Plan: cardiology clearance, initiate leuprolide 3.75 mg IM monthly for 3 months, adjust pain regimen to acetaminophen ± low‑dose oxycodone PRN, maintain antihypertensive, lipid‑lowering, antiplatelet, antidiabetic, and BPH therapies. Follow‑up in 4 weeks for cardiology clearance; repeat PSA and metabolic panel 3 weeks after ADT initiation.</li><li>2023-09-10: 68-year-old male underwent pre‑operative cardiac evaluation for scheduled radical prostatectomy; normal ECG, grade II diastolic dysfunction, HR 108; bisoprolol 2.5 mg daily initiated; labs ordered; patient cleared for surgery.</li><li>2023-10-05: Post‑operative assessment day 5 following radical cystoprostatectomy with ileal conduit; vitals stable (BP 110/70, HR 98, RR 16, Temp 98.2°F), pain well controlled on acetaminophen 650 mg q6h PRN and oxycodone 5 mg q6h PRN; creatinine 1.8 mg/dL indicating postoperative AKI, PSA 18 ng/mL; operative incision intact, drain in place, Foley removed POD7; plan for drain removal POD14, repeat PSA in 4 weeks, BMP and renal panel in 1 week, and CBC in 1 week.</li><li>2023-10-15: 68-year-old male postoperative day 10 after radical prostatectomy with ileal conduit. Reports mild dizziness, fatigue, intermittent ileal conduit obstruction. Vitals stable. Labs: fasting glucose 250 mg/dL, HbA1c 9.8%, LDL 120 mg/dL, creatinine 1.8 mg/dL, PSA 18 ng/mL. Insulin glargine 20 U SC daily initiated; metformin discontinued due to eGFR &lt;45. Started spironolactone 25 mg daily for fluid balance. Leuprolide dose adjusted to 22.5 mg SC monthly starting 4 weeks post‑op. Labs ordered: CMP, fasting glucose, HbA1c, BMP, K+. Follow‑ups scheduled: endocrinology in 1 week, urology in 2 weeks, oncology in 4 weeks.</li><li>2023-11-10: Radiation Oncology visit – patient on adjuvant EBRT reported new flank pain and left leg swelling, found to have ruptured left external iliac node with venous infiltration and partial occlusion; underwent covered stent, filter, transfusion of 2 units PRBC and 1 unit platelets; EBRT paused pending CBC recovery; started enoxaparin 40 mg SC BID; plan to resume therapy when WBC &gt;3.5k/µL and Hgb &gt;10 g/dL; added gabapentin 300 mg PO q12h for neuropathic pain; PSA increased to 31 ng/mL; renal function remains elevated (Cr 1.8 mg/dL).</li><li>2024-02-28: 68-year-old male presented to neurology with sudden left leg paresthesia, migraine‑like headache, and fever 101.0°F. Exam: decreased sensation below knee on left, no motor deficit. Brain MRI showed a small right parietal hypodensity consistent with acute ischemic infarct. Labs INR 3.2, potassium 5.5 mEq/L, WBC 2.8 k/µL. Started warfarin 5 mg daily and transitioned to enoxaparin 40 mg SC BID; aspirin held. Initiated low‑dose steroids, insulin‑glucose drip for hyperkalaemia, and continued gabapentin. Ordered CBC, BMP, cultures, chest X‑ray; referred to PT/OT and neuro‑rehab; discussed hospice planning. Follow‑up: daily INR monitoring until therapeutic, BMP and CBC every 48 h.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

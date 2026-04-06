@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 1cc3149d</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 1cc3149d</h1><div class="subtitle">Prostate Carcinoma, Not Otherwise Specified | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia, Cardiovascular disease, Type 2 Diabetes</div><div class="meta-line">Risk Factors: Age &gt;65, Male sex, African‑American ancestry, High‑fat diet, Obesity, Family history of prostate cancer, Low fruit and vegetable intake</div></div>
+<details><summary>Narrative <span class="preview-text">**The Story of Mr. James Allen**  James Allen was a 68‑year‑old African‑American man who lived in a modest home in a sub...</span></summary><div class="section-body"><p>**The Story of Mr. James Allen**</p><p>James Allen was a 68‑year‑old African‑American man who lived in a modest home in a suburban community. He worked part‑time as a custodian at a local high school, had been overweight (BMI 31 kg/m²) for years, and had a long history of high‑fat meals, few fruits and vegetables, and regular consumption of sugary drinks. His mother had died of a heart attack at 65, and his maternal uncle had been diagnosed with prostate cancer when he was in his 50s. James had a medical history of benign prostatic hyperplasia (BPH) that had been managed with tamsulosin, hypertension treated with lisinopril, coronary artery disease (post‑CABG 8 years ago) that required periodic aspirin and statin therapy, and type 2 diabetes mellitus (HbA1c 8.2 %) controlled with metformin and low‑dose glimepiride.</p><p>---</p><p>### **Episode I – “Just a Little Problem” (Week 0–2)**</p><p>It began with a “minor” complaint: in the evenings, after dinner, James started to find himself rushing to the bathroom more frequently—about 8–10 times a night, each time with a little discomfort, a slight burning, but no blood. The next morning he would find the bathroom door locked because he had gone to the shop, and when he returned, the restroom was still full of people. He attributed it to his BPH, an assumption that had held true for years. He kept his tamsulosin regimen and, after a brief call with his primary physician, noted that his symptoms had mildly worsened, “sometimes it feels more urgent, and it’s hard to hold on long enough to get to the bathroom,” he admitted over the phone.</p><p>Within a week, James felt a dull ache in his lower back, especially after standing long periods or after a day at church. He reported it to the clinic nurse, who advised him to schedule an evaluation if the discomfort persisted.</p><p>---</p><p>### **Episode II – “The Check‑up” (Week 3)**</p><p>Three weeks after the first symptom, James visited his family physician, noting that his urinary frequency had escalated to 12 × 24 h and that his lower back was increasingly achy to the point of making it difficult to sit upright for more than 30 minutes. The physician performed a brief digital rectal examination (DRE) and noted a firm, nodular area on the posterolateral aspect of the prostate. He measured James’s PSA: **PSA = 12.4 ng/mL**, much higher than the baseline of 2.8 ng/mL two months earlier (which had, in turn, been elevated due to BPH).</p><p>The doctor referred James to a urology clinic for further evaluation. James was given a written note and, due to his anxiety, expressed concern that the urologist might discover something serious. He told his wife that he hoped it was just a BPH flare.</p><p>---</p><p>### **Episode III – “Getting the Right Diagnosis” (Week 4–5)**</p><p>At the urology clinic, Dr. Patel performed a focused exam. In addition to the firm DRE finding, he noted a slight hardening of the prostate along the left lateral wall and a palpable enlargement. The patient’s urinary stream was weak, and the post‑void residual (PVR) measured in a bedside bladder scanner came back at **260 mL**—far larger than expected for BPH alone.</p><p>An ultrasound was ordered, which revealed a heterogeneous echo pattern in the prostate lobe along with an enlarged seminal vesicle. A transrectal ultrasound‑guided core biopsy was scheduled, and James was started on a short course of prednisone to minimize post‑procedure pain.</p><p>The next day he received news that the biopsy would confirm a diagnosis. By **week 5**, pathology returned: prostate adenocarcinoma, Gleason 4+3=7, with extraprostatic extension on imaging, but no obvious bone lesions on a bone scan performed concurrently. The clinical stage was T3aN0M0—locally advanced, but not yet metastatic.</p><p>---</p><p>### **Episode IV – “First Treatment Decision” (Week 6–7)**</p><p>Given his comorbidities, Dr. Patel held a multidisciplinary tumor board. James’s age, coronary artery disease, and diabetes made the decision for definitive local therapy (surgery or radiation) delicate. His family history raised concerns of a more aggressive biology. After discussion with James and his wife, the board recommended *androgen deprivation therapy (ADT)* with a LHRH agonist (leuprolide) as initial bridging therapy while further oncologic work‑up took place. James also had a plan to start an **abiraterone**‑acetate regimen later, considering the potential benefit in more advanced disease.</p><p>James’s medication list was expanded: leuprolide injection every 12 weeks, a fludrocortisone‑like steroid for side effects, and continued metformin. His diabetes education was intensified because ADT can worsen insulin resistance. A dietitian set up a meal plan rich in vegetables, lean proteins, and reduced fat intake.</p><p>---</p><p>### **Episode V – “Side Effects &amp; Cardiovascular Caution” (Month 2–3)**</p><p>Within a month of the first leuprolide injection, James reported **fatigue**, **hot flashes**, and **an increased heart rate** at rest, which he described as feeling “like his heart is always on the brink.” His cardiology follow‑up was arranged; an EKG showed sinus tachycardia but no ischemic changes. He was advised an additional ACE inhibitor dose as his blood pressure remained on the high side (165/92 mm Hg).</p><p>Simultaneously, his PSA dropped to **4.1 ng/mL** after the first month of ADT—an encouraging sign. However, when the leuprolide was administered again at the four‑month mark, the PSA climb back up to **6.3 ng/mL** after two weeks indicated potential castration‑resistance emerging. Dr. Patel suggested starting abiraterone while continuing leuprolide, and James agreed, motivated by the fear of metastatic spread.</p><p>---</p><p>### **Episode VI – “New Symptom” (Month 4–5)**</p><p>While on abiraterone, James began experiencing sudden, sharp pain in his left hip, radiating to the groin. He described it as “a stabbing sensation that comes out of nowhere.” At his routine follow‑up, the doctor noted an elevated alkaline phosphatase (ALP = 190 U/L) and a rising PSA again (8.1 ng/mL). A low‑dose whole‑body bone scan revealed subtle lytic lesions in the left femoral head and right sacrum.</p><p>Mr. Allen’s oncologist explained that these findings were concerning for early **bone metastasis**. They held a second tumor board meeting: given his cardiovascular stability, they opted for **palliative external beam radiation** to his left hip to control pain, and they increased his opioid analgesic to a scheduled regimen.</p><p>He also enrolled in a clinical trial for a new second‑line androgen receptor–targeted therapy but declined due to its more aggressive side‑effect profile. Instead, he continued leuprolide plus abiraterone with close PSA surveillance.</p><p>---</p><p>### **Episode VII – “Cardiovascular Deterioration” (Month 7)**</p><p>At his next visit, James was noticeably less active, his gait slightly staggering. He reported shortness of breath on mild exertion. Dr. Patel suspected **heart failure exacerbation**. An echocardiogram revealed reduced ejection fraction at **45 %** (previously 55 % two years prior). His diabetes control had worsened (HbA1c 9.3 %). He was hospitalized for a two-week inpatient course of diuretics and started on carvedilol.</p><p>The hospital stay was challenging. Dr. Patel&#x27;s team noted that ADT had contributed to decreased cardiac perfusion. They adjusted his ACE inhibitor and added a beta‑blocker. The patient’s weight, however, fell from 185 lb to 175 lb due to loss of appetite and nausea.</p><p>---</p><p>### **Episode VIII – “Rapid Decline” (Month 9)**</p><p>Back at home, James’s urinary frequency returned to 10 × 24 h again, and he had a new complaint of swelling in both ankles. A CT pelvis with contrast showed the left femoral head lesion had progressed to a pathological fracture, while new lesions appeared in the pelvic bones. The oncologist called the family into emergency care.</p><p>James was admitted to the oncologic unit with acute back pain, mild fever, and a leukocytosis that suggested a possible infection in the fracture site. A percutaneous drain was placed, and antibiotics were started. He began a course of **palliative chemotherapy** with docetaxel, hoping to halt further metastasis, but his tolerance was poor; he could only complete one dose before debilitating neuropathy and myelosuppression forced discontinuation.</p><p>---</p><p>### **Episode IX – “Final Phase &amp; Home Hospice** (Month 11–12)**</p><p>By the tenth month after diagnosis, James’s PSA had skyrocketed to **18.5 ng/ml**, and bone scans showed multi‑segmental disease. His functional status was marked by a **Karnofsky performance score of 40 %**. He was no longer able to get out of bed without assistance and required continuous urinary catheterization due to severe bladder obstruction from local tumor growth.</p><p>His medical team, along with his wife and daughter, discussed the shifting goals. James expressed that he wanted to spend quality days with his family, not be a burden. He opted for comfort‑focused care in a home hospice setting. His medications were adjusted: low‑dose morphine for pain, a short‑acting antihypertensive to manage systolic blood pressure, and no further oncologic treatments.</p><p>---</p><p>### **Epilogue – A Realistic Timeline**</p><p>| Time | Clinical Event |
+|------|----------------|
+| Week 0 | Urinary frequency begins |
+| Week 3 | Elevated PSA, referral to urology |
+| Week 5 | Biopsy confirms prostate adenocarcinoma |
+| Month 1 | Start leuprolide ADT; PSA falls |
+| Month 4 | PSA rises, bone scan shows early lesions |
+| Month 6 | Palliative radiation for hip pain |
+| Month 7 | Heart failure exacerbation, hospitalization |
+| Month 9 | Pathologic fracture, palliative chemo initiated |
+| Month 11 | PSA 18.5 ng/mL, multi‑segment bone disease |
+| Month 12 | Transition to hospice care |</p><p>James Allen’s course illustrates a classic yet challenging progression. The interplay of his **benign prostatic hyperplasia, cardiovascular disease, type 2 diabetes, obesity, and high‑fat diet** complicated management of the prostate carcinoma. Early misattribution of symptoms to BPH delayed definitive assessment. While initial endocrine therapy slowed biochemical progression, the eventual emergence of bone metastases, coupled with cardiovascular decompensation and treatment side effects, led to a **worsening trajectory** that ultimately culminated in end‑of‑life palliation.</p><p>---</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-04</h3><div class="visit-meta">Family Medicine | Reason: Increasing nighttime urination and mild lower back discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Increasing nighttime urination and mild lower back discomfort.
+
+History of Present Illness: James Allen, a 68‑year‑old man with a history of BPH, hypertension, coronary artery disease, type 2 diabetes, and obesity, reports an increase in nocturia to 8–10 voids per night over the past few weeks. He also notes a mild burning sensation during voiding and a dull lower‑back ache that worsens after prolonged standing. There is no dysuria, hematuria, fever, or flank pain. No recent weight change or dietary alterations other than a high‑fat diet. He denies any urinary urgency or daytime frequency. He states that his BPH medication (tamsulosin 0.4 mg nightly) has been taken consistently.
+
+Past Medical History: BPH, hypertension (on lisinopril 20 mg), coronary artery disease (post‑CABG, aspirin 81 mg, atorvastatin 20 mg), type 2 diabetes mellitus (metformin 500 mg BID, glimepiride 1 mg), obesity (BMI 31 kg/m²).
+
+Medications: Tamsulosin 0.4 mg nightly, Lisinopril 20 mg daily, Aspirin 81 mg daily, Atorvastatin 20 mg nightly, Metformin 500 mg BID, Glimepiride 1 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for increased nocturia, mild burning upon voiding, and dull lower‑back pain after standing. Negative for fever, chills, hematuria, flank pain, constipation, or recent infections.
+
+Physical Examination: Vital signs - BP 150/90 mmHg, HR 78 bpm, RR 16 /min, Temp 98.6 °F. No acute distress. Genitourinary exam: Digital rectal exam not performed during this visit. Abdomen soft, non‑tender, no organomegaly. Musculoskeletal exam: Mild lumbar back tenderness upon palpation, no neurologic deficits.
+
+Assessment: 1) Benign prostatic hyperplasia with probable medication‑related nocturia and mild irritative voiding symptoms. 2) Potential overactive bladder component. 3) Possible musculoskeletal low‑back pain from prolonged standing. 4) Rule out urinary tract infection or other lower urinary tract pathology. 5) Consider diabetic autonomic neuropathy affecting bladder function.
+
+Plan:
+- Order serum PSA, CBC, and BMP (results pending or normal).  PSA will help screen for prostate carcinoma.
+- Reinforce adherence to tamsulosin; consider dose titration to 0.4 mg twice daily if symptoms persist.
+- Counsel on weight loss, smoking cessation, low‑fat diet, and increased fluid intake during daytime to reduce nocturia.
+- Encourage timed voiding and bladder diary for 3–5 days.
+- Initiate low‑dose anticholinergic (e.g., oxybutynin 2.5 mg nightly) if overactive bladder symptoms persist, pending discussion.
+- Discuss potential referral to urology if nocturia remains &gt;6 voids/night or if PSA rise.
+- Monitor blood pressure; consider increasing lisinopril dose or adding a calcium channel blocker if target not achieved.
+- Provide education on recognizing urinary tract infection signs.
+- Follow up in 3 weeks if symptoms persist or worsen; sooner if emergent urinary symptoms occur.
+
+All new orders are placed and patient is informed of expectations.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">8–10 nighttime voids with mild burning sensation</span><span class="pill">dull aching lower back after standing</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>150/90 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tactile impression of prostate not performed</li><li>No signs of acute distress</li><li>Normal abdominal exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum PSA</li><li>Baseline complete blood count (CBC)</li><li>Basic metabolic panel (BMP)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Serum PSA pending</li><li>CBC normal</li><li>BMP normal</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 20 mg</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Benign prostatic hyperplasia (BPH) – tamsulosin 0.4 mg nightly</li><li>Hypertension – lisinopril 20 mg daily</li><li>Coronary artery disease – post‑CABG, aspirin 81 mg daily, atorvastatin 20 mg nightly</li><li>Type 2 diabetes mellitus – metformin 500 mg BID, glimepiride 1 mg daily</li><li>BMI 31 kg/m²; high‑fat diet; smoking history 10 pack‑years</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>James Allen called his primary care office after noticing a marked increase in nighttime voids and mild burning. He described the frequency as 8-10 times per night and a mild lower back ache after prolonged standing. The clinician took a focused history, reaffirmed his BPH medications, and scheduled a physical exam and a PSA test. He was advised to continue his current regimen and to return in three weeks if symptoms persisted or worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early signs of irritative lower urinary tract symptoms suggestive of BPH exacerbation; PSA elevated pending laboratory results to rule out prostatic carcinoma.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-27</h3><div class="visit-meta">Family Medicine | Reason: Recurrent urinary frequency and lower back pain; routine follow-up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Recurrent urinary frequency and lower back pain; routine follow-up.
+
+History of Present Illness: 68‑year‑old male presents for second visit after initial evaluation for nocturia and mild dysuria. Patient reports increased urinary frequency, estimating 12 voids per 24 hours and moderate lower back ache. He denies hematuria, fever, chills, or recent weight change. No change in current medications. He remains compliant with tamsulosin 0.4 mg daily and anti‑hypertensives.
+
+Review of Systems: Positive for urinary frequency and lower back pain. Negative for fever, chills, hematuria, or new GI symptoms.
+
+Past Medical History: Benign prostatic hyperplasia, hypertension, coronary artery disease, type 2 diabetes mellitus, obesity.
+
+Medications: Tamsulosin 0.4 mg daily, Lisinopril 20 mg daily, Aspirin 81 mg daily, Atorvastatin 20 mg daily, Metformin 500 mg BID, Glimepiride 1 mg daily.
+
+Allergies: NKDA.
+
+Vital Signs: {
+  &quot;Blood Pressure&quot;: &quot;160/95 mmHg&quot;,
+  &quot;Heart Rate&quot;: &quot;80 bpm&quot;,
+  &quot;Respiratory Rate&quot;: &quot;16/min&quot;,
+  &quot;Temperature&quot;: &quot;98.6°F&quot;
+}
+
+Physical Examination:
+- General: Alert, oriented, no acute distress.
+- Abdomen: Soft, non-tender, no organomegaly.
+- Genitourinary: Digital rectal exam reveals firm, nodular prostate; no rectal bleeding.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Respiratory: Clear to auscultation.
+
+Laboratory: PSA 12.4 ng/mL (recent), urinalysis normal. CBC and BMP previously normal.
+
+Assessment:
+1. Benign prostatic hyperplasia, complicated by significant urinary frequency and a nodular prostate on DRE. PSA is elevated (12.4 ng/mL); differential includes high‑grade prostatic hyperplasia and prostate cancer.
+2. Uncontrolled hypertension (160/95 mmHg).
+3. Type 2 diabetes mellitus, glucose control stable.
+4. Anxiety related to prostate findings.
+
+Plan:
+- Refer to urology for further evaluation: trans‑rectal ultrasound, possible prostate biopsy, and definitive management.
+- Continue current medications; consider titrating tamsulosin if symptoms persist post‑urology follow‑up.
+- Intensify hypertension management: consider adding or uptitrating an antihypertensive (e.g., HCTZ or addition of an ACEI/ARB if tolerated). Recheck BP at next visit.
+- Reassure patient about referral process; provide written note for urology appointment.
+- Encourage lifestyle modifications: weight loss, low‑fat diet, increased physical activity, moderate fluid intake.
+- Discuss anxiety management or refer to counseling as needed.
+- Follow‑up: Return in 4 weeks if symptoms worsen or earlier if new symptoms. Await urology assessment and re‑evaluate PSA trend.
+
+Patient was educated on the significance of PSA elevation and potential need for biopsy. He was also briefed on the possible side effects of increased tamsulosin dosing.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">12 voids per 24 hours</span><span class="pill">moderate lower back ache</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>160/95 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm, nodular prostate palpated on DRE</li><li>No rectal bleeding</li><li>Abdominal exam unremarkable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum PSA (already noted)</li><li>Urinalysis to rule out infection</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Serum PSA 12.4 ng/mL</li><li>Urinalysis normal</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">Suspected prostate carcinoma (PSA pending high result)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 20 mg</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior BPH symptoms</li><li>Current medications unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At the clinic, the physician performed a digital rectal examination (DRE) revealing firm, nodular prostate tissue and confirmed a PSA of 12.4 ng/mL. These findings raise concern for prostate carcinoma rather than pure BPH. The patient was reassured about the referral process and given a written note for the urology clinic. The visit focused on discussing potential anxiety and explaining that the prostate evaluation would be definitive.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Significant PSA elevation and firm prostate on DRE suggest malignant change; referral to urology warranted.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-02-10</h3><div class="visit-meta">Urology | Reason: Evaluation of suspicious prostate findings</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 3\nDate: 2023-02-10\nSpecialty: Urology\n\nChief Complaint: Evaluation of suspicious prostate findings\n\nHistory of Present Illness:\n68-year-old male with known BPH and suspicious prostate carcinoma presents for continued evaluation of lower urinary tract symptoms. He reports frequent urinary urgency, weak stream, and intermittent lower back discomfort that has worsened over the past several weeks. He has been on tamsulosin 0.4 mg nightly for several months without significant relief. He denies hematuria, fever, or chills. He remains on chronic medications for hypertension, coronary artery disease, T2DM, and hyperlipidemia.\n\nPast Medical History:\n- Benign prostatic hyperplasia (BPH)\n- Suspected prostate carcinoma (high PSA, firm DRE)\n- Hypertension\n- Coronary artery disease\n- Type 2 diabetes mellitus\n- Obesity\n\nCurrent Medications:\n- Tamsulosin 0.4 mg nightly\n- Lisinopril 20 mg daily\n- Aspirin 81 mg daily\n- Atorvastatin 20 mg daily\n- Metformin 500 mg BID\n- Glimepiride 1 mg daily\n\nAllergies: NKDA\n\nVital Signs:\nBP 150/88 mmHg, HR 78 bpm, RR 16/min, Temp 98.6°F\n\nPhysical Examination:\n- General: Well‑appearing, no acute distress.\n- Abdomen: Soft, non‑tender. No palpable masses.\n- Genitourinary: DRE reveals a firm prostate with a palpable nodular area on the left side. Post‑void residual measured by bedside bladder scanner = 260 mL, indicating significant bladder outlet obstruction.\n- Neurologic: Intact sensation and motor function of lower extremities.\n- Cardiovascular: Regular rate and rhythm, no murmurs.\n\nAssessment:\n1. Suspicious prostate carcinoma vs progression of BPH → likely mixed pathology given firm, nodular prostate and high PSA.\n2. Bladder outlet obstruction secondary to prostatic enlargement → PVR 260 mL.\n3. Hypertension, coronary artery disease, type 2 diabetes, and obesity remain controlled but require ongoing monitoring.\n\nPlan:\n1. Proceed with TRUS‑guided prostate core biopsy (scheduled today) to obtain definitive pathology. A short postoperative course of prednisone 10 mg PO daily for 7 days was prescribed to reduce post‑procedural pain and inflammation.\n2. Continue tamsulosin 0.4 mg nightly to relieve obstruction, with reassessment after biopsy results.\n3. Continue antihypertensive regimen; if blood pressure remains &gt;140/90 mmHg in follow‑up, consider adding or uptitrating antihypertensive agents.\n4. Monitor blood glucose and lipid levels per current diabetes and hyperlipidemia protocol.\n5. Counsel patient on signs of urinary retention (difficulty voiding, flank pain, inability to void) and instruct to seek immediate care if these occur.\n6. Follow‑up: scheduled in 2 weeks for discussion of biopsy pathology or sooner if symptoms worsen.\n\nDisposition:\nPatient understood the plan and was given written instruction on medication use and potential side effects. A follow‑up appointment has been scheduled for 2023-02-24.\n\nPrepared by Dr. ______</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Frequent urinary urgency</span><span class="pill">Weak stream</span><span class="pill">Lower back discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>150/88 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm prostate, palpable nodularity on left side</li><li>Post‑void residual 260 mL</li><li>Weak urinary stream</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Transrectal ultrasound (TRUS)</li><li>Prostate core biopsy (scheduled)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TRUS: heterogeneous echo, enlarged left seminal vesicle</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 10 mg PO daily for 7 days</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Suspicious prostate carcinoma</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 20 mg</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>High PSA 12.4, firm DRE</li><li>BPH on tamsulosin 0.4 mg nightly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urologist performed a focused physical exam, measuring a post‑void residual via bedside bladder scanner at 260 mL, indicating significant obstruction. An ultrasound of the pelvis showed a heterogeneous echo pattern with an enlarged left seminal vesicle. A transrectal ultrasound‑guided core biopsy was scheduled. To mitigate post‑procedural pain, a short course of prednisone 10 mg PO daily was prescribed. The patient was informed about the need for biopsy to ascertain definitive pathology.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Obstruction greater than typical BPH; imaging suggests suspicious lesion; biopsy will confirm cancer.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-02-28</h3><div class="visit-meta">Urology / Oncology Tumor Board | Reason: Pathology report and treatment planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Pathology report review and treatment planning for prostate adenocarcinoma.
+
+History of Present Illness: Patient is a 68‑year‑old male with known BPH, T3aN0M0 prostatic adenocarcinoma Gleason 4+3, hypertension, coronary artery disease, type 2 diabetes, and obesity. He has been on Leuprolide 3.75 mg IM q12 wks for the past 3 weeks as a bridge to definitive therapy. He tolerated the previous dose with mild fatigue and increased urinary frequency. The tumor board confirmed that definitive surgery or radiation would pose significant cardiovascular and metabolic risks given his comorbidities. Therefore, continued ADT with Leuprolide was recommended as initial management with multidisciplinary oncology work‑up.
+
+He received his 4th Leuprolide injection today (3.75 mg IM) and was started on Fludrocortisone 0.05 mg PO daily to mitigate post‑injection nausea.
+
+Review of Systems: Positive for fatigue and increased urinary frequency. Denies pain, hematuria, weight loss, or fever.
+
+Physical Examination: Vitals: BP 155/90 mmHg, HR 82 bpm, RR 16/min, Temp 98.6 °F. General: well‑appearing, no distress. HEENT: normal. CV: regular rhythm, no murmurs. Respiratory: clear. Abdomen: soft, minimal tenderness. Genitourinary: mild suprapubic tenderness, no masses. Extremities: no edema. Neurologic: intact. Skin: intact. 
+
+Assessment:
+1. Prostate carcinoma Gleason 7 (4+3), T3a, N0, M0 – ongoing ADT with Leuprolide. 
+2. Symptomatic BPH exacerbation – increased urinary frequency and fatigue likely due to rising androgen suppression and edema. 
+3. Uncontrolled hypertension (BP 155/90) in the context of CAD – continue ACE inhibitor; consider antihypertensive adjustment.
+4. Diabetes mellitus type 2 – continue current regimen.
+
+Plan:
+• Continue Leuprolide 3.75 mg IM every 12 weeks.
+• Add Fludrocortisone 0.05 mg PO daily; counsel on potential fluid retention.
+• Continue tamsulosin 0.4 mg nightly for BPH symptoms.
+• Recheck PSA in 8 weeks to assess disease burden.
+• Complete CBC and CMP (baseline hematology panel) within 2 weeks.
+• Monitor urinary frequency; document catheterization or residual if symptoms worsen.
+• Initiate cardiology review for optimized blood pressure control; consider adding a calcium‑channel blocker if BP remains &gt;150/90.
+• Reinforce lifestyle measures: weight loss, diet low in saturated fat, exercise, and medication adherence.
+• Discuss potential transition to definitive therapy (external beam RT or radical prostatectomy) when cardiometabolic status is optimized or if PSA progression occurs.
+• Follow-up in 2 weeks for laboratory review and assessment of ADT side effects. Additional visits: PSA check at 8 weeks, routine oncology board review as scheduled.
+
+Signature: Dr. X, M.D.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue after first ADT injection</span><span class="pill">Increased urinary frequency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>155/90 mmHg</td></tr><tr><td>Heart Rate</td><td>82 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Stable physical exam</li><li>Abdominal tenderness minimal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline PSA (already known 12.4)</li><li>Hematology panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Baseline PSA 12.4 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Leuprolide 3.75 mg IM injection</li><li>Fludrocortisone 0.05 mg PO daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (Gleason 7, T3a)</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 20 mg</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li><li>Leuprolide 3.75 mg IM q12w</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pathology: Gleason 4+3=7, T3aN0M0</li><li>ADT: leuprolide injection 3 weeks ago</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The tumor board reviewed the pathology and discussed treatment options. Given his cardiovascular disease and diabetes, definitive surgery/radiation was considered high risk. They recommended starting androgen deprivation therapy (ADT) with leuprolide injections every 12 weeks as initial bridging therapy while the patient received a full multidisciplinary oncology work‑up. The patient agreed after understanding the risks and benefits. The first leuprolide injection was administered during the visit, and a steroid supplement (fludrocortisone 0.05 mg daily) was added to counter potential post‑injection nausea.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed locally advanced prostate cancer; initiating ADT to reduce tumor burden and control PSA rise.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-04-05</h3><div class="visit-meta">Endocrinology &amp; Cardiology | Reason: Adverse effects of ADT and cardiovascular review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient reports hot flashes, fatigue, and racing heart after initiation of leuprolide.\n\nHistory of Present Illness: 68‐year‑old male with prostate adenocarcinoma on leuprolide (3.75 mg IM q12 weeks) presents 4 weeks after first injection. Reports frequent hot flashes, generalized fatigue, and palpitations. He denies chest pain, dyspnea, or syncope. No new urinary symptoms.\n\nPast Medical History: Benign prostatic hyperplasia, prostate adenocarcinoma Gleason 7 T3a, hypertension, coronary artery disease, type 2 diabetes mellitus, obesity.\n\nMedications: Lisinopril 30 mg QD, Atorvastatin 20 mg QD, Aspirin 81 mg QD, Metformin 500 mg BID, Glimepiride 1 mg QD, Tamsulosin 0.4 mg QHS, Leuprolide 3.75 mg IM q12w, Fludrocortisone 0.05 mg PO daily.\n\nReview of Systems: Positive for hot flashes, fatigue, palpitations. Negative for chest pain, shortness of breath, weight change, or rash.\n\nPhysical Examination: Vitals – BP 165/92 mmHg, HR 96 bpm, RR 16/min, Temp 98.6°F. Cardiovascular: Regular rate, sinus tachycardia on rhythm strip, no murmurs. Respiratory clear. Abdomen soft. Genitourinary: normal.\n\nLaboratory/Diagnostic Studies: EKG shows sinus tachycardia, no ischemic changes. HbA1c 8.2%. PSA 4.1 ng/mL. Lipid panel LDL 95 mg/dL.\n\nAssessment and Plan:\n1. ADT‑related adverse effects (hot flashes, fatigue, tachycardia). – Continue leuprolide; start abiraterone 1 mg PO daily and prednisone 5 mg PO daily to mitigate side effects. Counsel patient on expected hot flashes and offer calcium/magnesium supplementation if needed.\n2. Uncontrolled hypertension (165/92). – Lisinopril increased by 10 mg to 30 mg QD, per cardiology recommendation. Encourage dietary sodium restriction and weight loss. Recheck BP in 4 weeks.\n3. Diabetes management: HbA1c 8.2%; consider intensifying metformin or adding sulfonylurea dose increase. Initiate lifestyle counseling (diet, exercise). Recheck HbA1c in 3 months.\n4. Cardiovascular risk: Continue aspirin, atorvastatin; consider addition of a second antihypertensive (e.g., a calcium channel blocker) if BP remains above goal. Cardiology follow‑up for further optimization.\n5. Prostate cancer: PSA shows adequate decline to 4.1 ng/mL, reassuring for biochemical response. Abiraterone therapy started; monitor for hypertension, hypokalemia, liver enzymes. Repeat PSA in 3 months.\n6. Labs: Order CMP, serum electrolytes (particularly potassium, chloride), LFTs in 1 month to monitor abiraterone toxicity.\n\nFollow‑up: Return in 4 weeks for BP, HR, medication tolerance, and symptom assessment. Repeat PSA, HbA1c, CMP, and electrolytes in 3 months. Encourage patient to report any worsening chest pain, arrhythmias, or endocrine symptoms immediately.\n</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue</span><span class="pill">Hot flashes</span><span class="pill">Palpitations / increased heart rate</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>165/92 mmHg</td></tr><tr><td>Heart Rate</td><td>96 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Heart rate 96 bpm</li><li>Blood pressure 165/92 mmHg</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>EKG</li><li>HbA1c</li><li>Repeat PSA</li><li>Lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>EKG: sinus tachycardia</li><li>HbA1c 8.2%</li><li>PSA 4.1 ng/mL</li><li>Lipid panel: LDL 95 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Increased lisinopril to 30 mg QD</li><li>Started abiraterone 1 mg PO daily</li><li>Started prednisone 5 mg PO daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (Gleason 7, T3a)</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 20 mg (increased to 30 mg pending review)</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li><li>Leuprolide 3.75 mg IM q12w</li><li>Fludrocortisone 0.05 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>First leuprolide injection 4 weeks ago</li><li>PSA dropped to 4.1 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported significant hot flashes, fatigue, and an uncomfortable racing heart. An EKG was performed showing sinus tachycardia without ischemic changes. The cardiologist recommended intensifying antihypertensives – lisinopril increased by 10 mg. Endocrinologist noted the PSA drop to 4.1, reassuring a good biochemical response, but observed a subsequent rise to 6.3 after the next dose, suggesting emerging castration resistance. They discussed adding abiraterone acetate. The patient consented to start abiraterone 1 mg PO daily with concomitant prednisone 5 mg PO daily to mitigate side effects.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early biochemical remission; rising PSA indicates impending ADT resistance; cardiovascular toxicity of ADT noted.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-05-05</h3><div class="visit-meta">Oncology | Reason: New hip pain and rising bone markers</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute sharp left hip pain radiating to groin with difficulty walking and bilateral ankle swelling.\n\nHistory of Present Illness: 68‑year‑old male with metastatic prostate adenocarcinoma on long‑term ADT (leuprolide) and abiraterone/prednisone. Presents with new left hip pain for 3 days, described as sharp, worsened by weight‑bearing, and associated with difficulty ambulating. Swelling noted in both ankles. No fever, chills, or recent trauma.\n\nPast Medical History: Benign prostatic hyperplasia, prostate adenocarcinoma T3a with known bone metastases, hypertension, coronary artery disease, type 2 diabetes mellitus, obesity.\n\nMedications: Tamsulosin 0.4 mg nightly; Lisinopril 30 mg daily; Aspirin 81 mg daily; Atorvastatin 20 mg daily; Metformin 500 mg BID; Glimepiride 1 mg daily; Leuprolide 3.75 mg IM q12 w; Fludrocortisone 0.05 mg daily; Abiraterone 1 mg PO daily; Prednisone 5 mg PO daily; Morphine 20 mg PO q6 h PRN (upgraded from 10 mg).\n\nAllergies: NKDA.\n\nPhysical Examination: BP 160/88 mmHg, HR 93 bpm, RR 18/min, Temp 98.7 °F. Left hip tender over femoral head, limited ROM, weight‑bearing pain. Bilateral ankle edema present. No neurovascular deficits.\n\nLabs/Imaging: Pelvic CT – left femoral head lesion with cortical thinning, consistent with metastatic disease. Bone scan – lytic lesions in left femur and right sacrum. CBC – WBC 7.2 k/µL, Hb 13.0 g/dL, platelets 260 k/µL. PSA 8.1 ng/mL (↑ from 4.1 ng/mL), ALP 190 U/L (↑).\n\nAssessment: 1. Metastatic prostate cancer involving left femoral head leading to pain and functional limitation. 2. Bilateral ankle edema likely due to advanced metastatic burden; monitor for DVT. 3. Hypertension poorly controlled (BP 160/88) on current regimen. 4. Pain management needs escalation (opioid dose increased).\n\nPlan: • Palliative external beam radiation to left hip 20 Gy in 5 fractions (scheduled). • Continue morphine 20 mg PO q6 h PRN; monitor for constipation, sedation, and overdose. • Recheck PSA and ALP in 4 weeks to assess disease activity. • Reevaluate BP in 2 weeks; consider adding or uptitrating antihypertensive (e.g., add amlodipine). • Continue ADT (leuprolide) and abiraterone/prednisone. • Encourage ambulation with assistive device; refer to physical therapy. • Monitor ankle edema; if progression or signs of thrombosis, obtain Doppler ultrasound and consider anticoagulation if appropriate. • Patient interested in clinical trial but declined aggressive arm; proceed with best supportive care. • Follow‑up oncology visit in 4 weeks or sooner if pain escalates.\n\nDisposition: Patient will receive radiation therapy and return in 4 weeks; opioid side effects and functional status to be monitored closely.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp left hip pain radiating to groin</span><span class="pill">Difficulty walking</span><span class="pill">Swelling in both ankles</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>160/88 mmHg</td></tr><tr><td>Heart Rate</td><td>93 bpm</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness over left femoral head</li><li>Reduced range of motion in left hip</li><li>Swelling of both ankles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvic CT</li><li>Bone scan (already done)</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pelvic CT: left femoral head lesion</li><li>Bone scan: lytic foci in left femur and right sacrum</li><li>CBC: WBC 7.2k, Hb 13.0 g/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Scheduled external beam radiation 20 Gy over 5 fractions</li><li>Adjusted morphine to 20 mg PO q6h</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, developing bone metastases)</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 30 mg</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li><li>Leuprolide 3.75 mg IM q12w</li><li>Fludrocortisone 0.05 mg daily</li><li>Abiraterone 1 mg PO daily</li><li>Prednisone 5 mg PO daily</li><li>Morphine 10 mg PO q6h PRN for pain</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 8.1 ng/mL</li><li>ALP 190 U/L</li><li>Bone scan shows lytic lesions</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncology visit focused on the acute left hip pain and new ankle edema. A pelvic CT confirmed a left femoral head lesion with cortical thinning consistent with bone metastasis. The patient’s ALP had risen to 190 U/L and PSA to 8.1 ng/mL. The team recommended a palliative external beam radiation to the left hip (20 Gy in 5 fractions) to alleviate pain. Morphine dosage was increased to 20 mg PO q6h. The patient also expressed interest in enrolling in a clinical trial but declined the more aggressive side‑effect profile. An updated clinical pathway focusing on symptom palliation was adopted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Development of clinically evident bone metastases; current ADT and abiraterone insufficient to halt disease progression.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-07-05</h3><div class="visit-meta">Cardiology / Hospital Medicine | Reason: Heart failure exacerbation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 68‑year‑old male presents with worsening dyspnea and fatigue, diagnosed with acute decompensated heart failure (HF) exacerbation.
+
+Subjective: Patient reports shortness of breath with mild exertion, staggering gait, and low energy. No chest pain, palpitations, or orthopnea reported. Reports compliant with chronic medications. Notes that gait instability has worsened over last 2 weeks.
+
+Past Medical History: BPH, prostate adenocarcinoma with bone metastases (on ADT, leuprolide, abiraterone, prednisone), HF with reduced EF, HTN, CAD, T2DM, obesity.
+
+Medications (current):
+- Lisinopril 15 mg QD (tapered from 30 mg)
+- Furosemide 20 mg PO daily (initiation)
+- Carvedilol 6.25 mg PO BID (added)
+- Metformin 500 mg BID
+- Glimepiride 1 mg PO daily
+- Leuprolide 3.75 mg IM q12w
+- Fludrocortisone 0.05 mg PO daily
+- Abiraterone 1 mg PO daily
+- Prednisone 5 mg PO daily
+- Tamsulosin 0.4 mg PO nightly
+- Aspirin 81 mg QD
+- Atorvastatin 20 mg PO daily
+- Morphine 20 mg PO q6h PRN
+
+Allergies: NKDA
+
+Objective:
+Vital Signs: BP 120/70 mmHg, HR 90 bpm, RR 20/min, Temp 98.6°F
+General: Alert, mild fatigue.
+Cardiovascular: Tachycardia 90 bpm, regular rhythm, systolic murmur at apex (grade II/VI). No arrhythmias.
+Respiratory: Clear to auscultation bilaterally; no rales or wheezes. No orthopnea.
+Abdominal: Soft, non‑tender.
+Extremities: Bilateral lower extremity edema to mid‑shin, pitting 2+.
+Neurologic: Mild staggering gait, no focal deficits.
+
+Labs/Imaging: Echocardiogram – EF 45%, moderate RV dilation, mild pulmonary hypertension. BMP – Na 140, K 4.2, Cl 103, BUN 18, Cr 1.0. CBC – Hb 13.2 g/dL, WBC 6.5k, Platelets 250k. HbA1c 9.3%.
+
+Assessment:
+1. Acute decompensated heart failure with reduced EF (EF 45%). Likely volume overload exacerbated by fluid retention and sub‑optimal diuretic regimen.
+2. Poor glycemic control (HbA1c 9.3%) secondary to diabetes and concomitant glucocorticoid therapy.
+3. Ongoing prostate cancer burden with bone metastases, requiring multidisciplinary coordination.
+4. Possible medication interactions (prednisone, abiraterone) contributing to fluid retention and metabolic derangements.
+
+Plan:
+1. Diuretic strategy: Start furosemide 20 mg PO daily. Reassess weight, edema, and symptoms in 48‑72 hrs. Consider loop diuretic dose escalation or alternate route if no improvement.
+2. Beta‑blocker optimization: Continue carvedilol 6.25 mg BID; monitor for bradycardia or hypotension. Titrate to 12.5 mg BID once tolerated.
+3. RAS inhibition: Lisinopril 15 mg QD; monitor serum creatinine and K+ once weekly. Re‑evaluate need for ACEi after diuretic response.
+4. Glycemic control: Engage diabetes educator; reinforce carbohydrate counting and strict medication adherence. Consider adding basal insulin if HbA1c &gt;9% after 3 months.
+5. Continue prednisone 5 mg PO daily, abiraterone 1 mg PO daily, leuprolide, fludrocortisone; discuss with oncology regarding potential switch to steroid‑free abiraterone regimen in future if feasible.
+6. Monitor for signs of adrenal suppression; maintain fludrocortisone.
+7. Follow‑up:
+   - Cardiology: 3‑week visit or sooner if symptoms worsen; repeat weight, vitals, and bedside echocardiogram if clinical status changes.
+   - Endocrinology: Re‑check HbA1c in 4 weeks; adjust antidiabetic medications accordingly.
+   - Oncology: Continue routine surveillance; PSA and ALP every 4 weeks.
+   - Primary care: Reinforce weight loss, fluid restriction 1.5–2 L/day, and exercise plan tailored to balance.
+8. Discharge instructions: Monitor daily weight; report weight gain &gt;2 lbs in 24 hrs, worsening dyspnea, chest pain, or palpitations.
+9. Patient education: Discuss medication interactions, potential side effects of diuretics (hypotension, electrolyte imbalance), and need for medication adherence.
+
+Disposition: Patient admitted; plan for 4‑day inpatient stay with close monitoring. Discharge criteria include stable vitals, improved dyspnea, no new edema, and ability to take medications as prescribed.
+
+Signature: Dr. [Name], MD, Cardiology/Hospital Medicine
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Shortness of breath with mild exertion</span><span class="pill">Staggering gait</span><span class="pill">Low energy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>120/70 mmHg</td></tr><tr><td>Heart Rate</td><td>90 bpm</td></tr><tr><td>Respiratory Rate</td><td>20/min</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Systolic murmur at apex</li><li>Bilateral lower extremity edema to mid-shin</li><li>Clear lung fields</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram</li><li>HbA1c</li><li>BMP</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram: EF 45 %</li><li>HbA1c 9.3%</li><li>BMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Furosemide 20 mg PO daily</li><li>Carvedilol 6.25 mg BID</li><li>Lisinopril tapered to 15 mg QD</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma with bone metastases</span><span class="pill">Heart failure with reduced EF</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 30 mg</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li><li>Leuprolide 3.75 mg IM q12w</li><li>Fludrocortisone 0.05 mg daily</li><li>Abiraterone 1 mg PO daily</li><li>Prednisone 5 mg PO daily</li><li>Morphine 20 mg PO q6h</li><li>Carvedilol 6.25 mg PO BID</li><li>Furosemide 20 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent ADT, abiraterone, and prednisone use</li><li>Cardiovascular disease</li><li>Diabetes with HbA1c 9.3%</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Allen was admitted to the hospital with worsening dyspnea and fatigue. An echocardiogram revealed an ejection fraction of 45 %. The cardiology team initiated a loop diuretic (furosemide) and added a beta‑blocker (carvedilol 6.25 mg BID). Lisinopril was tapered to allow better volume control. The endocrinologist noted worsening glycemic control (HbA1c 9.3%) and suggested tighter diabetes education. The oncology team reviewed the possibility of switching to a non‑steroidal abiraterone regimen but deferred due to the patient&#x27;s frailty.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Heart failure exacerbation likely steroid‑induced fluid retention; oncology medication adjustments considered.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-09-07</h3><div class="visit-meta">Oncology / Hospital Medicine | Reason: Acute back pain, pathologic fracture, and infection work‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 68‑year‑old male with known metastatic prostate carcinoma presents to the oncology inpatient unit with worsening low‑back pain radiating to the left hip, bilateral ankle swelling, and a low‑grade fever of 38.0 °C.
+
+**History of Present Illness:** The patient reports severe low‑back pain that radiates to the left hip and groin, limiting ambulation. He also reports swelling of both ankles that has worsened over the past 48 h. He denies any recent trauma or new falls. His pain is not relieved by his baseline morphine regimen (20 mg PO q6 h PRN). On admission, a CT pelvis with contrast was obtained, revealing a new pathologic fracture of the left femoral head and multiple lytic lesions in the pelvis. The image also identified an abscess within the left femoral head.
+
+**Past Medical History:** 
+- Benign prostatic hyperplasia
+- Cardiovascular disease
+- Type 2 diabetes mellitus
+- Hypertension
+- Obesity
+- Metastatic prostate adenocarcinoma (bone‐predominant) on ADT (Leuprolide + Abiraterone + Prednisone)
+- Heart failure with reduced EF (currently on carvedilol, lisinopril, furosemide)
+
+**Medications (current and added during admission):** 
+- Tamsulosin 0.4 mg nightly
+- Lisinopril 15 mg QD
+- Aspirin 81 mg QD
+- Atorvastatin 20 mg PO daily
+- Metformin 500 mg BID
+- Glimepiride 1 mg QD
+- Leuprolide 3.75 mg IM q12 w
+- Fludrocortisone 0.05 mg PO daily
+- Abiraterone 1 mg PO daily
+- Prednisone 5 mg PO daily
+- Morphine 20 mg PO q6 h PRN
+- Furosemide 20 mg PO daily
+- Carvedilol 6.25 mg PO BID
+- **New** vancomycin (dose per weight, q6 h SC) started empirically
+- **New** piperacillin–tazobactam (q6 h IV) started empirically
+- Percutaneous drainage of left femoral head abscess performed
+
+**Allergies:** NKDA
+
+**Review of Systems:** Positive for back pain, ankle edema, low‑grade fever. Denies chest pain, dyspnea, nausea, vomiting, or urinary changes.
+
+**Physical Examination:**
+- Vitals: BP 125/75 mmHg, HR 100 bpm, RR 18/min, Temp 38.0 °C, SpO₂ 96 % RA.
+- General: Alert, in moderate distress from pain.
+- HEENT: Unremarkable.
+- Cardiac: Regular rate/rhythm, S1S2, no murmurs.
+- Pulmonary: Clear to auscultation bilaterally, no wheezes.
+- Abdomen: Soft, mild tenderness in right lower quadrant, decreased bowel sounds.
+- Extremities: Left hip markedly tender, limited ROM, left femoral head fracture confirmed radiologically. Bilateral ankles swollen with pitting edema.
+- Neurological: Intact sensation, strength 5/5 except limited by pain; no focal deficits.
+
+**Laboratory Data:**
+- CBC: WBC 15,200/µL, Hgb 11.5 g/dL.
+- BMP: Calcium 8.9 mg/dL (mild hypocalcemia), normal creatinine.
+- CMP: Within normal limits aside from mild hypocalcemia.
+- Blood cultures: pending.
+
+**Imaging:** CT pelvis with contrast confirms left femoral head fracture, lytic pelvic lesions, and abscess.
+
+**Assessment / Differential Diagnosis:**
+1. **Osteomyelitis of left femoral head** secondary to metastatic disease with pathologic fracture and abscess formation – evidenced by imaging, leukocytosis, fever, and percutaneous drainage.
+2. **Septicemia** from osteomyelitis with ongoing bacteremia – pending blood cultures.
+3. **Progressive metastatic prostate carcinoma** – ongoing lytic bone disease.
+4. **Heart failure decompensation** – mild ankle edema may reflect fluid overload; however, signs of pulmonary congestion are absent.
+
+**Plan:**
+- Continue empiric vancomycin + piperacillin–tazobactam; adjust antibiotics once culture sensitivities returned.
+- Monitor drainage output and signs of wound infection; consider repeat imaging if clinical status deteriorates.
+- Serial CBC, BMP, CMP daily or as clinically indicated to evaluate trending leukocytosis, electrolytes, and renal function.
+- Continue pain management with morphine PRN; consider adding NSAID or gabapentin if neuropathic component worsens.
+- Reinforce hydration status; hold furosemide if worsening renal function or electrolyte imbalance noted.
+- Discuss transition to oral antibiotics (e.g., ciprofloxacin + clindamycin) if blood cultures negative/favorable and clinical improvement observed.
+- Engage palliative care team for symptom control and advanced care planning; the patient has opted for comfort measures rather than further cytotoxic therapy.
+- Consider repeat CT or MRI of the pelvis in 2–4 weeks to document healing or progression of the fracture and metastatic disease.
+- Cardiology consult for heart‑failure optimization; consider adjusting diuretic or ACE inhibitor dose based on weight and diuretic response.
+- Diabetes management: monitor glucose, adjust insulin or sulfonylurea as needed; consider temporary withholding of metformin if renal function declines.
+
+**Follow‑Up Recommendations:**
+- Review blood culture results and organ function labs daily.
+- Repeat pain score and medication requirements at each nursing shift.
+- Reassess the drainage site and output hourly; plan for wound care.
+- Schedule a multidisciplinary team meeting (oncology, infectious disease, cardiology, palliative care) in 48 h to evaluate treatment course.
+- Plan discharge or transfer to hospice as per patient wishes once stable;
+- Provide patient and family education on signs of infection, fluid overload, and when to seek urgent care.
+
+**Disposition:** ICU monitoring for septicemia; patient admitted for supportive care and palliative management.
+
+**Signature:**
+Oncology/Hospital Medicine Team</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe low back pain radiating to left hip</span><span class="pill">Swelling of ankles</span><span class="pill">Low‑grade fever (38.0°C)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>125/75 mmHg</td></tr><tr><td>Heart Rate</td><td>100 bpm</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Temperature</td><td>38.0°C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender left hip with limited ROM</li><li>Swollen ankles</li><li>Slightly decreased bowel sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT pelvis with contrast</li><li>CBC</li><li>BMP</li><li>CMP</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT pelvis: left femoral head fracture, pelvic metastases</li><li>CBC: WBC 15.2k, Hgb 11.5 g/dL</li><li>BMP: Calcium 8.9 mg/dL</li><li>Blood cultures pending</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Percutaneous drainage of abscess</li><li>Vancomycin + piperacillin–tazobactam</li><li>Docetaxel 75 mg/m² IV (one dose)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma with multiple bone metastases</span><span class="pill">Heart failure</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg</li><li>Lisinopril 15 mg QD</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li><li>Leuprolide 3.75 mg IM q12w</li><li>Fludrocortisone 0.05 mg daily</li><li>Abiraterone 1 mg PO daily</li><li>Prednisone 5 mg PO daily</li><li>Morphine 20 mg PO q6h</li><li>Carvedilol 6.25 mg BID</li><li>Furosemide 20 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bone scan showed progression to pelvis</li><li>Prior radiation to left hip</li><li>Ongoing ADT and abiraterone</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Upon admission, the patient complained of worsening back pain and ankle swelling. A CT scan of the pelvis with contrast revealed a new pathological fracture of the left femoral head and multiple lytic lesions in the pelvic bones. Laboratory work showed leukocytosis with WBC 15,200/μL, and mild hypocalcemia. The team promptly placed a percutaneous drain for the left femoral head abscess, started empiric broad‑spectrum antibiotics (vancomycin + piperacillin–tazobactam), and initiated a single cycle of docetaxel 75 mg/m² IV as palliative chemotherapy. Due to neuropathic side effects, treatment was stopped after one dose. The oncology team discussed further treatment options but the patient opted to focus on comfort measures.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progressive metastatic disease with skeletal complications; systemic therapy limited by toxicity.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2023-11-06</h3><div class="visit-meta">Palliative Care / Hospice | Reason: Transition to home hospice and comfort care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #9 – 2023-11-06
+
+Chief complaint: Transition to home hospice and comfort‑focused care.\n\nHistory of present illness: The patient, a 68‑year‑old male with a complicated oncologic history (suspected and then confirmed prostate carcinoma with bone metastases), chronic cardiovascular disease (heart failure with reduced EF), type 2 diabetes, hypertension, and previous osteomyelitis, has undergone extensive systemic therapy (ADT, leuprolide, fludrocortisone, abiraterone, prednisone, prior docetaxel) and local radiation therapy for metastatic lesions. He has been experiencing progressive disease with severe back pain, urinary retention requiring an indwelling catheter, and becoming bedridden with limited mobility.\n\nAfter a detailed shared decision‑making discussion with the patient, his family, and the multidisciplinary team, the patient elected to discontinue active oncologic therapy and transition to home hospice for comfort care. The morphine regimen was adjusted to 10 mg PO every 6 hours as needed for pain; a low‑dose antihypertensive (lisinopril 15 mg QD) was maintained to keep BP modest. A continuous indwelling urinary catheter was placed to manage retention. A home hospice team was scheduled to provide daily visits, symptom management, wound care, and psychosocial support. The patient expressed a strong wish to spend his remaining time with family, free from hospital visits.\n\nAssessment:\n1. Metastatic hormone‑refractory prostate carcinoma with bone metastases – hospice care indicated.\n2. Severe axial back pain secondary to bone disease – managed with opioid titration.\n3. Urinary retention due to prostatic obstruction – managed with indwelling catheter.\n4. Chronic heart failure, hypertension, and type 2 diabetes – stable under current low‑dose management.\n5. Reduced mobility, bedridden – risk for pressure ulcers; plan for preventive nursing care.\n\nPlan:\n- Continue morphine 10 mg PO q6h PRN for pain; assess pain level and breakthrough opioid need daily.\n- Maintain lisinopril 15 mg QD to keep BP in goal range; discontinue if hypotension occurs.\n- Indwelling catheter in place; monitor for urinary output and signs of infection.\n- Home hospice team: daily visits for pain control, hydration assessment, wound care, psychosocial support, and family education.\n- Reassess pain score, BP, weight, and catheter function each day.\n- Encourage family involvement in comfort measures and limit unnecessary investigations.\n- Provide clear instructions for emergency contacts and use of opioids.\n- Advance care planning review: confirm comfort‑only directives.\n\nFollow‑up: the patient will be monitored daily by hospice nursing.  No further diagnostic tests are ordered at this time.  Family will contact hospice or primary provider if symptoms worsen or if any urgent concerns arise.  The patient’s comfort and dignity are the top priorities in his care plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe back pain</span><span class="pill">Urinary retention with indwelling catheter</span><span class="pill">Limited mobility, bedridden</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>110/70 mmHg</td></tr><tr><td>Heart Rate</td><td>85 bpm</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Bedridden, requires assistance with all activities of daily living</li><li>Indwelling catheter in place</li><li>Stable vital signs</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg PO q6h PRN</li><li>Continuous urinary catheterization</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Advanced prostate adenocarcinoma with bone metastases</span><span class="pill">Heart failure</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">Diminished functional status (Karnofsky 40%)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg PO q6h PRN</li><li>Lisinopril 15 mg QD</li><li>Aspirin 81 mg</li><li>Atorvastatin 20 mg</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg</li><li>Leuprolide 3.75 mg IM q12w (discontinued)</li><li>Fludrocortisone 0.05 mg daily (discontinued)</li><li>Abiraterone 1 mg PO daily (discontinued)</li><li>Prednisone 5 mg PO daily (discontinued)</li><li>Carvedilol 6.25 mg BID</li><li>Furosemide 20 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 18.5 ng/mL</li><li>Multiple bone lesions</li><li>Failed ADT, abiraterone, and docetaxel</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After a detailed discussion with the patient, family and the care team, James agreed to discontinue active oncologic therapy and transition to home hospice for comfort‑focused care. Morphine dosing was adjusted for quality of life, a low‑dose antihypertensive was maintained to keep blood pressure modest, and he was fitted with a continuous indwelling urinary catheter. A home hospice team was arranged to provide daily visits, symptom management, and psychosocial support. The patient expressed wish to spend the remaining time with his family, free from hospital visits.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal phase of advanced metastatic prostate cancer; transition to palliative care and hospice indicated.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Cardiovascular disease</span><span class="pill">Type 2 Diabetes</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Suspected prostate carcinoma</span><span class="pill">Prostate carcinoma</span><span class="pill">Prostate bone metastases</span><span class="pill">Heart failure with reduced ejection fraction</span><span class="pill">Osteomyelitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg PO nightly</li><li>Lisinopril 15 mg QD</li><li>Aspirin 81 mg QD</li><li>Atorvastatin 20 mg PO daily</li><li>Metformin 500 mg BID</li><li>Glimepiride 1 mg QD</li><li>Leuprolide 3.75 mg IM q12w</li><li>Fludrocortisone 0.05 mg PO daily</li><li>Abiraterone 1 mg PO daily</li><li>Prednisone 5 mg PO daily</li><li>Morphine 10 mg PO q6h PRN</li><li>Furosemide 20 mg PO daily</li><li>Carvedilol 6.25 mg PO BID</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with increased nocturia (8–10 voids/night), mild burning sensation and lower back pain after standing; vital signs: BP 150/90 mmHg, HR 78 bpm; continued current medications; ordered serum PSA, CBC, and BMP; counseled on weight loss, smoking cessation, low‑fat diet, and daytime fluid intake; plan to titrate tamsulosin if symptoms persist and monitor blood pressure.</li><li>Patient presented with recurrent urinary frequency (12 voids/24 hrs) and moderate lower back pain; vital signs: BP 160/95 mmHg, HR 80 bpm; DRE: firm, nodular prostate; PSA 12.4 ng/mL, urinalysis normal; continued current medications; referred to urology for TRUS and possible biopsy; plan to consider antihypertensive adjustment; continue lifestyle modifications.</li><li>Visit 3 (2023-02-10, Urology): 68‑year‑old male with BPH and suspicious prostate findings presents for continued evaluation. Reports frequent urgency, weak stream, lower back discomfort. Vitals BP 150/88, HR 78. DRE shows firm prostate with left nodular area. Post‑void residual 260 mL. Plan: TRUS‑guided prostate core biopsy performed; short course prednisone 10 mg daily for 7 days prescribed; continue tamsulosin 0.4 mg nightly; monitor BP and follow‑up in 2 weeks for pathology discussion.</li><li>Visit 4 (2023-02-28, Urology/Oncology Tumor Board): Reviewed prostate adenocarcinoma (Gleason 4+3, T3aN0M0). Continued ADT with Leuprolide 3.75 mg IM q12w. Started Fludrocortisone 0.05 mg PO daily to counter post‑injection effects. Tamsulosin continued for BPH symptoms. Blood pressure 155/90; plan to optimize antihypertensive regimen. Follow‑up labs: PSA in 8 weeks, CBC &amp; CMP in 2 weeks. Follow‑up in 2 weeks for labs and side‑effect review.</li><li>Visit 5 (2023-04-05, Endocrinology &amp; Cardiology): 68‑year‑old male with prostate adenocarcinoma on leuprolide reports hot flashes, fatigue, and palpitations; vitals BP 165/92, HR 96; EKG sinus tachycardia; labs HbA1c 8.2%, PSA 4.1 ng/mL; initiated abiraterone 1 mg daily and prednisone 5 mg daily; increased lisinopril to 30 mg QD; continued other meds; scheduled follow‑up in 4 weeks for BP and symptom review and repeat labs in 3 months.</li><li>Visit 6 (2023-05-05, Oncology): 68‑year‑old male with metastatic prostate adenocarcinoma presented with acute sharp left hip pain radiating to groin, difficulty walking, and bilateral ankle swelling. Exam showed left hip tenderness, limited ROM, weight‑bearing pain, and bilateral ankle edema. CT showed left femoral head lesional thinning; bone scan revealed lytic lesions in left femur and right sacrum. PSA 8.1 ng/mL, ALP 190 U/L. Managed with palliative external beam radiation to left hip (20 Gy in 5 fractions) and started morphine 20 mg PO q6h PRN for pain. Antihypertensive regimen unchanged; BP 160/88. Follow‑up scheduled in 4 weeks to reassess pain, PSA, ALP, BP, and functional status; physical therapy referral for ambulation support.</li><li>Visit 7 (2023-07-05, Cardiology/Hospital Medicine): 68‑year‑old male admitted for acute decompensated heart failure with reduced EF; presented with dyspnea, fatigue, and gait instability. BP 120/70 mmHg, HR 90 bpm. Started furosemide 20 mg daily, carvedilol 6.25 mg BID, and Lisinopril 15 mg QD; continued existing ADT and other medications. Lab: echo EF 45%, BMP normal, HbA1c 9.3%. Plan: monitor weight and symptoms, cardiology follow‑up in 3 weeks, endocrine HbA1c check in 4 weeks, and regular oncology surveillance.</li><li>Visit 8 (2023-09-07, Oncology / Hospital Medicine): 68‑year‑old male admitted for acute low‑back pain radiating to left hip, bilateral ankle swelling, and low‑grade fever. CT pelvis with contrast revealed new pathologic fracture of left femoral head, lytic pelvic lesions, and abscess within left femoral head. Labs showed leukocytosis 15,200/µL and mild hypocalcemia. Started empiric vancomycin and piperacillin–tazobactam; performed percutaneous drainage of left femoral head abscess. Pain remained high despite baseline morphine. Vitals stable. Continue current meds, monitor labs and vitals.</li><li>Visit 9 (2023-11-06, Palliative Care/Hospice): Patient transitioned to home hospice for metastatic hormone‑refractory prostate carcinoma with bone metastases. Pain managed with morphine 10 mg PO q6h PRN. Low‑dose lisinopril 15 mg QD maintained. Indwelling urinary catheter placed. Daily hospice visits scheduled for symptom control. No further diagnostics ordered.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case ac1819ad</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: ac1819ad</h1><div class="subtitle">Prostate Adenocarcinoma (Unspecified) | Male, 70</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign Prostatic Hyperplasia (BPH), Prostatitis, Hypertension, Type 2 Diabetes, Obesity</div><div class="meta-line">Risk Factors: Age &gt; 50, Family history of prostate cancer, High dietary fat intake, Low fruit and vegetable consumption, Obesity</div></div>
+<details><summary>Narrative <span class="preview-text">John M. was seventy years old when he first went to see his primary‑care physician, Mr. Lopez, with what seemed at first...</span></summary><div class="section-body"><p>John M. was seventy years old when he first went to see his primary‑care physician, Mr. Lopez, with what seemed at first a simple set of urinary symptoms. “Mr. M. I can’t make it to the bathroom before you’re done, and I have to get up a few times in the night,” he complained over the phone in late March. His family history was a worry: his father had died of prostate cancer at 68, and his brother had been diagnosed at 59. John’s own medical record already marked him as high‑risk: a chronic smoker, a waist‑line well over 40 inches, a daily intake of processed meats and a pizza‑heavy diet, and very few servings of vegetables or fruit.</p><p>### Initial Encounter (March 2025)</p><p>Mr. Lopez noted that John’s frequent nighttime voids (“nocturia”) were now occurring six–seven times per night, and he reported a dribbling of urine after he finished emptying. “You sound a little like BPH, but we should check a PSA in case something’s wrong.” He sent for a basic metabolic panel, a lipid panel, and a PSA test. John’s fasting glucose was 165 mg/dL, confirming poorly controlled type 2 diabetes (HbA1c 9.2 %). Blood pressure read 165/90 mmHg, highlighting his hypertension, and his BMI was 33 kg/m²—a clear case of obesity.</p><p>The PSA came back 4.1 ng/mL (borderline high for a 70‑year‑old). Mr. Lopez scheduled an appointment with Dr. Patel, a urologist, to review the results.</p><p>### Urologist’s Visit (April 2025)</p><p>In the office, Dr. Patel performed a digital rectal exam (DRE) that found a slightly enlarged, indurated prostate, more typical of benign prostatic hyperplasia (BPH) but not entirely reassuring. “We’ll do an ultrasound‑guided prostate biopsy to rule out cancer,” she said.</p><p>Before the biopsy, John was started on a 5‑alpha‑reductase inhibitor (dutasteride) to relieve BPH symptoms and a low‑dose α‑blocker (tamsulosin) to reduce urinary obstruction. A short course of oral antibiotics (ciprofloxacin 500 mg BID) was prescribed due to mild prostatitis symptoms he had reported—dysuria and perineal pressure—that resolved after that week.</p><p>### Biopsy Results (May 2025)</p><p>The pathology returned “adenocarcinoma of the prostate, Gleason 7 (3+4), with two cores containing cancer. No invasion beyond the prostate capsule.” The PSA had risen to 6.2 ng/mL. Dr. Patel recommended a staging imaging study—an MRI of the pelvis and a bone scan—to identify local extension and distant disease.</p><p>John’s comorbidities complicated matters. His diabetes made him susceptible to infections, his hypertension required careful monitoring of medication interactions, and his obesity posed a risk for perioperative complications.</p><p>### Imaging (June 2025)</p><p>MRI showed a 2.5 cm solid lesion in the left peripheral zone extending into the base of the prostate but no evident extraprostatic extension. The bone scan was negative for metastases. With these findings, the multidisciplinary team (Dr. Patel, oncologist Dr. Li, and radiologist Dr. Simmons) determined that John had a locally confined prostate adenocarcinoma with a moderate risk profile (Gleason 7, PSA &gt; 4, &lt; 10 ng/mL, T2).</p><p>Given John’s significant urinary symptoms from BPH, Dr. Patel elected to proceed with a transurethral resection of the prostate (TURP) in early July, hoping to both relieve obstruction and obtain a larger tissue sample for staging. The procedure was complicated by a postoperative urinary leak that required a second procedure weeks later. His recovery was slow, partly due to his diabetes and obesity, which delayed wound healing.</p><p>### Follow‑Up (August–September 2025)</p><p>After the TURP, John complained of persistent pelvic pain and a feeling of heaviness in the groin that was not relieved by pain medications. His PSA rose to 8.5 ng/mL within a month, and MRI now showed perineural invasion and a slight extraprostatic extension toward the seminal vesicles. The team discussed definitive treatment options: radical prostatectomy, external beam radiotherapy (EBRT), or hormone therapy.</p><p>John’s history of hypertension and risk of cardiovascular events made the surgical team cautious. Dr. Patel suggested he undergo EBRT with short‑course androgen deprivation therapy (ADT) to minimize surgical complications. John, however, was reluctant to start testosterone‑blocking drugs due to concerns about bone density and cardiovascular risk. After a thorough discussion, he consented to a 6‑month course of leuprolide, understanding that this would reduce PSA aggressively and help control symptom spread.</p><p>### Hormone Therapy (October 2025 – March 2026)</p><p>During the first six months of leuprolide therapy, John’s PSA fell to 2.2 ng/mL. He reported that his urinary frequency had decreased significantly; the nocturia episodes were now limited to 2–3 times per night. However, the androgen suppression caused a significant weight gain (5–7 kg) and a rise in blood pressure to 180/95 mmHg. His glycemic control worsened, with fasting glucose hovering around 200 mg/dL and HbA1c rising to 9.8 %. Dr. Patel and his PCP adjusted his antihypertensive regimen—adding an ACE inhibitor—and his endocrinologist added a GLP‑1 receptor agonist to help with weight and glucose.</p><p>Meanwhile, John developed dull, aching pain in his lower back and left hip. X-rays revealed osteoblastic lesions in the lumbar vertebrae and left femoral neck. A repeat bone scan confirmed metastasis to the bone. The multidisciplinary team held a tumor board meeting in April 2026 and concluded that John’s disease had progressed beyond the prostate, despite hormone therapy.</p><p>### Deterioration (May–June 2026)</p><p>John’s pain intensified, requiring chronic opioid therapy. His PSA had climbed back to 13 ng/mL. He experienced fatigue, weight loss of 8 kg (~10%) over two months, and intermittent worsening of urinary obstruction. He was eventually admitted to the hospital for an acute exacerbation of urinary retention, requiring intermittent catheterization. During a hospital stay, a urinary tract infection (UTI) was identified; treatment involved broad‑spectrum antibiotics due to his diabetes.</p><p>The oncologist proposed adding docetaxel chemotherapy to his regimen. John’s overall performance status had dropped to ECOG 2; his cardiologist cautioned against any treatment that could further strain his heart. An echocardiogram was normal, but his blood pressure remained poorly controlled. The team ultimately decided against systemic chemotherapy, citing diminishing quality of life and the risk of exacerbating his comorbidities.</p><p>### Palliative Phase (July 2026 and beyond)</p><p>By mid‑2026, John’s disease had become widespread and painful. He and his family agreed on a palliative care approach. Pain was managed with a multimodal regimen—including opioids, nerve blocks, and bisphosphonates. His PSA remained elevated at 18 ng/mL, and repeat imaging showed further progression to the ribs and pelvis.</p><p>The medical team continued to adjust his anti‑hypertensives, optimized his diabetes management, and coordinated regular physical therapy to maintain mobility. He also received counseling services to cope with the psychological impact of the disease trajectory.</p><p>### Reflection</p><p>John’s case illustrates a classic, yet accelerated, progression of prostate adenocarcinoma in the context of common comorbidities. The presence of BPH, prostatitis, hypertension, type 2 diabetes, and obesity compounded each other: BPH initially masked early cancer symptoms; prostatitis and infections necessitated recurrent antibiotic use; the metabolic syndrome contributed to poorer wound healing and increased systemic inflammation, likely accelerating tumor growth.</p><p>From a primary‑care visit for nocturia in March 2025 to uncontrolled, metastatic disease in July 2026, less than 14 months had passed. Despite aggressive hormone therapy and radiologic interventions, the tumor continued to evolve, ultimately requiring a shift from curative intent to palliative care. His outcome—worsening and ultimately undiagnosed as a curable disease—highlights the importance of early, coordinated care and continuous monitoring in high‑risk populations.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-03-28</h3><div class="visit-meta">Primary Care | Reason: Nocturia and urinary frequency</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent nocturia (6–7 times/night) with dribbling after voiding and mild lower abdominal discomfort.
+
+History of Present Illness: 70‑year‑old male called to discuss ongoing urinary frequency and nocturia. Has a history of benign prostatic hyperplasia (BPH) and chronic prostatitis. No prior treatment for his current symptoms.
+
+Past Medical History: BPH, chronic prostatitis, hypertension, type 2 diabetes mellitus, obesity (BMI 33 kg/m²), smoker.
+
+Current Medications: None.
+
+Allergies: NKDA.
+
+Vitals: BP 165/90 mmHg, HR 78 bpm, T 98.6 °F, RR 14 /min, SpO₂ 98 %, BMI 33 kg/m².
+
+Physical Examination: Not performed (phone encounter).
+
+Laboratory Results: BMP normal; fasting glucose 165 mg/dL; HbA1c 9.2 %; PSA 4.1 ng/mL; lipid panel LDL 160 mg/dL.
+
+Assessment:
+1. Uncontrolled hypertension.
+2. Poorly controlled type 2 diabetes mellitus.
+3. Hyperlipidemia.
+4. Symptomatic BPH with urinary frequency and nocturia.
+5. Mildly elevated PSA—requires monitoring.
+
+Plan:
+- Initiate antihypertensive therapy: lisinopril 10 mg daily.
+- Start alpha‑1 blocker for BPH: tamsulosin 0.4 mg daily.
+- Initiate metformin 500 mg BID (monitor renal function). 
+- Start statin therapy: atorvastatin 20 mg at bedtime.
+- Counsel on lifestyle modifications: weight loss, low‑sodium diet, regular aerobic exercise, limit caffeine/alcohol, smoking cessation counseling.
+- Repeat PSA in 6 months; consider urology referral if PSA rises or symptoms worsen.
+- Monitor glucose with SMBG or SMBG logs; schedule repeat HbA1c in 3 months.
+- Recheck electrolytes and renal panel before initiating metformin.
+- Follow‑up in clinic in 4 weeks to review medication tolerability, BP, and symptom improvement.
+
+Patient education: Reviewed risks associated with uncontrolled HTN and DM, benefits of early BPH treatment, importance of medication adherence, and scheduled labs.
+
+Disposition: No acute emergencies. Patient advised to seek immediate care if he develops fever, chills, flank pain, hematuria, or worsening urinary retention.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Nocturia (6-7 times/night)</span><span class="pill">Dribbling after void</span><span class="pill">Mild lower abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>165/90</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>33 kg/m²</td></tr></table></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Basic metabolic panel (BMP)</li><li>Complete blood count (CBC)</li><li>Lipid panel</li><li>Prostate‑specific antigen (PSA)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 165 mg/dL</li><li>HbA1c 9.2%</li><li>PSA 4.1 ng/mL</li><li>BMP normal</li><li>Lipid panel: LDL 160 mg/dL</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BPH</li><li>Chronic prostatitis episodes</li><li>Hypertension</li><li>Type 2 diabetes</li><li>Obesity</li><li>Smoking</li><li>Family history of prostate cancer</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John called PCP about persistent urinary symptoms. The provider reviewed his history and ordered labs: BMP, CBC, lipid panel, and PSA. Discussed risk factors and recommended follow‑up in clinic.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial evaluation of nocturia suspicious for BPH; borderline PSA raises concern for early prostate carcinoma; metabolic comorbidities noted.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-04-15</h3><div class="visit-meta">Urology | Reason: Evaluation of urinary symptoms and PSA result</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #2 – 2025-04-15
+
+Chief Complaint: Evaluation of urinary symptoms and PSA result
+
+Subjective:
+Patient is a 70‑year‑old male presenting for follow‑up on lower urinary tract symptoms (LUTS) associated with known benign prostatic hyperplasia (BPH) and chronic prostatitis. He reports nocturia 6–7 times per night, dribbling post‑void, and perineal pressure. He denies hematuria, fever, chills, or dysuria. No new pain. He continues his current medication regimen.
+
+Objective:
+Vitals: BP 160/88 mmHg, HR 76 bpm, Temp 98.7 °F, RR 14, SpO₂ 98%, BMI 33 kg/m².
+Physical exam: DRE shows a slightly enlarged, indurated prostate with mild tenderness and no nodules. Abdomen soft, non‑tender. Lungs clear. Cardiovascular normal.
+
+Assessment:
+1. Benign prostatic hyperplasia – symptom severity moderate.
+2. Chronic prostatitis – likely urethral inflammation.
+
+Plan:
+- Continue metformin 1000 mg BID, lisinopril 20 mg daily, amlodipine 5 mg daily, atorvastatin 20 mg nightly, aspirin 81 mg daily, tamsulosin 0.4 mg daily.
+- Start dutasteride 0.5 mg daily and continue tamsulosin 0.4 mg daily for symptom relief.
+- Ciprofloxacin 500 mg BID for 2 weeks for prostatitis (completed).
+- Counsel on weight loss, exercise, sodium restriction.
+- Repeat PSA in 6 months. Repeat HbA1c in 3 months.
+- Monitor blood pressure; aim &lt;140/90 mmHg. Adjust antihypertensives if needed.
+- Follow‑up in 4 weeks to reassess LUTS and blood pressure. If symptoms worsen or PSA increases, consider transrectal ultrasound or cystoscopy.
+
+Differential: BPH, chronic prostatitis, prostate cancer (ruled out by PSA &lt;10 but repeat PSA pending).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Nocturia (6-7 times/night)</span><span class="pill">Dribbling after void</span><span class="pill">Perineal pressure</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>160/88</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>33 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Digital rectal exam: slightly enlarged indurated prostate, mild tenderness</li><li>Abdominal exam: soft, non‑tender</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started dutasteride 0.5 mg daily</li><li>Started tamsulosin 0.4 mg daily</li><li>Prescribed ciprofloxacin 500 mg BID for 2 weeks</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Tamsulosin 0.4 mg daily</li><li>Dutasteride 0.5 mg daily</li><li>Ciprofloxacin 500 mg BID (for 2 weeks)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 4.1 ng/mL</li><li>BPH</li><li>Chronic prostatitis</li><li>Hypertension</li><li>Type 2 diabetes</li><li>Obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Digital rectal exam revealed a slightly enlarged, indurated prostate with mild tenderness. Discussed that PSA and DRE suggest BPH but do not rule out cancer. Initiated dutasteride and tamsulosin to relieve symptoms and prescribed a short course of ciprofloxacin for prostatitis. Planned ultrasound‑guided prostate biopsy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>DRE suggests BPH; PSA borderline; plan biopsy to rule out carcinoma. Initiated medical therapy for BPH and prostatitis.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-05-12</h3><div class="visit-meta">Urology | Reason: Biopsy results and next steps</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #3 – 2025-05-12
+
+Chief Complaint: Biopsy results returned and next steps. Patient presents after pathology report of unspecified prostate pathology and continued rising PSA.
+
+Subjective: 70‑year‑old male. Remains on tamsulosin 0.4 mg QD, dutasteride 0.5 mg QD, lisinopril 20 mg daily, amlodipine 5 mg daily, metformin 1000 mg BID, atorvastatin 20 mg nightly, aspirin 81 mg daily. Reports nocturia 6–7 times/night, dribbling, and perineal pressure. Denies dysuria, hematuria, weight loss, fever, or fatigue. No new urinary urgency.
+
+Objective: Vital signs – BP 162/90, HR 78, T 98.5°F, RR 14, SpO₂ 98%, BMI 33 kg/m². No new physical exam performed in office (previous DRE noted mild enlarged indurated prostate). Medications unchanged.
+
+Assessment:
+- Unspecified prostate pathology on biopsy; PSA currently 6.2 ng/mL (continued rise).
+- Differential:
+  1. Prostate adenocarcinoma (high‑grade or localized/locally advanced – staging pending)
+  2. Benign prostatic hyperplasia – symptomatically controlled but contributing to LUTS
+  3. Chronic prostatitis/urinary tract infection – chronic dribbling
+  4. Hypertension (BP 162/90 on dual therapy)
+  5. Type 2 diabetes mellitus – HbA1c trend 9.2% to 9.0% (needs control)
+
+Plan:
+1. Order staging imaging – pelvic MRI and bone scan (results pending). Evaluate for local extension and distant metastasis.
+2. Continue current medication regimen:
+   - Tamsulosin 0.4 mg QD
+   - Dutasteride 0.5 mg QD
+   - Lisinopril 20 mg QD
+   - Amlodipine 5 mg QD
+   - Metformin 1000 mg BID
+   - Atorvastatin 20 mg nightly
+   - Aspirin 81 mg daily
+3. BP control: continue lisinopril and amlodipine; educate on sodium restriction, weight loss, exercise.
+4. Diabetes: continue metformin; monitor fasting glucose and HbA1c every 3 months.
+5. PSA follow‑up: repeat 6 weeks after imaging to assess response or progression.
+6. Discuss prostate cancer treatment options (radiation, surgery, hormone therapy) with patient once imaging is reviewed.
+7. Continue bladder diary and symptom monitoring.
+
+Follow‑up Recommendations:
+- Return in 2 weeks for imaging results and PSA; discuss definitive treatment plan.
+- Continue antihypertensive and antidiabetic regimens; monitor BP and glucose.
+- Reinforce lifestyle modifications: weight loss, low‑sodium diet, increased physical activity.
+- Consider referral to GU oncology if metastasis present or for definitive treatment discussion.
+- If any new urinary symptoms, pain, fever, or worsening LUTS, seek prompt evaluation.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Nocturia (6-7 times/night)</span><span class="pill">Dribbling</span><span class="pill">Perineal pressure</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>162/90</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>33 kg/m²</td></tr></table></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI pelvis</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>In preparation; results pending</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Tamsulosin 0.4 mg daily</li><li>Dutasteride 0.5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 6.2 ng/mL (rising)</li><li>Biopsy performed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Pathology report returned: adenocarcinoma of the prostate, Gleason 7 (3+4). PSA continued to rise. Discussed staging imaging. Ordered pelvic MRI and bone scan to assess local and distant disease burden.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Histology confirms adenocarcinoma (Gleason 3+4=7). PSA rising; plan imaging for local/distant staging.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-06-10</h3><div class="visit-meta">Radiology | Reason: Imaging results review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Review of imaging results for 70‑year‑old male with known Urologic and metabolic comorbidities.
+
+**History of Present Illness:** Patient presents for follow‑up of MRI pelvis and bone scan results. He reports continued nocturia and no new pain. He has had a 2.5‑cm intraprostatic lesion identified on previously obtained MRI. No evidence of extraprostatic extension or bone metastasis.
+
+**Imaging Review:**
+- **MRI pelvis**: 2.5‑cm lesion confined to peripheral zone of prostate; no extraprostatic extension, no seminal vesicle invasion. 
+- **Bone scan**: No uptake—negative for skeletal metastases.
+
+**Assessment:**
+- Clinical suspicion for localized prostate adenocarcinoma (cT2b). 
+- Differential includes benign prostatic hyperplasia (BPH) and chronic prostatitis given history and symptomatology.
+- Current PSA 6.2 ng/mL, rising trend.
+- No evidence of metastatic disease.
+
+**Plan:**
+1. Discussed treatment options: TURP versus definitive radiation or radical prostatectomy.  
+2. Patient elected for TURP to relieve obstructive symptoms and obtain additional tissue.  
+3. Continue current medical therapy:
+   - Metformin 1000 mg BID
+   - Lisinopril 20 mg daily
+   - Amlodipine 5 mg daily
+   - Atorvastatin 20 mg nightly
+   - Aspirin 81 mg daily
+   - Tamsulosin 0.4 mg daily
+   - Dutasteride 0.5 mg daily
+4. Reinforce lifestyle modifications: weight loss, exercise, sodium restriction, and glycemic control.
+5. Coordinate with Urology for TURP scheduling; discuss peri‑operative management and potential for postoperative PSA decline.
+6. Continue monitoring PSA every 3 months for the next year to assess biochemical response.
+7. Follow‑up in clinic 2 weeks post‑TURP for wound check, symptom review, and PSA assessment.
+
+**Disposition:** Patient was advised to contact the office if urinary retention, hematuria, fever, or worsening lower‑tract symptoms occur prior to scheduled TURP.
+
+**Signature:** Dr. X, M.D.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continued nocturia</span><span class="pill">No new pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>160/88</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>33 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Urinary frequency mild</li><li>No abdominal tenderness</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI pelvis: 2.5 cm lesion, confined within prostate</li><li>Bone scan: no metastases</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Tamsulosin 0.4 mg daily</li><li>Dutasteride 0.5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>MRI pelvis: 2.5 cm lesion in peripheral zone, no extraprostatic extension</li><li>Bone scan negative</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>MRI reviewed: 2.5‑cm intraprostatic lesion confined to prostate. No bone metastasis on scan. Discussed options: TURP to relieve obstruction and acquire more tissue versus definitive radiation or surgery. Decided on TURP given symptom relief need and intermediate surgical risk.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage T2 disease; plan TURP to relieve obstruction and obtain tissue for staging. Surgical risk moderate due to comorbidities.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-07-02</h3><div class="visit-meta">Urology | Reason: Transurethral resection of prostate (TURP) – procedure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transurethral resection of prostate (TURP) – postoperative follow‑up.
+
+History of Present Illness: The patient is a 70‑year‑old male who underwent TURP for symptomatic BPH and tissue sampling of a 2.5‑cm peripheral zone lesion. Procedure was performed under spinal anesthesia without intraoperative adverse events. Post‑operatively a urinary extravasation from the bladder neck was identified. The patient reports persistent discomfort and continues to exhibit urinary leakage after removal of the catheter. No fever or abdominal pain; mild suprapubic swelling noted. No hematuria.
+
+Past Medical History: BPH, chronic prostatitis, hypertension, type 2 diabetes mellitus, obesity.
+
+Medications: Metformin 1000 mg BID, Lisinopril 20 mg daily, Amlodipine 5 mg daily, Atorvastatin 20 mg nightly, Aspirin 81 mg daily, Tamsulosin 0.4 mg daily, Dutasteride 0.5 mg daily.
+
+Review of Systems: Positive for postoperative urinary leakage and suprapubic discomfort. Denies fever, chills, dysuria, hematuria, weight loss.
+
+Physical Examination: Vitals: BP 158/86, HR 78, Temp 98.6°F, RR 14, SpO₂ 99%. BMI 33 kg/m². Inspection of suprapubic area shows mild swelling without erythema. No active urine leakage observed at exam.
+
+Assessment:
+1) Urinary extravasation from bladder neck following TURP – uncomplicated leak managed conservatively.
+2) Persistent postoperative discomfort.
+3) Stable chronic comorbidities.
+
+Plan:
+• Continue current medication regimen (including tamsulosin and dutasteride) without changes.
+• Prescribe oral acetaminophen 1 g PO q6h PRN for pain; avoid NSAIDs due to postoperative bleeding risk.
+• Counsel patient on activity restrictions: avoid heavy lifting, prolonged standing, and sexual activity for 4 weeks.
+• Instruct on voiding diary.
+• If leakage worsens or fever develops, consider ultrasound assessment and possibly cystography.
+• Follow‑up in 2 weeks for wound check, symptom review, PSA trend. If ongoing leak or complications, consider re‑laparoscopic evaluation.
+• Monitor PSA quarterly as per oncology follow‑up.
+• Encourage weight loss, sodium restriction, and glycemic control.
+
+Tests Ordered: None at this time.
+
+Follow‑up Recommendations: Return in 2 weeks for post‑op follow‑up; earlier if signs of infection or worsening leakage.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Postoperative discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>158/86</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>99%</td></tr><tr><td>BMI</td><td>33 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Suprapubic area: mild swelling</li><li>Urinary leakage noted post catheter removal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>TURP performed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Complains of discomfort and urinary leakage</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Tamsulosin 0.4 mg daily</li><li>Dutasteride 0.5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>TURP performed</li><li>Immediate postoperative urinary leak identified</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Underwent TURP under spinal anesthesia. Intraoperative course uncomplicated. Post‑op, a urinary leak from the bladder neck was noted, necessitating eventual secondary procedure weeks later but managed conservatively until then.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early postoperative leak; plan secondary procedure. Staging remains local; discuss adjuvant therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-08-20</h3><div class="visit-meta">Urology/Oncology | Reason: Post‑TURP follow‑up and discussion of adjuvant therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after TURP with discussion of adjuvant external beam radiotherapy (EBRT) and concurrent androgen deprivation therapy (ADT). He also reports persistent pelvic pain, heaviness in groin, reduced urinary frequency with occasional urgency.
+
+History of Present Illness: 70‑year‑old male with prior BPH, chronic prostatitis, TURP and PSA progression to 8.5 ng/mL. MRI demonstrates perineural invasion and a slight extraprostatic extension; bone scan negative. Post‑TURP wound healing satisfactory but patient reports ongoing pelvic tenderness and discomfort. He is concerned about hormonal side effects but is willing to proceed with ADT.
+
+Past Medical History: BPH, chronic prostatitis, hypertension, type 2 diabetes mellitus, obesity (BMI 33 kg/m²).
+
+Medications: Metformin 1000 mg BID; Lisinopril 20 mg daily; Amlodipine 5 mg daily; Atorvastatin 20 mg nightly; Aspirin 81 mg daily; Tamsulosin 0.4 mg daily; Dutasteride 0.5 mg daily; Leuprolide acetate 3.75 mg IM monthly (first dose today); Acetaminophen 1 g PO q6h PRN.
+
+Allergies: NKDA.
+
+Vital Signs: BP 165/92 mmHg; HR 80 bpm; Temp 98.5 °F; RR 14 breaths/min; SpO₂ 98 %; BMI 33 kg/m².
+
+Physical Examination: Abdomen soft, nondistended; Genitourinary: pelvic tenderness on palpation, external genitalia normal; DRE: enlarged, moderately indurated prostate; no lymphadenopathy.
+
+Assessment: 1) Localized prostate adenocarcinoma clinical stage T2c N0 M0 (based on MRI and PSA). 2) Post‑TURP wound satisfactory, no infection. 3) Hypertension controlled, diabetes suboptimal (previous A1c 9.2 %).
+
+Plan: • Initiate external beam radiotherapy (70 Gy in 28 fractions) with concurrent daily ADT. • Start leuprolide acetate 3.75 mg IM monthly (first dose administered today). • Continue current antihypertensives, antidiabetics, statin, aspirin, alpha‑blocker, 5‑ARI, and pain control. • Counsel on potential hot flashes, decreased libido, bone density changes, and recommend baseline DEXA scan. • Monitor PSA every 3 months; repeat MRI if PSA &gt;8.5 ng/mL or clinical symptoms recur. • Discuss bone scan if PSA rises or symptomatic bone pain occurs. • Encourage weight‑loss program, diet, and moderate exercise. • Schedule coordination with radiation oncology; aim to start EBRT within 6 weeks.
+
+Follow‑up: • 2‑week visit to assess leuprolide injection site, hormone‑related side effects, and radiation scheduling. • 6‑week appointment with radiation oncology for treatment initiation. • Quarterly PSA monitoring for the first year. • Annual DEXA scan. • Repeat clinical visit in 6 months for overall status and metabolic control.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent pelvic pain</span><span class="pill">Heaviness in groin</span><span class="pill">Reduced urinary frequency but occasional urgency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>165/92</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>33 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Pelvic tenderness</li><li>External genital exam normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started leuprolide 3.75 mg IM monthly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Concerned about side effects but willing to proceed</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Tamsulosin 0.4 mg daily</li><li>Dutasteride 0.5 mg daily</li><li>Leuprolide 3.75 mg IM monthly (starting this visit)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 8.5 ng/mL</li><li>MRI: perineural invasion, slight extraprostatic extension</li><li>Bone scan negative</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Reviewed imaging and PSA trends. Discussed external beam radiotherapy with concurrent androgen deprivation therapy. Patient expressed concerns about hormonal side effects. He consented to weekly leuprolide injections; scheduled for first dose today and monthly thereafter.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>PSA rising and imaging shows perineural invasion; initiating ADT with expectation of lowering PSA and controlling local disease.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-11-05</h3><div class="visit-meta">Oncology | Reason: ADT monitoring and metabolic adjustment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Monitoring of androgen deprivation therapy (ADT) and metabolic adjustment.
+
+History of Present Illness:
+A 70‑year‑old male presents for routine ADT surveillance. He reports reduced urinary frequency (previously 6–7 times/night), a 5‑kg weight gain, elevated blood pressure, and hyperglycemia. He notes feeling hotter and expresses concerns about ongoing weight gain despite therapy. The patient’s prostate surveillance was previously altered after TURP and initiation of leuprolide. His PSA has declined from 6.2 ng/mL (post‑TURP) to 2.2 ng/mL on this visit.
+
+Past Medical History:
+- Benign prostatic hyperplasia
+- Chronic prostatitis
+- Hypertension
+- Type 2 diabetes mellitus
+- Obesity (BMI 38 kg/m²)
+
+Current Medications:
+- Metformin 1000 mg BID
+- Lisinopril 20 mg daily (upgraded from 10 mg earlier)
+- Amlodipine 5 mg daily
+- Atorvastatin 20 mg nightly
+- Aspirin 81 mg daily
+- Leuprolide acetate 3.75 mg IM monthly
+- Liraglutide (GLP‑1 agonist) 0.6 mg daily (newly added)
+
+Allergies: NKDA
+
+Review of Systems (selected):
+- Genitourinary: improved nocturia; urinary frequency reduced
+- Cardiovascular: BP elevated 180/95
+- Endocrine: fasting glucose 200 mg/dL
+- Metabolic: weight gain 5 kg
+- Constitutional: feels hotter
+
+Physical Examination:
+- Vitals: BP 180/95, HR 78, Temp 98.6 °F, RR 14, SpO₂ 98 %
+- BMI 38 kg/m²
+- Abdomen: mild fullness, no tenderness
+- Genitourinary: normal external
+
+Labs (repeat for monitoring):
+- CBC: normal
+- BMP: normal
+- PSA: 2.2 ng/mL (↓ from 6.2)
+- Fasting glucose: 200 mg/dL (↑ from 165)
+
+Assessment:
+1. Prostate cancer in remission on ADT; PSA stable at 2.2 ng/mL. Continue quarterly monitoring.
+2. Uncontrolled hypertension; current BP 180/95 on lisinopril 20 mg and amlodipine 5 mg.
+3. Uncontrolled diabetes; fasting glucose 200 mg/dL on metformin 1000 mg BID.
+4. Adverse metabolic effects of ADT: weight gain, hyperglycemia, increased sympathetic tone.
+
+Differential Diagnosis:
+- BPH progression vs residual disease (unlikely given PSA decline)
+- ADT‑related metabolic syndrome (weight gain, hyperglycemia, hypertension)
+- Insufficient antihypertensive and antidiabetic therapy
+- Adrenal or thyroid dysfunction (ruled out by normal BMP)
+
+Plan:
+1. Antihypertensive adjustment: increase lisinopril to 40 mg daily. Counsel on sodium restriction; recheck BP in 2 weeks.
+2. If BP remains &gt;140/90, consider adding a thiazide diuretic (e.g., hydrochlorothiazide 12.5 mg daily) after labs.
+3. Antidiabetic management: continue metformin 1000 mg BID; add SGLT2 inhibitor (dapagliflozin 10 mg daily) to target A1c &lt;7%. Counsel on fluid intake.
+4. Continue GLP‑1 agonist (liraglutide) for weight and glucose control.
+5. Lifestyle: reinforce diet, exercise, gradual weight loss goal 0.5–1 kg per week, monitoring of urinary symptoms.
+6. PSA: repeat at 3 months as part of routine surveillance.
+7. PSA monitoring quarterly thereafter.
+8. Schedule routine labs: CBC, BMP, fasting glucose, HbA1c, lipid panel in 3 months.
+9. Educate on signs of ADT side effects: hot flashes, decreased libido, bone pain; refer to bone density scan in 6 months.
+10. Follow‑up appointment in 4 weeks for BP, glucose review, medication tolerability, and PSA discussion.
+
+Patient education: Reviewed medication changes, potential side effects, and importance of adherence. Advised to report any new urinary retention or flank pain immediately.
+
+Follow‑up: 2025‑11‑29 (4 wk).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Reduced urinary frequency</span><span class="pill">Weight gain (~5 kg)</span><span class="pill">Elevated blood pressure</span><span class="pill">Hyperglycemia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>180/95</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>38 kg/m²</td></tr><tr><td>Glucose</td><td>200 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild abdominal fullness</li><li>No abdominal tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>PSA</li><li>Fasting glucose</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>BMP normal</li><li>PSA 2.2 ng/mL</li><li>Fasting glucose 200 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Added GLP‑1 agonist</li><li>Adjusted Lisinopril dosage</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Urinary symptoms improved, but feels hotter and weight gain</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide 3.75 mg IM monthly</li><li>GLP‑1 agonist (liraglutide 0.6 mg daily)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Leuprolide monthly</li><li>Weight gain</li><li>HTN worsened</li><li>Diabetes worsened</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Measured PSA, CBC, BMP, fasting glucose. PSA 2.2 ng/mL, indicating initial response to ADT. Discussed side‑effect profile, added GLP‑1 agonist to address weight and glycemic control, and optimized antihypertensive regimen to lower BP.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>ADT effective in reducing PSA; metabolic side effects prominent.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-04-15</h3><div class="visit-meta">Radiology/Oncology | Reason: Detection of bone metastases</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 8 – 2026‑04‑15
+
+Chief Complaint:
+Evaluation of new bone metastases identified on imaging.
+
+History of Present Illness:
+71‑year‑old male presents for multidisciplinary review of imaging findings. He reports worsening lower back pain and left hip pain, now limiting ambulation, along with ongoing fatigue. Pain is dull, aching, exacerbated by movement and relieved modestly by over‑the‑counter analgesics. He denies new neurologic deficits, constitutional symptoms, or urinary changes. He has been on monthly leuprolide (ADT) since 2025‑08‑20 with a PSA decline from 6.2 to 2.2 ng/mL; PSA currently 13 ng/mL. He continues metformin, lisinopril, amlodipine, atorvastatin, aspirin, and liraglutide. No new medications added since last visit.
+
+Pertinent Physical Examination:
+- Vital signs: BP 190/100, HR 82, T 98.7°F, RR 14, SpO₂ 98%, BMI 38 kg/m².
+- Spinal tenderness over L2‑L4, no obvious instability or deformity.
+- Left hip tenderness over greater trochanter; no swelling, erythema, or neurovascular compromise.
+- Neurologic exam is intact; no radiculopathy.
+
+Imaging Review:
+- Whole‑body bone scan: multiple osteoblastic foci in lumbar vertebrae and left femoral neck.
+- CT pelvis: confirms radiographic lesions in aforementioned sites; no new masses.
+
+Assessment:
+1. Metastatic castration‑resistant prostate cancer with symptomatic osteoblastic bone disease. PSA 13 ng/mL suggests disease progression despite ADT.
+2. Uncontrolled hypertension (190/100) despite lisinopril 20 mg and amlodipine 5 mg. Requires re‑optimization.
+3. Type 2 diabetes uncontrolled (fasting glucose ~200 mg/dL) on metformin; add SGLT2 inhibitor.
+4. Osteopenia likely secondary to metastatic disease and prolonged androgen deprivation – consider bone‑modifying therapy.
+
+Plan:
+- Continue leuprolide 3.75 mg IM monthly.
+- Arrange palliative external beam radiotherapy to symptomatic lumbar vertebrae and left femur within 4–6 weeks. Coordinate with radiation oncology.
+- Initiate denosumab 120 mg SC q4 weeks (or zoledronic acid 4 mg IV q4 weeks) after baseline Ca, PTH, and renal labs.
+- Add thiazide diuretic (hydrochlorothiazide 12.5 mg PO daily) to BP regimen; re‑titrate lisinopril if needed.
+- Maintain metformin 1000 mg BID; continue dapagliflozin 10 mg daily.
+- Continue atorvastatin 20 mg nightly, aspirin 81 mg daily.
+- Counsel on weight loss, diet, sodium restriction, and supervised aerobic activity.
+- Labs: CBC, BMP, Ca, PTH, alkaline phosphatase, PSA at next visit.
+- Bone scan repeat in 3 months to assess response.
+
+Follow‑Up Recommendations:
+- Return in 4 weeks for pain and BP reassessment, to review radiotherapy scheduling and lab results.
+- Schedule DEXA scan within 6 months to evaluate bone density.
+- Continue PSA quarterly; consider switching to androgen‑receptor targeted therapy (enzalutamide, abiraterone) if radiologic progression or symptomatic worsening.
+
+Signature: _____________________   Radiology/Oncology
+Date: 2026‑04‑15</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Lower back pain</span><span class="pill">Left hip pain</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>190/100</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>38 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Spinal tenderness</li><li>Left hip tenderness</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Bone scan: multiple osteoblastic lesions</li><li>CT pelvis: lesions confirmed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Complains of increasing pain</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span><span class="pill">Bone metastases (symptomatic)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide 3.75 mg IM monthly</li><li>GLP‑1 agonist (liraglutide 0.6 mg daily)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bone scan: osteoblastic lesions in lumbar vertebrae and left femoral neck</li><li>PSA 13 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Reviewed bone scan and CT pelvis; found multiple osteoblastic lesions consistent with metastatic prostate cancer. Discussed disease stage, prognosis, and limited treatment options. Consensus: continue ADT, consider palliative radiotherapy to painful sites, but chemotherapy deferred due to comorbidities and performance status.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease progressed to bone metastasis despite ADT; now metastatic CRPC; consider palliative radiotherapy and systemic options, but comorbidities limit chemotherapy.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2026-06-10</h3><div class="visit-meta">Internal Medicine | Reason: Acute urinary retention and UTI admission</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Acute urinary retention, UTI.
+
+**History of Present Illness**: 71‑year‑old male with known BPH, prostatitis, metastatic castration‑resistant prostate cancer with bone metastases presents with acute urinary retention. He reports sudden inability to void, suprapubic fullness, severe lower back pain, fatigue, and low‑grade fever. Catheterization was performed in the ED, after which pain improved and fever subsided. He remains on leuprolide 3.75 mg IM monthly, dutasteride 0.5 mg daily, tamsulosin 0.4 mg daily, and other chronic meds.
+
+**Past Medical History**: BPH, localized prostate adenocarcinoma, metastatic CRPC, bone metastases, osteopenia, hypertension, type 2 diabetes mellitus, hyperlipidemia, obesity.
+
+**Medications**: Leuprolide acetate 3.75 mg IM monthly, Metformin 1000 mg BID, Lisinopril 20 mg daily, Amlodipine 5 mg daily, Atorvastatin 20 mg nightly, Aspirin 81 mg daily, Liraglutide 0.6 mg daily, Dapagliflozin 10 mg daily, Hydrochlorothiazide 12.5 mg daily, Denosumab 120 mg SC q4 weeks, Acetaminophen 1 g PO q6h PRN, Dutasteride 0.5 mg daily. **New**: IV Cefepime 2 g q12h (started 06‑10‑2026).
+
+**Allergies**: NKDA.
+
+**Vital Signs**: BP 185/98, HR 88, Temp 99 °F, RR 16, SpO₂ 97 %, Glucose 210 mg/dL.
+
+**Physical Examination**: Abdomen: distended, suprapubic fullness; back: mild tenderness at L3‑L4. No costovertebral angle tenderness. Catheter in place, draining clear yellow urine.
+
+**Labs / Tests**:
+- Urinalysis: WBC 120/hpf, bacteria
+- Urine culture: E. coli susceptible to cefepime
+- CBC: normal
+- BMP: normal
+
+**Assessment**:
+1. Acute urinary retention secondary to bladder outlet obstruction (BPH/Castrate‑resistant prostate cancer) – resolved with catheter.
+2. Acute uncomplicated cystitis/urosepsis due to E. coli – improving with cefepime.
+3. Mild hypertension; BP elevated (185/98) – likely volume overload and medication adjustment needed.
+4. Diabetes mellitus with hyperglycemia on admission – monitor glucose.
+
+**Plan**:
+1. Continue IV Cefepime 2 g q12h for 5 total days; consider transition to oral cefuroxime 500 mg BID if clinically stable.
+2. Maintain urethral catheter; plan trial of void at discharge; if residual &gt;150 mL, discuss prolonged catheter or intermittent catheterization.
+3. Initiate 1 L normal saline bolus; continue maintenance fluids.
+4. BP control: Increase lisinopril to 40 mg daily; consider adding a thiazide diuretic or continuing hydrochlorothiazide; recheck BP in 48 hrs.
+5. Continue current diabetes regimen; adjust insulin if needed; monitor glucose daily.
+6. Pain: Acetaminophen 1 g PO q6h PRN; if inadequate, add ibuprofen 400 mg PO q6h PRN.
+7. Monitor for signs of UTI recurrence: fever, chills, abdominal pain, changes in urine output.
+8. Follow‑up labs: CBC, BMP, serum creatinine, BUN, electrolytes on day 3; repeat urinalysis day 5.
+9. Oncology: Continue adjuvant radiation therapy; maintain leuprolide; keep denosumab q4 weeks.
+10. Imaging: Repeat bone scan in 3 months; PSA quarterly.
+11. Discharge instructions: catheter care; signs of infection; when to call.
+12. Follow‑up: Internal medicine in 2 weeks; oncology in 4 weeks.
+
+**Disposition**: Admit for continued IV antibiotics and monitoring.
+
+**Signature**: Dr. [Name], MD
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe urinary retention</span><span class="pill">Fatigue</span><span class="pill">Low‑grade fever</span><span class="pill">Lower back pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>185/98</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temperature</td><td>99°F</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>SpO2</td><td>97%</td></tr><tr><td>Glucose</td><td>210 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Abdominal distension</li><li>Suprapubic fullness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis</li><li>CBC</li><li>BMP</li><li>Urine culture</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Urinalysis: WBC 120/hpf, bacteria</li><li>Urine culture: E. coli susceptible to cefepime</li><li>CBC normal</li><li>BMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Urethral catheter placed</li><li>IV cefepime 2 g q12h</li><li>IV fluids</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved with catheter, fever subsided</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span><span class="pill">Bone metastases (symptomatic)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide 3.75 mg IM monthly</li><li>GLP‑1 agonist (liraglutide 0.6 mg daily)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Catheterization due to retention</li><li>UTI confirmed</li><li>Hospital admission</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Admitted for acute urinary retention. Catheter inserted, IV cefepime initiated. Urine culture grew E. coli susceptible to cefepime. Monitoring for infection resolution and pain control. Planned discharge with catheter and home IV antibiotics if necessary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute urinary retention worsened due to bladder outlet obstruction; UTI treated; disease burden high.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2026-07-15</h3><div class="visit-meta">Palliative Care | Reason: Initiate palliative phase and pain management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiate palliative phase and pain management. 70 year old male with metastatic prostate cancer presenting with severe bone pain, fatigue, weight loss (~8 kg), and reduced mobility. The patient reports that pain is persistent despite current morphine 30 mg PO q8h PRN, and he remains fatigued and less able to ambulate. Past medical history significant for hypertension, type 2 diabetes mellitus, and obesity. Current medication list includes leuprolide acetate 3.75 mg IM monthly, metformin 1000 mg BID, lisinopril 20 mg daily, amlodipine 5 mg daily, atorvastatin 20 mg nightly, aspirin 81 mg daily, liraglutide 0.6 mg daily, morphine 30 mg PO q8h PRN, and bisphosphonate zoledronic acid 4 mg IV monthly. The patient is non‑allergic.
+
+Subjective: Patient states pain is constant with occasional breakthrough episodes; pain rating 9/10 in the lumbar spine and left femur. Expressed desire for increased comfort and willingness to consider hospice enrollment.
+
+Objective: Vitals: BP 180/92 mmHg, HR 84 bpm, Temp 98.4°F, RR 14 breaths/min, SpO2 98%, BMI 30 kg/m². Physical exam revealed spinal tenderness, left hip tenderness, and limited range of motion. No neurological deficits noted.
+
+Assessment: 1) Metastatic bone pain secondary to prostate cancer – requires higher opioid dosing and multimodal analgesia. 2) Opioid‑induced constipation – patient reports infrequent stools and difficulty. 3) Hypertensive urgency – BP elevated despite current regimen. 4) Possible hypercalcemia from bone metastases – not yet evaluated. 5) Fatigue likely multifactorial: disease burden, anemia, inadequate sleep, and opioid side effects.
+
+Plan: 1) Increase morphine to 60 mg PO q8h PRN, titrate as needed. 2) Initiate scheduled bowel regimen: loperamide 2 mg PO q6h PRN, polyethylene glycol 400 mL PO daily. 3) Start ondansetron 4 mg PO qid PRN for nausea. 4) Continue zoledronic acid 4 mg IV monthly as scheduled. 5) Refer to interventional pain service for scheduled spinal and hip nerve blocks. 6) Counsel patient and family on prognosis, comfort measures, and hospice options; facilitate advanced care planning. 7) Adjust antihypertensive therapy: consider increasing lisinopril to 40 mg or adding thiazide diuretic if blood pressure remains uncontrolled. 8) Order labs prior to next bisphosphonate dose: CBC, CMP, serum calcium, and renal function. 9) Monitor for signs of spinal cord compression or new neurological deficits.
+
+Follow‑up: Outpatient visit in 2 weeks to reassess pain control, opioid side effects, and BP management. Interventional pain service coordination and hospice discussion to occur as needed. Continue to document symptom changes and medication adherence. Patient encouraged to maintain sleep hygiene and engage family support.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe bone pain</span><span class="pill">Fatigue</span><span class="pill">Weight loss (~8 kg)</span><span class="pill">Reduced mobility</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>180/92</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>SpO2</td><td>98%</td></tr><tr><td>BMI</td><td>30 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Spine tenderness</li><li>Left hip tenderness</li><li>Limited ROM</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Administered morphine 30 mg PO q8h</li><li>Scheduled zoledronic acid IV monthly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved, but remains fatigued</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metastatic prostate cancer</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Leuprolide 3.75 mg IM monthly</li><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>GLP‑1 agonist (liraglutide 0.6 mg daily)</li><li>Morphine 30 mg PO q8h PRN</li><li>Bisphosphonate (zoledronic acid 4 mg IV monthly)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bone metastases extensive</li><li>PSA 18 ng/mL</li><li>Multiple hospitalizations</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Consolidated palliative plan: high‑dose morphine for pain, scheduled zoledronic acid, scheduled nerve blocks, counseling on prognosis, consider hospice. Emphasized comfort measures and family support.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to palliative care; disease advanced; focus on comfort.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 70</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign Prostatic Hyperplasia (BPH)</span><span class="pill">Prostatitis</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Hyperlipidemia</span><span class="pill">Localized prostate adenocarcinoma</span><span class="pill">Metastatic castration‑resistant prostate cancer</span><span class="pill">Bone metastases</span><span class="pill">Osteopenia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Leuprolide acetate 3.75 mg IM monthly</li><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Liraglutide 0.6 mg daily</li><li>Morphine 60 mg PO q8h PRN</li><li>Loperamide 2 mg PO q6h PRN</li><li>Polyethylene glycol 400 mL PO daily</li><li>Ondansetron 4 mg PO qid PRN</li><li>Zoledronic acid 4 mg IV monthly</li><li>Hydrochlorothiazide 12.5 mg PO daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Phone encounter on 2025-03-28 for persistent nocturia, dribbling, mild abdominal discomfort. Labs showed normal BMP, fasting glucose 165 mg/dL, HbA1c 9.2%, PSA 4.1 ng/mL, LDL 160 mg/dL. Initiated lisinopril 10 mg daily, tamsulosin 0.4 mg daily, metformin 500 mg BID, atorvastatin 20 mg at bedtime. Counsel on weight loss, diet, exercise, smoking cessation. Repeat PSA in 6 months, HbA1c in 3 months; follow-up in 4 weeks.</li><li>Follow‑up visit on 2025-04-15: patient reports nocturia 6–7 times/night, dribbling, perineal pressure; vitals BP 160/88 mmHg, BMI 33; DRE shows mildly enlarged indurated prostate. Continued metformin 1000 mg BID, lisinopril 20 mg daily, tamsulosin 0.4 mg daily; added amlodipine 5 mg daily, aspirin 81 mg daily, dutasteride 0.5 mg daily; completed ciprofloxacin course. Counsel on weight loss, exercise, sodium restriction; repeat PSA in 6 months, HbA1c in 3 months; follow-up in 4 weeks.</li><li>Visit on 2025-05-12: patient presented after biopsy returned with unspecified prostate pathology and rising PSA of 6.2 ng/mL. Current medication regimen unchanged. Staging imaging (pelvic MRI and bone scan) ordered. Follow‑up planned in 2 weeks for imaging results, PSA assessment, and discussion of treatment options. Lifestyle modifications reinforced.</li><li>Visit on 2025-06-10: Review of MRI pelvis and bone scan results. Imaging showed a 2.5‑cm intraprostatic lesion confined to peripheral zone; no extraprostatic extension, no bone metastasis. PSA 6.2 ng/mL. Patient elected TURP for symptom relief and tissue acquisition. Continued current medical therapy (metformin, lisinopril, amlodipine, atorvastatin, aspirin, tamsulosin, dutasteride). TURP scheduled within 2–4 weeks. PSA to be monitored quarterly for next year. Follow‑up 2 weeks post‑TURP for wound check, symptom review, and PSA assessment.</li><li>Postoperative follow‑up after TURP for BPH; patient reports persistent urinary leakage and suprapubic discomfort, mild swelling noted, no active leakage observed; urinary extravasation from bladder neck confirmed. Continued current medications; prescribed acetaminophen 1 g PO q6h prn. Counseling on activity restrictions and voiding diary. Follow‑up in 2 weeks for wound check and symptom review; PSA monitored quarterly.</li><li>Follow‑up on 2025-08-20 after TURP: Discussed adjuvant external beam radiotherapy; initiated leuprolide acetate 3.75 mg IM monthly; noted persistent pelvic pain, groin heaviness, reduced urinary frequency, occasional urgency; continued current antihypertensives, antidiabetics, statin, aspirin, alpha‑blocker, 5‑ARI, pain control; plan to start EBRT within 6 weeks; PSA to be monitored quarterly; baseline DEXA recommended.</li><li>Visit on 2025-11-05: Oncology review of ADT with PSA decline to 2.2 ng/mL, elevated BP 180/95, fasting glucose 200 mg/dL; lisinopril increased to 40 mg daily, added dapagliflozin 10 mg daily and liraglutide 0.6 mg daily; other medications unchanged; labs CBC, BMP, fasting glucose, PSA repeated; next visit 2025-11-29; PSA quarterly thereafter; consider thiazide diuretic if BP remains uncontrolled.</li><li>Visit on 2026-04-15: evaluation of new osteoblastic bone lesions in lumbar spine and left femoral neck; PSA 13 ng/mL; BP 190/100; initiated denosumab 120 mg SC q4 weeks, added hydrochlorothiazide 12.5 mg daily, planned palliative external beam radiotherapy to lumbar vertebrae and left femur; continued leuprolide, metformin, dapagliflozin, lisinopril 20 mg, amlodipine, atorvastatin, aspirin, liraglutide; scheduled bone scan repeat in 3 months and PSA quarterly.</li><li>Visit on 2026-06-10: Hospital admission for acute urinary retention and UTI. Catheterization performed in ED; initiated IV Cefepime 2 g q12h for 5 days; labs showed E. coli UTI; BP elevated at 185/98; lisinopril planned to be increased to 40 mg, HCTZ continued; glucose 210 mg/dL; plan for transition to oral antibiotics and discharge when stable.</li><li>Visit on 2026-07-15: Palliative Care assessment – initiated higher‑dose morphine 60 mg PO q8h PRN for metastatic bone pain, added scheduled bowel regimen with loperamide and polyethylene glycol, started ondansetron PRN for nausea, continued zoledronic acid monthly and ADT, discussed hospice enrollment and advanced care planning; BP 180/92 and plan to adjust lisinopril if uncontrolled; labs ordered for CBC, CMP, calcium, renal function.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

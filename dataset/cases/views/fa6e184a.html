@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case fa6e184a</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: fa6e184a</h1><div class="subtitle">Acute Bipolar I Manic Episode | Female, 35</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Substance Use Disorder (Alcohol), Generalized Anxiety Disorder, Insomnia, Hypertension, Obesity</div><div class="meta-line">Risk Factors: Family history of bipolar disorder, Sleep deprivation, Cannabis use, Recent major life stressors, Substance use, Medication non‑adherence</div></div>
+<details><summary>Narrative <span class="preview-text">**A Storm in the Quiet Hours**  Sarah M., a 35‑year‑old accountant, had always been the sort of woman who could be “on t...</span></summary><div class="section-body"><p>**A Storm in the Quiet Hours**</p><p>Sarah M., a 35‑year‑old accountant, had always been the sort of woman who could be “on the clock” for twenty‑four hours and still feel satisfied. She had a long family history of bipolar disorder—her mother had battled recurrent mania—and a lifelong predisposition to insomnia that made her night‑time hours a canvas of restless thoughts. For years, she had tried to mask the creeping anxiety that accompanied her workload with a handful of cheap over‑the‑counter sleeping aids and a nightly glass of wine. Her weight had crept up to 210 lbs over the past decade, and her blood pressure had stabilized at 140/93 after a few years’ worth of irritable‑patient medication adherence.</p><p>In the spring of 2026, when Sarah’s mother was hospitalized for an acute cardiac event, the familiar quiet that usually accompanied Sarah’s evenings was shattered. That night, she woke at 1 a.m. and felt an urge that seemed almost animal, a compulsion to rearrange her office desk, to write emails that would not be sent, and to plan a weekend trip to a beach town she had never considered. A week before, she had taken a puff of cannabis she had picked up from a friend, followed by a bottle of wine, and the “calm” arrived slowly rather than sharply. She would say, “I’ve never felt so good.”</p><p>**Week 1: A Glitch in the Routine**</p><p>When Sarah scheduled a routine follow‑up with her primary care physician, she described “mood swings” in vague terms. “I keep getting so excited,” she told the nurse, but her voice held a tremor. She could not sleep past 3 a.m. that evening and was “talking a lot.” The clinician, noting Sarah’s elevated heart rate (108 bpm) and a blood pressure reading of 145/95, suspected a combination of anxiety, alcohol, and sleep deprivation affecting her cardiovascular system. She was offered a brief sleep hygiene counseling, advised to keep a routine bedtime, and prescribed a low‑dose trazodone for sleep. However, Sarah’s insistence that she “needed to get the work done” led to a deferral of any psychosis‑related evaluation.</p><p>**Week 2: A Growing Storm**</p><p>Two weeks later, Sarah’s grandiosity intensified. She began speaking at faster rates than usual, her pitch fluctuating, and her idea of “the future” included a sudden relocation to a coastal town to start a “small business.” She stopped sleeping more than six hours a night. Her mother, alarmed by Sarah’s increased talkativeness and erratic behavior, urged her to see a psychiatrist. At the initial psychiatric assessment, Sarah’s affect was elated, her speech pressured, and she denied psychotic ideation. Cognitive testing revealed mildly impaired attention attributable to sleep deprivation. Her medical history revealed hypertension and obesity and self‑reported alcohol use disorder; she admitted to drinking two to three drinks a night, mostly on weekdays, and to using cannabis irregularly. She also admitted non‑adherence to her antihypertensive medication.</p><p>The psychiatrist noted the subtlety of the presentation—no overt delusions or dangerous behavior, just a marked elevation in energy coupled with anxiety about finances and the future. A provisional diagnosis of Bipolar I, acute manic episode, was made. The plan involved a combination of a mood stabilizer (lithium), a second‑line antipsychotic (quetiapine low dose) to mitigate insomnia and anxiety, and immediate referral to a substance use program. A baseline serum lithium level and basic metabolic panel were ordered, with a note to monitor the patient’s hyponatremia risk given her fluid intake.</p><p>**Week 3: Intervention and In‑hospital Episode**</p><p>Within the week, Sarah’s behavior became erratic to the point of endangering others. While driving home after a late night at work, she crossed a red light, ran a stop sign, and then abandoned the vehicle in an intersection, shouting into the night that she “deserved a better life.” She was pulled over by a police officer, who found her with a markedly increased pulse (123 bpm) and a blood pressure of 152/98. The officer called emergency services because Sarah was agitated and unable to explain her actions. The paramedic crew noted a lack of insight regarding her mood instability and observed that her breathing pattern was irregular, likely because of insomnia and caffeine intake.</p><p>Sarah was admitted to the psychiatric inpatient unit at a 20‑bed community hospital, where a rapid‑titration lithium protocol was initiated. Initial serum levels did not exceed 0.8 mmol/L, and her sodium remained within normal limits. The inpatient team, wary of cardiovascular side effects in the context of chronic hypertension and obesity, instituted an arrhythmia monitoring protocol and ensured frequent vital sign checks. Her anxiety and insomnia were addressed concurrently with low‑dose quetiapine (25 mg at bedtime) and a structured sleep‑routine plan.</p><p>In addition to the psychopharmacologic stabilization, the inpatient team arranged for a comprehensive substance use assessment. She disclosed that her alcohol consumption had risen in the last month, and she expressed ambivalence toward therapy. The inpatient team introduced a motivational interviewing approach that highlighted the interconnectedness of her manic symptoms, her insomnia, and the cardiovascular risks of alcohol and cannabis.</p><p>**Week 4: The Turning Point**</p><p>By day seven of hospitalization, Sarah’s affect normalized. Her speech slowed, her energy returned to a manageable level, and she had started to recognize the link between her disrupted sleep, the heightened anxiety, and her impulsive decisions. Her lithium level, at that point 0.9 mmol/L, was within the therapeutic window (0.6–1.2 mmol/L). She reported being able to sleep through the night for the first time in weeks, attributing it to the combination of quetiapine and improved sleep hygiene. During a scheduled therapy session, she acknowledged that her impulsive purchases during the manic phase had caused debt, something that had been a source of guilt even during periods of better self‑regulation.</p><p>**Week 5‑8: Transition to Outpatient Care**</p><p>Sarah was discharged on day 14 with a maintenance plan: lithium 600 mg twice daily, quetiapine 25 mg nightly (titrated to 50 mg with no side effects), lisinopril switched back to her antihypertensive regimen (10 mg daily), and a scheduled follow‑up with the psychiatrist in one week, with a metabolic panel to monitor lithium excretion and electrolytes. A psychiatrist and a physician navigator coordinated to streamline her medications: the navigator checked for adherence, while the psychiatrist continued cognitive-behavioral therapy (CBT) focusing on mood regulation, anxiety management, and sleep.</p><p>At her first outpatient visit, Sarah’s lithium level rose to 1.1 mmol/L, but her electrolytes remained stable. She reported that her anxiety had diminished from the last hospitalization; she was no longer panicking about potential “big risks” and was planning a small exercise routine. She began an after‑school support group for individuals with substance abuse and emotional instability. She also decided to enroll in a structured substance use program, prompted by her experience in the hospital.</p><p>**Week 12–16: Consolidation and Improvement**</p><p>Over the next three months, Sarah’s course was marked by notable improvement. Her mood was stable; she maintained a consistent sleep schedule of 7‑8 hours per night, and her anxiety had markedly reduced. She reported a sense of empowerment after participating in CBT and group therapy, noting that her self‑esteem had improved. Her blood pressure had lowered to 130/84 on a 5 mg/day dose of lisinopril, and her weight had stabilized, partly due to the exercise program.</p><p>A key turning point was the decision to taper quetiapine after the second outpatient visit. Her psychiatrist monitored her mood with regular check‑ins and noted a low risk for relapse, allowing the dose to be stepped down to 25 mg nightly and eventually to discontinuation after six weeks. A follow‑up lithium level remained within the therapeutic range, and no side effects had emerged.</p><p>Sarah also re‑engaged with her medical providers for the first time in months. She reported no cravings for alcohol or cannabis and had remained abstinent. She attributed her sobriety to a blend of medication stability, structured therapy, family support, and a newly discovered interest in yoga, which helped her maintain both her nervous system stability and her sleep hygiene.</p><p>**Epilogue**</p><p>While Sarah’s journey through an acute manic episode was tumultuous, the careful layering of pharmacologic stabilization with psychosocial support, and thoughtful adjustments to her existing comorbidities (hypertension, insomnia, obesity, and substance use disorder), produced a course that moved from the brink to steady improvement. The subtlety of the initial presentation—oscillating between an over‑tuned “creative mind” and an intense need for relief from chronic insomnia and anxiety—required a clinician’s suspicion, and the coordinated inpatient–outpatient continuum proved essential in steering her back toward health. As Sarah stood at the window of her apartment one evening, watching the horizon melt into twilight, she felt the weight of the future shift from a storm to a horizon she could navigate.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-04-01</h3><div class="visit-meta">Primary Care | Reason: Routine follow-up; mood swings, insomnia, high pulse</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine follow-up; mood swings, insomnia, high pulse.
+History of Present Illness: Sarah is a 35‑year‑old female with known hypertension, generalized anxiety disorder, insomnia, obesity, and alcohol use disorder. She presents today for routine review. She reports a 1‑hour episode of talkative mood swings, early morning awakening, tremor in voice, feeling exhausted yet energetic. She notes difficulty falling asleep and persistent insomnia for the past week. She denies recent alcohol consumption, but admits to ongoing alcohol use disorder.
+Review of Systems: Positive for mood lability, insomnia, anxiety, early morning awakening, tremor. Negative for chest pain, dyspnea, focal neurological deficits. She denies hallucinations, suicidal ideation, or depression.
+Physical Examination: Vitals: HR 108 bpm, BP 145/95 mmHg, T 98.6°F, RR 18/min, SpO2 98%. General: Patient alert and oriented. HEENT: Eyelid lag noted. Neurologic: Tremulous, no focal deficits. Cardiovascular: Regular rate and rhythm, no murmurs. Pulmonary: Clear to auscultation bilaterally. BMI: Obesity category.
+Assessment: 1. Insomnia - moderate severity. 2. Mood lability and anxiety - likely exacerbated by sleep deprivation and alcohol. 3. Hypertension - elevated BP, possibly due to anxiety or alcohol use. 4. Alcohol use disorder - ongoing.
+Plan: 1. Pharmacologic: Trazodone 50 mg at bedtime for insomnia; advise gradual titration if needed. 2. Lifestyle: Sleep hygiene education; maintain regular sleep schedule; limit caffeine after noon; avoid alcohol. 3. Monitor BP: Home BP monitoring twice daily; consider antihypertensive if BP remains &gt;140/90. 4. Labs: CMP, CBC, lipid panel already ordered; review results next visit. 5. Safety: No suicidal ideation, no psychosis, therefore no psychiatric consult ordered now but watch for any changes. 6. Follow‑up: Return in 4 weeks for BP and sleep assessment or sooner if symptoms worsen.
+
+Signed: ___________________
+Primary Care Physician</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mood lability</span><span class="pill">Early morning awakening</span><span class="pill">Talkative</span><span class="pill">Tremor in voice</span><span class="pill">Feeling &quot;exhausted&quot; but energetic</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>108 bpm</td></tr><tr><td>Blood Pressure</td><td>145/95 mmHg</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tremulous, but oriented to person, place, time</li><li>Eyelid lag</li><li>No focal neurological deficits</li><li>Normal heart and lung auscultation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Basic metabolic panel</li><li>Complete blood count</li><li>Lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CMP: within normal limits</li><li>CBC: normal</li><li>Lipid panel: borderline high triglycerides</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Trazodone 50 mg nightly</li><li>Sleep hygiene education</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>Generalized anxiety disorder</li><li>Insomnia</li><li>Obesity</li><li>Alcohol use disorder</li><li>Family history of bipolar disorder</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah arrived at the PCP&#x27;s office with a 1‑hour history of talkative mood swings and persistent insomnia. The clinician noted her elevated heart rate and a blood pressure reading of 145/95, and discussed the potential role of sleep deprivation and alcohol. A brief sleep hygiene counseling was provided. The patient was prescribed a low‑dose trazodone 50 mg at bedtime for insomnia. Sarah was advised to avoid alcohol and to keep a regular sleep schedule. No psychiatric evaluation was performed due to lack of overt psychotic symptoms or suicidality.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation consistent with sleep‑deprivation amplified anxiety. No evidence of mania yet; however, mood lability noted. Consider monitoring for potential escalation.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-04-08</h3><div class="visit-meta">Psychiatry | Reason: Evaluation of increased talkativeness and grandiosity; possible manic episode</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Assessment: 35‑year‑old female presents with classic indicators of a manic episode consistent with bipolar I disorder.  Elevated affect, pressured speech, grandiose ideation, decreased need for sleep and increased anxiety about finances were documented.  The episode appears to be precipitated by recent stressors (maternal cardiac event) and ongoing alcohol use.  No psychotic features noted, but the patient displays impaired concentration likely secondary to sleep loss.
+
+Past psychiatric history: mood lability, insomnia treated with trazodone prior to current visit.  Medical history significant for hypertension (non‑adherent to lisinopril), obesity, alcohol use disorder, family history of bipolar disorder.
+
+Differential: 1) Bipolar I disorder – current manic episode. 2) Substance‑induced mood disorder (alcohol/Cannabis abuse). 3) Medication non‑adherence – uncontrolled hypertension contributing to mood dysregulation.
+
+Plan:
+1. Initiate lithium 600 mg BID with rapid‑titration; aim for therapeutic serum level 0.6‑1.2 mEq/L.  Lithium level to be checked in 72 h, then weekly until stable.
+2. Start quetiapine 25 mg nightly for sleep and residual anxiety.  Titrate up over 2–3 weeks based on tolerability.
+3. Continue lisinopril; follow up to reinforce adherence and re‑check BP.
+4. Refer for substance use counseling (inpatient program recommended due to ongoing alcohol use).
+5. Counsel on sleep hygiene, stress management, and psychoeducation regarding bipolar disorder.
+6. Monitor for lithium toxicity: watch for nausea, tremor, cognitive changes, GI upset; educate patient on warning signs.
+7. Routine labs (CMP, CBC, TSH, lithium level, renal function) already ordered.
+8. Follow‑up in 1 week for repeat lithium level and assessment of side effects, or sooner if any adverse symptoms.
+
+Disposition: Patient oriented, cooperative, declined any additional discussion beyond medication plan.  She is scheduled for a follow‑up visit on 2026‑04‑15.
+
+The patient was briefed on the importance of medication adherence and the potential need for dose adjustments based on lab results.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pressured speech</span><span class="pill">Grandiose ideas</span><span class="pill">Reduced need for sleep (≤6 hours) </span><span class="pill">Anxious about finances and future</span><span class="pill">Mood markedly elevated</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>110 bpm</td></tr><tr><td>Blood Pressure</td><td>148/97 mmHg</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Oxygen Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Euphoric affect</li><li>Pressure of voice</li><li>No psychomotor agitation</li><li>No visual or auditory hallucinations observed</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Basic metabolic panel</li><li>CBC</li><li>Serum electrolytes</li><li>Serum lithium level</li><li>Renal function</li><li>TSH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CMP: Na 138 mEq/L, K 4.1, Cl 102, bicarb 24</li><li>CBC: WBC 6.5, Hgb 13.5, Hct 40</li><li>Renal function: BUN 12, creatinine 1.0, eGFR 90</li><li>TSH: 1.8 µIU/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID (start)</li><li>Quetiapine 25 mg nightly (start)</li><li>Counseling referral for substance use</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily (non‑adherent)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent mother hospitalization for cardiac event</li><li>Alcohol consumption: 2–3 drinks nightly</li><li>Cannabis use: irregular</li><li>Non‑adherence to antihypertensive medication</li><li>History of insomnia and ADHD? (none present)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah arrived at the psychiatry office with accelerated speech, a grandiose plan to relocate and start a business, and anxiety about finances. She denied hallucinations or delusions. The psychiatrist performed a brief neurocognitive screen, noting mild impaired concentration likely due to sleep loss. A provisional diagnosis of Bipolar I disorder, acute manic episode (moderate severity) was made. The plan included initiation of lithium 600 mg twice daily (with rapid‑titration schedule) and quetiapine 25 mg nightly to address sleep and anxiety. The patient was also referred to a substance use program and medication counseling was scheduled. Baseline labs including CBC, CMP, TSH, lithium level, and renal function were ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnostic confirmation of Bipolar I acute mania; initiation of mood stabilizer series. Monitoring of lithium trough expected, potential for rapid adjustment.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-04-10</h3><div class="visit-meta">Psychiatric Inpatient | Reason: Acute psychiatric inpatient admission for self‑harm, agitation, and unsafe behavior</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute psychiatric inpatient admission for self-harm, agitation, and unsafe behavior.
+
+History of Present Illness: Sarah, a 35‑year‑old female, was brought to the emergency department by police after leaving a vehicle unattended and shouting threats. She was admitted to the psychiatric inpatient unit for acute agitation, disorientation, and self‑harm risk. She has a history of generalized anxiety disorder, insomnia, obesity, hypertension, alcohol use disorder, and recent increase in alcohol and cannabis use. She has missed multiple doses of lithium and quetiapine in the past. She is currently on lisinopril 10 mg daily. She presents with pressured speech, euphoric affect, tachycardia, hypertension, and an elevated heart rate of 123 bpm. She denies hallucinations but is restless and has displayed reckless behavior.
+
+Past Psychiatric History: Mood lability, grandiose ideation, reduced sleep need, anxiety about finances, multiple medication non‑adherence episodes.
+
+Past Medical History: Hypertension, obesity, GAD, insomnia, alcohol use disorder, family history of bipolar disorder.
+
+Medications: Lithium 600 mg BID (rapid titration), quetiapine 25 mg nightly, trazodone 50 mg nightly, lisinopril 10 mg daily.
+
+Allergies: NKDA.
+
+Social History: Increases alcohol (up to 4‑6 drinks nightly) and cannabis use. No current employment. No insight into illness.
+
+Physical Examination: Vitals: HR 123 bpm, BP 152/98 mmHg, Temp 98.3 °F, RR 20/min, O2 sat 96 %. General: Restless, pressured speech, euphoric affect. HEENT: No focal deficits. Cardiovascular: Systolic murmur grade I/VI, no edema. Respiratory: Irregular breathing pattern. Abdomen: No tenderness. Extremities: No cyanosis or clubbing.
+
+Labs: CMP within normal limits (Na 138, K 4.0, Cl 101, bicarb 24); CBC normal; Lithium level 0.8 mmol/L (therapeutic 0.6–1.2 mmol/L). Renal function normal (BUN 11, Cr 0.9 mg/dL). Urine drug screen: THC +, alcohol metabolites +.
+
+Risk Assessment: High risk for suicide/self‑harm, potential for lithium toxicity if not monitored. Cardiac monitoring indicated due to tachycardia and history of systolic murmur.
+
+Assessment:
+1. Acute manic episode with mixed features (evidence of pressured speech, euphoria, decreased sleep, increased agitation). High risk for self‑harm.
+2. Possible substance‑induced mood elevation (elevated alcohol and cannabis use).
+3. Lithium toxicity risk (currently therapeutic but borderline). Requires close monitoring.
+4. Alcohol intoxication contributing to psychomotor agitation.
+
+Plan:
+- Continue lithium 600 mg BID, obtain serum lithium level next morning and repeat daily for first 3 days.
+- Continue quetiapine 25 mg nightly; monitor for sedation and cardiac conduction delays.
+- Lorazepam 20 mg IV administered for agitation; further benzodiazepines only as needed under supervision.
+- Initiate regular ECG monitoring, obtain baseline ECG and serial ECGs for QTc assessment.
+- Obtain baseline transthoracic echocardiogram to evaluate cardiac risk given lithium therapy.
+- Continue trazodone 50 mg nightly for insomnia; monitor for oversedation.
+- Initiate structured sleep hygiene protocol and bedtime routine.
+- Conduct substance use assessment; provide motivational interviewing and link to inpatient substance use counseling.
+- Re‑educate patient on medication adherence; involve family/friend if available.
+- Hydration: 1.5 L fluids/day; monitor electrolytes and renal function.
+- Continue blood pressure monitoring in the unit; adjust lisinopril or add antihypertensive if needed.
+- Discuss transition to outpatient follow‑up with a mood stabilizer and antipsychotic review.
+- Discharge planning: Once medically stable and lithium level within therapeutic range, discharge with close outpatient follow‑up within 48 h, safety contract, and psychoeducation.
+
+Follow‑up: Next lithium level and ECG in 24 h; daily vitals; psychiatric reevaluation daily. If lithium level exceeds 1.4 mmol/L or if any arrhythmia develops, hold lithium and seek hematology‑oncology input.
+
+Disposition: Patient admitted to monitored psychiatric unit for ongoing safety, medication review, and substance use counseling.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Disorientation</span><span class="pill">Agitation</span><span class="pill">Hallucination? (none noted)</span><span class="pill">Restlessness</span><span class="pill">Reckless behavior (left car abandoned)</span><span class="pill">Elevated heart rate</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>123 bpm</td></tr><tr><td>Blood Pressure</td><td>152/98 mmHg</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr><tr><td>Respiratory Rate</td><td>20/min</td></tr><tr><td>Oxygen Saturation</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Euphoric affect, pressured speech</li><li>No focal neurologic deficits</li><li>Respiratory pattern irregular</li><li>Systolic murmur grade I/VI, no edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Basic metabolic panel</li><li>CBC</li><li>Serum lithium level</li><li>Serum electrolytes</li><li>Echocardiogram (baseline) to assess arrhythmia risk</li><li>Urine drug screen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CMP: Na 138, K 4.0, Cl 101, bicarb 24</li><li>CBC: WBC 5.8, Hgb 13.0, Hct 39</li><li>Lithium level: 0.8 mmol/L</li><li>Renal function: BUN 11, Cr 0.9</li><li>Urine drug screen: THC +, Alcohol metabolites +</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID (rapid titration)</li><li>Quetiapine 25 mg nightly</li><li>Lorazepam 20 mg IV (for agitation)</li><li>Sleep hygiene education</li><li>Motivational interviewing for substance use</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Lisinopril 10 mg daily (non‑adherent)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent escalation of mania</li><li>Multiple episodes of non‑adhering to medication</li><li>Alcohol and cannabis use increase</li><li>Lack of insight</li><li>No known allergies</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah was admitted after the police brought her in following a dramatic incident of leaving a vehicle unattended and shouting threats. The inpatient team performed a rapid assessment. Vital signs were borderline tachycardic and hypertensive. She was given a 20‑mg lorazepam dose for agitation but remained restless. A rapid‑titration lithium protocol was initiated, with an IV bolus to reach a therapeutic serum level by the next day. Low‑dose quetiapine 25 mg was continued nightly. Arrhythmia surveillance was instituted and the patient was moved to a monitored room. She underwent a formal psychiatric evaluation, confirming an acute manic episode per DSM-5 criteria. The inpatient team also arranged a substance use assessment and initiated a motivational interviewing approach. Sleep hygiene and a structured bedtime routine were implemented to reduce insomnia.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute manic crisis required inpatient stabilization. Lithium reached therapeutic range without toxicity. Quetiapine effective in mitigating agitation and insomnia. Substance use identified; engagement in M.I. approach.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-04-12</h3><div class="visit-meta">Psychiatric Inpatient | Reason: Day two of inpatient care; assessment of vitals and lithium levels; adjustment of therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient Sarah is a 35‑year‑old woman admitted on 2026‑04‑10 after a self‑harm episode associated with acute mania and agitation. She is on lithium 600 mg BID, quetiapine 25 mg nightly, chronic lisinopril (non‑adherent), trazodone 50 mg nightly (discontinued during admission).\n\nDay 2 assessment: 1. **Mood** – euphoric but markedly calmer; agitation has reduced significantly, speech slowed relative to admission but is coherent. 2. **Sleep** – patient reports improved sleep quality with fewer awakenings. 3. **Vital signs** – stable, HR 108 bpm, BP 140/92 mmHg, RR 18/min, temp 98.2°F, SpO2 98%. 4. **Physical exam** – no tremor, normal cardiopulmonary exam, no signs of heart failure or fluid overload. 5. **Laboratory** – lithium 0.8 mmol/L (therapeutic), Na 137 mEq/L, K 3.9 mEq/L. Renal function and thyroid profile previously normal.\n\n**Assessment**\n• Bipolar I disorder, current manic episode, now improving on lithium and quetiapine.\n• No evidence of lithium toxicity or organ dysfunction.\n• Anxiety and insomnia have markedly ameliorated but remain ongoing targets.\n• Non‑adherence to lisinopril noted, but no current hypertension crisis.\n\n**Plan**\n1. Continue lithium 600 mg BID and quetiapine 25 mg nightly.\n2. Recheck serum lithium and electrolytes in 48 hours; continue every other day.\n3. Reinforce sleep hygiene; continue CBT focused on early mood destabilization markers.\n4. Encourage adherence to antihypertensive therapy; schedule cardiology consult if BP remains &gt;140/90.\n5. Monitor vital signs q8h.\n6. Begin discharge planning: outpatient psychiatry follow‑up within 4 weeks, community substance‑use counseling, and primary care for hypertension management.\n7. Arrange baseline ECG and echocardiogram if not recent (currently pending).\n\nThe patient remains stable and is an appropriate candidate for early discharge pending continuation of outpatient care and support for medication adherence.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Energized mood</span><span class="pill">Improved sleep</span><span class="pill">Reduced agitation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>108 bpm</td></tr><tr><td>Blood Pressure</td><td>140/92 mmHg</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mood: euphoric, decreased psychomotor agitation</li><li>Speech: slowed compared to admission</li><li>No tremor or abnormal movements</li><li>No signs of heart failure</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum lithium level</li><li>Serum electrolytes</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lithium level: 0.8 mmol/L</li><li>Na: 137, K: 3.9</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>CBT session</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Lisinopril 10 mg daily (non‑adherent)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continuing lithium therapy</li><li>Stable hemodynamics</li><li>Compliance with prescribed medications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On day two, Sarah presented a marked decrease in agitation, improved sleep patterns, and stable vitals. Lithium levels were within the therapeutic window, and no signs of thyroid or renal dysfunction were identified. The inpatient team continued to monitor serum lithium every other day, maintained the low‑dose quetiapine, and reinforced sleep hygiene. A structured CBT session with a therapist was initiated, focusing on recognizing early signs of mood destabilization. No adjustments to psychotropic dosages were deemed necessary at this time.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stabilization of mood; continued safety monitoring. Lithium pharmacokinetics within expected range; ready for discharge plan.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-04-17</h3><div class="visit-meta">Psychiatric Inpatient - Discharge Planning | Reason: Day seven of hospitalization; evaluation of readiness for discharge</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint / Reason for Visit**
+Day‑seven hospitalization – evaluation of readiness for discharge.
+
+**History of Present Illness**
+Sarah Jones, 35‑year‑old female, currently admitted for 7 days after an acute manic episode complicated by self‑harm and substance use. She has known hypertension, GAD, insomnia, obesity, alcohol use disorder, and a family history of bipolar disorder. During this admission she demonstrated an overall mood stabilization with a more content affect, slowed speech, and improved sleep. Insight into past impulsivity and risk behaviours has emerged. Her lithium level was 0.9 mmol/L, in the therapeutic range. Vital signs remained stable, and there were no signs of cardiopulmonary compromise.
+
+**Review of Systems**
+- Mood: calm, euphoria replaced by stability.
+- Sleep: improved quality, more consistent schedule.
+- Insight: recognizes impulsivity.
+- No suicidal ideation or hallucinations.
+- Substance use: ongoing alcohol use but limited.
+- No current anxiety spikes.
+
+**Physical Exam**
+- Cardiac: no murmurs, heart rate 98 bpm, blood pressure 138/90.
+- Pulmonary: clear bilateral breath sounds, RR 18/min.
+- Neurologic: no focal deficits.
+- General: BMI remains high.
+
+**Labs / Tests**
+- Serum lithium: 0.9 mmol/L.
+- Serum electrolytes: Na 138 mmol/L, K 4.0 mmol/L.
+
+**Assessment**
+1. Bipolar I disorder – manic episode, currently in partial remission after inpatient stabilization.
+2. Generalized anxiety disorder – resolved acutely, to be maintained with CBT.
+3. Alcohol use disorder – mild‑moderate; ongoing counseling needed.
+4. Hypertension – well‑controlled on lisinopril, but still borderline elevated.
+5. Lithium therapy – therapeutic, no signs of toxicity.
+
+**Plan**
+- **Medications**: Continue lithium 600 mg BID and quetiapine 25 mg nightly; restart lisinopril 10 mg daily for HTN; no trazodone required.
+- **Monitoring**: Lithium serum level every 4–6 weeks. Blood pressure checked at each outpatient visit.
+- **Counseling / Psychotherapy**: Continue CBT focusing on sleep hygiene, substance use coping strategies, and relapse prevention.
+- **Substance Use Treatment**: Psychiatric nurse navigator to arrange referral to a structured alcohol‑use program.
+- **Follow‑up**:
+    * Outpatient psychiatry appointment scheduled 7 days post‑discharge.
+    * Primary care visit for hypertension and weight management within 2 weeks.
+    * Ensure medication adherence education; use pill organizer and reminder app.
+- **Safety**: No current suicidal ideation; keep phone number on file, encourage 24‑hr crisis line use.
+- **Discharge Summary**: Completed with emphasis on continuation of lithium, CBT, medication adherence, and routine lithium checks.
+
+Sarah was advised to resume a consistent sleep schedule, limit alcohol intake, and attend all follow‑up appointments. She was instructed to contact the psychiatric nurse navigator with any medication concerns.
+
+**Disposition**
+Patient ready for discharge pending approval of discharge plan. All consults and arrangements in place. She will receive a printed copy of her discharge summary.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Normalized affect</span><span class="pill">Sleep quality improved</span><span class="pill">Insight into manic behaviors</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>98 bpm</td></tr><tr><td>Blood Pressure</td><td>138/90 mmHg</td></tr><tr><td>Temperature</td><td>98.1°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Blood pressure normalized</li><li>Mood: euphoria replaced by calmness</li><li>No signs of heart failure or neurological deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum lithium level</li><li>Serum electrolytes</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lithium level: 0.9 mmol/L</li><li>Na: 138, K: 4.0</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Educational counseling</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Lisinopril 10 mg daily (non‑adherent)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>One week of psychotropic therapy</li><li>No current suicidal ideation</li><li>Improved adherence to medications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah demonstrated a stable mood, slowed speech, improved sleep, and emerging insight into her earlier impulsivity. Lithium trough was 0.9 mmol/L, within therapeutic range and safe. The inpatient team initiated a step‑down care plan: lithium 600 mg BID, quetiapine 25 mg nightly, continuation of lisinopril 10 mg daily. A psychiatrist outpatient appointment was scheduled for one week post‑discharge. A psychiatric nurse navigator was assigned to assist with medication adherence and to coordinate referrals to a substance use program. The discharge summary highlighted the need for continued CBT, maintenance therapy, and regular monitoring of lithium serum levels every 4–6 weeks. Sarah was advised to resume a consistent sleep schedule and to limit alcohol consumption.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Marked improvement; readiness for outpatient care. Lithium maintained; quetiapine low dose effective. Next steps: outpatient follow‑up, CBT continuation, substance use treatment.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-04-24</h3><div class="visit-meta">Psychiatry (Outpatient) – Discharge Follow‑Up | Reason: Discharge follow‑up; review of lithium levels, medication adherence, and transition to outpatient therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">SOAP Note – Visit #6 (Discharge Follow‑up)
+
+Subjective:
+- Patient is a 35‑year‑old female presenting for her first outpatient psychiatry visit after discharge from inpatient care. She reports feeling stable with a euthymic mood. Occasional mild anxiety is present, which she manages with deep breathing. She denies suicidal or homicidal ideation, psychotic symptoms, or sleep disturbances.
+- Review of systems is otherwise negative.
+
+Objective:
+Vital Signs: HR 92 bpm, BP 130/84 mmHg, Temp 98.3°F, RR 18/min, SpO2 98%.
+Physical Exam: BP well controlled, euthymic affect, no focal neuro deficits.
+Labs: Serum lithium 1.1 mmol/L (therapeutic), CMP: Na 137, K 4.1, BMP normal, CBC pending.
+
+Assessment:
+- Maintenance treatment for bipolar spectrum disorder (likely Bipolar I, currently in euthymic phase). Lithium level in therapeutic range and patient is adherent.
+- Stable blood pressure and minimal anxiety.
+- No evidence of lithium toxicity.
+
+Plan:
+Medication Management:
+- Continue lithium 600 mg twice daily.
+- Continue quetiapine 25 mg at night.
+- Continue lisinopril 10 mg daily for hypertension.
+- Discontinue trazodone (no longer needed).
+
+Monitoring:
+- Order CBC and CMP in 2 weeks to monitor lithium toxicity.
+- Repeat serum lithium in 2 weeks to ensure therapeutic levels.
+
+Therapy:
+- Refer to CBT therapist for in‑office sessions focusing on mood regulation, coping with stressors, and sleep hygiene.
+
+Substance Use:
+- Encourage continued participation in the alcohol use disorder program.
+
+Follow‑up:
+- Return for outpatient psychiatry follow‑up in 2 weeks to review labs, medication adherence, and therapy progress.
+- Patient advised to contact office sooner if she experiences new or worsening symptoms (e.g., tremor, confusion, palpitations).
+
+Education:
+- Reinforced the importance of medication adherence, regular lithium monitoring, and maintaining a sleep‑friendly environment.
+
+Disposition:
+- Patient scheduled for next visit 2026‑04‑30.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Stable mood</span><span class="pill">Occasional mild anxiety</span><span class="pill">No sleep disturbances</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>92 bpm</td></tr><tr><td>Blood Pressure</td><td>130/84 mmHg</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP well controlled</li><li>Euthymic affect</li><li>No focal neuro deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Serum lithium</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lithium level: 1.1 mmol/L</li><li>CMP: Na 137, K 4.1</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue lithium 600 mg BID</li><li>Continue quetiapine 25 mg nightly</li><li>Schedule CBT sessions</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Discharged from inpatient unit</li><li>Started lithium and quetiapine</li><li>Participating in substance use group</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah presented for her first outpatient psychiatry visit after discharge. She reported feeling stable, with minimal anxiety that she could manage with deep‑breathing techniques. She denied any thoughts of self‑harm or psychotic symptoms. The lithium trough was measured at 1.1 mmol/L, within the therapeutic range (0.6–1.2). The outpatient team reinforced the importance of medication adherence and scheduled regular therapeutic sessions. The psychiatrist ordered a CBC and CMP in two weeks to monitor lithium effects. A CBT therapist was referred for in‑office sessions focusing on mood regulation and coping with stressors. The patient was encouraged to continue the substance use program and to maintain a sleep‑friendly environment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Clinical stability achieved; lithium level slightly elevated but still safe. Plan to monitor and titrate if necessary. Patient shows improved insight and coping skills.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-05-02</h3><div class="visit-meta">Psychiatry (Outpatient) – Follow‑Up | Reason: One‑week follow‑up; review of lithium level, lifestyle changes, and discussion of quetiapine taper</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: One‑week follow‑up; review of lithium level, lifestyle changes, and discussion of quetiapine taper.
+
+**History of Present Illness**: Sarah presents for routine follow‑up. She reports stable mood, consistent sleep over the past week, improved anxiety, and adherence to her exercise regimen (weekly yoga). She has no relapse of depressive or manic symptoms. Current lithium level (checked 1.2 mmol/L) is within therapeutic range. Blood pressure is well‑controlled on lisinopril and her BMI remains stable.
+
+**Past Psychiatric History**: Bipolar I disorder, generalized anxiety disorder, insomnia, alcohol use disorder, cannabis use disorder. Recent inpatient admission for acute agitation and self‑harm (see prior notes). Currently on lithium, quetiapine, and lisinopril.
+
+**Physical Examination**: 
+- Euthymic affect, no agitation or psychomotor excitation.
+- No tremor, dysarthria, or orthostatic changes.
+- BP 128/82 mmHg, HR 90 bpm, RR 18/min, Temp 98.2 °F, SpO₂ 98%.
+
+**Assessment**:
+1. Bipolar I disorder in remission, well‑controlled on lithium.
+2. Sleep maintained; insomnia resolved with trazodone previously, now quetiapine used.
+3. Anxiety symptoms mild and controlled.
+4. Lithium therapeutic; no signs of toxicity.
+5. Medication adherence confirmed.
+
+**Plan**:
+- Increase quetiapine to 50 mg nightly for the next two weeks to consolidate sleep maintenance.
+- After two weeks, begin taper to 25 mg nightly over 2 weeks.
+- Counsel patient on potential side effects (somnolence, weight gain, orthostatic hypotension) and safety monitoring.
+- Educate on signs of lithium toxicity (GI upset, tremor, confusion) and when to seek care.
+- Continue lithium 600 mg BID and lisinopril 10 mg daily. No changes to dose.
+- Encourage ongoing participation in substance‑use group, maintain sleep hygiene, and continue yoga.
+- Repeat serum lithium level in one week and again at two‑week visit.
+- Repeat CMP and CBC in 2 weeks as per routine.
+- Schedule next outpatient psychiatry visit in 2 weeks (2026‑05‑16). Primary care follow‑up in 4 weeks for hypertension review.
+
+**Follow‑Up**: 1) Repeat lithium level in 1 week; 2) Next psychiatry visit in 2 weeks; 3) CBC/CMP in 2 weeks; 4) Continue lifestyle measures.
+
+**Patient Education**: Reinforced importance of medication adherence, sleep routine, and substance‑use abstinence. Discussed potential side effects of quetiapine increase.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Stable mood</span><span class="pill">Improved sleep quality</span><span class="pill">Increased routine with exercise</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>90 bpm</td></tr><tr><td>Blood Pressure</td><td>128/82 mmHg</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP controlled</li><li>Euthymic affect</li><li>No tremor</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum lithium</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lithium level: 1.2 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Increase quetiapine to 50 mg nightly</li><li>Counseling education about taper</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Participating in substance use group</li><li>Maintaining 7-8 hour sleep schedule</li><li>Weekly yoga sessions</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah reported consistent sleep, reduced anxiety, and no relapse. Her lithium level measured at 1.2 mmol/L. The psychiatrist deemed it safe to increase quetiapine to 50 mg nightly for two weeks to solidify sleep maintenance. After that period, a taper to 25 mg nightly would begin. The outpatient team discussed potential side effects and patient preferences. Sarah expressed satisfaction with improvements and reaffirmed commitment to medication adherence.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Maintained therapeutic lithium; quetiapine titrated upward to aid sleep, plan to taper later. Patient remains in remission.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-05-23</h3><div class="visit-meta">Psychiatry (Outpatient) – Quetiapine Taper | Reason: Eight‑week follow‑up; initiation of quetiapine taper</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">
+**Subjective**
+
+Sarah reports complete remission of prior mood lability, stable sleep with no recent insomnia complaints, and no anxiety spikes. She continues to attend CBT, practice yoga, and participate in a substance use support group. She tolerates the 25 mg nightly quetiapine dose without adverse effects and has no new side‑effects.
+
+**Objective**
+
+Vitals: HR 88 bpm, BP 125/80 mmHg, Temp 98.1 °F, RR 16/min, SpO₂ 98 %. Physical exam confirms stable BP, euthymic mood, no tremor or extrapyramidal signs.
+
+Labs: Serum lithium 1.1 mmol/L (therapeutic).
+
+**Assessment**
+
+1. Stable euthymic phase of bipolar disorder – no current manic or depressive symptoms.
+2. Generalized anxiety disorder – symptoms controlled, no recent anxiety spikes.
+3. Insomnia – stable, no new complaints.
+4. Alcohol use disorder – no escalation reported.
+5. Lithium therapeutic level, no toxicity.
+6. Quetiapine 25 mg nightly is well tolerated; planned discontinuation in 6 weeks.
+
+**Plan**
+
+- Continue lithium 600 mg BID.
+- Continue quetiapine 25 mg nightly, with a plan to discontinue after an additional 6 weeks.
+- Continue lisinopril 10 mg daily for hypertension.
+- Maintain CBT, yoga, and substance‑use support group participation.
+- Weekly phone check‑ins over the next 4 weeks to monitor mood, sleep, and any emergent side‑effects.
+- Recheck serum lithium in 4 weeks and again prior to quetiapine discontinuation.
+- Schedule an in‑person follow‑up visit 6 weeks from today (2026‑07‑07) to assess tolerability of quetiapine discontinuation and repeat medication review.
+- Patient educated on early warning signs of mood destabilization and encouraged to keep a mood diary.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No mood lability</span><span class="pill">Stable sleep</span><span class="pill">No anxiety spikes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>88 bpm</td></tr><tr><td>Blood Pressure</td><td>125/80 mmHg</td></tr><tr><td>Temperature</td><td>98.1°F</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP stable</li><li>Mood: euthymic</li><li>No tremor or extrapyramidal signs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum lithium</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lithium level: 1.1 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue lithium 600 mg BID</li><li>Continue quetiapine 25 mg nightly</li><li>Plan for quetiapine discontinuation in 6 weeks</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Quetiapine 25 mg nightly</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Tapering quetiapine from 50 mg to 25 mg at 4‑week interval</li><li>No side‑effects observed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the eighth‑week visit, Sarah reported no depressive or manic symptoms. She has tolerated the quetiapine reduction to 25 mg nightly without adverse effects. The psychiatrist reviewed the plan to discontinue quetiapine after an additional 6 weeks. Lithium dosing remained unchanged. She continues to engage in CBT, yoga, and a substance use support group. The patient and clinician agreed to a close monitoring schedule with weekly phone checks for the next month.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Sustained remission, successful quetiapine taper. Lithium stable.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2026-07-02</h3><div class="visit-meta">Psychiatry (Outpatient) – Consolidation visit | Reason: Three‑month consolidation; review of lithium, quetiapine discontinuation, long‑term maintenance</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient Sarah, 35‑year‑old female, returned for her three‑month consolidation follow‑up. She reports no mood changes, excellent sleep, low anxiety, and maintained sobriety for the past months. Her lithium level was 1.0 mmol/L, comfortably within the therapeutic range. Blood pressure remained controlled at 128/83 mmHg. There were no new adverse effects; tremor was absent and the patient remained euthymic with no emotional lability. The physician reaffirmed the current lithium monotherapy regimen and discontinued quetiapine, which had been tapered off six weeks prior. Psycho‑education on medication adherence and lifestyle modification was reinforced. The plan is to continue lithium 600 mg BID and lisinopril 10 mg daily, schedule a repeat lithium and renal panel in six months, and maintain regular CBT and yoga sessions. No additional psychotropic medication is needed.
+
+Assessment:
+- Bipolar spectrum disorder, currently in stable remission on lithium monotherapy.
+- Hypertension, well controlled on lisinopril.
+- Generalized anxiety, well managed.
+- No evidence of lithium toxicity.
+
+Plan:
+1. Continue lithium 600 mg BID.
+2. Continue lisinopril 10 mg daily.
+3. Repeat serum lithium and CMP in 6 months.
+4. Maintain CBT and yoga; continue alcohol sobriety support.
+5. Monitor for subtle side effects (tremor, weight gain, thyroid function) at routine labs.
+6. Follow‑up visit scheduled for 2026-07-07 to review quetiapine taper status and overall progress.
+
+Significant changes from last visit:
+- No quetiapine current.
+- Stable lithium level without need for dose adjustment.
+
+Patient education:
+- Importance of lithium levels within 0.5‑1.2 mmol/L.
+- Adherence to renal and thyroid monitoring.
+- Lifestyle measures for weight and blood pressure control.
+
+Follow‑up:
+- Clinic visit in 1 week for routine check; call if new mood symptoms, weight change, or tremor.
+- Telehealth check‑in 4 weeks.
+- Repeat labs in 6 months.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Stable mood</span><span class="pill">No residual insomnia</span><span class="pill">Low anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>86 bpm</td></tr><tr><td>Blood Pressure</td><td>128/83 mmHg</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>Respiratory Rate</td><td>17/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP at goal</li><li>Euthymic mood</li><li>No tremor</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum lithium</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lithium level: 1.0 mmol/L</li><li>CMP: Na 138, K 4.0</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue lithium 600 mg BID</li><li>Reinforce adherence</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Alcohol use disorder</span><span class="pill">Family history of bipolar disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Quetiapine discontinued 6 weeks prior</li><li>Lithium maintained at 600 mg BID</li><li>Regular CBT and yoga</li><li>No substance use episodes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah came to the office for her three‑month follow‑up. She reported no mood changes, excellent sleep, and continued sobriety. Her lithium level was 1.0 mmol/L, within the therapeutic range. The psychiatrist noted that she was doing well under the lithium monotherapy regime and that her cardiovascular status had improved with controlled blood pressure at 128/83 mmHg. The patient was advised to keep up the current regimen, continue psychoeducation, and to schedule a lithium and renal panel in six months. No additional psychotropic medication is needed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Full remission with lithium monotherapy; no quetiapine needed. Patient stable and adherent. Transition to maintenance only.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Substance Use Disorder (Alcohol)</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Insomnia</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Bipolar I disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lithium 600 mg BID</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Routine follow-up visit on 2026-04-01. Patient reported mood lability, early morning awakening, talkative mood swings, tremor in voice, and feeling exhausted yet energetic. Vital signs: HR 108 bpm, BP 145/95 mmHg. Physical exam noted obesity and tremulousness. Labs ordered: basic metabolic panel, complete blood count, lipid panel. Prescribed trazodone 50 mg at bedtime for insomnia. Advised sleep hygiene, home blood pressure monitoring, and return in 4 weeks.</li><li>Follow-up visit on 2026-04-08. Patient presented with elevated affect, pressured speech, grandiose ideation, reduced sleep need, anxiety about finances, and observable mood elevation. Vital signs: HR 110 bpm, BP 148/97 mmHg, T 98.4°F, RR 18/min, SpO2 97%. Physical exam noted obesity and tremulousness. Labs ordered: basic metabolic panel, CBC, serum electrolytes, serum lithium level, renal function, TSH. Medications initiated: Lithium 600 mg BID, quetiapine 25 mg nightly, lisinopril 10 mg daily (adherence counseling). Patient advised regarding medication adherence, sleep hygiene, stress management, substance use counseling, and monitoring for lithium toxicity. Follow-up scheduled for 2026-04-15 for repeat lithium level and side‑effect assessment.</li><li>Visit on 2026-04-10: Acute psychiatric inpatient admission for self-harm, agitation, and unsafe behavior. Patient presented with tachycardia (HR 123), hypertension (BP 152/98), pressured speech, euphoria, restlessness, and disorientation. Labs: CMP normal, CBC normal, lithium level 0.8 mmol/L therapeutic, renal function normal, urine drug positive for THC and alcohol metabolites. Initiated Lorazepam 20 mg IV for agitation; continued lithium 600 mg BID, quetiapine 25 mg nightly, trazodone 50 mg nightly, lisinopril 10 mg daily. Ordered baseline ECG and transthoracic echocardiogram, daily lithium monitoring for first 3 days, daily vitals, and substance use counseling. Advised medication adherence and structured sleep hygiene.</li><li>Day-2 inpatient assessment on 2026-04-12. Patient remained euphoric but calmer; agitation reduced. Sleep improved; vitals stable (HR 108, BP 140/92, RR 18, Temp 98.2). Physical exam normal, no tremor. Labs: lithium 0.8 mmol/L (therapeutic), Na 137, K 3.9; renal function and thyroid normal. Continues lithium 600 mg BID, quetiapine 25 mg nightly; trazodone discontinued. Discharge planning underway pending outpatient psychiatry follow-up within 4 weeks, community substance‑use counseling, primary care for hypertension; CBT and sleep hygiene education ongoing; cardiology consult if BP remains &gt;140/90; baseline ECG and echocardiogram pending. Serum lithium monitored every other day; vitals q8h.</li><li>Discharge planning visit on 2026-04-17. Patient evaluated after 7‑day inpatient stay, mood stabilization, improved sleep, and insight into impulsivity. Vital signs: HR 98, BP 138/90, T 98.1°F, RR 18, SpO2 98%. Serum lithium 0.9 mmol/L therapeutic. Continued lithium 600 mg BID, quetiapine 25 mg nightly, lisinopril 10 mg daily. No trazodone. Plans: lithium monitoring every 4–6 weeks, outpatient psychiatry in 1 week, primary care in 2 weeks, alcohol counseling referral, CBT continuation, medication adherence education.</li><li>Date: 2026-04-24. Outpatient psychiatry discharge follow-up. Patient reports euthymic mood, mild anxiety manageable, no sleep disturbance. Vital signs: HR 92 bpm, BP 130/84 mmHg, Temp 98.3°F, RR 18/min, SpO2 98%. Physical exam: euthymic affect, no focal neuro deficits. Serum lithium 1.1 mmol/L therapeutic; CMP normal; CBC pending. Medication: continue lithium 600 mg BID, quetiapine 25 mg nightly, lisinopril 10 mg daily; discontinue trazodone. Orders: CBC and CMP in 2 weeks; repeat serum lithium in 2 weeks. Therapy referral to CBT. Follow-up scheduled 2026-04-30.</li><li>May 02, 2026: outpatient psychiatry follow‑up. Patient reported stable mood, consistent sleep, improved anxiety, and adherence to exercise. BP 128/82 mmHg, HR 90 bpm. Serum lithium 1.2 mmol/L therapeutic; no signs of toxicity. Quetiapine increased to 50 mg nightly; plan to taper to 25 mg over next 4 weeks. Repeat serum lithium in one week; CBC/CMP in two weeks. Next psychiatry visit scheduled 2026-05-16.</li><li>Visit on 2026-05-23. Patient reports complete remission of mood lability, stable sleep, no anxiety spikes, and no substance‑use escalation. Vitals: HR 88 bpm, BP 125/80 mmHg, Temp 98.1°F, RR 16/min, SpO2 98%. Physical exam: stable BP, euthymic mood, no tremor. Serum lithium 1.1 mmol/L therapeutic. Continue lithium 600 mg BID, quetiapine 25 mg nightly (planned discontinuation after 6 weeks), lisinopril 10 mg daily. Continue CBT, yoga, substance‑use support group. Weekly phone check‑ins for next 4 weeks, recheck lithium in 4 weeks, schedule in‑person follow‑up on 2026-07-07 to assess quetiapine discontinuation.</li><li>Date: 2026-07-02. Outpatient psychiatry consolidation visit. Patient denies mood changes and reports stable mood, excellent sleep, low anxiety, and maintained sobriety. Vital signs: HR 86 bpm, BP 128/83 mmHg, T 98.2°F. No adverse effects; tremor absent. Lithium level 1.0 mmol/L therapeutic. Quetiapine discontinued; lithium monotherapy continued. Plans: continue lithium 600 mg BID, lisinopril 10 mg daily, repeat serum lithium and CMP in 6 months, maintain CBT and yoga, regular alcohol sobriety support. Follow‑up scheduled 2026-07-07.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

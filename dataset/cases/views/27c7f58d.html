@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 27c7f58d</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 27c7f58d</h1><div class="subtitle">Lateral Ankle Sprain involving the Anterior Talofibular Ligament | Male, 22</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Comorbidities: Obesity, Previous Ankle Sprain</div><div class="meta-line">Risk Factors: High-impact sports participation, Barefoot walking on uneven terrain</div></div>
+<details><summary>Narrative <span class="preview-text">**A 22‑Year‑Old Male’s Journey Through a Lateral Ankle Sprain (ATFL)**    ---  ### Episode Begins – Day 0  Jacob, a 22‑y...</span></summary><div class="section-body"><p>**A 22‑Year‑Old Male’s Journey Through a Lateral Ankle Sprain (ATFL)**</p><p>---</p><p>### Episode Begins – Day 0</p><p>Jacob, a 22‑year‑old university sophomore, stands out on the campus quad for his love of basketball and weekend soccer games. He is a little heavier than his peers at 240 lb (≈ 108 kg) due to a history of mild obesity, but he keeps active by running on the college track and playing pick‑up sports.</p><p>On a Saturday afternoon while walking barefoot along a gravel trail behind the library, one of the stones dislodged, and his foot caught on a sudden dip. He pivoted sharply, his ankle inverted as his weight shifted, and an audible “pop” accompanied a wave of sharp pain down the lateral side of the right ankle. Instantly, Jacob felt the foot buckle, the pain intensified, and he could not put weight on it. A throbbing sensation and a feeling that the ankle was “giving way” followed.</p><p>He decided to wait a few minutes to see if the pain would subside. After 15 minutes the pain remained intense, there was visible swelling on the outer ankle, and a dull warmth spread over the lateral malleolus. His friend suggested he get medical help.</p><p>### First Medical Encounter – Day 1</p><p>Jacob goes to the university emergency department the same afternoon. The nurse observes moderate erythema and swelling at the lateral ankle joint. On physical exam, a moderate‑grade ATFL sprain (Grade II) is suspected:</p><p>- **Positive Anterior Drawer Test** – mild anterior translation of the talus with the ankle in 30° dorsiflexion and 30° inversion.
+- **Tinel’s sign** – tapping over the lateral malleolus elicits a tingling sensation.
+- **Pain** – localized to the ATFL area; no plantar or medial tenderness.
+  
+The ED team performs a plain radiograph of the ankle to rule out fracture. The X‑ray is unremarkable, confirming no bony injury.</p><p>**Management Plan**</p><p>1. **Acute R.I.C.E.** – Rest, Ice (30 min every 2 hrs), Compression bandage (elastic wrap), and Elevation (leg above heart).
+2. **Pain control** – Over‑the‑counter NSAID (ibuprofen 400 mg q6–8 hrs PRN).
+3. **Brace** – A semi‑rigid ankle‑foot orthosis is fitted to limit inversion and support the ATFL during healing.
+4. **Follow‑up** – A physiotherapy referral and an appointment with an orthopaedic clinic the next week.</p><p>### Day 3 – Home Care Progress</p><p>Jacob’s swelling has slightly subsided, but the lateral ankle still feels tender, especially when he flexes the foot. He follows the R.I.C.E. protocol diligently. Using the brace, he is able to ambulate briefly at home on crutches without pain. The pain score drops from 8/10 at diagnosis to 4/10. He begins to notice the “tightness” in the lateral foot when he does simple dorsiflexion.</p><p>### Day 5 – First Physiotherapy Assessment</p><p>Jacob meets with a licensed physiotherapist at the university sports medicine center. The PT confirms a Grade II ATFL sprain with residual ankle instability and muscle atrophy from immobility.</p><p>**Therapeutic interventions:**</p><p>- **Early mobilization** within the limits of pain (isometric strengthening of peroneal muscles, closed‑chain ankle circles).
+- **Gentle stretching** of the gastrocnemius‑soleus complex.
+- **Joint mobilization** (grade III side‑to‑side glides at the subtalar joint) to ease stiffness.
+- **Education** on proper use of the brace, safe walking techniques, and importance of controlled weightbearing.</p><p>Jacob is encouraged to stay with the brace and use crutches as needed, but he can now take short walks. By the end of the visit, pain has further reduced to 2/10, and he feels confident moving around the campus quad with his brace.</p><p>### Day 10 – Transition to Controlled Weightbearing</p><p>Over the week, Jacob’s swelling is essentially gone. The physiotherapist notes improved proprioception on the balance board assessment and a slight reduction in muscle bulk differences between legs. Jacob is now ready to increase activity:</p><p>- **Partial weightbearing** in the brace for 3–4 days.
+- Introduction of **active dorsiflexion and plantarflexion** with minimal load.
+- **Continued isometric peroneal strengthening** and **dynamic balance training** on unstable surfaces.</p><p>He is also given a home exercise program to reinforce the clinic visits. Jacob’s weight has gradually decreased, which helps reduce joint loading during activity.</p><p>### Day 14 – Functional Milestones</p><p>Jacob completes partial weightbearing in the brace and begins gradual return to low‑impact activities – walking upstairs and walking on uneven campus paths without pain. His ankle pain is now minimal, limited to occasional mild soreness after a long walk. He can also do the “single‑leg heel‑raise” with no significant discomfort.</p><p>The orthopaedic clinic visit on Day 14 confirms:</p><p>- No residual instability on the **Anterior Drawer Test** (within normal limits).
+- Adequate dorsiflexion range of motion (70°).
+- No tenderness on palpation.
+- The brace is effective in providing subjective stability.</p><p>### Day 20 – Clearance for Sport Participation</p><p>Jacob’s PT signs that he has regained proprioception and muscular strength to normal levels. He is now cleared for low‑to‑medium impact sport. Specific restrictions include:</p><p>- Avoid sudden pivot or cutting motions until he returns to full strength and stability.
+- Continue wearing the brace for the first 2–3 weeks post‑re‑entry into sports.</p><p>He is prescribed a gradual return-to-play protocol with a focus on neuromuscular training before full participation in competitive basketball.</p><p>### Day 28 – Return to Basketball</p><p>Jacob joins his university team for a few drills. He performs without pain, although he reports mild tightness after an extended sprint session, likely due to his weight. By the end of the first week of practice, his ankle feels normal, and no swelling is observed.</p><p>The physiotherapist reinforces calf‑strengthening exercises and addresses weight management through a nutritionist who helps him gradually reduce his body fat percentage to a healthier level. This is important to prevent recurrence and to reduce medial overload on the ankle joint.</p><p>### Day 35 – Fully Resolved</p><p>One month after the acute injury, Jacob’s ankle is pain‑free during all activities, including jogging, basketball, and barefoot walking on uneven terrain. The physiotherapist confirms:</p><p>- Normal Anterior Drawer Test.
+- Full range of dorsiflexion (70°) and plantarflexion (45°).
+- No residual tenderness or swelling.
+- Full muscular symmetry: peroneal and calf strength equal to the contralateral limb.
+- Excellent proprioceptive and dynamic balance scores.</p><p>Jacob continues with the braces only during high‑intensity sports or when playing barefoot on uneven grounds. His obesity is still a risk factor for future ankle injury, so he maintains lifestyle modifications to keep his weight under control.</p><p>### Summary of the Patient’s Course</p><p>| Day | Key Milestone | Clinical Decision/Intervention |
+|-----|---------------|--------------------------------|
+| 0 | Inversion injury, acute pain and swelling | Immediate R.I.C.E. and brace |
+| 1 | ED visit, Grade II ATFL confirmation, X‑ray negative | NSAIDs, brace, PT referral |
+| 3 | Swelling subsides, pain 4/10 | Continue R.I.C.E., commence brace‑assisted ambulation |
+| 5 | PT initiation | Isometrics, gentle ROM, education |
+| 10 | Partial weightbearing | Introduce controlled loading, balance training |
+| 14 | Functional assessment | Clearance to low‑impact activities |
+| 20 | Full participation in sports | Return‑to‑sport protocol |
+| 28 | First basketball session | Continue braces, progressive overload |
+| 35 | Full resolution | Long‑term maintenance plan |</p><p>Throughout this timeline, Jacob’s comorbid obesity and previous ankle sprain were acknowledged but did not alter the textbook course of a Grade II ATFL sprain. The high‑impact sports participation and barefoot walking on uneven terrain served as precipitating and predisposing factors, which the care team addressed through education and a graded rehabilitation plan. By the end of the month, the ankle has fully resolved, highlighting a successful, typical recovery for a young athletic adult.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-04-01</h3><div class="visit-meta">Emergency Medicine | Reason: Acute lateral ankle pain after inversion injury</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Jacob, a 22-year-old male with obesity (BMI 34.5), presented to the ED with acute lateral ankle pain following a pivoting injury while walking barefoot on a gravel trail. He reports a sharp, localized pain along the lateral ankle, visible swelling, mild erythema, inability to bear weight, an audible &#x27;pop&#x27; at the time of injury, and a throbbing, giving-away sensation. He denies prior fractures and notes a previous ankle sprain.\n\nOn exam, vitals: 98.6 F, BP 118/70 mmHg, HR 78, RR 16, SpO2 98%. Physical exam showed moderate erythema and swelling over the lateral malleolus, mild translation on anterior drawer test, positive Tinel&#x27;s sign over the lateral malleolus, and no medial or plantar tenderness. Neurologic exam was otherwise intact.\n\nAnteroposterior and lateral radiographs of the right ankle were obtained, showing no fracture but soft-tissue swelling.\n\nAssessment: Acute lateral ankle sprain (likely grade II) with concomitant peroneal tendon irritation and possible peroneal nerve irritation; no fracture, no dislocation.\n\nPlan: RICE education (rest, ice, compression, elevation), prescription of Ibuprofen 400 mg PO every 6–8 h PRN for pain and inflammation, fitted semi-rigid ankle‑foot orthosis to limit inversion, referral to physiotherapy for progressive mobilization, orthopedic outpatient follow‑up in one week. Educated patient on signs of worsening condition and to return to ED if neuro deficits develop or pain worsens. Continued monitoring and gradual weight‑bearing as tolerated.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp, localized pain along the lateral ankle</span><span class="pill">Visible swelling and mild erythema</span><span class="pill">Inability to bear weight</span><span class="pill">Audible &#x27;pop&#x27; at time of injury</span><span class="pill">Throbbing sensation and giving‑away feeling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Blood Pressure</td><td>118/70 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Moderate erythema and swelling on lateral ankle</li><li>Anterior drawer test: mild translation</li><li>Tinel’s sign positive over lateral malleolus</li><li>No medial or plantar tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Plain radiograph of right ankle</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>X‑ray: No fracture; demonstrates normal osseous alignment; soft tissue swelling present</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Rest, ice (30 minutes every 2 hours), compression bandage, elevation</li><li>Ibuprofen 400 mg q6–8h PRN</li><li>Fitted semi‑rigid ankle‑foot orthosis</li><li>Referral to physiotherapy</li><li>Orthopedic outpatient follow‑up in one week</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Jacob understood instructions and agreed to follow RICE protocol and attend PT. Pain decreased to 8/10 immediately after the visit.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Previous ankle sprain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>None at time of presentation</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity (BMI 34.5)</li><li>Previous right ankle sprain (1 year ago)</li><li>High‑impact sports participation (basketball, soccer)</li><li>Barefoot walking on uneven terrain</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Jacob presented to the ED reporting acute lateral ankle pain after a pivoting injury while walking barefoot on a gravel trail. A focused exam revealed moderate erythema, swelling, and tenderness over the lateral malleolus. The anterior drawer test was mildly positive, and Tinel’s sign elicited a tingling sensation. The ED team obtained an ankle radiograph, which showed no fracture but noted soft tissue swelling. Jacob received RICE education, was prescribed ibuprofen 400 mg every 6–8 hours as needed, and a semi‑rigid ankle‑foot orthosis was fitted to limit inversion. A referral to physiotherapy and an orthopedic follow‑up were recommended.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute Grade II ATFL sprain confirmed. Initiated conservative management; no fracture. Swelling expected to subside in 48–72 hours.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-04-05</h3><div class="visit-meta">Physiotherapy | Reason: Follow‑up for ankle injury management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Follow‑up for ankle injury management.
+
+**History:** 22‑year‑old male with a history of obesity and a previous acute lateral ankle sprain (current injury Grade II from a pivoting mechanism). He has followed RICE for 4 days, has been wearing a semi‑rigid ankle brace for 24 hrs, and has used crutches for 2 days. Ibuprofen is taken PRN.
+
+**Presenting Symptoms:** 
+- Residual pain = 4/10
+- Mild swelling, now decreased
+- Tightness on ankle dorsiflexion
+
+**Vitals (stable):**
+- Temp: 98.6 °F
+- BP: 120/72 mmHg
+- HR: 70 bpm
+- RR: 16/min
+- SpO₂: 98%
+
+**Physical Examination:**
+- Minimal swelling
+- Tenderness over lateral border (2/10)
+- Ankle ROM: dorsiflexion 65°, plantarflexion 45°
+- Anterior drawer test negative (improved stability)
+- No evident instability
+
+**Assessment:** Patient is in the early rehabilitation phase of a Grade II acute lateral ankle sprain with marked improvement in stability and pain. Residual proprioceptive deficits and tightness in the gastrocnemius‑soleus complex remain.
+
+**Plan:**
+1. Continue isometric peroneal strengthening, closed‑chain ankle circles, gentle ROM stretches of gastrocnemius‑soleus, and Grade III subtalar joint mobilization.
+2. Reinforce proper brace usage and safe, gradual weight‑bearing progression.
+3. Initiate home exercise program: isometrics (single‑leg stance, heel‑slides), balance drills (single‑leg stance on firm and foam), and progressive ankle ROM work.
+4. Educate on activity modification to avoid high‑impact or pivoting movements until full recovery.
+5. Medications: Ibuprofen PRN as needed for pain.
+6. Follow‑up: return for PT session in 3 days (or sooner if pain &gt;5/10) and continue RICE; plan to assess for return to full activity.
+
+**Prognosis:** Expected full recovery within 4–6 weeks with adherence to PT and home program.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Residual pain (4/10)</span><span class="pill">Mild swelling decreased</span><span class="pill">Tightness on ankle dorsiflexion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Blood Pressure</td><td>120/72 mmHg</td></tr><tr><td>Heart Rate</td><td>70 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Minimal swelling</li><li>Tenderness over lateral border 2/10</li><li>Ankle ROM dorsiflexion 65°, plantarflexion 45°</li><li>Anterior drawer negative</li><li>No instability noted</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Isometric peroneal strengthening</li><li>Closed‑chain ankle circles</li><li>Gentle ROM stretching of gastrocnemius‑soleus</li><li>Grade III subtalar joint mobilization</li><li>Brace education</li><li>Home exercise program</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Jacob reported pain reduced to 2/10 during the session and felt more confident walking with the brace.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Previous ankle sprain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen PRN (as needed)</li><li>Ankle brace (semi‑rigid)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continued RICE protocol</li><li>Wearing ankle brace for 24 hours</li><li>Crutch ambulation for 2 days</li><li>Pain medication as needed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Jacob arrived for his first PT session after four days of conservative care. Exam showed minimal swelling, tenderness over the lateral border graded 2/10, and mild pain during dorsiflexion. Anterior drawer was negative, indicating improved stability. The PT introduced isometric peroneal strengthening, closed‑chain ankle circles, gentle ROM stretches for the gastrocnemius‑soleus complex, and grade III subtalar joint mobilizations. Education reinforced correct use of the brace and safe weight‑bearing practices. Jacob was instructed on a home exercise program emphasizing isometrics and balance drills.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continuing healing of Grade II ATFL sprain. Ankle stable; early mobilization without exacerbation. Await progression to controlled loading.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-04-15</h3><div class="visit-meta">Orthopaedic Surgery | Reason: Functional assessment and clearance for low‑impact activity</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Jacob, 22‑year‑old male, presented for a functional assessment and clearance for low‑impact activity following a grade II acute lateral ankle sprain sustained during a pivoting injury. The patient reports mild soreness after walking, no pain during routine activities, and occasional mild soreness after long walks.
+
+History of present illness: Jacob underwent RICE and NSAID therapy during the acute phase. He has been partially weight bearing for 3 days, continued brace use, and engaged in regular low‑impact walking. PT has addressed residual pain and ROM deficits.
+
+On exam: anterior drawer test is negative; dorsiflexion 70°, plantarflexion 45°; no tenderness or swelling; the brace provides subjective stability.
+
+Vital signs are stable (see vitals). No new imaging is required at this time. Jacob is cleared for low‑impact activities such as walking and light jogging. The brace should be worn during higher‑intensity activities for the next 2–3 weeks. A progressive return‑to‑play protocol will be discussed with PT.
+
+Assessment:
+1. Lateral ankle sprain, grade II—resolved and functionally stable.
+2. No evidence of fracture or significant soft‑tissue injury.
+3. Patient is ready for low‑impact exercise with appropriate bracing.
+
+Plan:
+- Continue ibuprofen 400 mg PO q6‑8 h PRN for pain.
+- Continue ankle brace during higher‑intensity movements for 2–3 weeks.
+- Resume low‑impact activities (walking, light jogging) as tolerated.
+- Re‑evaluate in 1 week for PT progression and in 2 weeks to assess readiness for full return to sport.
+- Patient education on signs of re‑injury and importance of brace compliance.
+- Monitor for swelling, pain, or decreased ROM.
+
+No new tests are ordered.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild soreness after walking</span><span class="pill">No pain during routine activities</span><span class="pill">Occasional mild soreness after long walks</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Blood Pressure</td><td>117/68 mmHg</td></tr><tr><td>Heart Rate</td><td>75 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Anterior drawer negative (within normal limits)</li><li>Full ROM dorsiflexion 70°, plantarflexion 45°</li><li>No tenderness or swelling</li><li>Brace provides subjective stability</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reassurance and injury education</li><li>Prescription of ankle brace for continued use during high‑impact activities</li><li>Advice to return to PT for progressive load assessment</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Jacob reported good progress and expressed readiness to return to low‑impact sports under supervision.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Previous ankle sprain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen PRN</li><li>Ankle brace</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Partial weight bearing for 3 days prior</li><li>Continued brace use</li><li>Regular low‑impact walking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Jacob came for an orthopedic review. Physical exam confirmed anterior drawer negative, full dorsiflexion/plantarflexion (70°/45°), no tenderness, minimal swelling, and stability with the brace. The surgeon cleared Jacob for low‑impact activities (walking, light jogging) and advised continuation of the brace during higher intensity movements for 2–3 weeks. A progressive return‑to‑play protocol was discussed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>ATFL healing complete; ankle functional and stable. Prepping for controlled sport activity.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-04-20</h3><div class="visit-meta">Physiotherapy | Reason: Clearance for sports participation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Clearance for sports participation. 
+
+**History**: 22‑year‑old male with obesity and a history of acute lateral ankle sprain (grade II) presenting for a 4th PT visit. Current medications: Ibuprofen 400 mg PO q6‑8h PRN and ankle brace. No known allergies.
+
+**Current Presentation**: Slight tightness after a short sprint; no pain at rest. Progress is noted by a 30‑min low‑impact cardio routine and a week of basketball practice.
+
+**Vitals**: 
+- Temperature: 98.4 °F
+- BP: 119/70 mmHg
+- HR: 78 bpm
+- RR: 16/min
+- SpO2: 98%
+
+**Physical Examination**: 
+- Dynamic balance: normal 
+- Peroneal strength: equal to contralateral side
+- Full ROM: dorsiflexion 70°, plantarflexion 45°
+- No instability or tenderness; anterior drawer negative
+- No swelling or erythema
+
+**Assessment**: 
+- Functional recovery of the acute lateral ankle sprain. The patient demonstrates adequate strength, range of motion, and balance, with no objective signs of instability. Mild subjective tightness may be due to rapid load increase; managed with warm‑up.
+- Obesity may contribute to increased load on the ankle; ongoing weight‑reduction is recommended.
+
+**Plan**:
+1. Initiated a structured return‑to‑play protocol emphasizing neuromuscular training and progressive agility drills.
+2. Continue use of ankle brace during high‑intensity and contact activities such as basketball.
+3. Advise adherence to the warm‑up routine to mitigate transient tightness.
+4. Refer to a nutritionist for a personalized weight‑reduction plan.
+5. Schedule next PT visit in 2 weeks to reassess ROM, strength, and functional progress.
+6. Educate patient on signs of recurrence (pain, swelling, instability) and to contact clinic promptly if they occur.
+
+**Outcome**: Patient felt confident to return to basketball; mild tightness resolved with warm‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight tightness after short sprint</span><span class="pill">No pain at rest</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Blood Pressure</td><td>119/70 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Dynamic balance normal</li><li>Peroneal strength equal to contralateral side</li><li>Full ROM: dorsiflexion 70°, plantarflexion 45°</li><li>No instability or tenderness</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Return‑to‑play protocol initiation</li><li>Neuromuscular training drills</li><li>Nutritionist referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Jacob felt confident to play again; the mild tightness resolved with warm‑up routine.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Previous ankle sprain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen PRN</li><li>Ankle brace</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive load increase</li><li>30 min low‑impact cardio sessions</li><li>One week of basketball practice</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the PT visit, dynamic balance, strength, and functional agility tests showed full ROM, equal peroneal strength, and stability. The PT initiated a return‑to‑play protocol emphasizing neuromuscular training and advised a nutritionist referral to support weight‑reduction. Jacob was cleared to resume basketball with ankle brace use during high‑intensity drills.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Full functional recovery; prepared for sustained athletic activity with monitoring.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-04-28</h3><div class="visit-meta">Physiotherapy / Sports Medicine | Reason: First basketball practice after return‑to‑play</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Return‑to‑play after basketball practice following a prior grade II lateral ankle sprain.
+
+History: 22‑year‑old male, diagnosed previously with grade II lateral ankle sprain during a pivot injury (Visit 1). He has been protected with a semi‑rigid ankle‑foot orthosis and has progressed through a structured PT program. He currently uses an ankle brace intermittently during high‑intensity drills and reports no pain during gameplay but experiences mild tightness after extensive sprinting.
+
+Vital Signs: T 98.6°F, BP 118/70 mmHg, HR 80 bpm, RR 16 /min, SpO2 98%.
+
+Physical Exam: No pain noted during pivot, rapid direction changes, or weight‑bearing stance. Mild tightness relieved after a warm‑up routine. Ankle ROM is full (dorsiflexion 70°, plantarflexion 45°). No swelling, erythema, or tenderness over lateral border. Anterior drawer test negative. The ankle remains stable in functional activities.
+
+Assessment: Jacob’s lateral ankle sprain appears to be fully rehabilitated with restored strength, ROM, and proprioception. Current mild tightness is likely residual muscular fatigue not indicative of instability.
+
+Plan: 1. Continue wearing ankle brace during high‑impact basketball activities. 2. Reinforce neuromuscular strengthening and balance drills (peroneal strengthening, single‑leg hops, dynamic balance board work) as part of the weekly routine. 3. Provide weight‑management counseling to address obesity; refer to nutrition for calorie optimization. 4. Ibuprofen 400 mg PRN for any transient soreness post‑practice. 5. Educate on progressive return‑to‑play protocol with emphasis on proper warm‑up, gradual increase in intensity, and early reporting of any new instability or pain.
+
+Follow‑up: Schedule next PT visit in 2 weeks (2023‑05‑12) to reassess ROM, strength, and functional performance. If any pain, swelling, or instability arises before then, return to clinic sooner. Maintain brace use during the remainder of the season until clearance for full participation.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild tightness after extended sprint</span><span class="pill">No swelling or pain during gameplay</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Blood Pressure</td><td>118/70 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No pain during pivot or rapid direction change</li><li>Mild tightness relieved post‑warm‑up</li><li>Stable ankle, full ROM, no swelling</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continuation of ankle brace during strenuous activity</li><li>Reinforcement of strengthening and balance drills</li><li>Weight‑management counseling</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Jacob feels ankle stable and ready for full season play.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Previous ankle sprain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen PRN</li><li>Ankle brace</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>30 minute team drill today</li><li>Uses ankle brace intermittently during high‑intensity drills</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Jacob participated in a 30‑minute practice. Observations noted no pain, stable ankle during pivots, and mild tightness resolved after stretching. The PT reinforced continual brace use during high‑impact activity, provided additional strengthening and weight‑management guidance, and confirmed full functional recovery.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Recovery complete; ankle stable with minimal residual tightness. Long‑term plan includes weight reduction and continued neuromuscular training to mitigate recurrence.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 22</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Previous Ankle Sprain</span><span class="pill">Acute lateral ankle sprain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen 400 mg PO q6-8h PRN</li><li>Ankle brace</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Acute lateral ankle sprain grade II after pivoting injury; physical exam demonstrated swelling, mild erythema, positive anterior drawer and Tinel&#x27;s sign; plain radiographs negative for fracture. Management with RICE, Ibuprofen 400 mg PO q6-8h PRN, semi‑rigid ankle‑foot orthosis, physiotherapy referral and orthopedic follow‑up in one week.</li><li>Follow‑up PT session: residual pain 4/10, minimal swelling, tenderness over lateral border; ankle ROM dorsiflexion 65°, plantarflexion 45°, anterior drawer negative; continued isometric peroneal strengthening, closed‑chain ankle circles, gentle ROM stretches, Grade III subtalar joint mobilization; brace usage reinforced; home exercise program initiated; continue RICE; return in 3 days.</li><li>Functional assessment: ankle stable, negative anterior drawer, dorsiflexion 70°, plantarflexion 45°, no tenderness or swelling; brace provides subjective stability. Cleared for low‑impact walking and light jogging. Brace advised for higher‑intensity activities for 2–3 weeks. Plan: resume low‑impact activities, continue brace during high‑intensity, PT progression next week, re‑evaluation in 2 weeks.</li><li>PT assessment: functional recovery of lateral ankle sprain; full ROM dorsiflexion 70°, plantarflexion 45°; no instability or tenderness; mild subjective tightness after sprint resolved with warm‑up. Patient cleared for sports participation; instructed to use ankle brace during high‑intensity activities, follow neuromuscular training and warm‑up routine, and adhere to nutrition referral. Scheduled next PT visit in 2 weeks.</li><li>Patient returned for return‑to‑play after basketball practice; no pain or swelling noted; mild tightness after sprinting; ROM full (dorsiflexion 70°, plantarflexion 45°); ankle stable; continued brace use during high‑impact activities; neuromuscular strengthening, balance drills, and weight‑management counseling reinforced; Ibuprofen 400 mg PO PRN for soreness; next PT visit scheduled 2023‑05‑12.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

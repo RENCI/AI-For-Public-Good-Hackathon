@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 120387da</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 120387da</h1><div class="subtitle">Carcinoma, NOS of the Right Lung Tracheobronchial Region | Male, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic obstructive pulmonary disease, Emphysema, Chronic bronchitis, Pulmonary hypertension, History of smoking</div><div class="meta-line">Risk Factors: Active tobacco smoking, Occupational exposure to asbestos, Occupational exposure to silica, Exposure to diesel exhaust, Radon exposure, Air pollution</div></div>
+<details><summary>Narrative <span class="preview-text">On a brisk March afternoon, John‑P. B., a 65‑year‑old mechanic from the south‑side of the city, sat in a humming exam ro...</span></summary><div class="section-body"><p>On a brisk March afternoon, John‑P. B., a 65‑year‑old mechanic from the south‑side of the city, sat in a humming exam room at his family physician’s office. He had been coughing for about six weeks, the cough now constant and dry, but it had evolved into a frequent, sputum‑laden cough that left him short of breath after a walk down the street. “I’ve got a cold that won’t go away,” he said, rubbing a thin film of mucus off his throat. The sputum was gray, occasionally streaked with a darker hue. His wife mentioned that he’d lost about 10 pounds over the past month and that their bedroom light was always dimmed because he was tired.</p><p>He had a long history of smoking—he had smoked 2 packs a day from the age of 20 until recently, when he cut back to one pack for the last year. He also had a decade of exposure to asbestos while working at a shipyard and had spent years in dusty sawmill work, exposing him to silica particles. He had regularly ridden in diesel‑fuel trucks, and there had been occasional concerns of radon levels in his two‑story home in the same area, although he had never tested the air. His baseline pulmonary status was well‑known to the office: chronic obstructive pulmonary disease with a moderate emphysematous component on a CT scan three years prior, chronic bronchitis flare‑ups every summer, and a diagnosis of pulmonary hypertension two years back, managed on a low‑dose calcium channel blocker and supplemental oxygen at 3 L/min.</p><p>---</p><p>### First encounter (March 2)</p><p>During the visit, John’s vital signs were telling: a resting heart rate of 98 beats/min, oxygen saturation of 94 % on 3 L/min O₂, and a wheeze at the right lung base on auscultation. The primary physician—Dr. Martinez—asked a series of questions to differentiate an infectious exacerbation from a more sinister cause. “Any fever?” John shook his head. “Any chest pain?” He declined. “Do you see blood in your sputum?” John’s eyes widened—“A little bit, a streak, especially after coughing. It’s not a lot, but it’s there.” Dr. Martinez noted this hemoptysis, which prompted the ordering of a chest X‑ray.</p><p>In the radiology suite, the AP and lateral films revealed a subtle opacity in the right mid‑lung zone, partially obscuring the right mainstem bronchus. There was also a mild enlargement of the right heart border, consistent with his known pulmonary hypertension. The radiologist’s preliminary report mentioned “possible central mass” but suggested a CT thorax for better characterization.</p><p>---</p><p>### Pulmonology referral (March 9)</p><p>Two days later, John visited his PCP once more after the patient experienced a new episode of coughing, producing copious yellow sputum. Dr. Martinez felt that a more definitive workup was warranted. He referred John to Dr. Lee, a pulmonologist in the same medical group, noting the suspicion of a central mass at the tracheobronchial junction.</p><p>At Dr. Lee’s office, John recounted the past week’s worsening dyspnea, especially when climbing the stairs—he now needed a cane. The pulmonologist reviewed John’s medication list: albuterol, ipratropium, budesonide–formoterol, low‑dose steroids for exacerbations, and the low‑dose calcium channel blocker for pulmonary hypertension. Dr. Lee ordered a high‑resolution CT scan of the chest with contrast, along with a bronchoscopy scheduled within a week.</p><p>Before the procedure, Dr. Lee had a brief discussion with John about the possibility of advanced lung disease given the occupational exposures and smoking history, and about the potential need for a multidisciplinary management plan that might involve oncology, thoracic surgery, and palliative care. John agreed to a “full‑body” evaluation when possible.</p><p>---</p><p>### CT &amp; bronchoscopy (March 16)</p><p>The CT scan returned a bright, 3.2 × 2.8 cm enhancing mass within the right mainstem bronchus, occluding 70 % of the lumen, with extension into the peribronchial fat and mild mediastinal lymph node enlargement. The emphysematous bullae were noted, and there was no evidence of pleural effusion or distant metastasis at that time. Dr. Lee called John into the office after the imaging results. He relayed that the mass was likely malignant and ordered a flexible bronchoscopy to obtain tissue samples.</p><p>John was prepped for bronchoscopy on March 17, after a pre‑op evaluation including a repeat blood count, renal panel, and discussion of anesthesia risks. He was admitted for the day of the procedure, on 2 L/min of oxygen, with the knowledge that the risk of peri‑procedural airway compromise was non‑negligible given the obstruction.</p><p>During the bronchoscopy, the visualized right mainstem bronchus was narrowed and erythematous, with friable plaques. A biopsy taken from the most obstructing part revealed dysplastic squamous epithelium with areas of invasive carcinoma—carcinoma NOS by histopathology, later clarified as squamous cell carcinoma with a high proliferation index on Ki‑67 staining.</p><p>---</p><p>### Hospital admission (March 18‑24)</p><p>After the biopsy, John’s wheezing worsened; his oxygen saturation dropped to 88 % at rest. He developed sputum‑producing cough and a mild fever. Dr. Lee recognized that his COPD exacerbation, coupled with bronchial obstruction from the tumor, necessitated inpatient care.</p><p>He was transferred to the hospital for a 7‑day course of IV methylprednisolone, nebulized albuterol–ipratropium, and a course of oral amoxicillin‑clavulanate pending culture results from the sputum. Oxygen flow was increased to 4 L/min via Venturi mask. A chest CT was repeated in the hospital, revealing slight pleural thickening but no new effusion.</p><p>John’s clinical course during that week was unstable; his sputum increased, and he had three brief episodes of coughing up streaks of blood. He reported increased fatigue and shortness of breath on lying flat. His wife noted that John was using a recliner more often to avoid exertion. Despite aggressive pulmonary therapy, his oxygen saturation fluctuated between 85–92 %.</p><p>On March 24, after three days of relative stabilization, Dr. Lee scheduled a multidisciplinary tumor board meeting to discuss management options. The board consisted of an oncologist, thoracic surgeon, pulmonologist, and a palliative care specialist. The discussion centered on John’s poor pulmonary reserve, the large central tumor’s location, and the associated pulmonary hypertension. The consensus was that curative surgery was high risk and likely to result in peri‑operative death. Instead, the board recommended a short course of palliative chemotherapy (cisplatin plus etoposide) alongside radiotherapy to the thorax, with a goal of symptom control rather than long‑term disease resolution.</p><p>---</p><p>### Chemotherapy initiation (April 1)</p><p>On April 1, John was admitted to the oncology unit for a start‑up regimen. Prior to therapy, his cardiopulmonary evaluation included a trans‑esophageal echocardiogram that showed a mean pulmonary artery systolic pressure of 70 mmHg, indicating severe pulmonary hypertension. With the assistance of the cardiothoracic team, John was placed on a short-acting vasodilator infusion (IV inhaled iloprost) to blunt the pulmonary vascular response during chemo infusion.</p><p>During his initial chemotherapy infusion, John complained of chest pressure and lightheadedness. The infusion was halted temporarily; the infusion pump was restarted a few minutes later, and John&#x27;s blood pressure remained stable at a high 120/80 mmHg. His oxygen saturation fell to 86 % during the infusion, and he was placed on a high‑flow nasal cannula temporarily.</p><p>Post‑chemotherapy, John developed mild mucositis and a persistent low-grade fever (38.0°C). He was treated with a 7‑day course of oral doxycycline and acetaminophen. His chest X‑ray after the first cycle showed no significant changes but revealed a moderate right pleural effusion, likely related to malignant infiltration and inflammatory response.</p><p>---</p><p>### Worsening clinical course (April 15)</p><p>Two weeks after the initial chemotherapy, John’s symptom burden had increased markedly. His sputum was now thick and purplish, and he reported a new onset of orthopnea; he could no longer sleep upright without a pillow. Physical examination revealed pitting edema in both lower extremities up to the knees, jugular venous distension, and a new holosystolic murmur at the left sternal border. A portable chest X‑ray illustrated an expanded right pleural effusion and a slightly more opacified right lung field, suggesting malignant progression.</p><p>A bedside thoracentesis removed 800 mL of fluid that was hemorrhagic and cytology-positive for malignant epithelial cells. The pleural fluid cultures were negative. John’s pulmonary hypertension worsened further; his mean pulmonary artery pressure rose to 85 mmHg. On Dr. Lee’s instructions, the team initiated a diuretic regimen (furosemide 40 mg BID) to manage right‑heart failure signs.</p><p>Despite aggressive diuresis, John’s edema persisted, and his weight had increased by five kilograms over a month, mainly due to fluid retention. His quality of life deteriorated rapidly: he became unable to perform chores, required assistance to ambulate even for a few steps, and reported worsening pain in his chest wall, localized to the right hemithorax. John’s family became concerned over his frequent nighttime awakenings and inability to maintain adequate sleep.</p><p>---</p><p>### Decision for palliative care (April 28)</p><p>At the end of April, Dr. Lee initiated a formal discussion with John and his wife regarding the goals of care. John expressed a desire to be comfortable and to avoid invasive procedures that would compromise his breathing or further diminish his autonomy. The hospital’s palliative care team was consulted. Their assessment concluded that continued chemotherapy and radiotherapy would likely add significant toxicities—especially in a patient with severe pulmonary hypertension—and fail to improve quality of life or survival.</p><p>The palliative care team recommended comfort measures, including low‑dose opioid analgesia for chest pain, non‑invasive ventilation support for hypoxia, and careful fluid management. They also discussed the possibility of hospice enrollment if home care resources were insufficient. John and his wife agreed to discontinue chemotherapy and accept a hospice referral.</p><p>He was placed on a low‑dose oral morphine regime for pain, with the caveat that his oxygen needs were managed with a 2‑L nasal cannula to avoid hypoxia. An oxygen tank was brought into the bedroom, and a breathing fan set to low speed was arranged at the bedside. John’s cough became less productive; however, he continued to experience intermittent wheezing and bronchial hyperreactivity. His pulmonary medications were streamlined to include only albuterol/ipratropium nebulization and a single dose of oral methylprednisolone at bedtime to blunt nighttime airway inflammation.</p><p>---</p><p>### Final hospitalization and hospice transition (May 12–15)</p><p>The following month, John’s wife noticed that his breathing had become irregular. The wife called the emergency department at 10 am on May 12, and John was brought to the ED. His vitals were: oxygen saturation 85 % on 3 L/min, heart rate 110 bpm, blood pressure 120/85 mmHg. On examination, he was in mild distress, but no obvious signs of infection existed. Lab work was notable for elevated BUN/creatinine, mild leukocytosis, and a mild anemia. Radiology showed a still-pleural effusion, now more significant at 1.2 L by CT volumetry, along with an increased right mainstem bronchial narrowing from the mass.</p><p>Given his limited respiratory reserve and the expectation that oxygenation would deteriorate rapidly, the team decided to transition John to hospice care. He was discharged from the ED on May 14 after a short observation stay, with a hospice home-care team scheduled for a home visit the same day.</p><p>John received comfort care at home, with his wife providing support with feeding and personal care. He was occasionally visited by a hospice nurse who administered subcutaneous morphine as needed. Oxygen was supplied via portable concentrator, and a small fan provided gentle airflow over his face. No further interventions were pursued, and John passed away peacefully on May 18 surrounded by his family.</p><p>---</p><p>### Reflection</p><p>John’s cancer course was a rapid, aggressive progression of a central lung carcinoma that compounded pre‑existing chronic obstructive pulmonary disease, pulmonary hypertension, and comorbidities from decades of occupational exposures. The disease’s anatomical location led to significant airway obstruction, prompting a cascade of respiratory failures, exacerbations, and ultimately the inability to tolerate curative interventions. The narrative illustrates the complexity inherent in managing a patient with multiple overlapping risk factors, and the difficulty clinicians face when balancing the promise of aggressive oncologic therapy against the reality of diminishing quality of life. The medical team’s eventual decision to prioritize comfort over curative treatment exemplifies patient‑centered care that recognizes the natural limits of intervention in a severely ill individual.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-03-02</h3><div class="visit-meta">Primary Care | Reason: Persistent cough and recent weight loss</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+65‑year‑old male with a history of COPD, emphysema, chronic bronchitis, and pulmonary hypertension presents with a persistent dry cough, new sputum production, exertional dyspnea (shortness of breath after walking), unintentional weight loss (~10 lbs over 3 months), and fatigue. He denies fever, chest pain, hemoptysis, or recent travel.
+
+Objective:
+Vital signs: HR 98 bpm, RR 20/min, SpO₂ 94% on 3 L supplemental O₂, BP 140/80 mmHg.
+Physical exam: Right lower lung base wheeze, use of accessory muscles, otherwise clear lung fields.
+Chest X‑ray: subtle opacity in the right mid‑lung zone suggestive of a central mass; mild right heart enlargement.
+
+Assessment:
+1. Possible pulmonary neoplasm (primary lung cancer or metastatic disease) – concerning given occupational exposures (asbestos, silica, diesel exhaust, radon) and smoking history.
+2. Exacerbation of underlying COPD and pulmonary hypertension, likely contributing to dyspnea and cough.
+3. Other differential considerations: bacterial or viral infection (less likely due to no fever or classic infiltrate), interstitial lung disease.
+
+Plan:
+• Order high‑resolution CT chest with contrast for better characterization of the opacity.
+• Refer urgently to pulmonology for further evaluation and possible biopsy.
+• Continue current O₂ therapy at 3 L/min; consider transition to a portable O₂ concentrator if exercise limitation persists.
+• Initiate short‑acting inhaled bronchodilator (albuterol) PRN for breakthrough dyspnea; follow up on inhaler technique.
+• Obtain baseline labs: CBC, CMP, CRP, LDH, and sputum culture if productive.
+• Discuss weight‑loss management and refer to nutrition counseling.
+• Provide smoking cessation counseling and resources.
+• Schedule a follow‑up visit in 2 weeks or sooner if symptoms worsen or new findings appear.
+
+Patient is informed about the plan and feels relieved that definitive diagnostic steps are underway.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dry cough</span><span class="pill">new sputum production</span><span class="pill">shortness of breath after walking</span><span class="pill">weight loss</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>98</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>SpO2</td><td>94%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr><tr><td>BP</td><td>140/80</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right lower lung base wheeze</li><li>Use of accessory muscles</li><li>No fever or chest pain</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AP/Lateral films: subtle opacity in right mid‑lung zone, possible central mass; mild right heart enlargement</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John feels relieved after the visit and hopes to get more definitive results soon.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Budesonide–formoterol</li><li>Low‑dose steroids (as needed)</li><li>Low‑dose calcium channel blocker</li><li>Oxygen 3 L/min</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic obstructive pulmonary disease</li><li>Emphysema</li><li>Chronic bronchitis</li><li>Pulmonary hypertension</li><li>History of smoking 2 packs/day until recently</li><li>Occupational asbestos exposure</li><li>Silica exposure</li><li>Diesel exhaust exposure</li><li>Radon exposure</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John‑P. B. presented to the family physician’s office with persistent cough, new sputum, shortness of breath, weight loss, and fatigue. A physical exam revealed a right lower lung base wheeze. The PCP ordered a chest X‑ray to evaluate for possible infection or structural lesion. The CXR showed a subtle opacity in the right mid‑lung zone suggestive of a central mass and mild right heart enlargement. The PCP advised a CT scan for better characterization and referred John to pulmonology.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of cough and weight loss in COPD patient; suspicion of central lung mass. Ordering CXR.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-03-09</h3><div class="visit-meta">Primary Care | Reason: New episode of productive cough and worsening dyspnea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: New episode of yellow sputum production and worsening exertional dyspnea.
+
+History of Present Illness: John is a 65‑year‑old male with known COPD, emphysema, chronic bronchitis, and pulmonary hypertension who presents for a routine follow‑up (Visit #2). He reports a new onset of productive yellow sputum with increased dyspnea after climbing stairs, accompanied by fatigue and the need to use a cane. He denies hemoptysis or chest pain. He expresses concern about a possible malignancy given the prior imaging findings.
+
+Past Medical History: COPD, emphysema, chronic bronchitis, pulmonary hypertension, mild right heart enlargement previously noted.
+
+Current Medications: Albuterol PRN, Ipratropium PRN, Budesonide–Formoterol maintenance, low‑dose oral steroids PRN, low‑dose calcium channel blocker, supplemental oxygen 3 L/min.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for cough with yellow sputum, shortness of breath, fatigue. Negative for chest pain, fever, weight change.
+
+Physical Examination: Vital signs reveal HR 104/min, RR 22/min, BP 135/78 mmHg, SpO₂ 92% on 3 L/min O₂. Examination shows marked accessory muscle use, right lower lung base wheeze, moderate diffuse crackles bilaterally.
+
+Assessment: Acute COPD exacerbation with superimposed bacterial infection and potential pulmonary mass/pleural opacity. Differential includes bacterial pneumonia, pulmonary embolism, lung cancer, and other infectious etiologies.
+
+Plan: 1) Continue inhaled therapy and supplemental oxygen. 2) Start empirical oral antibiotics (e.g., azithromycin 500 mg qd for 7 days) pending sputum culture results. 3) Order high‑resolution CT chest with contrast to evaluate the opacity noted on prior CXR. 4) Schedule flexible bronchoscopy for tissue diagnosis. 5) Refer urgently to pulmonology for specialized evaluation. 6) Encourage smoking cessation counseling and nutritional evaluation. 7) Educate on signs of deterioration (increased work of breathing, fever) and prompt return to ED if needed.
+
+Follow‑up: Patient will see pulmonology in 1 week. Repeat SpO₂ and symptom review at next scheduled office visit. Consider adjustment of steroids if inflammatory markers are elevated. Await imaging and bronchoscopy results before definitive diagnosis.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">productively yellow sputum</span><span class="pill">increased dyspnea especially on stairs</span><span class="pill">use of cane</span><span class="pill">shortness of breath</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>104</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>SpO2</td><td>92%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr><tr><td>BP</td><td>135/78</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Elevated use of accessory muscles</li><li>Right lower lung base wheeze</li><li>Moderate diffuse crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest with contrast</li><li>Bronchoscopy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John is concerned about a possible cancer after the PCP suggested advanced imaging and agrees to the referral.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Budesonide–formoterol</li><li>Low‑dose steroids (as needed)</li><li>Low‑dose calcium channel blocker</li><li>Oxygen 3 L/min</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Initial CXR with subtle opacity</li><li>COPD exacerbation</li><li>Use of cane for walking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Following the previous visit, John reports a new episode of yellow sputum, worsening dyspnea after climbing stairs, and increased fatigue. The PCP performs a lung exam, notes increased wheezing, and orders a CT chest with contrast to evaluate the opacity and a bronchoscopy for tissue diagnosis. The PCP refers John to the pulmonologist for specialized evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Worsening respiratory symptoms; central mass suspected. Referral to pulmonology, CT planned.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-03-16</h3><div class="visit-meta">Pulmonology | Reason: Review CT scan and perform bronchoscopy for diagnosis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of recent CT chest with contrast and perform diagnostic bronchoscopy. 
+
+History: 65‑year‑old male with a long history of COPD, emphysema, chronic bronchitis, and pulmonary hypertension. He presents with progressive dyspnea on exertion, productive cough, and intermittent hemoptysis. Past visits identified a focal opacity in the right lower lobe on CT. He has been on albuterol, ipratropium, budesonide–formoterol, low‑dose oral steroids, low‑dose calcium channel blocker, supplemental O₂ at 3 L/min, and azithromycin 500 mg daily for 7 days. No known drug allergies.
+
+Current Medications: Albuterol, Ipratropium, Budesonide–formoterol, Low‑dose steroids (PRN), Low‑dose calcium channel blocker, Oxygen 3 L/min, Azithromycin 500 mg daily.
+
+Review of Systems: Positive for dyspnea on exertion, productive cough, hemoptysis, weight loss (~10 lb over 3 months), fatigue. Negative for chest pain, fever, orthopnea.
+
+Physical Examination: Not documented during this visit; however, prior visits noted accessory muscle use, right lower lung base wheeze, and diffuse crackles bilaterally.
+
+Vital Signs: 
+- HR: 110/min
+- RR: 24/min
+- SpO₂: 88% on 3 L/min O₂
+- BP: 128/70 mmHg
+
+Assessment: The patient’s clinical picture is concerning for a possible bronchogenic neoplasm (primary lung cancer or metastatic disease) given the persistent opacity on contrast CT, progressive dyspnea, and hemoptysis. Infectious etiologies (e.g., bacterial abscess, TB) remain possible, especially in the setting of COPD. Pulmonary embolism with infarction and pulmonary hypertension flare could also contribute to symptoms but are less likely to cause focal hemoptysis. Prompt bronchoscopic evaluation is warranted for visualization, tissue diagnosis, and possible therapeutic intervention.
+
+Plan: 
+1. Perform flexible bronchoscopy with endobronchial ultrasound (EBUS) and obtain biopsies from the opacity and any endobronchial lesions. 
+2. Order laboratory studies: CBC with differential, CMP, LDH, CRP, β‑2 microglobulin, sputum Gram stain &amp; culture, and acid‑fast bacilli smear if TB suspected.
+3. Arrange for PET‑CT scan if bronchoscopy is consistent with malignancy to stage disease.
+4. Continue current inhaled therapy and low‑dose oral steroids. If infection is confirmed, initiate IV antibiotics per culture sensitivity.
+5. Maintain supplemental O₂; titrate flow to maintain SpO₂ ≥90%.
+6. Counsel patient on smoking cessation; refer to counseling services.
+7. Instruct patient to seek immediate care if severe hemoptysis (&gt;200 mL over 24 h) or sudden worsening dyspnea.
+
+Disposition: Schedule bronchoscopy today. Follow up in 7 days after procedure or sooner if complications arise.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dyspnea on exertion</span><span class="pill">cough</span><span class="pill">productivity</span><span class="pill">hemoptysis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>SpO2</td><td>88%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr><tr><td>BP</td><td>128/70</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right lung base wheeze</li><li>Inspiratory stridor</li><li>Mild crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Flexible bronchoscopy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT chest: 3.2 × 2.8 cm enhancing mass, 70% obstruction, mildly enlarged mediastinal nodes, emphysema, no effusion</li><li>Bronchoscopy biopsy: invasive squamous cell carcinoma, high Ki‑67</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pre‑op labs: CBC, CMP</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John is anxious but agrees to the procedure and future multidisciplinary evaluation.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Budesonide–formoterol</li><li>Low‑dose steroids (as needed)</li><li>Low‑dose calcium channel blocker</li><li>Oxygen 3 L/min</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT chest with contrast showing opacity</li><li>Previous PCP visit</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pulmonologist reviews the CT showing a 3.2 × 2.8 cm enhancing mass within the right mainstem bronchus occluding ~70% of the lumen. After discussing the findings, the pulmonologist schedules a flexible bronchoscopy to obtain tissue. During the bronchoscopy the lumen appears narrowed and erythematous; a biopsy of the most obstructing portion shows dysplastic squamous epithelium with invasive carcinoma (high Ki‑67). The patient is advised about the malignant nature of the lesion and potential need for multidisciplinary care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed malignant central mass. Patient will be admitted for management of compromised airway and respiratory status.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-03-18</h3><div class="visit-meta">Pulmonology/Medicine | Reason: Admitted for COPD exacerbation and tumor obstruction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 65‑year‑old male with COPD exacerbation and hemoptysis. The patient was admitted for a 7‑day course of IV methylprednisolone, nebulized albuterol–ipratropium, oral amoxicillin–clavulanate, and increased oxygenation to 4 L via Venturi mask.\n\nHistory of Present Illness: John presents with worsening cough, increased sputum production, mild fever, significant dyspnea, and intermittent hemoptysis over the past few days. Vital signs on admission were HR 112, RR 26, SpO₂ 86% on 3 L O₂ (up to 4 L after escalation), and BP 130/75. Physical exam revealed bilateral wheezes, decreased breath sounds in the right upper lung field, use of accessory muscles, and oxygen saturation fluctuating between 85–92%. No signs of shock were noted. Prior imaging showed a central pulmonary opacity (suggestive of a potential neoplasm) and mild right heart enlargement. A recent bronchoscopy was performed; biopsy results pending.\n\nAssessment: The patient remains in moderate COPD exacerbation with persistent hypoxemia and ongoing hemoptysis. Differential diagnosis includes: 1) Acute exacerbation of COPD with bacterial infection; 2) Pulmonary neoplasm (primary or secondary) with superimposed infection; 3) Pulmonary embolism; 4) Bronchiectasis; 5) Severe infection such as pneumonia or tuberculosis. The slight pleural thickening noted on repeat CT and continued pleuritic symptoms raise concern for possible malignant or infectious pleural involvement. The patient’s history of weight loss, central lung opacity, and hemoptysis is worrisome for underlying malignancy.\n\nPlan: 1) Continue IV methylprednisolone 40 mg q6h for 7 days, with taper as tolerated. 2) Nebulized albuterol–ipratropium q4h PRN. 3) Oral amoxicillin–clavulanate 875/125 mg BID for 10 days. 4) Maintain supplemental oxygen at 4 L via Venturi mask; consider high‑flow nasal cannula if sats &lt;88%. 5) Obtain sputum Gram stain, culture, and AFB smear; send bronchoalveolar lavage fluid for cytology and bacterial panels. 6) Repeat CBC and CMP daily. 7) Review bronchoscopy biopsy results; if malignancy confirmed, refer to oncology. 8) Consider CT chest with contrast if clinical status deteriorates or pleuritic signs persist. 9) Continue smoking cessation counseling; discuss inhaler technique. 10) Discuss end‑of‑life goals if malignancy is confirmed.\n\nFollow‑up: Monitor in pulmonary step‑down unit; re‑evaluate oxygen requirement and sputum characteristics. Repeat CBC and CMP on day 3; review sputum cultures on day 5. If biopsy is benign, plan for outpatient pulmonology follow‑up in 1 week.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">wheezing</span><span class="pill">increased sputum</span><span class="pill">mild fever</span><span class="pill">shortness of breath</span><span class="pill">hemoptysis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>112</td></tr><tr><td>RR</td><td>26</td></tr><tr><td>SpO2</td><td>86%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr><tr><td>BP</td><td>130/75</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Bilateral wheezes</li><li>Decreased breath sounds right upper lung</li><li>Use of accessory muscles</li><li>No overt shock</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Repeat CT chest</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: mild leukocytosis, hemoglobin 12.4, platelets 250 k</li><li>CMP: normal renal panel</li><li>Repeat CT: slight pleural thickening, no effusion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV methylprednisolone 40 mg q6h</li><li>Nebulized albuterol–ipratropium</li><li>Oral amoxicillin‑clavulanate 875/125 mg BID</li><li>Oxygen increased to 4 L via Venturi mask</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He tolerates steroids and bronchodilators with transient improvement, but oxygen continues to drop and hemoptysis persists.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Carcinoma of right mainstem bronchus</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Budesonide–formoterol</li><li>Low‑dose steroids (as needed)</li><li>Low‑dose calcium channel blocker</li><li>Oxygen 3 L/min</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Mass causing 70% bronchial obstruction</li><li>Recent bronchoscopy</li><li>Ongoing COPD exacerbation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presents to the hospital with worsening cough, sputum, mild fever, and significant dyspnea. He is admitted for a 7‑day course of IV methylprednisolone, nebulized albuterol–ipratropium, oral amoxicillin‑clavulanate, and increased oxygen to 4 L via Venturi mask. Repeat CT shows slight pleural thickening but no new effusion. Throughout the admission, he experiences intermittent hemoptysis and oxygen saturation fluctuating between 85–92%. The team monitors for airway compromise due to tumor obstruction and manages COPD exacerbation aggressively.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Admitted for severe COPD exacerbation secondary to central tumor obstruction; oxygen requirements rising, airway compromising.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-04-01</h3><div class="visit-meta">Oncology | Reason: Initiate palliative chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+65‑year‑old male with history of right mainstem bronchus carcinoma, severe pulmonary hypertension (pHTN) and COPD presents today for initiation of palliative chemotherapy. He reports significant fatigue, worsening dyspnea, intermittent chest discomfort, and moderate chest wall pain over the past week. He denies vomiting, chest trauma, or new cough. He is on chronic low‑dose steroids PRN, inhaled bronchodilators, and 3 L/min supplemental O₂.
+
+**Objective:**
+Vital signs: HR 100, BP 118/78, RR 20, SpO₂ 94% on 3 L O₂. Generalized wheezing noted on auscultation. Mild chest wall tenderness at the right anterolateral chest wall. No jugular venous distention, peripheral edema. Chest X‑ray shows moderate right pleural effusion. TEE confirms mean PAP 70 mmHg.
+
+**Assessment:**
+1. Carcinoma of right mainstem bronchus – palliative intent chemotherapy with cisplatin + etoposide planned.
+2. Severe pulmonary hypertension secondary to malignancy and chronic lung disease – managed with IV inhaled iloprost concurrent with chemo to blunt vasoconstriction.
+3. Mild chemotherapy‑related mucositis and low‑grade (38 °C) fever – likely neutropenic or infectious.
+4. Moderately large right pleural effusion – likely exudate secondary to tumor or heart failure.
+5. Underlying COPD exacerbation – controlled with inhalers and supplemental O₂.
+
+Differential diagnoses for fevers and pleural effusion: infectious pleuritis, malignant effusion, heart failure flares, neutropenic fever.
+
+**Plan:**
+– Continue cisplatin 75 mg/m² and etoposide 100 mg/m² per day 1‑3 cycle over 3 days.
+– Maintain IV inhaled iloprost 40 pg/kg/min during chemo; monitor hemodynamics, pause infusion if significant chest pressure or hypoxia.
+– Start oral doxycycline 100 mg BID for low‑grade fever pending culture; consider broad‑spectrum antibiotics if febrile neutropenia develops.
+– Acetaminophen 650 mg q6h PRN for mucositis pain; avoid NSAIDs due to possible renal compromise.
+– Continue baseline medications: albuterol, ipratropium, budesonide–formoterol, low‑dose steroids PRN, low‑dose calcium channel blocker, 3 L/min O₂.
+– Repeat CBC, CMP prior to next cycle to assess marrow suppression and renal function.
+– Repeat chest X‑ray in 7 days or sooner if respiratory status worsens.
+– Discuss possibility of thoracentesis if dyspnea or hypoxia escalates; obtain pleural fluid analysis.
+– Encourage smoking cessation; schedule nutrition counseling.
+– Refer to pulmonology for pHTN optimization (consider addition of endothelin receptor antagonists if tolerated).
+– Patient education on signs of neutropenia and when to contact oncology clinic.
+
+**Follow‑up:**
+– Return to infusion center on 2023‑04‑15 for cycle 2 if counts adequate.
+– Telehealth call on 2023‑04‑10 to assess fever, pain, and oxygen saturation.
+– Schedule pulmonary follow‑up for pHTN management within 4 weeks.
+
+**Signature:**
+Dr. X, MD
+Oncology
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">chest discomfort</span><span class="pill">dyspnea</span><span class="pill">moderate chest wall pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>100</td></tr><tr><td>BP</td><td>118/78</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>SpO2</td><td>94%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Generalized wheezing</li><li>Mild chest wall tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>TEE</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TEE: mean pulmonary artery pressure 70 mmHg</li><li>Chest X‑ray: moderate right pleural effusion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Cisplatin 75 mg/m² infusion</li><li>Etoposide 100 mg/m² infusion</li><li>IV inhaled iloprost 40 pg/kg/min</li><li>Oral doxycycline 100 mg BID</li><li>Oral acetaminophen 650 mg q6h PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John experiences transient chest pressure during infusion, recovers after pause, and tolerates the first cycle with mild mucositis and low‑grade fever.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Carcinoma of right mainstem bronchus</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Budesonide–formoterol</li><li>Low‑dose steroids (as needed)</li><li>Low‑dose calcium channel blocker</li><li>Oxygen 3 L/min</li><li>Paracetamol as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hospitalization for COPD exacerbation</li><li>Confirmed squamous cell carcinoma of right mainstem bronchus</li><li>Pulmonary hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist reviews the patient’s status and notes the severe pulmonary hypertension (TEE: mean PAP 70 mmHg). The first cycle of a cisplatin‑etoposide palliative regimen is administered with an IV inhaled iloprost infusion to blunt pulmonary vascular response. The infusion induces chest pressure and lightheadedness; the pump is paused and then resumed. O₂ falls to 86 % during the infusion but remains stable. After chemotherapy, John develops mild mucositis, a low‑grade fever (38 °C), and a moderate right pleural effusion on chest X‑ray. The oncology team starts oral doxycycline for fever and acetaminophen for pain.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First palliative chemotherapy cycle completed; severe pulmonary hypertension managed, tumor remains large.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-04-15</h3><div class="visit-meta">Pulmonology | Reason: Worsening dyspnea, pleural effusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Worsening dyspnea and right-sided pleural effusion.
+
+History of Present Illness: 65‑year‑old male with COPD (emphysema, chronic bronchitis), pulmonary hypertension, and a known right mainstem bronchus carcinoma with malignant pleural effusion presents with a 1‑week history of progressively worsening dyspnea, orthopnea, thick purplish sputum, new pitting edema up to the knees, right chest wall pain, and increasing fatigue. He reports that he can no longer lie flat and has a noticeable increase in lower‑extremity edema. His symptom burden has worsened despite continued furosemide 40 mg BID and 4 L/min nasal cannula oxygen. He has gained 5 kg in the past month.
+
+Past Medical History: COPD, emphysema, chronic bronchitis, pulmonary hypertension, right mainstem bronchus carcinoma, malignant pleural effusion.
+
+Medications: Albuterol, Ipratropium, Budesonide–formoterol, low‑dose oral steroids (PRN), low‑dose calcium channel blocker, Oxygen 4 L/min, Oral morphine 10 mg PO q6h PRN, Furosemide 40 mg BID.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for foul‑smelling sputum, orthopnea, edema, chest wall pain, fatigue. Denied fever, chills, chest trauma, recent travel.
+
+Physical Examination:
+- Vital Signs: HR 115, RR 24, SpO2 86% on 4 L/min O2, BP 128/70.
+- General: Cachectic, in mild respiratory distress.
+- HEENT: Warm; no jugular venous distention noted at 30° incline.
+- Cardiovascular: JVD at 30°, holosystolic murmur at the left sternal border best heard at the 4th intercostal space.
+- Pulmonary: Bilateral crackles, prominent right lower lobe crackles, wheeze at right base.
+- Extremities: Bilateral pitting edema to the knees.
+- Other: No cyanotic lips, no clubbing.
+
+Diagnostics:
+- Portable chest X‑ray: Right pleural effusion enlarged to the costophrenic angle with opacified right lung field.
+- Thoracentesis: 800 mL hemorrhagic fluid; fluid cytology positive for malignant epithelial cells; cultures negative.
+- Labs: Not documented in this encounter.
+
+Assessment:
+1. Malignant pleural effusion secondary to right mainstem bronchus carcinoma – primary cause of dyspnea and peripheral edema.
+2. Right‑heart failure secondary to pulmonary hypertension and volume overload.
+3. COPD exacerbation (evidence of increased sputum purulence, wheeze, accessory muscle use).
+
+Differential diagnosis:
+- Malignant pleural effusion.
+- Pulmonary embolism (unlikely given negative cultures and absence of acute chest pain). 
+- Infectious pleuritis (ruled out by negative cultures). 
+- Congestive heart failure due to pulmonary hypertension.
+
+Plan:
+- Continue furosemide 40 mg BID; increase to 80 mg BID or add spironolactone 25 mg daily pending renal function.
+- Maintain oxygen 4 L/min, titrate to keep SpO2 &gt;90%.
+- Continue morphine 10 mg PO q6h PRN for chest wall pain.
+- Consider early pleurodesis or chest‑tube placement if repeat effusion occurs.
+- Repeat chest X‑ray in 1 week; monitor weight and peripheral edema.
+- Check serum electrolytes, CBC, BMP, renal function prior to dose increase.
+- Continue scheduled cisplatin + etoposide chemotherapy on schedule.
+- Discuss involvement of palliative care for symptom management and goals of care.
+- Follow up in pulmonary clinic 7 days from today or sooner if symptoms worsen.
+
+Disposition: Patient to remain on current oxygen therapy, with diuretic adjustment per plan. Advised to report sudden worsening of dyspnea, chest pain, or new swelling immediately.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">thick purplish sputum</span><span class="pill">orthopnea</span><span class="pill">pitting edema up knees</span><span class="pill">right chest wall pain</span><span class="pill">increasing fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>115</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>SpO2</td><td>86%</td></tr><tr><td>O2_Flow</td><td>4L</td></tr><tr><td>BP</td><td>128/70</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Pitting edema up to knees</li><li>Jugular venous distension</li><li>Holosystolic murmur left sternal border</li><li>Right pleural effusion signs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Portable chest X‑ray</li><li>Thoracentesis</li><li>Fluid cytology</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: enlarged right pleural effusion, more opacified right lung</li><li>Thoracentesis: 800 mL hemorrhagic fluid, cytology positive for malignant epithelial cells</li><li>Fluid cultures: negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Furosemide 40 mg BID</li><li>Oxygen 4 L/min</li><li>Oral morphine 10 mg PO q6h PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Increasing dyspnea despite diuretics; pain remains moderate.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Carcinoma of right mainstem bronchus</span><span class="pill">Malignant pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Budesonide–formoterol</li><li>Low‑dose steroids (as needed)</li><li>Low‑dose calcium channel blocker</li><li>Oxygen 4 L/min</li><li>Oral morphine 10 mg PO q6h PRN</li><li>Furosemide 40 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent chemotherapy</li><li>Progression of pleural effusion</li><li>Right heart failure signs</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John reports worsening sputum color, difficulty breathing lie‑flat, and new edema. On examination, there is pitting edema down to the knees, jugular venous distension, and a holosystolic murmur at the left sternal border. A portable chest X‑ray shows an expanded right pleural effusion and an opacified right lung field. A thoracentesis yields 800 mL hemorrhagic fluid; cytology is positive for malignant epithelial cells; cultures are negative. The patient is started on furosemide 40 mg BID and continued oxygen support. Diuresis yields limited improvement, and weight has increased by 5 kg in the past month.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progression with malignant pleural effusion causing right heart failure; worsening pulmonary hypertension.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-04-28</h3><div class="visit-meta">Palliative Care | Reason: Discuss goals of care, transition to comfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Discussion of goals of care and transition to comfort measures.
+
+**History of Present Illness:** 65‑year‑old male with advanced right mainstem bronchus carcinoma complicated by malignant pleural effusion, severe pulmonary hypertension, and COPD/emphysema. Over the past 2 months, he has experienced progressive dyspnea, fatigue, chest wall pain, and difficulty sleeping upright. The patient has received two cycles of cisplatin/etoposide chemotherapy with IV iloprost and has endured multiple complications including right heart failure and fluid overload.
+
+**Review of Systems:**
+- Respiratory: dyspnea, right chest wall pain, wheeze, orthopnea.
+- Cardiovascular: JVD, right heart failure signs.
+- Musculoskeletal: chest wall tenderness.
+- General: fatigue, weight loss (~10 lb) over 3 months, poor sleep.
+
+**Current Medications (prior to changes):** Albuterol inhaler, ipratropium inhaler, budesonide–formoterol inhaler, low‑dose oral steroids PRN, low‑dose calcium channel blocker, cisplatin 75 mg/m², etoposide 100 mg/m², IV inhaled iloprost 40 pg/kg/min, doxycycline 100 mg BID, acetaminophen 650 mg q6h PRN, oxygen 3 L/min, furosemide 40 mg BID, oral morphine 10 mg PO q6h PRN.
+
+**Physical Examination:**
+- Vitals: HR 110, RR 22, SpO₂ 88 % on 3 L O₂, BP 123/75. O₂ flow currently 3 L/min.
+- HEENT: unremarkable.
+- Chest: moderate expiratory wheeze, right chest wall tenderness, no acute distress at rest.
+- Cardiovascular: normal rate and rhythm, no murmurs.
+- Extremities: mild pitting edema to knees, JVD 30°.
+
+**Assessment:**
+1. Advanced right mainstem bronchus carcinoma with malignant pleural effusion and progressive pulmonary hypertension—likely non‑responsive to further cytotoxic therapy.
+2. COPD/emphysema with chronic bronchitis—contributing to dyspnea.
+3. Right heart failure secondary to pulmonary hypertension and mass effect.
+4. Moderate chest wall pain likely due to tumor invasion.
+5. Cachexia and fatigue—consistent with end‑stage disease.
+
+**Plan:**
+- **Goals of Care:** Patient and wife consent to discontinue chemotherapy and radiotherapy, shifting focus to symptomatic and palliative care.
+- **Symptom Management:**
+  - Increase baseline opioid: oral morphine 10 mg PO q6h PRN for pain, titrate based on pain scale.
+  - Initiate oral methylprednisolone 8 mg at bedtime to reduce airway edema.
+  - Reduce oxygen to 2 L/min via nasal cannula to avoid hypercapnia; reassess SpO₂ and comfort.
+  - Transition nebulized albuterol–ipratropium to PRN use only; encourage use at home if wheeze or dyspnea increases.
+  - Continue furosemide 40 mg BID; monitor edema and renal function.
+- **Hospice Referral:** Arrange timely referral to local hospice care for home-based support and further symptom control.
+- **Education &amp; Counseling:** Discuss expectation for disease progression, potential for increased dyspnea, pain, and fatigue. Educate patient and family on medication use, side‑effects, and when to call.
+- **Support Services:** Connect with social work for financial counseling, home health services, and psychological support for family.
+- **Monitoring:** Daily vitals in next 48 hrs; if SpO₂ falls below 85 % or RR &gt;25, consider re‑increase O₂ or reassess.
+- **Documentation:** Update electronic medical record with goals of care and discharge to hospice, ensuring all providers are aware.
+
+**Follow‑up:**
+- Hospice team to visit within 24 hrs.
+- Palliative care team follow‑up in 2 weeks or sooner if symptoms worsen.
+- Home health nurse to monitor vitals and medication adherence daily.
+- Family to be available for 24‑hour call in case of emergencies.
+
+**Signature:** Palliative Care Team, 2023‑04‑28</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dyspnea</span><span class="pill">fatigue</span><span class="pill">pain in right chest wall</span><span class="pill">difficulty sleeping upright</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>SpO2</td><td>88%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr><tr><td>BP</td><td>123/75</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Moderate wheeze</li><li>Right chest wall tenderness</li><li>No distress at rest</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Oral morphine 10 mg PO q6h PRN</li><li>Oral methylprednisolone 8 mg at bedtime</li><li>Oxygen 2 L/min nasal cannula</li><li>Nebulized albuterol–ipratropium as needed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John expresses desire to be comfortable; he and his wife agree to discontinue aggressive treatment and accept hospice care.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Carcinoma of right mainstem bronchus</span><span class="pill">Malignant pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Oral methylprednisolone 8 mg at bedtime</li><li>Oxygen 2 L/min nasal cannula</li><li>Oral morphine 10 mg PO q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Persistent tumor, pleural effusion, right heart failure</li><li>Multiple chemotherapy cycles</li><li>Ongoing pulmonary hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The palliative care team meets with John and his wife to review goals of care. They discuss the futility of ongoing chemotherapy and radiotherapy in the setting of severe pulmonary hypertension and progressive disease. John agrees to discontinue chemotherapy and focus on comfort measures. The team initiates low‑dose opioid analgesia, reduces rescue medications, and plans for hospice referral. The oxygen regimen is lowered to 2 L/min to avoid hypercapnia, and nebulized bronchodilators are kept only as needed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to hospice; cancer unresponsive to therapy; focus shifts to symptom control.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-05-12</h3><div class="visit-meta">Emergency Medicine | Reason: Respiratory distress at home</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Respiratory distress at home.
+
+History of Present Illness: 65‑year‑old male with advanced COPD/emphysema, chronic bronchitis, pulmonary hypertension, and known malignant pleural effusion was brought to the ED by his wife after she observed irregular breathing and a drop in SpO₂ while he was on 3 L nasal cannula at home. On arrival, vitals were HR 110, RR 18, SpO₂ 85% on 3 L O₂, BP 120/85. Physical exam revealed mild respiratory distress with accessory muscle use, no focal lung infection signs, and a stable cardiovascular evaluation. Laboratory studies showed mild anemia and leukocytosis on CBC, an elevated BUN of 32 mg/dL and creatinine of 1.3 mg/dL on CMP, and a chest CT confirming a 1.2 L pleural effusion with increased bronchial narrowing. With no identifiable reversible etiology and considering the patient’s advanced disease status, the decision was made to transfer the patient to hospice care at home. A hospice home‑care team has been scheduled for a same‑day visit.
+
+Assessment: 1) Advanced COPD exacerbation with pleural effusion and pulmonary hypertension; 2) Malignant pleural effusion due to underlying pulmonary malignancy; 3) Mild renal dysfunction secondary to chronic disease.
+
+Plan: 1) Continue current therapy—albuterol and ipratropium inhalers as needed, oral methylprednisolone 8 mg nightly, oxygen 3 L/min via nasal cannula, and oral morphine 10 mg PO q6h PRN for pain. 2) Observation in ED for 4 h to monitor for abrupt deterioration; maintain supplemental oxygen. 3) Arrange hospice transfer; hospice home‑care team to conduct a visit today to reassess comfort status and provide palliative support. 4) Educate family regarding expected disease trajectory and advance care planning. 5) No further acute interventions planned; notify hospice if patient shows increased dyspnea, chest pain, or hemodynamic instability.
+
+Follow‑up: Hospice home‑care scheduled same day; patient comfort and vitals will be monitored by the hospice team. Contact ED if any acute change or escalation of symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">irregular breathing</span><span class="pill">fatigue</span><span class="pill">mild chest pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>85%</td></tr><tr><td>O2_Flow</td><td>3L</td></tr><tr><td>BP</td><td>120/85</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild respiratory distress</li><li>No signs of acute infection</li><li>Stable cardiovascular exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Chest CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: mild anemia, leukocytosis</li><li>CMP: BUN 32 mg/dL, creatinine 1.3 mg/dL</li><li>Chest CT: pleural effusion 1.2 L, increased bronchiolar narrowing</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Observation, supplemental oxygen 3 L/min</li><li>Hospice referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Family agrees to hospice transfer; patient remains comfortable with low‑dose comfort medications.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Carcinoma of right mainstem bronchus</span><span class="pill">Malignant pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol</li><li>Ipratropium</li><li>Oral methylprednisolone 8 mg at bedtime</li><li>Oxygen 3 L/min nasal cannula</li><li>Oral morphine 10 mg PO q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous COPD exacerbation</li><li>Pulmonary hypertension</li><li>Malignant pleural effusion</li><li>Hospice transfer decision</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John’s wife calls the emergency department after noticing irregular breathing and difficulty maintaining oxygen saturation on 3 L. In the ED, the patient is evaluated; CBC shows mild anemia and leukocytosis, CMP reveals elevated BUN and creatinine, and a chest CT confirms an enlarged pleural effusion of approximately 1.2 L and increased bronchial narrowing. With no evidence of a reversible cause, the team decides to transfer John to hospice care at home. A hospice home‑care team is scheduled for a visit the same day.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>End‑of‑life supportive care; hospice initiated; patient expected to die peacefully at home.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Emphysema</span><span class="pill">Chronic bronchitis</span><span class="pill">Pulmonary hypertension</span><span class="pill">History of smoking</span><span class="pill">Right mainstem bronchus carcinoma</span><span class="pill">Malignant pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Ipratropium inhaler</li><li>Budesonide–Formoterol inhaler</li><li>Low‑dose oral steroids PRN</li><li>Low‑dose calcium channel blocker</li><li>Oral doxycycline 100 mg BID</li><li>Acetaminophen 650 mg q6h PRN</li><li>Oxygen 2 L/min nasal cannula</li><li>Furosemide 40 mg BID</li><li>Oral morphine 10 mg PO q6h PRN</li><li>Oral methylprednisolone 8 mg at bedtime</li><li>Nebulized albuterol–ipratropium PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>65‑year‑old male presents with persistent dry cough, new sputum production, exertional dyspnea, unintentional weight loss (~10 lb over 3 months), and fatigue. Examination shows right lower lung base wheeze, accessory muscle use, and SpO₂ 94% on 3 L supplemental O₂. Chest X‑ray reveals a subtle opacity in the right mid‑lung zone suggestive of a central mass and mild right heart enlargement. Plan: order high‑resolution CT chest with contrast, refer urgently to pulmonology, continue 3 L/min O₂, initiate albuterol PRN inhaler, obtain CBC, CMP, CRP, LDH, and sputum culture, refer for nutrition counseling and smoking cessation, and follow up in 2 weeks.</li><li>Patient presents with new episode of yellow sputum production, worsening exertional dyspnea, fatigue, and use of cane. Vital signs show HR 104, RR 22, SpO₂ 92% on 3 L supplemental oxygen. Physical exam reveals accessory muscle use, right lower lung base wheeze, and diffuse crackles bilaterally. Empiric azithromycin 500 mg daily for 7 days initiated pending sputum culture. High‑resolution CT chest with contrast and flexible bronchoscopy ordered to evaluate persistent opacity. Current inhaled therapy (albuterol, ipratropium, budesonide–formoterol) and low‑dose oral steroids PRN continued; low‑dose calcium channel blocker and supplemental oxygen maintained. Urgent pulmonology referral scheduled within 1 week.</li><li>2023‑03‑16 pulmonology visit after CT with contrast. Patient reports progressive dyspnea, productive cough, hemoptysis, and weight loss. Vitals: HR 110, RR 24, SpO₂ 88% on 3 L O₂, BP 128/70. Physical exam includes accessory muscle use, right lower lung base wheeze, diffuse crackles. Plan: perform flexible bronchoscopy with EBUS and biopsies today, order CBC, CMP, LDH, CRP, sputum Gram stain &amp; culture, AFB smear if indicated. If malignancy suspected, arrange PET‑CT. Continue inhaled therapy, low‑dose steroids, O₂, and smoking cessation counseling. Follow‑up 7 days post‑procedure or sooner if complications arise.</li><li>2023‑03‑18 admission for COPD exacerbation with hemoptysis. Patient received IV methylprednisolone 40 mg q6h, nebulized albuterol–ipratropium, oral amoxicillin–clavulanate 875/125 mg BID, supplemental oxygen 4 L via Venturi mask. Daily CBC/CMP, sputum cultures, and bronchoscopy biopsy pending. Oxygen requirement 4 L maintained. Monitoring in pulmonary step‑down unit with plan to review cultures and biopsy results, and outpatient pulmonology follow‑up if benign.</li><li>65‑year‑old male with right mainstem bronchus carcinoma presents for initiation of palliative cisplatin + etoposide chemotherapy; persistent fatigue, dyspnea, chest discomfort, moderate chest wall pain; physical exam shows wheezing, mild chest wall tenderness, moderate right pleural effusion; chest X‑ray and TEE reveal pleural effusion and mean PAP 70 mmHg; started cisplatin 75 mg/m² and etoposide 100 mg/m², IV inhaled iloprost 40 pg/kg/min, oral doxycycline 100 mg BID for low‑grade fever, acetaminophen PRN; continued baseline bronchodilators, low‑dose steroids PRN, low‑dose calcium channel blocker, and 3 L/min O₂; ordered CBC, CMP, TEE, chest X‑ray; scheduled cycle 2 on 2023‑04‑15, telehealth 2023‑04‑10, pulmonary follow‑up within 4 weeks.</li><li>4‑April‑2023 pulmonary clinic visit: patient reports worsening dyspnea, orthopnea, purplish sputum, ankle edema, chest wall pain, fatigue. Vital signs HR 115, RR 24, SpO₂ 86% on 4 L/min O₂, BP 128/70. Physical exam: cachectic, mild respiratory distress, JVD at 30°, wheeze, bilateral crackles, pitting edema to knees. Thoracentesis: 800 mL hemorrhagic fluid, malignant epithelial cells confirmed. Plan: increase furosemide to 80 mg BID or add spironolactone 25 mg daily pending renal function; maintain O₂ 4 L/min; start oral morphine 10 mg q6h PRN for chest wall pain; continue cisplatin + etoposide chemotherapy; consider early pleurodesis; repeat chest X‑ray in 1 week; monitor weight and edema; assess labs before diuretic adjustment; involve palliative care; follow up in 7 days.</li><li>2023‑04‑28: Palliative care visit focusing on goals of care; discontinuation of cisplatin/etoposide chemotherapy; initiation of oral methylprednisolone 8 mg bedtime; reduction of supplemental oxygen to 2 L/min via nasal cannula; transition nebulized albuterol–ipratropium to PRN; continuation of furosemide 40 mg BID, opioids, inhalers; hospice referral arranged; home health monitoring scheduled; palliative follow‑up in 2 weeks.</li><li>65‑year‑old male with advanced COPD/emphysema, chronic bronchitis, pulmonary hypertension, and malignant pleural effusion presents to ED with respiratory distress, SpO₂ 85% on 3 L O₂, mild anemia and leukocytosis, BUN 32 mg/dL and creatinine 1.3 mg/dL. Chest CT shows 1.2 L pleural effusion. Managed with observation, continued albuterol and ipratropium inhalers PRN, oral methylprednisolone 8 mg nightly, oxygen 3 L/min via nasal cannula, and oral morphine 10 mg PO q6h PRN. Transferred to hospice care at home with same‑day hospice team visit. No acute interventions performed.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

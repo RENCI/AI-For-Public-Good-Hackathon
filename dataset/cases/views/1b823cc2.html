@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 1b823cc2</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 1b823cc2</h1><div class="subtitle">Invasive Ductal Carcinoma of the Right Breast, Other Site (C50.8) | Female, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Hypertension, Type 2 Diabetes Mellitus, Hyperlipidemia, History of Chest Radiation</div><div class="meta-line">Risk Factors: Obesity, Hormone Replacement Therapy, BRCA1/2 mutation, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">**September 2023 – First Whisper**  Ms. K, a 65‑year‑old retired schoolteacher, had spent the past decades juggling a he...</span></summary><div class="section-body"><p>**September 2023 – First Whisper**</p><p>Ms. K, a 65‑year‑old retired schoolteacher, had spent the past decades juggling a heavy workload, a life‑long habit of smoking (≈15 pack‑years), and a diet that made her a proud resident of the “obesity” quadrant on the waist‑to‑hip chart. She had been on a 10‑year course of oral HRT until menopause‑induced hot flashes forced a switch to a low‐dose transdermal patch in 2020. The patch had faded after 18 months, but the memory of that therapy lingered, ever present in her mind as a subtle, “I used to have a hormonal storm.”</p><p>While washing her hair one Sunday morning, Ms. K felt a small, hard nodule tucked under her right breast, about the size of a walnut. It moved little with pressure, was relatively fixed to the tender tissue, and did not blanch when she pinched it. Initially brushing it off as the lingering ache from a recent minor skin stretch injury, she postponed professional attention.</p><p>By **the second week** of October 2023, the lump had become more palpable; it was firmer, and a dull ache radiated to the right axillary region. The next day she scheduled a **mammogram and ultrasound** at the county hospital, hoping the routine screening would allay her anxieties.</p><p>**October 2023 – The Reveal**</p><p>The screening was brisk: a 2‑cm hypoechoic mass in the upper outer quadrant of the right breast with irregular margins, classified as BI‑RADS 5. A **core‑needle biopsy** was performed during the same visit. The histology read invasive ductal carcinoma, grade 3, ER‑negative, PR‑negative, HER2‑negative – a classic triple‑negative profile that, regrettably, lined up with her known BRCA1 mutation. A genetic counselor had flagged the mutation during a routine age‑based DNA test two years prior. The family history was sparse; no one in her immediate family had survived breast cancer, but the mutation&#x27;s presence alone made a case for aggressive management.</p><p>The pathology report also noted a **20 mm tumor** with invasion into the underlying dermis, and **2 of 3 examined sentinel nodes** were microscopically involved. The team called it **Stage pT2N1M0** (Stage IIIB in the AJCC 8th edition). While Ms. K was still physically robust, her blood work flagged a fasting glucose of 156 mg/dL (HbA1c 7.8 %) and LDL of 160 mg/dL – reflecting uncontrolled Type 2 Diabetes Mellitus and Hyperlipidemia that had been poorly managed for years. Her blood pressure was 140/88 mmHg, controlled only partially with lisinopril.</p><p>**Early November 2023 – The Strategy Meeting**</p><p>Ms. K&#x27;s multidisciplinary team convened: medical oncologist, surgical oncologist, radiation oncologist, cardiologist, endocrinologist, and her primary care physician. Three major threads emerged: the cancer’s aggressive biology, the patient’s comorbidities, and the legacy of **historical chest radiation** (a 30 Gy whole‑thorax dose she received at age 35 for thymic carcinoma).</p><p>1. **Radiation Contraindication** – The cardiology consultation flagged that re‑irradiation of the chest wall would exponentially increase thoracic cardiac risk, especially given her diabetes and prior radiation. Thus, a single‑fractionated, post‑mastectomy radiotherapy was ruled out.</p><p>2. **Surgical Approach** – The radiology team argued that given the size, nodal positivity, and triple‑negative status, a **radical mastectomy** would achieve local control while sparing the chest wall—an important consideration to avoid re‑irradiation. The oncologists agreed, adding that a pre‑operative **neoadjuvant chemotherapy** could downstage and tackle micrometastatic disease, but concerns about cardiotoxicity from anthracyclines in a patient with prior radiation and diabetes were significant.</p><p>3. **Endocrine HRT** – The endocrine team, noting the HRT history, suggested discontinuing hormonal treatments entirely given the ER‑negative status. Lifestyle interventions—weight loss, dietary counseling, and smoking cessation support—were recommended.</p><p>The plan that emerged was: **neoadjuvant chemotherapy** with a **dose‑modified dose‑dense epirubicin (anthracycline) and cyclophosphamide (AC)**, followed by the radical mastectomy, and then palliative chemo if needed.</p><p>**December 2023 – First Chemo Cycle**</p><p>Ms. K received the first two-weekly doses (epirubicin 40 mg/m², cyclophosphamide 600 mg/m²). Post‑infusion, she experienced mild nausea, an elevated heart rate to 110 bpm, and a fleeting feeling of chest tightness—an ominous echo of cardiotoxicity. Her oncology nurse recorded a **transthoracic echocardiogram** prior to therapy: LVEF 55 %. The endocrine team adjusted her diabetes regimen: metformin was increased and a GLP‑1 agonist added, anticipating the glycaemic swings post chemo.</p><p>**February 2023 – Chemo Tolerance**</p><p>Ms. K completed six cycles of DCAC over six weeks. She battled moderate nausea, mild grade 2 neuropathy in the feet, and episodes of fatigue. Her LVEF, measured in March, declined to 50 %—within borderline thresholds but still acceptable. Blood glucose remained a rollercoaster; the endocrinologist added basal insulin for better control.</p><p>Despite these side effects, a repeat **breast MRI** in March showed a near‑complete radiologic response: the mass was now 0.5 cm, but the axillary nodes were still suspicious. The surgical team felt confident that a **radical mastectomy** could clear microscopic disease effectively.</p><p>**April 2023 – Operative Day**</p><p>Ms. K underwent a radical mastectomy with axillary dissection. The surgery lasted 4.5 hours. During the incision, the surgeon noted adherent tissue around the pectoral fascia—an expected sequela of the prior chest radiation. The pathologist reported a **0.4 cm residual tumor** (pT1c), with 2 of 10 nodes positive. Her tumor stage thus became **pT1cN1M0**. The surgeon closed with a **radial scar** and an intercostal nerve protective dressing to mitigate post‑surgical pain from her thoracic cage&#x27;s stiffness.</p><p>Post‑operative recovery was complicated by **pulmonary complications**—a mild pleural effusion that required drainage, and a brief period of hypoxia. Her diabetes management was temporarily halted to avoid hypoglycemia while her blood sugar was monitored by a dietitian.</p><p>**May 2023 – Post‑Op Recovery**</p><p>Ms. K, while on the ward, expressed frustration: the surgery scar was disfiguring, but she felt relieved that the cancer had been physically removed. She started physical therapy to restore shoulder mobility, gradually regaining 120 degrees of abduction—important to minimize the stiffening from the mastectomy and improve her quality of life. She re‑enrolled in a smoking cessation program, with the help of a psychologist and nicotine patch.</p><p>For the first time since diagnosis, Ms. K’s oncology team advised an **adjuvant paclitaxel** regimen (90 mg/m² weekly for 12 weeks) because of her lymph node positivity and triple‑negative tumor. The cardiologist gave clearance, noting that paclitaxel is less cardiotoxic. However, Ms. K’s insulin dose was tapered gradually to avoid hypoglycemia, and her blood pressure meds were switched to losartan for better heart protection.</p><p>**July 2023 – A Glimmer of Hope**</p><p>By the end of June, Ms. K had finished her 12‑week paclitaxel course. During her routine follow‑up at the oncology office, a **chest X‑ray** revealed a faint, 2‑cm opacity in the right middle lobe—nothing definitive yet. Her physical exam was unremarkable; she still complained of mild upper back soreness, likely post‑mastectomy. Her blood sugar was 140 mg/dL and LDL 120 mg/dL. She was advised to attend a routine CT chest/abdomen/pelvis in 30 days and to keep an eye on any new symptoms—especially cough or breathlessness.</p><p>**August 2023 – The First Red Flags**</p><p>Ms. K noticed a persistent, dry cough that intensified at night. She also reported low‑grade fevers and an unexplained weight loss of about 6 kg over two months. In October, she presented to her family doctor with a **high‑grade fever of 101.5 °F**, chills, and a new breathlessness that worsened when lying flat. The family practitioner referred her to the emergency department.</p><p>At the ER, a chest CT scan revealed a **3‑cm spiculated nodule** in the right lower lobe, accompanied by multiple smaller nodular lesions throughout both lungs and a 1.5‑cm lymph node near the mediastinum. PET imaging confirmed hypermetabolic activity (SUV max 12.3) in the pulmonary masses and the mediastinal node—suggestive of metastatic disease. There was no evidence of bone lesions on a bone scan.</p><p>On the same day, an **excisional biopsy** of the mediastinal lymph node was performed under CT guidance. The pathology confirmed metastatic adenocarcinoma with immunohistochemical profiling—ER‑negative, PR‑negative, HER2‑negative—that matched the primary breast tumor.</p><p>**October 2023 – The New Battlefield**</p><p>Ms. K was transferred to the oncology ward. Her case transitioned from curative intent to palliative control. She and her family were briefed on her disease trajectory: metastatic triple‑negative breast cancer has a poor prognosis, with median overall survival of 15–18 months after metastatic diagnosis. The interdisciplinary team convened to weigh options: systemic therapy, local consolidative therapy, or best supportive care.</p><p>Given her comorbidities (cardiac, diabetic, prior chest radiation), the oncologists recommended a **modified dose‑intensive capecitabine (Xeloda)**, 1000 mg/m² twice daily for 21 days on a 28‑day cycle, which offers a more favorable cardiac profile. A palliative radiation to the chest wall (20 Gy in 10 fractions) was suggested to alleviate local pain and control the palpable mass in the right breast region, but cardiologist clearance was pending.</p><p>The patient’s diabetes was intensifed to basal‑bolus therapy; her hypertension was optimized to target &lt;130/80 mmHg with a combination of ACE inhibitor and diuretic.</p><p>**November 2023 – The Battle Rages**</p><p>Ms. K began capecitabine on schedule. She developed **grade 2 hand–foot syndrome** and mild mucositis, which she managed with topical emollients and dose adjustments. Her insulin pump was calibrated to accommodate the variable appetite. The radiation oncology team, after cardiology clearance, delivered 20 Gy to the right breast wall over five days, achieving a significant reduction in local swelling.</p><p>During this month, she experienced **hemoptysis**—three small bouts of coughing up bright red blood. A bronchoscopy confirmed a bleeding focus in the right lower lobe, and an interventional pulmonology team coiling the involved branch of the pulmonary artery. The procedure stabilized her, and she was discharged with **anticoagulation** (apixaban 5 mg BID) to prevent potential thrombotic events given her high tumor burden and recent bleed.</p><p>**December 2023 – The Tides Turn**</p><p>Ms. K’s subsequent CT in December showed a **stable lung disease**; no new lesions were seen, and the mediastinal node measured reduced by 15 %. The breast wall lesion had shrunk further, with only a residual 0.8 cm scar. Her performance status improved marginally (ECOG 1 instead of 2).</p><p>The oncology team added **veliparib** (a PARP inhibitor) to her regimen, given her BRCA1 mutation and triple‑negative histology. Dosing was cautious; they started with 200 mg twice daily, monitoring for nausea, vomiting, and bone marrow suppression.</p><p>**January 2024 – The Storm**</p><p>Her last month was tumultuous: Ms. K had a sudden onset of shortness of breath and chest discomfort. An emergent echo revealed a new left ventricular ejection fraction drop to 45 %. Her cardiologist attributed this to **anthracycline‑related cardiomyopathy**—a cumulative dose effect exacerbated by her previous chest radiation. Heart failure management with beta‑blocker (metoprolol) and ACE inhibitor was intensified. Unfortunately, the combination of heart failure, uncontrolled diabetes, and pulmonary embolism—diagnosed after a CT pulmonary angiogram—complicated management.</p><p>**February 2024 – The Final Chapter**</p><p>Ms. K’s blood gases remained borderline. She reported feeling increasingly weak, with a 4‑kg weight loss in one month. Her oncologist advised de‑escalation: **switching from capecitabine to single‑agent gemcitabine (1000 mg/m² IV day 1, 8, 15 of a 28‑day cycle)**, hoping gemcitabine’s comparatively mild cardiotoxic profile would spare further cardiac decline.</p><p>However, after the first gemcitabine cycle, Ms. K developed a high fever (104 °F), chills, and a new rash—symptoms that were later confirmed as **severe neutropenic sepsis**. Despite broad‑spectrum antibiotics, her neutrophil count plunged to &lt;500 /µL. The ward team transferred her to the ICU.</p><p>In a last-ditch attempt, they began **intravenous immunoglobulin** and granulocyte colony‑stimulating factor (G-CSF) support. She developed a massive pulmonary embolism within 48 hours, despite anticoagulation, leading to refractory cardiac arrest that evening. The family, at their bedside, held her hand, expressing gratitude for her courage and the care they had afforded her.</p><p>**Epilogue**</p><p>Ms. K’s journey, spanning from a small palpable mass to a life‑threatening cascade, illustrates the aggressive nature of triple‑negative, BRCA‑mutated breast cancer in an older patient burdened with cardiovascular risk and prior radiation exposure. The interplay of comorbidities—diabetes, hypertension, hyperlipidemia—and lifestyle factors (obesity, smoking) compounded the disease’s progression. The diagnostic, therapeutic, and palliative milestones spanned roughly **six months** from initial presentation to terminal event, a timeline too swift for many but unsurprising given the biology of the underlying tumor.</p><p>While each intervention yielded temporary reprieve—complete symptom relief, radiographic stability—Ms. K ultimately succumbed to the dual forces of metastatic cancer and cardiopulmonary failure. Her story serves as a sobering reminder of the limits of modern oncology when confronted with biologically aggressive disease in a frail host.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button><button class="">Visit 13</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-10-05</h3><div class="visit-meta">Radiology | Reason: Routine breast screening – persistent lump</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Ms. K, a 65‑year‑old female with a history of breast cancer predisposition (BRCA1 mutation) and prior chest wall radiation (30 Gy at age 35), presents for routine breast screening. She reports a persistent, hard lump in the right breast for the past 3 months and a dull ache over the right axilla. She denies pain, nipple discharge, or skin changes. No new medications and NKDA.
+
+**Objective:**
+• Vital signs: BP 140/88 mmHg, HR 74 bpm, Temp 98.6 °F, BMI 32.1 kg/m².
+• Physical exam: Right breast contains a 2 cm hard, fixed, non‑mobile mass in the upper outer quadrant. No overlying skin erythema or ulceration. Right axilla mildly tender; no enlarged palpable nodes.
+• Imaging: Diagnostic mammogram – BI‑RADS 5 mass, 2.1 cm. Right breast ultrasound – hypoechoic, irregular margins, 2.0 cm. Core‑needle biopsy – 20 mm invasive tumor; 2 of 3 sentinel lymph nodes involved.
+
+**Assessment:**
+The imaging and pathology findings are highly suspicious for an invasive ductal carcinoma with evidence of early nodal metastasis in a high‑risk patient (BRCA1, prior chest radiation). Differential diagnoses include radiation‑induced breast sarcoma, secondary malignancy, or other breast cancers, but the biopsy confirms invasive carcinoma.
+
+**Plan:**
+1. Arrange multidisciplinary oncology consult (surgeon, medical oncology, radiation oncology) within 10 days.
+2. Discuss definitive treatment options: modified radical mastectomy vs breast‑conserving surgery with adjuvant radiation, considering her previous chest radiation exposure and nodal involvement.
+3. Continue routine management of hypertension, type 2 DM, and hyperlipidemia; ensure optimal control prior to surgery.
+4. Provide patient education regarding signs of recurrence and emphasize adherence to follow‑up.
+5. No new systemic therapy prescribed at this time; oncologic team will determine chemotherapy and targeted therapy eligibility.
+6. Recommend lifestyle modifications: dietary changes, weight reduction goal of 5‑10 % over 6 mo, and cessation of smoking.
+
+**Disposition:**
+The patient was reassured, discharged with instructions to arrange oncology appointment, and scheduled for a multidisciplinary team review on 2023‑10‑19.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Right breast palpable nodule</span><span class="pill">Dull right axillary ache</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/88 mmHg</td></tr><tr><td>Heart Rate</td><td>74 bpm</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>BMI</td><td>32.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right breast: 2‑cm hard, non‑mobile, fixed to underlying tissue</li><li>Right axilla: mild tenderness, no palpable enlarged nodes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Diagnostic mammogram</li><li>Right breast ultrasound</li><li>Core‑needle biopsy of mass</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Mammogram: BI‑RADS 5 mass, 2.1 cm</li><li>Ultrasound: hypoechoic lesion, irregular margins, 2.0 cm</li><li>Biopsy: invasive ductal carcinoma, grade 3, ER‑negative, PR‑negative, HER2‑negative, tumor 20 mm, 2/3 sentinel nodes involved</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Biopsy under local anesthesia</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 40 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of chest radiation at age 35 (30 Gy whole‑thorax)</li><li>HRT discontinued 3 years ago</li><li>Hypertension, type 2 diabetes, hyperlipidemia</li><li>Smoking history 15 pack‑years</li><li>BRCA1 mutation confirmed 2 years prior</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K arrived for a routine breast screening after describing a persistent right‑breast lump. The radiology nurse confirmed prior chest radiation. A diagnostic mammogram revealed a 2‑cm irregular‑shaped mass in the upper outer quadrant (BI‑RADS 5). An ultrasound guided core‑needle biopsy was performed during the same visit. The patient was reassured and scheduled for a multidisciplinary oncology consult.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage pT2N1M0 (AJCC Stage IIIB). Triple‑negative tumor in BRCA1 carrier. Poorly controlled diabetes and hyperlipidemia noted.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-11-01</h3><div class="visit-meta">Oncology | Reason: Multidisciplinary treatment planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Multidisciplinary treatment planning for triple‑negative breast cancer.
+
+**History of Present Illness:** Ms. K is a 65‑year‑old woman with a diagnosed 2 cm invasive ductal carcinoma (biopsy confirmed 20 mm, 2/3 sentinel nodes positive). She has no current symptoms. She has a significant past medical history of hypertension, type 2 diabetes mellitus (poorly controlled, HbA1c 7.8 %), hyperlipidemia, prior thoracic radiation, obesity, and smoking habit. She has a BRCA1 mutation and a history of chest radiation which precludes re‑irradiation.
+
+**Review of Systems:** All reviewed systems negative; no new complaints.
+
+**Physical Examination:** • General: well‑appearing, no acute distress.
+• Breast: 2 cm hard mass in the right upper outer quadrant; unchanged from prior.
+• Cardiovascular: Regular rate and rhythm 72 bpm, no murmurs; blood pressure 138/86 mmHg.
+
+**Vitals:**
+- Blood Pressure: 138/86 mmHg
+- Heart Rate: 72 bpm
+- Temperature: 98.4 °F
+
+**Baseline Investigations:**
+- Transthoracic echocardiogram (TTE) – LVEF 55% (normal)
+- Fasting glucose: 148 mg/dL
+- HbA1c: 7.8%
+- Lipid panel – LDL 160 mg/dL
+
+**Assessment:**
+1. Triple‑negative breast cancer stage II (T2N1M0) – appropriate for neoadjuvant chemotherapy.
+2. Cardiac function preserved; however, risk of anthracycline cardiotoxicity is moderate due to prior chest radiation, diabetes, and hypertension.
+3. Poor glycemic control (HbA1c 7.8%); requires optimization.
+4. Hyperlipidemia (LDL &gt; 130 mg/dL); cardiovascular risk elevated.
+
+**Plan:**
+- **Neoadjuvant chemotherapy:** Dose‑modified, dose‑dense epirubicin 40 mg/m² + cyclophosphamide 600 mg/m² every 2 weeks for 6 cycles. Total anthracycline exposure capped at 240 mg/m².
+- **Cardiac monitoring:** Repeat TTE before cycle 4 and at completion of chemotherapy; monitor for any decline in LVEF.
+- **Diabetes management:** Increase metformin to 850 mg BID; initiate GLP‑1 agonist (liraglutide 0.6 mg daily). Re‑evaluate HbA1c in 6 weeks.
+- **Cardiovascular prophylaxis:** Aspirin 81 mg daily. Continue lisinopril 10 mg nightly, atorvastatin 40 mg nightly.
+- **Lifestyle:** Smoking cessation counseling, weight reduction goal, and regular physical activity.
+- **Surgical planning:** After neoadjuvant therapy, proceed with radical mastectomy with sentinel node or axillary clearance as indicated.
+- **Follow‑up:** Oncologist review in 2 weeks prior to first chemo cycle; repeat BP and glucose at each visit. Endocrinology follow‑up in 4 weeks. Cardiologist consultation for baseline TTE and subsequent monitoring.
+- **Patient education:** Discuss signs of heart failure and chemotherapy toxicities; provide handouts on medication adherence and lifestyle changes.
+
+**Disposition:** Patient scheduled for first chemotherapy dose in 2 weeks. All team members updated.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">N/A</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138/86 mmHg</td></tr><tr><td>Heart Rate</td><td>72 bpm</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General: well‑appearing</li><li>Breast: 2‑cm hard mass, no changes</li><li>Cardiac: no murmurs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Transthoracic echocardiogram (TTE) baseline</li><li>Baseline fasting glucose, HbA1c, lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TTE: LVEF 55%</li><li>HbA1c: 7.8%</li><li>LDL: 160 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiate epirubicin 40 mg/m² + cyclophosphamide 600 mg/m² every 2 weeks for 6 cycles (dose‑modified), total anthracycline exposure 240 mg/m²</li><li>Increase metformin to 850 mg BID; add GLP‑1 agonist</li><li>Add aspirin 81 mg daily for cardiovascular prophylaxis</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 40 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest radiation poses re‑irradiation risk</li><li>Cardiorenal risk due to diabetes</li><li>Patient is smoking, obese</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The care team—medical oncologist, surgical oncologist, radiation oncologist, cardiologist, endocrinologist, and PCP—met to devise a personalized plan. Given the prior thoracic radiation, re‑irradiation was ruled out. Consensus: dose‑modified dose‑dense epirubicin‑cyclophosphamide (AC) neoadjuvant chemotherapy to downstage, followed by radical mastectomy. Baseline cardiac assessment (TTE) and diabetes optimization by endocrinology were initiated.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Neoadjuvant AC started with cardiology clearance. Diabetes management intensified; anticipated cardio‑protective measures.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-12-14</h3><div class="visit-meta">Oncology | Reason: First chemotherapy cycle</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** First AC chemotherapy infusion.
+
+**History of Present Illness:** Ms. K, a 65‑year‑old woman with triple‑negative breast cancer on dose‑modified dose‑dense epirubicin 40 mg/m² + cyclophosphamide 600 mg/m² q2w, presents after her first infusion. She tolerated the infusion well but reports mild nausea, palpitations, and brief chest tightness during the last 20 min of infusion. Post‑infusion she reports feeling fatigued. No arrhythmias were recorded on cardiac telemetry; an irregular rhythm noted during the infusion resolved spontaneously. Endocrinology reports post‑chemo hyperglycemia with fasting glucose 190 mg/dL; we have intensified glucose logging but withheld metformin dose adjustment.
+
+**Past Medical History:** Hypertension, Type 2 Diabetes Mellitus, Hyperlipidemia, History of chest radiation, obesity, smoking, BRCA1 mutation, right‑sided invasive ductal carcinoma stage IIIB (2 cm, 2/3 nodes). 
+
+**Medications:**
+- Epirubicin 40 mg/m² q2w (infused today)
+- Cyclophosphamide 600 mg/m² q2w (infused today)
+- Metformin 850 mg BID
+- Liraglutide 0.6 mg daily
+- Aspirin 81 mg daily
+- Lisinopril 10 mg nightly
+- Atorvastatin 40 mg nightly
+- Ondansetron 4 mg IV pre‑infusion
+
+**Allergies:** NKDA.
+
+**Review of Systems:**:
+- Cardiovascular: Palpitations, transient chest tightness.
+- Gastrointestinal: Mild nausea.
+- General: Fatigue.
+
+**Physical Examination (Today):**
+- Vital signs: BP 150/90 mmHg, HR 110 bpm, Temp 98.7 °F.
+- Breast: Right upper outer quadrant mass unchanged.
+- Cardiac: No current arrhythmia; telemetry resolved.
+- Abdomen: Soft, non‑tender.
+
+**Laboratory/Imaging:**
+- CBC: WBC 3,800/µL, neutrophils 60%.
+- CMP: Na 140 mEq/L, K 4.2 mEq/L, Cr 1.0 mg/dL.
+- Fasting glucose: 190 mg/dL.
+- Telemetry: transient irregular rhythm, no sustained arrhythmia.
+
+**Assessment:**
+1. Tolerable first cycle of anthracycline‑cyclophosphamide with expected mild cardiotoxicity signs (tachycardia, brief chest tightness). Cardiac monitoring remained benign.
+2. Chemotherapy‑induced nausea – well managed with ondansetron.
+3. Hyperglycemia secondary to beta‑adrenergic effects of chemotherapy and steroid‑free regimen; glucose logs intensified.
+4. No evidence of severe myelosuppression at baseline.
+
+**Plan:**
+- Continue current AC dosing schedule; next infusion in 14 days.
+- Continue metformin 850 mg BID, liraglutide 0.6 mg, aspirin, lisinopril, atorvastatin.
+- Encourage intensified self‑monitoring of blood glucose twice daily; consider lowering metformin dose if HbA1c &gt; 8% or glucose &gt; 200 mg/dL consistently.
+- Counsel on nausea coping strategies; add dexamethasone 8 mg PO BID if nausea returns.
+- Repeat CBC, CMP, fasting glucose prior to next cycle.
+- Repeat cardiac telemetry on cycle 3 and obtain echocardiogram at cycle 4 per protocol.
+- Continue lifestyle counseling: weight reduction, smoking cessation, diet.
+- Schedule follow‑up: Oncology in 2 weeks (pre‑next chemo), Endocrinology in 4 weeks (re‑evaluate glycemic control), Cardiology per monitoring plan.
+- Patient instructed to report any chest pain, syncope, or persistent palpitations immediately.
+
+**Disposition:** Outpatient. Patient was educated regarding the above plan and asked to contact the oncology clinic if any new or worsening symptoms arise.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild post‑infusion nausea</span><span class="pill">Palpitations, heart rate 110 bpm</span><span class="pill">Transient chest tightness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>150/90 mmHg</td></tr><tr><td>Heart Rate</td><td>110 bpm</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: mass unchanged</li><li>Cardiac: irregular rhythm noted on telemetry, resolved</li><li>Abdomen: soft, non‑tender</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC, CMP before each cycle</li><li>Blood glucose logs</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 3,800/µL, neutrophils 60%</li><li>CMP: Na 140 mEq/L, K 4.2 mEq/L, Cr 1.0 mg/dL</li><li>Glucose 190 mg/dL fasting</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Epirubicin 40 mg/m² + Cyclophosphamide 600 mg/m²</li><li>Carboplatin avoided due to potential cardio‑toxicity</li><li>Ondansetron 4 mg IV pre‑treatment</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">On neoadjuvant chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 850 mg BID</li><li>GLP‑1 agonist </li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Epialin 40 mg/m² (epirubicin) + Cyclophosphamide 600 mg/m²</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent initiation of AC chemo</li><li>Baseline diabetes, hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K returned for her first AC infusion. She tolerated the infusion well but experienced mild nausea, an elevated heart rate, and brief chest tightness. A cardiac telemetry monitor was applied. Post‑infusion she reported feeling fatigued. No arrhythmias recorded. Endocrinology noted post‑chemo hyperglycemia; metformin dose was kept but glucose logging was intensified.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First AC cycle completed; cardiotoxicity risk monitored; diabetes management adjusted.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-01-15</h3><div class="visit-meta">Radiology | Reason: Post‑chemo assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Post‑chemotherapy assessment
+
+**History of Present Illness:**
+Ms. K, a 65‑year‑old female with triple‑negative breast cancer currently receiving dose‑modified, dose‑dense epirubicin and cyclophosphamide (AC) chemotherapy, presents for a post‑chemo assessment eight weeks after the first cycle. She reports persistent fatigue, nausea during chemo, and mild peripheral neuropathy. She has completed 6 AC cycles and is awaiting radical mastectomy.
+
+**Physical Examination:**
+- Breast: Residual induration 0.5 cm in the right upper outer quadrant.
+- Axilla: Palpable nodes 2 cm.
+- Cardiac: Regular rhythm, no murmurs.
+
+**Vitals:**
+- Blood Pressure: 135/85 mmHg
+- Heart Rate: 80 bpm
+- Temperature: 98.5 °F
+
+**Imaging &amp; Cardiac Assessment:**
+- Chest MRI: Primary lesion reduced to 0.5 cm; axillary nodes enlarged to 1.8 cm.
+- Repeat TTE: Left ventricular ejection fraction (LVEF) 50 % (↓ from baseline 55 %) but deemed acceptable for planned surgery.
+
+**Assessment &amp; Plan:**
+1. **Residual locally advanced triple‑negative breast cancer with axillary nodal metastasis** – MRI demonstrates significant tumor regression, but persistent suspicious nodes. Surgical oncologist will proceed with radical mastectomy.
+2. **Anthracycline‑induced cardiotoxicity** – LVEF decline to 50 %; cardiology and radiation oncology concur that no imminent systemic cardiac risk; continue cardiac monitoring.
+3. **Chemotherapy‑related peripheral neuropathy** – mild; consider dose adjustment if worsens.
+4. **Chemotherapy‑related nausea** – ongoing; continue ondansetron pre‑infusion and reassess anti‑emetic efficacy.
+5. **General supportive care** – fatigue and metabolic control.
+
+**Medications:** Continue current regimen:
+- Epirubicin 40 mg/m² q2w
+- Cyclophosphamide 600 mg/m² q2w
+- Metformin 850 mg BID
+- Liraglutide 0.6 mg daily
+- Aspirin 81 mg daily
+- Lisinopril 10 mg nightly
+- Atorvastatin 40 mg nightly
+- Ondansetron 4 mg IV pre‑infusion
+
+**Follow‑Up Recommendations:**
+- Continue AC regimen, with next dose 4 days after last administered.
+- Repeat TTE in 4 weeks to monitor LVEF.
+- Preoperative evaluation (cardiac clearance, anesthesia assessment) prior to radical mastectomy.
+- Oncology follow‑up in 2 weeks.
+- Endocrinology review for glucose control in 4 weeks.
+- Cardiology consultation for ongoing cardiac monitoring.
+- Neuropathy assessment with DN4 questionnaire at next visit.
+- Re‑evaluate anti‑emetic strategy if nausea persists.
+
+**Signature:** Radiology
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue</span><span class="pill">Nausea during chemo</span><span class="pill">Mild peripheral neuropathy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>135/85 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: residual induration 0.5 cm</li><li>Axilla: palpable nodes 2 cm</li><li>Cardiac: regular rhythm, no murmurs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest MRI</li><li>Repeat TTE</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: primary lesion 0.5 cm, nodes enlarged 1.8 cm</li><li>TTE: LVEF 50%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continued AC regimen; last dose administered 4 days prior</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">On neoadjuvant chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 850 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 6 AC cycles</li><li>Baseline LVEF 55%</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Eight weeks after the first cycle, Ms. K underwent a chest MRI and a repeat echocardiogram to evaluate response and cardiac function. The MRI showed a remarkable reduction of the primary mass to 0.5 cm (near‑complete response) but persistent suspicious axillary nodes. LVEF had declined to 50% but remained within acceptable limits for the planned surgery. The radiation oncologist and cardiologist concurred that no further systemic cardiac risk was imminent. The surgical oncologist proceeded with the plan for radical mastectomy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Radiologic response significant; cardiac function stable at 50%; proceed to surgery.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-04-25</h3><div class="visit-meta">Surgery | Reason: Radical mastectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Post‑operative management following radical mastectomy with axillary dissection.
+
+**History of Present Illness:** Ms. K is a 65‑year‑old female who underwent a radical mastectomy with axillary dissection two days ago. Intra‑operatively, adherent soft tissue around the pectoral fascia was noted due to prior chest radiation; however, clear margins were achieved. Estimated blood loss was 350 mL. Post‑operative course has been complicated by a small pleural effusion that required thoracentesis and mild residual effusion on chest X‑ray. She is on paracetamol for pain and has a thoracic epidural in place. Her glucose was temporarily held post‑op, and a dietitian supervised IV fluids to avoid hypoglycemia. Rehabilitation with shoulder physiotherapy has begun. She reports post‑operative pain and limited abduction of the shoulder.
+
+**Past Medical History:** Hypertension, type 2 diabetes mellitus, hyperlipidemia, previous chest radiation, BRCA1 mutation, triple‑negative breast cancer (post‑neoadjuvant AC), history of anthracycline‐induced left ventricular dysfunction (LVEF 50%).
+
+**Medications:** Lisinopril 10 mg daily, Metformin 850 mg BID, GLP‑1 agonist (liraglutide 0.6 mg daily), Atorvastatin 40 mg nightly, Aspirin 81 mg daily, Acetaminophen 500 mg PRN.
+
+**Allergies:** NKDA.
+
+**Vitals:** Blood Pressure 132/82 mmHg, Heart Rate 78 bpm, Temperature 98.4 °F.
+
+**Physical Examination:**:
+- Chest wall: surgical scar with mild edema; no erythema or drainage.
+- Pectoralis fascia: fibrotic; palpation elicits minimal tenderness.
+- Lungs: clear breath sounds bilaterally.
+- Upper extremity: right shoulder abduction limited to 30°, strength 2/5, pain 5/10 with movement.
+
+**Assessment:**
+1. Post‑operative surgical wound status – healing without infection.
+2. Mild residual pleural effusion; likely reactive to surgery and prior radiation.
+3. Post‑operative pain – acute inflammatory pain with possible neuropathic component due to radiation‑induced fibrosis.
+4. Limited shoulder abduction – expected post‑mastectomy; risk of adhesive capsulitis or nerve injury.
+5. Controlled diabetes – glucose held post‑operatively; monitor for hypoglycemia.
+
+**Plan:**
+- **Pain Management:** Continue acetaminophen PRN. Consider starting gabapentin 300 mg PO BID titrated to 300–600 mg TID for neuropathic pain if pain persists beyond epidural catheter removal.
+- **DVT Prophylaxis:** Resume low‑molecular‑weight heparin 40 mg SC once epidural catheter is removed and bleeding risk is low.
+- **Fluid &amp; Glucose Management:** Once epidural removed and oral intake resumed, resume Metformin 850 mg BID and GLP‑1 agonist with strict glucose monitoring.
+- **Rehabilitation:** Continue shoulder physiotherapy on a daily basis focusing on gentle range‑of‑motion and scar mobilization. Consider referral to a specialized breast‑cancer physio if limited abduction persists &gt;4 weeks.
+- **Wound Care:** Inspect surgical site daily for erythema, drainage, or dehiscence. Keep incision clean and dry; suture removal at 14 days.
+- **Pleural Effusion:** Repeat chest X‑ray in 3 days to monitor resolution. If effusion enlarges or symptomatic, consider repeat thoracentesis.
+- **Follow‑up:** Schedule wound review and physiotherapy assessment in 7 days; oncology consult in 2 weeks for post‑operative staging. Cardiologist to review LVEF and diabetes control before any further adjuvant therapy.
+- **Patient Education:** Reviewed signs of infection (redness, increased pain, fever), DVT warning signs, and importance of early ambulation.
+
+**Disposition:** The patient is stable for discharge home with home health services and a scheduled follow‑up in 7 days.
+
+**Signature:** Dr. [Name], MD
+
+---
+
+**Key Dates:**
+- Post‑op Day 0: Chest X‑ray – mild pleural effusion.
+- Post‑op Day 2: Thoracentesis 5 mL.
+- Post‑op Day 2: CBC (Hb 10.8 g/dL, WBC 4,000/µL), CMP (Cr 1.1 mg/dL).
+
+**Medications to be continued/started:**
+- Acetaminophen 500 mg PRN.
+- Gabapentin 300 mg PO BID (initiate only if pain persists).
+- LMWH 40 mg SC daily (after epidural removal).
+
+**Follow‑up Recommendations:**
+1. Wound review – 7 days.
+2. Shoulder physiotherapy – ongoing.
+3. Repeat chest X‑ray – 3 days.
+4. Oncology – 2 weeks.
+5. Cardiology – once stable.
+6. Endocrinology – 4 weeks.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Post‑operative pain</span><span class="pill">Limited shoulder abduction</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>132/82 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Chest wall: surgical scar, mild edema</li><li>Pectoralis fascia: fibrotic</li><li>Lung: clear breath sounds</li><li>Shoulder strength: abduction 30°</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Post‑op CBC, CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: mild pleural effusion</li><li>CBC: Hb 10.8 g/dL, WBC 4,000/µL</li><li>CMP: Cr 1.1 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis (5 mL pleural fluid removed)</li><li>Analgesia: paracetamol, epidural</li><li>Wound care</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">On neoadjuvant chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 850 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Acetaminophen 500 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Radical mastectomy scheduled after neoadjuvant AC</li><li>Prior chest radiation leading to tissue fibrosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K underwent a radical mastectomy with axillary dissection. The surgeon noted adherent soft tissue around the pectoral fascia due to prior radiation but achieved clear margins. Intraoperative bleeding was 350 mL. Post‑op, she received paracetamol for pain control and a thoracic epidural for analgesia. Two days post‑surgery a small pleural effusion required thoracentesis; subsequent chest X‑ray showed mild residual effusion. Her glucose was temporarily held; a dietitian supervised IV fluids to prevent hypoglycemia. Rehabilitation initiation with shoulder physiotherapy ensued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Resected tumor 0.4 cm, 2/10 nodes positive (pT1cN1). Pulmonary complications noted, manageable.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-05-20</h3><div class="visit-meta">Oncology | Reason: Adjuvant paclitaxel initiation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Assessment and Plan:
+
+Ms. K, a 65‑year‑old female with a history of triple‑negative breast cancer, post‑mastectomy and axillary dissection, has commenced adjuvant weekly paclitaxel (90 mg/m²) for a planned 12‑week course. She has been tolerating therapy well. She reports mild fatigue and mild shoulder stiffness with occasional mild neuropathic tingling, but no severe pain or neurologic deficits. Vitals are stable (BP 129/81 mmHg, HR 76 bpm, T 98.3 °F). CBC prior to day‑1 dose shows a neutrophil count of 1400 /µL, which is at the lower end of the acceptable range for proceeding with chemotherapy. No other laboratory abnormalities were noted. Physical exam reveals a well‑healed surgical scar and shoulder abduction of 110°. Lungs are clear.
+
+Assessment:
+1. Adjuvant paclitaxel therapy – currently tolerated but neutropenic borderline (ANC 1400). Continue monitoring. 2. Mild, likely chemotherapy‑induced peripheral neuropathy – asymptomatic severe deficits absent. 3. Mild fatigue – likely related to chemotherapy and possible anemia; to be further evaluated. 4. Controlled hypertension and diabetes; insulin dose adjustment has been made.
+
+Plan:
+- Continue weekly paclitaxel 90 mg/m² IV.
+- Repeat CBC and CMP prior to each dose; if ANC &lt;500/µL or febrile neutropenia develops, hold chemotherapy and initiate antibiotics and consider G‑CSF support.
+- Initiate gabapentin 300 mg PO BID if neuropathic tingling becomes bothersome; continue current acetaminophen PRN for musculoskeletal discomfort.
+- Continue physiotherapy for right shoulder; monitor range of motion.
+- Maintain current antihypertensive regimen (Losartan 50 mg daily) and cardiovascular protective therapy (Atorvastatin 40 mg nightly, Aspirin 81 mg daily).
+- Decrease insulin as per endocrinology recommendation; monitor capillary glucose 2× daily.
+- Educate patient about signs of infection, severe neuropathy, and instructions for reporting symptoms promptly.
+- Schedule oncology follow‑up in 1 week for dose 2; endocrinology review in 4 weeks; cardiology TTE in 8 weeks (as per prior plan) to monitor LVEF.
+
+The patient has been advised to keep a symptom diary and to contact the oncology desk immediately if she develops fever, chills, new pain, or worsening weakness.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight fatigue</span><span class="pill">Mild shoulder stiffness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>129/81 mmHg</td></tr><tr><td>Heart Rate</td><td>76 bpm</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: surgical scar, well‑healed</li><li>Shoulder: abduction 110°</li><li>Lung: clear breath sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC, CMP prior to first paclitaxel dose</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: 1400/µL neutrophils</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Paclitaxel 90 mg/m² IV weekly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Post‑surgery</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily (changed from lisinopril)</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Paclitaxel 90 mg/m² weekly (scheduled)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Post‑mastectomy recovery</li><li>Node positivity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After a week of physiotherapy, Ms. K started adjuvant weekly paclitaxel for 12 weeks, totaling 12 doses. The oncology team explained the rationale given node positivity and triple‑negative biology. Endocrinology reduced insulin dose to avoid hypoglycemia under chemo. She tolerated therapy, reporting occasional mild neuropathic tingling but no severe side effects. Blood pressure remained controlled.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Adjuvant chemotherapy underway.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-07-15</h3><div class="visit-meta">Radiology | Reason: Routine follow‑up imaging</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine surveillance imaging for metastatic breast cancer follow‑up.
+
+History: Ms. K, 65‑year‑old female, currently in adjuvant chemotherapy with weekly paclitaxel (90 mg/m²). She reports mild upper‑back soreness but denies cough, dyspnea, chest pain, fevers, or weight change.
+
+Vitals (pre‑scan):
+BP: 127/80 mmHg, HR: 73 bpm, T: 98.3°F
+
+Imaging: CT chest/abdomen/pelvis performed per surveillance protocol.
+
+Findings: A 2‑cm solitary opacity in the right middle lobe, poorly circumscribed, non‑calcified, with no evidence of mediastinal lymphadenopathy, pleural effusion, or osseous lesions. No new hepatic or renal abnormalities noted. All other pulmonary parenchyma and mediastinum appear unremarkable.
+
+Assessment: Indeterminate pulmonary nodule of 2 cm in a patient with a history of triple‑negative breast cancer and extensive prior chest irradiation. Differential diagnosis includes metastatic disease, post‑radiation radiation pneumonitis or fibrosis, benign inflammatory nodule, or primary lung malignancy.
+
+Plan:
+1. Repeat CT chest/abdomen/pelvis in 30 days to assess for change in size or characteristics.
+2. Consider PET‑CT if nodule persists or enlarges on follow‑up.
+3. Continue current antihypertensive and anti‑diabetic regimen; maintain regular oncology and endocrinology follow‑ups.
+4. Advise patient to report immediately if new respiratory symptoms, worsening back pain, or fevers arise.
+5. Coordinate with oncology for potential biopsy or definitive management should nodule demonstrate growth.
+
+Disposition: Patient discharged with follow‑up imaging ordered; patient instructed to contact radiology or oncology team with any new symptoms.
+
+Prepared by: Radiology Resident
+
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild upper back soreness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>127/80 mmHg</td></tr><tr><td>Heart Rate</td><td>73 bpm</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: surgical scar, no palpable masses</li><li>Shoulder: 120° abduction</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest/abdomen/pelvis for surveillance</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 2‑cm right middle lobe opacity, no other findings</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Post‑surgery and adjuvant chemo</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Paclitaxel 90 mg/m² weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completion of paclitaxel course</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K presented for a follow‑up CT chest/abdomen/pelvis as per surveillance protocol. The scan revealed a 2‑cm opacity in the right middle lobe, indeterminate but concerning for early metastatic spread. No obvious bone lesions. The pathology had previously confirmed the primary tumor as triple‑negative; the new pulmonary opacity required closer scrutiny. The oncologist advised a 30‑day repeat CT and to notify her immediately if new symptoms arise.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early pulmonary lesion detected; surveillance plan activated.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-08-28</h3><div class="visit-meta">Primary Care | Reason: Persistent cough and weight loss</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Ms. K, a 65‑year‑old female with triple‑negative breast cancer on adjuvant chemotherapy (weekly paclitaxel 90 mg/m², epirubicin 40 mg/m²/​cyclophosphamide 600 mg/m² q2w) and a history of chest radiation, presents to the clinic with a persistent dry cough, intermittent low‑grade fevers, and progressive weight loss (~6 kg over 2 months). She reports the cough is worse at night, with no sputum production, and has experienced no dyspnea or productive symptoms. Recent surveillance CT identified a 2 cm right middle lobe opacity that has not altered since the last imaging two months ago. The patient denies night sweats, chest pain, or hemoptysis.
+
+Physical exam: afebrile (99.0 °F), BP 125/79 mmHg, HR 80 bpm, RR 16/min, SpO₂ 98 % RA. Chest auscultation reveals decreased breath sounds over the right lower lobe. Lungs are clear to auscultation elsewhere. Abdomen is soft and non‑tender. No peripheral edema or heart murmurs.
+
+Clinical reasoning: In a patient with known malignancy and prior chest radiation, a new pulmonary opacity warrants evaluation for metastatic disease, primary lung cancer, or infection (e.g., atypical pneumonia, tuberculosis, post‑radiation pneumonitis). The presence of low‑grade fevers and weight loss raises concern for a possible neoplastic process, but infectious etiologies cannot be excluded. Given the lesion’s stability on serial imaging, a high likelihood of metastatic or metastatic‑like pathology remains.
+
+Plan:
+1. Order a contrast‑enhanced chest CT to characterize the lesion (size, margins, lymphadenopathy). 
+2. Counsel patient on a structured smoking cessation program; prescribe a nicotine patch (21 mg) and consider varenicline 0.5 mg BID for 12 weeks. 
+3. Initiate a short‑term (2‑week) outpatient course of doxycycline 100 mg BID if infectious etiology suspected; discontinue if CT confirms malignancy or other non‑infectious cause.
+4. Continue current antihypertensive (losartan), antidiabetic (metformin 1000 mg BID, liraglutide 0.6 mg), lipid-lowering (atorvastatin), antiplatelet (aspirin), and anticoagulation (low‑molecular‑weight heparin 40 mg SC) regimens.
+5. Advise patient to seek emergent care if fever &gt;101.5 °F, worsening dyspnea, chest pain, or new hemoptysis develops.
+6. Arrange a follow‑up PCP visit in 4 weeks or sooner if the CT shows progression.
+7. Coordinate with oncology for the imaging and subsequent discussion of potential biopsy or change in systemic therapy.
+
+Follow‑up recommendations: 
+- Complete the chest CT within the next 14 days.
+- Review CT results at the oncology consult.
+- Continue the smoking‑cessation program and reassess efficacy at the next visit.
+- Monitor weight and nutritional intake; consider referral to dietitian.
+- Next routine oncology appointment in 2 weeks for continued paclitaxel cycle; endocrinology review in 8 weeks to manage diabetes and lipid optimization.
+
+All other medications (paclitaxel, epirubicin, cyclophosphamide, gabapentin, ondansetron, acetaminophen, low‑molecular‑weight heparin, aspirin, atorvastatin, losartan, metformin, liraglutide) remain unchanged.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dry cough worse at night</span><span class="pill">Low‑grade fevers</span><span class="pill">Weight loss ~6 kg over 2 months</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>125/79 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>99.0°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lung: decreased breath sounds right lower lobe</li><li>Abdomen: soft, non‑tender</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT with contrast for oncologic evaluation</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Pulmonary lesion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Radiology CT showed 2‑cm right middle lobe opacity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K consulted her PCP for a persistent dry cough, intermittent low‑grade fevers, and progressive weight loss. The PCP reviewed her recent surveillance CT suggesting a right lung lesion. She was instructed to follow up at the oncology clinic, undergo a chest CT, and start a smoking cessation program. A referral to the emergency department was advised if she experienced high‑grade fever or dyspnea.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pulmonary lesion present; patient to receive confirmatory imaging.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2023-09-25</h3><div class="visit-meta">Oncology | Reason: Emergency department admission – suspected metastasis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Patient:** Ms. K, 65‑year‑old female, known history of triple‑negative breast cancer with prior mastectomy, axillary dissection, adjuvant AC chemotherapy, and ongoing weekly paclitaxel. She presents to the ED with acute onset high‑grade fever, chills, night cough, and dyspnea that worsens in supine position.
+
+**History of Present Illness:** Ms. K reports progressive fever to 101.5°F, associated with chills and a night‑time cough. She describes shortness of breath, especially when lying flat, with intermittent orthopnea. Previous chest CT (2023‑07‑15) revealed a 2‑cm right middle lobe opacity; subsequent contrast chest CT (pending) was scheduled. She denies chest pain, hemoptysis, weight loss, or recent travel.
+
+**Review of Systems:** Fever, chills, night cough, dyspnea ↑ in supine; no chest pain, hemoptysis, or hemoglobin loss.
+
+**Past Medical History:** Hypertension, type 2 diabetes mellitus, hyperlipidemia, obesity, smoking history, BRCA1 mutation, anthracycline‑induced LVEF 50‑55% (latest 4 weeks), left ventricular dysfunction.
+
+**Current Medications:** Paclitaxel 90 mg/m² weekly IV; epirubicin 40 mg/m² q2 wks; cyclophosphamide 600 mg/m² q2 wks; Losartan 50 mg daily; Metformin 1000 mg BID; Liraglutide 0.6 mg daily; Aspirin 81 mg daily; Atorvastatin 40 mg nightly; Ondansetron 4 mg IV pre‑infusion; Acetaminophen 500 mg PRN; Gabapentin 300 mg PO BID; Low‑molecular‑weight heparin 40 mg SC daily; Nicotine patch 21 mg; Varenicline 0.5 mg BID.
+
+**Allergies:** NKDA.
+
+**Vital Signs (ED at presentation):**
+- BP 142/90 mmHg
+- HR 98 bpm
+- Temp 101.5 °F (38.6 °C)
+- SpO₂ 92 % on RA
+- RR not documented
+
+**Physical Examination:**
+- General: febrile, in mild respiratory distress.
+- HEENT: no neck lymphadenopathy.
+- Cardiovascular: regular rhythm, systolic murmur absent.
+- Pulmonary: decreased breath sounds right mid‑lower lobe; scattered crackles; no wheezes.
+- Abdomen: soft, non‑tender.
+- Extremities: no peripheral edema.
+- Neurologic: no focal deficits.
+
+**Investigations:**
+- Chest CT (urgent): 3‑cm spiculated nodule right lower lobe, multiple smaller bilateral nodules, 1.5‑cm mediastinal lymph node.
+- FDG‑PET/CT: high uptake (SUV max 12.3) in pulmonary lesions and node.
+- CT‑guided core biopsy of mediastinal node: adenocarcinoma consistent with metastatic breast cancer.
+- CBC/chem: pending.
+
+**Assessment:**
+1. Metastatic breast cancer to lungs with mediastinal adenopathy (confirmed by biopsy). 2. Likely infectious pulmonary component (fever, cough, infiltrate on CT); likely bacterial pneumonia superimposed on metastatic disease. 3. Pre‑existing anthracycline‑induced LV dysfunction – careful monitoring if systemic therapy is escalated.
+
+**Plan:**
+- Continue current LMWH anticoagulation; maintain aspirin. 
+- Initiate empiric ceftriaxone 1 g IV q12h for presumed bacterial pneumonia; re‑evaluate after culture results. 
+- O2 supplementation to keep SpO₂ &gt;94 %. 
+- Hydration IV. 
+- Pain control with oxycodone 5 mg PRN for dyspnea‑related discomfort.  
+- Hold paclitaxel infusion until infection resolves and ANC &gt;1500 /µL.  
+- Discuss palliative systemic therapy options: consider weekly docetaxel + carboplatin, or endocrine modulators if ER‑positive (pending receptor status).  
+- Radiation oncology consult for possible consolidative chest wall radiation (if symptomatically beneficial).  
+- Cardiac monitoring with repeat TTE in 4 weeks (or sooner if clinical deterioration).  
+- Repeat CBC and CMP daily until ANC &gt;1500 /µL; consider G‑CSF if ANC &lt;500 /µL or febrile neutropenia develops.  
+- Educate patient and family on signs of infection worsening, need for prompt reporting.  
+- Schedule next oncology review in 2 weeks for next chemotherapy cycle decision; endocrinology review in 8 weeks; cardiology follow‑up in 4 weeks.
+
+**Disposition:** Admit to medical floor for IV antibiotics and monitoring; plan for repeat chest imaging in 48 hr. 
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">High‑grade fever 101.5°F</span><span class="pill">Chills</span><span class="pill">Night cough</span><span class="pill">Shortness of breath, worse when lying down</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>142/90 mmHg</td></tr><tr><td>Heart Rate</td><td>98 bpm</td></tr><tr><td>Temperature</td><td>101.5°F</td></tr><tr><td>Oxygen Saturation</td><td>92% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: surgical scar, no palpable masses</li><li>Chest: decreased breath sounds right mid‑lower lobe</li><li>Neurological: no deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT thorax, abdomen, pelvis</li><li>FDG‑PET/CT</li><li>CT‑guided core biopsy of mediastinal node</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 3 cm RLL nodule, multiple nodules bilaterally, 1.5 cm mediastinal node</li><li>PET: SUV max 12.3 in pulmonary nodules, node</li><li>Biopsy: metastatic breast carcinoma, triple‑negative phenotype</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Empiric ceftriaxone 1 g IV q12h</li><li>Hydration IV</li><li>Pain management with oxycodone 5 mg PRN</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Pulmonary lesion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous CT showing 2‑cm right lung opacity</li><li>Post‑mastectomy and chemotherapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K was admitted to the ED with a high‑grade fever and dyspnea. A chest CT was performed revealing a 3‑cm spiculated nodule in the right lower lobe, multiple smaller nodules bilaterally, and a 1.5‑cm mediastinal lymph node. FDG‑PET/CT demonstrated high uptake (SUV max 12.3) in all pulmonary lesions and the node, confirming metastatic disease. No bony lesions were detected. A CT‑guided core biopsy of the mediastinal node yielded adenocarcinoma immunophenotype matching the breast primary (ER‑/PR‑/HER2‑negative). The oncology team shifted the plan to palliative systemic therapy and considered consolidative radiation to the chest wall.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease progressed to metastatic stage III (M1). Plan for palliative capecitabine and local radiation.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2023-10-02</h3><div class="visit-meta">Oncology | Reason: Palliative therapy initiation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Palliative therapy initiation for locally recurrent breast carcinoma.
+
+Patient: 65‑year‑old female with history of triple‑negative breast cancer, BRCA1 mutation, prior chest radiation, hypertension, type 2 diabetes mellitus, hyperlipidemia, and recent hemoptysis managed with bronchoscopic control.
+
+Subjective: 
+- Fatigue of moderate intensity, likely chemotherapy‑related.
+- Mild diffuse skin erythema over chest wall.
+- Hand‑foot syndrome: erythematous rash involving dorsal surfaces of hands and feet, currently grade 2 per CTCAE.
+
+Objective: 
+Vital Signs: BP 120/78 mmHg; HR 82 bpm; Temp 98.4 °F. 
+Physical Exam: 
+- Breast scar 0.8 cm noted; no palpable masses.
+- Lungs clear to auscultation with mild crackles over right chest wall.
+- Skin: hand‑foot erythema, no blistering.
+- Cardiovascular: regular rhythm, no murmurs.
+- Extremities: no pedal edema.
+
+Labs/Diagnostics: 
+- CBC: neutrophils 3,500/µL.
+- CMP: BUN 25 mg/dL; creatinine 1.0 mg/dL.
+- Chest imaging pending from prior visit (right middle lobe nodule).
+
+Assessment:
+1. Local recurrence of breast carcinoma, currently palliatively managed with capecitabine and chest wall radiotherapy.
+2. Capecitabine‑associated hand‑foot syndrome (grade 2) requiring topical emollients and dose reduction.
+3. Post‑radiation dermatitis of mild–moderate severity.
+4. Pulmonary nodule in right middle lobe – differential: metastatic lesion vs. benign post‑radiation change.
+5. Anemia of chronic disease/chemotherapy‑induced; neutropenia minimal, monitoring advised.
+
+Plan:
+- Continue capecitabine 1000 mg/m² BID for 21 days (21/7 schedule), reduce dose by 10‑15% if HFS &gt;grade 2.
+- Chest wall radiotherapy completed 20 Gy in 10 fractions; continue to use emollients, consider oral prophylactic dose‑reducing schedules.
+- Apixaban 5 mg BID continued; monitor for bleeding, hold if hemoptysis recurs.
+- Arrange weekly CBC; hold or postpone capecitabine if ANC &lt;500 /µL or febrile neutropenia.
+- Schedule imaging of right middle lobe nodule in 30 days; if unchanged then PET‑CT.
+- Continue antihypertensives (Losartan 50 mg QD), antidiabetics (Metformin 1000 mg BID, GLP‑1 agonist), statin (Atorvastatin 40 mg nightly) and aspirin 81 mg daily.
+- Reinforce hand‑foot care: moisturizers, avoid hot showers, reduce footwear friction, consider topical steroids if severe.
+- Maintain physiotherapy for right shoulder abduction.
+- Encourage prompt reporting of new respiratory symptoms, hemoptysis, or significant pain.
+
+Follow‑up: Oncology review in 2 weeks for capecitabine cycle; lab tests as above. Endocrinology in 8 weeks. Cardiology consult if chest wall radiation‑related cardiac symptoms develop.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue</span><span class="pill">Mild skin erythema</span><span class="pill">Hand–foot rash (grade 2)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>120/78 mmHg</td></tr><tr><td>Heart Rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: 0.8 cm scar</li><li>Lungs: clear breath sounds, mild crackles right chest wall</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC, CMP prior to capecitabine</li><li>Baseline CBC weekly during chemo</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: 3,500/µL neutrophils</li><li>CMP: BUN 25 mg/dL, Creatinine 1.0 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Capecitabine 1000 mg/m² BID 21 days</li><li>Radiation 20 Gy in 10 fractions</li><li>Apixaban 5 mg BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Metastatic disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Capecitabine 1000 mg/m² BID 21 days on/7 days off</li><li>Apixaban 5 mg BID (after hemoptysis control)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metastatic breast cancer</li><li>Prior cardiac and diabetic comorbidities</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncology team started her on palliative capecitabine as first‑line systemic therapy, given its favorable cardiac profile and BRCA‑associated sensitivity. Radiotherapy to the chest wall (20 Gy in 10 fractions over two weeks) was initiated to control local disease and reduce pain. She developed grade 2 hand‑foot syndrome which was managed with emollients and dose reduction. Anticoagulation with apixaban was started after bronchoscopic control of hemoptysis.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable disease per CT; local tumor regression; systemic disease controlled temporarily.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2023-12-10</h3><div class="visit-meta">Oncology | Reason: Stable disease after first lines</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint** – Stable disease after first line
+
+**History of Present Illness** – Ms. K, a 65‑year‑old female with a history of triple‑negative metastatic breast cancer and BRCA1 mutation, is currently receiving combination systemic therapy comprising capecitabine (21/7 schedule) and a newly added PARP inhibitor, veliparib 200 mg BID. She reports mild fatigue and exertional dyspnea; no new chest symptoms, weight loss, or fever. December CT imaging demonstrated no new lesions; the right lung nodules remained stable and the mediastinal nodes decreased by 15 %. She remains performance‑status ECOG 1.
+
+**Past Medical History** – Hypertension, type 2 diabetes mellitus, hyperlipidemia, obesity, smoking history (cigarettes 30 pack‑years, quit 5 years ago), prior chest wall radiation, myocardial infarction history, anthracycline‑induced left ventricular dysfunction (LVEF 50 % post‑AC), BRCA1 mutation status.
+
+**Current Medications** – Losartan 50 mg daily; Metformin 1000 mg BID; GLP‑1 agonist; Atorvastatin 40 mg nightly; Aspirin 81 mg daily; Capecitabine 1000 mg/m² BID 21 days on/7 days off; Apixaban 5 mg BID; Veliparib 200 mg BID; Ondansetron 4 mg IV pre‑infusion; Acetaminophen 500 mg PRN; Gabapentin 300 mg PO BID; Low‑molecular‑weight heparin 40 mg SC daily; Epirubicin 40 mg/m² Q2W; Cyclophosphamide 600 mg/m² Q2W; Nicotine patch 21 mg; Varenicline 0.5 mg BID; Ceftriaxone 1 g IV q12h; Oxycodone 5 mg PRN.
+
+**Allergies** – NKDA
+
+**Review of Systems** – Notable for mild fatigue, exertional SOB, no chest pain, no new weight change, no neuro deficits, no dermatologic emergencies.
+
+**Vitals** – BP 118/75 mmHg, HR 78 bpm, Temp 98.2 °F, RR 16, SpO₂ 98 % RA.
+
+**Physical Exam**
+- General: Alert, oriented, ECOG 1.
+- Breast: 0.8 cm post‑surgical scar, no erythema or discharge.
+- Respiratory: Mild fine crackles at right basilar area, no wheeze.
+- Cardiovascular: Regular rate/rhythm, S1S2 normal, no murmurs.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema, full ROM.
+
+**Assessment**
+1. Metastatic triple‑negative breast cancer, disease‑stable on CT.
+2. Mild fatigue and exertional dyspnea – likely attributable to treatment fatigue and anthracycline‑induced cardiomyopathy/radiation changes; baseline LVEF at 50 %.
+3. Early bone‑marrow suppression: CBC shows ANC 4 200 /µL; trending will assess for drop. No anemia detected.
+4. No evidence of infection or progression.
+
+**Differential Diagnosis**
+- Treatment‑related fatigue and dyspnea (anthracycline, radiation, capecitabine, veliparib).
+- Subclinical heart failure or cardiomyopathy.
+- Bone marrow suppression leading to cytopenias.
+- Pulmonary fibrosis or radiation pneumonitis (history of chest radiation).
+- Paraneoplastic processes.
+- Infection (unlikely given vitals and labs).
+
+**Plan**
+1. **Therapy** – Continue capecitabine 1000 mg/m² BID 21/7 and veliparib 200 mg BID. Continue anti‑emetic prophylaxis (ondansetron) before infusion.
+2. **Monitoring** – CBC and CMP weekly (already ordered). Repeat ANC/platelets every week; if ANC &lt; 2000 for &gt; 5 days or neutropenia &gt; grade 2, consider G‑CSF or dose hold. Bone marrow reserve assessment (trend ANC &amp; hemoglobin) – consider bone marrow biopsy if persistent cytopenia.
+3. **Cardiac** – Serial LVEF by TTE every 3 months; consider adding cardiac strain imaging (GLS) if LVEF stable.
+4. **Symptom Management** – Continue Gabapentin for neuropathic pain; consider adding low‑dose prednisone or dexamethasone for fatigue if refractory. Encourage early mobilization.
+5. **Lifestyle** – Continue smoking cessation program (nicotine patch, varenicline). Counsel on heart‑healthy diet, weight management.
+6. **Anticoagulation** – Continue apixaban 5 mg BID after discussion of bleeding risk; monitor for thrombosis/bleeding.
+7. **Follow‑up** – Oncology visit in 2 weeks for next cycle; cardiology review in 3 months; endocrinology for diabetes control in 4 months.
+8. **Patient Education** – Educated on signs of neutropenic fever, increased fatigue, dyspnea; instructed to call clinic if symptoms worsen.
+9. **Documentation** – Order bone marrow reserve assessment as per protocol; order baseline TTE if not done within last 3 months.
+
+**Disposition** – Patient discharged home with stable vitals; next oncology appointment scheduled in 2 weeks.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild fatigue</span><span class="pill">Shortness of breath on exertion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>118/75 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: 0.8 cm scar</li><li>Lungs: mild crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC, CMP weekly</li><li>Bone marrow reserve assessment</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: 4,200/µL neutrophils</li><li>CMP: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Veliparib 200 mg BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Metastatic disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Capecitabine 1000 mg/m² BID 21 days on/7 days off</li><li>Apixaban 5 mg BID</li><li>Veliparib 200 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Capecitabine therapy for 3 months</li><li>Radiation to chest wall</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A December CT showed no new lesions; the right lung nodules remained stable and the mediastinal node decreased by 15%. Based on BRCA1 mutation and triple‑negative status, the oncology team added veliparib, a PARP inhibitor, to her regimen at a cautious dose of 200 mg BID, monitoring for bone marrow suppression and nausea. She reported mild fatigue but otherwise remained functional.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease stable; added targeted therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2024-01-28</h3><div class="visit-meta">Cardiology | Reason: New onset heart failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 65‑year‑old female presents with emergent admission for new, worsening dyspnea and fatigue. Past history significant for hypertension, type 2 diabetes, hyperlipidemia, prior chest radiation and anthracycline exposure for triple‑negative breast cancer, and known NYHA II heart failure.
+
+**Subjective:**
+- Shortness of breath at rest, worsened over the past few days. 
+- Persistent fatigue, worse with activity. 
+- Lower extremity swelling noted for 2–3 days.
+
+**Objective:**
+- **Vitals:** BP 117/72 mmHg, HR 95 bpm, Temp 98.1°F.
+- **Physical exam:** S3 gallop, bibasilar crackles, 2+ pitting edema in ankles.
+- **Cardiac imaging:** Emergent TTE shows LVEF 45% with global hypokinesis.
+- **BNP:** 650 pg/mL.
+
+**Assessment:**
+The evidence is most consistent with acute decompensated heart failure secondary to chemotherapy‑induced cardiomyopathy (anthracycline + radiation) compounded by diabetes. The LVEF fall from 55% to 45% and BNP elevation support a true functional decline. No evidence of acute ischemia, valvular disease, or arrhythmia on exam or telemetry.
+
+**Differential Diagnosis Considered:**
+1. Anthracycline‑ and radiation‑induced dilated cardiomyopathy.
+2. Acute decompensated CHF due to fluid overload.
+3. Diabetic cardiomyopathy.
+4. Ischemic heart disease (less likely given normal prior EKG and lack of exertional chest pain).
+
+**Plan:**
+- Continue HF guideline‑directed therapy:
+  * Metoprolol succinate ↑ to 50 mg BID (previously 25 mg BID).
+  * Lisinopril ↑ to 40 mg daily (previously 20 mg).
+  * Furosemide 20 mg daily (maintain dose; add if edema worsens).
+  * Add spironolactone 25 mg daily once baseline renal function and potassium are stable.
+- Discontinue capecitabine for 2 weeks to allow cardiac recovery; re‑evaluate oncologic benefit vs. cardiotoxic risk.
+- Monitor electrolytes, renal function, and potassium q2‑week.
+- Repeat TTE in 4–6 weeks to assess LVEF trend.
+- Daily weight monitoring and instruct patient to report any worsening dyspnea, edema, or orthopnea.
+- Continue apixaban 5 mg BID for anticoagulation; hold aspirin 81 mg if high bleeding risk.
+- Counsel on sodium restriction (&lt;2 g/day), fluid restriction (1.5–2 L/day), and daily activity as tolerated.
+- Arrange cardiology follow‑up in 2 weeks for clinical assessment and possible adjustment of diuretics.
+- Coordinate with oncology – discuss possible dose‑modified or alternative systemic therapy.
+
+**Disposition:** Admit to cardiac unit for monitoring; discharge once hemodynamically stable. 
+
+**Next steps:** Reassess clinical status, weight, and labs prior to discharge date.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Shortness of breath at rest</span><span class="pill">Fatigue</span><span class="pill">Peripheral edema</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>117/72 mmHg</td></tr><tr><td>Heart Rate</td><td>95 bpm</td></tr><tr><td>Temperature</td><td>98.1°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Cardiac: S3 gallop, no murmurs</li><li>Lungs: bibasilar crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram</li><li>BNP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Echo: LVEF 45%</li><li>BNP: 650 pg/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg BID to 50 mg BID</li><li>Lisinopril 20 mg to 40 mg daily</li><li>Furosemide 20 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Metastatic disease</span><span class="pill">Heart failure NYHA II</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Capecitabine 1000 mg/m² BID 21 days on/7 days off</li><li>Apixaban 5 mg BID</li><li>Veliparib 200 mg BID</li><li>Metoprolol 25 mg BID</li><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior anthracycline exposure</li><li>Re‑irradiation avoided</li><li>Diabetic cardiometabolic risk</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. K was admitted with new, worsening dyspnea and fatigue. An emergent echocardiogram displayed an LVEF of 45% and new global hypokinesis. The cardiology team attributed this to cumulative anthracycline cardiomyopathy, exacerbated by prior chest radiotherapy and diabetes. Heart failure therapy was intensified with beta‑blocker, ACE inhibitor, and diuretic uptitrated. Ongoing monitoring of LVEF and rhythm was instituted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progressive cardiac dysfunction; need to reconsider systemic therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 13 &mdash; 2024-02-15</h3><div class="visit-meta">Oncology | Reason: Switch to gemcitabine; neutropenic sepsis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit 13 – 2024‑02‑15
+
+Chief complaint: febrile neutropenia after first cycle of gemcitabine.
+
+History: Ms. K was started on gemcitabine 1000 mg/m² IV on days 1 and 8 of a 28‑day cycle after failing capecitabine and with cardiac comorbidities limiting anthracycline use. She tolerated the first infusion; 48 h later she presented with high‑grade fever (104 °F), chills, generalized truncal rash, and marked weakness. On exam she was tachycardic (HR 110 bpm), normotensive (BP 110/68 mmHg), febrile, tachypneic, with crackles in both lung fields, pale and distressed.
+
+Investigations: CBC revealed ANC 200 /µL; CMP was normal; blood cultures were drawn; CT pulmonary angiogram showed a filling defect in the right pulmonary artery and pulmonary embolus in the right lower lobe. Broad‑spectrum antibiotics with piperacillin‑tazobactam 4.5 g IV q6h were started immediately and G‑CSF 300 µg SC q24h given. The patient was admitted to ICU for septic shock management. Despite therapeutic apixaban, a massive pulmonary embolism with resulting cardiac arrest occurred, and the patient was declared deceased at 20:30.
+
+Assessment: The death was caused by neutropenic sepsis complicated by a massive pulmonary embolism while on therapeutic anticoagulation.
+
+Differential: 1) Febrile neutropenia secondary to gemcitabine; 2) Severe sepsis from unrecognized bacteremia; 3) Pulmonary embolism with possible paradoxical embolism or undetected thrombophilia; 4) Adverse drug reaction to gemcitabine; 5) Capable of capecitabine cross‑reactivity.
+
+Plan: None, as the patient passed. Documentation of multidisciplinary discussion and disposition to family. Bereavement support to be offered, and review of future adjuvant therapy options for family consideration if any further treatment is desired. Ensure appropriate closure and communication with oncology, cardiology, and palliative care teams.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">High‑grade fever 104°F</span><span class="pill">Chills</span><span class="pill">Rash on trunk</span><span class="pill">Marked weakness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>110/68 mmHg</td></tr><tr><td>Heart Rate</td><td>110 bpm</td></tr><tr><td>Temperature</td><td>104°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General: distressed, pale</li><li>Respiratory: tachypnea, crackles</li><li>Cardiac: regular rate, no murmurs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC with differential</li><li>CMP</li><li>Blood cultures</li><li>CT pulmonary angiogram</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: ANC 200/µL</li><li>CMP: normal</li><li>CT PA: filling defect in right pulmonary artery, embolism in right lower lobe</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Gemcitabine 1000 mg/m² day 1 &amp; 8</li><li>Piperacillin‑tazobactam 4.5 g IV q6h</li><li>G‑CSF 300 mcg SC q24h</li><li>Apixaban 5 mg BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of chest radiation</span><span class="pill">BRCA1 mutation</span><span class="pill">Triple‑negative breast cancer</span><span class="pill">Metastatic disease</span><span class="pill">Heart failure NYHA III</span><span class="pill">Neutropenia risk</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>GLP‑1 agonist</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Apixaban 5 mg BID</li><li>Metoprolol 25 mg BID</li><li>Lisinopril 40 mg daily</li><li>Furosemide 20 mg daily</li><li>Veliparib 200 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Capecitabine intolerance, persistent disease</li><li>Cardiac failure limits anthracyclines/radiation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Given the cardiac comorbidities and prior capecitabine side effects, the oncology team switched Ms. K to gemcitabine (IV 1000 mg/m² day 1 &amp; 8 of 28‑day cycle). She tolerated a single cycle but presented within 48 h with fever 104°F, chills, generalized rash, and severe neutropenia (ANC &lt; 500/µL). Broad‑spectrum antibiotics (piperacillin‑tazobactam) were started, and G‑CSF was administered. Despite ICU admission and aggressive support, a massive pulmonary embolism developed despite therapeutic apixaban, leading to cardiac arrest. She was declared deceased at 8:30 p.m. on the day of admission.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal event: death due to septic shock and pulmonary embolism.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">History of Chest Radiation</span><span class="pill">Breast cancer</span><span class="pill">Obesity</span><span class="pill">Smoking habit</span><span class="pill">BRCA1 mutation</span><span class="pill">Anthracycline-induced left ventricular dysfunction</span><span class="pill">Myocardial infarction history</span><span class="pill">Heart failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li><li>Metformin 1000 mg BID</li><li>Liraglutide 0.6 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Capecitabine 1000 mg/m² BID 21/7 (hold for 2 weeks)</li><li>Apixaban 5 mg BID</li><li>Veliparib 200 mg BID</li><li>Ondansetron 4 mg IV pre‑infusion</li><li>Acetaminophen 500 mg PRN</li><li>Gabapentin 300 mg PO BID</li><li>Low‑molecular‑weight heparin 40 mg SC daily</li><li>Epirubicin 40 mg/m² Q2W</li><li>Cyclophosphamide 600 mg/m² Q2W</li><li>Nicotine patch 21 mg</li><li>Varenicline 0.5 mg BID</li><li>Ceftriaxone 1 g IV q12h</li><li>Oxycodone 5 mg PRN</li><li>Metoprolol succinate 50 mg BID</li><li>Lisinopril 40 mg daily</li><li>Furosemide 20 mg daily</li><li>Spironolactone 25 mg daily (start later)</li><li>Gemcitabine 1000 mg/m² IV days 1 &amp; 8</li><li>Piperacillin‑tazobactam 4.5 g IV q6h</li><li>Granulocyte colony‑stimulating factor (G‑CSF) 300 µg SC q24h</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Ms. K, 65 y/o female, presented for routine breast screening with a persistent right breast lump for 3 months. Examination found a 2 cm fixed mass in the upper outer quadrant; diagnostic mammogram and ultrasound confirmed a BI‑RADS 5 lesion measuring ~2.1 cm. Core‑needle biopsy revealed a 20 mm invasive ductal carcinoma with 2 of 3 sentinel lymph nodes involved. Multidisciplinary oncology consultation arranged; patient advised to continue management of hypertension, diabetes, and hyperlipidemia and to adopt lifestyle changes.</li><li>Ms. K, 65‑year‑old female, presented for multidisciplinary treatment planning of triple‑negative breast cancer. Examination unchanged from prior: 2 cm hard mass in right upper outer quadrant. Cardiac function normal LVEF 55%. Labs: fasting glucose 148 mg/dL, HbA1c 7.8%, LDL 160 mg/dL. Initiated dose‑modified dose‑dense epirubicin 40 mg/m² + cyclophosphamide 600 mg/m² q2w for 6 cycles (total anthracycline 240 mg/m²). Started metformin 850 mg BID and liraglutide 0.6 mg daily, aspirin 81 mg daily, lisinopril 10 mg nightly, atorvastatin 40 mg nightly. Cardiac monitoring with repeat TTE before cycle 4 and after completion. Follow‑up: oncologist review in 2 weeks for chemo start, endocrinology in 4 weeks, cardiology for cardiac monitoring. Lifestyle: smoking cessation counseling, weight reduction.</li><li>Ms. K, 65‑year‑old female, presented for first dose‑modified dose‑dense epirubicin and cyclophosphamide infusion. She tolerated infusion with mild nausea, palpitations and transient chest tightness, and post‑infusion fatigue. Vital signs: BP 150/90, HR 110, Temp 98.7°F. CBC, CMP, fasting glucose 190 mg/dL, telemetry showed transient irregular rhythm resolved. Ondansetron 4 mg IV was administered pre‑infusion. Plan: continue AC schedule, maintain current diabetes and cardiovascular medications, repeat CBC/CMP/glucose and telemetry before next cycle, repeat echocardiogram at cycle 4, and follow up with oncology in 2 weeks and endocrinology in 4 weeks.</li><li>Ms. K, 65‑year‑old female, post‑chemotherapy assessment 2024‑01‑15. Findings: residual breast induration 0.5 cm, palpable axillary nodes 2 cm, chest MRI confirms tumor 0.5 cm and nodes 1.8 cm, repeat TTE shows LVEF 50% (↓ from 55%). Symptoms include fatigue, nausea during chemotherapy, mild peripheral neuropathy. Plan: continue AC regimen, repeat TTE in 4 weeks, pre‑operative cardiac clearance before radical mastectomy, oncology follow‑up in 2 weeks, endocrinology review in 4 weeks, cardiology consult for ongoing monitoring, neuropathy assessment, evaluate anti‑emetic strategy.</li><li>Ms. K underwent radical mastectomy with axillary dissection. Post‑operative day 2, small pleural effusion required thoracentesis. Pain managed with acetaminophen PRN; gabapentin 300 mg PO BID planned if pain persists after epidural removal. Low‑molecular‑weight heparin prophylaxis to commence after epidural removal. Physiotherapy initiated for right shoulder abduction. Surgical wound healing without infection. Follow‑up scheduled in 7 days with wound review and physiotherapy assessment; oncology consultation in 2 weeks.</li><li>Ms. K, 65‑year‑old female, initiated adjuvant weekly paclitaxel 90 mg/m² IV for a 12‑week course. She tolerated therapy well with mild fatigue, mild shoulder stiffness, and occasional mild neuropathic tingling. Vitals were stable (BP 129/81 mmHg, HR 76 bpm, Temp 98.3°F). CBC prior to day‑1 dose showed neutrophil count of 1400/µL. CBC and CMP repeated before each dose; if ANC drops below 500/µL or febrile neutropenia occurs, treatment will be held and G‑CSF considered. Current antihypertensive regimen of Losartan 50 mg daily, Aspirin 81 mg daily, and Atorvastatin 40 mg nightly continues. Metformin dose increased to 1000 mg BID; insulin dose reduced per endocrinology recommendation. Paclitaxel 90 mg/m² weekly continues; monitor ANC and consider G‑CSF if needed. Gabapentin 300 mg PO BID may be started if neuropathic tingling worsens. Physiotherapy for right shoulder continues. Oncology follow‑up scheduled in 1 week, endocrinology in 4 weeks, cardiology TTE in 8 weeks.</li><li>Ms. K, 65‑year‑old female, routine radiology surveillance on 2023‑07‑15. Mild upper‑back soreness reported. Blood pressure 127/80 mmHg, heart rate 73 bpm, temperature 98.3°F. CT chest/abdomen/pelvis revealed a 2‑cm solitary opacity in the right middle lobe, poorly circumscribed, non‑calcified, with no mediastinal lymphadenopathy, pleural effusion, or osseous lesions. All other pulmonary parenchyma and mediastinum appeared unremarkable; no new hepatic or renal abnormalities. Plan: repeat CT chest/abdomen/pelvis in 30 days to assess size changes; consider PET‑CT if nodule persists or enlarges; continue current antihypertensive, antidiabetic, lipid‑lowering, anticoagulant, antiplatelet, and chemotherapy regimens. Advise patient to report any new respiratory symptoms or worsening back pain immediately.</li><li>Ms. K, 65‑year‑old female, presented with persistent dry cough, intermittent low‑grade fevers, and weight loss of 6 kg over 2 months. Physical exam showed afebrile status, BP 125/79, HR 80, RR 16, SpO₂ 98%. Decreased breath sounds noted over the right lower lobe. Chest CT pending. A structured smoking cessation program initiated with nicotine patch 21 mg and varenicline 0.5 mg BID. Current antihypertensive, antidiabetic, lipid‑lowering, antiplatelet, and anticoagulation regimens continued. Contrast‑enhanced chest CT ordered to characterize the right middle lobe opacity. Follow‑up PCP visit scheduled in 4 weeks.</li><li>Ms. K, 65‑year‑old female, follow‑up PCP visit in 4 weeks. (Addendum) No significant changes noted; ongoing monitoring of weight and nutritional status.</li><li>Ms. K, 65‑year‑old female, oncology follow‑up in 2 weeks for next paclitaxel cycle; endocrinology review in 8 weeks.</li><li>Ms. K, 65‑year‑old female, presented to ED on 2023‑09‑25 with acute fever, chills, night cough, and dyspnea worse when lying flat. Chest CT revealed a 3 cm spiculated right lower lobe nodule, multiple bilateral nodules, and a 1.5 cm mediastinal lymph node. CT‑guided core biopsy of the mediastinal node showed adenocarcinoma consistent with metastatic breast cancer. Empiric ceftriaxone 1 g IV q12h was started, O₂ supplementation to keep SpO₂ &gt;94%, IV hydration, and oxycodone 5 mg PRN for dyspnea‑related discomfort. Paclitaxel infusion was held pending infection resolution. Low‑molecular‑weight heparin and aspirin were continued. Repeat CBC and CMP were ordered daily until ANC &gt;1500/µL; G‑CSF to be considered if ANC &lt;500/µL or febrile neutropenia develops. Oncology review scheduled in 2 weeks for chemotherapy decision; cardiology TTE planned in 4 weeks; radiation oncology referral considered for possible consolidative chest wall radiation.</li><li>Ms. K, 65‑year‑old female, oncology palliative visit on 2023‑10‑02: initiated capecitabine 1000 mg/m² BID (21/7 schedule) for locally recurrent breast carcinoma; chest wall radiotherapy completed 20 Gy in 10 fractions; ongoing apixaban 5 mg BID; hand‑foot syndrome grade 2 managed with emollients and dose‑reduction plan; vital signs stable at BP 120/78, HR 82, Temp 98.4°F; mild skin erythema and crackles over right chest wall documented. Weekly CBC monitoring scheduled; imaging of right middle lobe nodule planned in 30 days; physiotherapy for right shoulder continued.</li><li>Ms. K, 65‑year‑old female, evaluated on 2023‑12‑10 for stability of metastatic triple‑negative breast cancer while receiving capecitabine and newly added veliparib. She reports mild fatigue and exertional dyspnea; no new chest or weight changes. Imaging shows stable right lung nodules and a 15% decrease of mediastinal nodes. CBC shows ANC 4,200/µL; weekly monitoring of CBC, CMP, and bone marrow reserve assessment was ordered. Cardiac surveillance with serial TTE every 3 months. Continued anticoagulation with apixaban, smoking cessation program, and anti‑emetic prophylaxis. Follow‑up oncology in 2 weeks.</li><li>Ms. K, 65‑year‑old female, presented to cardiology on 2024-01-28 with acute dyspnea, fatigue, peripheral edema. Examination revealed S3 gallop, bibasilar crackles, ankle edema. TTE showed LVEF 45% with global hypokinesis, BNP 650 pg/mL. Initiated HF guideline‑directed therapy: metoprolol succinate 50 mg BID, lisinopril 40 mg daily, furosemide 20 mg daily, spironolactone 25 mg daily pending labs; capecitabine held for 2 weeks. Planned repeat TTE in 4–6 weeks, weight monitoring, labs q2 weeks, cardiology follow‑up in 2 weeks.</li><li>Ms. K, 65‑year‑old female, presented Feb 15, 2024 after first gemcitabine cycle with high‑grade fever (104 °F), chills, generalized rash, and marked weakness. Physical findings were tachycardic (HR 110 bpm), febrile, tachypneic, and with crackles bilaterally. CBC revealed ANC 200 /µL. CT pulmonary angiogram documented pulmonary embolism in the right lower lobe. Broad‑spectrum antibiotics (piperacillin‑tazobactam 4.5 g IV q6h) and G‑CSF 300 µg SC q24h were started; the patient was admitted to ICU for septic shock. Despite therapeutic apixaban, massive pulmonary embolism led to cardiac arrest and death.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

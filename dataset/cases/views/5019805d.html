@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 5019805d</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 5019805d</h1><div class="subtitle">Iron Deficiency Anemia | Female, 45</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Heavy menstrual bleeding, Chronic gastrointestinal bleeding, Celiac disease, Anemia of chronic disease</div><div class="meta-line">Risk Factors: Menorrhagia, Long‑term NSAID use, Vegetarian diet, Poor dietary iron intake</div></div>
+<details><summary>Narrative <span class="preview-text">**A Chronic, Unseen Fade**  Marina had always liked the rhythm of her life. A nurse by trade, she knew the signs her bod...</span></summary><div class="section-body"><p>**A Chronic, Unseen Fade**</p><p>Marina had always liked the rhythm of her life. A nurse by trade, she knew the signs her body was trying to tell her, but when the symptoms first began they seemed to belong to the “usual aches and pains of middle age.” The story begins in early 2010, when at the age of 30 Marina noticed that her menstrual period had become unusually heavy. Cranes and tampons left her with a dull, constant ache around her lower abdomen. Whenever she tried to take a brisk walk around the block, she felt a strange heaviness in her chest, a light‑headedness that faded a few minutes later. “Probably just hormonal,” she told her friend, and turned to the nearest pharmacy for a discreet bottle of spironolactone. A month later, she had a new habit: a glass of black coffee after breakfast, a snack of apples, a lunch of a quinoa and lentil salad, and a dinner of pasta with marinara sauce. She was a committed vegetarian, believing wholeheartedly that her diet was as healthy as it was colorful.</p><p>---</p><p>### 2010–2011: A Quiet Onset</p><p>The first few months of heavy bleeding were followed by a pallor that surprised Marina. She caught her reflection in a bathroom mirror and noticed her lips were a shade of mauve. She went to her general practitioner (GP) in late 2010. The GP performed a quick exam, noted her pallor, and ordered a basic complete blood count (CBC). The results were returned two weeks later: a hemoglobin of 10.8 g/dL, mean corpuscular volume (MCV) of 76 fL, and a red cell distribution width (RDW) slightly elevated. “A little low,” the GP said. “Iron deficiency is common in heavy bleeding.” She was prescribed ferrous sulfate 325 mg orally three times daily and asked to follow up in three months.</p><p>Marina dutifully took the pills for two months, yet the fatigue persisted. She had stopped noticing the faint, throbbing dizziness that surfaced whenever she stood up too quickly. “You probably have iron deficiency,” the GP thought, “but let’s give it a try.” She did not mention this again until 2011 when her doctor, after a routine eye exam, asked her why her vision sometimes seemed a bit hazy. On a brief review of systems, Marina described “dizziness when I rush from a standing position to walking upstairs.&quot; The GP ordered a retest of her CBC, which now showed hemoglobin 9.2 g/dL and MCV 72 fL. “We’re getting into low ranges,” the GP said, this time adding a ferritin draw. The ferritin returned at 3 ng/mL, confirming an iron stores deficiency.</p><p>---</p><p>### 2012: Celiac Disease</p><p>The low ferritin prompted the GP to refer Marina to a gastroenterologist. She had no overt abdominal symptoms at the time, aside from occasional bloating after meals, but her physician wanted to rule out any chronic gastrointestinal loss. A small intestinal biopsy was performed, revealing villous atrophy consistent with celiac disease. The gastroenterologist recommended a gluten‑free diet and started her on a low‑dose iron supplementation regimen: ferrous gluconate 200 mg once daily. Marina accepted the diagnosis with relief that it was “not a mystery” and a little shame that it required such a big change in her diet.</p><p>The diet change was challenging. She found it hard to replace certain staples—like a slice of cheese she always enjoyed with lunch—with gluten‑free alternatives. Instead of a whole grain of barley, she ate rice or oat‑based crackers. She often skipped the whole grain portion of her dinner, thinking “I can make up for it later.” On the other hand, she began to feel a sense of control that kept her spirits up. She also bought an over‑the‑counter supplement of vitamin B12, since she knew iron and folate were essential, but B12 was commonly deficient in vegetarians.</p><p>Despite her new diet and iron supplement, her CBC at the one‑year follow‑up showed hemoglobin 9.9 g/dL, MCV 73 fL, ferritin 4 ng/mL. Her symptoms, however, had worsened: the episodes of dizziness became more frequent, and she began noticing a “flutter” in her chest during quiet moments. Her GP, remembering her earlier history, recommended her start a low‑dose folic acid (0.8 mg daily) but did not push further investigations.</p><p>---</p><p>### 2013–2014: NSAIDs and the Gastrointestinal Cast</p><p>Marina began chronic back pain after a minor car accident in 2012. She was prescribed a course of NSAIDs (ibuprofen 600 mg twice daily) for three months and found relief for the most part. However, she began to experience occasional darkening of her stool—a subtle blackness she initially attributed to coffee. By mid‑2014, she had started to worry about “gastric bleeding.” She asked her GP if she could continue ibuprofen. The GP, wary of potential gastric erosion, advised her to switch to naproxen but insisted she continue monitoring her stool color.</p><p>The next year, her CBC was abnormal again. Her hemoglobin dropped to 8.5 g/dL and was accompanied by a thrombocytosis (platelet count 450,000 /µL) that the GP speculated could be reactive. Her GP repeated a ferritin test, which again returned below 5 ng/mL. She was told to continue her iron supplementation and take an over‑the‑counter antacid. Still, the black spots on her stool persisted. She reported occasional nausea after meals and a feeling of fullness early in the afternoon.</p><p>In 2015, after an unscheduled ER visit for syncope while going to the bathroom, a bedside hemoglobin measurement in the emergency department was 7.4 g/dL. This was a wake‑up call. A rapid test revealed positive guaiac (fecal occult blood). A colonoscopy was performed in late 2015, showing erosive gastritis with multiple small linear ulcerations in the posterior stomach wall, likely secondary to NSAID use. No obvious sources of overt bleeding were found. She received a proton pump inhibitor and was temporarily switched to a different analgesic, acetaminophen, for her back pain. Her iron supplement was increased to 325 mg ferrous sulfate once daily.</p><p>After the procedure, her iron levels improved slightly, with hemoglobin rising to 8.2 g/dL, but they never fully returned to baseline. She described feeling “sick all the time” and began experiencing shortness of breath with minimal activity. She complained of “tiredness that won’t go away” and that her skin looked “more tired.” Despite these complaints, she still felt the necessity of staying busy — she was a nurse, after all.</p><p>---</p><p>### 2016–2018: The Cumulative Weight</p><p>During 2016, Marina started complaining of a new symptom—a mild, persistent heart palpitations at rest. She felt her heart quickening and then slowing unpredictably. On a routine visit, her GP performed an ECG and noted a borderline normal sinus rhythm. His blood work was unchanged: hemoglobin 7.9 g/dL, ferritin 6 ng/mL. He told her to schedule a follow‑up in six months if symptoms worsened.</p><p>In a quiet, humid Saturday morning in 2017, Marina’s left thigh felt like a heavy stone. She had known for months that she had “tightness” after long periods of walking. She was too busy to book a visit, so she tried a self‑therapy, applying a heated compress. Yet, that evening she noticed the faint pulsing in her chest again and was forced to get an urgent CBC. The lab returned hemoglobin 7.7 g/dL, an MCV of 70 fL, elevated RDW, ferritin 5 ng/mL, and normal serum iron. Her iron supplement dosing was increased again. The GP, being thorough, added a daily dose of oral vitamin C to enhance absorption.</p><p>The next month that the same pattern of low hemoglobin and low ferritin persisted with minor variations. She tried a new brand of ferrous sulfate, feeling a stomach upset each time. She stopped taking it, rationalizing that the side effects were too bothersome. Meanwhile, the celiac diagnosis had placed her in a gluten‑free community group. She shared her anemia story, but the group’s focus was on weight loss; she felt the “anemia” was a different narrative.</p><p>In 2018, Marina’s doctor, Dr. Patel, recognized her chronic heavy periods and repeated heavy bleeding, her celiac, and her NSAID use. He noted a high suspicion of iron deficiency anemia secondary to menorrhagia, chronic GI bleeding, chronic disease (from celiac), and poor dietary intake. He offered a trial of a levonorgestrel intra‑uterine device (IUD) to reduce menstrual blood loss. Marina, however, found the idea of an IUD frightening; she had only had a contraceptive prescription in the past, not an IUD. She declined and chose instead to continue iron therapy and NSAIDs.</p><p>She was admitted to the hospital in early 2018 after fainting in the bathroom while turning around. Her hemoglobin was 6.5 g/dL. She received a transfusion of two units of packed red blood cells and was started on intravenous ferrous sulfate. A review of her medication list during that admission led the inpatient team to discontinue NSAIDs temporarily. A follow‑up CBC in the ED on day four showed hemoglobin 9.2 g/dL, ferritin 8 ng/mL—an improvement, but not adequate for her baseline.</p><p>The next month, she was discharged. The hospital notes read, “Anemia likely multifactorial; will continue iron therapy; to see GI and gynecology specialists.” On her follow‑up appointments, each specialist gave her a component of the story but no single diagnosis. The GP advised “take the iron.” The gynecologist suggested hormonal birth control as a means to reduce menstrual flow. The gastroenterologist recommended a repeat endoscopy to watch for NSAID ulcer progression, but her insurance declined coverage for a repeat procedure, citing “no new findings” from the last colonoscopy. She could not pay for an outpatient esophagogastroduodenoscopy (EGD) without insurance.</p><p>---</p><p>### 2019–2021: The Slow Drag</p><p>Marina’s 45th birthday came after a year of repeated fatigue and a persistent grayish discoloration of her hair. Her hair looked thinner, and every time she brushed through it she thought, “It must be the anemia.” She had never been called “anaemic” by anyone in her life. Her doctor at that time, a new family physician, finally documented a “diagnosis code: iron deficiency anemia” when she came in for a routine skin check. He prescribed a daily ferrous sulfate tablet, switched from the triple dose to a single daily dose because he read that multiple doses can reduce absorption.</p><p>It was March of 2020 when the pandemic forced outpatient visits into virtual. Marina’s PCP suggested she get a home finger‑stick test to see how her CBC was trending. She downloaded a free smartphone app that showed her hemoglobin at 8.1 g/dL at home, versus 7.6 g/dL in earlier labs. She tried to follow the recommendations: take her iron supplement with a glass of orange juice and avoid drinking tea on the same day. She also switched her NSAID therapy from naproxen to acetaminophen, thinking it would reduce GI bleeding.</p><p>The next few months were unremarkable. Her CBC from a local lab, performed on her request, displayed hemoglobin 7.8 g/dL, ferritin 4 ng/mL. She returned to her GP, who simply said, “You’ll get better once you get more iron into the bloodstream.” In a meeting with her gynecologist, she expressed her desire to reduce menstrual bleeding. The gynecologist suggested a copper IUD but she declined again. She had the idea that “iron deficiency is just a result of eating less, and not that there’s something else.”</p><p>By mid‑2021, her anemia had not improved, and she was experiencing new symptoms: a mild, constant headache, an occasional tinnitus, and a chronic sense of “not being able to catch my breath” on walking up a flight of stairs. Her GP prescribed a “short course of corticosteroid” for what he described as “an inflammatory disease,” expecting it might address her chronic disease anemia. Marina took the steroids for a month. The next CBC revealed hemoglobin 8.0 g/dL, ferritin 3 ng/mL. The steroids didn&#x27;t bring her ferritin up; they made her feel drowsy.</p><p>She began to wonder if something was wrong but never said anything. Even though she could not find a single doctor who could put all her data together, her life continued. She did not feel the need for an official label or diagnosis. The concept of being “undiagnosed” had slipped into her routine; she kept looking to her own pulse and blood pressure, but those were unchanged. She would shrug, “That’s how people age,” told herself. The small steps she took to adjust her diet and reduce NSAID use were not enough.</p><p>---</p><p>### 2022: A Silent Continuation</p><p>When the healthcare insurance policy changed in early 2022, the cost of her iron supplements increased. Marina, being a nurse, had paid for most of it out of pocket in the past, but she realized the price had doubled. She cut back on her ferrous sulfate after the doctor told her “we need to keep the blood moving.” That month, her hemoglobin fell to 7.6 g/dL. Her wife suggested she get a new CBC in the hospital, but Marina declined, feeling the “hospital is too expensive.”</p><p>Her routine blood tests at her local laboratory over the next six months consistently produced a pattern: hemoglobin hovering between 7.5 and 8.5 g/dL, ferritin 1–6 ng/mL, serum iron low, transferrin saturation 10–12 %. Her RBC morphology consistently showed microcytosis and anisocytosis. Yet, these abnormal lab values were simply noted on the requisition form and were not entered as an explicit diagnosis in her EHR. Her last doctor wrote in the note, “Patient continues to have low iron stores; continue therapy.”</p><p>During a routine checkup with a new internal medicine specialist at the end of 2022, she was told that “the work-up looks typical.” The specialist recommended she begin an ongoing oral iron supplement regimen of 325 mg a day and “schedule a follow‑up in three months.” The patient, after careful reading of her chart, realized that iron deficiency was not yet listed as a formal diagnosis in her file; perhaps the label was not the problem. She kept her routine.</p><p>---</p><p>### 2023: A Final Piece</p><p>By mid‑2023, Marina’s fatigue had become so chronic that it started to affect her mood. She felt a sense of emptiness and thought it might be depression. Though she was seen by a psychiatrist for this, she also brought up her recurrent anemia. The psychiatrist was supportive and suggested a “full anemia work‑up” to rule out any underlying cause. She booked a lab panel that included iron studies, B12, folate, and tests for hemolysis. All came back normal except for iron parameters.</p><p>The psychiatrist prescribed a serotonin‑reuptake inhibitor, but the effect was minimal. Her doctor said, “We’re going to keep treating the anemia as it is,” and added a note in her chart that she had a “possible multifactorial anemia.” Yet no official diagnostic code was ever added. The health system used a new EHR that required explicit disease codes to trigger certain protocols. The last time a physician reviewed the chart had only scanned for the code; the code was not present. The doctor did not feel the need to add one or to push for additional testing because the patient&#x27;s current symptoms had not escalated drastically.</p><p>Marina, aware of the label’s benefits (insurance coding, medication coverage, potential clinical trial inclusion), had long asked herself if she wanted the diagnosis. The answer was mixed: the diagnosis would bring an official name and a potential sense of closure, but it could also open doors to treatments that she had not yet considered, like a long‑acting iron infusion or a hormone therapy to control her heavy flow.</p><p>By the time of the narrative’s closing in mid‑2024, Marina had a formal iron deficiency anemia code filed by the new family practice in her chart. The code was present, but no follow‑up was scheduled. The story remained the same: a patient living with the steady, silent ache of a chronic, undiagnosed anemia: heavy bleeding, chronic GI bleeding, malabsorption from celiac disease, and the compounded effect of a long‑term vegetarian diet and NSAID use. The medical narrative is incomplete, but the patient and many in her health team understand the components; the single cohesive diagnosis, however, remains elusive in her daily experience.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2010-10-15</h3><div class="visit-meta">General Practice | Reason: Heavy menstrual bleeding, pallor</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+
+Marina, a 45‑year‑old female, presents with unusually heavy menstrual bleeding and a vague sense of fatigue. She reports heavy menstrual periods, lower abdominal ache, and generalized fatigue. She has a vegetarian diet and no current medications.
+
+History of Present Illness:
+
+Marina reports several months of increasingly heavy menses, associated with a soft lower abdominal ache. She feels fatigued but denies weight loss, night sweats, or systemic symptoms. She has a known history of heavy menstrual bleeding, chronic gastrointestinal bleeding, celiac disease, and anemia of chronic disease.
+
+Past Medical History:
+
+• Chronic gastrointestinal bleeding
+• Celiac disease
+• Anemia of chronic disease
+
+Medications:
+
+None
+
+Allergies:
+
+No known drug allergies
+
+Review of Systems:
+
+- Conjunctival pallor, general fatigue
+- No dysuria, hematuria, or recent weight change
+- No chest pain or shortness of breath
+
+Physical Examination:
+
+Vital signs: BP 118/70, HR 78, Temp 98.6 °F, BMI 22.1.
+
+General: Appears fatigued, pale.
+
+HEENT: Marked pallor of conjunctiva and mucous membranes.
+
+Abdomen: Soft, non‑tender, no organomegaly.
+
+Cardiovascular and pulmonary exam: Within normal limits.
+
+Plan and Assessment:
+
+She is at risk of iron deficiency anemia secondary to heavy menstrual losses and malabsorption from celiac disease. Chronic GI bleeding and anemia of chronic disease are also possible contributors.  Immediate work‑up consists of a CBC and, if indicated, iron studies.
+
+Investigations:
+• Complete Blood Count (CBC) – ordered now.
+
+Medication:
+• Ferrous sulfate 325 mg PO TID for iron replacement.
+
+Counseling:
+• Discuss importance of adherence: take iron on an empty stomach with vitamin C or orange juice; avoid dairy or calcium supplements with iron.
+• Dietary advice: incorporate plant‑based iron sources (lentils, spinach, fortified cereals) and vitamin C‑rich foods.
+• Encourage routine folate intake.
+
+Follow‑up:
+• Return in 3 months for repeat CBC and symptom assessment.
+• If hemoglobin/hematocrit fails to improve after 6 weeks, repeat CBC and obtain iron panel, ferritin, and consider GI evaluation.
+• If menorrhagia persists, arrange gynecologic evaluation (transvaginal ultrasound/menstrual history review).
+
+Differential Diagnosis:
+1. Iron deficiency anemia due to heavy menstrual bleeding.
+2. Anemia of chronic disease.
+3. Malabsorption anemia secondary to celiac disease.
+4. Chronic gastrointestinal bleeding.
+5. Hypothyroidism (to be excluded if indicated).
+
+Disposition:
+
+Continued outpatient care with scheduled follow‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Heavy menstrual periods</span><span class="pill">Lower abdominal ache</span><span class="pill">General fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/70</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.6</td></tr><tr><td>BMI</td><td>22.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Marked pallor of conjunctiva</li><li>Soft, non-tender abdomen</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete Blood Count (CBC)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescription: ferrous sulfate 325 mg TID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Vegetarian diet</li><li>No medication use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marina presented with complaints of unusually heavy menstrual flow and a vague sense of fatigue. Physical examination revealed marked paleness of the conjunctiva and mucous membranes. A abdominal exam was normal. The GP ordered a CBC and instructed the patient to take ferrous sulfate 325 mg orally three times daily for iron deficiency. A follow‑up appointment was scheduled for 3 months.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of iron deficiency anemia likely secondary to menorrhagia; baseline low hemoglobin observed at follow‑up.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2011-02-10</h3><div class="visit-meta">General Practice | Reason: Follow‑up for anemia treatment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Marina presented for a routine follow‑up of her chronic anemia and heavy menstrual bleeding. She reports persistent fatigue and occasional dizziness upon standing, despite three months of iron therapy. On review, she continues regular thrice‑daily ferrous sulfate 325 mg with compliant dosing. She has a vegetarian diet; malabsorption is considered secondary to her known celiac disease. Examination shows mild pallor with otherwise normal cardiovascular assessment. Vitals are within normal limits (BP 120/72, HR 76, Temp 98.7 °F, BMI 21.9). A recent CBC and iron studies demonstrate Hgb 9.2 g/dL, MCV 72 fL, RDW 17%, ferritin 3 ng/mL, supporting ongoing iron‑deficiency anemia. In light of these findings, we reinforced adherence to iron supplementation, added folic acid 0.8 mg PO daily to address possible folate deficiency in a vegetarian, and discussed further evaluation of malabsorption. A referral to gastroenterology has been offered for comprehensive assessment, including endoscopy and evaluation of celiac disease activity.
+
+Assessment: Persistent iron‑deficiency anemia (likely secondary to heavy menses and malabsorption).
+
+Plan:
+1. Continue ferrous sulfate 325 mg PO TID.
+2. Initiate folic acid 0.8 mg PO daily.
+3. Follow up with gastroenterology.
+4. Repeat CBC and iron studies in 12 weeks.
+5. Counsel on adequate iron intake (e.g., legumes, fortified cereals) and Vitamin C‐rich foods to enhance absorption.
+6. Monitor symptoms of dizziness and advise safety precautions.
+7. Encourage continuation of current dietary habits while awaiting GI workup.
+
+The patient verbalized understanding of the plan and consented to the referral. She will return for lab reassessment in 3 months or sooner if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent fatigue</span><span class="pill">Occasional dizziness when standing</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/72</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>98.7</td></tr><tr><td>BMI</td><td>21.9</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slight pallor</li><li>Normal cardiovascular exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Iron studies (serum iron, ferritin, TIBC)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 9.2 g/dL</li><li>MCV 72 fL</li><li>RDW 17%</li><li>Ferritin 3 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescription update: add folic acid 0.8 mg daily</li></ul></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ferrous sulfate 325 mg TID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Three months of ferrous sulfate intake</li><li>Continuing heavy menses</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marina returned for routine review. CBC revealed hemoglobin 9.2 g/dL, MCV 72 fL, RDW 17%, and ferritin 3 ng/mL, confirming severe iron depletion. The GP reinforced adherence to iron therapy, added daily folic acid 0.8 mg, and discussed possible malabsorption causes, noting her vegetarian diet. A referral to a gastroenterologist was suggested for further evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Iron deficiency persists with markedly low ferritin; potential malabsorption suspicion leads to gastro referral.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2012-01-15</h3><div class="visit-meta">Gastroenterology | Reason: Evaluating possible malabsorption and persistent anemia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation of persistent anemia and possible malabsorption.
+
+History of Present Illness: 32‑year‑old female with known celiac disease, chronic gastrointestinal bleeding, and heavy menstrual bleeding presents for evaluation of ongoing iron deficiency despite current therapy. She reports bloating after meals and occasional abdominal discomfort. She has been on ferrous sulfate 325 mg TID for 6 months and a vegetarian diet. No melena or hematochezia noted during this visit.
+
+Past Medical History: Heavy menstrual bleeding, chronic GI bleeding, celiac disease (recently confirmed by biopsy), anemia of chronic disease.
+
+Medications: Ferrous sulfate 325 mg PO TID (last 6 mo), folic acid 0.8 mg PO daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for bloating after meals, occasional abdominal discomfort. Denies nausea, vomiting, weight loss, dysphagia, or rectal bleeding.
+
+Physical Examination: Vitals within normal limits: BP 118/68 mmHg, HR 77 bpm, Temp 98.6 °F, BMI 21.8. General: Well‑appearing, no pallor. Abdomen: soft, non‑tender, no organomegaly, normal bowel sounds.
+
+Diagnostic Testing: Upper endoscopy with duodenal biopsy performed today. Histology demonstrated villous atrophy with crypt hyperplasia, consistent with celiac disease.
+
+Assessment: 1) Celiac disease confirmed – requires strict gluten‑free diet to restore mucosal integrity and improve iron absorption. 2) Iron deficiency anemia (previous ferritin 3 ng/mL, Hgb 9.2 g/dL, MCV 72 fL) likely secondary to malabsorption; current ferrous sulfate regimen poorly tolerated. 3) Heavy menstrual bleeding contributing to blood loss.
+
+Plan: 1) Initiate ferrous gluconate 200 mg PO once daily; take on empty stomach with vitamin C or a small amount of fruit juice to enhance absorption, and with food to reduce GI upset. 2) Continue folic acid 0.8 mg PO daily. 3) Counsel patient on strict gluten‑free diet; provide written dietary guide and recommend a dietitian referral. 4) Encourage consumption of iron‑rich plant foods (lentils, beans, dark leafy greens) and vitamin C‑rich foods (berries, citrus) throughout day. 5) Schedule follow‑up CBC and iron studies in 4 weeks to assess response. 6) Monitor for signs of nutritional deficiencies (fatigue, pallor, GI symptoms). 7) At next visit review menstrual patterns; if bleeding remains heavy, discuss possible endometrial evaluation or hormonal therapy.
+
+Disposition: Patient educated on medication changes and diet; instructed to monitor for side effects of ferrous gluconate and to contact office with any worsening symptoms.
+
+Follow‑up: Return in 4 weeks for lab review; consider gastroenterology follow‑up in 8 weeks if anemia persists.
+
+Prepared by: Dr. XXXX, MD
+
+Signatures: ________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Bloating after meals</span><span class="pill">Occasional abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/68</td></tr><tr><td>HR</td><td>77</td></tr><tr><td>Temp</td><td>98.6</td></tr><tr><td>BMI</td><td>21.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal abdominal exam</li><li>Soft, non-tender</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Duodenal biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Villous atrophy consistent with celiac disease</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescription: ferrous gluconate 200 mg daily</li><li>Education: gluten‑free diet</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ferrous sulfate 325 mg TID</li><li>Folic acid 0.8 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Heavy menstrual bleeding</li><li>Ferrous sulfate TID for 6 months</li><li>Vegetarian diet</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The gastroenterologist performed an upper endoscopy with duodenal biopsy. Histology showed villous atrophy and crypt hyperplasia, confirming celiac disease. The patient was advised to adopt a strict gluten‑free diet and switched iron supplementation to ferrous gluconate 200 mg once daily to improve tolerability. Counseling on nutritional sources of iron was provided.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Iron deficiency now explained by combination of menorrhagia and mucosal malabsorption secondary to untreated celiac disease.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2015-11-20</h3><div class="visit-meta">Emergency Medicine | Reason: Syncope with anemia and occult GI bleeding</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Syncope with anemia and occult GI bleeding.
+
+History of Present Illness:
+Marina, a 35‑year‑old female, collapsed at home. Rapid bedside hemoglobin was 7.4 g/dL. She endorsed a sudden fainting episode, black tarry stools, and nausea. She has a long‑term history of iron deficiency anemia, celiac disease, and chronic NSAID use (ibuprofen 600 mg BID).
+
+Past Medical History:
+- Iron deficiency anemia
+- Celiac disease (duodenal villous atrophy confirmed; strict gluten‑free diet)
+- Chronic NSAID use
+
+Medications:
+- Ferrous gluconate 200 mg daily (changed to ferrous sulfate 325 mg daily this admission)
+- Vitamin B12 supplement
+- Paracetamol PRN
+
+Allergies: None
+
+Physical Examination:
+- Vitals: BP 84/48 mmHg, HR 122 bpm, Temp 98.4 °F, BMI 21.9
+- General: Pale conjunctiva, weak peripheral pulses
+- Cardiovascular: Tachycardia, no murmurs
+- Respiratory: Clear to auscultation
+- Abdomen: Mild epigastric tenderness, soft, non‑distended
+- Lower extremities: No edema
+
+Laboratory/Procedural Findings:
+- Bedside CBC: Hemoglobin 7.4 g/dL
+- Fecal occult blood: Positive
+- EGD: Gastritis with small linear ulcers (NSAE related)
+- Colonoscopy: Normal
+
+Assessment:
+1. Acute blood loss anemia due to upper GI bleeding from NSAID‑induced gastritis/ulceration.
+2. Chronic iron deficiency anemia superimposed on celiac disease.
+3. Syncope secondary to significant anemia and possible dehydration.
+
+Plan:
+1. Initiate omeprazole 20 mg PO daily as acid suppression.
+2. Escalate iron therapy to ferrous sulfate 325 mg PO daily; advise ingestion with vitamin C and avoid calcium or antacids concurrently.
+3. Discontinue ibuprofen; counsel on alternatives (acetaminophen) and educate about NSAID risks.
+4. Admit for monitoring of vitals, serial CBC, and symptom assessment.
+5. Repeat CBC and iron studies in 4 days; aim for Hb &gt; 9 g/dL and ferritin &gt; 30 ng/mL.
+6. Encourage strict gluten‑free diet; consider repeat iron studies in 4‑6 weeks pending response.
+7. Arrange follow‑up with GI clinic in 2 weeks for further evaluation of malabsorption and review of GI bleeding.
+8. Educate patient on signs of recurrent bleeding (dark stools, melena, dizziness) and to seek immediate care.
+
+Disposition: Stabilized, admitted to the medical floor for close monitoring and transfusion precautions as needed. Discharge pending stabilization and outpatient follow‑up.
+
+Signature: _______________________
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden fainting episode</span><span class="pill">Darkened stool (black tarry)</span><span class="pill">Nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>84/48</td></tr><tr><td>HR</td><td>122</td></tr><tr><td>Temp</td><td>98.4</td></tr><tr><td>BMI</td><td>21.9</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Weak peripheral pulses</li><li>Mild epigastric tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bedside CBC</li><li>Fecal occult blood test</li><li>EGD &amp; colonoscopy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 7.4 g/dL</li><li>Fecal occult blood positive</li><li>Gastritis with linear ulcers</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV fluids</li><li>Ferrous sulfate 325 mg daily</li><li>OmePrazole 20 mg daily</li><li>Discontinue ibuprofen</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Celiac disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ferrous gluconate 200 mg daily</li><li>Vitamin B12 supplement</li><li>Paracetamol as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Long‑term NSAID use (ibuprofen 600 mg BID)</li><li>Recent celiac disease diagnosis</li><li>Current ferrous gluconate 200 mg daily</li><li>Gluten‑free diet</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marina collapsed at home; the ER nurse performed a rapid hemoglobin test revealing 7.4 g/dL. Guaiac test was positive for occult blood. She was admitted for close monitoring. A diagnostic colonoscopy and EGD revealed gastritis with small linear ulcers attributed to chronic NSAID use. The patient was started on a proton pump inhibitor (omeprazole 20 mg daily) and advised to discontinue ibuprofen. Iron therapy was escalated to ferrous sulfate 325 mg daily. A follow‑up CBC on day 4 showed hemoglobin 9.2 g/dL and ferritin 8 ng/mL.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anemia worsened due to cumulative GI bleeding; iron supplementation increased; proton pump inhibitor introduced to protect gastric lining.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-06-15</h3><div class="visit-meta">Psychiatry | Reason: Depression screening with anemia work‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 45‑year‑old female with a history of iron deficiency anemia secondary to celiac disease and major depressive disorder. She presents for routine depression screening and evaluation of persistent fatigue and headache. 
+
+Subjective:  The patient reports ongoing fatigue, an empty‑feeling mood, intermittent headaches, and tinnitus lasting a few days each week. She denies new bleeding symptoms, weight change, or appetite loss. She adheres to her current medication regimen: ferrous sulfate 325 mg PO daily, omeprazole 20 mg PO daily, vitamin B12 supplement, sertraline 50 mg PO daily, folic acid 0.8 mg PO daily, and PRN paracetamol. She follows a vegetarian, gluten‑free diet and reports consistent use of aspirin for occasional headaches. 
+
+Objective:  Vitals were stable: BP 122/78 mmHg, HR 70 bpm, Temp 98.6 °F, BMI 22.2 kg/m². Physical exam revealed mild pallor of the conjunctiva and oral mucosa. Cardiovascular exam was normal. No abdominal masses or tenderness noted. 
+
+Labs:  CBC and iron studies confirm severe iron deficiency anemia: Hemoglobin 8.0 g/dL, ferritin 3 ng/mL, serum iron 12 µg/dL, TIBC 400 µg/dL, LDH 200 U/L, haptoglobin 2.5 g/L. Vitamin B12 450 pg/mL and folate 4.0 ng/mL were within normal limits. No evidence of hemolysis. 
+
+Assessment:  This patient has persistent iron deficiency anemia likely due to malabsorption from celiac disease, despite ongoing oral iron therapy. The anemia is contributing to her depressive symptoms, fatigue, and neurologic complaints (headache, tinnitus).  Her depressive symptoms remain mild‑to‑moderate and are partially responsive to sertraline.  Differential includes: 1) Iron deficiency anemia, 2) Major depressive disorder, 3) Chronic NSAID‑related gastritis (unlikely currently due to omeprazole), 4) Potential occult GI bleed (unlikely from occult studies). 
+
+Plan:  1) Continue ferrous sulfate 325 mg PO daily.  2) Discuss iron infusion with primary care for refractory anemia.  3) Continue omeprazole 20 mg PO daily for gastric protection.  4) Continue sertraline 50 mg PO daily.  5) Continue folic acid 0.8 mg PO daily.  6) Advise regular monitoring of CBC and iron studies at 4‑week intervals.  7) Reinforce strict gluten‑free diet and iron‑rich, vitamin C‑rich foods.  8) Encourage NSAID avoidance; consider ibuprofen alternatives.  9) Schedule GI and gynecology follow‑ups as advised. 10) Reassess mood symptoms and anemia in 4 weeks.  11) If no improvement, consider SSRI dose adjustment or augmentation with another agent.
+
+Patient was educated on the importance of adherence to iron therapy and diet.  She was provided a schedule for labs and appointments.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent fatigue</span><span class="pill">Feeling of emptiness</span><span class="pill">Headache</span><span class="pill">Tinnitus</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/78</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Temp</td><td>98.6</td></tr><tr><td>BMI</td><td>22.2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild pallor</li><li>Normal cardiovascular exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Serum iron</li><li>Ferritin</li><li>TIBC</li><li>LDH</li><li>Haptoglobin</li><li>Vitamin B12</li><li>Folate</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 8.0 g/dL</li><li>Ferritin 3 ng/mL</li><li>Serum iron 12 µg/dL</li><li>TIBC 400 µg/dL</li><li>LDH 200 U/L</li><li>Haptoglobin 2.5 g/L</li><li>Vitamin B12 450 pg/mL</li><li>Folate 4.0 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Updated medication list with ICD‑10 code D50.9</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Celiac disease</span><span class="pill">Major depressive disorder (depressed mood, anhedonia)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ferrous sulfate 325 mg daily</li><li>OmePrazole 20 mg daily</li><li>Vitamin B12 supplement</li><li>SSRIs (sertraline 50 mg daily)</li><li>Paracetamol as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Long‑term iron deficiency anemia</li><li>Celiac disease</li><li>Chronic NSAID use</li><li>Vegetarian diet</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the mood evaluation, the psychiatrist noted significant fatigue, headaches, and intermittent tinnitus that may reflect anemia. A full anemia panel was requested: repeat CBC, iron studies, B12, folate, LDH, haptoglobin. Results returned with hemoglobin 8.0 g/dL, ferritin 3 ng/mL, normal B12 and folate. The psychiatrist confirmed no hemolysis. The patient was advised to maintain daily ferrous sulfate and discuss potential iron infusion with her primary care physician. The clinician added an ICD‑10 code for iron deficiency anemia (D50.9) to the electronic chart to activate benefit coverage and eligibility for specialist referral. An appointment with GI and gynecology was scheduled.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Despite long‑standing iron deficiency, anemia remains unresolved; formal coding established to facilitate coordinated care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 45</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Heavy menstrual bleeding</span><span class="pill">Chronic gastrointestinal bleeding</span><span class="pill">Celiac disease</span><span class="pill">Anemia of chronic disease</span><span class="pill">Iron deficiency anemia</span><span class="pill">NSAID-induced gastritis</span><span class="pill">Major depressive disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ferrous sulfate 325 mg PO daily</li><li>Folic acid 0.8 mg PO daily</li><li>Omeprazole 20 mg PO daily</li><li>Vitamin B12 supplement</li><li>Paracetamol PRN</li><li>Sertraline 50 mg PO daily</li><li>Aspirin</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with heavy menstrual bleeding, lower abdominal ache, and generalized fatigue. Physical exam notable for conjunctival pallor and normal vitals. CBC ordered. Started on ferrous sulfate 325 mg PO TID for iron replacement. Advised dietary modifications and medication adherence. Scheduled follow‑up in 3 months.</li><li>Patient reported persistent fatigue and occasional dizziness upon standing. Examination: mild pallor, otherwise normal cardiovascular assessment. Vitals: BP 120/72, HR 76, Temp 98.7°F, BMI 21.9. CBC: Hgb 9.2 g/dL, MCV 72 fL, RDW 17%. Ferritin 3 ng/mL suggesting iron depletion. Continued ferrous sulfate 325 mg PO TID; added folic acid 0.8 mg PO daily. Discussed referral to gastroenterology for malabsorption evaluation. Advised repeat CBC and iron studies in 12 weeks; counselled on dietary iron sources and vitamin C intake. Scheduled follow‑up accordingly.</li><li>Patient evaluated for persistent iron deficiency anemia and suspected malabsorption. History of celiac disease, chronic GI bleeding, and heavy menstrual bleeding; continued on vegetarian diet. Physical exam normal. Upper endoscopy with duodenal biopsy confirmed villous atrophy, consistent with celiac disease. Switched iron therapy to ferrous gluconate 200 mg PO daily, continued folic acid 0.8 mg PO daily. Advised strict gluten‑free diet, increased iron‑rich plant foods, and vitamin C‑rich foods. Follow‑up CBC and iron studies scheduled in 4 weeks.</li><li>Visit 4 on 2015-11-20 (Emergency Medicine): patient presented with syncope, black tarry stools, and nausea. Vitals: BP 84/48 mmHg, HR 122 bpm, Temp 98.4°F, BMI 21.9. CBC hemoglobin 7.4 g/dL. Fecal occult blood positive. Endoscopy showed gastritis with small ulcers attributed to NSAID use; colonoscopy normal. Started omeprazole 20 mg daily and switched iron to ferrous sulfate 325 mg daily; discontinued ibuprofen. Advised strict gluten‑free diet, NSAID avoidance, and monitoring. Admitted for vitals monitoring and repeat CBC/iron studies in 4 days. Follow‑up with GI clinic in 2 weeks.</li><li>Visit 5 on 2023-06-15: Psychiatric evaluation for depression screening and anemia assessment. Reports persistent fatigue, mild pallor, intermittent headaches, and tinnitus. Physical exam shows mild conjunctival and oral mucosa pallor; vitals stable. CBC and iron studies reveal severe iron deficiency anemia (Hb 8.0 g/dL, ferritin 3 ng/mL). Continues ferrous sulfate 325 mg PO daily, omeprazole 20 mg PO daily, sertraline 50 mg PO daily, folic acid 0.8 mg PO daily, vitamin B12 supplement, aspirin, and PRN paracetamol. Plan: maintain current regimen, discuss iron infusion with PCP, monitor CBC/iron studies every 4 weeks, reinforce gluten‑free diet, NSAID avoidance, continue psychiatric follow‑up.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

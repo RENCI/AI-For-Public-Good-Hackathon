@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 413dc339</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 413dc339</h1><div class="subtitle">Plantar Fasciitis | Female, 45</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Obesity, Type 2 Diabetes Mellitus, Osteoarthritis</div><div class="meta-line">Risk Factors: High Body Mass Index, Prolonged Standing, Overpronation, Poor Arch Support, High-Impact Activity, Recent Increase in Exercise Routine</div></div>
+<details><summary>Narrative <span class="preview-text">**A Year‑Long March of Pain: The Undiagnosed Story of Anna K.**  Anna K., 45, spends most of her days as a sales‑floor m...</span></summary><div class="section-body"><p>**A Year‑Long March of Pain: The Undiagnosed Story of Anna K.**</p><p>Anna K., 45, spends most of her days as a sales‑floor manager at a local department store. Her routine is a relentless cycle of standing, walking, and occasionally sprinting to the back‑office supply room. She has carried a “plummy” figure all her life—she weighs 215 pounds, 5’6”, giving her a BMI of 34. Her tongue‑labeled comorbidities, managed but not cured, lie in the background: Type 2 Diabetes Mellitus, kept on metformin, and osteoarthritis of both knees that gnaws her during long shifts.</p><p>For several months, Anna kept the story of her pain to herself. She told herself the aches were simply the price of a hectic life and a new, more ambitious workout routine she had started a month ago. She had begun a 5‑day “HIIT for beginners” program at the local gym, adding daily 30‑minute jogs to her schedule. She bought a pair of glossy, low‑profile running shoes—brightly colored—at a discount store because they looked “trendy” and they were inexpensive. The sole was thin, the arch support minimal, and the heel cushioning barely there.</p><p>---</p><p>### **Weeks 1–2: A First-Step Worry**</p><p>Anna’s heel pain began after an early morning walk around the office parking lot. Each step felt like a small, sharp jolt. She laughed it off: “That’s just my feet getting used to the new shoes.” By the end of the day she’d had a single 10‑minute stretch session of the calves and the plantar fascia. She slept on a mattress that had lost a lot of its spring, and the next morning the pain persisted, especially when she took the first steps after her bed had been cold.</p><p>She tried over‑the‑counter ibuprofen, a dab of menthol ointment, and a hot‑water bottle for the heel. The pain was worse at night, a subtle throbbing that forced her to rest her feet up on a pillow. She told her coworkers she’d taken a short break, but she continued to stand all day.</p><p>---</p><p>### **Month 1: The Early Visits**</p><p>By the end of the month, the heel pain had migrated from “sharp” to a dull, aching pressure that spread into the arch. She began to notice that her walking gait had subtly changed: her heel hit first, then her foot rolled inward—a tell‑tale sign of overpronation. Her knees also began to feel more sore after a full day of duty.</p><p>Anna visited her primary care physician (PCP) with “ankle and foot pain” on an appointment slot that was booked for a routine check‑up. The doctor asked, “Anything affecting your knees?” and, after a brief physical exam, suggested that her knee osteoarthritis might be causing referred pain into the foot. The recommendation was simple: “Rest, ice, and ibuprofen as needed.” He ordered an HbA1c test to check her diabetes control but did not explore foot-specific pathology. Anna left the office still uncertain if it was “just my knees” or something more specific to her feet.</p><p>---</p><p>### **Month 2–3: The Misattributions Continue**</p><p>Undeterred, Anna began a basic stretching routine at home—standing calf stretches, hamstring pulls, and a gentle ankle roll. The pain continued. She attempted to buy an arch‑supporting shoe at a nearby shoe store. The sales clerk suggested a generic “comfort” line; Anna, wary of spending extra on what she thought of as a “comfort” issue, paid the $50 for a brand‑new pair of slippers. They were thin and offered little arch support.</p><p>A month later she went to urgent care during a foot‑pain flare‑up. The nurse described a “heel spur suspicion” and suggested an X‑ray of the foot. The doctor, with a stack of test reports, made a short comment: “Heel spurs are common in your age group with high BMI. Continue physical therapy; this will settle down.” He didn’t ask about the rest of her foot biomechanics or her increased exercise routine. Anna left with a prescription for naproxen and a “light” physiotherapy referral, which she declined because of time constraints.</p><p>---</p><p>### **Month 4–5: The First Physiotherapy and Orthotics Misstep**</p><p>Anna finally saw a physiotherapist after another week of relentless pain that made it impossible to finish her shift. The PT performed a quick assessment, noted limited dorsiflexion, and recommended an Achilles tendon stretch and a foot‑roll routine. She suggested an orthotic insert from the local shoe store, claiming it would “prevent overpronation.” Anna purchased a generic foam insert, slipped them into her ill‑fitting running shoes, but the arch remained unsupported and the heels still made hard contact with the ground on each step.</p><p>The pain had intensified to the extent that she started using a cane on her way from aisle to aisle to reduce the load on her heel. Yet the cane merely transferred weight to her knees in an awkward way, worsening her osteo‑arthritic pain. Her foot swelling increased from time to time; she noticed small bruises in the heel area, possibly blood pooling under the skin due to inadequate arch support.</p><p>---</p><p>### **Month 6–7: A Radiographic Misnomer**</p><p>Anna’s PCP ordered foot X‑rays after a week of unrelenting pain in the heel. The radiologist flagged a “calcaneal spur” as a potential cause. The office physician, following the report, explained that the spur was “not likely to be the real problem.” A foot specialist, Dr. Ramirez, was referred. He performed a simple physical exam, pressed on the heel, and, noting tenderness, concluded that “there was no fracture.” He recommended rest and light stretching. He did not address the arch issue or ask her about the specific pain pattern during walking.</p><p>Within a month, the pain had spread to the metatarsals, pressing against Anna’s forefoot. The pain when she stood was no longer just “the heel”; it was “the entire foot” that felt like her shoes were glued to her skin. Despite the foot specialist&#x27;s reassurance of no fractures, Anna’s life was spiraling: she was missing shifts, her diabetes test results spiked due to poor nutritional intake, and her knee pain worsened from overcompensation.</p><p>---</p><p>### **Month 8–9: The Diabetes &amp; Neuropathy Angle**</p><p>When her feet began to feel numb in between the balls of her feet—a new symptom—Anna was pushed toward a neurologist. She was told her diabetes could cause peripheral neuropathy, and that “the pain might be neuropathic.” A test panel for blood sugar control confirmed modestly elevated glucose levels (HbA1c 7.8%). She was given gabapentin at a low dose for neuropathic pain. The medication gave her a faint, diffuse numbness that alleviated some discomfort but was entirely unrelated to her heel pain. She kept missing appointments because her foot pain remained constant, and she had not yet connected the dots about chronic plantar fasciitis.</p><p>---</p><p>### **Month 10: A Frustrated, Yet Unidentified Patient**</p><p>At her next annual check‑up with the PCP, Anna was still in sharp, constant pain. Her doctor, perhaps exhausted by the cycle of complaints, summarized the diagnosis as “foot/ankle pain secondary to diabetes and poor footwear.” He wrote a letter to her podiatrist: “Patient is dealing with chronic plantar pain, consider advanced imaging if pain persists.” However, after the visit, the podiatrist’s office staff forwarded the letter to a different department, and Anna never followed up.</p><p>During this same month, Anna&#x27;s glucose level flared further (HbA1c 8.4%), her weight increased by 3 pounds, and her knee pain returned with an intensity that forced her to change her usual route to the office’s supply room—slowly, with deliberate footfalls. Each time she touched the kitchen, she felt a dull, pulsing ache in the heel that persisted for minutes, fading only when she rested for a long pause.</p><p>---</p><p>### **Month 11–12: The Chronic Pain Stage**</p><p>A year after the first painful step, Anna’s condition had reached a “maintenance” phase. She used over-the-counter NSAIDs daily, though occasionally she became wary of liver side effects. She had a new, cheaper “comfort” shoe line, still lacking arch support. Physical therapy appointments were sporadic owing to scheduling conflicts. She avoided the gym altogether because the routine runs felt cruel.</p><p>Her foot pain never resolved—she still woke up each morning with that same throbbing in the heel, the pain radiating along the arch with each step. She had not heard the term “plantar fasciitis” yet; her only references were to &quot;heel spurs&quot;, &quot;ankle pain&quot;, &quot;diabetic neuropathy&quot;, and &quot;painful feet&quot; spoken by various providers. A diagnostic label had eluded her—and it seemed this would remain the case.</p><p>---</p><p>### **Looking Back: Where Did the System Fail?**</p><p>Throughout this narrative, Anna’s journey reflects a tapestry of risk factors: obesity increasing mechanical load; diabetes potentially altering tissue healing; osteoarthritis making her cautious and limiting exercise; a high‑impact exercise routine that pushed her feet into repetitive stress; overpronation that stretched the plantar fascia excessively; poorly supportive footwear that offered no mitigation. Each healthcare encounter focused on a single facet—knees, spurs, diabetes—while neglecting the cumulative effect on her feet. The result: chronic plantar fasciitis, persistent, unmanaged, and clinically undiagnosed as such, persisted for a year and continues to haunt Anna in the silence of a misnamed disease.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-10</h3><div class="visit-meta">Primary Care | Reason: Routine check‑up with heel pain after standing</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine annual examination; new sharp heel pain after walking.
+
+History: 45‑year‑old female with Type 2 Diabetes Mellitus, knee osteoarthritis, and obesity. Current medication: Metformin 1000 mg BID. No known drug allergies.
+
+History of Present Illness: Patient reports a sharp heel pain that began 1 week ago after walking in the parking lot. Pain is described as dull, aching pressure radiating to the arch, worsened with first steps after bed. Recent factors include an increase in exercise intensity (started HIIT 1 month ago), new low‑profile running shoes, and an occupation involving 8 hrs of standing daily.
+
+Physical Examination:
+- Medial calcaneal tenderness 6/10.
+- Ankle dorsiflexion limited to 12°.
+- Mild overpronation noted.
+- Knee pain 4/10 post‑shift.
+- Vitals: BP 132/78, HR 78, Temperature 98.6 °F.
+
+Assessment: 
+1. Plantar fascia strain / possible calcaneal spur (tenderness over medial calcaneal tuberosity, limited dorsiflexion). 
+2. Overpronation‑related foot pain—may contribute to heel discomfort.
+3. Knee osteoarthritis pain likely unrelated to current heel symptoms.
+4. Diabetes control suboptimal with HbA1c 7.4%; requires ongoing monitoring.
+
+Plan:
+- Prescription: Ibuprofen 400 mg PO QID PRN for pain.
+- Non‑pharmacologic: Rest, ice the heel 15 min every 3–4 hrs, avoid excessive standing and high‑impact activity; encourage proper footwear with arch support.
+- Consider custom foot orthotics if pain persists beyond 4 weeks.
+- Continue Metformin as prescribed.
+- Follow up in 3 weeks to reassess foot pain and function; repeat HbA1c in 6 months.
+- Discuss weight management, low‑impact aerobic exercise, and glycemic control strategies.
+- If inadequate improvement, refer for physiotherapy or orthotic specialist.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Heel pain after morning walk</span><span class="pill">Dull aching pressure radiating to the arch</span><span class="pill">Pain worsens with first steps after bed</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/78</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Medial calcaneal tenderness 6/10</li><li>Limited ankle dorsiflexion 12°</li><li>Mild overpronation observed</li><li>Knee pain 4/10 after shift</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 7.4%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen 400 mg PO QID PRN</li><li>Rest and ice instructions</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Knee osteoarthritis</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Occupational standing (8 hrs/day)</li><li>New HIIT program started 1 month ago</li><li>Purchased low‑profile running shoes the week before</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Anna arrived for her routine annual exam and complained of a new sharp heel pain that had started a week earlier after walking the parking lot. The PCP took a focused history, noted her standing occupation, recent increase in exercise intensity, and recent footwear change. On physical exam, there was tenderness over the medial calcaneal tuberosity and slight limitation in ankle dorsiflexion. The clinician was concerned about referred knee pain but did not perform a foot‑specific assessment. Because Anna’s glucose values had not been checked in over a year, the PCP ordered an HbA1c to evaluate glycemic control. Ibuprofen was recommended for intermittent use, and the patient was advised to rest and ice the heel.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of heel pain attributed to possible knee osteoarthritis referral. Plantar fascia evaluation not performed. HbA1c within pre‑diabetes range. No definitive diagnosis of plantar fasciitis.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-02-05</h3><div class="visit-meta">Urgent Care | Reason: Acute flare of heel pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #2 – 2023-02-05
+
+Chief Complaint: Acute flare of heel pain
+
+History of Present Illness:
+45‑year‑old female with type 2 diabetes mellitus (HbA1c 7.4%), knee osteoarthritis, and obesity presents with a 1‑week history of worsening medial heel pain. She reports throbbing pain at night, swelling around the heel, and difficulty walking for &gt;30 minutes. The pain was present during last visit and was initially treated with ibuprofen 400 mg PO qid PRN. She denies recent injury, fever, redness, or drainage. She has gained 3 lb over the last month and continues HIIT training. No change in footwear.
+
+Review of Systems:
+Constitutional – no fever, chills, weight loss. Musculoskeletal – painful medial heel, unable to walk &gt;30 min. No calf pain or Achilles involvement. No urinary or abdominal symptoms.
+
+Physical Examination (Not documented in chart):
+— Inspection: mild swelling over medial aspect of heel, no erythema or open wound.
+— Palpation: Tenderness over medial calcaneal tuberosity (~6/10). Achilles tendon non‑tender.
+— Range of Motion: Ankle dorsiflexion 12°, normal eversion/inversion.
+— Gait: Antalgic, brief step‑length.
+
+Assessment:
+1. Plantar fasciitis – acute flare.
+2. Achilles tendinopathy – less likely.
+3. Calcaneal stress fracture – low suspicion.
+4. Heel bursitis – possible.
+5. Infection – low likelihood.
+
+Plan:
+- Continue NSAID pain control: Ibuprofen 400 mg PO qid PRN (max 1200 mg daily).
+- Ice heel 15–20 min, 3–4 times daily.
+- Gentle stretching: plantar fascia and calf; 10 repetitions every 2 hours.
+- Activity modification: limit prolonged walking/standing, use supportive footwear, consider orthotics.
+- Topical diclofenac 1% gel qid if oral intolerable or GI concern.
+- Educate on glucose management.
+- Follow‑up in 4 weeks or sooner if worsening.
+- If symptoms persist &gt;4 weeks, obtain foot radiograph and/or ultrasound.
+- Referral to podiatry/orthopedics for orthotics or PT.
+- Weight‑management counseling; dietitian referral.
+
+Follow‑up: 4‑week clinic visit; imaging if persistent.
+
+Clinical Impression: Acute exacerbation of plantar fasciitis.
+
+Signed: [Clinician]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Worsened heel pain, throbbing at night</span><span class="pill">Swelling around heel</span><span class="pill">Difficulty walking for &gt;30 min</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/80</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Calf swelling 2 cm</li><li>Tenderness 7/10 at medial heel</li><li>No erythema, no deformity</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Foot X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>X‑ray shows calcaneal spur, no fracture</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Naproxen 250 mg PO BID</li><li>Ibuprofen 400 mg PO QID PRN</li><li>Physiotherapy referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain persists despite NSAIDs; willing to see PT.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Knee osteoarthritis</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Ibuprofen 400 mg PO QID PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>3 lb weight gain over last month</li><li>Continued HIIT training</li><li>No change in footwear</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Anna presented with a sudden increase in heel pain and nighttime throbbing. The nurse performed a focused exam and found increased tenderness over the medial calcaneal tuberosity with mild swelling. The provider suspected a heel spur and ordered a foot X‑ray. The doctor prescribed naproxen, reinforced NSAID use, and referred Anna to a physical therapist for foot‑specific therapy. She was advised to avoid high‑impact activities until the X‑ray results arrived.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>The X‑ray confirms a calcaneal spur but does not explain persistent heel pain. Plantar fascia involvement still unconfirmed; diagnosis remains ambiguous.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-03-15</h3><div class="visit-meta">Physical Therapist | Reason: Physical therapy for chronic heel pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 45‑year‑old female with a history of type 2 diabetes mellitus, knee osteoarthritis, and obesity who presents for ongoing physical therapy of chronic heel pain. She reports constant pain in the heel and arch, rated 8/10 on the visual analog scale during ambulation, with swelling and bruising noted in the heel area. She has been compliant with medication but has not found relief with a generic foam insert. Current medications include Metformin 1000 mg BID, Naproxen 250 mg PO BID, Ibuprofen 400 mg PO QID PRN, and topical diclofenac 1 % gel QID.
+
+Objective findings: limited ankle dorsiflexion to 10° (normal &gt;35°), mild overpronation, calf tightness, pronated gait pattern, mild subcutaneous swelling over the medial calcaneal region, and pain 8/10 VAS with weight bearing.
+
+Assessment: The presentation is most consistent with medial calcaneal (plantar fasciitis) pain associated with limited ankle dorsiflexion and overpronation. Differential includes Achilles tendinopathy, diabetic peripheral neuropathy-related foot pain, and obesity‑related mechanical overload. No evidence of infection or fracture noted. Diabetes control is reasonably adequate with an HbA1c of 7.4%.
+
+Plan:
+1. Continue current anti‑inflammatory medication regimen.
+2. Continue daily ankle dorsiflexion stretch (achilles tendon stretch) and foot‑roll routine as taught. Encourage use of a proper arch-supporting footwear.
+3. Advise discontinuation of low‑impact and high‑impact activities until pain improves to &lt;3/10.
+4. Refer for custom orthotics; in the meantime, use firm arch supports.
+5. Reinforce weight‑management counseling; goal of 5–10% weight loss.
+6. Re‑evaluate in 4 weeks. If pain remains &gt;4/10 or increases, consider ultrasound‐guided corticosteroid injection or further imaging (plain film or MRI). If diabetic control deteriorates, repeat HbA1c.
+7. Educate on importance of foot hygiene to reduce risk of ulcers.
+
+This PT note is documented to ensure continuity of care and supports the ongoing conservative management plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Constant heel and arch pain</span><span class="pill">Pain 8/10 upon walking</span><span class="pill">Swelling and bruising in heel area</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>134/78</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Ankle dorsiflexion 10°</li><li>Pronated gait pattern</li><li>Heel pain 8/10 VAS</li><li>Mild subcutaneous swelling</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Achilles tendon stretch instruction</li><li>Foot roll routine education</li><li>Generic foam orthoses recommendation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Bought generic foam inserts but pain remains unchanged.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Knee osteoarthritis</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Naproxen 250 mg PO BID</li><li>Ibuprofen 400 mg PO QID PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Physiotherapy referral from urgent care</li><li>Still wearing low‑profile running shoes</li><li>Generic foam orthoses purchased but not effective</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The PT performed a focused neuromuscular assessment. Limited ankle dorsiflexion (12°), mild overpronation, and calf tightness were documented. The PT provided an Achilles tendon stretch, a foot‑roll technique, and recommended a custom arch orthosis. Anna opted for a generic foam insert, which she inserted into her current shoes. The PT instructed daily stretching and advised that she avoid high‑impact activity until symptoms improve.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Biomechanical deficits (limited dorsiflexion, overpronation) likely contributing to chronic plantar fascia strain. No definitive diagnosis; pain remains active.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-04-20</h3><div class="visit-meta">Podiatrist | Reason: Foot specialist evaluation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 45‑year‑old female presents for foot specialist evaluation with persistent medial heel pain during standing and difficulty walking long distances.  
+
+**History of Present Illness:**  The patient reports ongoing pain at the medial aspect of the heel that worsens with prolonged standing and after periods of inactivity.  Pain is constant (7/10) and interferes with ambulation.  Previous orthotic trials and PT were ineffective due to time constraints; she continues to wear poorly supportive shoes.  A foot X‑ray from an earlier visit confirmed calcaneal spur formation.  
+
+**Past Medical History:**  Type 2 diabetes mellitus (HbA1c 7.4%), knee osteoarthritis, obesity.  
+
+**Medications:**  Metformin 1000 mg BID; Naproxen 250 mg PO BID; Ibuprofen 400 mg PO QID PRN.  
+
+**Allergies:**  No known drug allergies.  
+
+**Review of Systems:**  Positive for foot pain, mild knee pain; otherwise unremarkable.  
+
+**Physical Examination:**  
+- General: 45‑y/o female, BMI ~32.  
+- Lower Extremity:  Medial heel tenderness (7/10) without erythema or swelling.  Ankle dorsiflexion limited to 12° (reduced).  No ankle swelling.  Gait analysis revealed overpronation with a steppage component.  Achilles tendon was tight on manual assessment.  No deformities or fractures noted.  
+
+**Assessment:**  Primary diagnosis: Plantar fasciitis with a calcaneal spur; secondary considerations include overpronation‑related strain, Achilles tendon tightness, and neuropathic component due to diabetes.  
+
+**Plan:**  
+1. Continue current NSAID regimen (Naproxen 250 mg BID, Ibuprofen 400 mg QID PRN).  
+2. Prescribe a supervised stretching protocol focusing on ankle dorsiflexion and calf/soleus flexibility (daily 15‑min sessions).  
+3. Advise rest and activity modification; avoid prolonged standing, high‑impact surfaces.  
+4. Recommend footwear with adequate arch support, heel cushioning, and a lower heel drop; consider a progressive orthotics trial.  
+5. Refer to orthopedics for advanced evaluation and potential custom orthotics if pain persists.  
+6. Counsel on weight management to reduce plantar stress; refer to dietitians/weight‑loss program.  
+7. Follow up in **2 weeks** after initiating orthotic and stretching protocol; if no improvement, consider custom orthotics at 6‑week mark.  
+8. Monitor pain level and NSAID side effects; adjust as needed.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent heel pain during standing</span><span class="pill">Difficulty walking long distances</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/78</td></tr><tr><td>HR</td><td>74</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Medial heel tenderness 7/10</li><li>No ankle swelling</li><li>Gait shows overpronation</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Rest recommendation</li><li>Stretching protocol</li><li>Footwear with arch support advice</li><li>Orthopedic referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Frustrated, continued to use poorly supportive shoes due to convenience.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Knee osteoarthritis</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Naproxen 250 mg PO BID</li><li>Ibuprofen 400 mg PO QID PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Orthotic use failed to relieve pain</li><li>PT not followed due to time constraints</li><li>Foot X‑ray shows calcaneal spur</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The podiatrist conducted a comprehensive foot exam. The patient had marked medial heel tenderness but no swelling. The examiner performed manual testing for Achilles tightness, plantar fascia palpation, and gait analysis. No fractures or deformities were noted. The podiatrist advised rest, continued stretching, and footwear changes that provide arch support. She was also referred to an orthopedic specialist for further evaluation and was advised to consider custom orthotics if pain persisted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Calcaneal spur confirmed. Plantar fascia likely inflamed, but no formal diagnosis has been made. Pain remains chronic and mechanical in origin.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-05-25</h3><div class="visit-meta">Neurologist | Reason: Screening for peripheral neuropathy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Clinical Note
+---
+Subjective:
+Patient is a 45‑year‑old female with a history of type 2 diabetes mellitus, knee osteoarthritis, and obesity presenting for screening of peripheral sensory symptoms. She reports numbness between the ball of the foot and tingling that worsens after long shifts. She denies new onset pain, but notes that her chronic heel pain remains unchanged (~7/10). She reports an upward trend in her HbA1c (currently 8.0%) and a weight gain of 5 lb over the past 3 months. No new injuries or infections.
+
+Objective:
+Vitals: BP 130/77, HR 76, Temp 98.7°F. Physical exam reveals decreased pin‑prick sensation on toes 2‑4, slightly diminished vibration sense, preserved Achilles reflex, normal ankle dorsiflexion, and normal motor strength in the lower extremities. Foot inspection shows no erythema, ulceration, or deformity.
+
+Assessment:
+The findings are most consistent with mild distal symmetric sensorimotor neuropathy secondary to poorly controlled diabetes. Nerve conduction study corroborates mild sensory loss with normal motor conduction. Differential includes vitamin deficiencies, medication‑induced neuropathy, or other metabolic causes, but current data favor diabetic peripheral neuropathy.
+
+Plan:
+1. Continue Metformin 1000 mg BID, Naproxen 250 mg PO BID, Ibuprofen 400 mg PO QID PRN, and Gabapentin 300 mg PO at bedtime. Consider increasing Gabapentin to 300 mg BID if neuropathic symptoms persist after 4 weeks.
+2. Recheck HbA1c in 3 months and reinforce glycemic control; aim for &lt;7.0%.
+3. Repeat NCS if clinical signs worsen or fail to improve.
+4. Educate patient on foot hygiene, inspection, proper footwear, and weight‑management strategies.
+5. Continue NSAIDs for chronic heel pain; consider referral for orthotic evaluation if pain persists beyond 6 weeks.
+6. Advise immediate assessment if new ulceration, progressive numbness, or signs of infection develop.
+7. Follow‑up appointment in 4 weeks to reassess neuropathic symptoms and glycemic control.
+
+---
+End of Note</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Numbness between the ball of foot</span><span class="pill">Tingling that worsens after long shifts</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/77</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased pinprick sensation on toes 2-4</li><li>Preserved Achilles reflex</li><li>Normal ankle dorsiflexion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Nerve conduction study</li><li>Repeat HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 8.0%</li><li>NCS: Mild peripheral neuropathy, normal motor conduction</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Gabapentin 300 mg PO at bedtime</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Minor improvement in numbness, but heel pain unchanged.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Knee osteoarthritis</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Naproxen 250 mg PO BID</li><li>Ibuprofen 400 mg PO QID PRN</li><li>Gabapentin 300 mg PO at bedtime (started earlier)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>HbA1c trending upward (8.0%)</li><li>Increasing weight (up to 5 lb over last 3 months)</li><li>Chronic heel pain unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A neurologic exam revealed decreased superficial sensation in the plantar surface of the toes and a slightly diminished vibration sense. Mild peripheral neuropathy was diagnosed based on the pattern of numbness and the patient&#x27;s high HbA1c. The neurologist ordered a nerve conduction study (NCS) confirming mild axonal neuropathy, and prescribed gabapentin 300 mg at bedtime to help with neuropathic symptoms. The patient was educated on foot hygiene, proper footwear, and glycemic control.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Peripheral neuropathy present but does not explain the persistent mechanical heel pain. Plantar fascia inflammation remains undiagnosed; patient continues to experience chronic pain.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 45</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Osteoarthritis</span><span class="pill">Diabetic peripheral neuropathy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Ibuprofen 400 mg PO QID PRN</li><li>Topical diclofenac 1% gel QID</li><li>Naproxen 250 mg PO BID</li><li>Gabapentin 300 mg PO at bedtime</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Routine annual check‑up; patient reports sharp heel pain that began 1 week ago after walking in the parking lot. Physical exam reveals medial calcaneal tenderness (6/10), ankle dorsiflexion limited to 12°, mild overpronation, and knee pain (4/10). Prescribed ibuprofen 400 mg PO four times daily as needed for pain. Advised rest, ice, avoidance of excessive standing, proper footwear with arch support, and to consider custom orthotics if pain persists beyond 4 weeks. HbA1c 7.4% was obtained and will be monitored; continue metformin 1000 mg BID. Follow‑up scheduled in 3 weeks for reassessment and repeat HbA1c in 6 months.</li><li>Acute flare of heel pain noted; medial calcaneal tenderness (6/10) with mild swelling and limited ankle dorsiflexion (12°). Patient reported difficulty walking &gt;30 minutes, throbbing night pain, and 3‑lb weight gain. Continuing metformin 1000 mg BID. Prescribed ibuprofen 400 mg PO QID PRN (max 1200 mg daily) and topical diclofenac 1% gel QID if oral intolerable. Instructions included ice, gentle stretching, activity modification, supportive footwear, orthotics referral, and weight‑management counseling. Follow‑up in 4 weeks with imaging if symptoms persist.</li><li>Physical therapy visit for chronic heel pain; pain 8/10 during ambulation, swelling and bruising noted. Exam: limited ankle dorsiflexion to 10°, mild overpronation, calf tightness, pronated gait. Prescribed Naproxen 250 mg PO BID, continued ibuprofen and diclofenac, advised daily dorsiflexion stretch, use of arch-supporting footwear, discontinue high‑impact activities, refer for custom orthotics, weight‑management counseling, re‑evaluate in 4 weeks.</li><li>Visit 4 – 2023-04-20 (Podiatrist): 45‑year‑old female presents with persistent medial heel pain (7/10) exacerbated by standing and long walking. Physical exam shows medial heel tenderness, ankle dorsiflexion limited to 12°, overpronation, tight Achilles tendon, no swelling or deformity. Recommends continuing current NSAID regimen (naproxen 250 mg BID, ibuprofen 400 mg QID PRN), supervised daily ankle dorsiflexion and calf/soleus stretching, rest, activity modification, arch‑support footwear, and progressive orthotic trial. Refer orthopedics for further evaluation and potential custom orthotics after 6 weeks. Continue weight‑management counseling. Follow‑up in 2 weeks.</li><li>Neurologist visit for diabetic peripheral neuropathy screening: patient reports numbness between ball of foot and tingling that worsens after long shifts, chronic heel pain unchanged (~7/10). Physical exam shows decreased pin‑prick sensation on toes 2‑4, slightly diminished vibration sense, preserved Achilles reflex, normal ankle dorsiflexion, and normal lower‑extremity strength. HbA1c 8.0% noted. Nerve conduction study confirmed mild sensory loss with normal motor conduction. Started gabapentin 300 mg nightly, continued metformin 1000 mg BID, naproxen 250 mg BID, and ibuprofen 400 mg PO QID PRN. Plan to recheck HbA1c in 3 months, reassess neuropathic symptoms in 4 weeks, consider dose adjustment of gabapentin if symptoms persist, and reinforce foot hygiene, footwear, and weight‑management.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

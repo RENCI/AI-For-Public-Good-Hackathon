@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 4cbcbfbb</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 4cbcbfbb</h1><div class="subtitle">Acute Panic Attack | Female, 35</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Comorbidities: Generalized Anxiety Disorder, Major Depressive Disorder</div><div class="meta-line">Risk Factors: Family history of anxiety disorders, Recent stressful event, Sleep deprivation, Caffeine use, Substance use, High perceived stress</div></div>
+<details><summary>Narrative <span class="preview-text">**A Sudden Storm in the Calm of a Busy Life**  **Background**  Ana was thirty‑five, a senior marketing strategist for a ...</span></summary><div class="section-body"><p>**A Sudden Storm in the Calm of a Busy Life**</p><p>**Background**</p><p>Ana was thirty‑five, a senior marketing strategist for a medium‑sized tech firm. Her work demanded long days, frequent client calls, and the perpetual churn of tight deadlines. Three years earlier, after an internal promotion, Ana’d begun to feel the weight of the new role. She had a history of generalized anxiety disorder (GAD) and major depressive disorder (MDD), both well‑controlled with an SSRI (escitalopram) and intermittent psychotherapy. Her mother’s history of panic attacks and her father’s chronic insomnia were known family risk factors. Ana was an avid coffee drinker—about three cups a day—often after lunch to keep her alert through the late shifts, and she drank a modest amount of wine on weekends. Sleep had slipped to an average of four to five hours a night. She also reported using nicotine and occasional marijuana to relax, especially after work.</p><p>**Day 1: The Trigger**</p><p>On Thursday, Ana’s team was slated to present a new product launch plan to the company’s executive board. She’d spent the last nine months refining the pitch, rehearsing data slides, and drafting a script. Throughout the week, anxiety crept up on her: a sense of looming failure, fear that the meeting would expose her inadequacy, and a nagging feeling that “something had to go wrong.” Sleep remained disrupted; she only slept for six hours after a long night of coffee and late‑night editing.</p><p>Two hours before the meeting, she was in the office kitchen, taking her third cup of black coffee. She reached for her tablet, scrolling through last night’s emails and the presentation timeline. As her heart rate climbed, she told herself she was just nervous. She could feel her breathing getting shallow.</p><p>**Day 1, 1:30 PM – The Panic Attack**</p><p>When the meeting started, the room’s fluorescent lights seemed to glow too bright. Ana’s breathing was rapid, chest tightness growing, her hands began trembling, and a wave of dizziness hit her. Fear surged: she imagined the board laughing at her, that her career would implode. Her vision blurred, a sense of impending doom rushed through her. She tried to speak, but a lump formed in her throat. The panic attack lasted roughly thirty minutes, peaking at 2:00 PM. After the meeting ended, she sat in the conference room, panting, her heart rate still high.</p><p>The panic attack did not resolve spontaneously; she realized she could not focus on the next task. A colleague noticed her distress and sent her a message asking if she was okay. Ana, unable to stay at her desk, went home for the night.</p><p>**Day 2 – Morning of Symptoms**</p><p>The next morning, 7:00 AM, she woke with a persistent feeling of shortness of breath and an unsettled heartbeat. She forced herself to go to work while the residual panic lingered, but it made her feel exhausted. She tried deep‑breathing exercises and drank a glass of water to steady herself. Yet, by 11:00 AM, she was again feeling a lightheadedness and a pounding in her chest.</p><p>Ana decided to call her primary care provider, Dr. Patel, to schedule an urgent appointment. She also called her therapist, Mara, to reschedule her weekly talk therapy session with a short break. The call to Dr. Patel was a critical decision point: Ana anticipated medical causes, such as a myocardial infarction, and wanted immediate evaluation.</p><p>**Day 2, 3:30 PM – Urgent Care**</p><p>After a thirty‑minute drive, Ana arrived at the urgent care center. The receptionist noted she had a “panic attack.” Dr. Patel took the history: the attack had begun after the meeting, the anxiety history, her regular SSRI dose, and her caffeine use. Physical exam revealed normal heart rate resting at 78 bpm, normal blood pressure, no abnormal lung sounds. Dr. Patel ordered an ECG to rule out cardiac arrhythmia and a set of routine labs to exclude thyroid dysfunction or electrolyte imbalance. All results would be available the next day.</p><p>During waiting, Dr. Patel explained the differential diagnosis: panic attacks can mimic myocardial infarction but are distinguished by absence of ischemic ECG changes. He suggested a trial of short‑acting benzodiazepine (lorazepam 0.5 mg orally) to help her recover rapidly from the residual symptoms. Ana accepted, and her breath normalized within 30 minutes.</p><p>**Day 2, 6:00 PM – Return Home**</p><p>Ana’s heart rate slowed, but she remained on edge. Dr. Patel sent her home medications (lorazepam) and advised that she must reduce caffeine intake, limit alcohol, and get at least eight hours of sleep. She was also offered immediate referral to psychiatry for acute anxiety and medication management.</p><p>The next morning, Dr. Patel’s lab results were normal: TSH, CBC, CMP within reference ranges; ECG showed normal sinus rhythm with no Q waves. He called her at 10:00 AM to share the results.</p><p>**Day 3 – Psychiatric Consultation**</p><p>Ana accepted a psychiatry appointment at the hospital’s outpatient clinic. She was greeted by Dr. Singh, a psychiatrist specialized in anxiety disorders. During the interview, Dr. Singh confirmed her GAD and MDD history and noted the recent stressor. She inquired about substance use: Ana admitted to having three drinks on the weekend and occasionally smoking marijuana late at night to unwind. She had a history of using nicotine daily.</p><p>Dr. Singh’s primary decision point was medication management. She increased Ana’s escitalopram dose from 10 mg to 20 mg daily, citing a sub‑optimal response to the prior dose and recent escalation in anxiety. She also prescribed propranolol 20 mg twice daily as a prophylactic against autonomic symptoms (palpitations, tremor). Dr. Singh scheduled weekly psychotherapy sessions and recommended a sleep hygiene plan: reducing caffeine to one cup post‑lunch, establishing a bedtime routine, and limiting TV before bed.</p><p>**Day 4 – Return to Work**</p><p>Ana returned to work on Thursday, feeling slightly better. She still felt a residual anxiety but could manage the tasks. She took her first dose of propranolol at 8 AM, then her standard escitalopram at noon. She also took her first dose of lorazepam on an as‑needed basis, only if she felt an anxiety flare before tasks. Her heart rate stayed within normal limits; she no longer had the chest tightness.</p><p>**Day 7 – Follow‑up with Dr. Patel**</p><p>Ana had a follow‑up appointment with Dr. Patel on Monday. She reported feeling stable; the panic attacks had subsided, and her anxiety was mild. She still had occasional worries about work and had been sleeping 7–8 hours nightly. Dr. Patel confirmed her labs remained normal. The decision point was whether to taper the benzodiazepine. Dr. Patel discontinued lorazepam, explaining that with her controlled SSRI and propranolol, she would no longer need the anxiolytic. He advised her to report any new symptoms immediately.</p><p>**Day 14 – Check‑in with Dr. Singh**</p><p>Two weeks later, Ana returned to psychiatry. Her anxiety had decreased to a mild level; she had not experienced a panic attack in 14 days. Depression symptoms (sleep, appetite, anhedonia) improved. Dr. Singh maintained her escitalopram at 20 mg and propranolol 20 mg twice daily. She also scheduled a group CBT program focusing on relapse prevention.</p><p>**Day 28 – Final Assessment**</p><p>A month after the initial crisis, Ana attended a routine psychiatry follow‑up. She was in good spirits, the anxiety had resolved, and depressive symptoms were largely gone. Sleep was regular, caffeine intake reduced, and alcohol consumption cut to one day per week. Dr. Singh advised her to maintain a regular therapy schedule and to continue the propranolol for at least six months, after which it could be tapered.</p><p>**Conclusion**</p><p>Ana’s acute panic attack was a watershed event precipitated by a high‑stress presentation, chronic caffeine use, sleep deprivation, and personal substance use patterns. Through a combination of rapid evaluation in urgent care, judicious pharmacotherapy (benzodiazepines, SSRIs, beta‑blockers), adjustment of lifestyle factors, and targeted psychotherapy, she achieved a full resolution of symptoms within a month. The narrative underscores the importance of addressing comorbidities, risk factors, and the interplay of biological, psychological, and social elements in the acute management of panic disorders.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-04-05</h3><div class="visit-meta">Urgent Care Medicine | Reason: Acute panic attack following work presentation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #1 – 2023‑04‑05
+
+Chief Complaint: Acute anxiety episode during client presentation.
+
+History of Present Illness: 35‑year‑old female presents to urgent‑care after experiencing sudden onset of hyperventilation, chest tightness, trembling hands, dizziness, sense of impending doom, blurred vision, and shortness of breath during a work presentation. The episode began abruptly while speaking to a client and lasted approximately 30 minutes. She reports a recent increase in caffeine intake (3 cups of coffee per day) and chronic sleep deprivation (4–5 hrs/night). She has a 3‑year history of generalized anxiety disorder (GAD) and major depressive disorder (MDD), both controlled with escitalopram 10 mg daily. No other medications are taken. Family history significant for maternal panic attacks and paternal insomnia. Social history includes occasional nicotine and marijuana use.
+
+Past Medical History: Generalized Anxiety Disorder, Major Depressive Disorder.
+
+Past Psychiatric History: Controlled GAD/MDD on escitalopram.
+
+Medications: Escitalopram 10 mg PO daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for anxiety, dizziness, chest tightness, blurred vision, shortness of breath. All other systems negative.
+
+Vitals: BP 120/78 mmHg, HR 78 bpm, RR 18 breaths/min, Temp 98.6 °F, SpO₂ 98%.
+
+Physical Examination: Anxious but without acute distress. Cardiac auscultation: normal rate and rhythm, no murmurs. Lungs: clear bilaterally, no wheezes or crackles. Neurologic: no focal deficits; patient oriented. No skin or muscle abnormalities noted.
+
+Assessment:
+1. Panic attack or acute exacerbation of GAD – clinical presentation and context strongly suggest this diagnosis. No objective evidence of cardiac or pulmonary cause.
+2. Exclusion of medical etiologies: ECG, CBC, CMP, and TSH ordered to rule out arrhythmia, electrolyte abnormalities, hypothyroidism.
+
+Plan:
+- Continue escitalopram 10 mg PO daily.
+- Administer Lorazepam 0.5 mg PO PRN for acute anxiety; patient tolerated well with rapid symptom resolution.
+- Counsel on lifestyle modifications: reduce caffeine to &lt;1 cup/day, limit alcohol, improve sleep hygiene (consistent bedtime, limiting screen time, relaxing pre‑sleep routine).
+- Provide patient education on breathing techniques (4‑7‑8 breathing) and grounding exercises.
+- Arrange prompt psychiatry referral for a comprehensive review of anxiety management and consideration of augmenting therapy or changing medication if needed.
+- Laboratory results pending – follow up when available.
+- Advise to return to urgent‑care or PCP if chest pain, palpitations, syncopal episodes, or worsening anxiety or if lab results reveal abnormalities.
+- Document safety plan; patient has no intent or plan for self‑harm.
+
+Disposition: Outpatient; schedule psychiatry appointment within 2 weeks.
+
+Follow‑up: Psychiatry referral, return for lab results, follow‑up in urgent‑care or primary clinic if new or worsening symptoms occur.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">rapid breathing</span><span class="pill">chest tightness</span><span class="pill">trembling hands</span><span class="pill">dizziness</span><span class="pill">sense of impending doom</span><span class="pill">blurred vision</span><span class="pill">shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>120/78 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>18 breaths/min</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Heart rate 78 bpm, RR 18/min, BP 120/78 mmHg, O2 sat 98%;</li><li>Normal cardiac rhythm on auscultation;</li><li>Clear lungs, no wheeze or crackles;</li><li>No focal neurological deficits;</li><li>Anxious appearance, but no physical distress;</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ECG</li><li>CBC</li><li>CMP</li><li>TSH</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lorazepam 0.5 mg PO</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Breathing returned to normal and chest tightness resolved within 30 minutes after lorazepam.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Generalized anxiety disorder (GAD) since 2020, controlled on escitalopram 10 mg;</li><li>Major depressive disorder (MDD) since 2018, controlled on escitalopram 10 mg;</li><li>Family history: mother with panic attacks, father insomnia;</li><li>Recent high caffeine intake (3 cups coffee/day);</li><li>Recent sleep deprivation (4–5 hrs/night);</li><li>Occasional nicotine and marijuana use;</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ana arrived at the urgent‑care center after experiencing an acute panic attack during a client presentation. Dr. Patel reviewed her recent psychiatric history and current medication (escitalopram) and performed a focused physical exam. He ordered an ECG and a baseline laboratory panel (CBC, CMP, TSH) to rule out medical causes. While waiting for results, Ana reported feeling short of breath and chest tightness. Dr. Patel administered lorazepam 0.5 mg PO, leading to rapid resolution of her hyperventilation and chest discomfort within 30 minutes. He advised reducing caffeine, limiting alcohol, and improving sleep hygiene, and offered a referral to psychiatry for acute anxiety management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute panic attack precipitated by high stress presentation, caffeine use, and sleep deprivation; differential includes cardiac, but ECG expected to be normal; immediate anxiolytic required.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-04-06</h3><div class="visit-meta">Primary Care | Reason: Follow‑up for laboratory results after urgent‑care visit</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up for laboratory results after urgent‑care visit.
+
+History of Present Illness: 35‑year‑old female presents for routine follow‑up after receiving laboratory results for the recent urgent‑care visit. She reports mild anxiety but denies chest pain or shortness of breath. She has no new symptoms since the last encounter, and her mood remains stable on escitalopram. She is willing to taper her lorazepam dose and has been counseled on strategies for reducing caffeine intake and maintaining sleep hygiene.
+
+Past Medical History: Generalized Anxiety Disorder, Major Depressive Disorder. Current medications include escitalopram 10 mg daily and lorazepam 0.5 mg PO as needed.
+
+Vital Signs: Blood pressure 118/76 mmHg, heart rate 75 bpm, temperature 98.4°F, respiratory rate 16 breaths/min, oxygen saturation 99% on room air.
+
+Physical Examination: General: The patient is alert, oriented, and in no acute distress. Cardiovascular: Regular rate and rhythm, no murmurs. Respiratory: Clear to auscultation bilaterally. Abdomen: Soft, non‑tender. Extremities: No edema. Neurological: Alert, cranial nerves grossly intact. Psychiatric: Mildly anxious but cooperative.
+
+Assessment: 1) Generalized Anxiety Disorder – stable on escitalopram, mild symptoms persist. 2) Major Depressive Disorder – currently well‑controlled. 3) No acute medical illness; CBC, CMP, TSH and ECG within normal limits.
+
+Plan:
+- Continue escitalopram 10 mg daily.
+- Initiate tapered discontinuation of lorazepam (reduce by 0.1 mg every 2 weeks until discontinued).
+- Reinforce lifestyle modifications: limit caffeine, maintain sleep hygiene, regular exercise.
+- Encourage ongoing psychotherapy; discuss potential referral to psychiatry for comprehensive anxiety management.
+- Arrange follow‑up appointment in 4 weeks or sooner if symptoms worsen.
+
+No new tests ordered.
+
+Provider: Dr. Patel</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild anxiety</span><span class="pill">No chest pain</span><span class="pill">No shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>118/76 mmHg</td></tr><tr><td>Heart Rate</td><td>75 bpm</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Respiratory Rate</td><td>16 breaths/min</td></tr><tr><td>Oxygen Saturation</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Vital signs within normal limits;</li><li>Physical exam unremarkable;</li><li>No acute distress;</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: 4.5×10⁹/L; WBC 5.5×10⁹/L; Hemoglobin 13.5 g/dL;</li><li>CMP: All electrolytes, liver enzymes within reference ranges;</li><li>TSH: 2.0 µIU/mL;</li><li>ECG: Normal sinus rhythm, HR 70 bpm, no Q waves;</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on benzodiazepine taper strategy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable mood, mild anxiety, no new symptoms. She agreed to taper lorazepam.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 10 mg daily</li><li>Lorazepam 0.5 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior urgent‑care visit for panic attack;</li><li>Escitalopram 10 mg daily;</li><li>Lorazepam 0.5 mg PRN prescribed after urgent‑care visit;</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel called Ana with her laboratory results: CBC and CMP were within normal limits, TSH was 2.0 µIU/mL, and the ECG showed normal sinus rhythm with no ischemic changes. After confirming that there was no underlying medical cause for her panic attack, he discussed tapering her benzodiazepine. He advised continuing her escitalopram, reducing caffeine, and maintaining sleep hygiene. He also offered a referral to psychiatry for ongoing anxiety management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>No medical etiology found; benzodiazepine taper initiated; anxiety remains mild, psychiatric follow‑up recommended.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-04-07</h3><div class="visit-meta">Psychiatry | Reason: Acute anxiety and medication adjustment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 35‑year‑old female presents for acute anxiety, insomnia, and medication adjustment. 
+
+History of Present Illness: The patient reports chronic generalized anxiety and mild panic symptoms, ongoing insomnia, decreased appetite, and low energy. She describes increased anxiety over the past week, with episodes of trembling and palpitations. No suicidal ideation or violent thoughts reported. She continues to consume high amounts of caffeine and nicotine, uses marijuana, and drinks alcohol on weekends.
+
+Past Psychiatric History: Generalized Anxiety Disorder and Major Depressive Disorder. Previous treatment: Escitalopram 10 mg daily, Lorazepam 0.5 mg PRN. Recent adjustments: Lorazepam taper as per 0.1 mg biweekly reduction; Propranolol 20 mg BID newly prescribed to control autonomic symptoms.
+
+Vitals: Blood pressure 117/74 mmHg, heart rate 72 bpm, temperature 98.3°F, respiratory rate 16 breaths/min, SpO2 99%.
+
+Mental Status Examination: Mood anxious, affect restricted. Thought processes linear, no delusions or hallucinations. Judgment and insight intact. No evidence of suicidality.
+
+Physical Exam: No cardiopulmonary complaints; normal cardiac exam; no orthostatic changes.
+
+Assessment:
+1. Generalized Anxiety Disorder – current medication (Escitalopram 10 mg) sub‑optimal.
+2. Major Depressive Disorder – stable but need ongoing evaluation.
+3. Insomnia secondary to anxiety.
+4. Mild panic symptoms.
+
+Plan:
+1. Escitalopram increased from 10 mg to 20 mg daily.
+2. Initiate Propranolol 20 mg twice daily to mitigate tremor and palpitations.
+3. Continue Lorazepam 0.5 mg PRN while tapering per schedule.
+4. Commence weekly individual CBT sessions.
+5. Structured sleep hygiene plan: limit caffeine after lunch, establish bedtime routine, reduce screen time.
+6. Patient education on medication adherence, potential side effects of propranolol (bradycardia, hypotension), and importance of monitoring.
+7. Follow‑up in 4 weeks to assess medication response, side effects, and adjust dosing as needed.
+8. If anxiety symptoms worsen or if suicidal ideation develops, call clinic immediately.
+
+The patient verbally confirmed understanding of the new regimen and expressed commitment to medication adherence and therapy attendance.
+
+***END OF NOTE***</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic anxiety</span><span class="pill">Mild panic symptoms</span><span class="pill">Insomnia</span><span class="pill">Decreased appetite</span><span class="pill">Low energy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>117/74 mmHg</td></tr><tr><td>Heart Rate</td><td>72 bpm</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr><tr><td>Respiratory Rate</td><td>16 breaths/min</td></tr><tr><td>Oxygen Saturation</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mood anxious, affect restricted;</li><li>No psychosis or suicidality;</li><li>Physical exam normal;</li><li>No cardiovascular complaint;</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Escitalopram increased to 20 mg daily</li><li>Propranolol 20 mg BID prescribed</li><li>CBT and sleep hygiene plan initiated</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Understood treatment plan and committed to medication adherence and regular therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 10 mg daily</li><li>Lorazepam 0.5 mg PRN</li><li>Propranolol 20 mg BID (newly prescribed)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>GAD and MDD history;</li><li>Recent acute panic attack;</li><li>Escitalopram 10 mg daily; lorazepam 0.5 mg PRN;</li><li>High caffeine use, nicotine, marijuana, and weekend alcohol;</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Singh conducted a thorough psychiatric assessment. Recognizing the sub‑optimal response to escitalopram and the recent escalation of anxiety, he increased the dose to 20 mg daily. He prescribed propranolol 20 mg twice daily to mitigate autonomic symptoms such as tremor and palpitations. Dr. Singh also scheduled weekly individual psychotherapy sessions and recommended a structured sleep hygiene plan (reduce caffeine after lunch, bedtime routine, limit screen time). He emphasized the importance of adherence to the new medication regimen and CBT techniques for stress coping.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Escitalopram dose up-titrated; beta-blocker introduced for autonomic symptoms; CBT and sleep hygiene interventions started.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-04-12</h3><div class="visit-meta">Primary Care | Reason: Follow‑up on anxiety and benzodiazepine taper</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up on anxiety and benzodiazepine taper.
+
+History of Present Illness: 35‑year‑old female with a long‑standing diagnosis of Generalized Anxiety Disorder (GAD) and Major Depressive Disorder (MDD) presents for routine follow‑up. She reports no panic attacks in the past week and remains on a stable dose of escitalopram 20 mg daily and propranolol 20 mg BID. Her benzodiazepine (lorazepam) was discontinued per previous taper plan and she reports no rebound anxiety or withdrawal symptoms.
+
+Psychosocial: Weekly psychotherapy is ongoing, with CBT group sessions scheduled for the coming weeks. She denies substance use, sleep, appetite or energy changes at this visit.
+
+Review of Systems: Notable for mild residual anxiety; otherwise negative. No cardiac symptoms noted.
+
+Physical Examination: Vital signs stable—Blood Pressure 116/70 mmHg, Heart Rate 70 bpm, Temperature 98.5 °F, Respiratory Rate 15 breaths/min, SpO2 99%. Patient appears well‑appearing with a mildly anxious affect.
+
+Assessment: 1) GAD – stable, well controlled on current regimen. 2) MDD – stable depressive symptoms. 3) Benzodiazepine taper completed with no adverse effects.
+
+Plan: 
+- Continue escitalopram 20 mg daily and propranolol 20 mg BID as prescribed.
+- Maintain CBT therapy; advise patient to keep up with homework assignments.
+- Monitor for any recurrence of anxiety or depressive symptoms; if new or worsening symptoms occur, return sooner.
+- Next follow‑up scheduled in 4‑6 weeks.
+- No laboratory work or imaging indicated at this time.
+
+Patient education: Reviewed importance of medication adherence, coping strategies for residual anxiety, and when to seek urgent care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Stable mood</span><span class="pill">Mild residual anxiety</span><span class="pill">No panic attacks in past week</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>116/70 mmHg</td></tr><tr><td>Heart Rate</td><td>70 bpm</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>15 breaths/min</td></tr><tr><td>Oxygen Saturation</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Vital signs stable;</li><li>No acute findings;</li><li>Patient appears well with mild anxiety;</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue escitalopram 20 mg daily</li><li>Continue propranolol 20 mg BID</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reports improved mood, no panic attacks, mild anxiety present.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily</li><li>Propranolol 20 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily; propranolol 20 mg BID;</li><li>Lorazepam discontinued per Dr. Patel;</li><li>Weekly psychotherapy ongoing; CBT group scheduled;</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel reviewed Ana’s recent progress: no panic attacks and mild anxiety. He confirmed that benzodiazepine had been discontinued without adverse effects. He reinforced the importance of continuing escitalopram and propranolol, emphasized monitoring for any recurrence of anxiety, and scheduled the next follow‑up. No new tests were ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Benzodiazepine discontinued successfully; anxiety symptoms improving; plan to maintain current regimen.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-04-19</h3><div class="visit-meta">Psychiatry | Reason: Review anxiety, depression, and therapy progress</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of anxiety, depression, and therapy progress.
+
+History of Present Illness: 35‑year‑old female with GAD and MDD presents for routine follow‑up. She reports no panic attacks in the past two weeks, improved sleep, and reduction in depressive symptoms. She remains anxious but is calm during evaluation.
+
+Review of Systems: Positive for mild anxiety and insomnia; negative for panic attacks, chest pain, palpitations, weight change, or suicidality.
+
+Physical Examination: Vitals stable (BP 115/72 mmHg, HR 68 bpm, Temp 98.3°F, RR 16, SpO2 99%). Cardiovascular exam unremarkable. Mental status: alert, oriented, appropriate affect, no evidence of psychosis or cognitive impairment.
+
+Assessment: 1) Generalized Anxiety Disorder – stable, no acute exacerbation. 2) Major Depressive Disorder – remission of core symptoms, ongoing maintenance therapy. 3) Treatment adherence and engagement in psychotherapy and group CBT.
+
+Plan: • Continue Escitalopram 20 mg PO daily and Propranolol 20 mg PO BID for next 6 months. • Patient enrolled in relapse‑prevention group CBT; encourage attendance each week. • Monitor mood and anxiety daily; document any return of panic or severe anxiety. • If symptoms worsen or new symptoms arise, schedule earlier appointment or contact office. • Re‑evaluate medication effectiveness and side‑effects at next visit in 6 weeks (2023‑05‑03).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild anxiety</span><span class="pill">Improved sleep</span><span class="pill">No panic attacks</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>115/72 mmHg</td></tr><tr><td>Heart Rate</td><td>68 bpm</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr><tr><td>Respiratory Rate</td><td>16 breaths/min</td></tr><tr><td>Oxygen Saturation</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Anxious but calm, no panic symptoms;</li><li>Stable cardiovascular exam;</li><li>No signs of depression on brief mental status exam;</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Enroll in group CBT for relapse prevention</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feeling better, motivated to continue therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily</li><li>Propranolol 20 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily; propranolol 20 mg BID;</li><li>Weekly individual psychotherapy; group CBT started;</li><li>No panic attacks in past two weeks;</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Singh assessed Ana’s progress. She reported no panic attacks, improved sleep, and reduced depressive symptoms. He reinforced the continuation of escitalopram and propranolol for at least six months. He enrolled her in a group CBT program focused on relapse prevention and encouraged regular attendance. She was advised to monitor for any return of anxiety symptoms and to consult promptly if needed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Ongoing improvement in anxiety and depression; plan to maintain current pharmacotherapy and CBT regimen.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-05-03</h3><div class="visit-meta">Psychiatry | Reason: Monthly follow‑up after crisis resolution</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Monthly follow‑up.
+
+**History of Present Illness**: Patient is a 35‑year‑old female with a history of Generalized Anxiety Disorder (GAD) and Major Depressive Disorder (MDD) who presents for her routine monthly follow‑up.  She reports that her anxiety and depressive symptoms are fully resolved, she sleeps regularly, caffeine intake has been reduced, and she has successfully limited alcohol consumption.  She reports no episodes of panic or mood crises in the past 28 days.
+
+**Review of Systems**: All relevant systems negative aside from the aforementioned psychiatric symptoms, which are now minimal or resolved.
+
+**Physical Examination**: Vital signs within normal limits.  Appears well, alert, and cooperative.  No acute distress.
+
+**Assessment**:
+1. **GAD** – in remission.
+2. **MDD** – in remission.
+3. **Medication status** – Escitalopram 20 mg daily maintained, Propranolol 20 mg BID continued; propranolol being used primarily for autonomic anxiety symptoms.
+
+**Plan**:
+- Continue Escitalopram 20 mg daily; patient is satisfied with current dose and mood stability.
+- Initiate planned taper of propranolol after 6 months of stable remission, reducing dose by 5 mg every 2 weeks until discontinued.
+- Reinforce continued engagement in individual CBT and group relapse‑prevention CBT, along with sleep hygiene practices.
+- Maintain current schedule of monthly visits while monitoring for any recurrence of anxiety or depressive symptoms.
+- Counsel patient on signs of relapse; advise prompt contact if symptoms recur.
+- Continue to evaluate blood pressure, heart rate, and general health status at each visit.
+
+**Follow‑up**: Return in 4–6 weeks for routine monitoring of therapy response and propranolol taper.  Should any anxiety or mood symptoms recur sooner, patient advised to call office.
+
+**Education &amp; Counseling**: Reviewed importance of medication adherence, lifestyle modifications, and early detection of relapse symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Anxiety resolved</span><span class="pill">Depressive symptoms minimal</span><span class="pill">Regular sleep</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>114/70 mmHg</td></tr><tr><td>Heart Rate</td><td>66 bpm</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>Respiratory Rate</td><td>15 breaths/min</td></tr><tr><td>Oxygen Saturation</td><td>100%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Vitals normal;</li><li>No anxiety or depression signs;</li><li>Patient appears well and active;</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Maintain current medication regimen; plan propranolol taper after 6 months</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Very good, satisfied with progress.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily</li><li>Propranolol 20 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily; propranolol 20 mg BID;</li><li>Regular individual psychotherapy and group CBT;</li><li>No panic attacks for 28 days;</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Singh reviewed Ana’s full recovery: anxiety and depression symptoms resolved, sleep regular, caffeine intake reduced, alcohol limitation achieved. He discussed the plan to taper propranolol after a total of six months, noting that the drug was used primarily for autonomic symptoms. He reinforced the importance of continued escitalopram until remission of depressive symptoms, and encouraged continued CBT and sleep hygiene practices. No medication adjustments were made at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anxiety and depressive symptoms resolved; propranolol scheduled for taper after 6 months.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Escitalopram 20 mg daily</li><li>Propranolol 20 mg BID</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with acute panic attack symptoms during a work presentation; vital signs were stable. Treated with Lorazepam 0.5 mg PO PRN and continued Escitalopram 10 mg daily. ECG, CBC, CMP, and TSH were ordered. Patient was advised on lifestyle modifications and a psychiatry referral was scheduled.</li><li>Visit on 2023-04-06: Follow‑up after laboratory results; mild anxiety, vital signs normal; continued Escitalopram 10 mg daily; initiated Lorazepam tapering schedule, reduce by 0.1 mg biweekly until discontinued; reinforced lifestyle modifications; no new tests ordered; arranged 4‑week follow‑up.</li><li>Visit on 2023-04-07: Patient presented with acute anxiety, insomnia, decreased appetite, and low energy. Vital signs normal. Escitalopram increased to 20 mg daily and Propranolol 20 mg BID added. Lorazepam 0.5 mg PRN continued. Weekly CBT sessions commenced. Sleep hygiene plan discussed. Follow‑up scheduled in 4 weeks.</li><li>Visit on 2023-04-12: Follow‑up on anxiety and benzodiazepine taper. Patient reports stable mood, mild residual anxiety, no panic attacks. Continues Escitalopram 20 mg daily and Propranolol 20 mg BID. Lorazepam discontinued per taper plan; no rebound anxiety. No lab work ordered. Next visit scheduled in 4‑6 weeks. Patient advised on medication adherence and coping strategies.</li><li>Visit on 2023-04-19: Routine follow‑up for GAD and MDD. Reports no panic attacks, mild anxiety, improved sleep, and remission of depressive symptoms. Vital signs stable. Continues Escitalopram 20 mg daily and Propranolol 20 mg BID. Enrolled in relapse‑prevention group CBT with weekly attendance. No new tests ordered.</li><li>Visit on 2023-05-03: Patient presented for monthly follow‑up; reports anxiety and depressive symptoms resolved, regular sleep, reduced caffeine and alcohol. Vital signs normal. Continues Escitalopram 20 mg daily; Propranolol 20 mg BID continued with plan to begin taper after 6 months of stable remission. Reinforced CBT and sleep hygiene. No new lab tests ordered.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

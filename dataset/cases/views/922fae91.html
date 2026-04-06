@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 922fae91</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 922fae91</h1><div class="subtitle">Acute Systemic Lupus Erythematosus Flare | Female, 30</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Antiphospholipid syndrome, Chronic kidney disease (stage 2 secondary to lupus nephritis), Hypertension, Hypocomplementemia</div><div class="meta-line">Risk Factors: High serum anti‑dsDNA antibodies, Low complement (C3, C4), High disease activity, Recent upper‑respiratory infection, Prior rapid steroid taper, Pregnancy or postpartum period</div></div>
+<details><summary>Narrative <span class="preview-text">**Clinical Narrative**  For Sarah Patel, a thirty‑year‑old woman who had just delivered a healthy infant six weeks earli...</span></summary><div class="section-body"><p>**Clinical Narrative**</p><p>For Sarah Patel, a thirty‑year‑old woman who had just delivered a healthy infant six weeks earlier, the postpartum period began with a mixture of relief and residual exhaustion. Two days after delivery, she noted a faint, erythematous rash on the bridge of her nose that had appeared less than a day before. It was barely discernible, a mere pink blot, and she attributed it to the usual “strawberry” rash that can accompany a bout of viral infection. That very evening she developed a mild, low‑grade fever (37.8 °C) and a dull ache in her knees that she shrugged off as typical post‑partum soreness.</p><p>**Day 5 after Delivery (Post‑partum Day 5)**  
+Sarah’s obstetrics office visited her for a routine check‑up. She reported “just a little soreness” and the faint rash on her cheeks. The OB nurse noted a BP of 142/92 mm Hg, a slight tachycardia (HR 92 bpm), and a normal heart and lung exam. The OB physician was relieved that Sarah’s hemoglobin was 3 weeks normal at 11.6 g/dL (down modestly from 12.3 g/dL at the time of delivery). Sarah was reassured that her mild fever was likely due to a recent upper‑respiratory infection she had caught a week earlier, and advised to rest and monitor for any worsening.</p><p>**Day 10 (Post‑partum Day 10)**  
+Sarah’s fatigue increased. After an otherwise uneventful day of breastfeeding, she felt an unrelenting heaviness in her limbs, new arthralgias in both wrists and hips, and a diffuse erythema that had spread to her forearms. She also noticed dark‑colored spots on her inner thighs—a mild, new rash that she described as “strawberry” for the first time. Sarah visited her primary care provider (PCP), who listened to her lower respiratory tract symptoms (mild dry cough), inquired about any new infections, and noted a temperature of 38.1 °C on exam. The PCP did a quick complete blood count (CBC) and found a mildly low platelet count at 128 × 10³/µL, hemoglobin of 10.9 g/dL, and a white count of 8.9 × 10³/µL. Given her history of systemic lupus erythematosus (SLE) and anti‑phospholipid syndrome (APS), the PCP ordered a basic autoimmune panel—anti‑dsDNA, complement C3/C4, and antiphospholipid antibodies.</p><p>**Day 12 (Post‑partum Day 12)**  
+Sarah’s laboratory results returned. An elevated anti‑dsDNA at 5 IU/mL (normal &lt;1) and markedly low C3 (48 mg/dL, normal 90–180) and C4 (12 mg/dL, normal 10–40) indicated hypocomplementemia. The antiphospholipid panel was positive for lupus anticoagulant and anticardiolipin IgG of 42 GPL units (normal &lt; 15) with a borderline ANA titer of 1:320. Her renal function was borderline normal: creatinine 1.3 mg/dL (baseline 1.0 mg/dL), estimated GFR 73 mL/min/1.73 m². Urinalysis revealed mild proteinuria (1 g/d over 24‑hour collection) and trace blood. Sarah was now acutely symptomatic: she had a 1‑inch swelling in her left femoral lymph node, a persistent low‑grade fever, and diffuse arthralgia. Her BP had risen to 154/96 mm Hg.</p><p>Sarah was referred to the rheumatology clinic at the nearest tertiary center.</p><p>**Day 15 (Post‑partum Day 15)** – *Rheumatology Initial Evaluation*  
+By the first rheumatology visit, Sarah’s symptoms had intensified. She complained of a “tired” feeling, a burning sensation in her wrists, and worsening rash that was no longer merely “pink” but had a subtle scaly, erythematous presentation across her cheeks and forearms. On physical exam, her joint counts were significant: a swollen tender count of 7 (wrist, knee, shoulder, hip). Her rash was described by the rheumatologist as a mild malar erythema with a faint “butter‑fluffy” component. She also had a mild edema on the lower extremities.</p><p>Her medical sheet highlighted her prior rapid steroid taper six months earlier after a flare that had required high‑dose methylprednisolone (1 g IV daily for 3 days followed by oral prednisone 30 mg, tapered off within 2 weeks). Her baseline comorbidities—CKD stage 2, hypertension (managed with amlodipine), and APS—were already on low‑dose aspirin.</p><p>The rheumatologist ordered repeat labs: CBC, CMP, anti‑dsDNA, complement, ANA, CRP, ESR, anti‑cardiolipin IgG/IgM, and lupus anticoagulant. She also ordered a renal ultrasound to evaluate for structural changes. Sarah agreed on a higher dose of prednisone (60 mg/day) and initiation of hydroxychloroquine (400 mg daily), but due to her prior rapid taper, the rheumatologist was uncertain whether a high oral dose alone would be sufficient. Nonetheless, the rheumatologist was unconvinced that Sarah was truly in a full flare, suspecting perhaps a sub‑clinical worsening or a medication side‑effect. She recommended close monitoring but no immediate biologic therapy.</p><p>**Week 3 (Post‑partum Day 21)** – *Initial Symptoms Worsening*  
+Sarah’s back pain intensified, with a notable low‑back ache. She had become increasingly agitated, complaining of a sense of “fog” and difficulty concentrating. Her BP had spiked to 165/102 mm Hg despite being on amlodipine 5 mg and a short course of oral prednisone. An urgent CBC returned with a drop to 9.2 g/dL hemoglobin, thrombocytopenia 90 × 10³/µL (down from 128 × 10³/µL), and creatinine rising to 1.5 mg/dL. 24‑hour urine protein had climbed to 2.3 g. The ESR was 82 mm/h; CRP 18 mg/L, both markedly elevated.</p><p>She complained of a sudden throbbing headache, which did not relieve with ibuprofen. She was taken to the rheumatology clinic for an emergency reassessment.</p><p>**Day 24 (Post‑partum Day 24)** – *Urgent Evaluation*  
+On day 24, Sarah’s symptoms had progressed to include new onset visual disturbances (blurred vision) and a mild, non‑pitting edema around her ankles (1 cm). On exam, her blood pressure was now 180/110 mm Hg; her creatinine 1.7 mg/dL. The riddle: she had no overt signs of a stroke, but she had a known APS. Her neurologist at the hospital evaluated her for potential ischemic event: CT head was negative, but MR angiography revealed a small high‑signal spot in the right parietal lobule. A Doppler ultrasound of lower extremities was positive for a non‑occlusive clot in the left common femoral vein with echogenic thrombus in the left popliteal vein but no overt deep venous thrombosis.</p><p>A renal biopsy was performed by nephrology (under conscious sedation) and revealed class III/IV proliferative lupus nephritis—endocapillary proliferation with wire‑loop lesions, mild interstitial fibrosis, and crescents in 4 of 19 glomeruli. This confirmed an active renal flare.</p><p>Given the simultaneous evidence of organ‑system involvement (vascular thrombosis, renal flare, hypertension, worsening ANA, high anti‑dsDNA, low complement), the rheumatology team concluded that Sarah was experiencing an acute, severe SLE flare in the backdrop of APS.</p><p>**Day 25–30—Intensive Care**  
+Sarah was admitted to the rheumatology ward for high‑dose IV methylprednisolone 1 g/day for 3 days, followed by a more cautious steroid taper beginning at 60 mg/day and planned reduction to 40 mg/day after 10 days. She was started on mycophenolate mofetil (MMF) 500 mg BID as induction therapy for the proliferative lupus nephritis. Hydroxychloroquine was continued.</p><p>Because of her APS and recent thrombotic events, the hematology unit initiated full‑dose low‑molecular‑weight heparin (enoxaparin 1 mg/kg) and later transitioned her to warfarin with a target INR of 2–3, plus continued low‑dose aspirin.</p><p>During this time Sarah’s blood pressure required a triple‑agent regimen (amlodipine, lisinopril, and clonazepam for anxiety). Her creatinine rose to 1.9 mg/dL by day 5 of admission, and her urine protein to 4.2 g/24 h, indicating a rapidly progressive renal failure despite immunosuppression. Her platelet count fell to 65 × 10³/µL. A transfusion of platelets was required.</p><p>**Week 6 (Post‑partum Day 42)**  
+Sarah’s flare persisted. The corticosteroid taper over the past month had been too brisk; her prednisone had been reduced to 15 mg by day 35, and the MMF dose remained at 500 mg BID due to her side effects (nausea, mild diarrhea). She had developed a fever up to 39 °C during a post‑op day on the 2nd week after admission. Cultures were negative, but a transesophageal echocardiogram was performed to rule out infective endocarditis; it was negative. She was empirically treated for presumed sepsis‑like syndrome with broad‑spectrum antibiotics for 7 days, but her fever resolved only after her corticosteroid dose was increased back to 20 mg daily and an additional 40 mg of methylprednisolone was given IV.</p><p>Despite aggressive therapy, her renal function remained suboptimal: creatinine 2.3 mg/dL, GFR 48 mL/min/1.73 m². The nephrologist suggested adding tacrolimus, but Sarah declined the calcineurin inhibitor due to concerns about neurotoxicity. She remained on MMF.</p><p>She also developed a new rash—more pronounced than before, with purple patches on her upper back, suggestive of cutaneous vasculitis. Cryoglobulins were negative, but she had low C4 and persisting anti‑dsDNA positivity (8 IU/mL).</p><p>**Month 3 (Post‑partum Day 90)**  
+Sarah’s overall picture was one of persistent, severe disease activity: ongoing proteinuria (~3 g/day), hematuria, rising anti‑dsDNA titers, hypertension, reduced complement levels, and a history of thrombotic events (femoral vein thrombus, parietal brain infarct). The rheumatology team considered adding belimumab but opted for a more aggressive immunosuppressive approach: they increased MMF to 1.5 g twice daily and maintained a slow, cautious steroid taper (prednisone 20 mg/day). They continued warfarin.</p><p>Despite an attempt at an induction–maintenance strategy, Sarah’s disease did not improve. Her hemoglobin remained at ~9.5 g/dL, and her platelets hovered in the 80 × 10³/µL range. She was still dealing with fatigue, intermittent headaches, and mild confusion. The neurologist suspected a small, silent infarct burden, and a follow‑up MRI at day 90 confirmed another hyperintense focus in the left parietal white matter.</p><p>**Outcome—Worsening**  
+By month four, Sarah’s renal function had declined to a creatinine of 3.4 mg/dL, a 200 % increase from baseline. She also developed chronic pain in her joints and new ocular manifestations (granulomatous episcleritis). Her disease activity score (SLEDAI) skyrocketed to 12 despite the high dose of corticosteroids, MMF, and low‑molecular‑weight heparin. At this point, the rheumatology group recognized that the flare was refractory: the combination of SLE, APS, and pre‑existing CKD had pushed Sarah into an irreversible disease trajectory.</p><p>She was counseled regarding the potential need for renal replacement therapy (hemodialysis) if her kidney function continued to deteriorate. She also expressed anxiety about her child’s health, her future fertility, and her overall quality of life. At the end of the fourth month, a nephrology‑oncology discussion considered the possibility of a kidney biopsy‑guided treatment change (b/c of active proliferative lesions). She remained on a high dose of prednisone 25 mg/day with MMF 1.5 g BID, warfarin, and a tight BP regimen.</p><p>For the remainder of her care, Sarah’s disease course would likely continue to worsen without a definitive remission, illustrating the peril of rapid steroid taper and the interplay of APS with SLE in a postpartum patient. The narrative captures her evolving symptoms, clinical decisions, and the gradual decompensation that ensued over three to four months.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-04-06</h3><div class="visit-meta">Obstetrics | Reason: Routine postpartum check‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Sarah presents today for a routine postpartum check‑up (post‑partum day 2). She reports a faint erythematous blotting over the bridge of her nose and a low‑grade fever of 37.8 °C. She denies chills, vaginal discharge, abdominal pain, or urinary symptoms. She mentions mild knee soreness attributed to recovery from delivery, but denies swelling, erythema, or instability.
+
+**Objective:**
+- **Vitals:** BP 142/92 mmHg, HR 92 bpm, Temp 37.8 °C, RR 16, SpO₂ 98% RA.
+- **General:** Alert, oriented, in no acute distress.
+- **Skin:** Faint pink blot on nasal bridge, no scaling or desquamation.
+- **Cardiovascular:** Normal sinus rhythm, 76 bpm when measured by pulse, no murmurs or rubs.
+- **Pulmonary:** Clear to auscultation bilaterally, no wheezes or crackles.
+- **Musculoskeletal:** Mild tenderness over left knee, no effusion, normal ROM, no swelling or erythema.
+- **Other systems:** No lymphadenopathy, normal abdominal exam, no vaginal bleeding.
+
+**Assessment:**
+1. **Post‑partum low‑grade fever** – likely benign, possibly viral or transient physiologic response.
+2. **Mild erythematous nasal rash** – likely viral exanthem or minor allergic reaction; no signs of infection.
+3. **Borderline hypertension** – modest rise in BP likely from post‑partum catecholamine surge; no evidence of organ dysfunction.
+4. **Chronic conditions** (APLS, CKD stage 2, hypertension, hypocomplementemia) are stable and currently not contributing to acute findings.
+
+**Plan:**
+- Order CBC with differential to rule out occult infection or anemia.
+- Reassure patient that findings are benign; advise rest, adequate hydration, and monitoring of temperature.
+- Educate on signs that warrant earlier evaluation: fever &gt;38.3 °C, worsening rash, new abdominal pain, vaginal bleeding, or new or worsening hypertension.
+- Encourage normal postpartum activities as tolerated, with knee support as needed.
+- Continue routine antenatal follow‑up with her primary OB provider; schedule routine postpartum visit at 6 weeks.
+
+**Disposition:** Patient is stable, leaves the clinic with verbal instruction to return if symptoms worsen or as scheduled.
+
+**Signature:**
+—Dr. [Name], MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">faint erythematous rash on bridge of nose</span><span class="pill">mild low‑grade fever</span><span class="pill">dull knee ache</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>142/92</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>37.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: faint pink blot on nasal bridge; no desquamation</li><li>Cardiovascular: normofrequent, 76 bpm, no murmurs</li><li>Pulmonary: clear to auscultation bilaterally</li><li>Musculoskeletal: mild knee tenderness, no swelling</li><li>No lymphadenopathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reassurance, advise rest and vigilant symptom monitoring</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Agrees to rest and follow up if symptoms worsen.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Systemic lupus erythematosus (remission)</span><span class="pill">Antiphospholipid syndrome</span><span class="pill">Chronic kidney disease stage 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>low‑dose aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>post‑partum day 2 rash</li><li>post‑partum day 1 delivered healthy infant</li><li>SLE patient in remission</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah presents for a routine postpartum check‑up. The OB nurse notes a faint erythematous blush on the bridge of her nose and a mild low‑grade fever of 37.8 °C. Vital signs show a slightly elevated blood pressure (142/92 mm Hg) and a mild tachycardia (HR 92 bpm). She reports only mild knee soreness, which she attributes to postpartum recovery. A quick cardiovascular and pulmonary exam is unremarkable. The OB physician acknowledges her chronic lupus status but determines the rash to be likely post‑viral. She is reassured about the benign nature of her symptoms, instructed to rest, drink fluids, and monitor temperature. No formal labs are drawn. The appointment concludes with a verbal reminder to return if rash worsens or fever persists.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Postpartum period uncomplicated; SLE in remission. Rash likely viral; no SLE flare signs.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-04-11</h3><div class="visit-meta">Primary Care | Reason: Increasing fatigue and new rash</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 30‑year‑old female with a history of SLE in remission, antiphospholipid syndrome, CKD stage 2, and hypertension. She presents today with progressive fatigue, limb heaviness, new bilateral wrist and hip arthralgias, diffuse erythema of the forearms, dark patches (described as ‘strawberry’ lesions) on the inner thighs, a mild dry cough, and a low‑grade fever of 38.1 °C. Vital signs are notable for elevated blood pressure (154/96 mmHg) and a heart rate of 98 bpm. Examination reveals tender swelling of the wrists, hips, and knees; clear lungs; and skin findings of diffuse erythema on the forearms and non‑purpuric dark patches on the thighs.
+
+Given the constellation of constitutional symptoms, rash, and joint involvement in a patient with a history of SLE, a disease flare is high on the differential. Other considerations include a viral upper respiratory infection, a new drug reaction, flares of antiphospholipid syndrome, and post‑partum thyroiditis, although the latter is less likely given the absence of neck pain or overt thyroid symptoms.
+
+The workup will include CBC, anti‑dsDNA, complement C3/C4, and a comprehensive antiphospholipid panel (lupus anticoagulant, anticardiolipin IgG/IgM). In the interim, I started prednisone 10 mg PO daily for presumed SLE flare, and ibuprofen 400 mg PO every 6–8 h as needed for arthralgias. Hydration is encouraged, and the patient is advised to continue her low‑dose aspirin and amlodipine. BP monitoring at home is recommended, with an instruction to adjust amlodipine if readings remain above 140/90 mmHg.
+
+The patient was instructed to keep a symptom diary, noting temperature (with a reminder to seek care if &gt;38.5 °C), rash changes, and any new symptoms. She was advised to return to the clinic in 3 days for reassessment or sooner if symptoms worsen. No acute interventions were performed today beyond the medication orders.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">heaviness in limbs</span><span class="pill">new arthralgias in wrists and hips</span><span class="pill">diffuse erythema on forearms</span><span class="pill">dark spots on inner thighs</span><span class="pill">mild dry cough</span><span class="pill">fever 38.1 °C</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>154/96</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>Temp</td><td>38.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: diffuse erythema on forearms, dark patches on inner thighs, no purpura</li><li>Musculoskeletal: tender swelling in wrists, hips, knees</li><li>Cardiovascular: systolic BP 154/96, HR 98</li><li>Pulmonary: clear, mild cough</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Anti‑dsDNA</li><li>Complement C3/C4</li><li>Antiphospholipid antibodies (lupus anticoagulant, anticardiolipin IgG/IgM)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Advised rest, symptom diary, return if fever &gt;38.5°C</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Systemic lupus erythematosus (remission)</span><span class="pill">Antiphospholipid syndrome</span><span class="pill">Chronic kidney disease stage 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>low‑dose aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>postpartum day 5 faint rash</li><li>postpartum day 10 symptoms</li><li>SLE in remission</li><li>prior rapid steroid taper</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The PCP sees Sarah complaining of persistent fatigue, limb heaviness, and new joint pains affecting both wrists and hips. She also reports diffuse redness on her forearms and new dark patches on her inner thighs, describing them as &#x27;strawberry&#x27; lesions. A mild dry cough and a low‑grade fever of 38.1 °C are noted. Physical examination reveals a blood pressure of 154/96 mm Hg, heart rate 98 bpm, and clear lungs. A basic laboratory panel is ordered, including a CBC and an autoimmune workup (anti‑dsDNA, complement C3/C4, and antiphospholipid antibodies). She is advised to take rest, monitor temperature, and return if symptoms worsen. The visit ends with instructions to keep a symptom diary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Emerging signs suggest SLE flare; labs pending to confirm autoimmune activity.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-04-13</h3><div class="visit-meta">Rheumatology | Reason: Review of autoimmune workup results and referral</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Review of autoimmune workup results and referral.
+
+**History of Present Illness:** Patient is a 30‑year‑old female with known SLE (in remission), antiphospholipid syndrome, CKD stage 2, and hypertension. She presents for review of recent autoimmune panel. Labs returned showing elevated anti‑dsDNA (5.0 IU/mL), low complement C3 (48 mg/dL) and C4 (12 mg/dL), positive lupus anticoagulant, and elevated anticardiolipin IgG (42 GPL). She reports a low‑grade fever (38.0 °C), diffuse arthralgia involving wrists and knees, and a 1‑inch left femoral lymph node swelling. Physical exam reveals mild erythema of the forearms and cheeks, symmetric tender joints, and a non‑tender 1‑inch left femoral lymph node.
+
+**Past Medical History:** SLE remission, APS, CKD stage 2, hypertension. Current meds: amlodipine 5 mg daily, low‑dose aspirin 81 mg daily, prednisone 10 mg daily (started on 2025‑04‑11), ibuprofen 400 mg q6–8 h PRN.
+
+**Physical Examination:** BP 154/96 mmHg, HR 100 bpm, Temp 38.0 °C. Skin: mild erythema on forearms and cheeks; no rash. Lymph nodes: 1‑inch left femoral, non‑tender. Musculoskeletal: symmetric wrist and knee tenderness.
+
+**Assessment:** Current findings are most consistent with an SLE flare in conjunction with APS activity. The lymphadenopathy may represent reactive lymphadenitis secondary to inflammatory activity or an early infectious process; no overt signs of infection present. Her hypertension remains uncontrolled.
+
+**Plan:** 
+1. **Medication management** – Continue current therapy (amlodipine, low‑dose aspirin, prednisone 10 mg qd, ibuprofen PRN). Counsel patient on tapering prednisone once flare resolves.
+2. **Referral** – Refer to tertiary rheumatology clinic for comprehensive workup, possible adjustment of immunosuppression, and APS management.
+3. **Monitoring** – Home BP and temperature monitoring. Return to clinic or urgent care if temperature &gt;38.3 °C, new rash, or worsening joint pain.
+4. **Lab follow‑up** – Repeat autoimmune panel in 1–2 weeks or sooner if symptoms progress.
+5. **Counseling** – Discuss infection precautions and review vaccination status.
+
+**Follow‑up** – Tertiary referral letter issued; patient advised to keep current medications and schedule routine follow‑up within 4 weeks of tertiary evaluation.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">low‑grade fever</span><span class="pill">1‑inch swelling in left femoral lymph node</span><span class="pill">diffuse arthralgia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>154/96</td></tr><tr><td>HR</td><td>100</td></tr><tr><td>Temp</td><td>38.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild erythema on forearms, cheeks; no rashes</li><li>Lymph nodes: 1‑inch swelling left femoral, non‑tender</li><li>Musculoskeletal: symmetric joint tenderness wrists, knees</li><li>Vital signs: BP 154/96, HR 100, Temp 38.0</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Anti‑dsDNA 5.0 IU/mL</li><li>C3 48 mg/dL</li><li>C4 12 mg/dL</li><li>Lupus anticoagulant positive</li><li>Anticardiolipin IgG 42 GPL units positive</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to tertiary rheumatology clinic</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Nods, expresses mild anxiety about referrals</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Systemic lupus erythematosus (remission)</span><span class="pill">Antiphospholipid syndrome</span><span class="pill">Chronic kidney disease stage 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>low‑dose aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CBC &amp; autoimmune panel</li><li>anti-dsDNA 5 IU/mL</li><li>C3 48 mg/dL</li><li>C4 12 mg/dL</li><li>lupus anticoagulant and anticardiolipin IgG 42 GPL units positive</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The rheumatology clinic receives Sarah after her autoimmune panel returns. Results show a raised anti‑dsDNA of 5 IU/mL, markedly low complement levels (C3 48, C4 12), and a positive lupus anticoagulant along with elevated anticardiolipin IgG (42 GPL units). Clinically she continues to experience low‑grade fever and a tender swelling in her left femoral lymph node, with marked arthralgia. The rheumatologist reviews her history of SLE, APS, CKD stage 2, and hypertension, and explains the significance of the laboratory abnormalities suggestive of a systemic flare. After a brief physical exam confirming erythema without purpura, Sarah is referred to a tertiary rheumatology clinic for comprehensive evaluation, and a referral letter is issued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Laboratory evidence of active SLE correlates with clinical manifestations; referral to specialist needed.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-04-16</h3><div class="visit-meta">Rheumatology | Reason: Initial rheumatology evaluation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #4 – Rheumatology Evaluation (2025‑04‑16)
+
+Chief Complaint:
+• Initial rheumatology evaluation
+
+History of Present Illness:
+Sarah, a 30‑year‑old female with a longstanding diagnosis of systemic lupus erythematosus (SLE), antiphospholipid syndrome (APS), chronic kidney disease stage 2, and hypertension, presents for her first formal rheumatology visit. She reports progressive fatigue, burning pain in both wrists, and a worsening rash over the cheeks and forearms. She also notes mild pitting edema of the lower extremities. She denies fever, shortness of breath, chest pain, or urinary changes.
+
+Past Medical History:
+• SLE
+• APS (positive lupus anticoagulant, anticardiolipin IgG 42 GPL)
+• CKD stage 2
+• Hypertension
+
+Current Medications:
+• Amlodipine 5 mg PO daily
+• Low‑dose aspirin 81 mg PO daily
+
+Allergies:
+• NKDA
+
+Review of Systems:
+• Constitutional: fatigue
+• Musculoskeletal: burning wrists
+• Skin: worsening rash
+• Cardiac: hypertension
+• Renal: denies hematuria or edema (low‑grade pitting noted)
+
+Physical Examination:
+• General: alert, oriented, appears fatigued
+• Vitals: BP 165/102 mmHg, HR 96 bpm, Temp 37.6 °C, RR 18; O₂ sat 98 % RA
+• Skin: mild malar erythema, subtle scaly plaques on forearms; no violaceous purpura
+• Musculoskeletal: 7 tender and swollen joints (wrists, knees, shoulders, hips); range of motion limited by pain; no swelling of ankles
+• Cardiovascular: regular rate, systolic BP 165/102 mmHg, no murmurs
+• Respiratory: clear to auscultation
+• Abdomen: soft, non‑tender
+• Extremities: mild pitting edema in both lower legs
+
+Laboratory and Imaging to be Ordered:
+• CBC, CMP
+• Anti‑dsDNA, complement C3/C4
+• ANA
+• CRP, ESR
+• Antiphospholipid IgG/IgM, lupus anticoagulant
+• Renal ultrasound
+
+Assessment:
+• SLE flare – active cutaneous and articular manifestations, new‑onset edema, elevated BP; likely systemic inflammation.
+• Possible APS flare – patient remains antiphospholipid antibody positive; concern for thrombotic risk; no acute thrombosis identified.
+• Early lupus nephritis (stage 2 CKD may represent chronic injury; need confirmation). Renal ultrasound will help assess structural changes.
+• Differential includes drug‑induced rash or infection, but clinical picture favors autoimmune flare.
+
+Plan:
+1. Initiate high‑dose oral prednisone 60 mg daily with slow taper as labs and clinical response permit.
+2. Start hydroxychloroquine 400 mg daily (loading dose of 200 mg BID for 1 week acceptable; however 400 mg PO daily is chosen for simplicity).
+3. Continue amlodipine 5 mg daily and low‑dose aspirin 81 mg daily. Reinforce home BP monitoring and note any hypertensive episodes.
+4. Order and repeat CBC, CMP, anti‑dsDNA, complements, CRP, ESR, full antiphospholipid panel, lupus anticoagulant, and renal ultrasound. Follow up on results within 1–2 weeks.
+5. Counsel patient on signs of steroid side effects (hyperglycemia, infection, mood changes) and importance of adherence.
+6. Provide patient education on flare recognition and when to seek emergent care (e.g., chest pain, sudden dyspnea, hematuria, swelling, fever &gt;38.5 °C).
+7. Schedule follow‑up rheumatology visit in 3 days if symptoms worsen; otherwise, next appointment in 2 weeks.
+
+Disposition:
+Patient was given a prescription for prednisone and hydroxychloroquine and instructed on medication administration and monitoring.
+
+Follow‑Up Recommendations:
+• Return to clinic in 3 days or sooner if symptoms worsen.
+• Recheck BP, HR, and symptom diary daily.
+• Await laboratory and imaging results; contact clinic if abnormal findings require prompt intervention.
+• Continue cardiovascular precautions per APS guidelines.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">tiredness</span><span class="pill">burning wrists</span><span class="pill">worsening rash</span><span class="pill">mild lower leg edema</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>165/102</td></tr><tr><td>Temp</td><td>37.6</td></tr><tr><td>HR</td><td>96</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild malar erythema, subtle scaly plaques on forearms</li><li>Joints: 7 swollen, tender including wrists, knees, shoulders, hips</li><li>Edema: mild pitting in lower legs</li><li>Cardiovascular: systolic BP 165/102, HR 96</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Anti‑dsDNA</li><li>Complement C3/C4</li><li>ANA</li><li>CRP</li><li>ESR</li><li>Antiphospholipid IgG/IgM</li><li>Lupus anticoagulant</li><li>Renal ultrasound</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 60 mg/day</li><li>Hydroxychloroquine 400 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Systemic lupus erythematosus</span><span class="pill">Antiphospholipid syndrome</span><span class="pill">Chronic kidney disease stage 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>low‑dose aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>prior rapid steroid taper 6 months ago</li><li>SLE flare suspicion</li><li>history of APS and CKD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The rheumatologist conducts a comprehensive exam. Sarah reports feeling exhausted, with burning pain in both wrists, and a rash that has developed a subtle scaly, erythematous appearance on cheeks and forearms. There is mild pitting edema of the lower extremities. The joint count is 7 swollen tender. The clinician orders repeat laboratory studies (CBC, CMP, anti‑dsDNA, complement C3/C4, ANA, CRP, ESR, antiphospholipid antibodies) and a renal ultrasound. Sarah is started on a high‑dose oral prednisone 60 mg/day and hydroxychloroquine 400 mg daily, pending the results. The rheumatologist also stresses the importance of monitoring for potential flares and advises early return if symptoms worsen. The visit ends with a detailed explanation of the medication plan and follow‑up schedule.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Signs point toward an active SLE flare; high oral steroids initiated but uncertain sufficiency due to prior rapid taper.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-04-22</h3><div class="visit-meta">Rheumatology | Reason: Follow‑up on worsening symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up on worsening symptoms. Patient reports back pain, agitation, cognitive fog, difficulty concentrating, and a throbbing headache that has not improved with ibuprofen. Blood pressure remains elevated at 165/102 mmHg despite being on amlodipine.
+
+History of Present Illness: The patient is a 30‑year‑old female with systemic lupus erythematosus (SLE), antiphospholipid syndrome (APS), CKD stage 2, and hypertension. She was on prednisone 60 mg/day for 1 week, then tapered to 15 mg/day; currently on 15 mg/day prior to this visit. She takes low‑dose aspirin 81 mg daily, hydroxychloroquine 400 mg, and amlodipine 5 mg daily. She reports a fever of 38.4 °C, mild leukopenia, mild thrombocytopenia, proteinuria 2.3 g/24 h, anemia, elevated ESR/CRP, and low complement. Physical exam shows mild swelling of wrists and knees, mild malar erythema, mild pitting edema of the legs, lumbar tenderness, mild confusion, agitation. Vitals: BP 165/102, HR 104, Temp 38.4 °C.
+
+Assessment: 1. Active SLE flare with evidence of lupus nephritis (proteinuria &gt;2 g/24 h, low C4). 2. Uncontrolled hypertension. 3. Anemia of chronic disease. 4. Thrombocytopenia likely due to SLE. 5. Possible infection cannot be excluded, but no focal findings.
+
+Plan:
+1. Increase prednisone to 25 mg daily (continue hydroxychloroquine 400 mg, low‑dose aspirin 81 mg, amlodipine 5 mg).
+2. Add lisinopril 10 mg daily to address hypertension and reduce proteinuria; consider a diuretic if edema persists.
+3. Discuss initiation of mycophenolate mofetil (1 g BID) for lupus nephritis in 1–2 weeks pending lab confirmation.
+4. Monitor blood pressure twice daily; aim &lt;140/90 mmHg.
+5. Repeat CBC, CMP, urinalysis, serum creatinine, anti‑dsDNA, complement in 4 weeks.
+6. Educate patient on signs of infection, steroid side‑effects (agitation, mood changes), and importance of medication compliance.
+7. Refer to nephrology for evaluation of lupus nephritis.
+8. Continue low‑dose aspirin for APS prophylaxis.
+9. Plan follow‑up in 2 weeks or sooner if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">back pain</span><span class="pill">agitation</span><span class="pill">cognitive fog</span><span class="pill">difficulty concentrating</span><span class="pill">throbbing headache</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>165/102</td></tr><tr><td>HR</td><td>104</td></tr><tr><td>Temp</td><td>38.4</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild malar erythema, no new lesions</li><li>Joints: 4 swollen, tender wrists, knees</li><li>Back: tenderness lumbar</li><li>Cognitive: mild confusion, agitation</li><li>Edema: mild pitting legs</li><li>BP 165/102, HR 104</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Anti‑dsDNA</li><li>Complement C3/C4</li><li>ESR</li><li>CRP</li><li>Creatinine</li><li>Urine protein</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 9.2 g/dL</li><li>Platelets 90 ×10³/µL</li><li>Creatinine 1.5 mg/dL</li><li>Urine protein 2.3 g/24h</li><li>ESR 82 mm/h</li><li>CRP 18 mg/L</li><li>Anti‑dsDNA 6 IU/mL</li><li>C3 50 mg/dL</li><li>C4 10 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 25 mg/day (increase from 15 mg)</li><li>Continue hydroxychloroquine 400 mg</li><li>Continue amlodipine 5 mg</li><li>Advise blood pressure monitoring</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feels slight improvement in headache but overall fatigued.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>prednisone 15 mg daily</li><li>low‑dose aspirin 81 mg daily</li><li>hydroxychloroquine 400 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>on prednisone 60 mg/day for 1 week</li><li>short course of oral prednisone decreased to 15 mg/day?</li><li>low‑dose aspirin</li><li>amlodipine 5 mg daily</li><li>hypertension, CKD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a routine rheumatology follow‑up Sarah presents with back pain and an agitated, foggy demeanor. She reports an exacerbated headache that hasn&#x27;t improved with ibuprofen. Her blood pressure remains elevated at 165/102 mm Hg despite being on amlodipine. Physical exam confirms mild edema and tenderness in the lumbar region; otherwise rash remains mild. A repeat laboratory workup is ordered (CBC, CMP, anti‑dsDNA, complement, ESR, CRP, creatinine). The results show a drop in hemoglobin to 9.2 g/dL, thrombocytopenia 90 × 10³/µL, creatinine 1.5 mg/dL, and proteinuria 2.3 g/day. ESR 82 mm/h; CRP 18 mg/L. The rheumatologist escalates prednisone to 25 mg/day (from 15 mg) and plans a taper; they also consider adding an immunosuppressive agent. Sarah is advised to monitor blood pressure closely and return immediately if symptoms worsen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Evidence of systemic involvement: anemia, thrombocytopenia, nephritic proteinuria, rising BUN/creatinine, high disease activity.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-04-25</h3><div class="visit-meta">Rheumatology | Reason: Urgent reevaluation for multisystem flare</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Urgent reevaluation for exacerbation of SLE/APS with sudden visual disturbances, mild ankle edema, severe hypertension, and possible thrombotic complications.
+
+History: 30‑year‑old female with known SLE, antiphospholipid syndrome (APS), CKD stage 2, and hypertension. Current medications include amlodipine 5 mg daily, prednisone 25 mg daily, low‑dose aspirin 81 mg daily, and hydroxychloroquine 400 mg daily. Patient presents with blurred vision, mild ankle swelling, headache, and markedly elevated blood pressure 180/110 mmHg.
+
+Physical Exam: Neuro exam shows decreased visual acuity with minimal focal deficits. Skin examination reveals a mild macular rash. Musculoskeletal assessment shows mild swelling of both wrists. Cardiovascular exam: HR 110 bpm, BP 180/110 mmHg. Lungs are clear. No lymphadenopathy.
+
+Investigations: CBC: hemoglobin 9.0 g/dL, platelets 90 k/µL. CMP: creatinine 1.7 mg/dL. Anti‑dsDNA 7 IU/mL. Complement: C3 45 mg/dL, C4 9 mg/dL. Lupus anticoagulant positive. Renal biopsy shows inflammatory changes consistent with lupus nephritis. CT head negative for hemorrhage. MR angiography: small high‑signal focus in right parietal lobe. Doppler ultrasound of lower extremities: non‑occlusive clot in left common femoral vein and popliteal thrombus. ECG is normal.
+
+Assessment: SLE flare with APS manifested by new thrombotic events (lower extremity DVT), renal involvement (lupus nephritis), and CNS involvement (probable small‑vessel ischemic lesion).  Differential diagnoses include acute lupus nephritis (Class IV/V), central nervous system vasculitis, venous sinus thrombosis, uncontrolled hypertension‑related end‑organ damage, and APS‑related thrombosis.
+
+Plan:
+- Initiated IV methylprednisolone 1 g/day for 3 days; will taper to oral prednisone 25 mg daily.
+- Started mycophenolate mofetil 500 mg BID; will titrate to 1 g BID over 1–2 weeks pending lab monitoring.
+- Added therapeutic enoxaparin 1 mg/kg BID; plan switch to warfarin with target INR 2.5‑3.0 after 2 weeks.
+- Continued hydroxychloroquine 400 mg daily, amlodipine 5 mg daily, and aspirin 81 mg daily.
+- Initiated lisinopril 10 mg daily for blood‑pressure control and renal protection.
+- Advise home BP monitoring q2–3 h and maintain a symptom diary.
+- Repeat CBC, CMP, anti‑dsDNA, complements, and lupus anticoagulant every 7 days; repeat renal panel and urinalysis.
+- Repeat brain MRI with contrast in 2 weeks to assess the parietal lesion.
+- Refer to nephrology for ongoing renal management; plan for possible adjustment of immunosuppressive regimen.
+- Counsel patient on signs of bleeding, infection, and urgent symptoms requiring immediate evaluation.
+- Schedule rheumatology follow‑up in 7 days and nephrology in 7 days.
+
+Follow‑up: Patient encouraged to report any worsening neurological symptoms, bleeding, or signs of infection immediately. BP and lab monitoring as outlined.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">visual disturbances</span><span class="pill">ankle edema</span><span class="pill">headache</span><span class="pill">high BP</span><span class="pill">renal dysfunction</span><span class="pill">thrombotic signs</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>180/110</td></tr><tr><td>Temp</td><td>37.9</td></tr><tr><td>HR</td><td>110</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neurologic: visual acuity decreased, focal deficits minimal</li><li>Skin: mild macular rash</li><li>Lymph nodes: none</li><li>Musculoskeletal: mild joint swelling wrists</li><li>BP 180/110</li><li>Heart rate 110</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT head</li><li>MR angiography</li><li>Doppler ultrasound lower extremities</li><li>Renal biopsy</li><li>ECG</li><li>Complete blood count</li><li>CMP</li><li>Anti‑dsDNA</li><li>Complement</li><li>Antiphospholipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT head negative</li><li>MR angiography small right parietal high signal</li><li>Doppler US left femoral non‑occlusive clot, popliteal thrombus</li><li>Renal biopsy: class III/IV proliferative LN</li><li>CBC: Hgb 9.0, Plt 90</li><li>CMP: Cr 1.7</li><li>Anti‑dsDNA 7 IU/mL</li><li>C3 45 mg/dL</li><li>C4 9 mg/dL</li><li>Lupus anticoagulant positive</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV methylprednisolone 1 g/day x3</li><li>Mycophenolate mofetil 500 mg BID</li><li>Enoxaparin 1 mg/kg BID</li><li>Continue hydroxychloroquine 400 mg</li><li>Prednisone 25 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight relief of headache; remains anxious about MRI findings.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>prednisone 25 mg daily</li><li>low‑dose aspirin 81 mg daily</li><li>hydroxychloroquine 400 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>APS</li><li>new thrombotic event</li><li>renal flare</li><li>high disease activity</li><li>prior labs</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah is brought back to the rheumatology clinic due to sudden onset of blurred vision, mild ankle edema, and a dramatic rise in blood pressure (180/110 mm Hg). An urgent neurological evaluation is ordered: a CT head and MR angiography are performed, revealing a small high‑signal focus in the right parietal lobe but no acute bleed. Doppler ultrasound confirms a non‑occlusive clot in the left common femoral vein with a thrombus in the popliteal. A renal ultrasound and biopsy are performed under conscious sedation, revealing class III/IV proliferative lupus nephritis with endocapillary proliferation, wire‑loop lesions, and crescents. The rheumatologist consolidates these findings into an active, multisystem SLE flare with APS complications, and immediately initiates high‑dose IV methylprednisolone 1 g/day for 3 days, adds mycophenolate mofetil 500 mg BID, and starts therapeutic low‑molecular‑weight heparin. The plan also includes a full discussion of potential anticoagulation transition to warfarin.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multisystem flare confirmed, APS thrombotic events, renal class III/IV; high‑dose steroids and immunosuppression initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-04-26</h3><div class="visit-meta">Rheumatology | Reason: Inpatient initiation of high‑dose steroids and immunosuppressants</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Patient:** Sarah, 30‑year‑old female, diagnosed with systemic lupus erythematosus (SLE) and antiphospholipid syndrome (APS), CKD stage 2 progressing to stage 3, hypertension.
+
+**Location:** Rheumatology inpatient ward.
+
+**Chief Complaint / Reason for Visit:** Inpatient initiation of high‑dose steroids and immunosuppressants; management of severe hypertension, active lupus flare with nephritis, thrombocytopenia, and ongoing fevers.
+
+---
+
+**S – Subjective:**
+- Patient reports persistent fatigue and significant joint pain despite high‑dose therapy.
+- Continues to have low‑grade fever (38.1–38.3 °C) and a mild malar rash.
+- Anxiety about lab values and disease course.
+
+**O – Objective:**
+- **Vitals:** BP 185/112 mmHg, HR 112 bpm, T 38.3 °C.
+- **Physical exam:** mild rash on malar area, minimal joint swelling, pitting edema in lower extremities, high‑grade proteinuria evident on day‑5 results, platelet count 65 × 10³/µL.
+- **Labs:** creatinine 1.9 mg/dL, proteinuria 4.2 g/24 h, platelets 65 × 10³/µL, INR 2.3 on warfarin therapy, BMP otherwise normal, LFTs normal.
+- **Imaging:** renal ultrasound pending; prior renal biopsy showed inflammatory nephritis; MR angiography revealed small right parietal focus; Doppler identified non‑occlusive femoral and popliteal venous thrombi.
+
+**A – Assessment:**
+1. **Active SLE with class III/IV nephritis** – rising creatinine, massive proteinuria, low complement, high anti‑dsDNA titers.
+2. **Thrombocytopenia** likely SLE‑related immune thrombocytopenic purpura (ITP) or consumptive coagulopathy associated with APS.
+3. **Severe hypertension** – inadequately controlled despite triple therapy; requires further dose adjustment and renal protective measures.
+4. **Antiphospholipid syndrome** – chronic low‑grade thrombosis (venous) and ongoing anticoagulation plan.
+5. **Infection ruled out** – no focal source; fever likely inflammatory flare.
+
+**P – Plan:**
+- Continue high‑dose IV methylprednisolone 1 g/day x3 days, then transition to oral prednisone 60 mg/day with a taper: 60 mg/day for 10 days, 40 mg/day for next 10 days, 30 mg/day for 10 days, 20 mg/day for 10 days, then 10 mg taper.
+- Maintain mycophenolate mofetil 500 mg BID; consider escalation to 1 g BID if renal function stabilizes and platelets remain &gt;75 × 10³/µL.
+- Switch from enoxaparin to warfarin once therapeutic INR (&gt;2) achieved; target INR 2–3; hold warfarin until platelet count &gt;50 × 10³/µL.
+- Continue amlodipine 5 mg, lisinopril 10 mg, low‑dose beta‑blocker 12.5 mg each daily; adjust antihypertensives to achieve BP &lt;140/90 as tolerated.
+- Continue hydroxychloroquine 400 mg, aspirin 81 mg; consider adding low‑dose rivaroxaban if warfarin not tolerated.
+- Diuretics (e.g., furosemide 40 mg q12h) for edema and to facilitate antihypertensive effect.
+- Prophylactic antibiotics per ICU protocol; monitor for infection.
+- Daily CBC/CMP, LFTs, INR/PTT, renal panel, daily platelet counts, and 24‑h urine protein excretion.
+- Repeat renal ultrasound in 48 h to assess possible obstruction or worsening.
+- Monitor BP q2–3 h until stable; maintain symptom diary.
+- Educate patient on bleeding risks with anticoagulation and signs of infection.
+- Schedule next inpatient rheumatology consult on day 7 post‑initiation and nephrology follow‑up in 2 days.
+- Plan outpatient follow‑up in 2 weeks; sooner if hypertension, fever, or lab abnormalities worsen.
+
+---
+
+**Follow‑up Recommendations (to be documented in next visit):**
+- Continue daily labs and review results with rheumatology.
+- Once platelets stabilize above 75 × 10³/µL, consider increasing mycophenolate dose.
+- Reassess antihypertensive regimen; potential addition of a CCB if needed.
+- Monitor INR weekly after 2 weeks on warfarin; adjust dose to maintain target.
+- Evaluate renal function; if creatinine continues to rise or proteinuria &gt;3 g/24 h, consider nephrology‑driven therapy.
+- Reinforce patient education on medication adherence, monitoring for bleeding, and infection symptoms.
+- Plan for eventual transition to outpatient care with rheumatology and nephrology.
+
+**Disposition:** Patient stable on current regimen, transferred to rheumatology ward for continued monitoring. No immediate discharge considered.
+
+**Signature:**
+Dr. [Name], MD
+Rheumatology
+2025‑04‑26</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">ongoing fever</span><span class="pill">anemia</span><span class="pill">thrombocytopenia</span><span class="pill">pain</span><span class="pill">renal decline</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>185/112</td></tr><tr><td>Temp</td><td>38.3</td></tr><tr><td>HR</td><td>112</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 180/112, HR 112</li><li>Skin: mild rash persists</li><li>Musculoskeletal: minimal swelling</li><li>Kidney: high proteinuria</li><li>Platelets: 65</li><li>Temp 38.3</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Daily CBC/CMP</li><li>Liver function tests</li><li>INR/PTT</li><li>Urine protein</li><li>Renal ultrasound</li><li>Daily platelet counts</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Day 5 creatinine 1.9</li><li>Protein 4.2 g/24h</li><li>Platelets 65 x10^3/µL</li><li>INR 2.3 after warfarin 2 weeks</li><li>BMP normal except creatinine</li><li>LFTs normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV methylprednisolone 1 g/day x3</li><li>Oral prednisone 60 mg/day (post IV)</li><li>Mycophenolate 500 mg BID</li><li>Enoxaparin 1 mg/kg BID</li><li>Switch to warfarin (INR 2–3)</li><li>Amlodipine 5 mg</li><li>Lisinopril 10 mg</li><li>Beta‑blocker 12.5 mg</li><li>Hydroxychloroquine 400 mg</li><li>Platelet transfusion</li><li>Diuretics</li><li>Prophylactic antibiotics</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feeling some fatigue relief but persistent pain; anxiety over labs.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 2 progressing to stage 3</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg daily</li><li>prednisone 15 mg daily (after 3 days of IV)</li><li>mycophenolate mofetil 500 mg BID</li><li>hydroxychloroquine 400 mg daily</li><li>enoxaparin 1 mg/kg BID</li><li>aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>hospitalization day 25</li><li>high‑dose steroids started</li><li>mycophenolate 500 mg BID introduced</li><li>enoxaparin started</li><li>warfarin pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah is admitted to the rheumatology ward for an acute flare. Blood pressure requires a triple‑agent regimen – amlodipine, lisinopril, and a low‑dose beta‑blocker – to control her hypertension. Her creatinine rises to 1.9 mg/dL by day 5, while proteinuria climbs to 4.2 g/24 h. Platelet counts drop to 65 × 10³/µL, requiring a platelet transfusion. The rheumatologist continues high‑dose IV methylprednisolone for the first three days, then transitions her to oral prednisone 60 mg/day with a planned taper to 40 mg after 10 days. Mycophenolate is maintained at 500 mg BID, and her LMWH is switched to warfarin once the INR becomes therapeutic &gt;2. The patient receives prophylactic antibiotics and diuretics. Despite aggressive therapy, her disease remains severe, with ongoing pain and fatigue.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Severe flare with renal and thrombotic involvement; high‑dose steroids and MMF initiated but renal function continues to worsen.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-05-01</h3><div class="visit-meta">Rheumatology | Reason: Post‑discharge follow‑up after septic workup</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 30‑year‑old female with a history of systemic lupus erythematosus (SLE), antiphospholipid syndrome (APS), chronic kidney disease stage 2, and hypertension presenting for a post‑discharge rheumatology follow‑up after a 5‑day inpatient admission for a presumed infectious flare. 
+
+Chief Complaint: Persistent low‑grade fever (39 °C), ongoing proteinuria, mild ankle swelling, conjunctival injection, knee pain, and headache.
+
+History of Present Illness: The patient was hospitalized 5 days ago after developing fever, mild confusion, and elevated creatinine. During admission, broad‑spectrum antibiotics (piperacillin‑tazobactam 4.5 g q6h and vancomycin 1 g q12h) were started empirically; IV methylprednisolone 1 g/day for 3 days was given followed by oral prednisone 60 mg/day with a taper plan. Mycophenolate mofetil 500 mg BID was initiated with escalation to 1 g BID pending labs. Enoxaparin 1 mg/kg BID was started for confirmed venous thromboembolism; we transitioned to warfarin once INR was therapeutic. The patient’s fever resolved after steroids and antibiotics; however she remains fatigued, reports mild ankle edema, conjunctival injection, and knee pain. Physical exam is notable for mild ankle pitting edema, mild conjunctival injection, mild wrist and knee tenderness, mild rash on forearms and ankles, and BP 181/108.
+
+Review of Systems: Positive for fever, fatigue, headache, pain in knees, mild swelling in ankles, mild conjunctival erythema, increased urinary protein; negative for chest pain, shortness of breath, rash beyond mild erythema, abdominal pain, GI upset.
+
+Past Medical History: SLE diagnosed 3 years ago; APS; CKD stage 2 progressing; systemic hypertension.
+
+Medications: amlodipine 5 mg daily; prednisone 20 mg daily; mycophenolate mofetil 500 mg BID; hydroxychloroquine 400 mg daily; enoxaparin 1 mg/kg daily; warfarin 2 mg daily; low‑dose aspirin 81 mg daily.
+
+Allergies: NKDA.
+
+Physical Examination: 
+- Vital Signs: BP 181/108 mmHg, Temp 39.0 °C, HR 108 bpm, RR 18 /min, O₂ sat 98% RA.
+- General: Alert, oriented, mildly fatigued.
+- HEENT: Conjunctiva mildly injected, no visual changes.
+- Cardiovascular: Tachycardia 108 bpm; regular, no murmurs.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Soft, non‑tender.
+- Extremities: Mild pitting edema ankles; no cyanosis.
+- Musculoskeletal: Tenderness in both knees and wrists; no swelling.
+- Skin: Mild erythematous rash on forearms and ankles, no purpura.
+- Neurologic: Alert, cranial nerves intact, no focal deficits.
+
+Labs (post‑discharge):
+- CBC: Hgb 9.0 g/dL; Hct 27%; Plt 65 k/µL; WBC 3.8 k/µL.
+- CMP: Cr 1.9 mg/dL; BUN 38 mg/dL; ALT 24 U/L.
+- CRP 20 mg/L; ESR 90 mm/h.
+- Urinalysis: Protein 4.5 g/24 h.
+- Blood cultures: Negative.
+- Urine cultures: Negative.
+- Antiphospholipid panel: persistently positive lupus anticoagulant.
+- Autoimmune panel: anti‑dsDNA 7 IU/mL; complements low (C3 45 mg/dL, C4 9 mg/dL).
+- INR: 2.3.
+
+Assessment:
+1. **Active SLE flare with class III/IV lupus nephritis** – supported by proteinuria 4.5 g/24 h, low complements, anemia, thrombocytopenia, and clinical improvement after high‑dose steroids.
+2. **Hypertensive urgency** – BP 181/108 with edema and proteinuria.
+3. **Vasculitic process?** – MR angiography shows a small parietal focus; no new ischemic lesions on current imaging.
+4. **Infection ruled out** – all cultures negative; fever resolved with antibiotics; no overt infection signs.
+5. **Anticoagulation management** – warfarin with target INR 2.0‑3.0 while on enoxaparin; need monitoring for potential bleeding.
+
+Plan:
+- **Immunosuppression**: Continue prednisone 20 mg PO daily; plan taper 5 mg every 5–7 days after 2 weeks once labs stabilize. Re‑initiate mycophenolate mofetil 1 g BID after CBC/ CMP normalize.
+- **Antihypertensive**: Add lisinopril 10 mg daily (ACE‑I for renal protection) while continuing amlodipine; target BP &lt;130/80 mmHg.
+- **Anticoagulation**: Transition enoxaparin to warfarin; maintain INR 2.0‑3.0; hold warfarin if INR &gt;3.5 or bleeding risk increases.
+- **Infection**: Stop piperacillin‑tazobactam and vancomycin after negative cultures and 48 h of no fever; continue prophylactic antibiotic stewardship.
+- **Monitoring**: Daily CBC, CMP, INR; twice‑weekly office blood pressure; urinalysis every 2 weeks.
+- **Laboratory**: Repeat CRP, ESR, complements in 1 week. Repeat renal function and proteinuria in 4 weeks.
+- **Imaging**: Repeat renal ultrasound in 4 weeks; consider repeat MR angiography in 3 months if symptoms recur.
+- **Referral**: Nephrology consultation for ongoing lupus nephritis management.
+- **Patient education**: Discuss signs of bleeding, infection, hypertension crisis; importance of adherence to warfarin and blood pressure meds; schedule a tele‑visit in 7 days for check of INR, blood pressure, and symptom review.
+
+Follow‑up: Return in 1 week for labs and INR check; nephrology follow‑up in 2 weeks; rheumatology follow‑up in 4 weeks or sooner if symptoms worsen.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent fever 39 °C</span><span class="pill">anemia</span><span class="pill">proteinuria</span><span class="pill">pain</span><span class="pill">headache</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>181/108</td></tr><tr><td>Temp</td><td>39.0</td></tr><tr><td>HR</td><td>108</td></tr><tr><td>Resp</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild rash</li><li>Edema: mild ankles</li><li>BP 181/108</li><li>HR 108</li><li>Temp 39.0</li><li>Conjunctiva: mild injection</li><li>Musculoskeletal: pain in knees</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Blood cultures</li><li>Urine cultures</li><li>CBC</li><li>CMP</li><li>CRP</li><li>ESR</li><li>Renal panel</li><li>Repeat MR angiography</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>All cultures negative</li><li>CBC: Hgb 9.0, Plt 65</li><li>CMP: Cr 1.9, BUN 38, ALT 24</li><li>CRP 20 mg/L</li><li>ESR 90 mm/h</li><li>Renal: protein 4.5 g/24h</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV methylprednisolone 20 mg</li><li>IV methylprednisolone 40 mg</li><li>Piperacillin‑tazobactam 4.5 g q6h</li><li>Vancomycin 1 g q12h</li><li>Enoxaparin 1 mg/kg</li><li>Warfarin 2 mg</li><li>Amlodipine 5 mg</li><li>Prednisone 20 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Fever resolves after steroids and antibiotics; remains fatigued.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 2 progressing</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg</li><li>prednisone 20 mg</li><li>mycophenolate mofetil 500 mg BID</li><li>hydroxychloroquine 400 mg</li><li>enoxaparin 1 mg/kg</li><li>warfarin 2 mg</li><li>low-dose aspirin 81 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>prior inpatient therapy</li><li>recent infection concerns</li><li>IV methylprednisolone course</li><li>platelet transfusion</li><li>anticoagulation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah presents for a rheumatology follow‑up after a 5‑day inpatient stay. She reports a persistent low‑grade fever of 39 °C and ongoing urinary proteinuria. A bedside exam reveals mild swelling of ankles, mild conjunctival injection. The clinician orders a full septic work‑up: cultures (blood, urine), CBC, CMP, CRP, ESR, renal panel, and a repeat MR angiography if indicated. Empiric broad‑spectrum antibiotics (piperacillin‑tazobactam plus vancomycin) are started while awaiting cultures. The methylprednisolone dose is increased to 20 mg IV and a 40 mg IV methylpred dose is given, as the patient’s fever was not resolving. Platelet count remains stable at 65 × 10³/µL. The rheumatologist plans a tighter blood pressure goal and orders daily labs.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Sepsis‑like picture likely steroid‑related; broad antibiotics covered; no infection found. Steroids improved fever.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2025-05-13</h3><div class="visit-meta">Nephrology | Reason: Follow‑up on renal disease progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Visit #9 – 2025‑05‑13**
+
+**Chief Complaint:** Follow‑up on renal disease progression.
+
+**History of Present Illness:** 30‑year‑old female with SLE, antiphospholipid syndrome, CKD stage 2 progressing to stage 3, and hypertension presents for nephrology follow‑up. She reports persistent proteinuria (~3 g/day) and hematuria with mild dysuria. She reports a persistent low‑grade fever (39 °C) and headaches. No shortness of breath or chest pain. Past history of recent lupus flare with nephritis requiring hospitalization and multiple immunosuppressive agents.
+
+**Vitals:** BP 190/115 mmHg; Temp 39.0 °C; HR 105 bpm; RR 18 /min.
+
+**Physical Examination:**
+- **General:** Alert, mildly distressed.
+- **Skin:** Mild erythematous rash, no new lesions.
+- **HEENT:** Conjunctival injection, no oral ulcers.
+- **Cardiovascular:** Tachycardia, normal S1‑S2, no murmurs.
+- **Pulmonary:** Clear.
+- **Abdomen:** No tenderness, normal splenomegaly.
+- **Extremities:** Bilateral ankle edema, mild lower limb weakness.
+- **Nephrologic:** Urine protein 3 g/24 h confirmed on repeat urinalysis.
+
+**Labs/Results:**
+- Serum creatinine 2.3 mg/dL, eGFR 48 mL/min/1.73 m².
+- Hemoglobin 9.3 g/dL, Platelets 80 ×10³/µL.
+- Anti‑dsDNA 8 IU/mL (low‑normal), C3 48 mg/dL, C4 9 mg/dL.
+- 24‑h urine protein 3 g.
+- CBC shows anemia and thrombocytopenia.
+
+**Assessment:**
+1. **Lupus nephritis flare** – worsening proteinuria and rising creatinine suggest ongoing active renal involvement despite current therapy.
+2. **Hypertensive emergency** – BP refractory to current regimen; may be contributing to renal injury.
+3. **Possible subclinical infection** – persistent fever, headache; consider occult infection or sepsis in setting of APS and immunosuppression.
+4. **APS‑related microthrombi** – mild hematuria may reflect microangiopathic changes.
+5. **Medication side effects** – mycophenolate‑induced marrow suppression (anemia, thrombocytopenia) or warfarin‑induced hepatic dysfunction unclear.
+
+**Plan:**
+- **Immunosuppression**: Increase mycophenolate mofetil dose to 1.5 g BID (as agreed). Continue prednisone 20 mg daily; consider short IV pulse methylprednisolone 500 mg q24h if signs of severe flare.
+- **Blood pressure control**: Add a third antihypertensive – start losartan 50 mg daily (ACEI/ARB) and a low‑dose diuretic (furosemide 20 mg daily) to triple regimen. Continue amlodipine 5 mg daily.
+- **Anticoagulation**: Continue enoxaparin 1 mg/kg SC q12h and warfarin 2 mg daily; monitor INR closely.
+- **Aspirin**: Continue 81 mg daily.
+- **Hydroxychloroquine**: Continue 400 mg daily.
+- **Laboratory monitoring**: CBC, CMP, INR, serum creatinine, eGFR, complement levels, anti‑dsDNA – repeat in 2 weeks. 24‑h urine protein at 1 month.
+- **Infection work‑up**: CBC with differential, CRP, ESR, blood cultures if persistent fever or leukocytosis. Consider chest X‑ray.
+- **Imaging**: Renal ultrasound already done; schedule MRI brain (with contrast) in 90 days to evaluate for CNS hemorrhage or emboli.
+- **Patient education**: Counsel on strict BP control, medication adherence, signs of infection or bleeding.
+- **Follow‑up**: Next nephrology visit in 2 weeks; rheumatology in 4 weeks to adjust steroid taper.
+
+**Disposition:** Patient stable for home with close monitoring; instructed to call clinic immediately for worsening headaches, visual changes, or fevers.
+
+*Prepared by: [Nephrology Clinician]*</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent hematuria</span><span class="pill">proteinuria</span><span class="pill">fever 39 °C</span><span class="pill">high BP</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>190/115</td></tr><tr><td>Temp</td><td>39.0</td></tr><tr><td>HR</td><td>105</td></tr><tr><td>Resp</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild rash</li><li>BP 190/115</li><li>HEENT: mild conjunctival injection</li><li>Edema: ankles</li><li>Muscle: mild weakness</li><li>Renal: increased urine protein</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis</li><li>24h urine protein</li><li>Serum creatinine</li><li>CMP</li><li>Anti‑dsDNA</li><li>Complement</li><li>Hemogram</li><li>Renal ultrasound</li><li>Renal biopsy review</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Urine protein 3 g/24h</li><li>Cre 2.3 mg/dL, eGFR 48</li><li>Hemoglobin 9.3 g/dL</li><li>Platelets 80 ×10^3/µL</li><li>Anti‑dsDNA 8 IU/mL</li><li>C3 48</li><li>C4 9</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Increase MMF to 1.5 g BID</li><li>Maintain prednisone 20 mg daily</li><li>Triple antihypertensive regimen</li><li>Continue enoxaparin and warfarin</li><li>Hydroxychloroquine 400 mg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in swelling; remains concerned about kidney function.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 2 progressing to stage 3</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg</li><li>prednisone 20 mg</li><li>mycophenolate mofetil 500 mg BID</li><li>hydroxychloroquine 400 mg</li><li>enoxaparin 1 mg/kg</li><li>warfarin 2 mg</li><li>aspirin 81 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>continued mycophenolate 500 mg BID</li><li>current prednisone 20 mg</li><li>enoxaparin</li><li>warfarin</li><li>HTN control</li><li>prior flare</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a nephrology consult Sarah reports ongoing proteinuria approximately 3 g/day, hematuria with mild dysuria. She complains of persistent fever and headaches. A routine urinalysis confirms proteinuria 3 g/day, hematuria 2+. Creatinine rises to 2.3 mg/dL, eGFR 48. The nephrologist reviews the renal biopsy and calculates that the disease remains active. The nephrologist discusses the possibility of adding a calcineurin inhibitor (tacrolimus) but Sarah declines due to neuro toxicity concerns. The plan includes continuing mycophenolate at 1.5 g BID, maintaining steroids 20 mg, and intensifying BP control with a triple regimen. She is scheduled for a follow‑up MRI 90 days later.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Active proliferative LN continues; need stronger immunosuppression but patient refusal of tacrolimus.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2025-05-31</h3><div class="visit-meta">Rheumatology | Reason: Assessment of disease activity and possible biologic therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint** – Assessment of current medication effectiveness and consideration of additional therapy.
+
+**History of Present Illness** – Sarah, a 30‑year‑old woman with systemic lupus erythematosus (SLE), antiphospholipid syndrome (APS), chronic kidney disease stage 3, and hypertension, presents for a routine rheumatology follow‑up. She reports persistent cognitive fog, low‑level fatigue, mild confusion, and mild headache over the past month. She denies new joint swelling, abdominal pain, or recent infections. Her medications have remained unchanged since the last visit: prednisone 20 mg daily, mycophenolate mofetil 1.5 g BID, hydroxychloroquine 400 mg daily, enoxaparin 1 mg/kg SC BID, warfarin 2 mg daily, aspirin 81 mg daily, and amlodipine 5 mg daily.
+
+**Physical Exam** – Vital signs: BP 180/110 mmHg, T 37.8°C, HR 102 bpm, RR 18/min. General: Alert, mild confusion. Skin: Mild periorbital swelling, mild erythematous rash over forearms. Musculoskeletal: No new joint tenderness or swelling. Neurologic: Mild confusion, no focal deficits. Ophthalmology: Mild ocular edema. Cardiovascular: Normal S1/S2, no murmurs. Respiratory: Clear bilaterally. Abdomen: Soft, non‑tender.
+
+**Laboratory/Imaging** – Repeat autoimmune panel: anti‑dsDNA 10 IU/mL (↑), CRP 16 mg/L (↑), ESR 70 mm/h (↑), C3 50 mg/dL (↓), C4 10 mg/dL (↓). Brain MRI shows a small hyperintense focus in the left parietal lobe (likely ischemic or inflammatory). Autoimmune panel otherwise normal besides known SLE.
+
+**Assessment** – 1.  Active SLE flare with serologic activity and low complement, correlating with neuro‑cognitive symptoms (neuro‑psychiatric lupus). The left parietal MRI focus may represent micro‑infarct related to APS. 2.  Severe hypertension (180/110) likely contributing to cognitive changes; requires tighter BP control. 3.  APS with chronic anticoagulation; no new thrombotic events noted. 4.  No evidence of infectious flare.
+
+**Plan** – 1.  Initiate belimumab 10 mg/kg IV every 4 weeks, starting with infusion today. 2.  Continue mycophenolate mofetil 1.5 g BID, prednisone 20 mg daily, hydroxychloroquine 400 mg daily. 3.  Intensify BP therapy: add lisinopril 10 mg daily (already on amlodipine), adjust antihypertensive regimen as needed; monitor BP q2–3 h at home. 4.  Continue anticoagulation: enoxaparin 1 mg/kg SC BID with warfarin 2 mg daily (target INR 2.5–3.0); continue aspirin 81 mg. 5.  Monitor labs: CBC, CMP, urinalysis, creatinine, eGFR, complement, anti‑dsDNA, CRP, ESR at 4‑week intervals. 6.  Repeat brain MRI in 3 months to assess for progression. 7.  Counsel on infection risk, bleeding risk, and red‑flag symptoms (new focal deficits, severe headache, fever &gt;38.5 °C). 8.  Schedule next rheumatology visit in 4 weeks; coordinate with nephrology for CKD management.
+
+**Signature** – Dr. R. Smith, MD, Rheumatology.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">ongoing fatigue</span><span class="pill">confusion</span><span class="pill">mild headache</span><span class="pill">mild rash</span><span class="pill">no new joint swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>180/110</td></tr><tr><td>Temp</td><td>37.8</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>Resp</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild rash</li><li>Joints: no swelling</li><li>Cognitive: mild confusion</li><li>BP 180/110</li><li>Eyes: mild edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum anti‑dsDNA</li><li>Complement</li><li>CRP</li><li>ESR</li><li>MRI brain</li><li>Autoimmune panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Anti‑dsDNA 10 IU/mL</li><li>C3 50</li><li>C4 10</li><li>CRP 16 mg/L</li><li>ESR 70 mm/h</li><li>MRI brain: hyperintense focus left parietal</li><li>Autoimmune panel normal aside from SLE</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Plan belimumab 10 mg/kg IV q4 weeks</li><li>Continue MMF 1.5 g BID</li><li>Prednisone 20 mg</li><li>Hydroxychloroquine 400 mg</li><li>Anticoagulation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Accepts belimumab; relieved about new option.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 3</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg</li><li>prednisone 20 mg</li><li>mycophenolate mofetil 1.5 g BID</li><li>hydroxychloroquine 400 mg</li><li>enoxaparin 1 mg/kg</li><li>warfarin 2 mg</li><li>aspirin 81 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>MMF at 1.5 g BID</li><li>prednisone 20 mg</li><li>anticoagulation</li><li>no recent infections</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On a routine rheumatology visit Sarah reports persistent cognitive fog and low‑level fatigue. Physical exam reveals mild periorbital swelling and mild rash on forearms. Repeat labs show anti‑dsDNA 10 IU/mL, CRP 16 mg/L, ESR 70 mm/h. The rheumatologist discusses adding belimumab to the regimen, but notes that disease activity remains high despite steroid taper and MMF. A plan is proposed to initiate belimumab 10 mg/kg IV q4 weeks while continuing current therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease remains high activity; biologic considered but patient still no remission.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2025-06-30</h3><div class="visit-meta">Rheumatology | Reason: Evaluation after belimumab initiation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation after belimumab initiation.
+
+Subjective: Patient reports persistent fatigue, mild headache, ongoing proteinuria (~3 g/day), intermittent hematuria, and ocular inflammation (granulomatous episcleritis). She is concerned about rising creatinine and uncontrolled blood pressure. She remains hesitant about intensifying immunosuppression.
+
+Objective:
+BP 190/115 mmHg, HR 100 bpm, Temp 37.5°C, RR 18/min.
+General: mild fatigue. Skin: mild rash. Eyes: granulomatous episcleritis noted. HEENT: conjunctival injection. Cardiovascular: normal heart sounds. Pulmonary: clear. Abdomen: normoactive. Neuro: mild headache, normal neuro exam.
+Labs: creatinine 2.5 mg/dL (eGFR 45), anti‑dsDNA 12 IU/mL, CRP 18 mg/L, ESR 75 mm/h, C3 48 mg/dL, C4 9 mg/dL. Urine: proteinuria 3.1 g/day, hematuria mild.
+Current meds: belimumab 10 mg/kg IV, prednisone 20 mg PO, mycophenolate mofetil 1.5 g BID, hydroxychloroquine 400 mg, warfarin 2 mg, enoxaparin 1 mg/kg SC, aspirin 81 mg, amlodipine 5 mg, lisinopril 10 mg.
+
+Assessment:
+1) Active SLE with lupus nephritis (class III/IV, likely ongoing activity).
+2) Uncontrolled hypertension, likely secondary to renal disease.
+3) Belimumab therapy not yet effective.
+4) APS with continued anticoagulation.
+5) Possible ocular involvement (episcleritis) – inflammatory.
+
+Differential:
+- Persistent lupus nephritis
+- Accelerated hypertension
+- Drug‑induced nephropathy
+- Infection (unlikely)
+- APS renal involvement.
+
+Plan:
+1) Continue current immunosuppressive regimen (belimumab 10 mg/kg IV q6 weeks, pred 20 mg, MMF 1.5 g BID, HCQ 400 mg).
+2) Continue antihypertensives: amlodipine 5 mg, lisinopril 10 mg; consider adding a diuretic (furosemide 20 mg) if edema.
+3) Continue anticoagulation: warfarin target INR 2–3; enoxaparin bridging as needed.
+4) Labs: CMP, CBC, creatinine, urinalysis, protein/creatinine ratio, anti‑dsDNA, complements, INR weekly for next 2 weeks; repeat at 3 months.
+5) Monitor blood pressure home q2–3 h.
+6) Ophthalmology follow‑up for episcleritis.
+7) Discuss intensification (e.g., tacrolimus, azathioprine) but patient declines; will re‑evaluate if disease remains active at 3‑month visit.
+8) Education: signs of infection, bleeding, hypertension crisis, and when to seek urgent care.
+
+Follow‑up: Return in 3 months for repeat labs, BP assessment, and review disease activity.
+MRI brain not ordered today; will repeat in 3 months.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">mild headaches</span><span class="pill">proteinuria</span><span class="pill">hematuria</span><span class="pill">ocular inflammation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>190/115</td></tr><tr><td>Temp</td><td>37.5</td></tr><tr><td>HR</td><td>100</td></tr><tr><td>Resp</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: mild rash</li><li>Eyes: granulomatous episcleritis</li><li>BP 190/115</li><li>Hematuria mild</li><li>Proteinuria 3.1 g/day</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum creatinine</li><li>CMP</li><li>Anti‑dsDNA</li><li>Complement</li><li>CRP</li><li>ESR</li><li>Ocular exam</li><li>MRI brain if needed</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Creatinine 2.5 mg/dL</li><li>eGFR 45</li><li>Anti‑dsDNA 12 IU/mL</li><li>C3 48</li><li>C4 9</li><li>CRP 18 mg/L</li><li>ESR 75 mm/h</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Belimumab 10 mg/kg IV</li><li>Continue MMF 1.5 g BID</li><li>Prednisone 20 mg</li><li>Hydroxychloroquine 400 mg</li><li>Warfarin 2 mg</li><li>Enoxaparin 1 mg/kg</li><li>Amlodipine 5 mg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Skeptical about improvements; anxious about kidney function.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 4? 3/4</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg</li><li>prednisone 20 mg</li><li>mycophenolate mofetil 1.5 g BID</li><li>hydroxychloroquine 400 mg</li><li>enoxaparin 1 mg/kg</li><li>warfarin 2 mg</li><li>aspirin 81 mg</li><li>belimumab 10 mg/kg IV</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Belimumab 1 month started</li><li>MMF 1.5 g BID</li><li>prednisone 20 mg</li><li>anticoagulation</li><li>no new infections</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sarah comes for a routine rheumatology follow‑up one month after starting belimumab. She reports persistent fatigue, mild headaches, and ongoing proteinuria (~3 g/day). Her ocular examination shows granulomatous episcleritis. Blood pressure stays high at 190/115 mm Hg. Lab work shows creatinine 2.5 mg/dL, eGFR 45, anti‑dsDNA 12 IU/mL, CRP 18, ESR 75. The rheumatologist notes that belimumab has not brought significant improvement; disease remains active. They discuss intensifying immunosuppression (possible tacrolimus) but Sarah remains hesitant. They decide to maintain the current regimen and schedule a 3‑month repeat evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Belimumab ineffective; disease refractory; patient refusal of tacrolimus; continuing high disease activity.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2025-07-31</h3><div class="visit-meta">Rheumatology &amp; Nephrology | Reason: Worsening renal function and management plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+Patient is a 30‑year‑old female with known SLE, APS, CKD stage 4, and hypertension presenting at her fourth month follow‑up with worsening renal function. She reports increased fatigue, difficulty sleeping, worsening anemia symptoms, persistent proteinuria, new ocular inflammation described as granulomatous episcleritis, and uncontrolled hypertension despite current antihypertensives.
+
+Objective:
+Vitals: BP 200/120 mmHg, Temp 37.2°C, HR 110 bpm, Resp 18/min.
+Physical: Persistent malar rash, episcleritis, 2+ pitting ankle edema, otherwise unremarkable neurologic and musculoskeletal exam.
+Labs: Serum creatinine 3.4 mg/dL, eGFR 30 mL/min/1.73m², 24‑h urine protein 3.8 g, anti‑dsDNA 12 IU/mL, complement low, INR 2.8, hemoglobin 8.5 g/dL.
+
+Assessment:
+1. Active lupus nephritis (Class IV/IV-S) with progressive renal impairment (CKD stage 4) and significant proteinuria.
+2. Uncontrolled hypertension contributing to renal decline.
+3. Ocular inflammation (episcleritis) likely a manifestation of SLE flare.
+4. Anemia of chronic disease with hemoglobin 8.5 g/dL.
+
+Plan:
+- Continue current immunosuppression: prednisone 25 mg daily, MMF 1.5 g BID, belimumab 10 mg/kg IV.
+- Add lisinopril 10 mg daily and hydrochlorothiazide 25 mg daily to improve BP control.
+- Initiate furosemide 20 mg PO BID if edema persists.
+- Continue warfarin 2 mg daily with target INR 2–3; monitor INR weekly.
+- Arrange peritoneal dialysis assessment if creatinine rises above 4.5 mg/dL.
+- Referral for kidney transplant evaluation.
+- Repeat CBC, CMP, creatinine, urine protein, and urinalysis every 2 weeks.
+- Educate patient on signs of impending dialysis need and importance of medication adherence.
+- Schedule next visit in 2 weeks.
+
+All treatments and monitoring will be coordinated with the multidisciplinary team.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">increasing fatigue</span><span class="pill">difficulty sleeping</span><span class="pill">anemia</span><span class="pill">proteinuria</span><span class="pill">ocular inflammation</span><span class="pill">BP high</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>200/120</td></tr><tr><td>Temp</td><td>37.2</td></tr><tr><td>HR</td><td>110</td></tr><tr><td>Resp</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: persistent rash</li><li>Eyes: episcleritis</li><li>BP 200/120</li><li>Edema ankles</li><li>Muscle: normal</li><li>Renal: high proteinuria</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum creatinine</li><li>CMP</li><li>Urine protein</li><li>Anti‑dsDNA</li><li>Complement</li><li>INR</li><li>Dialysis clearance</li><li>B12 if needed</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Creatinine 3.4 mg/dL</li><li>eGFR 30</li><li>Proteinuria 3.8 g/24h</li><li>Anti‑dsDNA 12 IU/mL</li><li>INR 2.8</li><li>Hemoglobin 8.5 g/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue prednisone 25 mg</li><li>MMF 1.5 g BID</li><li>Belimumab 10 mg/kg IV</li><li>Hydroxychloroquine 400 mg</li><li>Warfarin 2 mg (INR 2–3)</li><li>Amlodipine 5 mg</li><li>Lisinopril 10 mg</li><li>Hydrochlorothiazide 25 mg</li><li>Prepare for dialysis assessment</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Expresses anxiety about future dialysis, but agrees to plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">SLE</span><span class="pill">APS</span><span class="pill">CKD stage 4</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 5 mg</li><li>prednisone 25 mg</li><li>mycophenolate mofetil 1.5 g BID</li><li>hydroxychloroquine 400 mg</li><li>warfarin 2 mg</li><li>aspirin 81 mg</li><li>belimumab 10 mg/kg IV</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>continued prednisone 25 mg daily</li><li>MMF 1.5 g BID</li><li>warfarin therapy</li><li>HTN control</li><li>no new infections</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At her fourth month follow‑up Sarah presents with worsening renal function: creatinine 3.4 mg/dL, eGFR 30, proteinuria 3.8 g/day. She reports new ocular inflammation—granulomatous episcleritis—and persistent high blood pressure. She is concerned about progression to ESRD and the need for dialysis. After multidisciplinary discussion, the rheumatology and nephrology teams agree to continue current immunosuppression but plan to start peritoneal dialysis if creatinine rises above 4.5. They continue warfarin with INR target 2–3 and adjust antihypertensives to add a diuretic. A kidney transplant evaluation is also discussed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progression to CKD stage 4; disease refractory; no remission; dialysis likely; transplant evaluation ongoing.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 30</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Antiphospholipid syndrome</span><span class="pill">Hypertension</span><span class="pill">Hypocomplementemia</span><span class="pill">Systemic lupus erythematosus</span><span class="pill">Deep vein thrombosis</span><span class="pill">Acute lupus nephritis</span><span class="pill">CKD stage 4</span><span class="pill">Severe hypertension</span><span class="pill">Thrombocytopenia</span><span class="pill">Anemia</span><span class="pill">Class III/IV lupus nephritis</span><span class="pill">neuro‑psychiatric lupus</span><span class="pill">Episcleritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 25 mg daily</li><li>Mycophenolate mofetil 1.5 g BID</li><li>Hydroxychloroquine 400 mg daily</li><li>Warfarin 2 mg daily</li><li>Aspirin 81 mg daily</li><li>Amlodipine 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Belimumab 10 mg/kg IV</li><li>Hydrochlorothiazide 25 mg daily</li><li>Furosemide 20 mg BID</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Post‑partum day 2 visit: mild fever 37.8°C, faint erythematous blot on nasal bridge, mild left knee tenderness. BP 142/92mmHg, HR 92bpm. CBC ordered. Patient advised rest, hydration, monitoring of temperature, and to seek care if fever rises &gt;38.3°C or rash worsens. Routine postpartum follow‑up scheduled at 6 weeks.</li><li>2025‑04‑11: Patient reported fatigue, limb heaviness, new bilateral wrist and hip arthralgias, diffuse erythema of forearms, non‑purpuric dark patches on inner thighs, mild dry cough, low‑grade fever 38.1°C. Vital signs: BP 154/96mmHg, HR 98bpm. Tender swelling of wrists, hips, knees; clear lungs; skin findings noted. Started prednisone 10 mg PO daily and ibuprofen 400 mg PO q6–8h PRN; continued amlodipine 5 mg daily and low‑dose aspirin 81 mg daily. Ordered CBC, anti‑dsDNA, complement C3, complement C4, and antiphospholipid panel. Advised home BP monitoring, symptom diary, return in 3 days or sooner if worsening.</li><li>2025‑04‑13: Review of recent autoimmune workup. Labs: anti‑dsDNA 5.0 IU/mL, C3 48 mg/dL, C4 12 mg/dL, lupus anticoagulant positive, anticardiolipin IgG 42 GPL. Patient had low‑grade fever 38.0°C, diffuse arthralgia (wrists, knees), 1‑inch left femoral lymph node. BP 154/96 mmHg, mild erythema forearms/cheeks, symmetric joint tenderness. Plan: continue prednisone 10 mg daily, amlodipine 5 mg daily, low‑dose aspirin 81 mg daily, ibuprofen PRN; refer to tertiary rheumatology, monitor BP/temperature, repeat autoimmune panel in 1–2 weeks.</li><li>Rheumatology visit on 2025‑04‑16: BP 165/102 mmHg, HR 96, Temp 37.6°C. Mild malar erythema, subtle scaly plaques on forearms, 7 tender/swollen joints (wrists, knees, shoulders, hips). Mild lower leg edema. Started high‑dose prednisone 60 mg daily, added hydroxychloroquine 400 mg daily, continued amlodipine 5 mg daily and low‑dose aspirin 81 mg daily. Ordered CBC, CMP, anti‑dsDNA, complements C3/C4, ANA, CRP, ESR, antiphospholipid IgG/IgM, lupus anticoagulant, and renal ultrasound.</li><li>2025‑04‑22: Follow‑up for worsening SLE, proteinuria, uncontrolled hypertension. Patient reported back pain, agitation, headache; fever 38.4°C, BP 165/102. Exam: mild wrist/knee swelling, malar erythema, pitting edema, lumbar tenderness, confusion. Labs: leukopenia, thrombocytopenia, proteinuria 2.3g/24h, anemia, elevated ESR/CRP, low complement. Plan: increase prednisone to 25mg daily, add lisinopril 10mg daily, initiate mycophenolate 1g BID in 1–2 weeks pending lab confirmation, monitor BP twice daily, repeat CBC/CMP/urinalysis/creatinine/dsDNA/complements in 4 weeks, refer to nephrology. Follow‑up in 2 weeks.</li><li>2025‑04‑25 urgent rheumatology reevaluation: patient presented with blurred vision, mild ankle edema, headache, severe hypertension (180/110 mmHg) and laboratory evidence of anemia (Hb 9.0 g/dL), thrombocytopenia (90k/µL), leukopenia, and creatinine 1.7 mg/dL. Physical exam revealed decreased visual acuity, mild macular rash, mild swelling of both wrists, HR 110 bpm, BP 180/110 mmHg. Investigations included CBC, CMP, anti‑dsDNA 7 IU/mL, low complements (C3 45 mg/dL, C4 9 mg/dL), persistent lupus anticoagulant positivity, renal biopsy showing inflammatory lupus nephritis, MR angiography with a small right parietal focus, and Doppler ultrasound identifying a non‑occlusive left common femoral vein clot and popliteal thrombus. Management: initiation of IV methylprednisolone 1 g/day for 3 days with planned taper to oral prednisone 25 mg daily, starting mycophenolate mofetil 500 mg BID with escalation to 1 g BID, therapeutic enoxaparin 1 mg/kg BID (to transition to warfarin with INR 2.5‑3.0 after 2 weeks), continued hydroxychloroquine, amlodipine, and low‑dose aspirin, and newly added lisinopril 10 mg daily for blood‑pressure control and renal protection. Patient instructed to monitor blood pressure q2–3 h, maintain a symptom diary, repeat CBC/CMP/autoimmune panels weekly, obtain brain MRI with contrast in 2 weeks, and attend nephrology and rheumatology follow‑ups in 7 days. Counseling on bleeding, infection, and urgent symptom recognition was provided.</li><li>2025‑04‑26: Inpatient initiation of high‑dose IV methylprednisolone 1 g daily x3 days, transition to oral prednisone 60 mg daily taper; started/followed up on mycophenolate mofetil 500 mg BID, hydroxychloroquine, amlodipine, lisinopril, beta‑blocker 12.5 mg, warfarin (INR 2.3), furosemide 40 mg q12h. BP 185/112 mmHg, HR 112, T 38.3 °C; labs: creatinine 1.9, proteinuria 4.2 g/24 h, platelets 65 ×10^3/µL, INR 2.3. Daily CBC/CMP, INR/PTT, urine protein orders. Urine protein monitoring; plan ongoing inpatient management.</li><li>Visit on 2025‑05‑01: Post‑discharge rheumatology follow‑up after a 5‑day inpatient admission for presumed infectious flare. Patient presented with persistent low‑grade fever (39 °C), proteinuria 4.5 g/24 h, mild ankle edema, conjunctival injection, knee pain, and headache. BP 181/108 mmHg. Labs revealed anemia (Hgb 9 g/dL), thrombocytopenia (65 k/µL), leukopenia (3.8 k/µL), elevated CRP 20 mg/L, ESR 90 mm/h, low complements (C3 45 mg/dL, C4 9 mg/dL), creatinine 1.9 mg/dL. Management continued prednisone 20 mg daily with planned taper, initiated mycophenolate mofetil 500 mg BID pending normal labs, added lisinopril 10 mg daily, maintained enoxaparin until INR therapeutic with warfarin 2 mg daily, discontinued antibiotics. Follow‑up includes daily CBC, CMP, INR, twice‑weekly BP checks, and repeat labs in 1–4 weeks.</li><li>Visit #9 – 2025‑05‑13: 30‑year‑old female with SLE, APS, and CKD stage 3 presented with persistent proteinuria (~3 g/24 h), hematuria, fever 39 °C and BP 190/115 mmHg. Labs: creatinine 2.3 mg/dL, eGFR 48 mL/min, anemia, thrombocytopenia. Management: increased mycophenolate to 1.5 g BID, continued prednisone 20 mg daily, added Losartan 50 mg daily and furosemide 20 mg daily; continued enoxaparin 1 mg/kg SC q12h, warfarin 2 mg daily, aspirin 81 mg daily, hydroxychloroquine 400 mg daily. Scheduled repeat labs in 2 weeks, monitor BP, and plan MRI brain in 90 days.</li><li>2025‑05‑31 rheumatology follow‑up: patient with SLE, APS, CKD stage 3, hypertension presented with persistent cognitive fog, fatigue, mild headache. BP 180/110, mild periorbital swelling, mild rash forearms, no new joint findings. Labs: anti‑dsDNA 10 IU/mL, CRP 16, ESR 70, low C3 50, C4 10, brain MRI: small hyperintense focus left parietal. Plan: initiate belimumab 10 mg/kg IV infusion, continue prednisone 20 mg, mycophenolate 1.5 g BID, hydroxychloroquine 400 mg, add lisinopril 10 mg daily, maintain anticoagulation, quarterly labs, repeat MRI in 3 months, next rheumatology visit in 4 weeks.</li><li>2025‑06‑30: Routine rheumatology follow‑up after belimumab initiation. BP 190/115 mmHg. Labs: creatinine 2.5 mg/dL, eGFR 45, anti‑dsDNA 12 IU/mL, CRP 18 mg/L, ESR 75, complements C3 48, C4 9, proteinuria 3.1 g/day, mild hematuria. Ocular exam noted granulomatous episcleritis and conjunctival injection. Continued current immunosuppressive regimen (belimumab 10 mg/kg IV q6 weeks, prednisone 20 mg, mycophenolate 1.5 g BID, hydroxychloroquine 400 mg) and antihypertensives (amlodipine 5 mg, lisinopril 10 mg). Warfarin and enoxaparin continued per anticoagulation protocol. Labs to be repeated weekly for INR, CMP, CBC, protein/creatinine ratio. Home BP monitoring q2–3 h. Ophthalmology referral for episcleritis. Follow‑up planned in 3 months. </li><li>2025‑07‑31: Patient presents with worsening renal function (serum creatinine 3.4 mg/dL, eGFR 30), persistent proteinuria (3.8 g/24 h) and uncontrolled hypertension (200/120 mmHg). Physical exam reveals episcleritis, malar rash, ankle edema. Labs: hemoglobin 8.5 g/dL, low complements, INR 2.8. Management: increased prednisone to 25 mg/day, continued MMF 1.5 g BID, belimumab 10 mg/kg IV, added lisinopril 10 mg/day and hydrochlorothiazide 25 mg/day; furosemide 20 mg BID if edema persists; continue warfarin 2 mg/day. Repeat labs every 2 weeks, consider dialysis if creatinine &gt;4.5 mg/dL, refer for kidney transplant evaluation.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

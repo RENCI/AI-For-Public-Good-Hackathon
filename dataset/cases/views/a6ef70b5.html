@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case a6ef70b5</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: a6ef70b5</h1><div class="subtitle">Acute Asthma Exacerbation | Male, 34</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Allergic Rhinitis, Eczema, Obesity, Depression</div><div class="meta-line">Risk Factors: Recent allergen exposure, Upper respiratory infection, Poor inhaler technique, Non‑adherence to controller medication, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">Alex Ramirez was a 34‑year‑old software developer who had always carried a small vial of his rescue inhaler under his ar...</span></summary><div class="section-body"><p>Alex Ramirez was a 34‑year‑old software developer who had always carried a small vial of his rescue inhaler under his arm. Two weeks earlier, he’d spent a weekend hiking in the valley, inhaling the dry pine‑tree dust that had been swirling around the trail. He had never complained of breathing trouble then – it was a day that felt, to him, like a reset, a break from the relentless glow of office screens. Yet on the first night after the hike, a low‑grade cough began to gnaw at the back of his throat.</p><p>By morning, the cough had swelled to a wheezy, rattling sound that seemed to echo in the hallway by his apartment door. Alex noticed his breathlessness was worsening, especially when he did his usual morning jog. He tried to get the inhaler out of his pocket, but fumbling in adrenaline‑filled anxiety, he had inhaled only one half‑dose, using the pen‑injector version on a high‑dose meter inhaler. The dose was uneven and did little to ease the tightening chest. That evening, as he sat in his kitchen with a cup of tea and a stack of work emails, the chest tightness sharpened into a palpable pressure. His breathing turned shallow, and the subtle tremor in his fingers that he’d associated with his ongoing anxiety began to manifest as a mild tremor in his hands as well.</p><p>**Day 1 – 08:00**  
+Alex first called the 911 line, describing “a tight chest, wheeze, can&#x27;t catch my breath.” The dispatch heard his description and noted that Alex had asthma, allergies, and a history of depression. Paramedics arrived within twenty minutes, and after a quick physical exam, they placed him on a nebulizer with 2.5 mg albuterol delivered via a portable jet nebulizer. Alex’s oxygen saturation hovered around 92% on room air, and his heart rate surged to 110 beats per minute. The EMS team also noted the wheeze, expiratory rales, and an audible stridor that indicated he was nearly at a critical point. They administered a single dose of subcutaneous epinephrine (0.5 mg) and transferred him to the nearest community hospital’s ER.</p><p>**Day 1 – 10:30**  
+In the ER, Alex was triaged into the emergency department’s asthma protocol. The nursing team began a 100 mL bolus of 2.5 % dextrose–normal saline, monitoring his electrolytes closely given his obesity, which could predispose him to fluid shifts. The physician confirmed the history of allergic rhinitis and eczema, noting that his eyes had been itchy that morning and that his itchy, excoriated skin patches on the arms hinted at atopic background. The clinician decided to start high‑dose methylprednisolone (125 mg IV) to curb inflammation, a step up from his usual 60 mg maintenance inhaled steroids, and ordered a chest X‑ray that showed no pneumonia but demonstrated diffuse hyperinflation and mild airspace opacity in the bases—classic for exacerbation.</p><p>Alex’s breathing pattern shifted from a simple tachypnea to a three‑phase waveform: a rapid inhalation, a short pause, and a forced exhalation that left him gasping for air. He reported “coughing up white mucus” and an “ear-sounding wheeze.” The ER nurse noted his breathing to be noisy but with a weak “high‑pitch whine,” indicating that the airways were partially obstructed but not completely closed. At 10:45, an additional bolus of albuterol 0.5 mg IV was given, along with a short‑acting anticholinergic, ipratropium, in 4 mg nebulization.</p><p>**Day 1 – 12:15**  
+After the nebulizer session, Alex began to feel a bit relieved; his chest loosened slightly, breathing less labored, and the wheeze dropped to a lower frequency. The physician reviewed his inhaler technique; during demonstration a few hours later, Alex was hesitant to correctly place the spacer. He recalled that his pen‑style inhaler had been a source of frustration; he had had a lot of “just didn’t get the spray” moments at work. The team arranged a home health visit in 48 hours so that a pulmonology nurse could demonstrate proper use, and asked Alex to keep a diary of inhaler use.</p><p>**Day 1 – 13:30**  
+At the ER, the physician reassessed his respiratory status. His oxygen saturation rose to 96% on 2 L/min via nasal cannula. The physician shifted from aggressive nebulization to a more conservative approach: a budesonide–formoterol rescue controller, 200 µg each, delivered by MDI with a spacer. Alex was given one puffs in a quick succession to open up the airway and given a plan for home management.</p><p>He also noted that Alex had been a smoker for 12 years, 10 cigarettes a day, which had worsened his asthma control. The physician documented his smoking history. Alex admitted that nicotine kept him focused at work, but his cough and wheeze were more distracting than helpful. A counselor was offered for smoking cessation support; Alex said he was “open to quitting” but apprehensive about withdrawal.</p><p>**Day 2 – 09:00**  
+Alex was discharged on a prednisone taper (50 mg daily for 5 days, then 37.5 mg for 5 days, then 25 mg for 5 days) and a maintenance inhaler of albuterol–salmeterol, 90/50 µg twice daily. He also received an inhaled corticosteroid, fluticasone 100 µg twice daily, and a written, stepwise plan for a home rescue inhaler. On discharge, the RN reinforced inhaler technique and instructed Alex to:</p><p>1. Use the spacer correctly: place the inhaler inside the spacer before each puff.
+2. Exhale fully before each inhalation.
+3. Hold breath for at least 10 seconds after inhaling.
+4. Perform a “spacer shake” if using a nebulizer for rescue.</p><p>In addition, the RN scheduled a follow‑up visit in 7 days and a phone call by the case manager in 48 hours.</p><p>**Day 3 – 11:00 (Home Phone)**  
+The case manager called Alex. He reported that the new inhaler was “still hard to get the spray right,” but the wheeze had subsided. He admitted he was on his second inhalation dose of the day (rescue) but didn’t remember dosing the maintenance inhaler because he was working. Alex also revealed that his work deadlines had put him on ‘stress mode’ all week; the rumination had triggered his depression, leading to decreased appetite. The case manager suggested a short talk about depression and potential referral to a therapist. Alex agreed to schedule an appointment for next week. The case manager also reminded him to keep track of inhaler usage; a simple paper sheet had been left on his desk with prompts.</p><p>**Day 4 – 14:00**  
+At the pulmonology office, Alex showed up with a paper diary where he had recorded the times he used rescue inhaler (four times a day). He was still missing maintenance doses, but the wheeze was negligible. The pulmonologist asked him: “Did you feel less shortness of breath yesterday?” Alex replied with a shrug, “Yeah, I’m feeling okay.” The pulmonologist re‑emphasized inhaler technique: demonstrated again, noting Alex’s misplacement of the inhaler into the spacer. The RN at the office observed an improvement in technique: Alex now waited for the spacer to “buzz” and then breathed in steadily. The pulmonologist discussed the importance of consistent controller medication and the dangers of exacerbations when not taken.</p><p>**Day 5 – 08:30**  
+Alex’s wife mentioned that his “mood had been better” since the first day he got the steroid taper. In the weeks after, Alex’s sleep improved, his appetite returned, and he began to lose a few pounds. Alex told the visit nurse that he had cut down one cigarette a day; he was not ready to quit fully but was open to considering nicotine patch therapy.</p><p>**Day 7 – 18:00 (Follow‑up**)**  
+When Alex returned for his routine 7‑day appointment, he reported that he had nearly stopped using his rescue inhaler altogether and that the morning chest tightness had disappeared. The pulmonologist performed a spirometry test: his FEV1 had risen from 50% predicted during the acute event to 70% predicted now. Alex’s asthma controller was still under‑utilized; he was placed on a more simplified regimen: albuterol–salmeterol MDI with spacer twice daily, and fluticasone 100 µg twice daily. He was counseled on lifestyle modifications – weight loss exercise plans, healthy diet, and a gradual reduction of smoking by a pharmacist‐guided cessation program. The case manager set a follow‑up in 4 weeks.</p><p>**Day 30 – 10:00**  
+In the 30‑day review, Alex had adhered strictly to his new inhaler regime. His wheeze had vanished, and he was enjoying a brisk walk around his neighborhood. His depression scores had modestly improved after starting a short course of low‑dose antidepressants and counseling. He had lost 8 kg (18 lb) over 6 weeks, a modest weight loss for a 95‑kg patient, which likely contributed to improved lung mechanics. His case manager reported that Alex had completed the nicotine patch course, and he had dropped to 3 cigarettes a day, citing better focus and fewer chest tightness events.</p><p>**Day 60 – 13:00**  
+Alex’s last follow‑up at the pulmonology office was marked by an “excellent” clinical status: no relapse of symptoms in the past 45 days, stable FEV1 (72% predicted), and an ongoing weight loss trajectory. The asthma specialist noted that Alex’s comorbidities – allergic rhinitis, eczema, depression – now seemed less intrusive, presumably because his asthma control had improved. The plan was to taper the systemic steroid down to maintenance inhaler only, with the patient scheduled for a routine control visit in 3 months.</p><p>**Summary**  
+Alex&#x27;s acute exacerbation was precipitated by a combination of allergen exposure during hiking, an upper respiratory virus, poor inhaler technique, non‑adherence to controller therapy, and smoking. The aggressive initial ER care (nebulized albuterol, systemic corticosteroids, and prompt assessment of inhaler technique) provided a rapid reduction in symptoms. A structured follow‑up plan—daily medication reminders, a documented inhaler technique review, and integration of psychological support for depression—facilitated adherence and long‑term improvement. By thirty days, Alex had normalized breathing, regained sleep quality, and lost weight, while his asthma remained under control with evidence of reduced exacerbation frequency. The case is a textbook example of how timely, patient‑centered care, with an emphasis on education and adherence, can reverse an acute respiratory crisis.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-04-01</h3><div class="visit-meta">Emergency Medicine | Reason: Acute severe asthma exacerbation; shortness of breath, wheezing</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 34‑year‑old male presents with sudden onset shortness of breath, wheezing, and chest tightness.
+
+History of Present Illness: The patient called 911 reporting severe chest tightness and wheezing 35 minutes ago. He has a longstanding history of asthma, allergic rhinitis, eczema, obesity (BMI 33), depression, and is a smoker (10 cigarettes/day for 12 years). He had recently been hiking in pine forest and was exposed to pine dust. He also reports a mild upper respiratory infection. At the time of EMS arrival, his oxygen saturation had fallen to 92% on room air, heart rate spiked to 110 bpm, and he was markedly tachypneic. EMS administered nebulized albuterol (2.5 mg) via a portable jet nebulizer and subcutaneous epinephrine 0.5 mg. Symptoms worsened; oxygen saturation dropped to 92% and heart rate increased to 110 bpm.
+
+Upon arrival to the Emergency Department, the patient was in moderate distress with audible wheezes and expiratory rhonchi. Vital signs: O2 sat 92% RA, HR 110 bpm, RR 32/min, BP 120/75 mmHg.
+
+Physical Examination: General: in moderate respiratory distress. HEENT: no conjunctival injection, oral mucosa dry. Lungs: diffuse wheeze, scattered expiratory rales bilaterally, no adventitious crackles. Cardiovascular: tachycardic but regular rhythm, no murmurs. Skin: excoriations on arms consistent with eczema; no dermatological signs of acute allergic reaction.
+
+Investigations: Chest X‑ray – diffuse hyperinflation with mild basal airspace opacity; no focal infiltrate, consolidation, or effusion.
+
+Assessment: Severe, acute asthma exacerbation likely precipitated by pine dust exposure and recent upper respiratory infection. Differential considerations include allergic bronchopulmonary reaction, lower respiratory tract infection (though unlikely based on imaging), pulmonary embolism, and heart failure.
+
+Plan:
+1. Continue aggressive bronchodilator therapy: nebulized albuterol 2.5 mg twice hourly, nebulized ipratropium 0.5 mg (4 mg total) twice hourly.
+2. IV methylprednisolone 125 mg as a single dose.
+3. IV 100 mL 2.5% dextrose–normal saline bolus.
+4. Continue subcutaneous epinephrine 0.5 mg if signs of anaphylaxis appear.
+5. Admit to monitored floor for observation of response to therapy.
+6. Educate on proper albuterol MDI technique; schedule inhaler technique review.
+7. Provide smoking cessation counseling and resources.
+8. Order pulmonary function testing (spirometry) once patient is stable.
+9. Discharge planning: if symptoms significantly improved, continue inhaled steroids (e.g., fluticasone 100 µg BID) and long‑acting bronchodilator (e.g., formoterol 12 µg BID) as appropriate.
+
+Disposition: Admitted for monitoring; oxygen sat improved to 96% after nebulization sessions, but wheezing persists. Plan to transfer to step‑down unit once clinical status improves.
+
+Follow‑Up Recommendations: In‑clinic asthma education session within 48–72 hours, follow‑up with pulmonology in 1 week, repeat spirometry in 4 weeks, smoking cessation follow‑up, and advise patient to seek immediate medical attention if symptoms worsen.
+
+Signature: _______________________
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">shortness of breath, wheezing, chest tightness</span><span class="pill">tachypnea</span><span class="pill">dry cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Oxygen Saturation</td><td>92% on room air</td></tr><tr><td>Heart Rate</td><td>110 bpm</td></tr><tr><td>Respiratory Rate</td><td>32/min</td></tr><tr><td>Blood Pressure</td><td>120/75 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Wheezing and expiratory rales</li><li>Stridor</li><li>Tachypnea</li><li>Moderate distress</li><li>Excoriations on arms suggestive of eczema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray demonstrates diffuse hyperinflation and mild basal airspace opacity, no pneumonia.</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Nebulized albuterol 2.5 mg (portable jet)</li><li>Subcutaneous epinephrine 0.5 mg</li><li>IV methylprednisolone 125 mg</li><li>IV 100 mL 2.5 % dextrose–normal saline bolus</li><li>Nebulized ipratropium 4 mg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Oxygen saturation improved to 96% during nebulization; wheezing decreased but remained present. Patient remained tachypneic with an audible wheeze.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Asthma</span><span class="pill">Allergic rhinitis</span><span class="pill">Eczema</span><span class="pill">Obesity</span><span class="pill">Depression</span><span class="pill">Smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol rescue inhaler (MDI) used intermittently</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Asthma diagnosed 10 years ago</li><li>Allergic rhinitis</li><li>Eczema</li><li>Obesity (BMI 33)</li><li>Depression</li><li>Smoker 12 years, 10 cigarettes/day</li><li>Recent hiking exposure to pine dust</li><li>Upper respiratory infection</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Alex called 911 reporting severe chest tightness and wheezing. EMS arrived within 20 minutes, performed a rapid assessment, and administered nebulized albuterol (2.5 mg) via portable jet nebulizer. In addition, subcutaneous epinephrine (0.5 mg) was given. While en route, his oxygen saturation declined to 92% on room air and heart rate spiked to 110 bpm. Upon arrival at the hospital ER, the team continued aggressive management with IV methylprednisolone 125 mg, a 100 mL bolus of 2.5 % dextrose–normal saline, and repeated nebulization with albuterol and ipratropium. A chest X‑ray was ordered and later returned showing diffuse hyperinflation with mild basal airspace opacities consistent with an acute asthma exacerbation. The patient was admitted for monitoring and received a 30‑minute nebulizer session that reduced the wheeze frequency. He was noted to have poor inhaler technique and was scheduled for education.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Severe asthma exacerbation precipitated by allergen exposure and viral URI. Acute inflammation led to airway obstruction requiring systemic steroids and rescue bronchodilators. Patient remains in ED for close observation.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-04-03</h3><div class="visit-meta">Home Health Nursing | Reason: Home inhaler technique training and medication review after acute exacerbation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: Alex, 34‑year‑old male with asthma, allergic rhinitis, eczema, obesity, depression, and tobacco use.  
+
+Chief Complaint: Home inhaler technique training and medication review.  
+
+History &amp; Presentation: Alex was discharged from the ED on April 1 with a prednisone taper (50 mg BID → 37.5 mg BID → 25 mg BID), and a regimen of albuterol/salmeterol (90/50 µg BID), fluticasone (100 µg BID), and a rescue albuterol MDI.  He had an upper respiratory infection, recent pine dust exposure, and reports occasional wheeze, mild exertional dyspnea, and a dry cough.  He had been smoking 10 cigarettes/day prior to the taper.  
+
+Current Encounter: At the visit, the patient was observed incorrectly placing the inhaler directly into the spacer without shaking (if a spacer‑compatible MDI).  I demonstrated proper technique: shaking nebulizer‑type rescue inhaler, exhaling fully before actuation, inhaling slowly, holding breath for 10 seconds, and using a spacer to deliver the full dose.  Alex had partial improvement but still expressed uncertainty.  I emphasized the importance of adherence to the prednisone taper and discussed a nicotine patch to support smoking cessation.  The case manager later contacted Alex to remind him about asthma diary‑keeping and to schedule a follow‑up visit.  
+
+Vitals: SpO₂ 96 % RA, HR 80 bpm, BP 118/70 mmHg, RR 20/min.  Clear lungs; mild wheeze noted with exertion; no distress.  
+
+Assessment: 1) Asthma – likely controlled with current controller regimen but inhaler technique suboptimal; 2) Recent upper respiratory infection and environmental exposure are contributing to symptoms; 3) Smoking status – risk factor for airway hyperresponsiveness.  
+
+Plan:  
+1. Reinforce inhaler technique – schedule a home visit in 5 days to re‑teach if necessary.  
+2. Continue current medication plan: prednisone taper as prescribed, albuterol/salmeterol 90/50 µg BID, fluticasone 100 µg BID, rescue albuterol MDI as needed.  
+3. Initiate nicotine patch (5 mg/24 h) and provide counseling resources.  
+4. Encourage diary entry of symptoms, peak flow (if available), medication adherence, and triggers.  
+5. Advise immediate ED or call emergency services if SpO₂ falls below 92 %, if wheeze worsens, or if they develop chest pain or severe dyspnea.  
+6. Follow up with home health in 7 days or sooner if symptoms worsen; coordinate with pulmonology for spirometry in 4–6 weeks.
+
+The patient is advised to continue education on inhaler use and to maintain communication with the case manager. 
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">occasional wheeze</span><span class="pill">mild shortness of breath during exertion</span><span class="pill">dry cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Oxygen Saturation</td><td>96% on room air</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Blood Pressure</td><td>118/70 mmHg</td></tr><tr><td>Respiratory Rate</td><td>20/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lungs, mild wheeze during exertion</li><li>Oxygen saturation 96% on room air</li><li>No signs of distress</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Education on inhaler technique</li><li>Recommendation of nicotine patch</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in inhaler use; still reports it is hard to get the spray right. Expressed willingness to use nicotine patch.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Asthma</span><span class="pill">Allergic rhinitis</span><span class="pill">Eczema</span><span class="pill">Obesity</span><span class="pill">Depression</span><span class="pill">Smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 50 mg daily (taper)</li><li>Albuterol/salmeterol 90/50 µg BID</li><li>Fluticasone 100 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Nicotine patch (recommended but not yet started)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Discharged home on prednisone taper (50 mg BID, then 37.5 mg, then 25 mg)</li><li>Albuterol/salmeterol 90/50 µg BID</li><li>Fluticasone 100 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Smoked 10 cigarettes/day prior to taper</li><li>Recent hiking exposure to pine dust</li><li>Upper respiratory infection</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The home health nurse visited Alex on day 3 to demonstrate proper inhaler technique with a spacer. Alex was initially placing the inhaler directly into the spacer without shaking, causing the dose to be suboptimal. The nurse corrected his technique, emphasizing a full exhale before inhalation, holding breath for 10 seconds, and shaking the inhaler if it was a nebulizer-type rescue. The nurse also reiterated the importance of taking the prednisone as prescribed and the benefits of a nicotine patch to aid smoking cessation. Alex left the visit feeling slightly better but still uncertain about his inhaler technique. A case manager called shortly after to remind him of diary‑keeping and to schedule a follow‑up.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient discharged on steroids; inhaler technique suboptimal; education required. Prednisone taper ongoing; risk of relapse reduced with education.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-04-07</h3><div class="visit-meta">Pulmonology | Reason: 7‑day follow‑up after acute exacerbation; review asthma control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 7‑day follow‑up after recent exacerbation; review respiratory control.
+
+**HPI:** 34‑year‑old male with known asthma, allergic rhinitis, eczema, obesity, depression, and smoking presents for the scheduled 7‑day follow‑up. Past 7 days, he has continued to use his albuterol rescue inhaler an average of four times per day despite prior instruction. He reports feeling well overall, with intermittent morning chest tightness and a dry cough. No current wheeze, chest pain, or shortness of breath.
+
+**Past History:** – Asthma diagnosis, recently severe exacerbation treated in ED on 4/1/23.
+– Current prednisone taper 37.5 mg daily.
+– Controller therapy: albuterol/salmeterol (90/50 µg) BID and fluticasone 100 µg BID.
+– Rescue albuterol inhaler.
+– Nicotine patch for smoking cessation.
+
+**Medications:** Prednisone 37.5 mg daily, albuterol/salmeterol 90/50 µg BID, fluticasone 100 µg BID, albuterol rescue inhaler, nicotine patch.
+
+**Allergies:** None known.
+
+**Vital Signs:** 
+- O₂ sat 97% RA, HR 78 bpm, BP 118/72 mmHg, RR 18/min.
+
+**Physical Examination:** Clear lung fields with minimal expiratory wheeze. No respiratory distress.
+
+**Pulmonary Function Tests:** Spirometry shows FEV₁ 70% predicted, FEV₁/FVC 69%.
+
+**Assessment:**
+1. Asthma – partially controlled. The patient is still using rescue inhaler frequently (4/day). FEV₁ 70% indicates mild reversible obstruction; FEV₁/FVC 69% suggests mild obstructive pattern consistent with outpatient asthma. The continued rescue use likely reflects poor adherence to controller inhaler or inadequate technique.
+2. Risk of smoking-related exacerbation – smoker (currently using nicotine patch). Patient expresses motivation to reduce use.
+3. Possible occupational exposure from recent hiking (pine dust) but no significant clinical impact noted.
+
+**Plan:**
+- Reinforce inhaler technique for both pre‑ and post‑bronchodilator medications. Provide a spacer demonstration and verify technique.
+- Simplify maintenance regimen: keep current dosing (no change) but emphasize consistent daily use of fluticasone + albuterol/salmeterol.
+- Continue prednisone taper per prescribing schedule.
+- Encourage gradual reduction of nicotine patch: transition to 21 mg patch for 4 weeks, then 14 mg for 4 weeks, then 7 mg as tolerance permits.
+- Schedule repeat spirometry at 4‑week visit to assess improvement.
+- Educate on early recognition of exacerbation and prompt use of rescue inhaler.
+- Follow up in clinic in 1 week for inhaler technique review and reassessment of rescue inhaler use.
+- If rescue use remains &gt;2 times/day or spirometry shows FEV₁ &lt;80% predicted, consider stepping up controller therapy (increase fluticasone dose or add leukotriene modifier).
+
+**Disposition:** Patient to return in 1 week for follow‑up. Advised to contact clinic sooner if experiencing increased wheeze, shortness of breath, or chest tightness.
+
+**Patient Education:** Discussed importance of adherence, proper inhaler technique, and smoking cessation strategies.
+**Signature:**
+
+Pulmonologist
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No wheeze</span><span class="pill">Occasional morning chest tightness</span><span class="pill">Dry cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Oxygen Saturation</td><td>97% on room air</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Blood Pressure</td><td>118/72 mmHg</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lung fields</li><li>Minimal expiratory wheeze</li><li>No respiratory distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Spirometry</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>FEV1 70% predicted, FEV1/FVC 69%</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Says he feels good now, chest tightness gone, and is ready to cut down on smoking.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Asthma</span><span class="pill">Allergic rhinitis</span><span class="pill">Eczema</span><span class="pill">Obesity</span><span class="pill">Depression</span><span class="pill">Smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 37.5 mg daily</li><li>Albuterol/salmeterol 90/50 µg BID</li><li>Fluticasone 100 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Nicotine patch</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prednisone taper ongoing (37.5 mg daily)</li><li>Albuterol/salmeterol 90/50 µg BID</li><li>Fluticasone 100 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Nicotine patch (ongoing)</li><li>Diary shows 4 rescue inhalations/day</li><li>Recent hiking exposure to pine dust</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Alex arrived for the scheduled 7‑day follow‑up. The pulmonologist reviewed his medication diary that indicated he still used the rescue inhaler four times a day despite instructions. An exam was performed; lungs were clear with minimal wheeze. Spirometry measured an FEV1 of 70% predicted, FEV1/FVC 69%. The pulmonologist reinforced adherence, simplified the maintenance regimen to the same dosing (no change), and emphasized consistent use of the controller inhaler. He also reviewed nicotine patch usage, suggesting gradual reduction. Alex reported feeling well, no chest tightness, and expressed motivation to maintain therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Asthma control now improving; inhaler technique adequate; FEV1 increased. Prednisone taper progressing. Patient remains on nicotine patch.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-05-01</h3><div class="visit-meta">Pulmonology | Reason: 30‑day review after acute exacerbation; monitor long‑term control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 30‑day review; monitor long‑term asthma control.
+
+History of Present Illness: 34‑year‑old male presents for routine pulmonology review. He reports no wheeze or chest tightness, occasional cough, improved sleep, and a weight loss of 8 kg over the past 6 weeks. He completed a prednisone taper after the acute exacerbation in early April, stopped nicotine patches, and has been taking sertraline 25 mg daily for depression. No recent asthma events.
+
+Past Medical History: Asthma, allergic rhinitis, eczema, obesity, depression. Past Interventions: Emergency department episode of severe asthma on 01 Apr 2023; home health visit 03 Apr with inhaler technique training and nicotine patch initiation; follow‑up 07 Apr with continued prednisone taper.
+
+Physical Examination: Vital signs stable. Chest clear with no wheeze; normal breath sounds. Weight ~80 kg (down 8 kg).
+
+Pulmonary Function: Recent spirometry (25 Apr) shows FEV1 72 % predicted, FEV1/FVC 71 %, no recent exacerbation.
+
+Assessment:
+1. Chronic, well‑controlled asthma – remains under control with current controller regimen and no recent exacerbation.
+2. Depression – improved sleep noted; sertraline tolerated.
+3. Obesity – significant weight loss improves lung mechanics.
+
+Plan:
+- Continue current inhaled corticosteroid/long‑acting β₂‑agonist (Fluticasone 100 µg BID + Salmeterol/Albuterol 90/50 µg BID).
+- Continue as needed albuterol rescue inhaler.
+- Continue sertraline 25 mg daily.
+- Repeat spirometry in 4 weeks to confirm stability.
+- Encourage ongoing smoking cessation support (patch discontinued).
+- Reinforce weight‑management, balanced diet, and regular exercise.
+- Continue routine depression counselling.
+- Follow‑up in clinic 4 weeks from today.
+
+No new medications or referrals ordered today.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No wheeze</span><span class="pill">No chest tightness</span><span class="pill">Occasional cough</span><span class="pill">Improved sleep</span><span class="pill">Weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Oxygen Saturation</td><td>98% on room air</td></tr><tr><td>Heart Rate</td><td>72 bpm</td></tr><tr><td>Blood Pressure</td><td>116/70 mmHg</td></tr><tr><td>Respiratory Rate</td><td>17/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lungs</li><li>No wheeze</li><li>Normal breath sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Spirometry</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>FEV1 72% predicted, FEV1/FVC 71%</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Says he feels good, no symptoms, pleased with asthma control, and appreciates support.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Asthma</span><span class="pill">Allergic rhinitis</span><span class="pill">Eczema</span><span class="pill">Obesity</span><span class="pill">Depression</span><span class="pill">Smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/salmeterol 90/50 µg BID</li><li>Fluticasone 100 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Sertraline 25 mg daily</li><li>Multivitamin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prednisone taper completed after 15 days; only controller inhalers remain</li><li>Nicotine patch discontinued</li><li>Started sertraline 25 mg daily for depression two weeks ago</li><li>Underwent counseling</li><li>Lost 8 kg over past 6 weeks</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pulmonologist reviewed Alex’s recent spirometry showing FEV1 at 72% predicted and no exacerbation events. He confirmed that Alex was now on a stable controller regimen, had stopped nicotine patches, and was taking sertraline for depression. Weight decreased by 8 kg, improving lung mechanics. The pulmonologist gave positive reinforcement, encouraged continued adherence, and emphasized lifestyle changes such as balanced diet and regular exercise. A repeat spirometry was ordered for final assessment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable asthma on controller inhaler; no systemic steroids required. Depression improving under sertraline. Continuing weight loss trajectory.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-06-01</h3><div class="visit-meta">Pulmonology | Reason: 60‑day follow‑up; ensure continued stability</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 60‑day follow‑up for asthma monitoring.
+
+History of Present Illness: Alex presents for routine pulmonary review. He reports no new symptoms, specifically no shortness of breath, wheeze, chest tightness, or cough. He reports good exercise tolerance and satisfaction with current regimen. Weight loss of 8 kg over 6 weeks has plateaued.
+
+Past Medical History: Asthma, allergic rhinitis, eczema, obesity, depression, former smoker (ceased 6 weeks ago).
+
+Medications: Albuterol/Salmeterol 90/50 µg BID, Fluticasone 100 µg BID, Albuterol rescue inhaler (MDI) PRN, Sertraline 25 mg daily, Multivitamin.
+
+Allergies: NKDA.
+
+Review of Systems: Negative for respiratory symptoms; mood, sleep, and appetite stable.
+
+Physical Examination: Vitals normal – O₂ Sat 98% RA, HR 70 bpm, BP 115/68 mmHg, RR 18/min. Pulmonary exam: clear lungs, no wheeze, normal chest contour. No dermal abnormalities.
+
+Diagnostic Testing: Spirometry completed today – FEV1 74% predicted. FEV1/FVC ratio not reported but within expected range for healthy adult.
+
+Assessment: Asthma remains well‑controlled. FEV1 74% predicted is stable compared to prior values (70–74%). No exacerbations; patient adheres to controller therapy. Weight loss plateau suggests need for lifestyle reinforcement.
+
+Plan:
+1. Continue current inhaled corticosteroid/long‑acting β₂‑agonist (Fluticasone/Albuterol‑Salmeterol) and rescue Albuterol.
+2. Re‑evaluate inhaler technique at next visit.
+3. Consider a step‑down trial of inhaled corticosteroid dose (e.g., reduce Fluticasone to 50 µg BID) after 4 weeks if FEV1 remains &gt;80% predicted and symptoms absent.
+4. Continue sertraline 25 mg daily for depression.
+5. Encourage balanced diet and continued exercise; refer to dietitian if weight goals not met.
+6. Smoking cessation support remains offered; nicotine patch discontinued due to cessation.
+7. Schedule spirometry in 4 weeks for objective monitoring.
+8. Follow‑up in clinic next month or sooner if symptoms develop.
+
+Patient education provided regarding importance of adherence, inhaler technique, and lifestyle measures for asthma control.
+
+Signature: Dr. ___, MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None</span><span class="pill">No wheeze</span><span class="pill">No chest tightness</span><span class="pill">Good exercise capacity</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Oxygen Saturation</td><td>98% on room air</td></tr><tr><td>Heart Rate</td><td>70 bpm</td></tr><tr><td>Blood Pressure</td><td>115/68 mmHg</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lungs</li><li>No wheeze</li><li>Normal chest contour</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Spirometry</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>FEV1 74% predicted</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Positive; no issues, content with current regimen, wants to keep weight stable.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Asthma</span><span class="pill">Allergic rhinitis</span><span class="pill">Eczema</span><span class="pill">Obesity</span><span class="pill">Depression</span><span class="pill">Smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/salmeterol 90/50 µg BID</li><li>Fluticasone 100 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Sertraline 25 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Asthma stable on controller inhalers</li><li>Depression stabilized on sertraline</li><li>Weight loss plateauing, but 8 kg lost over 6 weeks</li><li>No smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Alex returned for a routine check. The pulmonologist confirmed that his lung function remained stable (FEV1 74% predicted) and that asthma remained well controlled. No exacerbations had occurred in the past 6 weeks. The pulmonologist reiterated the importance of adherence, advised on gradual dose reductions if appropriate, and discussed long‑term management goals. Alex expressed satisfaction and plans to focus on lifestyle maintenance.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Asthma remains controlled on maintenance inhaler. No exacerbations, systemic steroids completed. Depression stable. Weight loss plateauing. Continue current maintenance regimen and schedule next review in 6 months.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 34</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Allergic Rhinitis</span><span class="pill">Eczema</span><span class="pill">Obesity</span><span class="pill">Depression</span><span class="pill">Asthma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Fluticasone 100 µg BID</li><li>Albuterol/Salmeterol 90/50 µg BID</li><li>Albuterol rescue inhaler (MDI)</li><li>Sertraline 25 mg daily</li><li>Multivitamin</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>April 1, 2023 – Emergency department visit for acute severe asthma exacerbation. Patient presented with shortness of breath, wheezing, chest tightness, and tachypnea. Vitals: O2 sat 92% RA, HR 110 bpm, RR 32/min, BP 120/75 mmHg. Physical exam: diffuse wheeze and expiratory rales; chest X‑ray: diffuse hyperinflation with mild basal opacity. Treatments: nebulized albuterol 2.5mg and ipratropium 0.5mg twice hourly, IV methylprednisolone 125mg, subcutaneous epinephrine 0.5mg if needed, IV 100mL 2.5% dextrose‑normal saline. Advised inhaler technique review, smoking cessation counseling, pulmonary follow‑up, and repeat spirometry.</li><li>April 3, 2023 – Home health visit for inhaler technique training and medication review after acute exacerbation. Patient demonstrated suboptimal inhaler technique; education provided on shaking, exhaling, inhaling slowly, holding breath, and spacer use. Prednisone taper continued per prescription. Initiated nicotine patch for smoking cessation. Vitals within normal limits. No acute distress during visit.</li><li>April 7, 2023 – 7‑day follow‑up after acute asthma exacerbation; review of asthma control. Spirometry showed FEV1 70% predicted and FEV1/FVC 69%. Patient used albuterol rescue inhaler four times daily. Inhaler technique reinforced and spacer demonstrated. Plan: continue current controller regimen, maintain prednisone taper, taper nicotine patch from 5mg to 21mg for 4 weeks, then 14mg for 4 weeks, then 7mg as tolerated. Repeat spirometry scheduled in 4 weeks.</li><li>May 1, 2023 – Pulmonology review. Patient reports no wheeze or chest tightness, occasional cough, improved sleep, and an 8‑kg weight loss over 6 weeks. Physical exam normal, chest clear, vitals stable. Spirometry (25 Apr) shows FEV1 72% predicted and FEV1/FVC 71%. Continue current inhaled corticosteroid/long‑acting β₂‑agonist regimen, Albuterol rescue inhaler, sertraline 25 mg daily, and multivitamin. Repeat spirometry in 4 weeks. Encourage smoking cessation support and lifestyle modifications.</li><li>June 1, 2023 – Pulmonology follow‑up for asthma monitoring. No respiratory symptoms; weight loss plateau at 8 kg. Vital signs normal (O₂ sat 98% RA, HR 70 bpm, BP 115/68 mmHg, RR 18/min). Spirometry FEV1 74% predicted, FEV1/FVC within expected range. Plan: continue current inhaled corticosteroid/long‑acting β₂‑agonist (Fluticasone/Albuterol‑Salmeterol) and rescue Albuterol; re‑evaluate inhaler technique; consider step‑down of inhaled corticosteroid dose after 4 weeks if FEV1 remains &gt;80% predicted; continue sertraline 25 mg daily; reinforce balanced diet, exercise, and smoking cessation support; schedule spirometry in 4 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

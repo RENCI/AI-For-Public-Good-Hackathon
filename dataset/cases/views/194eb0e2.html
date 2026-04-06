@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 194eb0e2</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 194eb0e2</h1><div class="subtitle">Sickle Cell Vaso‑Occlusive Crisis | Female, 35</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Chronic anemia, Renal insufficiency, Osteonecrosis, Pulmonary hypertension, Stroke, Gallstones</div><div class="meta-line">Risk Factors: Dehydration, Low oxygen saturation, Infection (e.g., urinary tract infection, pneumonia), Cold temperatures or rapid temperature change, High altitude, Stress, Certain medications (e.g., fluoroquinolones)</div></div>
+<details><summary>Narrative <span class="preview-text">Maya, a 35‑year‑old woman with a long history of sickle cell disease (HbSS), found herself on a rapid, exhausting journe...</span></summary><div class="section-body"><p>Maya, a 35‑year‑old woman with a long history of sickle cell disease (HbSS), found herself on a rapid, exhausting journey of pain, fear, and eventual relief. Her life outside the clinic had been a delicate balance: chronic anemia (hemoglobin 7.5 g/dL on baseline repeat labs), persistent renal insufficiency (creatinine 1.8 mg/dL, GFR ≈ 45 mL/min), a history of osteonecrosis of the femoral heads noted on a hip MRI a year ago, mild pulmonary hypertension (pulmonary systolic pressure 35 mmHg on echocardiography), a cerebral infarct in 2018 that left her with mild right‑side weakness but otherwise independent, and gallstones that had caused her a recent laparoscopic cholecystectomy three months earlier. She lived with these conditions like a seasoned runner: keeping track of dehydration, avoiding extremes of temperature, and staying diligent with her hydroxyurea (15 mg/kg daily) and folic acid.</p><p>---</p><p>### Day 0 – The Spark</p><p>The morning began in a small apartment in the Midwest. Maya had just finished a short flight from New York to Denver (approximately 1,500 m above sea level), a trip she’d taken for a conference on pain management. She felt the thinness of the air but dismissed it; after all, her baseline oxygen saturation on room air usually hovered around 94% at sea level. A quick cup of coffee left her slightly dehydrated, and she had been sipping only water through a large soda bottle on the plane, not realizing the thin cabin air accelerated sweat loss.</p><p>Later that afternoon, she noticed an unusual, dull ache in her left thigh—an area with a known history of osteonecrosis. It was mild, so she did not think much of it, but by evening, the pain erupted into a throbbing, whole‑body ache. She also felt a strange cold‑like chill in the room, although the HVAC was on low. Her blood pressure dipped to 100/60 mmHg, heart rate 95 beats/min. No fever yet, but her throat felt scratchy, and she remembered a recent urinary tract infection treated with a course of ciprofloxacin.</p><p>Maya&#x27;s thoughts drifted to the risk factors that could be compounding her sickle cell crisis: the altitude, the dehydration, the ciprofloxacin (known to sometimes precipitate hemolysis in sickle cell), and even the mild cold from rapidly changing temperatures in the airplane cabin to an outdoor conference setting. She tried a few ibuprofen tablets, but the pain only intensified.</p><p>---</p><p>### Day 1 – Descent into the Crisis</p><p>Morning arrived with a slight fever (99.5 °F/37.5 °C). On waking, she noticed her toes were a pale blue, and there was a dark shadow under her left eye—classic micro‑perfusion changes to a sickle. She called her nurse practitioner; a prompt home visit revealed her pulse to be 108 beats/min, SpO₂ 89% on room air, a wet‑appearing nasal discharge, and a slightly elevated white count of 11 000 cells/µL. The nurse recommended IV hydration in an urgent care center; Maya accepted, hoping for an easy day.</p><p>At the urgent care, the nurse practitioner—her second‑line provider—performed a quick CBC. Hemoglobin was 6.8 g/dL, hematocrit 22%. She had elevated reticulocytes (9%) and bilirubin of 3.5 mg/dL, indicating a hemolytic picture. Blood urea nitrogen was 22 mg/dL, creatinine rose to 2.0 mg/dL (reflecting her chronic renal insufficiency). A point‑of‑care SpO₂ remained low at 88%. Physical exam revealed a tender left groin and right flank pain; the latter could be a sign of ureteral obstruction or a complication of her recent UTI.</p><p>Maya’s urgent care physician ordered a urine culture, a chest X‑ray, and a CT scan of the abdomen due to a lingering right flank discomfort. The chest X‑ray showed mild right basal atelectasis, and the CT revealed one large gallstone lodged in the cystic duct—a known residual problem. The urine culture returned positive for Escherichia coli, consistent with her recent UTI. Her pain was worsening: she reported 9/10 in multiple joints and a constant throbbing in her left femur.</p><p>The physician decided to transfer Maya to the hospital, anticipating a severe vaso‑occlusive crisis with risk of multi‑organ involvement.</p><p>---</p><p>### Day 2 – Hospitalization and Management</p><p>**Morning:** Maya arrived at the regional tertiary care center in a wheeze of shortness of breath. She was greeted by an interdisciplinary team: a hematologist, a nephrologist, a pulmonologist, and a pain medicine specialist. They intubated her oxygen mask; SpO₂ rose to 94% with 4 L/min O₂. The pain was now reported as 10/10. Her pain score spiked the pain medicine team’s alert.</p><p>**Pain Management:** The first step was aggressive IV hydration. Because of her chronic renal insufficiency, the nephrologist carefully matched fluids to avoid volume overload but ensured she received 1 L/hr of 0.9% saline. A high‑dose opioid regimen—morphine 8 mg IV every 4 hrs with an IV drip of 4 mg/h as a background infusion—was titrated to keep her pain below 5/10. Adjunctive acetaminophen 1 g IV QID was added. Because she has osteonecrosis and chronic opioid use, the team used a multimodal approach with NMDA antagonists (ketamine 0.5 mg/kg IV), gabapentin 300 mg PO BID, and a small dose of lidocaine patch for localized relief.</p><p>**Transfusion:** The hematology team evaluated the need for a transfusion. Maya’s blood pressure remained stable, but the hemoglobin remained low at 6.5 g/dL, and her oxygen saturation never fully recovered. The decision was to issue a partial exchange transfusion (PEP), aiming to lower her HbS concentration from approximately 80% to less than 30%. They sent two units of antigen‑matched blood, giving her a net hematocrit rise to 27% and hemoglobin 8.0 g/dL. This was performed under close monitoring for transfusion reactions, something her past history had taught them to anticipate.</p><p>**Infection Control:** The ID specialist started empiric IV ceftriaxone 1 g q12h and metronidazole 500 mg q6h for possible aspiration pneumonia. The culture grew Klebsiella pneumoniae sensitive to ceftriaxone. She was also admitted to the infectious disease ward for a 7‑day course for her UTI. A bladder ultrasound showed no hydronephrosis. Her urinalysis resolved with a marked decrease in leukocytes.</p><p>**Pulmonary Considerations:** The pulmonologist noted mild right basal atelectasis on the chest X‑ray, but no pulmonary emboli on a low–dose CT angiogram. A pulmonary function test confirmed a mild restriction, typical of her baseline pulmonary hypertension. Inhaled oxygen and a non‑invasive ventilation mask ensured the SpO₂ remained above 92%. No escalation to high‑flow nasal cannula was needed.</p><p>**Renal Monitoring:** Her nephrologist kept a strict eye on the creatinine, which decreased to 1.6 mg/dL within 48 hrs of fluid resuscitation. The team also instituted mannitol for renal perfusion and diuretics when needed.</p><p>**Neuro‑Monitoring:** After her past stroke, they monitored her for any new or worsening neurological symptoms. Her NIHSS score remained at 0. There were no new deficits.</p><p>**Mental Health &amp; Support:** She had an anxious state—anxiety was a known comorbidity in a 35‑year‑old with chronic pain and was exacerbated by her hospitalization. The psychiatric team offered counseling and a low‑dose benzodiazepine for short‑term use. A social worker liaised with her insurance and family.</p><p>---</p><p>### Day 3 – The Turning Point</p><p>By Day 3, Maya&#x27;s pain had reduced from 10/10 to 4/10. Her Hb had risen steadily to 9.2 g/dL. The oxygen saturation stayed above 95% on 2 L/min; the need for high‑flow oxygen went away. Her urinary symptoms resolved. The chest X‑ray cleared partially: the atelectasis was less obvious.</p><p>Her pain management shifted from a continuous infusion to scheduled doses of oxycodone 10 mg PO Q6h with acetaminophen. The gabapentin and ketamine were tapered. The partial exchange transfusion seemed to have mitigated the risk of recurrent crises by reducing sickled cells. Her fluid balance remained in slight negative, preventing edema while maintaining adequate renal perfusion.</p><p>However, a new challenge appeared: the day after the CT scan, Maya’s gallstone had lodged in the cystic duct. She complained of right upper quadrant pain and a sensation of fullness. The surgical consult recommended a scheduled laparoscopic cholecystectomy, but the team decided to wait until her pain crisis was fully resolved to avoid surgical stress—a classic example of weighing the benefits and risks in a patient with pulmonary hypertension and renal insufficiency.</p><p>---</p><p>### Day 4 – Gradual Weaning</p><p>Maya&#x27;s physical exam on Day 4 showed improved pain thresholds; she could ambulate short distances without assistance, albeit with a mild limp left. Her urine output remained well above 1,500 mL/day, and creatinine had plateaued at 1.6 mg/dL. The nurse practitioner monitored vital signs: heart rate 86, BP 110/68, SpO₂ 97% on room air. She reported occasional mild chest discomfort, but an ECG demonstrated no new arrhythmias and a normal QTc.</p><p>Her pain regimen had narrowed to oxycodone/acetaminophen with an as‑needed ketamine infusion for breakthrough pain. The infusion was discontinued after 24 hrs. She also had daily physiotherapy sessions focusing on gentle range‑of‑motion for her osteonecrotic hips to maintain joint mobility and prevent flare-ups.</p><p>The ID team finished the 7‑day ceftriaxone course, and her inflammatory markers (CRP 2.5 mg/dL, ESR 30 mm/h) had trended toward normal. A final CBC on Day 5 revealed a stable hemoglobin of 9.0 g/dL. The hematology team continued hydroxyurea therapy, reinforcing the dosage.</p><p>---</p><p>### Day 6 – Discharge Planning</p><p>Having met the clinical criteria—pain score &lt;5, stable hemoglobin and creatinine, no acute infection, pulmonary pressures within acceptable limits—the interdisciplinary team drafted a discharge plan. She received an outpatient follow‑up with hematology in 2 weeks and was encouraged to keep a pain diary. Her nephrologist recommended regular eGFR monitoring, fluid balance education, and avoiding NSAIDs unless medically necessary. The pulmonologist advised maintaining supplemental oxygen during high‑altitude activities such as camping, with a target SpO₂ &gt; 90%.</p><p>The surgery board scheduled a laparoscopic cholecystectomy on Day 14, after confirming she was clinically stable enough for anesthesia, and planned for an analgesic regimen that minimized narcotics.</p><p>On the day of discharge, Maya was still mildly anxious but hopeful. She had seen the entire spectrum of acute crisis care—from the initial home visit to the complex inpatient multi‑specialty care. She had learned to identify early warning signs, to maintain hydration, and to seek prompt medical attention. Her oxygen sat stayed above 95% for the day, and she was given instructions on how to monitor her own SpO₂, when to call for help, and how to manage low‑grade pain with non‑opioid agents, before the outpatient oncology‑derived plan could guide her.</p><p>---</p><p>### One Week Post‑Discharge</p><p>In subsequent outpatient visits, Maya’s hemoglobin stabilized at 9.1 g/dL, her creatinine at 1.5 mg/dL, and her pain threshold remained high. The pain diary noted that her pain episodes were now less frequent and less intense. She continued with her hydroxyurea therapy and was scheduled for a cholecystectomy, which proceeded uneventfully. Her pulmonary hypertension remained controlled with low‑dose sildenafil. The patient’s overall quality of life improved measurably; she returned to full productivity at her job and scheduled a routine ophthalmologic exam to examine for retinal changes of sickle cell disease.</p><p>---</p><p>**The Takeaway**</p><p>Maya’s acute vaso‑occlusive crisis evolved over a week from an impulsive, multi‑factor precipitating set of events—high altitude, dehydration, infection, and medication—to an intensive inpatient recovery that involved fluid resuscitation, aggressive pain control, hemoglobin modulation via partial exchange transfusion, targeted antibiotic therapy, and interdisciplinary oversight. Her comorbidities—renal function, pulmonary hypertension, osteonecrosis, a history of stroke, and gallstones—required careful balancing, but with timely intervention, the crisis resolved. Maya emerged from this episode strengthened by insight into her disease, a more robust care plan, and a renewed sense of control. The story underscores that a typical crisis can be navigated successfully when risk factors are promptly recognized and managed within a cohesive, patient‑centered medical framework.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-05</h3><div class="visit-meta">Urgent Care | Reason: Acute pain, fever, and hypoxia after recent flight</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Acute diffuse body pain, right flank tenderness, blue toes, mild fever, cough, feeling chilly.
+
+**History of Present Illness:** A 35‑year‑old female presented after a recent flight to Denver (altitude 1500 m) with severe diffuse pain radiating to the left thigh, right flank tenderness, mild febrile sensation, and a wet‑appearing nasal discharge. She reports blue discoloration of her toes and a mild cough. She has a history of chronic anemia (Hb 7.5 g/dL), chronic renal insufficiency (Cr 1.8 mg/dL, GFR 45 mL/min), osteonecrosis of the left femoral head, pulmonary hypertension (PAP 35 mmHg), prior right‑handed stroke in 2018, and gallstones. She had laparoscopic cholecystectomy 3 months ago and a recent E. coli UTI treated with ciprofloxacin.
+
+**Review of Systems:** Positive for fever, diffuse pain, flank pain, blue toes, cough, feeling chilly. No chest pain, dyspnea, or recent trauma.
+
+**Physical Examination:**
+- **Vitals:** BP 97/62 mmHg, HR 108 bpm, RR 22/min, Temp 99.5 °F (37.5 °C), SpO₂ 88% RA.
+- **General:** Pale, diaphoretic, anxious.
+- **Head/Neck:** Pale conjunctiva, wet nasal discharge.
+- **Cardiovascular:** Tachycardic, normal S1/S2,
+- **Respiratory:** Reduced air entry basal right, mild crackles.
+- **Abdomen:** Right flank tenderness, mild suprapubic tenderness, distended and tender in the RUQ.
+- **Extremities:** Blue discoloration of toes without swelling or warmth.
+
+**Laboratory and Imaging:**
+- CBC: Hgb 6.8 g/dL, Hct 22%, retic 9%.
+- BMP: BUN 22 mg/dL, Cr 2.0 mg/dL.
+- Urine culture: E. coli susceptible to ceftriaxone.
+- Chest X‑ray: Mild right basal atelectasis.
+- CT abdomen: Large gallstone lodged in cystic duct.
+
+**Assessment:**
+1. **Acute hemolytic anemia exacerbation** – worsening hemoglobin with high retic count, indirect hyperbilirubinemia.
+2. **Sepsis secondary to E. coli UTI** – fever, tachycardia, leukocytosis, positive urine culture.
+3. **Acute cholangitis** – RUQ pain, hyperbilirubinemia, gallstone obstruction, fever.
+4. **Possible pulmonary embolism** – hypoxia, tachypnea, blue discoloration of toes, underlying pulmonary hypertension.
+5. **Pre‑renal acute kidney injury** – dehydration from recent flight, sepsis, low BP.
+
+**Plan:**
+- Admit to regional hospital for ICU/step‑down care.
+- Continue IV ceftriaxone 1 g q12h and metronidazole 500 mg q6h.
+- Maintain IV 0.9% NaCl 0.5 L/h; titrate to maintain urine output &gt;0.5 mL/kg/h.
+- Analgesia: IV morphine 8 mg q4h PRN; consider patient‑controlled analgesia if pain persists.
+- Continue IV acetaminophen 1 g qID and IV ketamine 0.5 mg/kg bolus for breakthrough pain.
+- Oxygen supplementation to maintain SpO₂ &gt;94% (start 2 L nasal cannula if needed).
+- Order D‑dimer, lower extremity Doppler ultrasound, and CT pulmonary angiography to evaluate for pulmonary embolism.
+- Serial CBC, BMP, coagulation panel every 12 h.
+- Monitor lactate and blood cultures; repeat cultures if clinical deterioration.
+- Consult nephrology for AKI management, hematology for hemolysis, and GI/Interventional Radiology for possible ERCP or cholecystectomy.
+- Consider anticoagulation if D‑dimer/CT confirms PE.
+
+**Disposition:** Admitted to the hospital with transfer to ICU/step‑down as indicated.
+
+**Follow‑up Recommendations:**
+- Admit and reassess pain, vitals, and SpO₂ hourly.
+- Repeat CBC, BMP, and bilirubin daily.
+- Repeat chest X‑ray in 48 h.
+- Follow up on imaging studies for PE and cholecystitis.
+- Communicate with hospital team regarding renal replacement therapy if creatinine rises or oliguria persists.
+- Post‑discharge plan will depend on resolution of hemolysis, infection, and biliary obstruction.
+
+**Signature:**
+- Dr. [Name], Urgent Care
+- Date: 2026‑03‑05</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe diffuse body pain</span><span class="pill">Right flank pain</span><span class="pill">Blue toes</span><span class="pill">Mild fever</span><span class="pill">Cough</span><span class="pill">Feeling chilly</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>97/62 mmHg</td></tr><tr><td>Heart Rate</td><td>108 bpm</td></tr><tr><td>Respiratory Rate</td><td>22/min</td></tr><tr><td>Temperature</td><td>99.5°F (37.5°C)</td></tr><tr><td>SpO2</td><td>88% on room air</td></tr><tr><td>Oxygen Flow</td><td>None</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Blue discoloration of toes</li><li>Pale conjunctiva</li><li>Right flank tenderness</li><li>Mild suprapubic tenderness</li><li>Wet‑appearing nasal discharge</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>Urine culture</li><li>Chest X‑ray</li><li>CT abdomen with contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hemoglobin 6.8 g/dL, Hematocrit 22%, Reticulocyte % 9%, Bilirubin 3.5 mg/dL</li><li>BMP: BUN 22 mg/dL, Creatinine 2.0 mg/dL</li><li>Urine culture: Escherichia coli sensitive to ceftriaxone</li><li>Chest X‑ray: Mild right basal atelectasis</li><li>CT abdomen: One large gallstone lodged in cystic duct</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV 0.9% NaCl 0.5 L/hr</li><li>IV morphine 8 mg q4h</li><li>IV acetaminophen 1 g qID</li><li>IV ketamine 0.5 mg/kg bolus</li><li>IV ceftriaxone 1 g q12h</li><li>IV metronidazole 500 mg q6h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain decreased from 9/10 to 8/10 after first opioid dose, but remained high. SpO2 improved to 90% on room air. Patient was admitted to hospital for further care.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Sickle Cell Disease</span><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke history</span><span class="pill">Gallstones</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Vitamin D 2000 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sickle Cell Disease (HbSS) on hydroxyurea 15 mg/kg daily</li><li>Chronic anemia (Hb 7.5 g/dL)</li><li>Renal insufficiency (Cr 1.8 mg/dL, GFR 45 mL/min)</li><li>Osteonecrosis of left femoral head (MRI 1 yr ago)</li><li>Pulmonary hypertension (PAP 35 mmHg)</li><li>Right‑handed stroke 2018</li><li>Gallstones; laparoscopic cholecystectomy 3 months prior</li><li>Recent UTI treated with ciprofloxacin</li><li>Recent flight to Denver (altitude 1500 m), mild dehydration</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented to the urgent‑care clinic with severe, diffuse pain radiating to the left thigh, right flank tenderness, and a mild fever. Physical exam revealed blue discoloration of fingertips, mild conjunctival pallor, and a wet‑appearing nasal discharge. The physician promptly obtained bloodwork and imaging. Laboratory evaluation showed significant hemolysis and acute kidney injury. Immediate IV hydration and analgesia were initiated. Empiric broad‑spectrum antibiotics were started given the likely infection. The patient was admitted to the regional hospital for further management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute vaso‑occlusive crisis precipitated by altitude, dehydration, recent UTI, and ciprofloxacin use. Hemolysis evident by elevated bilirubin and reticulocytes. Initiated early resuscitation and empiric antibiotics.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-06</h3><div class="visit-meta">Hospital – Hematology/Multidisciplinary | Reason: Severe vaso‑occlusive crisis with multi‑organ involvement</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 2 – 2026-03-06
+
+Chief Complaint: Severe pain crisis with multi‑organ involvement.
+
+History of Present Illness: 35‑year‑old female with known sickle cell disease, chronic anemia, renal insufficiency, osteonecrosis, pulmonary hypertension, stroke history, and gallstones presents with a 3‑day severe vaso‑occlusive crisis. She reports 10/10 body pain, shortness of breath, chest tightness, and persistent flank pain. Recent episode included a urinary tract infection with E. coli sensitive to ceftriaxone, treated with a 5‑day course of ciprofloxacin. She was also exposed to high altitude during a flight and was mildly dehydrated before admission.
+
+On presentation: She was afebrile, tachycardic, normotensive, with SpO₂ 94% on 4 L/min nasal cannula. Physical exam revealed generalized tenderness, right flank tenderness, mild right basal crackles, blue nail beds, and no new neurologic deficits.
+
+Labs and Imaging: Hemoglobin 8 g/dL, Hct 27%, Retic 7%; Cr 1.6 mg/dL, BUN 18 mg/dL; CRP 2.5 mg/dL, ESR 30 mm/h; Lactate 1.2 mmol/L; Urine culture grew E. coli. Chest CTA ruled out pulmonary embolism. PFT showed mild restrictive pattern consistent with baseline pulmonary hypertension.
+
+Assessment: Acute vaso‑occlusive crisis with multi‑organ involvement in sickle cell disease. Secondary infection (treated UTI) was addressed. Acute kidney injury improving. Pulmonary hypertension partially stabilized. No pulmonary embolism. Pain well controlled after partial exchange transfusion and aggressive multimodal analgesia.
+
+Plan:
+1. Pain: Continue IV morphine infusion 4 mg/h with schedule of tapering to IV acetaminophen and oral oxycodone/acetaminophen as needed. Start gabapentin 300 mg PO BID for neuropathic component. Apply lidocaine patch PRN.
+2. Infections: Continue IV ceftriaxone 1 g q12h and IV metronidazole 500 mg q6h for 5 days total. Monitor urine culture and inflammatory markers.
+3. Hematology: Partial exchange transfusion completed; monitor CBC and reticulocyte count daily.
+4. Renal: Continue IV fluids 0.9 % NaCl 1 L/hr; monitor urine output, SCr, BUN; hold furosemide unless fluid overload.
+5. Pulmonary: Maintain low‑flow oxygen to keep sats &gt;95%; follow up PFTs in outpatient setting.
+6. Follow‑up labs in 24 h: CBC, BMP, CMP, CRP, ESR.
+7. Continue hydroxyurea 15 mg/kg/day, folic acid, vitamin D.
+8. Education: Encourage adequate hydration, early mobilization, and pain reporting.
+9. Schedule outpatient hematology and nephrology appointments 7–10 days post‑discharge.
+
+Disposition: Stable, pain controlled, renal function improving, no new complications. Patient discharged home with instructions to seek immediate care for fever, worsening pain, or new neurologic symptoms.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">10/10 body pain</span><span class="pill">Shortness of breath</span><span class="pill">Chest tightness</span><span class="pill">Persistent flank pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>105/68 mmHg</td></tr><tr><td>Heart Rate</td><td>112 bpm</td></tr><tr><td>Respiratory Rate</td><td>22/min</td></tr><tr><td>Temperature</td><td>37.8°C (100°F)</td></tr><tr><td>SpO2</td><td>94% on 4 L/min oxygen</td></tr><tr><td>Oxygen Flow</td><td>4 L/min via nasal cannula</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Generalized tenderness including left femoral head</li><li>Right flank tenderness</li><li>Mild basal crackles right lung field</li><li>Blue nail beds</li><li>No new neurologic deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>CMP</li><li>CRP</li><li>ESR</li><li>Lactate</li><li>Blood culture</li><li>Repeat urine culture</li><li>Chest CT angiogram (low‑dose)</li><li>Pulmonary function test</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hemoglobin 8.0 g/dL, Hematocrit 27%, Retic 7%</li><li>BMP: Cr 1.6 mg/dL, BUN 18 mg/dL</li><li>CMP: LFTs normal</li><li>CRP: 2.5 mg/dL</li><li>ESR: 30 mm/h</li><li>Lactate: 1.2 mmol/L</li><li>Blood culture: Negative</li><li>Urine culture: E. coli sensitive to ceftriaxone</li><li>Chest CT angiogram: No pulmonary embolus</li><li>PFT: Mild restrictive pattern consistent with baseline PH</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Partial exchange transfusion (2 matched units)</li><li>IV 0.9% NaCl 1 L/hr</li><li>Morphine 8 mg IV q4h plus 4 mg/h infusion</li><li>IV acetaminophen 1 g qID</li><li>Ketamine 0.5 mg/kg IV bolus</li><li>Gabapentin 300 mg PO BID</li><li>Lidocaine patch applied to left thigh</li><li>Oxycodone/acetaminophen PO Q6h</li><li>IV ceftriaxone 1 g q12h</li><li>IV metronidazole 500 mg q6h</li><li>Inhaled oxygen 4 L/min via nasal cannula</li><li>Furosemide 20 mg IV if fluid overload noted</li><li>Mannitol 0.5 g/kg IV bolus for renal perfusion</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain decreased to 4/10 by the evening of Day 3. SpO2 improved to &gt;95% on 2 L/min. No new neurological deficits. CRP trending down. Renal function stabilized. Hospital course smooth aside from mild chest discomfort.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Sickle Cell Disease</span><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke history</span><span class="pill">Gallstones</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Vitamin D 2000 IU daily</li><li>IV morphine 8 mg q4h</li><li>IV acetaminophen 1 g qID</li><li>IV ketamine 0.5 mg/kg</li><li>IV ceftriaxone 1 g q12h</li><li>IV metronidazole 500 mg q6h</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous urinary tract infection, positive culture now</li><li>Recent 5-day course of ciprofloxacin</li><li>Altitude exposure during flight</li><li>Hydration level low prior to admission</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya was transferred to the inpatient ward with a tri‑age for severe vaso‑occlusive crisis and suspected infection. A rapid multidisciplinary intervention was initiated. The hematology team performed a partial exchange transfusion, nephrology monitored fluid balance, pulmonology managed oxygen and pulmonary status, and infectious disease started targeted antibiotics. Pain management was aggressive with morphine infusion and adjunctive agents. Renal function improved from creatinine 2.0 to 1.6 mg/dL, and hemoglobin increased to 8.0 g/dL after transfusion. The patient’s oxygen saturation rose above 95% with a low‑flow nasal cannula. She maintained stable hemodynamics and remained afebrile by Day 3.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Partial exchange transfusion effectively reduced HbS fraction. Infection cleared with targeted antibiotics. Renal function improved. Pulmonary status remained stable with mild PH. Patient cleared for discharge once pain &lt;5/10, hemoglobin &gt;9 g/dL, creatinine &lt;1.8 mg/dL, and SpO2 &gt;92% on room air.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-07</h3><div class="visit-meta">Hospital – Discharge Planning | Reason: Discharge evaluation and follow‑up plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Discharge Planning Note – Maya, 35‑year‑old female**
+
+**Chief Complaint / Reason for Encounter**: Review of inpatient progress, assessment of readiness for discharge, formulation of comprehensive outpatient follow‑up plan.
+
+**History &amp; Course**:
+Maya was admitted for acute pain exacerbation secondary to sickle cell crisis, acute kidney injury, and gallstone‑induced biliary obstruction. Over the past 2 days she has shown significant clinical improvement: pain has decreased to &lt;5/10, hemoglobin stable at 8 g/dL, creatinine 1.6 mg/dL, no febrile episodes, and resolution of sepsis parameters. She has tolerated oral hydroxyurea and folic acid, and her current pain regimen (acetaminophen &amp; gabapentin) is adequate. No new infections or organ‑specific complications have arisen.
+
+**Surgical Update**: The GI/Interventional Radiology team has cleared her for laparoscopic cholecystectomy on post‑operative day 14. She will have full post‑operative recovery before the surgery.
+
+**Medication Review**:
+- Hydroxyurea 15 mg/kg/d (current dose)
+- Folic acid 1 mg PO daily
+- Acetaminophen 1 g PO TID as needed (limit 4 g/day)
+- Gabapentin 300 mg PO BID
+No new medications added.
+
+**Physical Exam (Day 3)**:
+- Vitals stable: BP 110/68, HR 86, RR 16, Temp 36.8°C, SpO₂ 97% RA.
+- No new tenderness or swelling.
+- Mild limp with left femoral head involvement, consistent with known osteonecrosis.
+- Lungs clear, no cyanosis.
+
+**Assessments**:
+1. Chronic anemia due to sickle cell disease – stabilized.
+2. Renal insufficiency (eGFR declining, creatinine 1.6) – monitor.
+3. Pulmonary hypertension – maintained on supplemental O₂ when indicated.
+4. Osteonecrosis and left hip discomfort – persistent but controlled.
+5. Gallstones – scheduled for cholecystectomy.
+
+**Differential Diagnoses at Discharge**:
+- Pain crisis (no evidence of active crisis)
+- Post‑infection renal impairment (possible ongoing recovery)
+- Pulmonary hypertension exacerbation (not present)
+- Recurrent gallstone obstruction (managed with cholecystectomy)
+
+**Discharge Instructions**:
+- Continue hydroxyurea, folic acid, acetaminophen (max 4 g/day), gabapentin.
+- Maintain high‑volume hydration (≥2 L/day), monitor urine output.
+- Record pain level and opioid use in a pain diary.
+- Avoid NSAIDs unless indicated by pain; if needed, use acetaminophen only.
+- Monitor SpO₂ with pulse oximeter; use supplemental oxygen if SpO₂ &lt;94% or at high altitude.
+- Red‑flag symptoms (fever, new chest pain, hematuria, worsening renal function) → call ER.
+
+**Follow‑up Plan**:
+- Hematology (hemolysis clinic) in 2 weeks.
+- Nephrology outpatient visit in 1 month for eGFR, urine protein, and medication adjustment.
+- Pulmonology outpatient visit in 1 month for O₂ titration and exercise tolerance.
+- Post‑operative follow‑up after laparoscopic cholecystectomy (day 14) for wound healing and pain control.
+- Primary care follow‑up in 1 week to review medication adherence and overall well‑being.
+
+**Patient Education &amp; Psychosocial**:
+Maya expressed anxiety about future crises; provided reassurance about the structured plan and the role of hydroxyurea. Discussed use of anxiety‑reducing strategies and provided contact information for psychosocial counseling.
+
+**Disposition**: Discharged home with instructions and scheduled appointments. All necessary referrals placed.
+
+**Signature**: ____________________
+Discharge Planning Team Coordinator</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild chest discomfort</span><span class="pill">Occasional left hip ache</span><span class="pill">No fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>110/68 mmHg</td></tr><tr><td>Heart Rate</td><td>86 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>36.8°C</td></tr><tr><td>SpO2</td><td>97% on room air</td></tr><tr><td>Oxygen Flow</td><td>None</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No new tenderness</li><li>Left femoral head mild limp on gait</li><li>Right flank soft, non‑tender</li><li>No cyanosis</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discharge instructions: continued hydroxyurea, pain diary, OTC acetaminophen guidelines, avoid NSAIDs except as needed, maintain hydration, monitor SpO2</li><li>Referral to hemolysis clinic in 2 weeks</li><li>Referral to nephrology for eGFR monitoring</li><li>Referral to pulmonology for O2 titration for high altitude</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling more hopeful. Mild left hip ache persisted but manageable. She expressed anxiety about future crises but appreciated the clear plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Sickle Cell Disease</span><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke history</span><span class="pill">Gallstones</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Acetaminophen 1 g PO TID</li><li>Gabapentin 300 mg PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sickle Cell Disease</li><li>Recent hospitalization for vaso‑occlusive crisis</li><li>Chronic anemia</li><li>Renal insufficiency</li><li>Pulmonary hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The interdisciplinary team reviewed Maya’s progress. With pain below 5/10, stable hemoglobin and creatinine, and no active infection, the plan was to discharge with a comprehensive outpatient follow‑up. She was educated on pain management, hydration, signs of relapse, and instructed to maintain supplemental oxygen for high‑altitude excursions. A follow‑up with hematology was scheduled in two weeks and an outpatient visit with nephrology and pulmonology one month later. The surgical team arranged for a laparoscopic cholecystectomy on Day 14, pending postoperative recovery.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Discharge criteria met. Transition to outpatient management with scheduled specialist follow‑ups.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-14</h3><div class="visit-meta">Hematology – Outpatient | Reason: Weekly follow‑up after discharge; review labs and pain diary</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: Maya presents for routine hematology follow‑up after discharge. She reports minimal left hip ache, no fever, occasional mild chest discomfort with exertion. Pain diary shows a 40% reduction in pain episodes since discharge. She remains compliant with hydroxyurea, acetaminophen, gabapentin, sildenafil, and hydrochlorothiazide.
+
+Objective: Vitals: BP 120/70 mmHg, HR 80 bpm, RR 16/min, Temp 36.9°C, SpO₂ 98% RA. Physical exam: No new tenderness, mild limp on left femoral head, normal cardiac and pulmonary exam, SpO₂ 98% RA.
+
+Labs: CBC: Hgb 9.1 g/dL, Hct 29%, Retic 6%; BMP: Cr 1.5 mg/dL, BUN 18 mg/dL, electrolytes normal; CRP 1.0 mg/dL; PFT: mild restrictive pattern. All labs stable relative to baseline.
+
+Assessment:
+1) Sickle cell disease – chronic anemia stable on hydroxyurea.
+2) Renal insufficiency – creatinine stable at 1.5 mg/dL.
+3) Pulmonary hypertension – controlled on sildenafil with mild restrictive PFT.
+4) Osteonecrosis of left femoral head – minimal hip ache, likely stable; monitor for flare.
+5) Post‑hospitalization pain syndrome – reduced frequency of pain crises.
+6) Gallstones – cholecystectomy scheduled March 28.
+
+Plan:
+1) Continue hydroxyurea 15 mg/kg/day; monitor CBC and BMP every 4 weeks.
+2) Continue acetaminophen 1 g PO TID as needed, gabapentin 300 mg PO BID, sildenafil 5 mg PO BID, hydrochlorothiazide 25 mg PO daily.
+3) Educate Maya on medication adherence, pain diary, hydration, and activity modification.
+4) Follow up with hematology in 4 weeks; review labs and pain diary.
+5) Post‑operative follow‑up after cholecystectomy per surgical team.
+6) Refer orthopedics if hip pain worsens.
+7) Continue monitoring SpO₂; no supplemental O₂ needed.
+8) Counsel on signs of vaso‑occlusive crisis, infection, and renal decompensation.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Minimal left hip ache</span><span class="pill">No fever</span><span class="pill">Occasional mild chest discomfort with exertion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>120/70 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>36.9°C</td></tr><tr><td>SpO2</td><td>98% on room air</td></tr><tr><td>Oxygen Flow</td><td>None</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No new tenderness</li><li>Left femoral head mild limp</li><li>SpO2 98% RA</li><li>Normal cardiac exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>CRP</li><li>Pulmonary function test</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hemoglobin 9.1 g/dL, Hematocrit 29%, Retic 6%</li><li>BMP: Cr 1.5 mg/dL</li><li>CRP: 1.0 mg/dL</li><li>PFT: Mild restrictive pattern</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue hydroxyurea 15 mg/kg/day</li><li>Continue Gabapentin 300 mg PO BID</li><li>Continue Sildenafil 5 mg BID</li><li>Review pain management plan</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stability of hemoglobin and mild improvement in renal markers. She remains compliant with medication regimen and notes a 40% reduction in pain episodes since discharge.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Sickle Cell Disease</span><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke history</span><span class="pill">Gallstones</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Acetaminophen 1 g PO TID</li><li>Gabapentin 300 mg PO BID</li><li>Sildenafil 5 mg PO BID (pulmonary hypertension)</li><li>Hydrochlorothiazide 25 mg PO daily (renal protection)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Regular hydroxyurea therapy</li><li>Pain diary shows fewer episodes since discharge</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented for her routine hematology follow‑up. Laboratory results showed hemoglobin 9.1 g/dL, creatinine 1.5 mg/dL, BUN 18 mg/dL, and normal electrolytes. Her pain diary indicated fewer episodes. The clinician reviewed her hydroxyurea dose (maintained at 15 mg/kg) and emphasized adherence. Pulmonary hypertension remains controlled on sildenafil, and renal function remains stable. A referral for cholecystectomy remains scheduled for March 28.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable hematologic and renal status; pulmonary hypertension under control. No urgent changes. Continue current regimens and proceed with cholecystectomy.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-03-28</h3><div class="visit-meta">General Surgery – Laparoscopic Cholecystectomy | Reason: Removal of gallstone lodged in cystic duct</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 35‑year‑old female with chronic sickle cell disease and multiple comorbidities presents for routine postoperative follow‑up 1 day after laparoscopic cholecystectomy performed for a cystic duct‑obstructing gallstone.
+
+Subjective: Maya reports mild residual right upper quadrant discomfort (4/10) after the procedure, slight nausea but no vomiting or fever. She is able to ambulate with a cane and is hopeful for a full recovery. No dysuria, abdominal distension, or new pain has been noted.
+
+Objective: Vitals – BP 112/70 mmHg, HR 78 bpm, RR 16/min, Temp 36.7°C, SpO₂ 98% on room air. Examination – incision well‑healed, no erythema or drainage; RUQ soft, non‑tender, no rebound or guarding. No bruising or petechiae. No signs of respiratory distress. Hemoglobin 8.2 g/dL, Hct 26% (post‑op CBC). Intraoperative hemoglobin was 8.3 g/dL; 1 unit PRBC transfused pre‑emptively. No evidence of hemolysis (no drop in Hgb &gt;2 g/dL, no jaundice, bilirubin within normal limits).
+
+Assessment: The patient is recovering well from a standard laparoscopic cholecystectomy performed for a cystic duct gallstone. Pain is adequately controlled with IV acetaminophen and patient‑controlled morphine. No signs of infection, biliary leak, or hemolysis are present. Hemoglobin remains low but stable in the context of chronic sickle cell disease and the operative transfusion. Pulmonary status remains stable; no new chest symptoms or hypoxia.
+
+Differential Diagnosis:
+1. Post‑operative surgical site infection – ruled out by lack of erythema, drainage, or fever.
+2. Biliary leak or bile duct injury – unlikely given uneventful intra‑operative course, no elevated bilirubin or liver enzymes.
+3. Post‑operative anemia/hyperhemolysis – stable hemoglobin, no evidence of hemolysis.
+4. Pulmonary embolism – low pre‑test probability; SpO₂ 98%, no tachycardia.
+5. Sickle cell vaso‑occlusive crisis – not currently active; pain remains mild and responsive.
+6. Renal insufficiency exacerbation – baseline Cr 1.5‑2.0; no rise.
+
+Plan:
+1. Pain Management – Continue IV acetaminophen 1 g q6h. Taper morphine PCA as pain improves; discontinue when pain &lt;3/10 with oral analgesics. Educate patient on breakthrough pain using scheduled oral acetaminophen 1 g PO every 6 hours PRN.
+2. Hydration – Continue IV 0.9% NaCl 1 L over 6 hours intra‑op; maintain oral intake to keep urine output &gt;0.5 mL/kg/h.
+3. Hematology – Monitor CBC daily for first 3 days; repeat on postoperative days 4‑5. Consider transfusion if Hb &lt;7 g/dL or clinical signs of anemia.
+4. Infection Surveillance – Check temperature and vital signs daily; advise patient to report any redness, swelling, drainage, fever, chills.
+5. Wound Care – Keep incision clean, dry; instruct dressing change once per day; schedule suture removal as per standard protocol.
+6. Renal Function – BMP on POD 1 and POD 3; adjust fluids accordingly.
+7. Pulmonary – Continue Sildenafil 5 mg BID; monitor for chest discomfort, exercise tolerance. Schedule pulmonology follow‑up in 4 weeks.
+8. Medications – Continue hydroxyurea 15 mg/kg/day, folic acid 1 mg daily, gabapentin 300 mg PO BID, hydrochlorothiazide 25 mg PO daily.
+9. Lifestyle – Encourage ambulation, deep breathing exercises, and adequate hydration.
+10. Education – Discuss signs of postoperative complications; provide contact information for 24‑hour concerns.
+
+Disposition: Discharged home with postoperative instructions. Follow‑up in surgical clinic on postoperative day 7 (2026‑04‑04). Continue routine hematology, nephrology, and pulmonology appointments as scheduled.
+
+Signature: ____________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Right upper quadrant pain</span><span class="pill">Slight nausea</span><span class="pill">No fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>112/70 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>36.7°C</td></tr><tr><td>SpO2</td><td>98% on room air</td></tr><tr><td>Oxygen Flow</td><td>None</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right upper quadrant soft, non‑tender, no rebound</li><li>No bruising, incision healing well</li><li>SpO2 98% RA</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Operative summary</li><li>Post‑op CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC (post‑op): Hemoglobin 8.2 g/dL, Hematocrit 26%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV acetaminophen 1 g q6h</li><li>Patient‑controlled morphine PCA 1 mg on demand</li><li>IV fluids 0.9% NaCl 1 L over first 6 hours</li><li>Transfused 1 unit PRBC intraoperatively for hemoglobin maintenance</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain well controlled, able to ambulate with cane. No nausea or vomiting. She is hopeful for full recovery.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Sickle Cell Disease</span><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke history</span><span class="pill">Gallstones</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Acetaminophen 1 g PO TID</li><li>Gabapentin 300 mg PO BID</li><li>Sildenafil 5 mg PO BID</li><li>Hydrochlorothiazide 25 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Gallstones with recent CT confirmation of cystic duct obstruction</li><li>Sickle Cell Disease with recent crisis</li><li>Pulmonary hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya underwent a successful laparoscopic cholecystectomy for a gallstone obstructing the cystic duct. General anesthesia was administered with careful intraoperative monitoring of oxygen saturation and hemodynamics. Intraoperative hemoglobin was 8.3 g/dL, managed with a prophylactic transfusion. Postoperatively, she required IV acetaminophen and patient‑controlled morphine for moderate pain, which was controlled to 4/10 by Day 1. No complications such as infection, pancreatitis, or hemolysis were noted. She was discharged home on Day 1 with postoperative instructions and a follow‑up in the surgical clinic.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Gallstone removed, minimizing future hemolysis risk. Hemoglobin slightly reduced but within safe range. No impact on sickle cell crisis. Continuation of routine therapy expected.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-04-04</h3><div class="visit-meta">General Surgery – Post‑op Follow‑up | Reason: Surgical recovery assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Surgical recovery assessment.
+
+History of Present Illness: Maya presents on postoperative day 7 following laparoscopic cholecystectomy performed on 2026‑03‑28. She reports mild residual right upper quadrant discomfort (4/10) and slight nausea, without fever, erythema, or drainage. Pain is well controlled with acetaminophen 1 g PO TID PRN. She ambulates normally and denies any new systemic symptoms.
+
+Past Medical History: Sickle Cell Disease, chronic anemia, renal insufficiency, osteonecrosis, pulmonary hypertension, prior stroke, gallstones.
+
+Current Medications: Hydroxyurea 15 mg/kg/day, Folic acid 1 mg daily, Acetaminophen 1 g PO TID PRN, Gabapentin 300 mg PO BID, Sildenafil 5 mg PO BID, Hydrochlorothiazide 25 mg PO daily.
+
+Allergies: None.
+
+Physical Examination: 
+- Vital signs: BP 118/68 mmHg, HR 80 bpm, RR 16/min, Temp 36.8 °C, SpO₂ 98% RA.
+- Inspection: Right upper quadrant incision well‑healed, no erythema, edema, or drainage.
+- Palpation: Abdomen soft, nondistended, no tenderness, no organomegaly.
+- Gait: Normal.
+- Chest: Clear to auscultation bilaterally, no wheezes or crackles.
+
+Assessment:
+1. Post‑operative cholecystectomy – wound healing appearing normal, no signs of surgical site infection or bile leak.
+2. Mild residual abdominal discomfort – likely postoperative pain or inflammatory response; no evidence of intra‑abdominal complication.
+3. Stable hemoglobin (8.1 g/dL) and hematocrit (26%) consistent with chronic anemia and recent surgical blood loss. No new vaso‑occlusive crisis.
+4. Renal function unchanged; no acute tubular injury noted.
+5. No pulmonary complications observed.
+
+Differential Diagnosis:
+- Post‑operative incisional pain
+- Early surgical site infection
+- Biliary leakage
+- Vaso‑occlusive crisis of sickle cell
+- Persistent hemolysis or anemia
+- Exacerbation of pulmonary hypertension (none present)
+
+Plan:
+- Continue acetaminophen 1 g PO TID PRN for pain; monitor efficacy and tolerability.
+- Educate patient on gradual return to normal activity; avoid heavy lifting &gt;10 lb until clearance.
+- Encourage adequate oral hydration (≥2 L/day) to mitigate sickle cell crisis and support renal function.
+- Reinforce sickle cell disease management: maintain hydroxyurea, folic acid, and hydration.
+- No immediate antibiotics or wound drainage treatment required at this visit.
+- Schedule postoperative surgical clinic follow‑up in 2 weeks (2026‑04‑18) to reassess wound healing and activity progression.
+- Continue routine hematology follow‑up in 4 weeks; nephrology as per schedule.
+- Instruct Maya to seek immediate care for fever &gt;38.0 °C, increased abdominal pain, or signs of wound drainage.
+- No new medications ordered.
+
+Disposition: Patient remains stable; discharged home with instructions.
+
+Follow‑Up Recommendations:
+- Surgical follow‑up in 2 weeks.
+- Hematology consultation in 4 weeks.
+- Nephrology appointment as scheduled.
+- Monitor for any new symptoms such as fever, increased pain, or drainage.
+- Ensure adherence to hydroxyurea, folic acid, and hydration.
+
+Signature: ___________________________
+
+Dr. ___, General Surgery</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight abdominal discomfort</span><span class="pill">No fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>118/68 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>Temperature</td><td>36.8°C</td></tr><tr><td>SpO2</td><td>98% on room air</td></tr><tr><td>Oxygen Flow</td><td>None</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right upper quadrant incision well‑healed, no erythema or drainage</li><li>Soft abdomen</li><li>No tenderness</li><li>Normal gait</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Post‑op CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hemoglobin 8.1 g/dL, Hematocrit 26%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 1 g PO TID as needed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Good recovery, pain tolerable, no concerns. Very satisfied with surgical outcome.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Sickle Cell Disease</span><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke history</span><span class="pill">Gallstones</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Acetaminophen 1 g PO TID</li><li>Gabapentin 300 mg PO BID</li><li>Sildenafil 5 mg PO BID</li><li>Hydrochlorothiazide 25 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent cholecystectomy</li><li>Sickle Cell Disease</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya returned for check‑up of her laparoscopic cholecystectomy site. Her incision was healing without signs of infection. She reports mild residual pain managed by acetaminophen and is ambulating normally. Her hemoglobin remains stable at 8.1 g/dL, and renal function is unchanged. The surgeon confirmed no postoperative complications, and the plan is to resume normal activity gradually. Maya is instructed to continue regular follow‑up with her hematology and nephrology teams.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Surgical recovery uncomplicated; no effect on sickle cell status.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic anemia</span><span class="pill">Renal insufficiency</span><span class="pill">Osteonecrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Stroke</span><span class="pill">Gallstones</span><span class="pill">Sickle cell disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydroxyurea 15 mg/kg/day</li><li>Folic acid 1 mg daily</li><li>Acetaminophen 1 g PO TID PRN</li><li>Gabapentin 300 mg PO BID</li><li>Sildenafil 5 mg PO BID</li><li>Hydrochlorothiazide 25 mg PO daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2026-03-05: 35‑year‑old female presented with acute diffuse body pain, right flank tenderness, blue toes, mild fever, cough, and feeling chilly after a flight to Denver. Vitals: BP 97/62 mmHg, HR 108 bpm, RR 22/min, Temp 99.5°F (37.5°C), SpO₂ 88% on room air. Physical exam revealed pale conjunctiva, wet nasal discharge, tachycardia, reduced air entry at the basal right lung with mild crackles, right flank and RUQ tenderness, and blue discoloration of toes. Laboratory results included Hgb 6.8 g/dL, Hct 22%, retic 9%; BUN 22 mg/dL, Cr 2.0 mg/dL. Urine culture grew Escherichia coli susceptible to ceftriaxone. Chest X‑ray showed mild right basal atelectasis. CT abdomen identified a gallstone lodged in the cystic duct. The patient was admitted to the hospital and started on IV ceftriaxone 1 g q12h, IV metronidazole 500 mg q6h, IV morphine 8 mg q4h, IV acetaminophen 1 g qID, IV ketamine 0.5 mg/kg bolus, IV 0.9% NaCl 0.5 L/h, and supplemental oxygen via 2 L nasal cannula to maintain SpO₂ &gt;94%. Orders included D‑dimer, lower extremity Doppler ultrasound, and CT pulmonary angiography to evaluate for pulmonary embolism; consults to nephrology, hematology, and GI/Interventional Radiology were requested. Follow‑up plan involved daily CBC and BMP monitoring, repeat chest X‑ray in 48 h, and ongoing assessment of renal function, hemolysis, infection status, and biliary obstruction.</li><li>2026-03-06: 35‑year‑old female with sickle cell disease and chronic anemia presented with a 3‑day vaso‑occlusive crisis. Symptomatology included 10/10 body pain, shortness of breath, chest tightness, and persistent flank pain. Vitals: BP 105/68 mmHg, HR 112 bpm, RR 22/min, Temp 37.8 °C, SpO₂ 94% on 4 L/min O₂. Physical exam: generalized tenderness, right flank tenderness, mild right basal crackles, blue nail beds, no new neuro deficits. Labs: Hgb 8 g/dL, Hct 27%, retic 7%; Cr 1.6 mg/dL, BUN 18 mg/dL, CRP 2.5 mg/dL, ESR 30 mm/h, lactate 1.2 mmol/L; urine culture grew E. coli. Chest CTA negative for pulmonary embolism. Management: IV morphine 8 mg q4 h plus infusion 4 mg/h, IV acetaminophen 1 g qID, IV ceftriaxone 1 g q12h, IV metronidazole 500 mg q6h (5 days), IV 0.9% NaCl 1 L/hr, hydroxyurea 15 mg/kg/day, folic acid 1 mg daily, vitamin D 2000 IU daily, gabapentin 300 mg PO BID, lidocaine patch, oxycodone/acetaminophen PO Q6h, O₂ low‑flow as needed. Discharged home with hydration and mobilization instructions; follow‑up hematology and nephrology appointments in 7–10 days.</li><li>2026-03-07: Discharge planning for Maya. Clinical improvement from acute pain crisis; hemoglobin 8 g/dL, creatinine 1.6 mg/dL. Pain controlled with acetaminophen and gabapentin; hydroxyurea and folic acid continued. All IV antibiotics and pain infusions discontinued. Scheduled for laparoscopic cholecystectomy on post‑op day 14; follow‑up with hematology, nephrology, pulmonology, and primary care planned. No new infections or organ complications.</li><li>2026-03-14: routine hematology follow‑up; minimal left hip ache, no fever, mild chest discomfort with exertion. Vitals normal (BP 120/70, HR 80, RR 16, Temp 36.9°C, SpO₂ 98%). Labs stable: Hgb 9.1 g/dL, Hct 29%, retic 6%; Cr 1.5 mg/dL, BUN 18 mg/dL; CRP 1.0 mg/dL; mild restrictive pattern on pulmonary function test. Pain diary shows 40% reduction in pain episodes since discharge. Medications continued unchanged: hydroxyurea, acetaminophen, gabapentin, sildenafil, hydrochlorothiazide. Plan: maintain medications, monitor CBC/BMP every 4 weeks, follow up in 4 weeks, postoperative follow up after cholecystectomy, consider orthopedics referral if left hip pain worsens.</li><li>2026-03-28: 35‑year‑old female post‑laparoscopic cholecystectomy for cystic duct gallstone. Reports mild right upper quadrant discomfort (4/10) and slight nausea. Vitals: BP 112/70 mmHg, HR 78, RR 16, Temp 36.7°C, SpO₂ 98%. Examination shows well‑healed incision, no erythema or drainage; RUQ soft, non‑tender. Hemoglobin 8.2 g/dL, Hct 26%. No signs of infection, biliary leak, or hemolysis. Pain controlled with IV acetaminophen 1 g q6h and patient‑controlled morphine PCA. Ordered daily CBC for first 3 days, BMP POD 1 and POD 3. Discharged home with follow‑up surgical clinic on POD 7 (2026‑04‑04).</li><li>2026-04-04: Post‑op day 7 after laparoscopic cholecystectomy, mild right upper quadrant discomfort (4/10) and slight nausea; incision well‑healed, no erythema, drainage, or fever. Vital signs normal (BP 118/68 mmHg, HR 80 bpm, RR 16/min, Temp 36.8°C, SpO₂ 98% RA). Pain controlled with acetaminophen 1 g PO TID PRN. No evidence of intra‑abdominal complication, new vaso‑occlusive crisis, or renal injury. Reviewed hydration and activity recommendations. Ordered post‑op CBC. Plan: surgical follow‑up in 2 weeks (2026‑04‑18), routine hematology follow‑up in 4 weeks, continue hydroxyurea, folic acid, gabapentin, sildenafil, hydrochlorothiazide.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

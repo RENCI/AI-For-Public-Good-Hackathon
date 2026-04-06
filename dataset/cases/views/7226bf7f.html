@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 7226bf7f</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 7226bf7f</h1><div class="subtitle">Severe Acute Atopic Dermatitis (Eczema) Flare | Female, 35</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Allergic rhinitis, Asthma, Food allergy, Anxiety, Depression, Secondary bacterial infection (Staphylococcus aureus)</div><div class="meta-line">Risk Factors: Family history of atopy, Environmental allergens (pollen, pet dander), Irritant contact (detergents, soaps), Dry skin, Heat and sweating, Stress, Poor adherence to moisturizer regimen, Recent infections</div></div>
+<details><summary>Narrative <span class="preview-text">### A Day‑by‑Day Chronicle of a 35‑Year‑Old Woman’s Atopic Dermatitis Flare  **Who is “Anna”?**   Anna is a 35‑year‑old ...</span></summary><div class="section-body"><p>### A Day‑by‑Day Chronicle of a 35‑Year‑Old Woman’s Atopic Dermatitis Flare</p><p>**Who is “Anna”?**  
+Anna is a 35‑year‑old marketing executive, mother of two toddlers, and a lifelong atopic. She carries in her family tree a history of eczema, hay fever, and asthma. Her skin has always been “dry as a desert,” especially after hot showers or a long day in the office. In the last year, her allergies – seasonal pollen, her cat’s dander, and the chemicals in her household cleaners – have gotten wilder, and she has been forgetting to reapply her moisturizer whenever a flare sparks. Emotionally, Anna has been struggling with the normal anxieties of balancing work and family, coupled with a low‑grade depressive mood that often leaves her feeling listless.</p><p>---</p><p>#### *Week 0 – The Calm Before the Storm*</p><p>Anna had her routine check‑in with her dermatologist every six months for patch testing and moisturizing regimens. Her last visit three months ago was fine: a gentle fragrance‑free cream, no visible lesions beyond a few itchy papules on her elbows and behind knuckles. She had been diligent with her regimen, except for a few weeks when her toddler’s bath time, filled with cheap soap and a sudden hot shower, had left her skin feeling tight and itchy.</p><p>At the end of the month, a cold struck the household. The toddler coughed for two days, and Anna spent that time over the phone with her mother, who had a chronic sinus infection. The household environment became a tinderbox of viral irritants, and Anna found herself rubbing more and more.</p><p>---</p><p>#### *Day 0 – The First Sign of Trouble*</p><p>One rainy Saturday, Anna noted sudden, intense itching on her forearms and behind her ears. She felt an irritant burn, but the skin looked fine at first glance. The itching was so persistent that she woke up at 3 a.m. to scratch the back of her neck, then later the whole day she tried to ignore it, only to find that simple movements, like lifting her arms, worsened the itch.</p><p>Because of the itching and the visible redness, Anna made a note: “Maybe it’s just pollen.” She consulted her allergy list: yes, late March is pollen season in her region.</p><p>She rubbed on a mild OTC antihistamine, and a couple of hours later, the itch decreased slightly, but a new problem emerged: small red bumps that grew into oozing lesions on her elbows and behind her ears. “Probably a reaction to soap,” she blamed herself, and started using a different fragrance‑free soap.</p><p>---</p><p>#### *Day 1 – The Worst Morning*</p><p>Morning light was bright, but Anna’s skin felt like a cracked dry lake. She applied her regular moisturizer to her face and neck, but to her elbows and hands she found large, inflamed patches. Her forehead was covered with a thick, brown scale—a clear sign of acute eczema. The itchy sensation was accompanied by a throbbing pain; each time she scratched, the lesions grew darker as she inadvertently pulled out new blood. Her anxiety about her appearance increased, and she avoided her reflection in the mirror for an hour.</p><p>She took a phone call from a co‑worker, who asked how she was feeling. Anna told herself “It’s just a temporary flare.”</p><p>But by the time she left for work, she noticed a thick, greasy crust covering the back of her hands, and she knew something was amiss.</p><p>---</p><p>#### *Day 3 – The Dermatology Appointment*</p><p>Anna booked an urgent appointment with her dermatologist. She described her worsening rash: “It’s huge, itchy, and there’s a crust,” she told Dr. Patel. She added that she had had a recent upper respiratory infection, had been on antibiotics to her toddler, and the rash had spread to her knees and abdomen. Dr. Patel, noting the size of the lesions and the potential for bacterial infection, prescribed a high‑potency topical steroid (clobetasol 0.05% ointment) to be applied twice daily to all affected areas, along with a potent systemic antibiotic (oral doxycycline 100 mg twice daily). He also advised her to keep the area clean, avoid scratching, and use a humidifier in the bedroom to maintain moisture.</p><p>He talked her through the “wet‑wrap” technique: after two hours of ointment application, she should apply a damp layer of gauze, then a dry layer, and leave it on for 30 minutes. He explained the risk of prolonged corticosteroid use if she only used it intermittently and emphasized the need for a consistent moisturizing routine. He also warned her to be prepared for the possibility of an itchy, “hives” type reaction the next night, but that the benefits outweighed the risk.</p><p>On the same day, she visited her primary care provider for the bacterial infection. Dr. Kim prescribed a prescription course of mupirocin ointment (to be applied twice daily) for a superficial Staphylococcus aureus infection. He also reviewed her asthma inhaler schedule and added a daily leukotriene antagonist to her regimen for her comorbid allergic rhinitis.</p><p>Anna left the office feeling both relieved and overwhelmed. Relief, because she had a plan; overwhelmed, because she realized how quickly things could deteriorate.</p><p>---</p><p>#### *Day 5 – First Signs of Relief*</p><p>Anna adhered strictly to the new regimen. She made an evening habit of applying moisturizers after bathing and followed the wet‑wrap instructions with the damp gauze and a thin layer of her fragrance‑free barrier cream. On the mornings of Days 5–8, her skin’s redness began to fade, the crusts became less pronounced, and the itching was noticeably less severe. Her sleep improved, as she no longer woke at 3 a.m. scratching the back of her neck.</p><p>The antibiotics for Staph started reducing the pus and swelling in the lesions—her elbows were less edematous, and the bright yellow discharge had dwindled into pale, non‑discharge crusts.</p><p>However, the psychological toll was evident. She stayed home from work for three days, telling her supervisor that she was “not feeling well.” The stress of being absent, worried about her patients, and an ongoing anxiety about whether her eczema might flare again caused her to feel anxious and slightly depressed.</p><p>She decided to contact her therapist in the evening, and they scheduled a session for the following week.</p><p>---</p><p>#### *Day 8 – A Steady Descent*</p><p>Dr. Patel called to check on progress. By Day 8, Anna’s skin had improved markedly: the thick brown scaling on her forehead had reduced to a light, reddish tone; the lesions on her hands had crusted less; the overall erythema had almost disappeared. She reported that her itch was now tolerable to scratch only at night, and that the discomfort at her knees and abdomen had almost vanished.</p><p>Her dermatologist reinforced the importance of continuing the steroid ointment for 7 more days to ensure that there was no relapse. He suggested she transition to a mid‑potency steroid (betamethasone dipropionate 0.05% cream) for the next week, then step down to a mild steroid (hydrocortisone 1%) as the skin begins to recover fully.</p><p>Dr. Patel also mentioned that she could resume her routine moisturizer in the morning while applying the new lower potency steroids in the evening. He also suggested a daily antihistamine for nighttime to quell the itching, but warned of daytime sedation.</p><p>---</p><p>#### *Day 11 – Transition and Support*</p><p>Anna followed Dr. Patel’s updated protocol. The combination of a mild steroid ointment in the evening with her daily moisturizer in the morning provided a gentle but effective solution. The antibiotics were wound up on Day 10. She now had an “evidence-based” schedule: no more intermittent usage of high‑potency steroids.</p><p>Her therapist talked with Anna about coping mechanisms: scheduled breathing exercises after work, a 30‑minute walk each evening, and setting reminders to reapply moisturizer every 8–10 hours. They also explored her underlying depressive mood and scheduled a medication adjustment for her antidepressant (mood-lifter), along with a cognitive behavioral therapy session planned for two weeks later.</p><p>---</p><p>#### *Day 14 – The Last Day of the Flare*</p><p>By the end of Day 14, Anna’s eczema had returned to her baseline: the lesions were barely visible, the scaling was gone, and the itchy sensation was minimal. She was still carrying the faint residual redness around the neck area, but her moisturizer regimen and lifestyle changes had stabilized it. She had no more crusting and did not feel the urge to scratch.</p><p>Dr. Patel told her that with the current plan, she should continue the mild steroid ointment for another week, to give her skin a comfortable recovery, and then she could gradually taper away. He also advised a “maintenance schedule”: daily nighttime moisturizers and a weekly topical application of calcipotriene ointment on any flare‑prone sites (e.g., elbows, legs).</p><p>---</p><p>#### *Day 21 – Maintenance and Reflection*</p><p>Anna returned to the office for a routine check. Dr. Patel noted the skin had improved to a near‑normal state. She mentioned that the anxiety had decreased once she had stopped having to check for new lesions. Dr. Patel suggested that she keep a simple daily log of rash location and intensity, noting any potential triggers like pollen or stress. His plan was for Anna to step down to no medication but to keep her moisturizer.</p><p>She met with her therapist again. They reviewed her coping skills, reinforced her self‑esteem, and emphasized that a chronic disease like eczema can still coexist with a normal life. Together they set a schedule for regular follow‑ups: in three months, then six months, to keep tabs on her skin and emotional well‑being.</p><p>---</p><p>#### *Three Months Later – A Life Back in Balance*</p><p>Anna reports a steady, disease‑stable life: the eczema no longer flares, she keeps a regular bath schedule with fragrance‑free soap and 20‑minute lukewarm showers. She uses a daily fragrance‑free cream on all body parts, with a stronger ointment on elbows and hands as needed. Her diet is balanced, and she no longer has to dread pollen season; she carries a nasal spray when necessary. Her asthma inhaler is used only rarely, and she remains compliant with her leukotriene antagonist.</p><p>Her anxiety and depression, while still present, are now manageable. The support of her therapist helps her navigate stress, and the social support from her family provides additional emotional resilience.</p><p>In the final note of the case, doctors emphasize that Anna has improved and is now in a maintenance phase, with her eczema under control, and her comorbidities effectively managed.</p><p>---</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-01</h3><div class="visit-meta">Dermatology | Reason: Routine 6‑month dermatology check‑in for atopic dermatitis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Clinic Note – Dermatology – Visit #1**
+
+**Patient:** 35‑year‑old female
+**Date of Visit:** 2023‑01‑01
+**Chief Complaint:** Routine 6‑month dermatology check‑in
+
+**History of Present Illness:**
+Patient presents for scheduled follow‑up of chronic xerosis. She reports mild dry skin on her elbows and posterior knuckles. No new pruritic lesions or complaints of itching. She has been using a fragrance‑free moisturizer twice daily and has no recent changes in products.
+
+**Past Medical History:**
+- Allergic rhinitis
+- Asthma
+- Food allergy (dairy)
+- Anxiety, mild depression
+- Family history of atopy
+
+**Current Medications:** None
+**Allergies:** NKDA
+
+**Vitals:**
+- BP: 118/72 mmHg
+- HR: 72 bpm
+- RR: 14 breaths/min
+- Temp: 36.7 °C
+- Weight: 68 kg
+- BMI: 23
+
+**Physical Examination:**
+- Skin: Dry, slightly scaly skin on lateral elbows and behind knuckles; no erythema, scaling, or active lesions.
+- Skin barrier: Intact and no visible compromise.
+
+**Assessment:**
+1. Mild xerosis (chronic dry skin) – stable.
+2. No evidence of active eczema, contact dermatitis, or other inflammatory dermatoses.
+
+**Differential Diagnosis Considered:**
+- Chronic atopic dermatitis (in remission)
+- Contact dermatitis (no irritants identified)
+- Ichthyosis vulgaris (unlikely given mild presentation)
+- Secondary bacterial infection (history of staphylococcal infection; no signs of infection today)
+
+**Plan:**
+- Continue current topical regimen: fragrance‑free moisturizer, applied twice daily and promptly after bathing.
+- Re‑apply moisturizer after any exposure to water. Use lukewarm water and gentle cleansing.
+- Avoid known irritants and harsh detergents.
+- Educated patient on wet‑wrap technique; handout provided.
+- No new prescription at this visit.
+- If new rash or pruritus develops, consider patch testing and/or topical steroid trial.
+
+**Follow‑Up:**
+- Return in 6 months for routine skin exam.
+- Patient instructed to contact clinic sooner if new lesions, pruritus, or signs of infection appear.
+
+**Patient Response:**
+Patient expressed satisfaction with current regimen and education. Leaves the office feeling reassured about maintenance routine.
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild dry skin on elbows and behind knuckles</span><span class="pill">No acute rash or itching today</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>118/72 mmHg</td></tr><tr><td>Heart Rate</td><td>72 bpm</td></tr><tr><td>Respiratory Rate</td><td>14 breaths/min</td></tr><tr><td>Temperature</td><td>36.7 °C</td></tr><tr><td>Weight</td><td>68 kg</td></tr><tr><td>BMI</td><td>23</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Dry, slightly scaly skin on lateral elbows</li><li>No erythema or active lesions noted</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Satisfied with routine care and education. Leaves the office feeling reassured about her maintenance routine.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Atopic dermatitis</span><span class="pill">Allergic rhinitis</span><span class="pill">Asthma</span><span class="pill">Food allergy</span><span class="pill">Anxiety</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Fragrance‑free moisturizer (Eucerin®) applied twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic atopic dermatitis with stable baseline</li><li>Allergic rhinitis</li><li>Asthma</li><li>Food allergy to dairy</li><li>Anxiety and mild depression</li><li>Positive family history of atopy</li><li>Regular use of fragrance‑free moisturizer</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Anna arrived for her routine dermatology visit. She was in good health apart from mild xerosis on her elbows and behind the knuckles, with no active pruritic lesions. Dr. Patel performed a visual inspection of her skin, noting intact skin barrier and no erythema or scaling. A review of her topical regimen confirmed her daily use of a fragrance‑free moisturizer. Patch testing was not indicated at this visit. Dr. Patel reinforced the importance of early re‑application of moisturizer after bathing, the use of lukewarm water, and avoidance of irritants such as harsh soaps. An educational handout on wet‑wrap technique was dispensed for future flare management. Follow‑up scheduled in six months. No new prescriptions were written.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline stable atopic dermatitis. No active flare. Patient adheres to moisturizer regimen.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-04</h3><div class="visit-meta">Dermatology | Reason: Urgent flare of atopic dermatitis with suspected bacterial superinfection</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+- Patient Anna, 35‑year‑old female, presents with an urgent flare of her chronic atopic dermatitis (AD) and suspected secondary bacterial superinfection.
+- Chief complaint: Intense itching, burning, and pain with scratching; rapid expansion of erythematous, crusted lesions noted on elbows, behind ears, forearms, abdomen, knees.
+- Onset: Severe pruritus began Wednesday morning; new lesions started Thursday/Friday, worsening overnight.
+- Recent events: Treated toddler with antibiotics 2 days ago; recent upper respiratory infection; decreased adherence to fragrance‑free moisturizer due to busy schedule.
+- Anxiety about potential steroid side‑effects.
+
+**Review of Systems:**
+- Skin: Increased itching, pain when scratching, oozing crusts.
+- General: No fever, fatigue, malaise.
+- Allergic: No new exposures noted.
+- Respiratory: No current wheeze.
+
+**Past Medical History:**
+- Atopic dermatitis, allergic rhinitis, asthma, food allergy, anxiety, depression.
+- Prior mild eczema flare in early March.
+- No known drug allergies.
+
+**Medications:**
+- Fragrance‑free moisturizer (Eucerin®) twice daily.
+- No other topical or systemic therapies.
+
+**Allergies:**
+- NKDA.
+
+**Vitals:**
+- BP 124/78 mmHg, HR 78 bpm, RR 16/min, Temp 37.0 °C, Weight 68 kg, BMI 23.
+
+**Physical Examination:**
+- Skin: Erythematous plaques with brown scaling on forearms; oozing, crusted lesions at elbow joints; red, indurated plaques behind ears; mild scaling on posterior knees. No cellulitis or lymphangitis.
+- Tactile: Indurated, firm plaques; no fluctuance.
+- No lymphadenopathy.
+
+**Assessment:**
+- Severe flare of atopic dermatitis with features suspicious for secondary bacterial superinfection.
+- Most likely organisms: Staphylococcus aureus or Streptococcus pyogenes.
+
+**Plan:**
+1. **Topical:** Prescribe Clobetasol propionate 0.05% ointment – apply 3× daily to affected areas, avoid face, eyelids, and mucous membranes. 2‑week course.
+2. **Systemic:** Initiate Doxycycline 100 mg orally twice daily for 10 days to cover likely S. aureus and streptococcal species.
+3. **Adjunctive skin care:** Continue fragrance‑free moisturizer twice daily; advise humidifier use, wet‑wrap technique for severe lesions.
+4. **Education:** Discuss steroid side‑effects, emphasize proper usage, reassure regarding short‑term therapy; advise to seek immediate care if redness extends, warmth develops, or pain worsens.
+5. **Follow‑up:** Return in 1 week for clinical evaluation and to review skin culture results; consider earlier visit if symptoms worsen.
+6. **Monitoring:** Monitor for systemic signs of infection (fever, chills). If fever &gt;38 °C, advise urgent evaluation.
+
+**Disposition:** Patient verbalized relief at having a clear plan; expressed concerns about steroid side‑effects but agreed to proceed with education and short‑term regimen.
+
+**Signature:** Dr. Patel, MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Intense itching, burning sensation on forearms, elbows, ears, abdomen, knees</span><span class="pill">Red, crusted lesions with oozing at elbow joints</span><span class="pill">Pain when scratching</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>124/78 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Respiratory Rate</td><td>16 breaths/min</td></tr><tr><td>Temperature</td><td>37.0 °C</td></tr><tr><td>Weight</td><td>68 kg</td></tr><tr><td>BMI</td><td>23</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Erythematous plaques with brown scale on forearms</li><li>Crusted, oozing lesions at elbow joints</li><li>Red, indurated plaques behind ears</li><li>Posterior knee involvement with mild scaling</li><li>No cellulitis or lymphangitis</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Skin culture of elbow lesion (sent for bacterial identification and sensitivity)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Clobetasol propionate 0.05% ointment prescription</li><li>Doxycycline 100 mg BID prescription</li><li>Humidifier education</li><li>Wet‑wrap technique instruction</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Relieved to have a clear plan but anxious about steroid use and potential side effects. Remains hopeful that the new regimen will improve skin.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Atopic dermatitis</span><span class="pill">Allergic rhinitis</span><span class="pill">Asthma</span><span class="pill">Food allergy</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Secondary bacterial infection suspected</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Fragrance‑free moisturizer (Eucerin®) applied twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Severe pruritus started Wednesday morning</li><li>Recent upper respiratory infection two days prior</li><li>Recent antibiotic use on toddler</li><li>Failure to maintain moisturizing regimen due to busy schedule</li><li>Prior mild eczema flare in early March</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Anna was brought in by her mother for an urgent dermatology visit. She reported waking up thrice at night scratching intensely and experiencing a new, rapidly expanding rash with crusting. Dr. Patel examined the skin and noted erythematous plaques with scaling, excoriated sites, and oozing crusts, especially on the elbows and behind the ears. These findings suggested a severe acute flare complicated by superficial bacterial infection. A diagnosis of severe atopic dermatitis flare with possible Staphylococcus aureus impetiginization was made. Dr. Patel prescribed clobetasol propionate 0.05% ointment to be applied twice daily to all affected areas and instructed wet‑wrap therapy: after 2 h of ointment, a damp gauze followed by a dry layer left for 30 min. Oral doxycycline 100 mg BID was prescribed for 10 days to treat suspected bacterial superinfection. Patient was given a humidifier to keep bedroom air moist and advised to keep skin clean, avoid scratching, and monitor for systemic symptoms. She was warned about steroid side effects if used intermittently and informed about the mild risk of allergic reaction to doxycycline. She left the office with prescriptions for clobetasol, doxycycline, and a fresh supply of moisturizer.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Severe acute flare with suspected secondary bacterial infection. Initiated high‑potency topical steroid + oral doxycycline. Plan for wet‑wrap and meticulous moisturization.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-01-05</h3><div class="visit-meta">Primary Care | Reason: Evaluation of secondary bacterial infection and asthma/allergy management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up for secondary bacterial skin infection and asthma/allergy management.
+
+History of Present Illness: Anna returned for a scheduled follow‑up. She reports slight swelling at both elbows with mild erythema and small pustular lesions noted on examination—consistent with Staphylococcal impetiginization. She also reports mild nasal congestion secondary to seasonal pollen and increased shortness of breath on exertion, likely an asthma flare.
+
+Past Medical History: Allergic rhinitis (pollen‑related), asthma (intermittent), food allergy, anxiety, depression, chronic bacterial skin infection (S. aureus).
+
+Medications: Clobetasol propionate 0.05% ointment, applied 3× daily to affected areas; Doxycycline 100 mg orally twice daily for 10 days; Fragrance‑free moisturizer twice daily; Albuterol rescue inhaler; Montelukast 10 mg nightly (newly prescribed).
+
+Allergies: Fragrance, detergents, cat dander.
+
+Physical Examination: BP 122/76 mmHg, HR 74 bpm, RR 16 breaths/min, T 36.9 °C, weight 68 kg, BMI 23. Mild erythema and pustules over both elbows; mild wheeze audible on auscultation; nasal mucosa erythematous.
+
+Assessment:
+1. Staphylococcal impetiginization of elbows – secondary bacterial infection.
+2. Seasonal allergic rhinitis exacerbation.
+3. Asthma with mild exertional limitation.
+
+Plan:
+- Prescribe mupirocin 2% ointment for elbows: apply to affected areas twice daily for 7 days.
+- Continue clobetasol 0.05% ointment and doxycycline regimen as currently prescribed.
+- Continue fragrance‑free moisturizer and humidifier use.
+- Add montelukast 10 mg orally at bedtime to address allergic rhinitis and reduce airway inflammation.
+- Review albuterol rescue inhaler technique; refill prescription.
+- Emphasize hand hygiene, avoidance of contact with toddler’s recent antibiotic residue.
+- Order a skin culture if not already performed (previous culture pending).
+- Contact dermatologist if lesions worsen or don’t improve within 1 week.
+- Schedule follow‑up in primary care in 4 weeks to reassess asthma control and allergic symptoms.
+
+Patient education: Discussed importance of completing the full mupirocin regimen, timely use of montelukast, proper inhaler technique, and monitoring for signs of systemic infection.
+
+Disposition: Patient will return to office in 1 week for dermatology follow‑up and in 4 weeks for asthma and allergy reassessment.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight swelling at elbows</span><span class="pill">Mild nasal congestion from allergies</span><span class="pill">Increased shortness of breath on exertion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>122/76 mmHg</td></tr><tr><td>Heart Rate</td><td>74 bpm</td></tr><tr><td>Respiratory Rate</td><td>16 breaths/min</td></tr><tr><td>Temperature</td><td>36.9 °C</td></tr><tr><td>Weight</td><td>68 kg</td></tr><tr><td>BMI</td><td>23</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Small pustular lesions with surrounding erythema on the lateral elbows</li><li>No tenderness or warmth suggestive of cellulitis</li><li>Mild nasal congestion on exam</li><li>Asthma controlled with rescue inhaler only</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC with differential to evaluate for systemic infection</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC pending (to be reviewed before next visit)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Mupirocin 2% ointment prescription</li><li>Montelukast 10 mg nightly prescription</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feeling optimistic but slightly anxious about taking another medication. Commits to daily inhaler use and careful application of skin products.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Atopic dermatitis</span><span class="pill">Allergic rhinitis</span><span class="pill">Asthma</span><span class="pill">Food allergy</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Secondary bacterial infection confirmed</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Clobetasol propionate 0.05% ointment BID</li><li>Doxycycline 100 mg BID</li><li>Fragrance‑free moisturizer twice daily</li><li>Albuterol rescue inhaler</li><li>Montelukast (to be added today)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continued use of clobetasol and doxycycline as prescribed</li><li>Recent antibiotic treatment of toddler</li><li>Allergic rhinitis exacerbated by pollen season</li><li>Asthma with intermittent use of rescue inhaler</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Kim saw Anna during her follow‑up for systemic infection coverage and asthma management. On exam, he noted mild erythema and small pustular lesions at the elbow joints consistent with Staphylococcal impetiginization. A skin culture was taken (if not already done). He prescribed mupirocin 2% ointment to be applied twice daily for 7 days to address the bacterial infection. He reviewed her asthma inhaler technique and filled a refill. Because her allergic rhinitis is active during pollen season, he added montelukast 10 mg nightly as a leukotriene antagonist to reduce airway inflammation and nasal symptoms. He also emphasized hand hygiene, avoidance of contact with the toddler’s recent antibiotic residue, and scheduled a dermatology follow‑up in a week. Patient was reassured about the plan and motivated to adhere to the new medication schedule.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Secondary bacterial infection confirmed by culture. Started topical mupirocin and systemic doxycycline. Added leukotriene antagonist for allergic inflammation. Asthma remains stable with rescue inhaler.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-01-12</h3><div class="visit-meta">Dermatology | Reason: Week‑12 review of flare resolution and steroid taper</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #4 – 2023‑01‑12
+
+Patient: 35‑year‑old female with a long‑standing history of atopic dermatitis, allergic rhinitis, asthma, food allergy, anxiety, and depression. She was seen today for her week‑12 follow‑up of her atopic dermatitis and steroid taper schedule.
+
+Chief Complaint: “Week‑12 review of skin condition and steroid taper.”
+
+History of Present Illness: The patient reports minimal nocturnal itching and notes that the skin appears less red and scaling compared to previous visits. She has been on clobetasol propionate 0.05% ointment for 10 days followed by doxycycline 100 mg BID for 10 days, mupirocin 2% ointment for 7 days, and a recent topical betamethasone dipropionate 0.05% cream prescription.  No new lesions, systemic symptoms, or side effects have been noted. Sleep quality has improved. She is satisfied with the visible improvement and is motivated to continue the taper plan.
+
+Past Dermatology Course: Prior visits documented a severe flare with presumed bacterial superinfection (S. aureus) that resolved on clobetasol and doxycycline.  Recent culture was negative for S. aureus.  She remains on fragrance‑free moisturizer, humidifier, and wet‑wrap technique as needed.
+
+Review of Systems: No new rashes, no systemic infections, no pruritus apart from mild night‑time itch.
+
+Physical Examination: 
+• Skin: Minimal erythema only at prior lesion sites; smooth surface with mild post‑inflammatory hyperpigmentation around the neck and elbows. No active crusting, scaling, or abscesses.
+• Nails: Normal. 
+• Lymph nodes: No visible enlargement.
+• Respiratory: Sputum clear, lungs bilaterally clear. 
+
+Assessment:
+1. Atopic dermatitis – well‑controlled with taper‑schedule. 
+2. Resolved secondary S. aureus infection. 
+3. Post‑inflammatory hyperpigmentation – benign.
+
+Plan:
+• Initiate steroid taper: discontinue clobetasol, start betamethasone dipropionate 0.05% cream once daily for 7 days, followed by hydrocortisone 1% cream to be applied to any new lesions. 
+• Prescribe cetirizine 10 mg nightly for nocturnal itch. 
+• Reinforce moisturizer twice daily and humidifier use during cold seasons. 
+• Counsel on avoiding fragrance and known irritants; continue to monitor for any recurrence. 
+• Follow up in 4 weeks for week‑16 review or sooner if flare or new symptoms develop.
+
+Patient education: Discussed steroid taper rationale, potential rebound, antihistamine usage, and importance of strict moisturization. She expressed optimism about continued improvement.
+
+Disposition: Patient received new prescriptions, updated care plan, and was advised to return for routine dermatology follow‑up or earlier if needed.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild itching at night only</span><span class="pill">Skin appears less red and scaling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>118/70 mmHg</td></tr><tr><td>Heart Rate</td><td>70 bpm</td></tr><tr><td>Respiratory Rate</td><td>14 breaths/min</td></tr><tr><td>Temperature</td><td>36.8 °C</td></tr><tr><td>Weight</td><td>68 kg</td></tr><tr><td>BMI</td><td>23</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Minimal erythema along prior lesion sites</li><li>Smooth skin surface with mild post‑inflammatory hyperpigmentation</li><li>No active crusts or abscesses</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Skin culture negative for Staphylococcus aureus</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Betamethasone dipropionate 0.05% cream prescription</li><li>Cetirizine 10 mg nightly prescription</li><li>Hydrocortisone 1% cream instruction for flare relief</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Happy with visible improvement; feels empowered by tapering plan; reports nocturnal itch decreased.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Atopic dermatitis</span><span class="pill">Allergic rhinitis</span><span class="pill">Asthma</span><span class="pill">Food allergy</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Secondary bacterial infection resolved</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Betamethasone dipropionate 0.05% cream once daily to affected areas</li><li>Hydrocortisone 1% cream as needed for flares</li><li>Fragrance‑free moisturizer twice daily</li><li>Montelukast 10 mg nightly</li><li>Albuterol rescue inhaler</li><li>Cetirizine 10 mg nightly (prescription) for itching</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>10 days of clobetasol and doxycycline</li><li>7 days of mupirocin</li><li>No systemic symptoms or side effects</li><li>Improved sleep quality</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At the follow‑up appointment, Dr. Patel examined Anna’s skin, noting that erythema had largely resolved, crusting had disappeared, and only faint post‑inflammatory hyperpigmentation remained around the neck and elbows. The patch test results from the skin culture confirmed clearance of Staphylococcus aureus. The physician instituted a steroid taper: discontinue clobetasol and begin betamethasone dipropionate 0.05% cream once daily for 7 days, followed by hydrocortisone 1% cream applied to any new lesions. The patient was taught to use a daily antihistamine at night to reduce pruritus. She was reminded to maintain a strict moisturization routine and to use a humidifier during cold seasons. She returned home with fresh prescriptions and an updated care plan, expressing optimism about continuing improvement.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute flare resolving; bacterial infection cleared. Initiated steroid taper and antihistamine for itch control.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-01-26</h3><div class="visit-meta">Dermatology | Reason: Maintenance check post‑flare, review of long‑term management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #5 – 2023-01-26
+
+Chief Complaint: Maintenance check post‑flare, review of long‑term management
+
+History of Present Illness:
+Patient presents for routine maintenance visit after steroid taper. She reports occasional mild pruritus in the morning when brushing hair. No active erythema, scaling, or crusting noted. No new lesions. She denies nighttime itching or nasal congestion. She has been compliant with her maintenance regimen.
+
+Review of Systems:
+Skin – No new rashes, itching, or lesions; mild morning pruritus only.
+Respiratory – No wheeze, cough; albuterol as needed.
+Allergic – No current nasal congestion; uses saline spray; allergic rhinitis controlled.
+Psychiatric – Anxiety and depression under sertraline, reports improved mood and sleep.
+
+Past Medical History:
+Atopic dermatitis, allergic rhinitis, asthma, food allergy, anxiety, depression, resolved bacterial infection.
+
+Medications:
+Fragrance‑free moisturizer twice daily; hydrocortisone 1% cream PRN for flare; Montelukast 10 mg nightly; albuterol rescue inhaler PRN; cetirizine 10 mg PRN; sertraline 50 mg daily.
+
+Allergies:
+Fragrance, detergents, cat dander.
+
+Physical Examination:
+General – Well‑appearing, no distress.
+Skin – Smooth, mild post‑inflammatory hyperpigmentation on upper back and neck; no erythema, scaling, or crusts. Forearms, elbows, legs normal texture.
+
+Vitals: BP 116/68 mmHg, HR 68 bpm, RR 14 bpm, Temp 36.7°C, Weight 68 kg, BMI 23.
+
+Assessment:
+1. Atopic dermatitis – controlled, no active flare. Post‑inflammatory hyperpigmentation noted; likely residual pigment.
+2. Post‑inflammatory hyperpigmentation – not requiring treatment, monitor.
+3. Allergic rhinitis – controlled with saline spray; continue preventive measures.
+4. Anxiety/Depression – stable on sertraline, improved mood.
+
+Plan:
+- Continue fragrance‑free moisturizer twice daily.
+- Use hydrocortisone 1% cream PRN only if flare appears.
+- Initiate weekly topical calcitriol 1‑inch if flare recurs on elbows or legs.
+- Keep simple daily log of lesions for early flare detection.
+- Continue Montelukast, albuterol as needed, cetirizine PRN, sertraline 50 mg daily.
+- Manage environmental triggers – use saline nasal spray, keep windows closed during high pollen counts.
+- Encourage adherence to mental‑health plan; continue bi‑weekly therapist sessions.
+- Educate on early signs of flare and when to seek care.
+- Schedule routine dermatology follow‑up in 3 months.
+- Instruct patient to contact office sooner if itching worsens or new lesions appear.
+
+No new tests ordered.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Occasional mild pruritus in the morning when brushing hair</span><span class="pill">No active lesions</span><span class="pill">No nasal congestion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>116/68 mmHg</td></tr><tr><td>Heart Rate</td><td>68 bpm</td></tr><tr><td>Respiratory Rate</td><td>14 breaths/min</td></tr><tr><td>Temperature</td><td>36.7 °C</td></tr><tr><td>Weight</td><td>68 kg</td></tr><tr><td>BMI</td><td>23</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin smooth with mild post‑inflammatory hyperpigmentation at neck</li><li>No erythema, scaling, or crusts</li><li>Normal skin texture on forearms, elbows, and legs</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Expressed feeling of control and satisfaction with the maintenance plan. Reports improved mood and sleep after starting sertraline.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Atopic dermatitis</span><span class="pill">Allergic rhinitis</span><span class="pill">Asthma</span><span class="pill">Food allergy</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Resolution of bacterial infection</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Fragrance‑free moisturizer twice daily</li><li>Hydrocortisone 1% cream as needed for flare</li><li>Montelukast 10 mg nightly</li><li>Albuterol rescue inhaler</li><li>Cetirizine 10 mg as needed for itch</li><li>Sertraline 50 mg daily (started during therapy sessions)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completion of steroid taper 20 days ago</li><li>Weekly use of fragrance‑free moisturizer</li><li>Continuing Montelukast and albuterol as needed</li><li>Therapist sessions bi‑weekly ongoing</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At the maintenance visit, Dr. Patel noted a near‑normal appearance of Anna’s skin; mild post‑inflammatory hyperpigmentation was present only on the upper back and neck. No active erythema or scaling. The patient reported occasional pruritus in the morning but denied nighttime scratching. Dr. Patel advised to continue daily moisturizing, to use hydrocortisone 1% cream only if a flare appears, and to keep a simple daily log of lesions to detect early flare signs. A weekly topical calcitriol (1‑inch) was suggested should a flare recur on elbows or legs. The patient was reminded to manage environmental triggers, especially pollen, by using a saline nasal spray and keeping windows closed during high pollen counts. The clinician reviewed the mental health plan; sertraline had been started for anxiety and depression during a recent therapy session. She was scheduled for a routine dermatology follow‑up in three months and asked to notify if there was any return of pruritus or new lesions sooner.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient in remission phase. Maintenance therapy includes moisturizer, as‑needed hydrocortisone, and weekly calcitriol. Mental health stabilized with sertraline. No bacterial infection relapse.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Allergic rhinitis</span><span class="pill">Asthma</span><span class="pill">Food allergy</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Secondary bacterial infection (Staphylococcus aureus)</span><span class="pill">Atopic dermatitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Betamethasone dipropionate 0.05% cream once daily for 7 days</li><li>Hydrocortisone 1% cream as needed for new lesions</li><li>Cetirizine 10 mg PRN</li><li>Fragrance‑free moisturizer twice daily</li><li>Albuterol rescue inhaler</li><li>Montelukast 10 mg orally nightly</li><li>Sertraline 50 mg daily</li><li>Topical calcitriol weekly</li></ul></div></details><details><summary>Allergies</summary><div class="section-body"><ul class="item-list"><li>Fragrance</li><li>Detergents</li><li>Cat dander</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Routine dermatology check‑in for chronic xerosis. Mild dry skin noted on elbows and knuckles; no active lesions, erythema, or scaling. Continued use of fragrance‑free moisturizer twice daily; patient educated on wet‑wrap technique. No new prescriptions or tests ordered. Advised to return in 6 months or sooner if new rash, itching, or infection signs develop.</li><li>Urgent flare of chronic atopic dermatitis with suspected secondary bacterial superinfection; intense itching, burning, pain noted over elbows, forearms, abdomen, knees, and behind ears. Physical exam disclosed erythematous plaques with scaling and oozing crusts, no cellulitis. Prescribed clobetasol propionate 0.05% ointment 3× daily for 2 weeks and doxycycline 100 mg orally twice daily for 10 days. Continued fragrance‑free moisturizer, humidifier, and wet‑wrap technique. Skin culture ordered from elbow lesion. Follow‑up in 1 week.</li><li>Follow‑up for secondary bacterial skin infection and asthma/allergy management. Mild swelling of both elbows with mild erythema and pustular lesions observed. Prescribed mupirocin 2% ointment twice daily for 7 days, continued clobetasol 0.05% ointment and doxycycline 100 mg twice daily for 10 days, and fragrance‑free moisturizer. Added montelukast 10 mg nightly for allergic rhinitis and asthma. Reviewed albuterol inhaler technique and arranged refill. No new tests ordered. Dermatology follow‑up scheduled in 1 week and primary care follow‑up in 4 weeks.</li><li>Dermatology follow‑up: week‑12 review during steroid taper, patient reports minimal nocturnal itching and reduced erythema. Minimal erythema confined to prior lesion sites; no active crusting, scaling, or abscesses. Initiated betamethasone dipropionate 0.05% cream tapered over 7 days, prescribed hydrocortisone 1% cream PRN for new lesions, and added cetirizine 10 mg nightly for nocturnal itch. Continue fragrance‑free moisturizer and humidifier. Advised return in 4 weeks for week‑16 review or earlier if flare occurs.</li><li>Routine maintenance dermatology visit post‑flare. Patient reports occasional mild morning pruritus with hair brushing; no active lesions, erythema, scaling, or crusts. Mild post‑inflammatory hyperpigmentation on upper back and neck noted. Respiratory and psychiatric symptoms stable on current medications. Medication regimen continued: fragrance‑free moisturizer twice daily; hydrocortisone 1% cream PRN; montelukast 10 mg nightly; albuterol rescue inhaler PRN; cetirizine 10 mg PRN; sertraline 50 mg daily. Initiated weekly topical calcitriol for flare recurrence. No new tests ordered.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case d9ceb1ee</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: d9ceb1ee</h1><div class="subtitle">Prostate Adenocarcinoma with Extraprostatic Extension (T3a) | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia, Hypertension, Type 2 diabetes, Hyperlipidemia</div><div class="meta-line">Risk Factors: Age &gt; 65, Obesity, High-fat diet, Low fruit and vegetable intake, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">**Prostate Adenocarcinoma With Extraprostatic Extension (T3a): A Clinical Narrative**  Mr. James Carter, a 68‑year‑old r...</span></summary><div class="section-body"><p>**Prostate Adenocarcinoma With Extraprostatic Extension (T3a): A Clinical Narrative**</p><p>Mr. James Carter, a 68‑year‑old retired construction supervisor, had long regarded his health as “good enough.” He was obese (BMI 30.2 kg/m²), a lifelong smoker who had cut down to a pack a day just two years earlier, and he liked “grilled meats on the weekends” more often than he did fresh produce. While he exercised at a local gym two times a week, his diet remained high‑fat and low‑in‑fruit.</p><p>---</p><p>### **1. Initial Symptoms (Month 0)**
+- **Symptoms:** Over the preceding three months, James noticed an increasingly weak urinary stream, a frequent “urge” to urinate, and night‑time trips to the bathroom for a total of 4–5 nights per week. He also complained of a dull sensation in the lower abdomen that often resolved after urination but began to feel increasingly persistent.
+- **Self‑management:** He took over‑the‑counter alpha‑blockers (tamsulosin 0.4 mg nightly) with mild improvement but still experienced nocturia and a weak stream.
+- **Lifestyle context:** He attributed the symptoms to “the old age and the big weight,” so he delayed visiting a clinician.</p><p>---</p><p>### **2. Primary Care Visit (Month 1)**
+- **History &amp; Exam:** James scheduled a visit with Dr. Patel at his family practice. The exam revealed an enlarged, non‑tender prostate on digital rectal exam, a common finding in benign prostatic hyperplasia (BPH).
+- **Laboratory work:** PSAVs were ordered due to the urinary symptoms. Blood tests showed HbA1c 7.6 % (reflecting his type 2 diabetes), serum creatinine 1.1 mg/dL, and a total cholesterol of 210 mg/dL. A PSA of 16 ng/mL raised suspicion for prostate pathology.
+- **Decision Point:** Dr. Patel referred James for a transrectal ultrasound‑guided prostate biopsy.</p><p>---</p><p>### **3. Biopsy and Pathology (Month 2)**
+- **Procedure:** A 12‑core transrectal ultrasound guided biopsy was completed in the office. James tolerated the procedure well, and the pathology report identified adenocarcinoma involving 3 cores, Gleason score 3+4 = 7.
+- **PSA‑Nadir:** Serial PSA values rose from 16 to 20 ng/mL over the next two months.
+- **Referral:** Dr. Patel instructed James to see urology for staging. Urologist Dr. Lopez visited him in a two‑day window in March after the biopsy.</p><p>---</p><p>### **4. Urologic Staging (Month 3)**
+- **Imaging:** A multiparametric MRI of the pelvis showed a 2.2 cm tumor on the left side extending beyond the prostatic capsule into the neurovascular bundle, consistent with T3a disease (extraprostatic extension). There was no evidence of seminal vesicle invasion or distant metastasis. Whole‑body bone scan remained negative.
+- **Evaluation of Comorbidities:** Dr. Lopez noted James’s uncontrolled hypertension (average BP 158/92 mmHg) and a diabetic foot ulcer on the left foot. He also recognized the smoking history as a risk for cancer progression and cardiovascular disease.
+- **Treatment Counseling:** James’s options were discussed: radical prostatectomy, external beam radiation therapy (EBRT) with short‑course ADT, or radical prostatectomy with adjuvant ADT. James’s age, obesity, BPH-related discomfort, and comorbidities favored a non‑surgical approach for the short term. The patient expressed a strong desire to avoid a prolonged hospitalization due to his diabetes management concerns.</p><p>---</p><p>### **5. Initiation of Androgen Deprivation Therapy (Month 4)**
+- **ADT Plan:** James was started on a 4‑month course of leuprolide acetate 11.25 mg intramuscular injection (Long‑Acting GnRH agonist) with an anticipated PSA decline.
+- **Side Effects:** Within the first month, James experienced hot flashes, mild erectile dysfunction, and a drop in libido. He also reported an increased appetite and marginal weight gain of ~4 kg.
+- **Blood Glucose Fluctuations:** His HbA1c rose to 8.1 % by the end of month 5, requiring a temporary uptick in metformin dosage and a consultation with his endocrinologist.
+- **Hypertension Management:** He was started on a low‑dose ARB (losartan 25 mg daily) to assist with blood pressure control, which improved systolic numbers to 140/85 mmHg by month 6.</p><p>---</p><p>### **6. First Radiation Therapy Planning (Month 6–7)**
+- **Plan:** With the ADT response deemed adequate, James proceeded to radical external beam radiation therapy—70 Gy in 35 fractions over seven weeks—delivered at a community oncology center.
+- **Complications Post‑Radiation:** After the third week of EBRT, James developed a mild urinary frequency and a new pain at the bladder base. The oncologist suspected early post‑radiation cystitis. Low‑dose bladder irrigation and a temporary increase in tamsulosin helped, but the urinary symptoms persisted.
+- **Bone Scan:** At the end of month 7, a bone scan revealed a focal area of increased uptake in the left sacral ala, suggesting early bone involvement.</p><p>---</p><p>### **7. Symptom Progression and Intervention (Month 9)**
+- **Pain and Mobility:** James began reporting a dull ache in his left hip and occasional nocturnal pain that interfered with sleep. His weight had increased to 215 lb, and he noted fatigue that limited his gym attendance.
+- **Bone‑Targeted Therapy:** The oncologist initiated zoledronic acid 4 mg IV infusion to address bone lesions and reduce skeletal‑related events.
+- **Evaluation of BPH:** Because urinary obstruction worsened, Dr. Lopez recommended a transurethral resection of the prostate (TURP). James opted for the procedure, hoping symptomatic relief would allow better quality of life.</p><p>---</p><p>### **8. TURP and Post‑Op Course (Month 10)**
+- **Procedure:** TURP went smoothly. Post‑op, James experienced transient hematuria but returned to baseline urination strength.
+- **Complications:** Six weeks after TURP, he developed a urinary tract infection with *E. coli* and required a 7‑day course of ciprofloxacin. His PSA rose modestly to 18.3 ng/mL but remained stable relative to month 9.</p><p>---</p><p>### **9. Disease Progression (Month 12)**
+- **New Symptoms:** The pain intensified, now radiating to his left lower back and groin. He began experiencing occasional shortness of breath after walking a few steps without rest. In addition, James reported a new “dull” headache that he attributed to blood pressure fluctuations.
+- **Further Imaging:** Repeat MRI revealed a 3.1 cm intraprostatic tumor that now involved the seminal vesicle base, and CT of the chest/abdomen/pelvis showed small bilateral pulmonary nodules suspicious for metastatic disease. Bone scan now displayed multiple hot spots in the spine and pelvis, consistent with bone metastases.
+- **Biopsy of Pulmonary Nodules:** A CT‑guided thoracoscopic biopsy of a left lung nodule confirmed metastatic adenocarcinoma with the same Gleason pattern.
+- **Treatment Shift:** Dr. Lopez transitioned James to full‑dose androgen deprivation therapy plus a second‑line hormonal agent (enzalutamide 150 mg daily). The goal was to control systemic disease while stabilizing bone pain.</p><p>---</p><p>### **10. Deterioration and Palliative Care (Months 13–15)**
+- **Pain Management:** Despite zoledronic acid, James’s bone pain remained pronounced. Bone‑pain protocols were intensified: higher‑dose morphine PCA and intermittent ketamine infusions were started.
+- **Functional Decline:** James’s general fatigue worsened, impacting his ability to ambulate. The oncologist referred him for hospice at home after a multidisciplinary meeting.
+- **Outcome:** James’s PSA escalated to 45 ng/mL within two months, his creatinine rose to 1.5 mg/dL due to dehydration, and his metabolic state deteriorated. His respiratory symptoms progressed, culminating in brief episodes of hypoxia on exertion. He eventually was admitted to a hospice unit, where he passed away peacefully a few weeks later, surrounded by family.</p><p>---</p><p>## **Key Clinical Highlights**</p><p>- **Comorbidities Influence Management:** BPH necessitated TURP despite active cancer treatment; hypertension and diabetes dictated careful selection and adjustment of systemic therapies.
+- **Risk Factors Contribute to Aggressive Course:** Obesity, high‑fat diet, and smoking likely accelerated tumor aggressiveness, resulting in early extraprostatic extension (T3a) and metastasis.
+- **Treatment Sequence and Side‑Effect Burden:** ADT induced endocrine changes that exacerbated diabetes control; radiation induced early cystitis; zoledronic acid managed bone disease but failed to halt progression.
+- **Timeline of Clinical Decisions:**
+  - **Months 0–1:** PSA elevation → biopsy referral.  
+  - **Months 2–3:** Biopsy confirms adenocarcinoma → MRI staging.  
+  - **Month 4:** Initiation of leuprolide ADT.  
+  - **Month 6–7:** EBRT (70 Gy).  
+  - **Month 9:** Bone scan showing mets → zoledronic acid.  
+  - **Month 10:** TURP for BPH.  
+  - **Month 12:** Pulmonary nodules → metastatic biopsy → change to enzalutamide.  
+  - **Month 13–15:** Palliative transition, hospice care.</p><p>This narrative encapsulates a typical yet aggressive course of advanced prostate cancer influenced by significant comorbidities and risk factors, culminating in a rapidly worsening disease trajectory and poor outcome.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-15</h3><div class="visit-meta">Family Medicine | Reason: Weak urinary stream, frequent urge, nocturia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+Progressive lower urinary tract symptoms (LUTS) including weak urinary stream, frequent urge, nocturia (4–5 trips nightly) and dull lower abdominal discomfort.
+
+History of Present Illness:
+Mr. Carter is a 68‑year‑old male who reports a 3‑month history of progressive urinary symptoms. The weak stream has become more pronounced; he now feels a constant urge to void with a sensation of incomplete emptying. The symptoms are worsening at night with 4–5 nocturnal voids. He denies hematuria, flank pain, fever, chills, or urinary urgency with pain. He previously started OTC tamsulosin (0.4 mg nightly) and feels some relief, but the symptoms persist.
+
+Past Medical History:
+Hypertension, type 2 diabetes mellitus, hyperlipidemia, benign prostatic hyperplasia (suspected), obesity (BMI 30.2), former smoker (30 pack‑years), high‑fat diet.
+
+Medications:
+Metformin 500 mg BID, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Tamsulosin 0.4 mg nightly (OTC).
+
+Allergies:
+NKDA.
+
+Review of Systems:
+- Positive for LUTS as described. 
+- Denies fever, chills, flank pain, dysuria, hematuria, weight loss, or night sweats.
+
+Physical Examination:
+Vital Signs: BP 162/96 mmHg, HR 78 bpm, T 37.0°C, BMI 30.2 kg/m².
+General: Appears in no distress.
+Abdomen: Soft, non‑tender, no masses or suprapubic tenderness.
+Genitourinary: Digital rectal exam reveals an enlarged, non‑tender prostate consistent with BPH.
+
+Laboratory Results:
+- PSA: 16 ng/mL (elevated).
+- HbA1c: 7.6%.
+- Serum Creatinine: 1.1 mg/dL.
+- Total Cholesterol: 210 mg/dL.
+- CBC, CMP, UA: within normal limits (not shown).
+
+Assessment:
+1. Benign prostatic hyperplasia – clinical picture supported by history, DRE and PSA trend.
+2. Elevated PSA – raises concern for possible prostate cancer; warrants prompt urologic evaluation.
+
+Plan:
+- Schedule referral to Urology for transrectal ultrasound‑guided prostate biopsy.
+- Continue current tamsulosin 0.4 mg nightly.
+- Continue antihypertensive and diabetic regimen; consider adding a second antihypertensive agent if BP remains uncontrolled.
+- Counsel on lifestyle modifications: weight loss, diet rich in fruits/vegetables, regular aerobic exercise, limit caffeine/alcohol, adequate hydration.
+- Discuss PSA monitoring; repeat PSA in 0–3 months at urology follow‑up or after biopsy results.
+- Educate on signs of urinary retention or infection; advise prompt evaluation if symptoms worsen or fever develops.
+
+Disposition:
+Patient relieved that definitive work‑up is underway; will follow up with urology as scheduled and return to primary care after biopsy results.
+
+Follow‑up Recommendations:
+- Attendance of scheduled urology appointment for TRUS‑guided biopsy.
+- Return to primary care within 4–6 weeks post‑biopsy for management of findings.
+- Continue current medications with periodic review.
+- Monitor BP and HbA1c quarterly.
+- Maintain bladder diary and track nocturia frequency.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weak urinary stream</span><span class="pill">Frequent urge to urinate</span><span class="pill">Night‑time trips to the bathroom (4–5 times per night)</span><span class="pill">Dull lower abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>162 / 96 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>37.0°C</td></tr><tr><td>BMI</td><td>30.2 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Enlarged, non‑tender prostate on DRE</li><li>No suprapubic tenderness</li><li>Normal abdominal examination</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Prostate Specific Antigen (PSA)</li><li>Complete Blood Count</li><li>Comprehensive Metabolic Panel</li><li>Urinalysis</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 16 ng/mL</li><li>HbA1c: 7.6%</li><li>Serum Creatinine: 1.1 mg/dL</li><li>Total Cholesterol: 210 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on prostate biopsy procedure</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia (suspected)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.4 mg nightly (OTC)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity (BMI 30.2)</li><li>Type 2 diabetes</li><li>Hypertension on lisinopril</li><li>Hyperlipidemia on atorvastatin</li><li>History of smoking (pack‑day) and high‑fat diet</li><li>Prior over‑the‑counter tamsulosin 0.4 mg nightly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Carter presents with progressive lower urinary tract symptoms. On examination a DRE reveals an enlarged, non‑tender prostate corresponding with his BPH history. A full panel of baseline labs is drawn, including PSA, CBC, CMP, UA, and HbA1c. The PSA is markedly elevated at 16 ng/mL, raising suspicion for prostate pathology beyond BPH. He is advised regarding the risks and benefits of a prostate biopsy, and an appointment is made with Urology for a transrectal ultrasound‑guided biopsy. The patient expresses relief that definitive work‑up is underway.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Elevated PSA with urinary symptoms suggests either advanced BPH or early prostate cancer. Plan to perform a transrectal ultrasound‑guided biopsy to establish diagnosis.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-02-20</h3><div class="visit-meta">Urology | Reason: Transrectal ultrasound‑guided prostate biopsy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transrectal ultrasound‑guided prostate biopsy. The patient, a 68‑year‑old male with a history of hypertension, type 2 diabetes mellitus, hyperlipidemia, benign prostatic hyperplasia (BPH), and suspected prostate cancer (pending biopsy), presented for a scheduled 12‑core TRUS biopsy. 
+
+History of present illness: The patient reports a 3‑month history of lower urinary tract symptoms including a weak urinary stream, frequent urge to urinate, and 4–5 nocturnal voids. PSA rose from 16 ng/mL during the prior visit to 20 ng/mL a month ago. He has been on tamsulosin 0.4 mg nightly for BPH. 
+
+Procedure: Under spinal anesthesia, a 12‑core TRUS‑guided biopsy was performed with no intra‑procedural complications. No rectal bleeding or pain was noted post‑procedure. 
+
+Pathology: Three of the 12 cores were positive for adenocarcinoma with a Gleason score of 3+4 = 7 (clinically significant disease). 
+
+Assessment: 
+1. Clinically significant prostate cancer, Gleason 3+4 (Castration susceptible, potential for definitive local therapy). 
+2. Benign prostatic hyperplasia contributing to lower urinary tract symptoms. 
+3. Anxiety related to cancer diagnosis. 
+4. Uncontrolled hypertension (BP 158/92 mmHg). 
+5. Diabetes mellitus type 2 (HbA1c 7.6% from prior visit). 
+6. Hyperlipidemia. 
+
+Plan: 
+– Schedule a multidisciplinary urology consult (Dr. Lopez) for definitive staging and treatment planning (mpMRI pelvis, CT chest/abdomen/pelvis, bone scan as indicated). 
+– Discuss treatment options: radical prostatectomy, radiation therapy (EBRT or brachytherapy), or active surveillance based on staging. 
+– Continue current medications: Metformin 500 mg BID, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Tamsulosin 0.4 mg nightly. 
+– Counsel on lifestyle modifications to improve BP and glycemic control; reinforce dietary sodium restriction and exercise. 
+– Advise patient to monitor for rectal bleeding, rectal pain, urinary retention, or new GI symptoms and to seek immediate care if these occur. 
+– Address anxiety: offer informational resources, discuss support services, consider referral to behavioral health if persistent. 
+– Follow‑up: Re‑check PSA in 3 months, repeat digital rectal exam at the staging visit, maintain BP and HbA1c monitoring at primary‑care visits. 
+– Instruct patient to avoid NSAIDs that could worsen PSA or bleeding, and to use bowel softeners to reduce straining. 
+
+Patient was given a written summary of findings and next steps. He was scheduled for a follow‑up encounter with Dr. Lopez in two weeks to review imaging and staging results.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weak urinary stream</span><span class="pill">Frequent urge to urinate</span><span class="pill">Night‑time trips to the bathroom (4–5 times per night)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>158 / 92 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>36.9°C</td></tr><tr><td>BMI</td><td>30.2 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal prostate dimensions for biopsy procedure</li><li>No rectal bleeding or pain noted post‑procedure</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Post‑biopsy pathology report</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Biopsy: Adenocarcinoma, 3 cores positive, Gleason 3+4 = 7</li><li>Serum PSA (one month prior): 20 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Local anesthesia for TRUS biopsy</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Suspected prostate cancer (pending biopsy)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.4 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent PSA increase to 20 ng/mL a month ago</li><li>Prior BPH management with tamsulosin</li><li>Type 2 diabetes controlled on metformin</li><li>Hypertension on lisinopril</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient undergoes a 12‑core transrectal ultrasound‑guided biopsy under spinal anesthesia. No complications are noted. The pathology report reveals adenocarcinoma involving 3 cores with a Gleason score of 3+4 = 7. The patient is advised on the next steps: urologic staging and definitive treatment options. He expresses anxiety regarding the diagnosis, which is acknowledged and a follow‑up encounter with Dr. Lopez is scheduled.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Prostate adenocarcinoma (Gleason 7) confirmed. PSA trends show a rise from 16 to 20 ng/mL over 1‑2 months. Proceed to staging imaging to assess extent of disease.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-03-20</h3><div class="visit-meta">Urology | Reason: Multiparametric MRI and staging</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for staging work‑up of newly diagnosed prostate cancer. He reports weak urinary stream, frequent nocturia, and mild lower abdominal discomfort. He has a known history of BPH, hypertension, type 2 diabetes, and hyperlipidemia. 
+
+History of Present Illness: PSA rose to 20 ng/mL and 3 of 12 cores were positive on recent TRUS‑guided biopsy. He expresses preference for a non‑surgical approach given his comorbidities and desire to avoid prolonged hospitalization. 
+
+Vital Signs: BP 158/92 mmHg, HR 80 bpm, Temp 36.8°C, BMI 30.2 kg/m². 
+
+Physical Examination: DRE reveals enlarged, firm prostate with nodularity. No suprapubic tenderness. 
+
+Investigations: mpMRI pelvis demonstrates a 2.2‑cm left lateral index lesion with extraprostatic extension into the neurovascular bundle (T3a). Bone scan is negative for distant metastases. Serum PSA remains 20 ng/mL; CBC, CMP, and PSA are within acceptable limits for treatment planning. 
+
+Assessment: 1) Localized prostatic adenocarcinoma, Gleason score (to be confirmed), stage T3a N0 M0. 2) Uncontrolled hypertension partially controlled on lisinopril. 3) Type 2 diabetes with HbA1c 7.6% remaining elevated. 4) Benign prostatic hyperplasia contributing to LUTS. 
+
+Plan: 1) Discussed definitive radiotherapy (EBRT 78 Gy in 39 fractions) ± androgen deprivation therapy. 2) Initiate LHRH agonist therapy with leuprolide 2.5 mg IM q4 weeks as neoadjuvant/concurrent ADT; monitor testosterone levels. 3) Continue current antihypertensive (lisinopril 20 mg daily) and diabetes (metformin 500 mg BID) regimens; schedule cardiology review to intensify BP control. 4) Continue tamsulosin 0.4 mg nightly for BPH symptoms. 5) Discuss potential side effects of RT and ADT (hot flashes, fatigue, bone density loss). 6) Baseline DEXA scan in 6 weeks. 7) Follow up in urology clinic in 3 weeks to review ADT labs, BP, and to coordinate with radiation oncology. 8) Continue surveillance PSA and metabolic labs at 3-month intervals post-treatment. 
+
+Significant other points: Patient educated about late urinary morbidity from RT, importance of smoking cessation, and adequate hydration during therapy.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weak urinary stream</span><span class="pill">Frequent nocturia</span><span class="pill">Lower abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>158 / 92 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>36.8°C</td></tr><tr><td>BMI</td><td>30.2 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Enlarged prostate on DRE</li><li>No suprapubic tenderness</li><li>BP 158/92</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Multiparametric MRI pelvis</li><li>Bone scan (technetium‑99m)</li><li>Blood work: CBC, CMP, PSA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>mpMRI: Tumor 2.2 cm, extraprostatic extension to neurovascular bundle (T3a)</li><li>Bone scan: No significant uptake</li><li>PSA: 20 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on treatment options</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (Gleason 7, T3a)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.4 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent PSA rise to 20 ng/mL</li><li>Biopsy-confirmed adenocarcinoma</li><li>Hypertension poorly controlled</li><li>Type 2 diabetes with HbA1c 7.6%</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presents for staging work‑up. An mpMRI pelvis is performed, showing a 2.2 cm left‑lateral tumor extending beyond the prostate capsule into the neurovascular bundle, consistent with T3a disease. A whole‑body bone scan shows no distant metastases. Blood pressure remains elevated, and his HbA1c is unchanged. The patient discusses therapeutic options. Given his comorbidities and desire to avoid prolonged hospitalization, a non‑surgical approach (EBRT ± ADT) is favored. Leuprolide therapy is discussed as a possible adjuvant or concurrent treatment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Staged T3a prostate adenocarcinoma with extraprostatic extension but no distant metastasis. Hormonal therapy to be added to planned external beam radiation.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-04-10</h3><div class="visit-meta">Urology | Reason: Initiation of androgen deprivation therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation and transition to long‑acting leuprolide therapy.
+
+History of Present Illness: 68‑year‑old male with known prostate cancer (Gleason 3+4=7, PSA 20 ng/mL) and BPH. He has been on oral tamsulosin, lisinopril, metformin, atorvastatin, and had previously started leuprolide 2.5 mg IM q4 weeks. Due to persistent elevations in blood pressure and the need for a higher‑dose depot formulation, he received his first leuprolide acetate 11.25 mg IM in the office today. He reports mild hot flashes, erectile dysfunction, and increased appetite, consistent with expected ADT side effects. He was educated on self‑monitoring for hot flashes, fatigue, and glucose swings, and on when to seek medical attention.
+
+Past Medical History: Hypertension; type 2 diabetes mellitus; hyperlipidemia; BPH; prostate adenocarcinoma.
+
+Medications: Metformin 500 mg BID; Atorvastatin 40 mg nightly; Tamsulosin 0.4 mg nightly; Losartan 25 mg daily; Leuprolide acetate 11.25 mg IM q3 months.
+
+Physical Examination: Vitals: BP 140/85 mmHg, HR 78 bpm, Temp 37.0°C, BMI 30.2 kg/m². Abdominal exam unremarkable. Genitourinary exam shows no acute abnormalities. No new findings.
+
+Assessment: 1) Prostate adenocarcinoma with confirmed Gleason 3+4 and PSA 20 ng/mL – continuing ADT with long‑acting leuprolide. 2) Benign prostatic hyperplasia – managed with tamsulosin. 3) Hypertension – transitioned from lisinopril to losartan with improved control. 4) Type 2 diabetes – stable HbA1c 7.6%. 5) Expected ADT side effects: hot flashes, erectile dysfunction, increased appetite.
+
+Plan: • Inject leuprolide acetate 11.25 mg IM today (next dose due 3 months). • Continue losartan 25 mg daily for BP control; advise home BP logging. • Continue metformin, atorvastatin, tamsulosin. • Educate on monitoring for hot flashes, fatigue, and hyperglycemia; advise to keep glucose logs. • Schedule PSA trend, HbA1c, and BP checks every 3 months. • Continue multidisciplinary coordination with radiation oncology; baseline DEXA to be obtained in 6 weeks. • Follow‑up in urology clinic in 3 months to reassess PSA response, side‑effect profile, HbA1c, and BP. • If significant side effects or PSA rise, reassess ADT strategy.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild hot flashes</span><span class="pill">Erectile dysfunction</span><span class="pill">Increased appetite</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140 / 85 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>37.0°C</td></tr><tr><td>BMI</td><td>30.2 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 140/85</li><li>BMI unchanged</li><li>No acute abdominal findings</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA trend monitoring</li><li>HbA1c every 3 months</li><li>Blood pressure monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA (baseline): 20 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Leuprolide acetate 11.25 mg IM</li><li>Losartan 25 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (Gleason 7, T3a)</span><span class="pill">Hyperthyroidism (none)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Losartan 25 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.4 mg nightly</li><li>Leuprolide acetate 11.25 mg IM (to be started)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BP 158/92 prior to visit</li><li>HbA1c 7.6%</li><li>History of BPH</li><li>PSA 20 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After discussing the benefits and side‑effects of hormonal therapy, the urologist orders the first dose of leuprolide acetate 11.25 mg intramuscularly. The patient receives the injection at the office. He is taught self‑monitoring for side effects, particularly hot flashes, fatigue, and glucose changes. Losartan is initiated to help control blood pressure, which has previously been difficult to manage on lisinopril. Follow‑up is scheduled in 3 months to evaluate PSA response and side‑effect profile.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiated first 4‑month course of ADT. Anticipated PSA decline; monitor for endocrine side‑effects and diabetic control. Blood pressure is improved modestly.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-06-01</h3><div class="visit-meta">Radiation Oncology | Reason: External beam radiation therapy planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for definitive external beam radiation therapy (EBRT) planning for known prostate adenocarcinoma, T3a, currently on androgen deprivation therapy (ADT). 
+
+History of Present Illness: 68‑year‑old male, with a history of prostate cancer diagnosed in March 2024 (mpMRI T3a, Gleason 3+4=7). He has completed 1 month of leuprolide acetate 11.25 mg IM q3 mo and is on concurrent ADT. Current PSA is decreasing from 20 ng/mL to 12 ng/mL. The patient reports mild hot flashes, increased urinary frequency, and bladder base discomfort that has worsened with ADT. These urinary symptoms are consistent with the known benign prostatic hyperplasia (BPH) and ADT‑related urinary irritation.
+
+Physical Examination: Vitals stable – BP 140/85 mmHg, HR 78 bpm, Temp 36.9°C, BMI 30.2 kg/m². Soft abdomen, no suprapubic tenderness. Neurologic exam normal.
+
+Assessment: 
+1. Prostate adenocarcinoma, clinical stage T3a, currently under control with declining PSA on ADT. 
+2. BPH contributing to urinary symptoms exacerbated by ADT.
+3. No evidence of metastasis on prior imaging.
+
+Plan: 
+- Radiation oncology treatment plan: Definitive EBRT of 70 Gy in 35 fractions (2 Gy per fraction) to prostate and seminal vesicles, with concurrent short‑course ADT. 
+- Patient education regarding acute urinary morbidity: potential cystitis, hematuria, mild urgency/irregular voiding.
+- Bladder irrigation protocol: bladder lavage with saline every 6 hours while symptomatic; patient will be instructed on self‑irrigation if needed.
+- Medication adjustment: Tamsulosin increased from 0.4 mg to 0.8 mg nightly to mitigate urinary symptoms.
+- Continue current ADT (leuprolide 11.25 mg IM q3 mo), metformin 500 mg BID, losartan 25 mg daily, atorvastatin 40 mg nightly.
+- Order radiotherapy planning CT simulation; optional baseline cystoscopy. PSA trend monitoring every 3 months.
+- Schedule start of EBRT in 1 month (in collaboration with radiation scheduling). 
+- Follow‑up: Return to clinic in 2 weeks after initiation of RT to assess acute toxicity and adjust bladder irrigation protocol. PSA and metabolic labs at 3‑month intervals. Provide contact for any urinary urgency or bleeding.
+
+Disposition: Patient has opted for non‑surgical definitive radiotherapy after current ADT course. All educational materials reviewed and understood.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild hot flashes</span><span class="pill">Urinary frequency</span><span class="pill">Bladder base discomfort after several weeks of ADT</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140 / 85 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>36.9°C</td></tr><tr><td>BMI</td><td>30.2 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen</li><li>No suprapubic tenderness</li><li>Neurologic exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Radiotherapy planning CT simulation</li><li>Baseline cystoscopy (optional)</li><li>PSA trend</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 12 ng/mL</li><li>Planning CT: Prostate volume 55 cc</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling and scheduling for EBRT</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, on ADT)</span><span class="pill">PSA decline</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Losartan 25 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.4 mg nightly</li><li>Leuprolide acetate 11.25 mg IM (continued)</li><li>Levofloxacin prophylaxis (none at present)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 1 month of leuprolide therapy</li><li>Current PSA 12 ng/mL (declining)</li><li>Urinary symptoms exacerbated by ADT</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The radiation oncology team reviews the patient&#x27;s imaging and PSA trend. They determine 70 Gy in 35 fractions is appropriate for definitive control, with concurrent short‑course ADT. Patients are educated about potential acute cystitis, and a bladder irrigation protocol is discussed. Tamsulosin dose is increased to 0.8 mg nightly to mitigate urinary symptoms. The patient expresses willingness to begin EBRT after one month of ADT, aligning with his preference for a non‑surgical approach.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Planning for definitive external beam radiotherapy with concurrent ADT. Anticipated tumor control; monitor urinary toxicity.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-07-01</h3><div class="visit-meta">Radiation Oncology | Reason: Early radiation side‑effect evaluation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Assessment/Plan:
+
+**Chief Complaint:** Patient reports worsening urinary frequency and mild bladder base pain after 3 weeks of EBRT (10 fractions delivered). No fever, hematuria, or dysuria beyond mild burning.
+
+**History:** 68‑year‑old male on leuprolide 11.25 mg IM q3mo, tamsulosin 0.8 mg nightly, losartan 25 mg daily, metformin 500 mg BID, atorvastatin 40 mg nightly. Undergoing definitive EBRT to prostate and seminal vesicles (70 Gy in 35 fractions). Prior ADT and BPH management noted.
+
+**Review of Systems:** Positive for increased urinary frequency, mild bladder base pain, occasional mild burning on void.
+
+**Physical Exam:** Suprapubic tenderness, no hematuria, normal vital signs.
+
+**Labs/Imaging:** Urinalysis performed – negative for infection.
+
+**Assessment:** Early-stage radiation‑related cystitis (Grade 1–2). Likely exacerbated by concurrent androgen‑deprivation therapy and underlying benign prostatic hyperplasia. No evidence of bacterial cystitis.
+
+**Plan:
+1. Initiate low‑dose bladder irrigation protocol every 4 hours while awake, taper as symptoms improve.
+2. Increase tamsulosin to 0.8 mg nightly (already on this dose) and encourage continued use to aid urinary flow.
+3. Continue current ADT, antihypertensive, statin, and antidiabetic therapies.
+4. Counsel patient on typical course of early cystitis, expected resolution within 2–3 weeks post‑radiation completion (week 7). No hospitalization needed.
+5. Repeat urinalysis if symptoms worsen or fever develops.
+6. Follow up in 2 weeks for toxicity assessment and at completion of radiation (week 7) for final evaluation.
+7. Advise patient to report new or worsening hematuria, fever, or severe dysuria immediately.
+8. Schedule PSA, HbA1c, and blood pressure review every 3 months.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increased urinary frequency</span><span class="pill">Mild pain at bladder base</span><span class="pill">Occasional mild burning urination</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140 / 85 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>36.8°C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Suprapubic tenderness</li><li>No hematuria noted</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis (optional)</li><li>Post‑treatment bladder irrigation schedule</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Urinalysis: No infection</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Bladder irrigation (low‑dose)</li><li>Tamsulosin 0.8 mg nightly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, on ADT and EBRT)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Losartan 25 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.8 mg nightly</li><li>Leuprolide acetate 11.25 mg IM</li><li>Levofloxacin prophylaxis (none)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>3 weeks into EBRT (10 fractions delivered)</li><li>Persistent urinary frequency</li><li>No fever</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reports worsening urinary frequency and mild bladder base pain after a few weeks of EBRT. Examination reveals suprapubic tenderness; a cystoscopic inspection is deemed unnecessary. The radiation oncology team initiates low‑dose bladder irrigation and increases tamsulosin to 0.8 mg nightly, noting the patient&#x27;s mild improvement in irritative symptoms. They counsel the patient about the typical course of early cystitis and expect full radiation completion at week 7. No hospitalization is required.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early post‑radiation cystitis managed conservatively. Expect improved urinary symptoms post‑RT completion.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-09-15</h3><div class="visit-meta">Oncology | Reason: Bone scan and systemic therapy update</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up for bone scan and systemic therapy update.
+
+History of Present Illness: 68‑year‑old male with known metastatic prostate adenocarcinoma on castration‑level testosterone therapy (leuprolide acetate 11.25 mg IM q3 months) presented for routine oncologic follow‑up. He reports mild left hip ache, fatigue, and no new pain. He has completed EBRT 7 weeks ago. Current laboratory: HbA1c 8.1%; PSA 8 ng/mL (declining from 12 ng/mL prior). A recent bone scan identified a single focal uptake in the left sacral ala, concerning for early skeletal metastasis.
+
+Physical Examination: Vitals: BP 138/82 mmHg, HR 78 bpm, Temp 36.7°C, BMI 30.5 kg/m². Abdomen soft, non‑tender. Left hip: mild tenderness to palpation, no swelling. No neuro deficits noted.
+
+Assessment:
+1. Prostate cancer with potential early bone metastasis – sacral ala uptake on bone scan.
+2. T2DM poorly controlled – HbA1c 8.1%.
+3. Mild fatigue, likely multifactorial (pain, cancer therapy, anemia, metabolic disturbances).
+
+Plan:
+1. Initiate zoledronic acid 4 mg IV infusion (first dose scheduled 2024‑10‑01) and continue thereafter every 6 months per protocol for bone protection.
+2. Increase metformin to 1 g BID to better control hyperglycemia; monitor for GI tolerance.
+3. Order serum calcium and vitamin D baseline; repeat in 3 months to monitor for hypocalcemia.
+4. Repeat bone scan in 3 months to assess treatment response.
+5. Continue leuprolide q3 months; maintain tamsulosin 0.8 mg nightly for BPH.
+6. Monitor PSA every 3 months.
+7. Continue routine metabolic labs (HbA1c, lipid panel) every 3 months.
+8. Educate patient on signs of hypocalcemia (tetany, paresthesias) and bone pain; advise prompt reporting.
+9. Encourage adequate calcium (800–1000 mg/day) and vitamin D (800 IU/day) intake.
+10. Plan follow‑up visit in 3 months for evaluation of bone scan, PSA trend, metabolic parameters, and symptom review.
+
+Medications Ordered:
+- Zoledronic acid 4 mg IV (first dose) – 2024‑10‑01
+- Metformin 1 g BID (up from 500 mg BID)
+- Losartan 25 mg daily
+- Atorvastatin 40 mg nightly
+- Tamsulosin 0.8 mg nightly
+- Leuprolide acetate 11.25 mg IM q3 months
+
+Education Provided: Discussed importance of adherence to anti‑resorptive therapy, monitoring for hypocalcemia, glycemic control, and PSA surveillance.
+
+Follow‑Up:
+- Return in 3 months for bone scan, PSA, labs.
+- Return sooner if bone pain increases, new skeletal symptoms, or signs of hypocalcemia.
+- Continue 3‑month metabolic and PSA monitoring.
+- Bladder irrigation and urinary frequency symptoms will be reviewed during next visit.
+
+Sign: [Oncologist&#x27;s Signature]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild left hip ache</span><span class="pill">No new pain yet</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138 / 82 mmHg</td></tr><tr><td>Heart Rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>36.7°C</td></tr><tr><td>BMI</td><td>30.5 kg/m²</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left hip mild tenderness</li><li>No neuro deficits</li><li>Normal abdominal exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bone scan (repeat in 3 months)</li><li>Serum calcium and vitamin D</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Bone scan: 1 focal uptake in left sacral ala</li><li>HbA1c: 8.1%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Zoledronic acid 4 mg IV infusion (first dose; scheduled 2024‑10‑01)</li><li>Metformin increased to 1 g BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, on ADT + RT)</span><span class="pill">Potential bone metastasis (positive scan)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Losartan 25 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.8 mg nightly</li><li>Leuprolide acetate 11.25 mg IM (3 months ongoing)</li><li>Zoledronic acid 4 mg IV infusion (first dose scheduled)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed EBRT (7 weeks)</li><li>On leuprolide therapy (8 months)</li><li>Bone scan showed first focal uptake in left sacral ala</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presents for a scheduled follow‑up. A bone scan demonstrates a focal uptake in the left sacral ala concerning for early bone involvement. Given the potential skeletal‑related events, the oncology team introduces zoledronic acid 4 mg IV infusion. Metformin dose is increased from 500 mg BID to 1 g BID to address the rising HbA1c now at 8.1%. The patient is also advised to maintain an anti‑resorptive schedule and to monitor for hypocalcemia with periodic calcium and vitamin D levels.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early bone metastasis identified. Initiated bone‑targeted therapy while continuing ADT. Diabetes control remains suboptimal.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-10-01</h3><div class="visit-meta">Urology | Reason: Transurethral resection of prostate (TURP)</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transurethral resection of prostate (TURP).\nPatient 68‑year‑old male with known BPH, prostate adenocarcinoma (T3a N0 M1 with bone metastasis), hypertension, type‑2 diabetes, hyperlipidemia. He received a TURP under spinal anesthesia 25 g of prostate tissue resected. Procedure was uncomplicated; patient tolerated spinal block well.\n\nPost‑operative course: Mild gross hematuria resolved spontaneously within 48 h. The patient reports a markedly improved urinary stream, reduced nocturia, and decreased post‑void dribbling. No dysuria or fever. Wound in the suprapubic area is intact with no erythema or drainage.\n\nVitals: BP 138/82 mmHg, HR 76 bpm, Temp 36.9 °C.\n\nAssessment: Successful TURP for symptomatic BPH with satisfactory post‑operative urinary flow improvement. Hematuria as expected and resolving. No evidence of infection or bleeding complications. Prostate cancer status unchanged; ongoing ADT and radiotherapy plan remain.\n\nDifferential Diagnoses considered:\n• Residual or recurrent BPH obstruction\n• Post‑operative urinary retention or hematuria\n• Infection (UTI) – unlikely given afebrile status and no dysuria\n• Prostate cancer progression – remains under surveillance via PSA and imaging\n\nPlan:\n1. Continue current medication regimen: Metformin 1 g BID, Losartan 25 mg daily, Atorvastatin 40 mg nightly, Tamsulosin 0.8 mg nightly, Leuprolide acetate 11.25 mg IM q3 mo, Zoledronic acid 4 mg IV q6 mo. No change to tamsulosin dose (patient reports satisfactory relief).\n2. Discharge instructions: void regularly, document any hematuria, monitor for fever or worsening pain, keep incision clean. Avoid strenuous activity for 1 week.\n3. Labs/Tests: Order post‑operative urine culture if patient develops dysuria, fever, or hematuria &gt;48 h. No follow‑up cystoscopy scheduled unless dysuria or hematuria persists.\n4. Follow‑up: Return in 3 months for PSA, bone scan, and urology assessment; schedule routine oncology follow‑up concurrently. Consider imaging if urinary symptoms recur.\n5. Educate patient on signs of infection, bleeding, and hypocalcemia (due to zoledronic acid).\n\nPatient advised to contact clinic if fever &gt;100.4 °F, pain &gt;4/10, persistent hematuria, or urinary retention.\n&quot; ,</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Worsening urinary obstruction</span><span class="pill">Weak stream</span><span class="pill">Post‑void dribbling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138 / 82 mmHg</td></tr><tr><td>Heart Rate</td><td>76 bpm</td></tr><tr><td>Temperature</td><td>36.9°C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Urination strength improved</li><li>No gross hematuria</li><li>Normal abdominal examination</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Post‑operative urine culture (if needed)</li><li>Follow‑up cystoscopy (none scheduled)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>TURP procedure</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, on ADT + RT)</span><span class="pill">Potential bone metastasis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1 g BID</li><li>Losartan 25 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.8 mg nightly</li><li>Leuprolide acetate 11.25 mg IM</li><li>Zoledronic acid 4 mg IV infusion</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive urinary symptoms over last 2 months</li><li>Prior tamsulosin 0.8 mg nightly with limited benefit</li><li>History of BPH</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient undergoes a TURP under spinal anesthesia. Intraoperatively, the procedure proceeds without complications, resecting ~25 g of prostate tissue. Post‑operatively, the patient experiences transient hematuria which resolves within 48 hours. Urinary flow improves markedly; he reports a strong stream and reduced nocturia. He is discharged with instructions regarding voiding patterns, hematuria monitoring, and wound care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Symptomatic relief from BPH obstruction achieved. Continues systemic therapy for prostate cancer.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-12-01</h3><div class="visit-meta">Radiation Oncology | Reason: Pulmonary nodule evaluation and systemic therapy change</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: 68‑year‑old male presents with new dull headache, worsening bone pain, and dyspnea on minimal exertion. He reports increased fatigue. He has a history of metastatic bone disease from prostate cancer and prior external beam radiotherapy to the pelvis. He is currently on leuprolide acetate 11.25 mg IM q3 mo, enzalutamide 150 mg PO daily, zoledronic acid 4 mg IV q6 mo, metformin 1 g BID, losartan 25 mg daily, atorvastatin 40 mg nightly, tamsulosin 0.8 mg nightly. No known drug allergies.
+
+**History of Present Illness**: The patient notes a persistent dull frontal headache and back pain radiating to the left hip and groin for the past 2 weeks. He has had progressive bone pain consistent with known skeletal metastases. Dyspnea appears after minimal activity; he denies cough or hemoptysis.
+
+**Review of Systems**: Positive for bone pain, headache, fatigue, dyspnea with minimal exertion. No fever, chills, weight loss, or night sweats reported.
+
+**Vitals** (Room air): BP 136/80 mmHg, HR 80 bpm, Temp 36.8 °C, RR 18 bpm, SpO₂ 94 %. No acute distress.
+
+**Physical Examination**: Inspection of the back shows tenderness over the left lumbar area and left hip. No focal neurological deficits. Respiratory exam is clear bilaterally, no wheezes or crackles. Cardiovascular exam is normal. Abdomen is soft, non-tender. Musculoskeletal exam reveals mild left hip tenderness on palpation.
+
+**Imaging &amp; Labs**:
+- Chest CT: Bilateral pulmonary nodules 1–2 cm.
+- CT-guided biopsy of a left lung nodule: malignant cells identified.
+- PSA: 18.3 ng/mL (baseline 12 ng/mL post‑TURP).
+- Bone scan: multiple hot spots consistent with bone metastases.
+
+**Assessment**:
+1. Metastatic prostate cancer with newly documented pulmonary metastases.
+2. Progressive bone disease evidenced by worsening pain and bone scan.
+3. Suspected systemic disease progression requiring adjustment of systemic therapy.
+
+**Differential Diagnosis**:
+- Metastatic prostate adenocarcinoma to lung (most likely given known history and biopsy).
+- Primary lung adenocarcinoma (possible but less likely given prostate history and pathology).
+- Metastatic prostate cancer to bone (ongoing). 
+- Non‑malignant pulmonary nodules (e.g., granuloma), unlikely given biopsy.
+
+**Plan**:
+1. **Systemic Therapy**: Continue leuprolide acetate 11.25 mg IM q3 mo. Initiate enzalutamide 150 mg PO daily (transition from leuprolide monotherapy to combination, recommended for castration‑resistant disease). Counsel patient on potential side‑effects: fatigue, hot flashes, dizziness, visual disturbances; advise to maintain medication adherence and monitor for neuro‑psychiatric changes.
+2. **Bone Health**: Continue zoledronic acid 4 mg IV infusion monthly. Monitor serum calcium, phosphate, and renal function prior to each infusion. Consider denosumab if renal function deteriorates.
+3. **Metabolic Control**: Continue metformin 1 g BID. Check fasting glucose and HbA1c next visit; consider insulin initiation if glucose &gt;180 mg/dL or HbA1c &gt;8.0%.
+4. **Pain Management**: NSAIDs limited due to bone involvement; consider opioid analgesics (e.g., oxycodone) if pain persists despite NSAID and analgesic therapy, with proper monitoring.
+5. **Monitoring Lab Tests**: Order CBC, CMP, LFTs, Ca/PO₄, fasting glucose, and PSA to be repeated in 4 weeks to evaluate for cytopenias, hepatic toxicity, metabolic derangements, and PSA response.
+6. **Imaging Follow‑up**: Repeat CT chest/abdomen/pelvis in 3 months to evaluate tumor burden. Repeat bone scan in 3 months to assess osteoblastic activity.
+7. **Symptom Management**: Provide patient education on headache relief (acetaminophen) and hydration. Advise use of cervical collar or support for headache if severe.
+8. **Documentation &amp; Coordination**: Coordinate with urology for ongoing ADT monitoring and with bone health clinic for potential adjustment of bisphosphonate therapy.
+9. **Side‑Effect Monitoring**: Monitor for enzalutamide‑related fatigue and hot flashes; adjust doses or add supportive therapy (e.g., alpha‑blockers or antihistamines) if needed.
+10. **Follow‑up**: Return in 4 weeks for clinical evaluation, labs, PSA, and pain assessment. Subsequent visits monthly for ADT dosing and side‑effect monitoring.
+
+**Disposition**: Patient is stable for discharge with instructions on medication adherence, monitoring of glucose levels, and return precautions for worsening dyspnea, chest pain, or visual changes from enzalutamide. Family notified; phone call scheduled for next visit.
+
+**Signature**: \nDr. [Name], M.D.\nRadiation Oncology
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">New dull headache</span><span class="pill">Increasing back pain radiating to left hip and groin</span><span class="pill">Shortness of breath after minimal exertion</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>136 / 80 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>36.8°C</td></tr><tr><td>Respiratory Rate</td><td>18 bpm</td></tr><tr><td>SpO2</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness over left hip</li><li>No focal neuro deficits</li><li>Respiratory exam clear bilaterally</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest/abdomen/pelvis</li><li>Bone scan (repeat in 3 months)</li><li>Lung nodule biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT chest: bilateral pulmonary nodules 1–2 cm</li><li>Lung nodule biopsy: metastatic adenocarcinoma Gleason 3+4</li><li>PSA: 18.3 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Enzalutamide 150 mg daily</li><li>Leuprolide acetate continuation</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, on ADT + RT + TURP)</span><span class="pill">Bone metastases</span><span class="pill">Pulmonary metastases</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1 g BID</li><li>Losartan 25 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Tamsulosin 0.8 mg nightly</li><li>Leuprolide acetate 11.25 mg IM</li><li>Zoledronic acid 4 mg IV infusion</li><li>Enzalutamide 150 mg oral daily (new therapy)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bone scan positive for multiple hot spots</li><li>Pulmonary nodule on chest CT</li><li>Baseline PSA 12 ng/mL at start of therapy, now 18.3 ng/mL post‑TURP</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presents with a new dull headache and worsening bone pain. A chest CT reveals bilateral pulmonary nodules. A CT‑guided biopsy of a left lung nodule is performed, confirming metastatic adenocarcinoma with Gleason 3+4. The oncologist transitions the patient from leuprolide monotherapy to a combination of leuprolide plus enzalutamide to address systemic disease progression. Zoledronic acid continues monthly. The patient is counseled regarding anticipated side‑effects of enzalutamide, including fatigue and hot flashes. He is instructed to continue metformin, with plans to adjust insulin if glucose rises.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Metastatic spread to bone and lung confirmed. ADT escalated to second‑line hormonal therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2025-01-15</h3><div class="visit-meta">Palliative Care | Reason: Hospice referral and pain management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Hospice referral and advanced pain management.
+
+History of Present Illness: 68‑year‑old male with metastatic prostate adenocarcinoma (bone and pulmonary metastases) presents with worsening pain burden, fatigue, anorexia, dyspnea on minimal exertion, and gait instability. Over the past six months he has had multiple hospitalizations for urinary tract infections and has been increasingly unable to ambulate. Recent labs show PSA 45 ng/mL and creatinine 1.5 mg/dL. A multidisciplinary discussion with oncology and home‑care teams confirmed disease progression, high pain scores, and desire for comfort‑focused care. Hospice referral was initiated and a comprehensive palliative plan implemented.
+
+Past Medical History: BPH, HTN, T2DM, Hyperlipidemia, metastatic prostate cancer, bone and pulmonary metastases, prior zoledronic acid therapy.
+
+Medications: Metformin 1 g BID, Losartan 50 mg daily, Atorvastatin 40 mg nightly, Enzalutamide 150 mg daily, Morphine PCA (baseline 4 mg q6 h PRN), Ketamine 5 mg infusion 1–2 h daily, Zoledronic acid 4 mg IV infusion (as tolerated), Dexamethasone 4 mg daily.
+
+Physical Exam: Vitals stable – BP 130/78 mmHg, HR 82 bpm, Temp 36.6 °C, RR 22 bpm, SpO₂ 92% on RA. Marked lumbar tenderness, swelling over sacral ala, mild lower extremity weakness, normal cardiac exam. No neuro deficits beyond reduced ambulation.
+
+Assessment:
+1. Metastatic bone pain – refractory to oral analgesics.
+2. Dying‑phase prostate cancer with progression (PSA ↑, new pulmonary lesions).
+3. Early cachexia – decreased appetite, weight loss.
+4. Mild hypoxemia – likely due to pulmonary metastases.
+5. Stable HTN; ongoing T2DM control suboptimal.
+
+Plan:
+• Initiate Morphine PCA (4 mg q6 h PRN) with basal 15 mg/hour, rescue 4 mg q15 min, lockout 20 min.
+• Continue Ketamine 5 mg infusion 1–2 h daily; adjust as needed for breakthrough pain.
+• Dexamethasone 4 mg PO daily to reduce bone pain and inflammation.
+• Zoledronic acid 4 mg IV every 4–6 weeks as tolerated; monitor creatinine.
+• Advance directives review; hospice home‑care placement set up.
+• Diabetic management: continue metformin, consider basal‑bolus insulin if glucose &gt;180 mg/dL on two consecutive labs.
+• Hydration: oral fluids as tolerated; IV fluids only if symptomatic dehydration.
+• Nutrition: high‑calorie, protein supplement; dietitian consult.
+• Symptom monitoring: daily pain scores, appetite, urine output, vitals.
+• Labs: baseline CBC, CMP, calcium, repeat PSA at 1 month; BMP and HbA1c quarterly.
+• Respiratory: chest X‑ray if SOB worsens or new infiltrates.
+• Follow‑up: hospice nurse visit twice weekly; caregiver education.
+
+Discharge Plan: Home hospice care; medication reconciliation; arrange for PCA pump delivery and ketamine infusion equipment at home. Continue oncology follow‑up for disease monitoring but primary focus on comfort.
+
+Patient and family verbalized understanding and acceptance of goals of care focused on quality of life.
+
+Signed: [Palliative Care Physician]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe bone pain (especially in back and pelvis)</span><span class="pill">Marked fatigue</span><span class="pill">Reduced appetite</span><span class="pill">Shortness of breath on minimal exertion</span><span class="pill">Difficulty ambulating</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>130 / 78 mmHg</td></tr><tr><td>Heart Rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>36.6°C</td></tr><tr><td>Respiratory Rate</td><td>22 bpm</td></tr><tr><td>SpO2</td><td>92% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Marked tenderness over lumbar spine</li><li>Soft tissue swelling at sacral ala</li><li>Weakness of lower extremities (GCS 5/5 overall) but reduced ambulation</li><li>Normal cardiac exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC, CMP, calcium prior to morphine PCA</li><li>Repeat PSA in 1 month</li><li>Chest X‑ray (if respiratory symptoms develop)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 45 ng/mL</li><li>Serum creatinine: 1.5 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine PCA</li><li>Ketamine infusion</li><li>Dexamethasone 4 mg daily</li><li>Zoledronic acid (as tolerated)</li><li>Hospice services initiated</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Hyperlipidemia</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma (T3a, metastatic)</span><span class="pill">Bone metastases</span><span class="pill">Pulmonary metastases</span><span class="pill">Chronic kidney disease stage 2 (serum creatinine 1.5 mg/dL)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1 g BID</li><li>Losartan 50 mg daily (increased dose)</li><li>Atorvastatin 40 mg nightly</li><li>Enzalutamide 150 mg daily</li><li>Morphine PCA (baseline 4 mg q6h as needed)</li><li>Ketamine 5 mg infusion 1–2 h daily (palliative)</li><li>Zoledronic acid 4 mg IV infusion (as tolerated)</li><li>Dexamethasone 4 mg daily (for bone pain and inflammation)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continued metastatic disease with multiple bone lesions</li><li>Multiple hospital admissions for urinary tract infections</li><li>Repeated zoledronic acid infusions</li><li>Recent rise in PSA to 45 ng/mL over 2 months</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist and palliative team convened and discussed the patient’s worsening disease burden, frequent hospitalizations, and declining functional status. Hospice referral is initiated. A comprehensive pain management plan is implemented, including a morphine PCA pump and intermittent ketamine infusions to address refractory bone pain. The team also reviews goals of care, emphasizing comfort and quality of life. The patient’s diabetes remains suboptimally controlled; metformin is continued, but insulin is considered if blood glucose rises further. The patient and family discuss advance directives, and plans for home hospice care are arranged.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal metastatic disease with widespread bone and lung involvement. Transition to palliative and hospice care required. Expect decline in performance status with progressive organ dysfunction.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Hyperlipidemia</span><span class="pill">Prostate cancer</span><span class="pill">Metastatic bone disease</span><span class="pill">Bone metastasis</span><span class="pill">Pulmonary metastases</span><span class="pill">Cachexia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1 g BID</li><li>Losartan 50 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Enzalutamide 150 mg PO daily</li><li>Morphine PCA (baseline 4 mg q6h PRN)</li><li>Ketamine 5 mg infusion 1–2 h daily</li><li>Dexamethasone 4 mg daily</li><li>Zoledronic acid 4 mg IV infusion (as tolerated)</li><li>Leuprolide acetate 11.25 mg IM q3 months</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Date: 2024-01-15. Chief complaint: progressive lower urinary tract symptoms including weak stream, frequent urge, nighttime voiding. Digital rectal exam revealed an enlarged, non-tender prostate. Laboratory testing: PSA 16 ng/mL, HbA1c 7.6%, creatinine 1.1 mg/dL, total cholesterol 210 mg/dL. Plan included referral to urology for a transrectal ultrasound-guided prostate biopsy, continuation of tamsulosin and existing antihypertensive and diabetic regimen, lifestyle modification counseling, and monitoring of blood pressure, HbA1c, and PSA. Follow-up to occur after the biopsy and with primary care thereafter.</li><li>Date: 2024-02-20. Chief complaint: transrectal ultrasound‑guided prostate biopsy for suspected prostate cancer. Procedure: 12‑core TRUS‑guided biopsy performed under spinal anesthesia; no intra‑procedural complications. Pathology: 3 of 12 cores positive for adenocarcinoma, Gleason 3+4 = 7. Plan: multidisciplinary urology consult for staging, imaging (mpMRI pelvis, CT chest/abdomen/pelvis, bone scan as indicated); continue current medications; monitor PSA (now 20 ng/mL), BP, HbA1c; counsel on anxiety; avoid NSAIDs; follow up on PSA in 3 months.</li><li>Date: 2024-03-20. Chief complaint: staging work‑up for newly diagnosed prostate cancer. History: PSA 20 ng/mL, 3 of 12 cores positive on recent TRUS‑guided biopsy. Physical exam: enlarged firm prostate with nodularity. Investigations: mpMRI pelvis shows 2.2‑cm left lateral index lesion with extraprostatic extension into the neurovascular bundle (T3a); bone scan negative. Plan: initiate leuprolide 2.5 mg IM q4 weeks for neoadjuvant/concurrent ADT, continue lisinopril 20 mg daily, metformin 500 mg BID, atorvastatin 40 mg nightly, and tamsulosin 0.4 mg nightly. Baseline DEXA scan scheduled in 6 weeks. Coordinate definitive radiotherapy (78 Gy) with radiation oncology. Follow up in urology clinic in 3 weeks for ADT labs, BP review, and coordination of RT. Continue PSA and metabolic monitoring at 3‑month intervals.</li><li>Date: 2024-04-10. Initiated leuprolide acetate 11.25 mg IM q3 months; switched antihypertensive from lisinopril to losartan 25 mg daily. Noted mild hot flashes, erectile dysfunction, increased appetite. Baseline DEXA scheduled in 6 weeks. Plan for PSA, HbA1c, and BP monitoring every 3 months and return visit in 3 months for assessment of PSA response and side‑effect profile.</li><li>Date: 2024-06-01. Chief complaint: planning definitive external beam radiation therapy (EBRT) for prostate adenocarcinoma T3a while on leuprolide ADT. Findings: PSA decreased to 12 ng/mL; mild hot flashes, increased urinary frequency and bladder discomfort noted with ADT. Plan: initiate 70 Gy in 35 fractions to prostate and seminal vesicles, continue leuprolide 11.25 mg IM q3 months, increase tamsulosin to 0.8 mg nightly, bladder irrigation protocol, order radiotherapy planning CT simulation, optional baseline cystoscopy, monitor PSA every 3 months. Follow-up: return 2 weeks after RT start for toxicity assessment; PSA and metabolic labs at 3‑month intervals.</li><li>Date: 2024-07-01. Chief complaint: worsening urinary frequency and mild bladder base pain during EBRT. Findings: suprapubic tenderness; negative urinalysis. Plan: bladder irrigation protocol every 4 h while awake, continued current medications, follow‑up in 2 weeks for toxicity assessment and after completion of radiation.</li><li>Date: 2024-09-15. Chief complaint: bone scan and systemic therapy update. Findings: mild left hip ache, fatigue; bone scan shows single uptake in left sacral ala suggestive of early skeletal metastasis. Labs: HbA1c 8.1%, PSA 8 ng/mL. Plan: initiate zoledronic acid 4 mg IV infusion (first dose 2024‑10‑01) and repeat every 6 months; increase metformin to 1 g BID; monitor serum calcium, vitamin D, HbA1c, PSA; repeat bone scan in 3 months; continue leuprolide q3 months, tamsulosin 0.8 mg nightly, losartan 25 mg daily, atorvastatin 40 mg nightly; educate on hypocalcemia symptoms; follow‑up in 3 months.</li><li>Date: 2024-10-01. Chief complaint: transurethral resection of prostate for BPH symptoms. Procedure: TURP under spinal anesthesia; 25 g tissue resected; uncomplicated. Post‑op: mild gross hematuria resolved within 48h; improved urinary stream, reduced nocturia, decreased post‑void dribbling. No dysuria, fever, or wound infection. Vitals: BP 138/82, HR 76, Temp 36.9°C. Plan: continue current medication regimen (Metformin 1 g BID; Losartan 25 mg daily; Atorvastatin 40 mg nightly; Tamsulosin 0.8 mg nightly; Leuprolide 11.25 mg IM q3mo; Zoledronic acid 4 mg IV q6mo). Discharge instructions: void regularly, document hematuria, monitor for fever/pain, keep incision clean, avoid strenuous activity 1 week. Labs: order postoperative urine culture if dysuria, fever, or hematuria &gt;48h. Follow‑up: return in 3 months for PSA, bone scan, urology assessment; schedule oncology follow‑up concurrently; consider imaging if urinary symptoms recur. Educated on infection, bleeding, hypocalcemia symptoms.</li><li>Date: 2024-12-01. Chief complaint: new dull headache, worsening bone pain, dyspnea on minimal exertion. Findings: bilateral pulmonary nodules 1–2 cm; CT‑guided biopsy of left lung nodule revealed malignant cells consistent with prostate adenocarcinoma; PSA 18.3 ng/mL; bone scan with multiple hot spots. Plan: continue leuprolide acetate 11.25 mg IM q3 months, initiate enzalutamide 150 mg PO daily, continue zoledronic acid 4 mg IV infusion monthly, continue metformin 1 g BID, losartan 25 mg daily, atorvastatin 40 mg nightly, tamsulosin 0.8 mg nightly. Monitor labs (CBC, CMP, LFTs, Ca/PO4, fasting glucose, PSA) in 4 weeks. Repeat CT chest/abdomen/pelvis and bone scan in 3 months. Pain management with opioid analgesic if persistent. Follow up in 4 weeks. Symptom education provided.</li><li>Date: 2025-01-15. Chief complaint: Hospice referral and advanced pain management for metastatic prostate adenocarcinoma. Findings: worsening bone pain, fatigue, anorexia, dyspnea on minimal exertion, gait instability; labs PSA 45 ng/mL, creatinine 1.5 mg/dL. Plan: initiated morphine PCA with basal 15 mg/h, rescue 4 mg q15 min, ketamine infusion 5 mg 1–2 h daily, dexamethasone 4 mg PO daily; continued leuprolide acetate 11.25 mg IM q3 months, enzalutamide 150 mg PO daily, metformin 1 g BID, losartan 50 mg daily, atorvastatin 40 mg nightly, zoledronic acid 4 mg IV infusion; ordered baseline CBC, CMP, calcium, repeat PSA in 1 month, chest X‑ray if respiratory symptoms worsen. Hospice home‑care placement arranged and caregiver education provided.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 1c0217f1</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 1c0217f1</h1><div class="subtitle">Grade 3 Poorly Differentiated Non‑Small Cell Lung Carcinoma of the Right Lung, Other Parts | Male, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic Obstructive Pulmonary Disease, Chronic Bronchitis, Prior Pulmonary Tuberculosis, Asbestosis, Silicosis</div><div class="meta-line">Risk Factors: Tobacco smoking, Radon exposure, Occupational exposure to asbestos or silica, Genetic predisposition to lung disease, Previous lung disease, Environmental pollutants</div></div>
+<details><summary>Narrative <span class="preview-text">**John Thompson’s Silent Battle**  John Thompson had spent most of his life trading his breath for a steady stream of to...</span></summary><div class="section-body"><p>**John Thompson’s Silent Battle**</p><p>John Thompson had spent most of his life trading his breath for a steady stream of tobacco smoke, long hours bent over a metalwork shop, and nights listening to the faint hiss of his aging furnace. At 65, his lungs were already marred by decades of chronic bronchitis, asbestosis from a welding job in the 1960s, silicosis from a stint in glassblowing, and the lingering scars of tuberculosis he had fought off in his twenties. He lived in a rented house in a mining town where radon levels ran high; his parents had both died early, supposedly of “lung disease,” and a quiet, persistent cough was as familiar to him as the sound of his own heartbeat.</p><p>The first whisper of something new began two weeks prior to his doctor’s appointment. John could no longer ignore the fact that the chronic cough, which had waxed and waned with the seasons, had become relentless—productive, the sputum tinged with a blood‑red hue on at least two occasions. Each evening, after his night shift, he was left feeling winded, as if an invisible weight pressed against his chest. He noted that the cough no longer subsided with a cup of chamomile tea or the old inhaler he’d been using for years. Weight loss slipped in as a silent companion: he had lost about six pounds over the past month, yet he could still feel hungry, though the thought of food never quite reached the same comfort as before.</p><p>**First Visit – Day 0**</p><p>At the local clinic, Dr. Patel asked the usual questions about smoking history and occupational exposures. John confirmed 40 pack‑years of cigarette use, although he had quit a year ago, and described his former jobs as “metalwork—almost a lifetime.” He also mentioned living in a basement apartment where he suspected radon might seep in. Dr. Patel noted his COPD with a forced expiratory volume 1 (FEV1) of 45% predicted. A chest X‑ray, prompted by the hemoptysis, showed a dense opacity in the right upper lobe, suspicious for a lesion.</p><p>**Diagnostic Work‑up – Month 1**</p><p>Two weeks later, a bronchoscopy with a wedge biopsy was performed. Histology returned Grade 3 poorly differentiated non‑small cell lung carcinoma (NSCLC), specifically an undifferentiated carcinoma with focal neuroendocrine features. An oncologic staging CT of the chest and abdomen revealed a 5 cm mass in the right upper lobe, adjacent to an area of dense fibrosis consistent with asbestosis, with a 2‑cm mediastinal node enlargement. No distant metastases were seen, but the mass had invaded the pleural surface, forming a small effusion. Stage IIIA (T3N1M0) was assigned.</p><p>**First Treatment Decision – Month 2**</p><p>The multidisciplinary tumor board, aware of John’s comorbidities, weighed options. Surgery was fraught with risk given his diminished pulmonary reserve and the tumor’s pleural invasion. The consensus was a neoadjuvant chemotherapy regimen of cisplatin and gemcitabine, followed by definitive radiotherapy. John consented, though he worried about fatigue, appetite loss, and the possibility of exacerbated shortness of breath.</p><p>**First Chemotherapy Cycle – Week 4**</p><p>The chemotherapy started on the first of the month. Within five days, John reported nausea and light‑headedness. A routine blood count revealed mild thrombocytopenia, but his liver function remained within normal limits. He developed a moderate cough, now productive of purulent sputum, and an increased tendency to shortness of breath at the slightest exertion. His home oximeter now recorded a baseline of 90% on room air. For the next cycle, an empiric antibiotic course was added to control the bacterial component of his cough.</p><p>**Progressive Decline – Months 3 to 4**</p><p>After the second cycle (Week 8), a repeat CT scan showed that the primary lesion had not shrunk; instead, it had grown to 5.6 cm, with an increase in the pleural effusion and new faint shadows in the lower lobes that could represent pulmonary fibrosis or metastatic spread.</p><p>John’s condition worsened. He could no longer complete a single floor without needing a handrail. His weight fell another 8 pounds in two weeks; he could barely sit for a meal. The hemoptysis intensified into a daily cough that produced bright red streaks. Despite being on a low‑dose prednisone regimen for COPD exacerbations, he developed delirium, perhaps linked to systemic inflammation.</p><p>**Second-Line Therapy – Month 5**</p><p>Given the progression, the oncologic team discussed third‑line options. However, John’s performance status (ECOG 3) had deteriorated to a point where systemic chemotherapy offered minimal benefit and high toxicity. A palliative radiation therapy plan of 30 Gy in 10 fractions over two weeks was proposed, with the hope of reducing local tumor bulk and alleviating cough.</p><p>**Radiation and Careful Symptom Management – Month 6**</p><p>Radiation therapy was delivered gently, with diligent monitoring for esophagitis and radiation pneumonitis. During this period, John’s cough persisted, but the frequency of hemoptysis decreased markedly. He was managed with low‑dose opioids for breakthrough pain, a mucolytic to clear mucus plugs, and a carefully titrated diuretic regimen to reduce pleural fluid pressure.</p><p>**Final Chapter – Months 7 to 8**</p><p>Despite palliative measures, the disease advanced. John suffered from recurrent pleural effusions that required serial thoracenteses, each time revealing malignant cells in the fluid. A third thoracentesis was accompanied by a pleurodesis to attempt to obliterate the space. Yet, his sputum became increasingly copious and the breathlessness reached a level where he could no longer tolerate standing positions. He was transferred to a regional hospice, where comfort measures predominate, and his family could remain close.</p><p>During his last weeks, the focus shifted to maintaining dignity and minimizing suffering. His oxygen requirement was increased to 4 L via nasal cannula to stabilize SpO₂ at 92–94%. Symptom control was maintained with a combination of inhaled bronchodilators, small‑dose steroids, and low‑dose morphine.</p><p>Ultimately, John passed peacefully at the end of his 8th month of disease progression. His trajectory, while initially hopeful with a standard neoadjuvant chemotherapy and radiotherapy plan, was inexorably altered by a host of pre‑existing lung injuries and comorbidities. The narrative of his battle serves as a stark reminder of how complex pulmonary histology, coupled with long‑standing occupational and environmental exposures, can accelerate disease course and limit therapeutic options.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-01-01</h3><div class="visit-meta">Primary Care Physician | Reason: Persistent cough with occasional blood-tinged sputum</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Persistent productive cough with occasional blood‑tinged sputum.
+
+**History of Present Illness:** John is a 65‑year‑old male with a significant smoking history (40 pack‑years, quit 1 year ago) and occupational exposures to asbestos and silica. He presents with a 3‑month history of a persistent productive cough, intermittent hemoptysis, worsening dyspnea after evening work, weight loss, and fatigue. No prior treatment has been tried for these symptoms.
+
+**Past Medical History:** Chronic obstructive pulmonary disease (COPD), chronic bronchitis, prior pulmonary tuberculosis, asbestosis, silicosis, radon exposure.
+
+**Medications:** None.
+
+**Allergies:** NKDA.
+
+**Review of Systems:** Positive for cough, hemoptysis, dyspnea, weight loss, fatigue. Negative for fever, chills, chest pain.
+
+**Physical Examination:**
+- General: Alert, mildly fatigued, weight 150 lb, orals pale.
+- Vital signs: BP 130/78 mmHg, HR 88 bpm, RR 20/min, SpO₂ 94% on room air, Temp 37.1 °C.
+- HEENT: No cervical lymphadenopathy.
+- Cardiovascular: Regular rate, no murmurs.
+- Respiratory: Decreased breath sounds in right upper lobe; coarse crackles bilaterally; mild tachypnea.
+- Other systems unremarkable.
+
+**Diagnostic Work‑up:**
+- Chest X‑ray: 2.5 cm dense opacity in right upper lobe, suspicious for a mass.
+- CBC: Mild leukocytosis; Hgb 12.5 g/dL.
+- CMP: Within normal limits.
+
+**Assessment:** The patient’s presentation is most concerning for a pulmonary mass in the setting of significant smoking history and asbestos/silica exposure. Differential diagnosis includes bronchogenic carcinoma (most likely), TB relapse, fungal infection, asbestosis‑associated malignancy, silicosis complications, and bronchiectasis.
+
+**Plan:**
+1. Order CT chest with contrast to further characterize the opacity.
+2. Schedule flexible bronchoscopy with transbronchial needle aspiration (TBSNA) or endobronchial biopsy for histopathology.
+3. Refer to pulmonology/oncology for definitive staging and management.
+4. Conduct pulmonary function testing.
+5. Arrange for PPD/TB interferon-gamma release assay (IGRA) to rule out active TB.
+6. Counsel on smoking cessation (patient already quit); reinforce avoidance of asbestos/silica exposure.
+7. Discuss vaccinations: pneumococcal (PCV20) and annual influenza.
+8. Encourage adequate hydration, balanced nutrition, and rest.
+9. Follow up in 2 weeks or sooner if symptoms worsen.
+10. Provide patient with written plan and contact information.
+
+**Disposition:** Outpatient care with scheduled follow‑up and specialist referral.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent productive cough</span><span class="pill">occasional hemoptysis</span><span class="pill">shortness of breath after evening shift</span><span class="pill">weight loss</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>SpO2</td><td>94% RA</td></tr><tr><td>Temp</td><td>37.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>reduced breath sounds in right upper lobe</li><li>coarse crackles bilaterally</li><li>mild tachypnea</li><li>orals pale</li><li>weight 150 lbs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X-ray</li><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X-ray: right upper lobe dense opacity 2.5 cm, possible mass</li><li>CBC: mild leukocytosis, hemoglobin 12.5 g/dL</li><li>CMP: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Chest X-ray performed</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 5 mg daily</li><li>Salbutamol nasal spray</li><li>Multivitamin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>40 pack-year smoking; quit 1 year ago</li><li>metalwork workshop worker</li><li>exposure to asbestos and silica</li><li>prior pulmonary tuberculosis</li><li>asbestosis</li><li>silicosis</li><li>radon exposure in basement</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presented with a persistent productive cough and occasional blood-tinged sputum. Physical exam revealed reduced breath sounds in the right upper lobe, coarse crackles bilaterally, and mild tachypnea. Baseline oxygen saturation was 94% on room air. A chest X‑ray was ordered and performed during the visit, revealing a dense opacity in the right upper lobe suggestive of a mass. CBC and CMP were also ordered.</p><p>Results: Chest X‑ray showed a 2.5‑cm dense opacity in RUL; CBC revealed mild leukocytosis; CMP was normal. He was advised to schedule a bronchoscopy for further evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial suspicion of a pulmonary neoplasm; baseline comorbid COPD and occupational exposures documented. Plan for bronchoscopy to confirm diagnosis.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-01-15</h3><div class="visit-meta">Pulmonologist | Reason: Follow-up after chest X-ray; plan bronchoscopy and biopsy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after chest X‑ray; planned bronchoscopy with wedge biopsy.
+
+History of Present Illness: The patient is a 65‑year‑old male with a history of COPD, chronic bronchitis, prior pulmonary tuberculosis, asbestosis, and silicosis. He presents for follow‑up after a bronchoscopy and wedge biopsy performed on 2026‑01‑15. He reports persistent productive cough, occasional hemoptysis, and shortness of breath. Symptoms have been ongoing for several months and have not improved with his current therapy.
+
+Past Medical History: COPD, chronic bronchitis, asbestosis, silicosis, prior pulmonary tuberculosis.
+
+Medications: Albuterol inhaler PRN; prednisone 5 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for cough, hemoptysis, SOB; negative for fever, chest pain, weight loss (none noted in this visit).
+
+Vital Signs (2026‑01‑15):
+BP 128/76 mmHg, HR 86 bpm, RR 22/min, SpO2 92% RA, Temp 36.9 °C.
+
+Physical Examination:
+- Lung fields: bilateral coarse crackles; no wheezes.
+- Cardiovascular: heart rate regular; no murmurs.
+- Abdomen: soft, non‑tender.
+- Extremities: no edema.
+
+Procedures:
+- Flexible bronchoscopy performed uneventfully.
+- Wedge biopsy taken from right upper lobe opacity.
+- Bronchial brush cytology obtained and sent for pathology.
+- Contrast‑enhanced CT chest/abdomen obtained at the same visit.
+
+Investigations:
+- Bronchial brush cytology: negative for malignancy.
+- CT chest/abdomen: 5 cm mass in the right upper lobe adjacent to dense asbestotic fibrosis, 2 cm mediastinal node, small pleural effusion.
+
+Assessment:
+The patient has a persistent 5 cm right upper lobe mass in the setting of established asbestosis and silicosis. The mass is adjacent to extensive fibrosis, making surgical resection more challenging. The biopsy results are pending, but cytology was negative. The differential diagnosis includes:
+1. Primary pulmonary malignancy (e.g., non‑small cell lung cancer secondary to asbestos exposure).
+2. Mesothelioma involving pleura.
+3. Granulomatous disease (tuberculosis, berylliosis, sarcoidosis).
+4. Benign fibro‑inflammatory lesions related to occupational exposure.
+5. Reactive lymphadenopathy.
+
+Plan:
+1. Pathology review of wedge biopsy specimen with immunohistochemical staining; obtain definitive histologic diagnosis.
+2. If malignancy is confirmed, schedule a PET‑CT for staging and refer to thoracic surgery and medical oncology for definitive management (surgical resection if operable, chemotherapy/radiation as appropriate).
+3. If non‑malignant findings, consider CT‑guided core needle biopsy of mediastinal node for additional tissue or repeat bronchoscopy with forceps biopsy.
+4. Continue current medical therapy: prednisone 5 mg daily; albuterol PRN.
+5. Initiate inhaled long‑acting bronchodilator (e.g., tiotropium or combined formoterol/albuterol) to improve baseline dyspnea.
+6. Update vaccinations: influenza (annual), pneumococcal PCV20 (if not recent), and COVID‑19 booster as indicated.
+7. Discuss occupational exposure and recommend avoidance measures.
+8. Monitor for signs of pleural effusion progression (pitting edema, orthopnea) and notify provider if worsening.
+
+Follow‑Up:
+- Return in 1 week for discussion of biopsy pathology.
+- If pathology confirms malignancy, schedule oncology consult within 2 weeks.
+- If pathology is benign, consider repeat imaging at 3 months.
+- Continue routine outpatient follow up for COPD management.
+- Provide patient with instructions to report worsening cough, hemoptysis, or dyspnea.
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent productive cough</span><span class="pill">occasional hemoptysis</span><span class="pill">shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/76</td></tr><tr><td>HR</td><td>86</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>SpO2</td><td>92% RA</td></tr><tr><td>Temp</td><td>36.9</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>lungs bilateral coarse crackles</li><li>no wheeze</li><li>SpO2 92% RA</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bronchial brush cytology</li><li>Wedge biopsy</li><li>CT chest/abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Bronchial brush cytology: negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Bronchoscopy with wedge biopsy</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">possible pulmonary mass</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as visit 1</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient returned for bronchoscopy and wedge biopsy. The procedure was performed uneventfully, with a wedge biopsy taken from the right upper lobe opacity. A contrast‑enhanced CT of the chest and abdomen was also conducted during the visit to stage the disease.</p><p>Results: Bronchial brush cytology was negative for malignant cells. Wedge biopsy revealed Grade 3 poorly differentiated non‑small cell lung carcinoma with focal neuroendocrine features. CT imaging demonstrated a 5‑cm mass in the right upper lobe adjacent to dense asbestotic fibrosis, a 2‑cm mediastinal node, and a small pleural effusion. No distant metastases were noted.</p><p>The diagnosis of Stage IIIA (T3N1M0) NSCLC was established. He was informed of the diagnosis and the plan for neoadjuvant chemotherapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosis confirmed: Grade 3 poorly differentiated NSCLC, Stage IIIA. Planning for neoadjuvant chemotherapy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-02-01</h3><div class="visit-meta">Medical Oncologist | Reason: Multidisciplinary tumor board discussion; treatment planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint/Reason for Visit: Multidisciplinary tumor board discussion; treatment planning.
+
+History of Present Illness: 65‑year‑old male with known respiratory comorbidities (COPD, chronic bronchitis, prior TB, asbestosis, silicosis) presents with persistent productive cough, occasional hemoptysis, dyspnea, and weight loss since onset of a 5‑cm right upper lobe mass identified on recent CT. Patient reports new‑onset fatigue. He is eager to begin definitive therapy.
+
+Past Medical History: COPD, chronic bronchitis, prior pulmonary TB, asbestosis, silicosis, hypertension (well controlled). No known drug allergies.
+
+Current Medications: Albuterol inhaler PRN, Prednisone 5 mg daily (maintenance), Tiotropium inhaler.  
+
+Physical Examination: Alert, mild dyspnea at rest, SpO2 90% RA. Lungs: bilateral coarse crackles, decreased breath sounds in right upper lobe. Heart: regular rate 84/min, no murmurs. Abdomen: soft, non‑tender. Extremities: no edema.
+
+Vital Signs: BP 126/77 mmHg, HR 84 bpm, RR 24/min, SpO2 90% RA, Temp 36.7°C.
+
+Laboratory Results: CBC – Hb 12.5 g/dL (normal for male), WBC 8.5 k/µL, Platelets 170 k/µL. CMP results pending.
+
+Assessment/Plan: Multidisciplinary panel concluded that the patient has stage IIIA NSCLC (likely adenocarcinoma or squamous cell carcinoma) with adequate performance status (ECOG 1) and pulmonary reserve for neoadjuvant therapy. The consensus treatment plan is neoadjuvant cisplatin 75 mg/m² + gemcitabine 1250 mg/m² every 3 weeks for two cycles, followed by definitive thoracic radiation.
+
+1. Initiate neoadjuvant chemotherapy (Cisplatin + Gemcitabine) – schedule first cycle in 1 week.
+2. Continue current COPD therapy; add short‑acting oral steroids (Prednisone 5 mg) as needed for pulmonary exacerbations.
+3. Pre‑chemotherapy labs: order CBC and CMP before each cycle; monitor CBC 2‑3 days after each infusion for myelosuppression.
+4. Provide antiemetic prophylaxis (e.g., ondansetron 4 mg q8h PRN). Consider dexamethasone 8 mg q8h if significant nausea.
+5. Counsel patient on side‑effect profile: fatigue, nausea, myelosuppression, possible COPD exacerbation; instruct to report dyspnea, hemoptysis, or bleeding promptly.
+6. Vaccinations: ensure influenza, pneumococcal (PCV20) vaccinations administered.
+7. After completion of two cycles, schedule restaging CT thorax in 4 weeks for response assessment and referral to radiation oncology.
+8. Post‑therapy: continue pulmonary rehab, smoking cessation counseling, and routine oncology follow‑up.
+
+Follow‑up: Patient will return in 1 week for baseline labs and chemotherapy initiation. Subsequent oncology visits will align with the chemotherapy schedule.
+
+Disposition: Patient consented and scheduled for first cycle. Provided written instructions and emergency contact information.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent productive cough</span><span class="pill">occasional hemoptysis</span><span class="pill">shortness of breath</span><span class="pill">weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>126/77</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>SpO2</td><td>90% RA</td></tr><tr><td>Temp</td><td>36.7</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>patient alert, mild dyspnea at rest</li><li>lungs: coarse crackles</li><li>SpO2 90% RA</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 35%, platelets 170k, WBC 8.5k</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Advised neoadjuvant cisplatin/gemcitabine for 2 cycles + definitive RT</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Eager to start treatment; concerned about fatigue but willing to proceed</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">Grade 3 poorly differentiated NSCLC Stage IIIA</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as previous visits</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The tumor board, comprising thoracic surgery, medical oncology, and radiation oncology, reviewed the staging CT, biopsy results, and patient’s pulmonary reserve. Given the tumor’s pleural invasion, poor pulmonary function, and Stage IIIA disease, the consensus was to proceed with neoadjuvant chemotherapy using cisplatin 75 mg/m² and gemcitabine 1250 mg/m² every 3 weeks for two cycles, followed by definitive thoracic radiotherapy.</p><p>The patient was counseled on potential side effects, such as fatigue, nausea, myelosuppression, and exacerbation of COPD symptoms. He consented to the plan and was scheduled to start the first chemotherapy cycle.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiated neoadjuvant chemotherapy plan due to limited pulmonary reserve and tumor pleural invasion.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-04</h3><div class="visit-meta">Medical Oncologist | Reason: First chemotherapy cycle side effects</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Side effects after first cycle of cisplatin and gemcitabine.
+
+History of Present Illness: This 65‑year‑old man with a right upper lobe lung mass and advanced pulmonary comorbidities (COPD, asbestosis, silicosis) received his first cycle of chemotherapy (cisplatin 75 mg/m² IV over 30 min, gemcitabine 1250 mg/m² IV over 30 min). Within five days he reports nausea, lightheadedness, a productive cough with purulent sputum, and increased shortness of breath. He is compliant with his COPD regimen (prednisone 5 mg daily, albuterol PRN, tiotropium inhaler) and has recently begun a 7‑day course of azithromycin 500 mg PO daily to address the cough.
+
+Past Medical History: COPD, chronic bronchitis, prior pulmonary tuberculosis, asbestosis, silicosis, hypertension.
+
+Current Medications: Cisplatin, gemcitabine, ondansetron 4 mg q8 h PRN, azithromycin 500 mg daily, albuterol inhaler PRN, tiotropium inhaler, prednisone 5 mg daily.
+
+Allergies: None.
+
+Physical Examination: Vitals: BP 124/75 mmHg, HR 92 bpm, RR 26 /min, SpO₂ 88 % RA, Temp 36.8 °C. General: mild pallor, dry mucous membranes. Respiratory: bibasilar atelectasis findings, mild wheeze, SpO₂ 88 % RA. Cardiovascular: normal. Extremities: no edema.
+
+Laboratory: CBC – WBC 7.2 k/µL, hemoglobin 11.8 g/dL, platelets 120 k/µL; CMP – within normal limits; LFTs – normal; electrolytes – within normal limits.
+
+Assessment and Plan:
+1. Chemotherapy‑induced nausea and vomiting: Continue ondansetron PRN; add dexamethasone 8 mg PO q12h for 2 days post‑chemo as prophylaxis.
+2. Acute COPD exacerbation with infection: Continue azithromycin 500 mg daily for 7 days; counsel on inhaler technique; consider nebulized bronchodilator if symptoms worsen.
+3. Atelectasis: Encourage incentive spirometry and deep breathing; monitor for resolution.
+4. Low oxygen saturation: Instruct patient to keep home pulse oximeter; if SpO₂ &lt;88 % or new SOB, seek ER.
+5. Hematology: Platelets slightly low; repeat CBC 7–10 days prior to next cycle; defer next cycle if platelets &lt;100 k.
+6. Next chemo cycle scheduled in 2 weeks pending acceptable CBC.
+
+Follow‑up: Review CBC and LFTs before next cycle; re‑evaluate cough and SpO₂; schedule next oncology appointment in 2 weeks.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">nausea</span><span class="pill">lightheadedness</span><span class="pill">moderate cough</span><span class="pill">purulent sputum</span><span class="pill">increased shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>124/75</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>RR</td><td>26</td></tr><tr><td>SpO2</td><td>88% RA</td></tr><tr><td>Temp</td><td>36.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild pallor</li><li>dry mucous membranes</li><li>bibasilar atelectasis signs</li><li>mild wheeze</li><li>SpO2 88% RA</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>LFTs</li><li>Electrolytes</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: platelets 120k, hemoglobin 11.8, WBC 7.2k</li><li>CMP: normal</li><li>LFTs: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Cisplatin 75 mg/m²</li><li>Gemcitabine 1250 mg/m²</li><li>Ondansetron</li><li>Azithromycin</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Severe nausea and lightheadedness; moderate cough; slight improvement with antiemetics</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">Grade 3 poorly differentiated NSCLC Stage IIIA</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 5 mg daily</li><li>Azithromycin 500 mg daily (started)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as previous visits</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient received his first chemotherapy cycle of cisplatin 75 mg/m² and gemcitabine 1250 mg/m². Within 5 days, he reported nausea, lightheadedness, and a productive cough with purulent sputum. A routine CBC and CMP were drawn.</p><p>Results: CBC revealed platelets 120,000, hemoglobin 11.8, WBC 7.2k; CMP and LFTs were normal. The patient was given ondansetron and antiemetic support. An empiric azithromycin course was started to control the bacterial component of his cough.</p><p>He was advised to continue monitoring oxygen saturation and to seek care if saturation dropped below 88%.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First cycle completed; mild cytopenia and respiratory symptoms noted. Azithromycin started to control infection.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-04-15</h3><div class="visit-meta">Medical Oncologist | Reason: After second cycle; imaging shows progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint / Encounter Summary**
+The patient has received his second cycle of cisplatin (75 mg/m²) and gemcitabine (1250 mg/m²) for presumed stage III‑IV primary lung carcinoma.  Prior to this cycle a repeat CT chest/abdomen was obtained, which demonstrated progression of the primary lesion and an increase in pleural effusion.  The patient now presents with worsening dyspnea, productive cough, weight loss, daily hemoptysis, and delirium.
+
+**History of Present Illness**
+- Worsening shortness of breath, now requiring supplemental oxygen: RR 28/min, SpO2 86% RA.
+- Increased cough with purulent sputum.
+- Weight loss of 8 lb over 6 weeks.
+- Daily hemoptysis of moderate volume.
+- Confusing delirium noted since last visit.
+- No new fevers.
+
+**Past Medical History**
+- COPD with chronic bronchitis, prior pulmonary tuberculosis, asbestosis, silicosis, hypertension.
+- ECOG performance status 3.
+
+**Current Medications** (continued as indicated)
+- Albuterol inhaler PRN
+- Prednisone 10 mg PO daily
+- Azithromycin 500 mg PO daily (antibacterial prophylaxis)
+- Morphine 5 mg PO q6h PRN for pain
+- Tiotropium inhaler
+- Cisplatin 75 mg/m² IV q3weeks (cycle 2)
+- Gemcitabine 1250 mg/m² IV q3weeks (cycle 2)
+- Ondansetron 4 mg PO q8h PRN (antiemetic)
+- Dexamethasone 8 mg PO q12h
+
+**Vitals**
+- BP 122/74 mmHg
+- HR 90 bpm
+- RR 28/min
+- SpO2 86% on room air
+- Temp 37.0 °C
+
+**Physical Examination**
+- General: Cachectic, fatigued.  Confused, disoriented to time.
+- Respiratory: Dyspneic, SpO2 86%.  Bibasilar crackles, coarse bilateral wheezes.  Palpable dullness at left hemithorax.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Abdomen: Soft, non-tender.
+- Extremities: No edema.
+
+**Laboratory / Imaging**
+- CBC: WBC 7.6 k/µL, Hgb 11.5 g/dL, Platelets 110 k/µL.
+- CMP: Within normal limits.
+- CT chest/abdomen: Primary right upper lobe mass now 5.6 cm (previously 5.0 cm), pleural effusion 2.5 cm, faint opacities in lower lobes.
+
+**Assessment**
+1. **Progression of primary lung carcinoma with malignant pleural effusion** – imaging confirms growth and fluid accumulation; clinical decline (ECOG 3, weight loss, dyspnea, hemoptysis) supports progressive disease.
+2. **COPD exacerbation / pulmonary infection** – mild bibasilar crackles and lower lobe opacities may represent infection; ongoing azithromycin and steroids provide partial control.
+3. **Hemorrhagic effusion or tumor‑related bleeding** – daily hemoptysis raises concern; evaluation for pleural drainage and possible thoracentesis is warranted.
+4. **Delirium secondary to systemic illness, medication effects, or hypoxia** – to be managed supportively.
+
+**Plan**
+- **Palliative Radiation**: Initiate a palliative RT plan (30 Gy in 10 fractions) targeting the primary tumor and left pleural space to relieve dyspnea and prevent further bleeding.
+- **Pleural Management**: Arrange for image‑guided thoracentesis with drainage and exudate analysis.  Consider indwelling pleural catheter if recurrent effusion.
+- **Medication Adjustments**: Continue current COPD and oncologic regimen.  Increase supplemental oxygen to keep SpO2 &gt;88%; consider high‑flow nasal cannula if needed.  Maintain dexamethasone 8 mg PO q12h.  Continue azithromycin throughout radiation.
+- **Pain / Symptom Control**: Continue morphine PRN; evaluate for opioid escalation if pain escalates.
+- **Delirium Management**: Re‑assess for reversible causes; provide sleep hygiene, adequate hydration, and avoid benzodiazepines unless necessary.
+- **Supportive Care**: Discuss hospice options; plan for palliative care consult within the next 48 h.
+- **Monitoring**: CBC and CMP before each chemotherapy cycle (though chemotherapy will be discontinued).  Monitor for thrombocytopenia and anemia.
+- **Follow‑Up**: Return to oncology clinic in 2 weeks to assess response to radiation, review labs, and adjust supportive measures.  Urgent return if worsening dyspnea, hemoptysis, or delirium.
+
+**Patient Education**
+- Explained the rationale for stopping systemic chemotherapy, focusing on quality of life.
+- Reviewed the radiation schedule and potential side‑effects.
+- Discussed signs that warrant immediate contact (increasing hemoptysis, chest pain, severe dyspnea).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">worsening shortness of breath</span><span class="pill">increased cough</span><span class="pill">weight loss</span><span class="pill">daily hemoptysis</span><span class="pill">delirium</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/74</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>RR</td><td>28</td></tr><tr><td>SpO2</td><td>86% RA</td></tr><tr><td>Temp</td><td>37.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>dyspnea, SpO2 86% RA</li><li>bibasilar crackles</li><li>palpable chest dullness</li><li>weight loss 8 lb</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>CT chest/abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT chest/abdomen: mass 5.6 cm, pleural effusion 2.5 cm, lower lobe opacities</li><li>CBC: platelets 110k, hemoglobin 11.5</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Second cycle chemotherapy</li><li>Scheduled palliative RT plan</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Worsening dyspnea, cough, weight loss; delirium but stable</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">Grade 3 poorly differentiated NSCLC Stage IIIA</span><span class="pill">imaging progression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 10 mg daily</li><li>Azithromycin 500 mg daily</li><li>Morphine 5 mg PO q6h PRN</li><li>Azithromycin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as previous visits</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient received his second chemotherapy cycle of cisplatin and gemcitabine. A repeat CT chest/abdomen performed before the cycle showed disease progression: the primary mass now measured 5.6 cm, pleural effusion increased to 2.5 cm, and faint opacities were noted in the lower lobes.</p><p>CBC and CMP were drawn to assess for myelosuppression.</p><p>Results: CT imaging confirmed growth of the primary mass and effusion; CBC revealed platelets 110k, hemoglobin 11.5; CMP remained normal. The patient’s performance status is now ECOG 3. The oncology team discussed moving to palliative radiation therapy.</p><p>He was advised that systemic chemotherapy may offer limited benefit at this stage due to toxicity concerns.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Tumor progressed; lack of response to chemotherapy; ECOG 3. Decision to initiate palliative radiotherapy.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-05-01</h3><div class="visit-meta">Radiation Oncologist | Reason: Discuss palliative radiation therapy plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 65‑year‑old male with a history of primary lung carcinoma, malignant pleural effusion, COPD, asbestosis, silicosis, and prior TB. He presents today for discussion of a palliative radiation plan. 
+
+Chief complaint: Persistent cough and hemoptysis with shortness of breath. 
+
+History of present illness: Over the past several weeks the patient has experienced escalating cough with daily hemoptysis, progressive dyspnea requiring supplemental oxygen, and weight loss. After two cycles of cisplatin/gemcitabine the primary tumor progressed and pleural effusion increased to 2.5 cm. The patient remains on chronic steroids (prednisone 10 mg daily) and azithromycin 500 mg daily for bronchitis. 
+
+Physical examination: Vitals – BP 120/72 mmHg, HR 88/min, RR 26/min, SpO2 86% RA, Temp 36.9 °C. Lungs: reduced breath sounds in the right upper lobe, mid‑lobe crackles bilaterally, mild chest wall tenderness. No signs of acute infection or airway obstruction. 
+
+Current management: The patient will be placed on a 30 Gy in 10 fractions regimen over two weeks to the right hemithorax to control cough and reduce hemoptysis. Continue current steroids (prednisone 10 mg, dexamethasone 8 mg q12h) to mitigate radiation pneumonitis and esophagitis. Continue diuretics to manage pleural fluid. 
+
+Plan:
+1. Initiate palliative RT on 2026‑05‑03; 2. Continue albuterol PRN, tiotropium inhaler, azithromycin 500 mg daily, prednisone 10 mg PO daily, dexamethasone 8 mg PO q12h, ondansetron 4 mg PO q8h PRN, morphine 5 mg PO q6h PRN. 
+2. Continue diuretic therapy (furosemide 40 mg PO daily) to control pleural effusion.
+3. Daily home pulse‑oximetry; keep SpO2 &gt; 88%.
+4. CBC prior to each fraction; defer RT day if platelets &lt;100 k/µL.
+5. Symptom monitoring: cough, hemoptysis, chest pain, shortness of breath. 
+6. Refer to palliative care for symptom management and hospice discussion.
+7. Schedule oncology follow‑up in 2 weeks or sooner if worsening.
+
+Assessment: Palliative management of stage III/IV primary lung carcinoma with malignant pleural effusion and progressive respiratory symptoms. Radiation therapy chosen to palliate symptoms and reduce tumor burden.
+
+Differential diagnosis remains prioritized to: (1) lung carcinoma progression; (2) radiation-induced pneumonitis; (3) esophagitis from RT; (4) infection such as bacterial bronchitis.
+
+Patient is hopeful but concerned about side effects; counseling was provided.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span><span class="pill">hemoptysis</span><span class="pill">shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/72</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>26</td></tr><tr><td>SpO2</td><td>86% RA</td></tr><tr><td>Temp</td><td>36.9</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>reduced breath sounds RUL</li><li>mid‑lobe crackles</li><li>mild chest wall tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: platelets 115k</li><li>CMP: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed RT 30 Gy/10 Fractions</li><li>Recommended continued steroids &amp; diuretics</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Hopeful for relief but worried about possible side effects</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">Grade 3 poorly differentiated NSCLC Stage IIIA</span><span class="pill">multiple pleural effusions</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 10 mg daily</li><li>Azithromycin 500 mg daily</li><li>Morphine 5 mg PO q6h PRN</li><li>Furosemide 20 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as previous visits</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was informed that a palliative radiation regimen of 30 Gy in 10 fractions over two weeks would be delivered to the right hemithorax. The aim is to reduce tumor bulk, control cough, and decrease hemoptysis.</p><p>Potential short‑term effects such as esophagitis and radiation pneumonitis were discussed. Ongoing steroids and diuretics would continue to manage cough and pleural fluid.</p><p>He was scheduled to begin therapy on 2026-05-03.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Palliative radiotherapy initiated to control local symptoms.”</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-06-10</h3><div class="visit-meta">Pulmonologist | Reason: Thoracentesis and pleurodesis for recurrent pleural effusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Recurrent malignant pleural effusion – bedside thoracentesis and talc pleurodesis performed.
+
+History of Present Illness: 65‑year‑old male with primary lung carcinoma and known malignant pleural effusion presents with progressive shortness of breath, persistent productive cough, and daily hemoptysis. Over the prior month he has become increasingly oxygen‑dependent (SpO2 84% on RA). His oncologic course includes chemotherapy followed by palliative radiation, with recent radiographic progression to a 5.6‑cm right upper lobe mass and larger pleural effusion. At bedside today, 600 mL of bright yellow pleural fluid was removed and talc pleurodesis performed. Post‑procedure course is notable for a modest improvement in cough and dyspnea, but the patient remains dependent on supplemental oxygen. O₂ flow increased to 4 L NC to maintain SpO₂ 92‑94%. IV furosemide 20 mg was held, and the patient’s O₂ requirement was adjusted accordingly. No chest pain, fever, or pleuritic symptoms were noted.
+
+Past Medical History: COPD, chronic bronchitis, prior pulmonary tuberculosis, asbestosis, silicosis, hypertension, primary lung carcinoma, malignant pleural effusion.
+
+Medications (current): 
+- Albuterol inhaler PRN 
+- Prednisone 10 mg PO daily 
+- Azithromycin 500 mg PO daily 
+- Morphine 5 mg PO q6h PRN 
+- Tiotropium inhaler 
+- Ondansetron 4 mg PO q8h PRN 
+- Dexamethasone 8 mg PO q12h 
+- Furosemide 40 mg PO daily 
+- O₂ 4 L NC (maintenance)
+
+Allergies: NKDA.
+
+Physical Examination: 
+Vitals: BP 118/70 mmHg, HR 90 bpm, RR 30/min, SpO₂ 84% RA, Temp 37.2 °C.
+Inspection: No acute distress, mild lower chest tenderness on palpation over right lower zone.
+Inspection/Palpation: Reduced breath sounds at right apex, decreased tactile fremitus right midzone, mild lower chest tenderness.
+Percussion: Dullness over right lower zone.
+Auscultation: Decreased breath sounds apex; wheeze not appreciated. 
+
+Laboratory/Imaging: 
+- Pleural fluid: protein 3.5 g/dL, LDH 400 U/L; cytology pending. 
+- CBC: platelets 120 k/µL. 
+- CMP: normal. 
+- Chest X‑ray: Large right pleural effusion pre‑procedure; minimal residual fluid post‑procedure.
+
+Assessment: 
+1. Recurrent malignant pleural effusion – successful talc pleurodesis with temporary symptom relief. 
+2. Persistent dyspnea most likely due to underlying tumor burden, COPD exacerbation, and residual pleural fluid. 
+3. Daily hemoptysis attributable to malignant involvement of pulmonary vasculature.
+4. O₂‑dependence persists, likely reflecting global pulmonary compromise.
+
+Differential Diagnosis:
+- Malignant pleural effusion secondary to progression of primary lung carcinoma 
+- Recurrent pleural effusion due to tumor burden 
+- COPD exacerbation with alveolar hypoventilation 
+- Radiation‑induced pneumonitis (post‑30 Gy in 10 fractions) 
+- Pulmonary edema (unlikely given normal BP, CMP, and low albumin) 
+- Empyema (unlikely; clear fluid, no fever, no purulent drainage)
+
+Plan:
+1. Continue current medication regimen: prednisone 10 mg PO daily, azithromycin 500 mg PO daily (continue for 7 days), dexamethasone 8 mg PO q12h, furosemide 40 mg PO daily, morphine PRN for pain, tiotropium inhaler, albuterol PRN, ondansetron PRN, and maintain O₂ 4 L NC to keep SpO₂ &gt;90%.
+2. Increase home oxygen flow to 4‑5 L NC if SpO₂ &lt;90% or dyspnea worsens; consider home pulse oximetry monitoring. 
+3. Encourage incentive spirometry and deep breathing exercises; refer for pulmonary rehab if stable.
+4. Monitor pleural space status: repeat chest X‑ray in 4 weeks or sooner if symptoms deteriorate. If pleural effusion recurs or patient becomes symptomatic, consider percutaneous drainage or repeat thoracentesis, but re‑pleurodesis is unlikely given prior talc. 
+5. Repeat CBC and CMP before any further systemic therapy. Given progression and ongoing hemoptysis, chemotherapy is not indicated; palliative radiation is complete.
+6. Ensure patient and family are educated on signs of pleural effusion recurrence (dyspnea, orthopnea), infection (fever, chills), and pleural pain. 
+7. Discuss palliative care and hospice referral. Arrange a multidisciplinary palliative care consult to address symptom control, psychosocial support, and advanced care planning.
+8. Follow‑up: Schedule a pulmonology visit in 2 weeks; if symptoms worsen, patient should return to the clinic immediately.
+
+Sign: __________________________
+Date: 2026‑06‑10
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">shortness of breath</span><span class="pill">persistent cough</span><span class="pill">daily hemoptysis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/70</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>RR</td><td>30</td></tr><tr><td>SpO2</td><td>84% RA</td></tr><tr><td>Temp</td><td>37.2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>reduced breath sounds at right apex</li><li>decreased tactile fremitus right midzone</li><li>mild lower chest tenderness</li><li>SpO₂ 84% RA</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pleural fluid cytology</li><li>Pleural fluid analysis</li><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pleural fluid: malignant adenocarcinoma cells, protein 3.5 g/dL, LDH 400 U/L</li><li>CBC: platelets 120k</li><li>CMP: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis 600 mL</li><li>Talc pleurodesis</li><li>IV furosemide 20 mg</li><li>O₂ 4 L NC</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Shortness of breath improved slightly; still reliant on O₂; pain managed with morphine</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">Grade 3 poorly differentiated NSCLC Stage IIIA</span><span class="pill">recurrent pleural effusions</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 10 mg daily</li><li>Azithromycin 500 mg daily</li><li>Morphine 5 mg PO q6h PRN</li><li>Furosemide 20 mg BID</li><li>Oxygen 2 L NC</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as previous visits</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A large right pleural effusion was confirmed on physical exam and chest X‑ray. A bedside thoracentesis was performed, yielding 600 mL of pleural fluid. Cytology revealed malignant adenocarcinoma cells. A talc pleurodesis was then performed to obliterate the pleural space.</p><p>Post‑procedure monitoring noted a slight improvement in cough and dyspnea, but the patient remained oxygen‑dependent. An IV furosemide 20 mg was given, and O₂ was increased to 4 L NC to maintain SpO₂ 92‑94%.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pleurodesis attempted; effusion resolved temporarily; disease still progressing; hospice considered.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-07-20</h3><div class="visit-meta">Hospice/Primary Care | Reason: Transition to hospice care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transition to hospice care. 
+
+History of Present Illness: 65‑year‑old male with a long history of advanced COPD, chronic bronchitis, asbestosis, silicosis, prior pulmonary tuberculosis, and multiple pleural effusions. Recent oncology/palliative course included 2 cycles of cisplatin/gemcitabine, palliative thoracic radiation, and talc pleurodesis.  The patient and his family presented today for discussion of comfort‑focused care.  He reports minimal oral intake, persistent cough, increasing dyspnea, and localized pain, but is currently calm and cooperative.
+
+Vital Signs (at presentation):
+- Blood pressure: 112/68 mmHg
+- Heart rate: 85 bpm
+- Respiratory rate: 32 breaths/min
+- SpO₂: 90% on 4 L nasal cannula
+- Temperature: 36.8 °C
+
+Physical Examination:
+- General: well‑appearing, comfortable, minimal distress.
+- Respiratory: mild bibasilar wheeze, decreased breath sounds at right lower zone. No acute distress; SpO₂ 90% on 4 L NC. Mild lower extremity edema.
+- Cardiovascular: regular rate/rhythm, no murmurs.
+- Abdomen: soft, non‑tender.
+- Extremities: 1+ pitting edema in both ankles.
+- Head/Neck: oral cavity dry, minimal intake.
+
+Investigations:
+- CBC: Hemoglobin 10.2 g/dL, platelets 95 k/µL.
+- CMP: within normal limits.
+- Chest X‑ray: moderate right pleural effusion, no new lesions.
+
+Assessment:
+The patient remains in a terminal, palliative setting with progressively refractory dyspnea, pain, and cachexia associated with advanced pulmonary malignancy complicated by pleural disease and background interstitial lung disease. Oxygen requirements are stable at 4 L NC to maintain SpO₂ 90‑94%. The primary goal remains comfort and symptom control.
+
+Differential Diagnoses: 
+1. Progression of primary pulmonary malignancy with malignant pleural effusion.
+2. Exacerbation of COPD/chronic bronchitis.
+3. Exudative pleural effusion secondary to post‑radiation changes.
+4. Possible superimposed infection (unlikely with normal CMP and no fever). 
+5. Drug‑related side effects (e.g., opioid side effects, steroid‑induced hyperglycemia).
+
+Plan:
+1. Hospice Care: Initiated and documented in medical record.
+2. Oxygen: Continue 4 L NC; titrate to keep SpO₂ &gt;90%.
+3. Analgesia/Pain and Dyspnea control: 
+   - Morphine: Increase to 10 mg PO q3h PRN; consider supplemental 5 mg q2h PRN for breakthrough pain/dyspnea.
+   - Add opioid‑preserving agents if opioid side‑effects become limiting (e.g., clonidine 0.1 mg PO q6h). 
+4. Respiratory comfort: 
+   - Continue albuterol PRN and tiotropium inhaler. 
+   - Continue anticholinergic (hydroxyzine 25 mg qhs) for cough suppression.
+   - Continue nasal saline irrigation.
+5. Fluid Management: Continue furosemide 10 mg BID. Monitor intake/output, signs of dehydration.
+6. Steroid: Continue prednisone 5 mg daily; consider taper if no benefit.
+7. Antibiotic: Continue azithromycin 500 mg daily for bronchitis prophylaxis.
+8. Monitoring: 
+   - CBC and CMP at next routine follow‑up (baseline in 1 week).
+   - Chest X‑ray in 4 weeks or sooner if dyspnea worsens.
+   - Daily assessment of vitals, SpO₂, and symptom diary by family.
+9. Family support: Continue counseling; provide education on symptom management and signs that warrant urgent care.
+10. Advance care planning: Revisit DNR status, personal goals, and any wishes regarding resuscitation.
+11. Follow‑up: 
+   - Hospice home visit scheduled for Thursday, 2026‑07‑22.
+   - Virtual check‑in with palliative care on Sunday, 2026‑07‑25.
+   - If symptoms deteriorate (new fever, significant chest pain, sudden drop in SpO₂), call the hospice team immediate.
+
+Signature: ____________________
+Date/Time: 2026‑07‑20 10:15 AM</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">minimal oral intake</span><span class="pill">persistent cough</span><span class="pill">shortness of breath</span><span class="pill">pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>112/68</td></tr><tr><td>HR</td><td>85</td></tr><tr><td>RR</td><td>32</td></tr><tr><td>SpO2</td><td>90% on 4 L NC</td></tr><tr><td>Temp</td><td>36.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild lower extremity edema</li><li>minimal oral intake</li><li>stable SpO₂ 90% RA with 4 L NC</li><li>no acute distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hgb 10.2 g/dL, platelets 95k</li><li>CMP: normal</li><li>Chest X‑ray: moderate right pleural effusion with tumor, no new lesions</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated hospice care</li><li>Increased O₂ to 4 L NC</li><li>Titrated morphine</li><li>Provided family counseling</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Comfortable and calm; family supportive</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">prior pulmonary tuberculosis</span><span class="pill">asbestosis</span><span class="pill">silicosis</span><span class="pill">Grade 3 poorly differentiated NSCLC Stage IIIA</span><span class="pill">multiple effusions</span><span class="pill">terminal</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol PRN</li><li>Prednisone 5 mg daily</li><li>Azithromycin 500 mg daily</li><li>Morphine 10 mg PO q3h PRN</li><li>Furosemide 10 mg BID</li><li>Hydroxyzine 25 mg qhs</li><li>Nasal saline</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>same as previous visits</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient and his family visited the clinic to discuss a shift to comfort‑focused care. Hospice services were initiated, and oxygen support was increased to 4 L via nasal cannula to maintain SpO₂ 90‑94%. Morphine dosing was titrated to control pain and dyspnea. Anticholinergic and bronchodilator therapy were continued on a PRN basis. Family counseling and symptom management education were provided.</p><p>A chest X‑ray was performed, showing persistent right pleural effusion without new lesions. No new investigations were undertaken.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient transitioned to hospice; subsequent course focused on palliative comfort. Patient passed peacefully in the hospice ward within the eight‑month disease trajectory.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Obstructive Pulmonary Disease</span><span class="pill">Chronic Bronchitis</span><span class="pill">Prior Pulmonary Tuberculosis</span><span class="pill">Asbestosis</span><span class="pill">Silicosis</span><span class="pill">Hypertension</span><span class="pill">Primary lung carcinoma</span><span class="pill">Malignant pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Prednisone 5 mg daily</li><li>Azithromycin 500 mg daily</li><li>Morphine 10 mg PO q3h PRN</li><li>Tiotropium inhaler</li><li>Hydroxyzine 25 mg qhs</li><li>Furosemide 10 mg BID</li><li>O₂ 4 L NC</li><li>Nasal saline irrigation</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit 1: 65‑year‑old male presents with persistent productive cough, occasional hemoptysis, dyspnea, weight loss, and fatigue. Examination reveals mild tachypnea, decreased breath sounds in the right upper lobe, and coarse crackles bilaterally. Chest radiograph shows a 2.5 cm dense opacity in the right upper lobe. Laboratory studies demonstrate mild leukocytosis and hemoglobin of 12.5 g/dL. Orders include CT chest with contrast, flexible bronchoscopy with transbronchial needle aspiration or endobronchial biopsy, pulmonary function testing, TB screening (PPD/IGRA), pneumococcal PCV20 and annual influenza vaccination, and referral to pulmonology/oncology for definitive staging and management. Follow‑up scheduled in 2 weeks.</li><li>Visit 2: 2026‑01‑15 pulmonologist visit. Patient reports persistent productive cough, occasional hemoptysis, and shortness of breath. Physical exam shows bilateral coarse crackles. Flexible bronchoscopy performed; wedge biopsy from right upper lobe tumor and bronchial brush cytology obtained. CT chest/abdomen shows a 5 cm right upper lobe mass adjacent to asbestotic fibrosis, a 2 cm mediastinal node, and small pleural effusion. Bronchial brush cytology is negative for malignancy. Prescribed prednisone 5 mg daily, albuterol PRN, and initiated tiotropium inhaler. Plan: await wedge biopsy pathology; if malignant, proceed to further staging and oncologic referral. Follow‑up scheduled in 1 week to review pathology.</li><li>Visit 3: 2026‑02‑01 oncologist visit for multidisciplinary tumor board discussion; patient began neoadjuvant chemotherapy with cisplatin and gemcitabine; continues COPD regimen; CBC/CMP ordered before each cycle; antiemetic prophylaxis (ondansetron 4 mg q8 h PRN) prescribed; vaccinations updated; first chemotherapy cycle scheduled for next week.</li><li>Visit 4: 2026‑03‑04 – Patient presents after first cycle of cisplatin and gemcitabine with nausea, lightheadedness, worsening productive cough, purulent sputum, and increased shortness of breath. Physical examination shows respiratory rate of 26/min, oxygen saturation 88 % on room air, mild pallor, dry mucous membranes, bibasilar atelectasis, and mild wheeze. Laboratory studies reveal a CBC with WBC 7.2 k/µL, hemoglobin 11.8 g/dL, platelets 120 k/µL, and normal CMP, LFTs, and electrolytes. Plan includes continuing ondansetron PRN, adding dexamethasone 8 mg PO q12h for 2 days as prophylaxis, continuing a 7‑day course of azithromycin 500 mg daily, encouraging incentive spirometry and deep breathing, monitoring oxygen saturation with a home pulse oximeter, repeating CBC 7–10 days prior to next chemotherapy cycle (defer cycle if platelets &lt;100 k/µL), and scheduling next oncology appointment in 2 weeks.</li><li>Visit 5: 2026‑04‑15 oncologist visit. Second cycle of cisplatin (75 mg/m²) and gemcitabine (1250 mg/m²) was administered. Recent CT chest/abdomen shows progression of right upper lobe mass to 5.6 cm with increased pleural effusion (2.5 cm). Patient reports worsening dyspnea requiring supplemental oxygen, daily hemoptysis, 8‑lb weight loss, and delirium. Physical exam: cachexia, disorientation, bibasilar crackles, coarse bilateral wheezes, left chest dullness. CBC shows WBC 7.6 k/µL, Hgb 11.5 g/dL, platelets 110 k/µL; CMP normal. Plan: initiate palliative radiation (30 Gy in 10 fractions) to primary tumor and pleural space, arrange image‑guided thoracentesis with pleural fluid analysis, discontinue chemotherapy, start morphine PRN for pain, begin home oxygen to maintain SpO₂ &gt; 88 %, refer to palliative care, schedule follow‑up in 2 weeks, discuss hospice options. Monitor CBC/CMP before any future therapy.</li><li>Visit 6: 2026‑05‑01 radiation oncologist visit: discussion of palliative radiation therapy plan (30 Gy in 10 fractions over two weeks). Patient continued prednisone 10 mg daily, azithromycin 500 mg daily, albuterol PRN, tiotropium inhaler, ondansetron 4 mg q8h PRN, morphine 5 mg q6h PRN, dexamethasone 8 mg q12h, and was initiated on furosemide 40 mg PO daily for pleural effusion. Daily home pulse‑oximetry performed; CBC prior to each fraction; deferred if platelets &lt;100 k. Refer to palliative care; oncology follow‑up in 2 weeks.</li><li>Visit 7: 2026‑06‑10 pulmonologist visit. Bedside thoracentesis removed 600 mL bright‑yellow pleural fluid and talc pleurodesis performed. Post‑procedure modest improvement in cough and dyspnea. Patient remains oxygen‑dependent; SpO₂ 84 % on room air, increased to 4 L NC to maintain 92‑94 % SpO₂. Pleural fluid protein 3.5 g/dL, LDH 400 U/L; cytology pending. CBC platelets 120 k/µL, CMP normal. Plan: continue current medications, increase O₂ flow to 4‑5 L NC if SpO₂ &lt;90 % or dyspnea worsens, encourage incentive spirometry, repeat chest X‑ray in 4 weeks, refer for palliative care and hospice discussion, schedule pulmonology follow‑up in 2 weeks.</li><li>Visit 8: 2026‑07‑20 hospice/primary‑care visit. Transition to hospice care. Minimal oral intake, persistent cough, dyspnea, and pain. Vital signs: BP 112/68 mmHg, HR 85 bpm, RR 32 breaths/min, SpO₂ 90% on 4 L nasal cannula. Physical exam: mild bibasilar wheeze, decreased breath sounds at right lower zone, mild lower‑extremity edema. CBC: hemoglobin 10.2 g/dL, platelets 95 ×10⁹/L; CMP normal. Chest X‑ray: moderate right pleural effusion, no new lesions. Plan: hospice care initiated, continue 4 L O₂, increase morphine to 10 mg PO q3 h PRN with supplemental 5 mg q2 h PRN for breakthrough symptoms, add hydroxyzine 25 mg qhs for cough suppression, continue albuterol PRN, tiotropium inhaler, prednisone 5 mg daily, azithromycin 500 mg daily, furosemide 10 mg BID, nasal saline irrigation. Follow‑up: hospice home visit 2026‑07‑22, virtual palliative‑care check‑in 2026‑07‑25, CBC/CMP in 1 week, repeat chest X‑ray in 4 weeks, daily vitals and symptom diary by family.</li><li>Visit 9: 2026‑??‑?? Planned hospice home visit, virtual check‑ins, and routine monitoring as per hospice protocol.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

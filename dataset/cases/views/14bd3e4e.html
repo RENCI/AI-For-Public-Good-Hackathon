@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 14bd3e4e</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 14bd3e4e</h1><div class="subtitle">Stage IV Metastatic Invasive Ductal Carcinoma of the Right Lower Outer Quadrant of the Male Breast | Male, 57</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Obesity, Hypertension, History of chest radiation exposure</div><div class="meta-line">Risk Factors: BRCA2 germline mutation, Estrogen excess (e.g., aromatase activity), Radiation exposure to chest, Obesity</div></div>
+<details><summary>Narrative <span class="preview-text">When the first time Mark noticed the subtle, pear‑shaped swelling on the lower outer quadrant of his right breast was on...</span></summary><div class="section-body"><p>When the first time Mark noticed the subtle, pear‑shaped swelling on the lower outer quadrant of his right breast was on the evening of **June 12, 2023**. He had been feeling “odd” for a week—an uncomfortable fullness that seemed to rise and fall with his meals and was worse after he’d been on the couch for hours. He dismissed it as a benign lump from an old sports injury, but the next morning a palpable thickening remained. Because Mark is an avid cyclist, he wondered if a muscle strain had produced a painful, swollen area. He brushed it aside until the lump was firm enough that he could’t slide his hand around it in the mirror without feeling a hard, nodular edge.</p><p>On **June 25**, he decided to visit his primary‑care physician, Dr. Patel, after his routine blood work came back showing a rising low‑density plaque on his routine abdominal ultrasound (a benign incidental finding and unrelated to breast tissue). Dr. Patel performed a focused breast examination in her office; she noted a 1.8‑centimeter, firm, irregular mass in the right lower outer quadrant. Mark’s history included **morbid obesity (BMI 38)**, **hypertension on lisinopril 20 mg daily**, and a **history of chest wall radiation** for Hodgkin lymphoma ten years earlier. In addition, there was a recent revelation that Mark’s mother had been diagnosed with invasive ductal carcinoma at 45, prompting the family to request a BRCA panel. Mark’s genetic testing confirmed a pathogenic **BRCA2 germline mutation**.</p><p>Given the palpable lesion, Dr. Patel suggested imaging. On **July 2**, an expert‑radiologist performed a **hand‑held handheld 3‑D ultrasound** followed by an **M‑LOK™ 21‑cm whole‑body bone scan** to assess for possible metastases—a precaution given Mark’s recent exposure to chest radiation and his BRCA2 status. The ultrasound confirmed a hypoechoic mass measuring 1.8 × 1.5 × 1.9 cm with irregular borders. The bone scan did not reveal any obvious lytic activity, but the radiologist noted multiple faint spots in the lumbar vertebrae—“non‑specific, likely benign, but worth watching.”</p><p>Dr. Patel ordered a **core‑needle biopsy** of the breast mass. On **July 9**, Mark had the procedure. The pathology was “invasive ductal carcinoma, moderate nuclear grade, ER‑positive (&gt;90 % by immunohistochemistry), PR‑positive, HER2‑negative, Ki‑67 25 %” – a typical profile for male breast cancer. The final report also mentioned that the biopsy specimen had a **low‑dose radiation recall**: a microscopic field of fibrotic tissue consistent with the 200‑cGy dose administered during his previous chest radiotherapy. The pathologist flagged this as significant because it would limit future radiation options.</p><p>On **July 15** Mark met with a medical‐oncology consult at the regional cancer center. The multidisciplinary team—oncology, radiation oncology, orthopedic oncology, and cardiology—reviewed the pathology, imaging, and comorbidities. Because the lesion was palpable but no overt metastases were detected on the bone scan, they staged him as **stage III** (pT2N1M0). However, due to his **BRCA2 mutation** and the aggressive biology of male breast cancer, the oncologist, Dr. Ramaswamy, cautioned that metastasis could develop rapidly.</p><p>Treatments were set in motion: the team recommended **neoadjuvant chemotherapy** with a **docetaxel 75 mg/m² IV infusion** every three weeks for six cycles, followed by **paclitaxel 80 mg/m² IV** for an additional four cycles if tumor response was inadequate. Additionally, because the tumor was **ER‑positive** and Mark had **estrogen excess** (attributable to obesity‑induced aromatase activity), an **aromatase inhibitor (anastrozole 1 mg daily)** was prescribed to mitigate hormone‑driven growth. Mark was also put on **denosumab 120 mg subcutaneously every 4 weeks** to strengthen bone once bone scans became available. His **hypertensive medication was switched** from lisinopril to **losartan 50 mg** under cardiology’s guidance, anticipating chemotherapy‑related hypertension.</p><p>On **August 2** he started docetaxel. The first cycle was complicated by mild **thrombocytopenia (platelets dropped to 115 × 10⁹/L)** and **grade 2 neuropathy**—Mark experienced tingling in his toes. Dr. Ramaswamy adjusted his dose to 70 mg/m² for the second cycle. By **August 30**, after the third cycle, Mark’s tumor had shrunk to 1.2 cm on physical exam, but his blood counts were borderline, and he complained of worsening **fatigue**.</p><p>After the completion of docetaxel, Mark underwent a **pre‑operative assessment** on **September 20**. Imaging by MRI and MRI‑guided breast ultrasound confirmed continued tumor shrinkage, but the **bone scan performed this week** revealed a **focal osteolytic lesion in the 12th rib**—the first radiographic evidence of bone metastasis. The team consulted orthopedic oncology and decided to forego radiation due to his prior chest radiation exposure but to intensify systemic therapy and bone‑protective measures. Mark&#x27;s bone scan results raised the question of whether this might be the first sign of stage IV disease.</p><p>On **September 28**, after a thorough discussion, the oncologist recommended **switching to a combination of carboplatin (AUC 5) and paclitaxel (80 mg/m²)** for the remaining cycles, with an intention to **add a PARP inhibitor (olaparib 300 mg BID)** after the third cycle, given the BRCA2 mutation and the presence of bone metastases. Mark also joined a **clinical trial** for a **CDK4/6 inhibitor (palbociclib 125 mg daily)** to potentially improve progression‑free survival; thus, his regimen became multi‑modal: **paclitaxel + carboplatin + olaparib + palbociclib**.</p><p>However, the aggressive treatment approach began to take a toll. On **October 12**, Mark presented to the emergency department with acute, sharp right rib pain—localized to the 12th rib where the osteolytic lesion was—and dyspnea at rest. On physical exam, there were **absent breath sounds over the right lower lung field**. A **CT chest** revealed a **new right pleural effusion** and a **small subpleural bulla** compressing the right lower lobe. The effusion was exudative and confirmed malignant on cytology. The oncologic team rapidly admitted Mark for **palliative chemo‑cancer therapy** and **thoracentesis**.</p><p>The pleural effusion required close monitoring, and a **pneumocystis prophylaxis** with TMP‑SMX was instituted because of the anticipated immunosuppression. Mark’s **diuretics** were given for fluid overload, but his hypertension spiked to 180/100 mmHg, requiring the addition of **hydrochlorothiazide** and an upgrade of losartan to 100 mg after cardiology assessment. The weight of his obesity began to interfere with ventilatory mechanics; a **pulmonary rehabilitation** plan was drafted to improve his breathlessness.</p><p>In **November 2023**, Mark’s disease was officially staged as **stage IV (cT2N1M1)**, with at least **bone and pleural metastases**. Despite aggressive systemic therapy, his tumor burden continued to increase. Imaging on **November 18** showed two new lytic lesions in the pelvis and a progression of the right rib metastasis. His performance status had declined from **ECOG 0** to **ECOG 2**: he could no longer work as a truck driver and had to rely on his wife for daily activities.</p><p>When Mark’s tumor progressed after **four cycles of carboplatin/paclitaxel**, the oncology team convened a second multidisciplinary tumor board. They contemplated **switching to a topoisomerase‑II inhibitor (etoposide)** or a **second‑line PARP inhibitor** with **veliparib** combined with a **PI3K‑delta inhibitor** (idelalisib), but Mark’s **renal function was now mild** (creatinine 1.4 mg/dL) and his **liver enzymes** were elevated (AST 85 IU/L, ALT 92 IU/L). They elected to **continue olaparib alone**, and to **initiate a combination of everolimus** (an mTOR inhibitor) with a **corticosteroid backbone** for bone pain palliation. They also scheduled him for **palliative radiation** to the right rib after careful cardiology evaluation: the cumulative chest dose from prior therapy had been 30 Gy, and the team calculated that a single fraction of 8 Gy to the rib could reduce pain without exceeding tolerable limits.</p><p>On **December 10**, Mark’s chest X‑ray showed a reduction in pleural effusion after thoracentesis, but his pain remained severe. The palliative care team advised that the **pain scale** had escalated to 8/10 despite **opioids (morphine 30 mg PO q6 h) and nerve blocks.** They also encouraged Mark to enroll in a psychological support program, as mood disorders often accompany rapidly progressive metastatic disease.</p><p>The disease trajectory became increasingly relentless. By **January 2024**, Mark’s bone scans displayed **diffuse bony involvement**: a flare in multiple vertebrae and a new lesion in the left humerus. The oncologist suggested a **four‑cycle regimen of carboplatin/paclitaxel plus olaparib** would likely prove ineffective in the setting of widespread metastatic burden. In light of the **prolonged toxicity** from multi‑agent chemotherapy and Mark’s declining functional state, the team shifted focus to **goal‑concordant therapy** and comfort care.</p><p>On **February 2, 2024**, Mark’s oncology team met with him and his wife to discuss the shift from curative to palliative intent. Mark had opted to **discontinue systemic therapy** and pursue **symptom control**: high‑dose radiation to the painful right rib area (20 Gy in 10 fractions), ongoing **denosumab** and **analgesics**, and **psychosocial support**. Over the next weeks, he experienced a modest relief of bone pain after radiation, but fatigue and dyspnea persisted. A **ventilator assessment** was requested, but he declined invasive life support measures.</p><p>Mark passed away peacefully at home on **April 15, 2024**, surrounded by his family, after an aggressive battle that underscored the grim reality of **male breast cancer with metastatic progression** in the context of multiple risk factors—including a **BRCA2 mutation**, **obesity‑driven estrogen excess**, and a **history of chest radiation**. Throughout his course, the interplay between his comorbidities, genetic background, and the biology of his carcinoma steered a complex, often thwarted therapeutic journey that ultimately culminated in a **worsening disease state** that defied contemporary treatment armamentarium.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-06-25</h3><div class="visit-meta">Primary Care (Family Medicine) | Reason: Palpable breast lump</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 1
+Date: 2023-06-25
+
+Chief Complaint: Palpable breast lump
+
+History of Present Illness: Mark, 57‑year‑old male, presents with a new firm, irregular, ~1.8 cm mass in the lower outer quadrant of the right breast, noted over the last two weeks. He reports fullness that fluctuates with meals, no pain, no discharge, no skin changes. No nipple retraction. He denies fever, weight loss, or night sweats. Past medical history significant for hypertension, obesity (BMI 38), and prior chest radiation for Hodgkin lymphoma. He is on lisinopril 20 mg daily. No known drug allergies.
+
+Review of Systems: Positive for palpable breast lump; negative for breast pain, nipple discharge, skin changes, systemic symptoms.
+
+Physical Examination: Vitals stable: BP 138/85 mmHg, HR 78 bpm, Temp 98.6 °F, O₂ sat 98%. Right breast: firm, irregular, 1.8 cm mass in lower outer quadrant. No skin dimpling, erythema, or nipple retraction. No axillary adenopathy. The left breast is normal.
+
+Assessment: 1) Suspicious right breast mass in a male with prior chest radiation. Differential includes benign post‑radiation changes (fat necrosis, fibrous scar), benign fibroadenoma, and malignant radiation‑induced breast carcinoma.
+
+Plan:
+- Order handheld ultrasound of right breast (already scheduled).
+- Refer to interventional radiology for image‑guided core needle biopsy pending ultrasound findings.
+- Discuss BRCA panel; patient consented.
+- Counsel regarding symptoms to monitor: increasing size, pain, skin changes, nipple discharge.
+- Reinforce lifestyle modifications for obesity: weight loss, exercise, diet.
+- Counsel on smoking cessation if applicable (not reported).
+- Follow with Dr. Patel in 4 months or earlier if imaging or biopsy indicates malignancy.
+- Instruct patient to return urgently if any new symptoms develop.
+
+Medications: Current medication—lisinopril 20 mg daily.
+
+Follow‑up recommendations: 1) Core needle biopsy. 2) 4‑month follow‑up after ultrasound. 3) Lifestyle counseling and regular monitoring.
+
+Differential diagnoses considered: post‑radiation benign mass (fat necrosis, scar tissue), fibroadenoma, radiation‑induced breast carcinoma, metastatic lesion, lipoma.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">palpable breast mass, fullness in right breast</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O₂Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm, irregular 1.8 cm mass in right lower outer quadrant, no skin changes, no discharge, no nipple retraction</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Handheld ultrasound of right breast</li><li>Refer to core needle biopsy</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>morbid obesity</li><li>hypertension on lisinopril</li><li>history of chest radiation for Hodgkin lymphoma</li><li>BRCA panel requested</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark presented to Dr. Patel’s office complaining of a new firm, irregular mass along the lower outer quadrant of his right breast, noticed over the past two weeks. He reported fullness that fluctuated with meals and did not find the area painful. After a focused breast exam by Dr. Patel, the lesion was approximately 1.8 cm. Dr. Patel took a detailed history including obesity (BMI 38), hypertension on lisinopril 20 mg daily, and chest radiation for Hodgkin lymphoma. She ordered a diagnostic handheld breast ultrasound and noted a potential 4‑month follow‑up due to the suspicious findings.  The BRCA testing was discussed and Mark agreed to have a panel.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial detection of a suspicious breast mass in a male patient with BRCA2 mutation and high estrogen exposure.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-07-02</h3><div class="visit-meta">Radiology | Reason: Imaging for breast mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 57‑year‑old male with a palpable breast mass.\nHistory &amp; Examination: Patient has obesity, hypertension (on lisinopril 20 mg daily), BRCA2 mutation, and prior chest radiation. The right breast contains a firm, irregular 1.8 cm mass in the lower outer quadrant. \nImaging: Handheld 3‑D ultrasound demonstrated a 1.8 × 1.5 × 1.9 cm hypoechoic mass with irregular borders and no calcifications. Whole‑body M‑LOK™ bone scan was negative for aggressive lytic lesions; faint foci seen in the lumbar spine were noted but are nondiagnostic.\nAssessment: Findings are highly suggestive of an invasive malignancy (likely ductal carcinoma). Differential diagnosis includes invasive ductal carcinoma, other malignant breast neoplasms, benign fibroadenoma (unlikely given irregular borders), and post‑radiation scarring. No evidence of distant skeletal metastasis at this time.\nPlan: \n1. Await core needle biopsy pathology from the prior visit.  \n2. If pathology confirms malignancy, refer to surgical oncology for definitive local treatment (lumpectomy with axillary staging or mastectomy based on intra‑operative findings).  \n3. Continue current hypertension therapy; monitor BP during follow‑up visits.  \n4. No changes to medications at this time; patient remains NKDA.  \n5. Repeat bone scan only if new symptoms or clinical evidence of metastatic disease.\nFollow‑Up: Review biopsy results within 2 weeks; if malignant, schedule surgical consultation and plan further management. Continue routine surveillance for metastatic disease with clinical exam and imaging per oncology recommendation.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">palpable breast mass</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>98.7°F</td></tr><tr><td>O₂Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast ultrasound confirms irregular hypoechoic mass, no calcifications</li><li>Bone scan negative for major lytic lesions, subtle lumbar foci</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Handheld 3‑D ultrasound</li><li>Whole‑body bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Ultrasound: 1.8 × 1.5 × 1.9 cm irregular hypoechoic mass</li><li>Bone scan: faint lumbar foci, no overt metastasis</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest radiation</li><li>BRCA2 mutation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Ramirez, a breast radiologist, performed a handheld 3‑D ultrasound which confirmed a 1.8 × 1.5 × 1.9 cm hypoechoic mass with irregular borders. He also ordered a whole‑body bone scan (M‑LOK™) to evaluate for occult skeletal metastases. The bone scan did not demonstrate aggressive lytic lesions, though faint spots in the lumbar spine were noted. The results were emailed to Mark’s oncologist.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Mass confirmed; no bone metastases detected but incidental lumbar spots noted.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-07-09</h3><div class="visit-meta">Pathology | Reason: Core needle biopsy results</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit No. 3 – Pathology Consultation (2023‑07‑09)
+
+Chief Complaint: Review of core‑needle biopsy results for a palpable breast mass in a 57‑year‑old male with a BRCA2 mutation and prior chest radiation.
+
+History of Present Illness: The patient presents again following a core‑needle biopsy performed on a 1.8 × 1.5 × 1.9 cm irregular hypoechoic mass in the lower outer quadrant of the right breast. The specimen has been examined histologically on this encounter. There is no new systemic symptoms; the patient reports only the palpable mass.
+
+Past Medical History: Obesity, hypertension (treated with lisinopril 20 mg daily), history of chest radiation (200 cGy), BRCA2 mutation.
+
+Medications: Lisinopril 20 mg daily.
+
+Allergies: NKDA.
+
+Physical Findings: Vitals stable – BP 138/88 mmHg, HR 76/min, Temp 98.5 °F, O₂ sat 98% RA. No physical exam findings recorded herein; exam previously performed at imaging visit.
+
+Pathology Findings:
+• Morphology: Moderately differentiated invasive ductal carcinoma.
+• Immunohistochemistry: Estrogen receptor positive (ER &gt; 90%), progesterone receptor positive (PR +), HER2/neu negative, Ki‑67 proliferation index 25%.
+• Radiation Field: Fibrotic focus consistent with previous 200 cGy chest irradiation; this area may limit future radiotherapy exposure.
+
+Assessment: The findings are most consistent with a moderately differentiated, hormone‑receptor‑positive, HER2‑negative invasive ductal carcinoma in a male patient with a germline BRCA2 mutation and prior chest radiation. The fibrotic field imposes a significant constraint on adjuvant radiotherapy. Given the size (&gt;1.8 cm) and location, surgical management with consideration for breast‑conserving surgery versus mastectomy is indicated. Radiation is limited; endocrine therapy is recommended.
+
+Plan:
+1. Surgical Oncology referral for definitive treatment planning (lumpectomy vs mastectomy). Discuss possibility of sentinel node evaluation.
+2. Radiology: Discuss imaging of regional lymph nodes if not already performed.
+3. Endocrine therapy: Initiate aromatase inhibitor (e.g., anastrozole 1 mg daily) given hormone‑receptor positivity.
+4. Genetic counseling: Update on BRCA2 status and discuss family testing.
+5. Cardiovascular monitoring: Continue lisinopril; consider baseline echocardiogram before initiating aromatase inhibitor due to potential cardiac effects.
+6. Patient education: Discuss prognosis, treatment options, side effect monitoring, and importance of adherence to endocrine therapy.
+7. Follow‑up: Clinic visit in 2 weeks to review surgical notes and to initiate endocrine therapy. Further follow‑up as needed based on oncology recommendations.
+
+Signature: Dr. Lee, M.D.
+Pathology Department</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">palpable breast mass</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/88</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O₂Sat</td><td>98%</td></tr></table></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pathology: IDC, ER+, PR+, HER2‑negative, Ki‑67 25 %</li><li>Radiation recall fibrotic field noted</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest radiation</li><li>BRCA2 mutation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Lee reviewed the core‑needle biopsy specimen. Histopathology showed invasive ductal carcinoma, moderate nuclear grade, ER &gt; 90 %, PR +, HER2‑negative, Ki‑67 25 %. A microscopic fibrotic field was noted consistent with prior 200 cGy chest radiation, limiting future radiotherapy options. The report was sent to the oncology service.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed invasive ductal carcinoma; staging pending; radiation limited.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-07-15</h3><div class="visit-meta">Medical Oncology | Reason: Discussion of diagnosis and treatment plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Discussion of diagnosis and treatment plan.
+
+**History of Present Illness:** 57‑year‑old male presents for multidisciplinary review of breast cancer management. The patient is a known hypertensive on lisinopril 20 mg daily and anastrozole 1 mg daily. Recent imaging and core‑needle biopsy confirmed a 1.8 cm irregular mass in the lower outer quadrant of the right breast. Pathology is consistent with invasive ductal carcinoma, staged at T2N1M0 (Stage III). The patient reports mild fatigue only.
+
+**Past Medical History:** Hypertension, osteopenia risk.
+
+**Medications:** Anastrozole 1 mg PO daily, Lisinopril 20 mg PO daily (now changed to Losartan 50 mg PO daily per cardiology). No known drug allergies.
+
+**Review of Systems:** Minor fatigue; denies chest pain, dyspnea, headaches, or new neurologic deficits.
+
+**Vitals:** BP 140/90, HR 78, Temp 98.6°F, O₂Sat 98%.
+
+**Physical Examination:** Mammography and ultrasound confirm a 1.8 cm mass with no skin changes or nipple retraction. No palpable axillary lymphadenopathy noted.
+
+**Assessment:**
+1. Invasive ductal carcinoma of right breast, Stage III (T2N1M0). 2. Well‑controlled hypertension now on losartan. 3. Mild fatigue likely anemia or early chemotherapy side‑effect, but baseline labs pending.
+
+**Plan:**
+- Initiate neoadjuvant chemotherapy with Docetaxel 75 mg/m² IV q3w for six cycles. 6‑week pre‑chemotherapy baseline CBC and CMP will be drawn; subsequent CBCs will be obtained prior to each cycle.
+- Consider Paclitaxel following neoadjuvant cycle if residual disease remains.
+- Continue anastrozole 1 mg PO daily as adjuvant hormonal therapy.
+- Start Denosumab 120 mg SC monthly for bone protection, given osteopenia risk.
+- Switch lisinopril to losartan 50 mg PO daily under cardiology guidance; monitor BP every visit.
+- Counsel on potential side effects: neuropathy, neutropenia, alopecia, infusion reactions. Emphasized urgent reporting of fever (&gt;100.4°F), persistent neutropenia, or neuropathic pain.
+- Cardiology follow‑up within 4 weeks to evaluate BP response to losartan.
+- Return in 3 weeks for CBC/CMP and chemotherapy infusion; subsequent visits every 3 weeks during chemotherapy.
+- Plan for post‑surgical oncologic review after definitive surgery once neoadjuvant therapy completed.
+
+**Patient Education:** Reviewed chemotherapy regimen, potential complications, and monitoring strategy. Provided written instructions for side‑effect reporting.
+
+**Conclusion:** Treatment plan is communicated; patient consent obtained. Will coordinate with nursing and pharmacy for infusion scheduling and medication dispensing.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue (mild)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O₂Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast mass 1.8 cm, no skin changes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>lisinopril 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>osteopenia risk</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Ramaswamy met with Mark at the regional cancer center. The multidisciplinary team reviewed pathology, imaging, and comorbidities. The disease was staged as T2N1M0 (stage III). Due to BRCA2 mutation and aggressive male breast cancer biology, rapid progression was anticipated. The treatment plan included neoadjuvant docetaxel 75 mg/m² q3w for six cycles, followed by paclitaxel if needed, and adjuvant aromatase inhibitor (anastrozole 1 mg daily). Denosumab 120 mg SC monthly would be started for bone protection. Lisinopril was switched to losartan 50 mg daily under cardiology guidance. Mark was counseled on potential side effects and instructed to report neuropathy or cytopenias immediately.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage III IDC with planned neoadjuvant therapy; limited radiation options due to prior exposure.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-08-02</h3><div class="visit-meta">Medical Oncology | Reason: First docetaxel infusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+First docetaxel infusion.
+
+History of Present Illness:
+57‑year‑old male with a history of BRCA2‑associated, stage III invasive ductal carcinoma of the right breast, now on neoadjuvant chemotherapy. This is his first docetaxel (70 mg/m² IV) infusion dose‑reduced from 75 mg/m² due to pre‑existing thrombocytopenia. He tolerated the infusion without acute hypersensitivity or infusion reaction. Post‑infusion CBC showed a thrombocytopenia of 115 × 10⁹/L (baseline 120 × 10⁹/L), hemoglobin 12.0 g/dL, and WBC 4.5 × 10⁹/L. He reports mild fatigue and new numbness/tingling in the toes, consistent with grade 2 peripheral neuropathy. No bleeding or bruising noted.
+
+Past Medical History:
+• Obesity, hypertension (treated with losartan 50 mg daily)
+• History of chest radiation
+• BRCA2 mutation, male breast cancer
+
+Medications:
+• Losartan 50 mg PO daily
+• Anastrozole 1 mg PO daily
+• Denosumab 120 mg SC monthly (switched to weekly dosing for bone protection following this infusion)
+
+Allergies:
+None.
+
+Vital Signs:
+Blood pressure 140/92 mmHg, heart rate 74 bpm, temperature 98.4 °F, oxygen saturation 98% on room air.
+
+Physical Examination:
+General: alert, awake, in no acute distress.
+Skin: no new lesions.
+Extremities: mild tingling in distal toes, no signs of ischemia.
+
+Assessment:
+1. Docetaxel‑associated thrombocytopenia – dose‑reduced to 70 mg/m²; platelet count remains stable at 115 × 10⁹/L. No bleeding.
+2. Docetaxel‑induced peripheral neuropathy – grade 2, presenting as distal toe tingling.
+3. Stable anemia and leukopenia as expected with docetaxel.
+
+Plan:
+• Repeat CBC with differential 1 week prior to next infusion and weekly thereafter.
+• Continue current dose of docetaxel 70 mg/m² q3 weeks for total of 6 cycles.
+• Initiate denosumab 120 mg SC weekly for bone protection.
+• Symptom management: advise patient to rest and monitor neuropathic symptoms; consider acetaminophen or neuropathic pain agents if worsening.
+• Follow up in clinic 3 weeks from today for next infusion and CBC monitoring.
+• Continue BP monitoring; consider cardiology review per prior order.
+• Educate regarding signs of bleeding, neuropathic deterioration, and when to seek urgent care.
+
+Disposition:
+Patient understands plan and scheduled for next infusion in 3 weeks.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">numbness in toes</span><span class="pill">mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/92</td></tr><tr><td>HR</td><td>74</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O₂Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Peripheral neuropathy: mild tingling in toes</li><li>Platelet count 115 × 10⁹/L</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC with diff</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 12.0 g/dL, WBC 4.5 × 10⁹/L, Platelets 115 × 10⁹/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Docetaxel 70 mg/m² IV</li><li>Denosumab 120 mg SC</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Mild neuropathy; platelet drop noted</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>losartan 50 mg daily</li><li>anastrozole 1 mg daily</li><li>denosumab 120 mg SC monthly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>prior radiation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark received his first docetaxel infusion (70 mg/m², dose‑reduced from 75 mg/m² due to pre‑existing thrombocytopenia). He tolerated the infusion with mild thrombocytopenia (platelets 115 × 10⁹/L) and grade 2 peripheral neuropathy (tingling in toes). The day‑before CBC had shown a marginally low platelet count, prompting the dose reduction. Post‑infusion labs showed a hemoglobin of 12.0 g/dL, WBC 4.5 × 10⁹/L, and platelets 115 × 10⁹/L. Mark was advised to rest and to monitor for neuropathic symptoms. He was also started on denosumab weekly subcutaneously.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Documented early tolerability of taxane; platelet count concerning but manageable.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-09-20</h3><div class="visit-meta">Surgical Oncology | Reason: Pre-operative assessment and imaging review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Pre‑operative assessment and imaging review.
+
+History of Present Illness: 57‑year‑old male with known HER2‑negative, ER/PR‑positive stage III invasive ductal carcinoma of the right breast, BRCA2 mutation, and a history of chest radiation for prior breast disease. The patient reports ongoing fatigue and dull right‑sided back pain. He continues anastrozole 1 mg daily, losartan 50 mg daily, and denosumab 120 mg SC monthly. A recent breast MRI demonstrated continued shrinkage of the right breast mass to 1.2 cm. Updated bone scan reveals a new osteolytic lesion in the right 12th rib. The patient is concerned about disease progression but is agreeable to intensified systemic therapy.
+
+Review of Systems: Positive for fatigue, dull right‑sided back pain. Denies fever, night sweats, recent weight loss, or new neurological deficits.
+
+Physical Examination:
+• Vitals: BP 135/85, HR 78, Temp 98.5°F (37.1°C), O₂ sat 97% RA.
+• General: Alert, non‑distressed.
+• Breast: Right breast mass 1.2 cm, no overlying erythema or skin changes; lobular breasts noted.
+• Musculoskeletal/Back: Mild tenderness over the right 12th rib region, no deformity.
+
+Assessment:
+1. Breast carcinoma, stage III, currently responding to neoadjuvant therapy (shrinkage to 1.2 cm).
+2. New osteolytic lesion in the 12th right rib – likely bone metastasis given the patient’s breast cancer history and BRCA2 mutation.
+3. Contributory factors: prior chest radiation may complicate imaging interpretation; however imaging suggests metastatic disease.
+
+Differential Diagnosis:
+• Metastatic breast carcinoma to bone.
+• Radiation‑induced bone weakness or secondary benign lesion.
+• Infectious osteomyelitis (unlikely given absence of systemic signs).
+
+Plan:
+• Initiate systemic chemotherapy with carboplatin 200 mg/m² IV day 1 + paclitaxel 90 mg/m² IV day 1 q3wk (standard regimen for metastatic breast with BRCA mutation).
+• Discuss and plan for maintenance PARP inhibitor (olaparib) after completion of 4–6 cycles of carboplatin/paclitaxel.
+• Continue denosumab 120 mg SC monthly for bone protection; consider adding zoledronic acid if renal function permits.
+• Pain management: initiate low‑dose opioid or gabapentin for dull back pain; reassess after first chemotherapy cycle.
+• Monitoring: CBC, CMP prior to each chemo cycle; monitor renal function for denosumab and paclitaxel; perform serum calcium, phosphorus, and albumin levels.
+• Re‑evaluate tumor response: repeat breast MRI and bone scan after 2 cycles to assess response.
+• Surgical Oncology: Continue to postpone definitive surgery until after partial systemic response and reassessment of disease burden.
+• Supportive: Encourage continued adherence to anastrozole, losartan, and healthy lifestyle modifications.
+
+Follow‑up: Return in 3 weeks for first chemotherapy cycle and toxicity assessment. Subsequent visits every 3 weeks during chemotherapy with CBC and CMP checks. Re‑assessment for surgery after 4–6 cycles of systemic therapy.
+
+Disposition: Patient verbalized understanding of plan and consented to therapeutic approach. No acute concerns.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">dull back pain on right side</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/85</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O₂Sat</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast mass 1.2 cm, no overlying skin changes</li><li>Lobular breasts</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Breast MRI</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: breast mass 1.2 cm</li><li>Bone scan: new osteolytic lesion in 12th right rib</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Concerned but agreeable to intensified therapy</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>losartan 50 mg daily</li><li>anastrozole 1 mg daily</li><li>denosumab 120 mg SC monthly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior radiation</li><li>osteolytic lesion</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark underwent a pre‑operative MRI of the breast and an updated bone scan. MRI confirmed continued shrinkage of the breast mass to 1.2 cm, but the bone scan revealed a new focal osteolytic lesion in the 12th right rib, suggestive of metastatic spread. The multidisciplinary team deemed the disease to have progressed to stage IV. Given the bone lesion, a plan for systemic intensification and bone‑protective therapy was discussed. The surgical team postponed definitive surgery pending systemic response due to metastatic disease. Mark was scheduled to start a carboplatin/paclitaxel regimen and consider a PARP inhibitor. He was also advised to continue denosumab.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to metastatic disease with osteolytic rib involvement; systemic therapy intensified.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-10-12</h3><div class="visit-meta">Emergency Medicine | Reason: Right rib pain and dyspnea, possible pleural effusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Right rib pain and dyspnea.\nHistory: 57‑year‑old male with stage III right breast carcinoma on carboplatin/paclitaxel regimen, history of obesity, hypertension, chest radiation, and BRCA2 mutation. Presents with sharp right rib pain and worsening shortness of breath.\nVitals: BP 180/100 mmHg, HR 92 bpm, Temp 98.6°F, SpO2 96% RA.\nPhysical Exam: Right lower lung field absent breath sounds, dull percussion note, right rib tenderness. No cyanosis.\nLabs/Imaging: CT chest with contrast revealed right pleural effusion and a small subpleural bulla compressing the lower lobe. Pleural fluid cytology positive for malignant cells. Fluid was exudative.\nAssessment: Malignant pleural effusion secondary to metastatic breast carcinoma confirmed by cytology. Complicated by subpleural bulla compressing lung tissue. Hypertension uncontrolled.\nDifferential:\n- Malignant pleural effusion\n- Empyema / infectious effusion\n- Radiation‑induced pleural disease\n- Atelectasis from bulla compression\n- Congestive heart failure with fluid overload\n- Pulmonary embolism\nPlan:\n1. Therapeutic thoracentesis performed, 300 mL fluid removed.\n2. Initiated TMP‑SMX 160/800 mg BID for possible infectious component.\n3. Started diuretics: HCTZ 25 mg daily (added) and titrated losartan to 100 mg daily.\n4. Pain control: NSAID (acetaminophen 650 mg PRN) and gabapentin 300 mg BID PRN for rib pain; consider low‑dose opioid if pain remains uncontrolled.\n5. Pulmonary rehab referral to address dyspnea and exercise tolerance.\n6. Monitor BP daily, weight daily; adjust antihypertensives as needed.\n7. CBC/CMP before each chemo cycle; monitor renal function due to carboplatin.\n8. Follow‑up imaging (CT chest) in 4–6 weeks or sooner if symptomatic; consider chest tube if reaccumulation.\n9. Oncology follow‑up within 1 week to discuss chemo schedule and pleural disease.\n10. Educate patient on symptom monitoring (fever, chest pain, increasing dyspnea).\nDisposition: Discharged home with instructions to continue TMP‑SMX, HCTZ, losartan, and pain regimen. Phone line open for urgent concerns.\nSignature: [EM clinician]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sharp right rib pain</span><span class="pill">dyspnea on exertion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>180/100</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O₂Sat</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right lower lung field absent breath sounds</li><li>Right pleural effusion palpable on percussion</li><li>Right rib tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest with contrast</li><li>Pleural fluid cytology</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: right pleural effusion and subpleural bulla</li><li>Cytology: malignant breast cancer cells</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis (removed 300 mL fluid)</li><li>TMP‑SMX 160/800 mg BID</li><li>Hydrochlorothiazide 25 mg QD</li><li>Losartan 100 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Relief of dyspnea after drainage, but pain remained</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>losartan 100 mg daily</li><li>hydrochlorothiazide 25 mg daily</li><li>anastrozole 1 mg daily</li><li>denosumab 120 mg SC monthly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bone metastasis</li><li>recent pleural effusion</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark presented with sharp right rib pain and worsening shortness of breath. Physical exam revealed absent breath sounds over the right lower lung field. A CT chest was performed, showing a right pleural effusion and a small subpleural bulla compressing the lower lobe. Pleural fluid aspirate was exudative and cytology confirmed malignant cells consistent with breast origin. The oncology team admitted Mark for palliative chemo‑cancer therapy and performed a therapeutic thoracentesis. TMP‑SMX 160/800 mg BID was initiated for PCP prophylaxis; diuretics were started for fluid overload. His blood pressure had risen to 180/100 mmHg, necessitating addition of hydrochlorothiazide 25 mg daily and titration of losartan to 100 mg. Pulmonary rehab was recommended to mitigate dyspnea.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>New malignant pleural effusion; stage IV disease with pleural involvement.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-12-10</h3><div class="visit-meta">Palliative Care | Reason: Pain management and psychosocial support</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Mark, 57‑year‑old male with stage III invasive ductal carcinoma of the right breast and metastatic disease, presents for palliative care follow‑up. Chief complaints:
+- Severe bone pain (8/10) localized to the right 12th rib and diffuse back/limb pain.
+- Dyspnea, especially with exertion; reports difficulty completing usual tasks.
+- Fatigue, noted to be progressive since last visit.
+Mark reports that pain is partially controlled with current opioid regimen but still experiences breakthrough episodes. He also expresses anxiety about disease trajectory and depressive mood; he is willing to participate in psychosocial support. ECOG performance status has worsened to 2.
+
+**Objective:**
+- Vital signs: BP 140/88 mmHg, HR 90 bpm, Temp 98.4°F, SpO₂ 95% on room air.
+- Physical exam: Tenderness over the right 12th rib; diffuse tenderness over multiple vertebral and rib sites. Palpation of lower right lung reveals weak breath sounds; percussion was dull.
+- No other acute findings.
+
+**Assessment:**
+1. Severe bone pain secondary to metastatic bone disease – requires palliative opioid escalation and local intervention.
+2. Dyspnea likely due to malignant pleural effusion; currently clinically stable but monitoring warranted.
+3. Fatigue secondary to disease burden and chemotherapy; consider symptomatic management.
+4. Pain partially controlled with morphine 30 mg PO q6h; breakthrough pain prompts need for PRN hydromorphone.
+5. Continual bone protection with denosumab 120 mg SC monthly.
+
+**Plan:**
+1. Maintain morphine 30 mg PO q6h. Re‑evaluate dosing if pain remains &gt;4/10 after two doses.
+2. Prescribe hydromorphone 2 mg PO PRN for breakthrough pain; educate on rescue dosing and opioid side‑effect monitoring.
+3. Schedule intercostal nerve block for the right 12th rib pain within the next 48 h; consider ultrasound guidance.
+4. Continue denosumab 120 mg SC monthly, anastrozole 1 mg daily, losartan 100 mg daily, hydrochlorothiazide 25 mg daily, TMP‑SMX 160/800 mg BID, acetaminophen 650 mg PRN.
+5. Enroll in psychosocial support program (counseling, support group); schedule first session this week.
+6. Repeat whole‑body bone scan in 4 weeks to monitor disease progression.
+7. Obtain baseline CBC &amp; CMP before next chemotherapy cycle; monitor for cytopenias, electrolyte abnormalities.
+8. Monitor blood pressure and weight daily; consider adjusting antihypertensives if BP &gt;160/100.
+9. If dyspnea worsens or pleural effusion enlarges, arrange chest CT and possible repeat thoracentesis.
+10. Follow‑up in clinic in 2 weeks for pain &amp; symptom reassessment; sooner if pain or dyspnea escalates.
+
+**Education:**
+- Discussed opioid rotation if tolerance develops.
+- Explained side effects of hydromorphone and signs of respiratory depression.
+- Provided written instructions for psychosocial resources and emergency contact.
+
+**Disposition:** Patient remains at home with outpatient palliative management.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe bone pain</span><span class="pill">dyspnea</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O₂Sat</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness over right 12th rib</li><li>Diffuse bone tenderness</li><li>Weak breath sounds in lower R lung</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat bone scan</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 30 mg PO q6h</li><li>Hydromorphone PRN</li><li>Intercostal nerve block planned</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain partially controlled; emotional support helpful</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>losartan 100 mg daily</li><li>hydrochlorothiazide 25 mg daily</li><li>anastrozole 1 mg daily</li><li>denosumab 120 mg SC monthly</li><li>morphine 30 mg PO q6h</li><li>hydromorphone PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pleural effusion</li><li>bone metastases</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The palliative care team evaluated Mark for severe bone pain (pain score 8/10) and dyspnea. They increased morphine to 30 mg PO every 6 h, started a hydromorphone PRN for breakthrough pain, and planned an intercostal nerve block for rib pain. Mark was enrolled in a psychosocial support program to address anxiety and depression. Denosumab was continued; a repeat bone scan was scheduled for disease monitoring. Mark’s ECOG performance status had declined to 2, limiting his work and daily activities.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>ECOG 2; pain and dyspnea managed palliatively; ongoing bone disease.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-02-02</h3><div class="visit-meta">Medical Oncology | Reason: Transition to comfort care and goal‑concordant therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transition to comfort care and goal‑concordant therapy.
+
+History of Present Illness:
+Mark, a 57‑year‑old male with metastatic breast cancer (invasive ductal carcinoma, ER+, PR+, HER2‑, Ki‑67 25%) and a BRCA2 mutation, has progressed to widespread bone disease and a malignant pleural effusion over the past 12 months.  He has been receiving multiple lines of therapy: anastrozole, denosumab, carboplatin/paclitaxel, and olaparib.  All systemic aggressive therapy was discontinued during today’s visit at the patient’s request.
+
+Current symptoms: severe right 12th rib pain radiating to the back, dyspnea on exertion, and associated fatigue.  Pain is exacerbated by movement; no acute respiratory distress noted.  He reports that opioids have provided some relief after the first few fractions of palliative radiotherapy.
+
+Past Medical History: obesity, hypertension (BP well controlled on losartan 100 mg daily), prior chest radiation for breast cancer, malignant pleural effusion, bone metastases, depression, anxiety.
+
+Medications: losartan 100 mg daily; hydrochlorothiazide 25 mg daily; anastrozole 1 mg daily; denosumab 120 mg SC monthly; morphine 30 mg PO q6h; hydromorphone 0.2 mg PO PRN; TMP‑SMX 160/800 mg BID; acetaminophen 650 mg PRN; gabapentin 300 mg BID PRN.
+
+Physical Examination: BP 130/80 mmHg; HR 88 bpm; T 98.3°F; SpO₂ 96% on room air.  Tenderness over the right 12th rib with minimal movement pain. No new pulmonary findings.
+
+Assessment:
+1. Metastatic breast cancer with symptomatic bone disease (right 12th rib). 2. Malignant pleural effusion – currently managed with therapeutic thoracentesis and TMP‑SMX. 3. Ongoing moderate pain, responsive to opioids.
+
+Plan:
+• Discontinue all systemic chemotherapy (carboplatin/paclitaxel, olaparib).  • Initiate palliative radiotherapy to right 12th rib: 20 Gy in 10 fractions (2 Gy per fraction) over two weeks.
+• Continue denosumab 120 mg SC monthly for bone protection.
+• Continue pain management: morphine 30 mg PO q6h scheduled, hydromorphone PRN for breakthrough.  Titrate as needed; consider nerve block if refractory.
+• Continue antihypertensive therapy; monitor BP and weight daily.
+• Encourage psychosocial support program; discuss hospice referral if patient desires.
+• Provide counseling regarding potential radiation side effects (fatigue, mucositis) and anticipated pain evolution.
+• Schedule follow‑up in clinic in 2 weeks for pain control assessment, radiotherapy scheduling, and hospice discussion.
+
+Patient was provided education about the transition to comfort care, potential symptom burden, and the option for hospice referral.
+
+Significant decision was patient‑centered and in line with goals of care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">bone pain</span><span class="pill">dyspnea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>98.3°F</td></tr><tr><td>O₂Sat</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender right rib, minimal movement pain</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Radiation oncology referral</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Start palliative RT 20 Gy/10 fr to right rib</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Relief after early rounds, but acknowledged disease progression</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>losartan 100 mg daily</li><li>hydrochlorothiazide 25 mg daily</li><li>anastrozole 1 mg daily</li><li>denosumab 120 mg SC monthly</li><li>morphine 30 mg PO q6h</li><li>hydromorphone PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Worsening bone disease</li><li>discontinued chemo</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark and his wife visited the oncology office to discuss shifting from aggressive systemic therapy to comfort care. All active chemotherapy (carboplatin/paclitaxel, olaparib) was discontinued. The plan was to provide high‑dose radiation to the painful right rib area (20 Gy in 10 fractions), continue denosumab and analgesia, and maintain psychosocial support. Mark elected to forgo invasive life‑support measures. He received counseling about potential pain exacerbation and the possibility of hospice referral. This transition was documented in the family oncology discussion notes.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Shift to comfort care; planned palliative radiation and pain management.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 57</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Hypertension</span><span class="pill">History of chest radiation exposure</span><span class="pill">BRCA2 mutation</span><span class="pill">Male breast cancer</span><span class="pill">Invasive ductal carcinoma of right breast</span><span class="pill">Bone metastasis</span><span class="pill">Malignant pleural effusion</span><span class="pill">Depression</span><span class="pill">Anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 100 mg daily</li><li>Anastrozole 1 mg daily</li><li>Denosumab 120 mg SC monthly</li><li>Hydrochlorothiazide 25 mg daily</li><li>TMP-SMX 160/800 mg BID</li><li>Acetaminophen 650 mg PRN</li><li>Gabapentin 300 mg BID PRN</li><li>Morphine 30 mg PO q6h</li><li>Hydromorphone 0.2 mg PO PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with a 1.8‑cm firm irregular mass in the lower outer quadrant of the right breast. Vitals were stable. Handheld ultrasound and a core needle biopsy were ordered. BRCA panel discussion and lifestyle modifications were provided. Follow‑up in 4 months scheduled.</li><li>Radiology visit on 2023-07-02: Imaging of an irregular 1.8×1.5×1.9 cm hypoechoic mass in the lower outer quadrant of the right breast with handheld 3‑D ultrasound; whole‑body M‑LOK bone scan negative for aggressive lytic lesions. Await core needle biopsy pathology; if malignant, refer to surgical oncology. Continue lisinopril, monitor BP, repeat bone scan only with new symptoms. Follow‑up in 2 weeks for pathology review.</li><li>Pathology consultation on 2023-07-09 reviewed core-needle biopsy of the 1.8×1.5×1.9 cm mass, confirming a moderately differentiated invasive ductal carcinoma that is estrogen receptor positive, progesterone receptor positive, HER2 negative, Ki‑67 25%. Fibrotic changes consistent with prior chest radiation were noted. Referral to surgical oncology was scheduled, initiation of anastrozole 1 mg daily planned, baseline cardiac evaluation recommended, and genetic counseling offered.</li><li>Patient discussed diagnosis of stage III invasive ductal carcinoma of the right breast and treatment plan. Baseline CBC and CMP were planned. Initiated neoadjuvant Docetaxel 75 mg/m² IV every 3 weeks for six cycles. Started Losartan 050 mg daily for hypertension, Denosumab 120 mg SC monthly for bone protection. Continuation of anastrozole 01 mg daily. Planned follow‑up visits every 3 weeks during chemotherapy and cardiology review in 4 weeks. Monitoring CBC before each infusion.</li><li>First docetaxel infusion (dose‑reduced to 70 mg/m²) administered without acute reaction. Post‑infusion CBC showed thrombocytopenia 115×10⁹/L, hemoglobin 12.0 g/dL, WBC 4.5×10⁹/L. Patient reports mild fatigue and grade 02 peripheral neuropathy in toes. Denosumab switched to weekly dosing. Plan for CBC weekly and continued docetaxel q3w for total of 6 cycles. Follow‑up in 3 weeks.</li><li>Patient 57‑year‑old male with stage III invasive ductal carcinoma of the right breast undergoing pre‑operative assessment. Imaging shows breast mass reduced to 1.2 cm; new osteolytic lesion in right 12th rib identified. Patient reports ongoing fatigue and dull right‑sided back pain. Initiated systemic chemotherapy with carboplatin 200 mg/m² IV day 1 + paclitaxel 90 mg/m² IV day 1 q3 weeks, and will continue denosumab 120 mg SC monthly as bone protection. Pain is to be managed with low‑dose opioid or gabapentin. CBC and CMP monitoring before each cycle; renal function, calcium, phosphorus, albumin to be checked. Will repeat breast MRI and bone scan after 2 cycles. Follow‑up every 3 weeks during chemotherapy with CBC/CMP checks; surgery reassessment after 4–6 cycles. Supportive medication adherence encouraged.</li><li>Patient presented to Emergency Department with right rib pain and dyspnea. Vitals noted blood pressure 180/100 mmHg, heart rate 92 bpm, SpO₂ 96%. Physical exam revealed absent breath sounds and dull percussion in the right lower lung field, with tenderness over the right ribs. CT chest with contrast showed a right pleural effusion and a small subpleural bulla compressing the lower lobe; pleural fluid cytology was positive for malignant cells, confirming a malignant pleural effusion. Therapeutic thoracentesis removed 300 mL of fluid. Therapy was initiated with TMP‑SMX 160/800 mg BID, hydrochlorothiazide 25 mg daily, and losartan titrated to 100 mg daily. Pain was managed with acetaminophen 650 mg PRN and gabapentin 300 mg BID PRN. The patient was discharged with instructions for daily blood‑pressure and weight monitoring, routine CBC/CMP before each chemotherapy cycle, follow‑up chest CT in 4–6 weeks, pulmonary rehabilitation referral, and oncology follow‑up within one week.</li><li>Patient presented for palliative care follow‑up; severe bone pain at right 12th rib and diffuse back/limb pain, dyspnea on exertion, and progressive fatigue reported. Performance status ECOG 2. Current opioid regimen morphine 30 mg PO q6h with new hydromorphone 2 mg PO PRN for breakthrough pain; planned intercostal nerve block for right 12th rib pain. Continued denosumab 120 mg SC monthly, anastrozole 1 mg daily, losartan 100 mg daily, hydrochlorothiazide 25 mg daily, TMP‑SMX 160/800 mg BID, acetaminophen 650 mg PRN, and gabapentin 300 mg BID PRN. Patient enrolled in psychosocial support program. Repeat whole‑body bone scan in 4 weeks and baseline CBC &amp; CMP before next chemotherapy cycle planned. Daily blood‑pressure and weight monitoring with antihypertensive adjustment if BP &gt;160/100. Chest CT and possible repeat thoracentesis if dyspnea or effusion worsens. Follow‑up in clinic in 2 weeks.</li><li>Patient transitioned to comfort care; systemic chemotherapy discontinued. Initiated palliative radiotherapy to right 12th rib (20 Gy in 10 fractions over two weeks). Denosumab, pain medications, and antihypertensive therapy continued. Pain and symptom management ongoing. Follow‑up in 2 weeks planned.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

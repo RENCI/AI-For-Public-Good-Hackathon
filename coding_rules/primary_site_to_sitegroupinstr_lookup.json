@@ -1,0 +1,25 @@
+{
+  "Breast": [
+    "Breast_sitegroupinstr.json"
+  ],
+  "Colon": [
+    "Colon_sitegroupinstr.json"
+  ],
+  "Lung": [
+    "Lung_sitegroupinstr.json"
+  ],
+  "Malignant CNS": [
+    "Malignant_CNS_sitegroupinstr_1.json",
+    "Malignant_CNS_sitegroupinstr_2.json"
+  ],
+  "Non Malignant CNS": [
+    "Non_Malignant_CNS_sitegroupinstr_1.json",
+    "Non_Malignant_CNS_sitegroupinstr_2.json"
+  ],
+  "Other": [
+    "seer_manual_selected_codes.json"
+  ],
+  "Urinary": [
+    "Urinary_sitegroupinstr.json"
+  ]
+}

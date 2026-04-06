@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case eefb5bbc</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: eefb5bbc</h1><div class="subtitle">Well‑Differentiated Adenocarcinoma of the Prostate | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia (BPH), Hypertension, Diabetes mellitus, Dyslipidemia, Obesity</div><div class="meta-line">Risk Factors: Advanced age (≥65), Family history of prostate cancer, African‑American ancestry, Low dietary intake of fruits/vegetables, High consumption of red meat</div></div>
+<details><summary>Narrative <span class="preview-text">**A 68‑Year‑Old African‑American Man’s Rapid Onset of Advanced Prostate Cancer**  When James “Jim” Carter, a 68‑year‑old...</span></summary><div class="section-body"><p>**A 68‑Year‑Old African‑American Man’s Rapid Onset of Advanced Prostate Cancer**</p><p>When James “Jim” Carter, a 68‑year‑old retired mechanic, stepped into his primary‑care office in late May of 2025, the only thing on his mind was that his urinary stream had started to “cut out” a couple of times a day. He had spent most of his adult life working in a small auto‑repair shop, always proud of his strong back and good health. Over the past year he’d had an erratic eating habit—spicy fast‑food, red meat lunches, and the occasional steak dinner—paired with a modest intake of fruits and vegetables. He also slept little through the night, waking on average three or four times to go to the bathroom, a symptom he chalked up to “normal aging.”</p><p>**Early Symptoms and the First Encounter** (May 28–June 3, 2025)</p><p>Jim’s primary‑care physician, Dr. Patel, heard the patient describe a weak, intermittent stream, a feeling that the bladder didn’t empty completely, and a new trend of nocturia. He was also noticeably short of breath after climbing a flight of stairs. Given his age and the constellation of lower urinary tract symptoms (LUTS), Dr. Patel ordered a basic work‑up: a urinalysis, a fasting glucose level, a lipid panel, and a prostate‑specific antigen (PSA) level. Jim’s blood pressure in the office was 150/90 mm Hg, reflecting his longstanding hypertension, and his BMI calculated to 31 kg/m², categorizing him as obese.</p><p>The results did not surprise him. The PSA came back elevated at 12 ng/mL (normal &lt;4), and his fasting glucose was 158 mg/dL (HbA1c 8.6 %); his lipid profile also showed high LDL at 170 mg/dL and low HDL at 36 mg/dL. Dr. Patel explained that a high PSA could indicate benign prostatic hyperplasia (BPH) or prostate cancer, while his blood sugar and lipid abnormalities would need to be managed. He counseled Jim on lifestyle changes, but given Jim’s habit of high red‑meat consumption and low fruit and vegetable intake, the doctor emphasized that the diet might impact both his glycemic control and his prostate health.</p><p>**Referral to Urology and First Biopsy** (June 10–June 28, 2025)</p><p>Within a week, Jim was seen by Dr. Hernandez, a urologist who treats prostate cancer. Dr. Hernandez confirmed the presence of symptomatic BPH and noted the surprisingly high PSA in a patient with risk factors for prostate cancer: advanced age, African‑American ancestry, a family history of the disease (his older brother had died at 66 from prostate cancer), and the lifestyle habits mentioned above. An outpatient transrectal ultrasound‑guided prostate biopsy was scheduled for the end of June, with a plan to review the results in early July.</p><p>The biopsy revealed well‑differentiated adenocarcinoma involving six of the twelve cores, with a Gleason score of 3+3=6, and an overall tumor volume of 1.5 cc. Dr. Hernandez also noted that the cancer was within the peripheral zone, suggesting an early stage but still with detectable spread beyond a simple BPH.</p><p>**First Decision Point: Active Surveillance versus Immediate Treatment** (July 5–July 12, 2025)</p><p>The cancer was organ‑confined, and the Gleason score was “low” (well‑differentiated). The standard of care in such a scenario is either watchful waiting or active surveillance, usually combined with a PSA follow‑up every three months and repeat imaging if needed.</p><p>Mr. Carter, a man with diabetes, hypertension, and dyslipidemia already on medications (metoprolol, lisinopril, metformin, and simvastatin), was concerned about the potential side effects of treatment. Dr. Hernandez explained that the best next step would be a radical local treatment, most likely a laparoscopic radical prostatectomy, as his comorbidities were manageable and his life expectancy seemed good. James was hesitant; he worried that a major surgery would worsen his diabetes and blood pressure.</p><p>After three more months of careful discussion, Dr. Hernandez suggested a “hybrid” approach: proceeding with a transurethral resection of the prostate (TURP) to address his symptoms and potentially reduce the tumor burden, while also scheduling a repeat PSA in three months with a discussion of possible radical prostatectomy if the disease progressed.</p><p>**Progressive Symptoms and a Rapid PSA Rise** (October 2025)</p><p>The TURP, performed in early August, relieved Jim’s mild bladder outlet obstruction. PSA dropped to 7.8 ng/mL a month after the procedure, giving Jim and his doctors a brief reprieve. Jim’s diabetes blood glucose improved slightly after the surgery because he no longer needed to worry about nighttime urination interfering with his meals.</p><p>However, by mid‑October, Jim noticed a new symptom: dull aching pain in his lower back and left hip. He also had difficulty rising from the chair, which he attributed to fatigue. In early November, Dr. Patel noted an alarming rise in PSA to 21 ng/mL, an almost 200 % increase in less than two months. The PSA trend was now worrisome for progression.</p><p>**Advanced Imaging and Findings of Bone Metastasis** (November 3–November 15, 2025)</p><p>Dr. Hernandez ordered an MRI of the pelvis and a bone scan. The MRI showed multiple sclerotic lesions in the sacrum and left iliac bone. The bone scan revealed hot spots in the pelvic bones and right femur. At first, Jim assumed these were degenerative changes, but the imaging results confirmed the presence of bony metastases. The cancer had spread beyond the prostate gland in a surprisingly short time.</p><p>Given the new evidence of metastatic disease and the rapid PSA rise, urgent referral to a medical oncologist, Dr. Kim, was warranted. Jim was now presented with a difficult decision: systemic therapy with androgen deprivation therapy (ADT) and potential chemotherapy, or a palliative approach emphasizing symptom control.</p><p>**Initiation of Androgen Deprivation Therapy** (December 2025)</p><p>The decision was to start ADT with luteinizing hormone‑releasing hormone (LHRH) agonist therapy (leuprolide) to reduce testosterone production and blunt the cancer’s growth. However, ADT can worsen metabolic control: he was already diabetic, with impaired glucose tolerance; the therapy increased the risk of hyperglycemia and weight gain.</p><p>To mitigate these risks, Dr. Kim initiated a comprehensive metabolic supportive plan: tighter glucose monitoring, dietary adjustment including a low‑carb Mediterranean diet, and physical therapy to maintain mobility. Jim began to notice improved bone pain with the addition of an oral bisphosphonate to reduce bone resorption, along with a modest reduction in PSA to ~15 ng/mL at 6‑month follow‑up (June 2026).</p><p>**Complications and Worsening Condition** (June–October 2026)</p><p>Despite initial stabilization, Jim’s overall condition began to deteriorate. Dr. Kim noted a rise again in PSA to 28 ng/mL in July, alongside rising alkaline phosphatase levels. Imaging at that time revealed new lytic lesions in his lumbar vertebrae, with severe back pain radiating down his left leg. The pain was severe enough that he was unable to sit or stand for more than 10 minutes. A palliative radiotherapy session was ordered to relieve the spinal pain.</p><p>During this period, Jim’s comorbidities started to interfere more dramatically. His blood pressure spiked to 170/95 mm Hg during a post‑radiation checkup, his metformin was discontinued due to mild hepatic enzyme elevations, and his diabetes forced an escalation of his insulin regimen.</p><p>**Final Stages and Care at Home** (November–December 2026)</p><p>By late November, Jim’s PSA spiked to 45 ng/mL, bone scans showed widespread skeletal involvement, and imaging revealed a 3‑cm mass in the right iliac bone causing a pathological fracture. Dr. Kim recommended adding docetaxel chemotherapy to his regimen, but Jim was frail, and the potential side effects prompted a candid discussion. The family decided to focus on palliative care rather than aggressive chemotherapy. Jim enrolled in an outpatient palliative oncology program, where he received supportive care, pain management with opioid and non‑opioid medications, and counseling for both himself and his wife.</p><p>In December, Jim’s condition deteriorated rapidly; he developed a urinary tract infection complicated by sepsis. Despite aggressive ICU management, his multi‑organ failure led to death on December 19, 2026, 23 months after the onset of his urinary symptoms.</p><p>**Key Decision Points and Outcome Summary**</p><p>1. **Initial Evaluation (May 2025)** – PSA 12 ng/mL → biopsy → well‑differentiated cancer with BPH.  
+2. **Early Intervention (June–July 2025)** – TURP to relieve symptoms, deferred radical prostatectomy.  
+3. **Progression (October–November 2025)** – PSA rises to 21 ng/mL, MRI + bone scan → metastasis.  
+4. **Systemic Therapy (December 2025)** – Initiated ADT, metabolic support.  
+5. **Worsening (June–October 2026)** – PSA rises to 45 ng/mL, bone and spinal metastases, palliative radiation.  
+6. **Terminal (November–December 2026)** – Severe infection, multi‑organ failure, death.</p><p>This narrative traces a patient’s experience from early, seemingly benign urinary symptoms to a rapidly worsening metastatic prostate carcinoma, illustrating how comorbidities and risk factors, along with timely yet ultimately inadequate interventions, culminated in a fatal outcome.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-05-28</h3><div class="visit-meta">Family Medicine | Reason: Urinary stream cutting out and nocturia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Urinary stream cutting out and nocturia.
+
+History of Present Illness: 68‑year‑old male presents with intermittent weak urinary stream described as cutting out a couple of times daily, feeling of incomplete bladder emptying, and nocturia (3–4 times/night). He reports shortness of breath after climbing stairs, which he attributes to dyspnea on exertion. No history of fever, flank pain, chills, or urinary tract infection.
+
+Past Medical History: Benign prostatic hyperplasia (BPH), hypertension, type 2 diabetes mellitus, dyslipidemia, obesity.
+
+Past Surgical History: None.
+
+Medications: None prior to this visit.
+
+Allergies: NKDA.
+
+Family History: Brother diagnosed with prostate cancer.
+
+Review of Systems: 
+- Genitourinary: Weak, intermittent stream; incomplete emptying; nocturia.
+- Cardiovascular: Dyspnea on exertion.
+- Metabolic: Weight gain.
+- Other systems: Negative.
+
+Physical Examination:
+- Vital Signs: BP 150/90 mmHg, HR 88 bpm, Temp 98.6°F, BMI 31 kg/m2.
+- General: Alert, oriented, no acute distress.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Respiratory: Clear bilaterally.
+- Abdomen: Soft, non‑tender, no masses.
+- Genitourinary: Digital rectal exam: soft prostate, ~1–2 cm enlargement, no nodularity, no asymmetry.
+- Extremities: No edema.
+
+Laboratory Results:
+- Urinalysis: Normal.
+- Fasting plasma glucose: 158 mg/dL.
+- HbA1c: 8.6%.
+- Lipid panel: LDL 170 mg/dL, HDL 36 mg/dL.
+- PSA: 12 ng/mL.
+
+Assessment:
+1. Benign prostatic hyperplasia with significant bladder outlet obstruction, evidenced by weak stream, residual feeling, and nocturia.
+2. Elevated PSA (12 ng/mL) in the setting of family history and age—consideration of possible prostate adenocarcinoma.
+3. Uncontrolled type 2 diabetes mellitus (HbA1c 8.6%).
+4. Hypertension (stage 1/2) and dyslipidemia with poor lipid control.
+5. Obesity contributing to metabolic syndrome.
+
+Plan:
+- Initiate pharmacologic therapy for BPH: start tamsulosin 0.4 mg daily (to be considered after discussion of options; presently awaiting biopsy results).
+- Initiate antihypertensive therapy: metoprolol 50 mg daily and lisinopril 10 mg daily.
+- Initiate antihyperglycemic therapy: metformin 500 mg BID.
+- Initiate lipid‑lowering therapy: simvastatin 20 mg nightly.
+- Counsel on dietary modification, weight loss, exercise, and smoking cessation.
+- Schedule transrectal ultrasound‑guided prostate biopsy at the end of June; inform about risks and need for local anesthesia.
+- Order repeat fasting glucose in 3–4 weeks.
+- Repeat PSA in 6 months unless biopsy results dictate otherwise.
+- Refer to urology for consultation post‑biopsy.
+- Arrange follow‑up in primary care clinic in 4 weeks to review medication tolerance, side effects, and lab trends.
+- Provide a written plan and resources for lifestyle changes.
+
+The patient expressed understanding of the plan and concerns about potential side effects; these were discussed thoroughly. He has agreed to start the prescribed medications.
+
+Signature: ____________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">weak intermittent stream</span><span class="pill">feeling of incomplete bladder emptying</span><span class="pill">nocturia</span><span class="pill">shortness of breath after stairs</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>150/90 mmHg</td></tr><tr><td>Heart rate</td><td>88 bpm</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>BMI</td><td>31 kg/m2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Digital rectal exam: soft prostate, 1–2 cm enlargement, no nodularity</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis</li><li>Fasting plasma glucose</li><li>HbA1c</li><li>Lipid panel</li><li>Prostate Specific Antigen (PSA)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Urinalysis: normal</li><li>Fasting plasma glucose: 158 mg/dL</li><li>HbA1c: 8.6%</li><li>Lipid panel: LDL 170 mg/dL, HDL 36 mg/dL</li><li>PSA: 12 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Scheduled outpatient transrectal ultrasound‑guided prostate biopsy</li><li>Advised lifestyle modification</li><li>Prescribed metoprolol 50 mg daily, lisinopril 10 mg daily, metformin 500 mg BID, simvastatin 20 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient agrees to medication changes, expresses concern about side effects.</p></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>Type 2 Diabetes Mellitus</li><li>Dyslipidemia</li><li>Obesity</li><li>Family history of prostate cancer (brother)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Jim presents with urinary stream cutting out a couple of times a day, nocturia, and dyspnea on exertion. Physical exam is notable for mild digital rectal exam enlargement, but no palpable nodules. The physician orders urinalysis, fasting glucose, HbA1c, lipid panel, and PSA. Jim is counseled on lifestyle changes and started on metoprolol 50 mg daily, lisinopril 10 mg daily, metformin 500 mg BID, and simvastatin 20 mg nightly. A transrectal ultrasound‑guided prostate biopsy is scheduled for the end of June.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial workup reveals elevated PSA and comorbid metabolic derangements. Biopsy indicated to differentiate BPH vs carcinoma. Risks of progression high due to age and genetics.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-06-28</h3><div class="visit-meta">Urology | Reason: Review biopsy results and management plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review biopsy results and discuss management plan.
+
+Date of Encounter: 2025-06-28. Patient is a 68‑year‑old male with a history of hypertension, type 2 diabetes mellitus, dyslipidemia, obesity, and benign prostatic hyperplasia (BPH). Current medications: metoprolol 50 mg daily, lisinopril 10 mg daily, metformin 500 mg BID, simvastatin 20 mg nightly. No known drug allergies.
+
+History of Present Illness: Patient reports a urinary stream that cuts out (“cutting out”) and frequent nocturia (3–4 episodes nightly). Symptoms persisted despite medical management of BPH and remain a source of anxiety regarding potential malignancy.
+
+Recent Findings: PSA was 12 ng/mL two months ago. Transrectal ultrasound‑guided prostate biopsy was performed during this visit. Pathology shows prostate adenocarcinoma present in 6 of 12 cores, tumor volume 1.5 cc, located in the peripheral zone, organ‑confined. Digital rectal exam remains consistent with BPH, prostate soft, no nodularity.
+
+Vitals: BP 148/88 mmHg; HR 82 bpm; Temp 98.4°F; BMI 30 kg/m².
+
+Assessment:
+1. Organ‑confined prostate adenocarcinoma (likely Gleason score not yet reported but presumed favorable). 2. Symptomatic BPH contributing to dysuric symptoms.
+
+Plan:
+1. Discussed therapeutic options – radical prostatectomy is appropriate given organ‑confined disease and patient’s favorable performance status. TURP can be performed concurrently to relieve BPH symptoms and improve urinary flow.
+2. Counselled about potential peri‑operative risks, need for blood pressure optimization, diabetes control, and anticoagulation status.
+3. Obtain baseline PSA pre‑operatively; schedule post‑operative PSA monitoring every 3 months for the first 2 years.
+4. Continue current antihypertensive and metabolic therapy; add prophylactic low‑dose testosterone replacement is not indicated; no need for androgen deprivation therapy at this stage.
+5. Educated patient on signs of infection, urinary retention, and the importance of adherence to diabetes and hypertension management.
+6. Plan for surgical consult and scheduling of radical prostatectomy with possible intra‑operative TURP.
+
+Follow‑up: Post‑operative visit in 2 weeks to review pathology and surgical outcomes. Primary care provider will monitor BP, glucose, and lipid panels at monthly visits for the next 3 months.
+
+The patient is anxious but agrees to the discussed plan. Informed consent for surgery obtained and will be documented on the operative sheet.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">urinary stream cutting out</span><span class="pill">nocturia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>148/88 mmHg</td></tr><tr><td>Heart rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>BMI</td><td>30 kg/m2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Digital rectal exam: consistent with BPH, prostate soft, no nodularity</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Transrectal ultrasound‑guided prostate biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Biopsy: well‑differentiated adenocarcinoma in 6 of 12 cores, Gleason 3+3=6, tumor volume 1.5 cc, peripheral zone, organ‑confined</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Informed consent for TURP and radical prostatectomy discussed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient anxious but agrees to plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 12 ng/mL</li><li>Biopsy pending</li><li>Tolerating new meds</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Hernandez explains that the biopsy procedure will be performed during the same visit. Informed consent obtained. Discusses the biopsy results that will be available shortly. Patient remains concerned about potential implications.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Low‑grade prostate adenocarcinoma identified. Tumor limited but potential progression. Consider active surveillance vs definitive therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-07-12</h3><div class="visit-meta">Urology | Reason: Discuss treatment options post‑biopsy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Clinic Note – 2025-07-12
+
+Patient: 68‑year‑old male with known hypertension, type 2 diabetes mellitus, dyslipidemia, obesity, benign prostatic hyperplasia, and Gleason 6 prostate adenocarcinoma.
+
+Chief complaint: Discuss treatment options post‑biopsy.
+
+History of present illness: The patient reports a “cutting” urinary stream with intermittent weak flow. He completed a transrectal ultrasound‑guided prostate biopsy at the end of June; pathology demonstrated organ‑confined adenocarcinoma in 6 of 12 cores (1.5 cc tumor volume, peripheral zone) with a Gleason 6 score. Current PSA is 12 ng/mL.
+
+The patient and I reviewed the options: active surveillance, radical prostatectomy, and transurethral resection of the prostate (TURP). He prefers a less invasive approach. We discussed a hybrid strategy: perform TURP now to relieve BPH symptoms and allow PSA surveillance for 3 months, then consider radical prostatectomy if the PSA trend suggests progression. The patient consents to TURP in early August and expresses concern about surgical complications.
+
+Physical examination: General appearance stable. No neurological deficits. BP 145/90 mmHg, HR 80 bpm.
+
+Assessment:
+1. Benign prostatic hyperplasia – symptomatic urinary flow limitation.
+2. Organ‑confined low‑grade (Gleason 6) prostate adenocarcinoma – PSA 12 ng/mL, tumor volume 1.5 cc. No evidence of metastasis.
+
+Plan:
+• Schedule TURP in early August under monitored anesthesia care.
+• Pre‑operative labs: CBC, CMP, PT/INR, aPTT.
+• Post‑operative: catheter removal in 48–72 h, NSAID for pain, catheter care instructions.
+• PSA check at 3 months post‑TURP. If PSA rises &gt;2x baseline or ≥4 ng/mL, discuss radical prostatectomy.
+• Continue current medications: metoprolol 50 mg daily, lisinopril 10 mg daily, metformin 500 mg BID, simvastatin 20 mg nightly.
+• Monitor BP, glucose, lipids monthly with primary‑care team.
+• Counsel on peri‑operative diet, exercise, weight loss, and potential TURP complications (bleeding, infection, urgency, incontinence).
+• Follow‑up urology visit 2 weeks post‑TURP for catheter removal and early complication check; PSA follow‑up at 3 months.
+
+No new medications prescribed today.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">urinary stream cutting out</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>145/90 mmHg</td></tr><tr><td>Heart rate</td><td>80 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General exam stable, no neurological deficits</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Plan for TURP in early August</li><li>Schedule PSA follow‑up in 3 months</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient consents to TURP; concerned about surgical complications.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma Gleason 6</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Biopsy results</li><li>PSA 12 ng/mL</li><li>TURP not yet performed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Explain options: active surveillance, radical prostatectomy, TURP. Patient prefers less invasive approach. Discuss hybrid approach: TURP now, PSA monitoring for 3 months, then consider radical prostatectomy if progression. Patient consents to TURP in early August.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Chosen minimally invasive TURP to relieve urinary symptoms and possibly debulk tumor. PSA will be monitored.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-08-05</h3><div class="visit-meta">Urology | Reason: Post‑TURP follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑TURP follow‑up. 68‑year‑old male presents for second‑day post‑operative check after TURP performed on 2025‑08‑04. Patient reports mild improvement in urinary stream and fewer nighttime voids.  He reports new dull lower back and left hip pain, with mild difficulty rising from a chair.  No fever, chills, dysuria, hematuria, or constitutional symptoms.
+
+History of Present Illness: Patient underwent TURP for symptomatic BPH with coexisting low‑grade (Gleason 6) prostate adenocarcinoma.  Post‑op catheter was removed 48–72 h prior to today, and catheter care instructions were reviewed.  He reports that his urinary stream has improved and nocturia has decreased.  He notes mild back tenderness at L4‑S1 and left hip pain, described as dull and constant, without numbness or weakness.
+
+Past Medical History: Hypertension, Type 2 Diabetes Mellitus, Dyslipidemia, Obesity, Benign prostatic hyperplasia, Gleason 6 prostate adenocarcinoma (organ‑confined).  No known allergies.
+
+Medications: Metoprolol 50 mg daily, Lisinopril 10 mg daily, Metformin 500 mg BID, Simvastatin 20 mg nightly.
+
+Review of Systems: Urinary improvement noted. No fever, chills, pain abdomen, dysuria, or hematuria. No new neurological deficits.
+
+Vital Signs: Blood pressure 148/88 mmHg, heart rate 78 bpm, temperature 98.3 °F.
+
+Physical Examination:
+- General: Alert, oriented, in no acute distress.
+- Abdomen: Soft, non‑tender, no palpable masses, bladder appears comfortably decompressed.
+- Genitourinary: Post‑op bladder emptying normal, no urethral discharge or erythema.
+- Musculoskeletal: Mild tenderness on palpation of L4‑S1 lumbar spine, mild left hip tenderness on external rotation and weight‑bearing. No focal weakness, sensation intact, reflexes normal, straight‑leg raise negative.
+- Neurologic: Alert, no deficits.
+
+Investigations:
+- PSA ordered 07‑08‑2025: 7.8 ng/mL (baseline pre‑op PSA 12 ng/mL).
+
+Assessment:
+1. Post‑TURP recovery: urinary stream improved, nocturia decreased, no significant post‑op complications.
+2. New lower back &amp; left hip pain: likely musculoskeletal strain related to postoperative recovery or early degenerative changes; rule out retroperitoneal hematoma or postoperative infection, but vitals normal and no neuro deficits.
+3. PSA decline: 7.8 ng/mL, down from pre‑op 12 ng/mL; consistent with tissue removal, monitoring per protocol.
+
+Plan:
+- Continue current antihypertensive and metabolic medication regimen.
+- Initiate acetaminophen 650 mg PO q6–8 h PRN for back/hip pain; avoid NSAIDs given recent TURP until cleared by anesthesia (if pain persists &gt;3 days, consider safe low‑dose NSAID). 
+- Encourage gentle lumbar extension and hip mobility exercises; refer to physical therapy if pain worsens.
+- Counsel on bladder diary: note any hematuria, frequency changes.
+- Order CBC, CMP, PT/INR before any possible surgical intervention but not needed now.
+- Repeat PSA at 3‑month follow‑up (per protocol). If PSA rises &gt;2x baseline or ≥4 ng/mL thereafter, consider radical prostatectomy.
+- Educate patient on symptom red flags: sudden severe back pain, fever, new numbness, or worsening urinary symptoms; advise to call clinic if any arise.
+- Schedule urology follow‑up in 1 week for symptom review; patient to return sooner if pain escalates.
+- Primary‑care follow‑up for BP, glucose, lipids in next month as per prior plan.
+
+Disposition: Patient tolerating post‑op recovery, discharged with plan and clear instructions.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild improvement in urinary stream</span><span class="pill">reduced nocturia</span><span class="pill">post‑operative mild discomfort</span><span class="pill">new dull lower back and left hip pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>148/88 mmHg</td></tr><tr><td>Heart rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Post‑operative bladder emptying normal</li><li>Back tenderness at L4‑S1</li><li>No neuro deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 7.8 ng/mL</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels better with urinary symptoms but concerned about back pain.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma Gleason 6</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>TURP performed on 2025‑08‑04</li><li>PSA 7.8 ng/mL</li><li>Medications continued</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient reports improved urinary stream and fewer nighttime voids. Post‑op site appears healing. Exam finds mild lower back tenderness. PSA ordered; PSA falls to 7.8 ng/mL. Patient reports new dull lower back and hip pain, mild difficulty rising from chair.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial response to TURP shows lower PSA but new musculoskeletal pain warrants further evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-10-15</h3><div class="visit-meta">Family Medicine | Reason: New back pain and rising PSA</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint** 
+
+68‑year‑old male presents for new dull low back and left hip pain and difficulty rising from a chair. He reports that the pain started a few days ago after a recent morning of difficulty getting up, and it has progressively worsened. He denies fever, chills, recent falls, or changes in urinary symptoms.
+
+**History of Present Illness** 
+
+The patient has a history of prostate adenocarcinoma treated with radical prostatectomy and TURP 4 weeks ago, with current PSA of 7.8 ng/mL prior to TURP. After the TURP, he has been experiencing mild back and hip pain. He reports that the pain is dull, non‑radiating, worsens with repeated rising attempts, and is relieved somewhat by occasional acetaminophen. No reported hematuria or gross changes in urinary stream.
+
+**Past Medical History** 
+- Hypertension, type 2 diabetes mellitus, dyslipidemia, obesity, benign prostatic hyperplasia, prostate adenocarcinoma (organ‑confined, 6/12 cores positive, 1.5 cc total)
+
+**Medications** 
+Metoprolol 50 mg daily, Lisinopril 10 mg daily, Metformin 500 mg BID, Simvastatin 20 mg nightly, Acetaminophen 650 mg PO q6–8h PRN.
+
+**Allergies** 
+No known drug allergies.
+
+**Social History** 
+Non‑smoker, drinks socially.
+
+**Review of Systems** 
+- Musculoskeletal: Low back and left hip pain, difficulty rising.
+- Genitourinary: No hematuria, urinary stream unchanged.
+- Constitutional: No fever.
+- Cardiovascular: No chest pain.
+- Respiratory: No dyspnea.
+- GI: No abdominal pain.
+
+**Vital Signs** 
+Blood pressure 152/92 mmHg, heart rate 80 bpm, temperature 98.5 °F.
+
+**Physical Examination** 
+- General: Alert, in mild discomfort.
+- Back: Palpable tenderness at L4–S1, no focal neurologic deficits. Normal motor strength, reflexes, and sensation; gait slightly limping.
+- Hip: Mild tenderness left gluteal region, no swelling.
+- Abdomen: Soft, non‑tender, no organomegaly. No costovertebral angle tenderness.
+- Genitourinary: No suprapubic tenderness.
+- Cardiovascular: S1 S2, no murmurs. 
+- Respiratory: Clear breath sounds.
+
+**Labs / Test Results** 
+- PSA: 21 ng/mL (rapid rise from 7.8 ng/mL). 
+- CBC, CMP: Within normal limits.
+- Alkaline phosphatase: 280 U/L (elevated, suggests bone turnover).
+- Abdominal ultrasound: Bowel gas; no focal hepatic or renal abnormalities noted.
+
+**Assessment**
+1. **Suspected bone metastases from prostate adenocarcinoma** – The rapid rise in PSA, markedly elevated alkaline phosphatase, back and hip pain, and tenderness at L4–S1 are classic for metastatic bony disease. This also explains the difficulty rising due to possible vertebral involvement.
+2. **Post‑TURP musculoskeletal pain** – Some component of postoperative strain cannot be ruled out, but the lab abnormalities strongly point toward metastasis.
+3. **Hypertension and diabetes** – Well‑controlled but BP remains slightly above goal.
+
+**Plan**
+1. **Diagnostic imaging** – Urgent referral to urology/oncology for MRI of the lumbar spine and pelvis with contrast, along with a bone scan or PET‑CT to assess extent of disease.
+2. **Pain management** – Continue acetaminophen PRN. Start short‑course oxycodone 5 mg PO q6h PRN for breakthrough bone pain (2–4 days), with clear opioid‑use instructions. Counsel on side‑effects and safe disposal.
+3. **Laboratory monitoring** – Repeat CBC, CMP, and PSA in 3 months; if PSA remains elevated &gt;20 ng/mL or rises again, refer urgently to oncology for systemic therapy consideration.
+4. **Medication optimization** – Continue current antihypertensives and metformin. Consider adjusting antihypertensive if BP remains &gt;140/90 mmHg (add or titrate dose).
+5. **Physical activity** – Encourage gentle stretching and a weight‑bearing walking program as tolerated; refer to physical therapy if pain flares.
+6. **Follow‑up** – Return to clinic in 1 week after imaging results, or sooner if pain worsens. Schedule routine primary‑care follow‑up for BP, glycemic control, and lipid panel in 1 month.
+
+**Patient Education** – Discussed the possibility of metastatic prostate cancer, importance of imaging, the role of PSA as a tumor marker, and the safety and limits of opioid analgesics. Reviewed red‑flag symptoms: sudden worsening pain, new neurological deficits, fever, or bleeding.
+
+**Signature**
+
+Dr. Patel, Family Medicine
+
+---
+
+**Symptom List**
+- Low back pain
+- Left hip ache
+- Difficulty rising from a chair
+
+**Vitals**
+- Blood pressure: 152/92 mmHg
+- Heart rate: 80 bpm
+- Temperature: 98.5°F
+
+**Tests Ordered**
+- PSA
+- CBC
+- CMP
+- Alkaline phosphatase
+- Abdominal ultrasound
+
+**Diagnoses Considered**
+- Bone metastasis from prostate adenocarcinoma
+- Post‑TURP musculoskeletal strain
+- Degenerative lumbar disease
+- Other causes of back pain (e.g., acute strain, disc herniation)
+
+**Medications**
+- Acetaminophen 650 mg PO q6–8h PRN (continue)
+- Oxycodone 5 mg PO q6h PRN for breakthrough pain (short course)
+
+**Follow‑up Recommendations**
+- Urgent imaging (MRI lumbar spine/pelvis with contrast, bone scan/PET‑CT)
+- Return to clinic in 1 week after imaging
+- Routine follow‑up in 1 month for BP, DM, and Lipids
+- PSA, CBC, CMP repeat in 3 months
+- Refer to oncology if PSA continues high or imaging shows widespread metastases
+- Physical therapy referral if pain limits activity</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">low back pain</span><span class="pill">left hip ache</span><span class="pill">difficulty rising from chair</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>152/92 mmHg</td></tr><tr><td>Heart rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Spine tenderness at L4‑S1</li><li>Mild gait limp</li><li>Normal motor strength</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>CBC</li><li>CMP</li><li>Alkaline phosphatase</li><li>Abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 21 ng/mL</li><li>CBC: normal</li><li>CMP: normal</li><li>Alkaline phosphatase: 280 U/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referred to urology for imaging</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient worried about cancer progression and wants definitive therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma Gleason 6</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>TURP 4 weeks ago</li><li>PSA 7.8 ng/mL</li><li>Metabolic medications ongoing</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Jim reports new dull back and hip pain and difficulty rising. Physical exam shows spine tenderness; neuro exam normal. PSA checks reveal 21 ng/mL, a rapid rise. Alkaline phosphatase 280 U/L suggests bone activity. Dr. Patel refers to urology for imaging assessment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Rapid PSA doubling indicates aggressive disease; imaging planned to evaluate bone metastases.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-11-15</h3><div class="visit-meta">Urology | Reason: Imaging for suspected bone metastases</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 68‑year‑old male with a history of prostate adenocarcinoma (Gleason 6), benign prostatic hyperplasia, hypertension, type 2 diabetes, dyslipidemia, and obesity.  He presents today for imaging follow‑up after reporting worsening low back and left hip pain.  He is in no acute distress.
+
+**Subjective:**
+- Chief complaint: progressive dull low back and left hip pain for ~1 month, worsening to limit chair‑rise and ambulation.
+- Pain is constant, achy, 5/10 in the back, 6/10 in the left hip, worsens with prolonged sitting and standing.  No radicular symptoms, numbness, tingling, or weakness.
+- Denies weight loss, fevers, chills, or bowel/bladder incontinence.
+- No new urinary symptoms; urinary stream remains mildly weak, nocturia 2–3 times/night.
+- Pain controlled with acetaminophen PRN; short‑course oxycodone used for breakthrough pain.  He tolerates his antihypertensives and diabetes meds.
+
+**Objective:**
+- Vitals: BP 150/90 mmHg, HR 82 bpm, Temp 98.7°F.
+- General: Mild distress; no acute respiratory distress, but mild back stiffness.
+- Abdomen: Soft, non‑tender, no organomegaly.
+- Pelvic: No visible swelling or masses.
+- Extremities: L4–S1 tenderness, mild left hip tenderness, no neuro deficits, normal gait but slight limping.
+- Labs: PSA 21 ng/mL (↑ from 7.8), alkaline phosphatase 280 U/L (↑), CBC and CMP normal.
+
+**Investigations:**
+- Pelvic MRI with contrast (2025‑10‑15): multiple sclerotic lesions in sacrum and left iliac bone.
+- Whole‑body bone scan: hot spots in pelvic bones and distal femur.
+- Findings consistent with bone metastases from prostate adenocarcinoma.
+
+**Assessment:**
+1. Prostate adenocarcinoma with confirmed skeletal metastases (sacrum, iliac bone, distal femur).  This explains the new back and hip pain.
+2. Deconditioning/soft‑tissue pain secondary to pain and limited activity.
+3. Hypertension, type 2 diabetes, and dyslipidemia remain controlled but require ongoing monitoring.
+
+**Plan:**
+- **Referral**: Refer urgently to medical oncology for evaluation and initiation of androgen deprivation therapy (ADT) and systemic disease‑specific management.
+- **Pain management**: Continue acetaminophen 650 mg PO q6–8h PRN; repeat short‑course oxycodone as needed.  Consider low‑dose NSAIDs once clear of bleeding risk and postoperative period.  Encourage gentle range‑of‑motion exercises and physical therapy referral.
+- **Lifestyle**: Continue BP and glucose monitoring; encourage weight loss with diet and moderate exercise.
+- **Follow‑up**: Return to urology clinic in 1 week for pain and functional status review, or sooner if worsening neurologic symptoms or inability to ambulate.  Continue primary‑care visits for BP, glucose, and lipid panel every 3 months.
+- **Patient education**: Discuss red‑flag symptoms (new neurologic deficits, severe back pain, sudden PSA rise), importance of medication adherence, and lifestyle modifications.
+
+Patient is distressed but accepts the need for systemic therapy and is willing to cooperate.  Discussed potential side effects of ADT.  He was given a referral slip and an oncology appointment scheduled for next week.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">back pain</span><span class="pill">hip pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>150/90 mmHg</td></tr><tr><td>Heart rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Spine tenderness, limited flexion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvic MRI</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: multiple sclerotic lesions in sacrum and left iliac bone</li><li>Bone scan: hot spots in pelvic bones and right femur</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referred to medical oncology for ADT initiation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient distressed but accepts systemic therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma Gleason 6</span><span class="pill">Low back pain</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 21 ng/mL</li><li>Back/hip pain</li><li>TURP performed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>MRI pelvis and bone scan completed. Findings show multiple sclerotic lesions in sacrum and left iliac bone, hot spots in distal femur. Bone metastases confirmed. Referral to medical oncology for systemic ADT initiation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Metastatic disease confirmed; urgent systemic therapy indicated.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-12-01</h3><div class="visit-meta">Medical Oncology | Reason: Start systemic ADT</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 68‑year‑old male with known prostate adenocarcinoma and documented sclerotic bone metastases presents for initiation of systemic androgen deprivation therapy (ADT).
+
+Chief Complaint: Start systemic ADT.
+
+Past Medical History: Hypertension, Type 2 Diabetes Mellitus, Dyslipidemia, Obesity, Benign prostatic hyperplasia, Prostate adenocarcinoma with bone metastases.
+
+Current Medications: Metoprolol 50 mg daily, Lisinopril 10 mg daily, Metformin 500 mg BID, Simvastatin 20 mg nightly, Acetaminophen 650 mg PO q6–8h PRN, Oxycodone 5 mg PO q6h PRN short course.
+
+Allergies: NKDA.
+
+Social: No tobacco, occasional alcohol.
+
+Review of Systems: Denies new urinary symptoms. Reports bone pain, back pain that is aggravated by movement, and fatigue.
+
+Vital Signs: BP 152/92 mmHg, HR 78 bpm, T 98.5°F.
+
+Physical Exam: Stable; mild tenderness at L4–S1 and left hip. No neuro deficits.
+
+Assessment:
+1. Metastatic prostate adenocarcinoma to bone – current indication for systemic ADT.
+2. Pain from bone metastases – managed conservatively with PRN analgesics.
+3. Elevated fasting glucose (145 mg/dL) and borderline BP – requires ongoing monitoring and potential adjustment of metabolic therapy.
+4. Osteoclast activity – appropriate to institute bone protective therapy.
+
+Plan:
+- Initiate leuprolide 3.6 mg IM monthly (start today) for LHRH agonist therapy.
+- Begin zoledronic acid 4 mg IV q4w as bone protective agent.
+- Continue current antihypertensive and antidiabetic regimen.
+- Dietitian referral for low‑carb Mediterranean diet, glucose monitoring plan, and exercise counseling.
+- Laboratory monitoring: Fasting glucose &amp; HbA1c every 3 months, lipid panel every 6 months, PSA monthly, CBC &amp; CMP every 3 months, and repeat full lipid profile annually.
+- Baseline bone density T‑score (−0.8) – repeat DXA annually to monitor bone health.
+- Pain management: Acetaminophen 650 mg PO q6–8h PRN; short‑course oxycodone 5 mg PO q6h PRN as needed.
+- Educated patient on potential ADT side effects (hot flashes, sexual dysfunction, bone loss) and importance of adherence to imaging and lab follow‑up.
+- NSAIDs to be withheld until further evaluation of renal function and bleeding risk.
+
+Disposition: Patient will return in 1–2 weeks for a brief oncology assessment, and will continue routine primary‑care visits for BP, glucose, and lipid monitoring.
+
+Patient is hopeful and agrees with the plan. Signatures noted.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">bone pain</span><span class="pill">back pain aggravated</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>152/92 mmHg</td></tr><tr><td>Heart rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Stable physical exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline PSA</li><li>Baseline fasting glucose</li><li>Baseline lipid panel</li><li>Baseline bone density T-score</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Baseline PSA: 28 ng/mL</li><li>Fasting glucose: 145 mg/dL</li><li>BMD: T-score −0.8</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Leuprolide 3.6 mg IM</li><li>Zoledronic acid 4 mg IV</li><li>Dietitian referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels hopeful, agrees to glucose monitoring and diet changes.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma Gleason 6</span><span class="pill">Bone metastases</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metastatic prostate cancer with bone metastases</li><li>PSA 21 ng/mL</li><li>Imaging positive</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Initiation of leuprolide 3.6 mg IM monthly to start LHRH therapy. Oral bisphosphonate (zoledronic acid 4 mg IV Q4W) added for bone protection. Dietitian referral for low‑carb Mediterranean diet, glucose monitoring plan, and exercise counseling. Discuss potential side effects and necessity of monitoring HbA1c, lipid panel, and bone density.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>ADT initiated; expected PSA decline; metabolic consequences to be monitored.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-06-15</h3><div class="visit-meta">Medical Oncology | Reason: PSA progression and new spinal lesions; palliative radiotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Escalating low back pain and new spinal lesion in the setting of progressing prostate adenocarcinoma.
+
+History of Present Illness: 68‑year‑old male with known Gleason 6 prostate adenocarcinoma, bone metastases, and L4–L5 spinal metastasis presents with severe back pain radiating down the left leg. Pain has worsened over the past week, limiting the patient’s ability to sit or stand for more than 10 minutes. The patient reports increased fatigue and a recent “hypertensive crisis.” He is currently on ADT (leuprolide 3.6 mg IM monthly) and zoledronic acid 4 mg IV q4w. He has been compliant with pain medication (acetaminophen 650 mg q6–8h PRN, oxycodone 5 mg q6h PRN) but reports only modest relief.
+
+Past Medical History: Hypertension, type 2 diabetes mellitus, dyslipidemia, obesity, benign prostatic hyperplasia, metabolic syndrome, prostate adenocarcinoma with bone metastases.
+
+Medications: Metoprolol 50 mg daily; Lisinopril 10 mg daily (held today); Metformin 500 mg BID; Insulin glargine 20 U daily (now adjusted to 20 U BID due to hyperglycemia); Simvastatin 20 mg nightly; Zoledronic acid 4 mg IV quarterly; Leuprolide 3.6 mg IM monthly; Acetaminophen 650 mg PO q6–8h PRN; Oxycodone 5 mg PO q6h PRN (short course).
+
+Allergies: NKDA.
+
+Review of Systems: Positive for low back pain radiating to left leg, fatigue, difficulty sitting and standing, hypertension. Negative for weight loss, fever, night sweats.
+
+Physical Examination:
+- Vital signs: BP 170/95 mmHg, HR 88 bpm, Temp 98.4°F.
+- Abdomen: Soft, non‑tender.
+- Spine: Tenderness over L4–L5, limited flexion, mild motor weakness of left L4–L5 myotomes. Sensation intact.
+
+Laboratory/Imaging: Repeat PSA 45 ng/mL, CBC normal, CMP normal, alkaline phosphatase 350 U/L, bone scan shows extensive skeletal involvement.
+
+Assessment: 1) Progressive prostate adenocarcinoma with extensive osseous metastases, including an active spinal lesion at L4–L5, evidenced by rising PSA and imaging.
+   2) Pain due to vertebral metastasis and likely early spinal cord compression.
+   3) Elevated blood pressure and hyperglycemia likely exacerbated by ADT and recent insulin adjustments.
+   4) Potential for further neurologic compromise if spine disease progresses.
+
+Plan:
+1. Palliative radiotherapy 30 Gy in 10 fractions to L4–L5 for pain control and local disease control.
+2. Continue leuprolide monthly and zoledronic acid quarterly.
+3. Hold lisinopril; initiate amlodipine 5 mg daily to control BP and monitor renin‑angiotensin system effects.
+4. Adjust insulin glargine to 20 U BID; repeat fasting glucose 2 hours post‑dose to titrate.
+5. Continue acetaminophen and oxycodone PRN; consider adding gabapentin 300 mg nightly for neuropathic component.
+6. Early referral to palliative care and discussion of goals of care (family has declined further chemotherapy).
+7. Monitor for neurologic deficits; if new weakness, numbness, or urinary urgency – urgent MRI.
+8. Follow‑up: Return in 2 weeks to assess pain, RT tolerance, BP and glucose control; repeat PSA, CBC, CMP, alkaline phosphatase at 6 weeks.
+9. Continue routine oncology visits monthly; primary care to monitor BP, lipids, and diabetes.
+10. Provide patient education on activity modification and spine precautions.
+
+The patient agrees to the plan and is counseled on the expected benefits of radiotherapy and importance of close monitoring of hypertension and metabolic parameters.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe back pain radiating to left leg</span><span class="pill">difficulty sitting/standing &gt;10 min</span><span class="pill">fatigue</span><span class="pill">hypertensive crisis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>170/95 mmHg</td></tr><tr><td>Heart rate</td><td>88 bpm</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Spine tenderness, limited flexion, mild motor weakness L4‑L5, normal sensation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat PSA</li><li>CBC</li><li>CMP</li><li>Alkaline phosphatase</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 45 ng/mL</li><li>CBC: normal</li><li>Alkaline phosphatase: 350 U/L</li><li>Bone scan: extensive skeletal metastases</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Leuprolide 3.6 mg IM monthly</li><li>Zoledronic acid 4 mg IV</li><li>Insulin glargine 20 U BID</li><li>Radiotherapy schedule started</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain relief modest; patient agrees to comfort care focus.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Prostate adenocarcinoma Gleason 6</span><span class="pill">Bone metastases</span><span class="pill">Spinal metastasis</span><span class="pill">Metabolic syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Insulin glargine 20 U daily</li><li>Simvastatin 20 mg nightly</li><li>Zoledronic acid 4 mg IV Q4W</li><li>Leuprolide 3.6 mg IM monthly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>ADT started 3 months ago</li><li>Baseline bone metastases</li><li>PSA increased to 45 ng/mL</li><li>New lytic lumbar spine lesion</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient presents with escalating back pain and new spinal lesion. Repeat PSA 45 ng/mL confirms progression. Decision to initiate palliative radiotherapy 30 Gy in 10 fractions to L4‑L5 for pain control. Adjust insulin dose to manage hyperglycemia, hold Lisinopril temporarily due to BP elevation and potential renal function. Continue bisphosphonate and ADT. Discuss palliative care and goals of care; family opts against additional chemotherapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progressive metastatic disease with rising PSA, treatment side effects, palliative focus. Patient’s decline accelerated; death December 19, 2026.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia (BPH)</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Dyslipidemia</span><span class="pill">Obesity</span><span class="pill">Prostate adenocarcinoma</span><span class="pill">Prostate cancer bone metastasis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Acetaminophen 650 mg PO q6–8h PRN</li><li>Oxycodone 5 mg PO q6h PRN short course</li><li>Leuprolide 3.6 mg IM monthly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Insulin glargine 20 U BID</li><li>Amlodipine 5 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with weak, intermittent urinary stream, incomplete bladder emptying, and nocturia (3‑4 times nightly). Mild dyspnea on exertion noted. Vital signs: BP 150/90 mmHg, HR 88 bpm, BMI 31 kg/m². Urinalysis normal. Fasting plasma glucose 158 mg/dL, HbA1c 8.6%, LDL 170 mg/dL, HDL 36 mg/dL, PSA 12 ng/mL. Initiated metoprolol, lisinopril, metformin, and simvastatin. Counselled on diet, exercise, and smoking cessation. Scheduled transrectal ultrasound‑guided prostate biopsy at end of June. Follow‑up in primary care clinic in 4 weeks to review medication tolerance and lab trends.</li><li>Patient underwent transrectal ultrasound‑guided prostate biopsy. Pathology showed organ‑confined prostate adenocarcinoma in 6 of 12 cores (tumor volume 1.5 cc, peripheral zone). Plan: radical prostatectomy with possible intra‑operative TURP to relieve BPH symptoms. Continue current antihypertensive and metabolic therapy. Baseline PSA to be obtained pre‑operatively; PSA monitoring every 3 months for 2 years. Post‑operative visit scheduled in 2 weeks. Primary‑care follow‑up for BP, glucose, and lipids every month for the next 3 months.</li><li>Visit on 2025‑07‑12: Discussed prostate cancer treatment options post‑biopsy. Patient has persistent cutting urinary stream. PSA still 12 ng/mL; BP 145/90 mmHg. Plan: TURP scheduled in early August; pre‑op labs (CBC, CMP, coagulation panel). Post‑op catheter removal 48‑72 hours, NSAIDs for pain, catheter care instructions. PSA check at 3 months; if PSA rises &gt;2x baseline or ≥4 ng/mL consider radical prostatectomy. Continue current medications. Follow‑up urology visit 2 weeks post‑TURP for catheter removal and early complication check.</li><li>Post‑TURP follow‑up on 2025‑08‑05: Patient reported mild improvement in urinary stream, decreased nocturia, new dull lower back and left hip pain with mild difficulty rising from a chair. Vital signs stable (BP 148/88 mmHg, HR 78 bpm, temperature 98.3°F). Physical exam noted mild tenderness L4–S1 and left hip tenderness; no neuro deficits or hematuria. PSA 7.8 ng/mL, down from pre‑op 12 ng/mL. Continued antihypertensive and metabolic medications; acetaminophen 650 mg PO q6–8h PRN prescribed for pain, NSAIDs avoided until cleared. Advised bladder diary and red‑flag symptom recognition. Scheduled urology follow‑up in 1 week; primary‑care follow‑up in 1 month; repeat PSA at 3 months per protocol.</li><li>Visit on 2025‑10‑15: 68‑year‑old male reports new dull low back and left hip pain, difficulty rising from chair. Exam shows L4–S1 tenderness, mild left gluteal tenderness, gait limping. Vitals: BP 152/92, HR 80, T 98.5°F. Labs: PSA 21 ng/mL (↑ from 7.8), alkaline phosphatase 280 U/L (↑). CBC, CMP normal. Ordered urgent MRI lumbar spine/pelvis with contrast and bone scan/PET‑CT; referral to oncology planned. Initiated short‑course oxycodone 5 mg PO q6h PRN for breakthrough pain. Continue acetaminophen PRN, antihypertensives, metformin. Recommended gentle exercise, BP monitoring, and follow‑up in 1 week after imaging.</li><li>Patient returned for imaging follow‑up after worsening low back and left hip pain. Vitals: BP 150/90 mmHg, HR 82 bpm, Temp 98.7°F. Examination: mild back stiffness, L4–S1 tenderness, mild left hip tenderness, normal gait with slight limping, no neuro deficits. Labs: PSA 21 ng/mL, alkaline phosphatase 280 U/L, CBC and CMP normal. Pelvic MRI and whole‑body bone scan confirm sclerotic lesions consistent with bone metastases from prostate adenocarcinoma. Referral to medical oncology for initiation of ADT. Pain control continues with acetaminophen PRN and short‑course oxycodone PRN; NSAIDs to be considered when safe. Physical therapy referral advised. Follow‑up in urology clinic in 1 week; primary care visits every 3 months.</li><li>Visit on 2025‑12‑01: Initiated systemic ADT with leuprolide 3.6 mg IM monthly and started zoledronic acid 4 mg IV q4w for bone protection. Baseline fasting glucose, lipid panel, and bone density were ordered. Pain managed with acetaminophen and PRN oxycodone. Antihypertensive and antidiabetic therapy continued. Lab monitoring schedule established. Follow‑up oncology assessment in 1–2 weeks, routine primary‑care visits for BP, glucose and lipid monitoring.</li><li>Visit on 2026-06-15: patient presents with worsening low back pain radiating to left leg, elevated blood pressure 170/95 mmHg, PSA 45 ng/mL, new L4–L5 spinal lesion; plan for palliative radiotherapy 30 Gy in 10 fractions, continue testosterone suppression and bisphosphonates, add amlodipine 5 mg daily, hold lisinopril, begin insulin glargine 20 U BID, maintain acetaminophen and oxycodone PRN, consider adding gabapentin for neuropathic pain, refer to palliative care, monitor BP, glucose, and neurologic status, follow-up in 2 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 990ace3b</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 990ace3b</h1><div class="subtitle">Acute Endometriosis Pain Crisis | Female, 35</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Infertility, Adenomyosis, Chronic pelvic pain, Bowel obstruction, Chronic low back pain, Fibromyalgia, Depression, Anxiety, Uterine fibroids, Interstitial cystitis, IBS, Urinary frequency</div><div class="meta-line">Risk Factors: Family history of endometriosis, Early menarche, Nulliparity, Short menstrual cycle, Excessive estrogen exposure, History of pelvic surgery, Recent hormonal therapy changes</div></div>
+<details><summary>Narrative <span class="preview-text">**Maya’s Unsettling Rhythm – A Narrative of an Acute Endometriosis Pain Crisis**  Maya’s life had always felt out of syn...</span></summary><div class="section-body"><p>**Maya’s Unsettling Rhythm – A Narrative of an Acute Endometriosis Pain Crisis**</p><p>Maya’s life had always felt out of sync. She began menstruating at thirteen, and for as long as she could remember, every month was a battle against a tightness that she could feel creeping low in the abdomen. By twenty-five, she was a seasoned patient of gynecology and pain management, her calendar marked by consultations, hormone prescriptions, and the occasional MRI. Still, she had never let go of the small, nagging hope that infertility might be cured by some surgical intervention—until a routine laparoscopy two years ago revealed nothing but a cluster of fibroids and a thickened uterine wall suggestive of adenomyosis. Endometriosis, at least, was conspicuously absent from the operative record.</p><p>A month after the procedure, Maya’s menstrual cycles shortened from her typical 34‑day rhythm to a brisk 25‑day rhythm. It wasn’t just the timing, though. Each month she felt a dull ache at the base of her back that escalated into a sharp, shooting pain at the point of ovulation. The pain often spread to her left thigh and even, on a handful of mornings, to her lower back as if a phantom limb were being burned. She had always attributed this to fibromyalgia, an ever‑present companion that had been diagnosed in her late twenties following months of unexplained aches.</p><p>In the spring, a new prescription arrived: a combined oral contraceptive—estrogen 0.02 mg progestin 0.075 mg. She had never taken a daily pill before, having chosen natural cycles until that point. The hormone change was recommended by her OB‑GYN to regulate her cycles and ease the heavy bleeding she had been experiencing. Maya, optimistic but cautious, began the pack after reading up on potential side effects.</p><p>**Week 0 – The First Crisis**</p><p>The first week with the pill was almost normal. She enjoyed lighter periods and felt the back pain subside. But on the seventh day of her cycle, while sitting in a cafe with friends, a sudden, burning cramp erupted from her pelvis. The pain was sharp enough to make her clutch her seat. She tried hydrocodone for a day, but the agony grew into a relentless wave that pressed against her rectum, making her cough.</p><p>She drove herself to the ER in an hour. The triage nurse noted her distress and called for an abdominal X‑ray, a CT chest, and an ultrasound of the pelvis. Maya described her pain as “like a knife sweeping through her loins,” but she also added “I’ve always had this back pain, but this… this is different.” The radiologist’s CT scan showed only her pelvis intact—no obvious mass or free fluid. The ultrasound revealed the large fibroid cluster she had known since her early twenties but nothing that could explain the sudden, acute agony. She was given an antiemetic and scheduled for an urgent follow‑up.</p><p>**Week 1 – The Second Consultation**</p><p>Three days later, Maya returned to her OB‑GYN. She was sweating, her back aching, and she described a tightness that seemed to pulse with her heartbeat. The OB‑GYN, while sympathetic, felt the urgency. “Your symptoms sound a bit like an ovarian torsion,” she said. “Have you had a cyst? Did you notice swelling? Any nausea?” Maya shook her head. The OB‑GYN decided to order a serum CA‑125, a PSA for the pelvic floor muscles, and a repeat pelvic ultrasound.</p><p>The CA‑125 came back at 28 U/mL—slight but not definitive. The ultrasound again revealed a 4‑cm fibroid and an unchanged adenomyosis, without any free fluid or cystic lesions. The OB‑GYN then suggested a magnetic resonance imaging (MRI) study to look for deeper endometriotic implants.</p><p>**Week 2 – The Third Hospitalization**</p><p>Maya’s pain persisted. While going for a routine check‑up in the local urgent‑care center, a new set of symptoms emerged: sudden urinary frequency—she found herself in bathroom nine times in two hours—and a pressing desire to defecate, yet nothing came out. She also had a mild fever (100.4°F). The urgent‑care staff documented her pain as “sharp, localized just below the navel, radiating to the back, and worsening with bowel movements.” They called an internal medicine consult.</p><p>Dr. Patel, the internist, ran a basic metabolic panel, a complete blood count (CBC), and a urine pregnancy test. Everything was within normal limits. Dr. Patel considered interstitial cystitis (IC) as a differential—especially given Maya’s history of urinary frequency—but the lack of hematuria or infection markers made that less likely. He prescribed a trial of diltiazem and hydroxychloroquine for possible IC, and he ordered a urodynamic test.</p><p>**Week 3 – The Diagnostic Dilemma**</p><p>Maya’s MRI of the pelvis, ordered by her OB‑GYN, took a week to conduct and a week to read. The radiology report was bland: “Uterine fibroids, adenomyosis, incidental fluid collection within pouch of Douglas. No discrete mass lesions noted.” The radiologist suggested “possible endometriosis implants, but suboptimal for definitive diagnosis.” The radiologist’s note left Maya, and anyone else, with an ambiguous answer.</p><p>The urodynamic study showed overactive bladder but no detrusor instability. The urodynamic data, combined with her chronic urinary frequency, landed her on a treatment algorithm for overactive bladder: 12 mg tolterodine daily, an anticholinergic, plus behavioral changes—eating a low‑fat diet, scheduling bathroom visits, and doing pelvic floor stretching.</p><p>Meanwhile, Maya’s pain continued to flare with bowel movements, especially her IBS‑type loose stools in the evenings. She had always had some bloating, but this time it was relentless, accompanied by the sense that she was on the brink of a bowel obstruction. She tried to rest but only found her abdominal discomfort intensifying the more she sat or stood for long intervals.</p><p>**Week 4 – The Recurrent Crisis**</p><p>Late in her 30th day of her cycle, Maya awoke with a high pitched, roaring pain that seemed to erupt with each breath. She was unable to sit or lay down. The pain radiated into her right groin. She had the sense that her bowel was stuck, because every attempt to evacuate left her nauseated and with a severe cramp.</p><p>She rushed back to the ER. This time the physicians performed an abdominal CT scan with contrast. The scan revealed a small, self‑limiting obstruction within the sigmoid colon—likely a functional obstruction, nothing about that would indicate a specific underlying cause. The CT report also noted mild wall thickening of the uterus consistent with adenomyosis. There were no visible ovarian cysts, but a minimal amount of free fluid was identified in the cul‑de‑sac. All in all, the imaging remained nonspecific.</p><p>The ED physician recommended a high‑dose diclofenac and an antiemetic, and she was discharged with a prescription for a short course of prednisone (5 mg twice daily for a week) to rule out a steroid response. The OB‑GYN, on the other hand, suggested a repeat laparoscopy—but Maya was exhausted by the idea of more anesthesia and anesthesia itself, especially after her two prior surgeries, and was hesitant.</p><p>**Week 5 – The Persistent Undiagnosed Condition**</p><p>Maya’s visits to the pain clinic were the most exhausting. She reported “continuous dull ache” that seemed to ripple through her entire pelvis. The pain specialist prescribed low‑dose amitriptyline, titrating it upward, and recommended spinal manipulation. Maya tried it for a few weeks but found the manipulation uncomfortable because of her fibromyalgia, a sensation of being scraped across the skin all at once.</p><p>The chronic depression and anxiety that had plagued her for years made the pain feel even heavier. She had been on an SSRI for ten years but had never tried a different class. The neurologist was hesitant to change her regimen because of her history of urinary frequency, worried it might increase her urinary urgency. The patient expressed frustration—her pain seemed to dominate every day, and the physicians seemed to shift from one hypothesis to another, never closing the loop.</p><p>**Month Two – The Unfinished Story**</p><p>A month later, Maya was in a routine appointment with her OB‑GYN. She had lost five pounds over the last month, her appetite gone, her fatigue worsening. The OB‑GYN asked: “Do you still have the same cycles? Did anything change with the medicine?” Maya explained that she had been taking only 10 mg of estrogen progestin per week and that her estrogen levels were still high. The OB‑GYN recommended a pelvic MRI with contrast but hesitated to prescribe a new drug for her. The appointment ended with a plan to schedule a follow‑up in three weeks if her symptoms persisted.</p><p>At the three‑week mark, Maya did not improve. She had another flare, lasting 24 hours, requiring an overnight stay at the ED for intravenous pain management. That night, her pain was so intense she could only lay flat in the dark, her breathing shallow. When the doctor in the ICU questioned if she wanted a diagnosis that might guide therapy, Maya felt a wave of resignation. The conversation ended with a gentle reassurance that her condition, although not yet pinpointed, would be managed symptomatically.</p><p>**Month Three – Clinical Decision Points**</p><p>Maya’s journey over these three months now involved a multi‑disciplinary team: OB‑GYN, internist, pain specialist, urologist, neurologist, and mental health professionals. Each specialist had a hypothesis: endometriosis, fibroids, interstitial cystitis, IBS, functional GI motility, or a new pelvic floor dysfunction. Yet imaging findings were equivocal. Her labs were unremarkable. Her hormone profile was consistent with the oral contraceptive she was taking. The only thing that seemed to worsen was the cyclical nature of her pain coupled with bowel and urinary symptoms.</p><p>After a final meeting with the OB‑GYN, a decision was made to postpone a repeat laparoscopy—again, Maya was not ready to risk another surgical episode. Meanwhile, the OB‑GYN shifted Maya’s medication to a progesterone‑only injection every 12 weeks, thinking the estrogen might be driving inflammation. Unfortunately, the injection still contained a small amount of estrogen, and Maya’s cycles remained short. She also stopped the oral contraceptive, but the new regimen did not relieve her pain; her symptoms stayed the same.</p><p>**Month Four – The Continuing Dilemma**</p><p>Maya’s pain had become a routine part of her life, scheduled like a thunderstorm that arrived with each month’s start. She began to rely on high doses of opioids (oxycodone 15 mg prn), which unfortunately led to some sedation but did not significantly improve her quality of life. The pharmacist noted her dosage and recommended a taper plan, but Maya was reluctant to reduce. She said the pills were a lifeline.</p><p>On the third day of a flare this month, her pain became so severe that she had to call an ambulance. In the ED, her vital signs were stable, but she was trembling and tearful. The ED physician prescribed a 3‑day burst of hydrocortisone, combined with a high‑dose opioid. They also gave her an antispasmodic. The ED team sent her home with a prescription for 40 mg oxycodone and a plan to see her OB‑GYN in a week to adjust pain treatment.</p><p>**Month Five – Resignation and Hope**</p><p>By month five, Maya’s cycle had changed. The oral contraceptive was no longer in her system, and she had started a free‑running cycle that lasted 28 days, but her pain persisted. She had yet to get a definitive endometriosis diagnosis, and the story remained unresolved. She had grown accustomed to the pattern—pain, then pain, then relief for a few days, then pain again.</p><p>Despite the lack of diagnosis, Maya had learned to navigate her body’s unpredictable signals. She began a mindful meditation practice as suggested by her psychiatrist, aiming to reduce the anxiety that amplified her pain. She also started an exercise program focused on low‑impact aerobic work and gentle yoga, with the help of a physiotherapist who specialized in pelvic floor dysfunction.</p><p>**Conclusion – The Narrative of an Unresolved Acute Endometriosis Pain Crisis**</p><p>Within five months, Maya’s course exemplified a hard, atypical presentation of acute endometriosis pain crisis that remained undiagnosed due to overlapping comorbidities and subtle imaging findings. Her acute flares—sudden, severe, and cyclic—were interpreted in turn as ovarian torsion, bowel obstruction, interstitial cystitis, and IBS, each leading to different treatments, none of which addressed the underlying endometriosis. The risk factors—family history, early menarche, short cycle, hormonal therapy—fueled a cycle of misdiagnosis, as the clinicians focused on the most obvious explanations for her symptoms.</p><p>Maya’s narrative underscores the complexity of endometriosis when it presents acutely amid a backdrop of chronic pelvic pain, fibromyalgia, depression, anxiety, adenomyosis, fibroids, interstitial cystitis, and urinary urgency. It also highlights the challenges of diagnosing endometriosis when imaging is inconclusive, illustrating how a patient can navigate a maze of specialists, labs, and tests without ever receiving a clear label for her condition. The story ends with Maya practicing self‑management, hopeful for a better tomorrow but resigned to the unresolved mystery that continues to linger in her life.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-01</h3><div class="visit-meta">Emergency Medicine | Reason: Acute pelvic pain with nausea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute pelvic pain with nausea.
+
+History of Present Illness:
+Maya, a 35‑year‑old female, presented to the ED with a sudden onset of sharp, crampy pelvic pain that radiated to the lower back. She reports associated nausea, vomiting, and diaphoresis. Pain began abruptly, has been continuous and remains severe despite her own attempts to manage it. She has been on combined oral contraceptives (COC) for the past 4 weeks. Maya has a significant past medical history of fibroids, adenomyosis, chronic pelvic pain, intermittent infertility, chronic low back pain, fibromyalgia, depression, anxiety, and interstitial cystitis.
+
+Past Medical History: Adenomyosis, uterine fibroids (cluster of intramural fibroids), chronic pelvic pain, bowel obstruction (history), chronic low back pain, fibromyalgia, depression, anxiety, UTI history, urinary frequency.
+
+Medications: None currently.
+Allergies: NKDA.
+
+Physical Examination:
+Vital Signs: BP 118/72 mmHg, HR 98 bpm, Temp 37.8°C, RR 20/min, SpO₂ 98% RA.
+General: Alert, in moderate distress due to pain.
+Abdominal: Soft, non‑distended. Lower abdominal tenderness with mild guarding, no rebound tenderness. Bowel sounds present and normal. No palpable mass. No costovertebral angle tenderness.
+Pelvic: No visible vaginal discharge. Negative adnexal masses on external exam.
+Back: Mild lower back tenderness on palpation.
+
+Labs/Imaging:
+- Abdominal X‑ray: Normal, no free air or obstruction.
+- CT chest: Normal.
+- Pelvic ultrasound: 4‑cm intramural fibroid noted, thickened myometrium consistent with adenomyosis. No free fluid or adnexal masses.
+
+Assessment:
+1. Acute exacerbation of chronic pelvic pain likely related to underlying fibroids/adenomyosis. No evidence of acute gynecologic emergency (e.g., torsion, ectopic, PID) on imaging or exam.
+2. Differential includes ovarian torsion, ectopic pregnancy, acute appendicitis, bowel obstruction, urinary tract infection/ cystitis, and inflammatory bowel disease flare.
+
+Plan:
+- Pain Management: IV ondansetron 4 mg and IV hydromorphone 2 mg administered in ED. Discharged with a hydromorphone taper: 2 mg PO q6–8h as needed for pain, tapering over 5 days. Also instructed to take ibuprofen 400 mg PO q6h PRN for pain.
+- Follow‑up: Schedule an OB‑GYN appointment within 3 days for a comprehensive pelvic evaluation and to repeat ultrasound if pain persists.
+- Red‑flag instructions: Return to ED or urgent care if she experiences worsening pain, fever &gt;38.0°C, new onset vomiting, or any vaginal bleeding.
+- Safety: Counsel about appropriate hydromorphone use and disposal of unused medication.
+- Other: Encourage hydration, rest, and monitor for changes.
+
+Disposition: Discharged home with prescription and instructions. No further interventions required this visit.
+
+Signed: EM Team</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp pelvic cramp, burning pain radiating to lower back, vomiting, sweating</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/72</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>Temp</td><td>37.8</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lower abdominal tenderness, no rebound, normal bowel sounds</li><li>No visible vaginal discharge</li><li>No adnexal masses palpated</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Abdominal X-ray</li><li>CT chest</li><li>Pelvic ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Abdominal X-ray: normal</li><li>CT chest: normal</li><li>Pelvic ultrasound: 4‑cm intramural fibroid, thickened myometrium, no free fluid</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV ondansetron 4 mg</li><li>IV hydromorphone 2 mg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved slightly after hydromorphone but remained severe; she left the ED with a plan to take hydromorphone as prescribed and to seek urgent care if pain recurred.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive: ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Menarche at 13, regular cycles, history of fibroids and adenomyosis, prior laparoscopy (no endometriosis found), recent COC initiation</li><li>Chronic pelvic pain, fibromyalgia, chronic low back pain</li><li>Infertility</li><li>UTI history</li><li>Urinary frequency</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented to the ER with sudden, severe pelvic cramp and nausea. Physical exam revealed lower abdominal tenderness, mild guarding, and no rebound tenderness. An abdominal X‑ray, CT chest, and pelvic ultrasound were ordered. The imaging showed no free fluid or mass; the ultrasound confirmed the known fibroid cluster and adenomyosis. Vital signs were relatively stable except for mild tachycardia and low‑grade fever. The ED team administered IV ondansetron 4 mg, hydromorphone 2 mg IV, and started a low‑dose opioid taper. Maya was discharged with instructions to complete the hydromorphone course and return if symptoms worsened. She was instructed to schedule an OB‑GYN follow‑up within three days.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute pain crisis likely related to pelvic pathology; endometriosis remains undiagnosed. Initiated opioid taper for symptom control.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-04</h3><div class="visit-meta">Obstetrics &amp; Gynecology | Reason: Pelvic pain, concern for ovarian torsion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: Maya, a 35‑year‑old female, presented to the OB‑GYN office with a chief complaint of persistent lower abdominal tightness and back ache accompanied by diaphoresis. She reports ongoing chronic pelvic pain, fibromyalgia, back pain, and anxiety regarding potential ovarian torsion. The patient started a combined oral contraceptive (COC) 1 week prior and has a history of infertility, uterine fibroids, adenomyosis, interstitial cystitis, IBS, urinary frequency, and a prior laparoscopy for fibroids and adenomyosis.
+
+History: Maya describes tightness in the lower abdomen and a dull back ache that has been persistent for several days. She has anxiety about possible surgery but is willing to undergo further imaging. No fever, nausea, or vomiting reported today. No changes in urinary frequency or bowel habits.
+
+Review of Systems: Positive for chronic pelvic pain, back ache, musculoskeletal pain, and anxiety. Negative for fever, chills, vaginal bleeding, new urinary symptoms, or bowel changes.
+
+Physical Examination:
+- Vitals: BP 112/69, HR 86, Temp 37°C, RR 18, O₂ sat 98%.
+- General: afebrile, anxious but in no acute distress.
+- Abdomen: mild lower abdominal tenderness without rebound or guarding. No palpable masses.
+- Pelvic: cervical os closed, non‑tender, closed. Adnexae soft and non‑tender.
+- Back: mild tenderness over lumbar spine, no neurologic deficit.
+
+Investigations:
+- Serum CA‑125: 28 U/mL (within normal limits, slightly elevated).
+- Pelvic ultrasound: 4‑cm intramural fibroid, thickened myometrium with adenomyosis, no cystic lesions or free fluid.
+
+Assessment:
+1. Ovarian torsion – unlikely given negative ultrasound and normal clinical exam, but remains in differential if pain suddenly worsens.
+2. Fibroid degeneration or adenomyosis flare – plausible given imaging and chronic pain history.
+3. Interstitial cystitis or IBS flare – less likely but considered due to urinary frequency and bowel symptoms.
+4. Chronic low back pain / fibromyalgia flare – likely contributing factor to reported back ache.
+
+Plan:
+- Order pelvic MRI for detailed evaluation of myometrial and adnexal structures, to clarify potential fibroid or adenomyosis-related pain.
+- Continue current medication regimen: oral COC (ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg), hydromorphone 2 mg PO q6–8h PRN (tapering), ibuprofen 400 mg PO q6h PRN.
+- Advise patient to observe for any escalation of pain, nausea, vomiting, or acute symptoms and to seek emergent care if these occur.
+- Provide pain diary to track intensity, triggers, and medication use.
+- Discuss possible surgical exploration if MRI remains inconclusive and pain persists.
+- Schedule follow‑up appointment after MRI results are available. If MRI is positive for torsion or significant pathology, refer for surgical consultation.
+- Consider referral to a pain management specialist if chronic pain is refractory to current regimen.
+
+The patient was educated on the importance of monitoring pain, potential signs of acute abdomen, and the timeline for MRI scheduling. She requested a follow‑up within the next 2 weeks pending MRI results.
+
+Signed: OB‑GYN
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Tightness in lower abdomen, back ache, diaphoresis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>112/69</td></tr><tr><td>HR</td><td>86</td></tr><tr><td>Temp</td><td>37</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lower abdominal tenderness without rebound</li><li>Normal cervical exam</li><li>Adnexal regions soft and non-tender</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum CA‑125</li><li>Pelvic ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CA‑125: 28 U/mL</li><li>Pelvic ultrasound: 4‑cm fibroid, adenomyosis, no cystic lesion</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya expressed anxiety about possible surgery but was willing to undergo MRI.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive: ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior laparoscopy (fibroids and adenomyosis), recent COC started one week prior</li><li>Chronic pelvic pain, fibromyalgia, back pain</li><li>Inflammatory markers low</li><li>No recent fever</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the OB‑GYN office visit, Maya described persistent tightness and back ache. Examination revealed mild lower abdominal tenderness. The clinician suspected possible ovarian torsion due to the acute pain pattern. A serum CA‑125 and repeat pelvic ultrasound were ordered to rule out cystic disease. The CA‑125 returned at 28 U/mL (within normal limits but slightly elevated). Ultrasound reaffirmed a 4‑cm intramural fibroid and a thickened myometrium with no free fluid or cysts. Given the inconclusive results, the OB‑GYN recommended scheduling an MRI for detailed pelvic imaging and discussed potential need for surgical exploration if imaging failed to clarify pathology. Maya agreed to the MRI and was advised to monitor symptoms closely.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Imaging and labs inconclusive; endometriosis not ruled in or out. Planning for MRI of pelvis.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-01-09</h3><div class="visit-meta">Internal Medicine | Reason: Urinary frequency with mild fever</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Urinary frequency with mild fever.
+
+History of Present Illness: 35‑year‑old female presents to urgent‑care with a 2‑day history of increased urinary frequency (9 voids in 2 hrs), suprapubic discomfort, low‑grade fever (38.2 °C), and bowel urgency (no stool). She reports chronic urinary urgency, prior urinary tract infections, and a past suspected interstitial cystitis (IC). She has chronic fibromyalgia and IBS, and imaging has shown 4‑cm intramural fibroid with adenomyosis.
+
+Past Medical History: Fibroids, adenomyosis, fibromyalgia, chronic low back pain, infertility, suspected IC, IBS.
+
+Medications: Hydromorphone 2 mg PO q6–8 h PRN (taper), Ibuprofen 400 mg PO q6 h PRN, Ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg PO daily. NKDA.
+
+Physical Examination:
+• Vital signs: BP 110/68 mmHg, HR 92 bpm, Temp 38.2 °C, RR 20/min, SpO₂ 98% on room air.
+• General: Appears mildly uncomfortable, no distress.
+• Abdomen: Suprapubic tenderness, no CVA tenderness, no distension.
+• Genitourinary: No costovertebral angle tenderness. No visible external lesions.
+
+Labs &amp; Imaging:
+• CBC: Normal except slight leukocytosis (WBC 11.2 × 10⁹/L).
+• BMP: Within normal limits.
+• Urine pregnancy test: Negative.
+• Urodynamic study: Overactive bladder pattern, no detrusor instability.
+
+Assessment:
+1. Probable interstitial cystitis/overactive bladder: Chronic urinary frequency with suprapubic pain, history of suspected IC, urodynamics consistent with OAB pattern.
+2. Unremarkable UTI: Mild leukocytosis but no dysuria or hematuria; labs negative and symptoms improving with hydration.
+3. Fibroid/adenomyosis irritation: Imaging supports fibroid presence; may contribute to bladder symptoms.
+4. IBS and fibromyalgia: Contributing to abdominal discomfort, but less likely primary cause of urinary urgency.
+
+Plan:
+• Medications: Initiate diltiazem 30 mg PO BID and hydroxychloroquine 200 mg PO daily as a trial for IC; continue hydromorphone taper (2 mg q6–8 h PRN) and ibuprofen 400 mg q6 h PRN for pain.
+• Counsel on hydration, bladder diary, timed voiding, and avoidance of bladder irritants.
+• Follow‑up: Return in 1 week for symptom review, medication tolerance, and review of bladder diary. If no improvement or symptoms worsen, consider cystoscopy and/or referral to urogynecology.
+• Educate on red‑flag signs (fever &gt;38.5 °C, worsening pain, hematuria, or new urinary retention) warranting immediate return.
+• Continue oral contraceptive therapy.
+
+Disposition: Advised to monitor symptoms, keep diary, and return per schedule.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Urgent urination, 9 trips in 2 hours, lower abdominal discomfort, low-grade temperature</span><span class="pill">Bowel urgency without stool</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/68</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>38.2</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Suprapubic tenderness</li><li>No costovertebral angle tenderness</li><li>No abdominal distension</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>Urine pregnancy test</li><li>Urodynamic study</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>BMP: normal</li><li>Pregnancy test: negative</li><li>Urodynamics: overactive bladder, no detrusor instability</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Diltiazem 30 mg BID</li><li>Hydroxychloroquine 200 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya noted slight improvement in urgency after a few days but still experienced pain flare-ups.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span><span class="pill">Interstitial cystitis (suspected)</span><span class="pill">IBS</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive: ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic urinary frequency, prior UTI episodes, IBS, interstitial cystitis suspicion in past, fibromyalgia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Upon presentation to urgent‑care, Maya had feverish feeling and acute urinary frequency. Physical exam showed suprapubic tenderness. The internist ordered a CBC, BMP, urine pregnancy test, and initiated a urodynamic study. CBC was normal with a slight leukocytosis; BMP and pregnancy test were negative. The urodynamic study revealed an overactive bladder pattern but no detrusor overactivity. Considering her strong history of interstitial cystitis, the internist began a trial of diltiazem 30 mg twice daily and hydroxychloroquine 200 mg daily while awaiting urodynamic results. Maya was advised to monitor symptoms and to come back if pain persisted or worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Evaluation for interstitial cystitis ongoing; no infection confirmed. Overactive bladder pattern noted but not definitive for IC.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-01-16</h3><div class="visit-meta">Radiology / OB/GYN | Reason: Pelvic MRI imaging</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Pelvic MRI imaging
+
+**History of Present Illness**: Maya, a 35‑year‑old female with a known history of infertility, adenomyosis, uterine fibroids, chronic pelvic pain, and multiple other comorbidities (fibromyalgia, depression, anxiety, IBS, interstitial cystitis, chronic low back pain, urinary frequency, OAB), presents for a scheduled pelvic MRI with IV contrast. She reports persistent cyclical pelvic pain that has not improved despite her current pain regimen. Maya expresses frustration with the inconclusive MRI findings and a desire for a definitive evaluation.
+
+**Past Medical History**: Chronic pelvic pain, adenomyosis, uterine fibroids, interstitial cystitis/overactive bladder, fibromyalgia, depression, anxiety, IBS, chronic low back pain, bowel obstruction history.
+
+**Medications**: Hydromorphone 2 mg PO q6–8h PRN (tapering), Ibuprofen 400 mg PO q6h PRN, Ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg (oral contraceptive), Diltiazem 30 mg PO BID, Hydroxychloroquine 200 mg PO daily.
+
+**Allergies**: NKDA.
+
+**Review of Systems**: Positive for pelvic pain that is cyclical in nature; denies fever, chills, or recent urinary symptoms. No new GI symptoms.
+
+**Vital Signs**: BP 115/70 mmHg, HR 88 bpm, Temp 37 °C, RR 18 /min, O₂ sat 98% on room air.
+
+**Physical Examination**: Stable vital signs. Abdomen soft, non‑distended. Mild tenderness to deep palpation over the suprapubic region. No guarding, rebound, or organomegaly. Pelvic exam: uterus symmetric, no cervical motion tenderness, no adnexal masses palpable. Neurologic exam unremarkable.
+
+**Imaging**: Pelvic MRI with IV contrast revealed fibroids (size not specified), findings consistent with adenomyosis, and thin fluid within the pouch of Douglas. No discrete mass lesions. Radiology noted that the scan may be suboptimal for evaluating superficial endometrial implants.
+
+**Assessment**: The patient has persistent cyclical pelvic pain likely secondary to fibroids and adenomyosis. The MRI was inconclusive for endometriosis; given the limitations of imaging for superficial peritoneal implants, a definitive diagnosis remains uncertain. Chronic pelvic pain in this context can be multifactorial: fibroids, adenomyosis, endometriosis, and comorbid functional pain syndromes.
+
+**Differential Diagnoses Considered**:
+1. Adenomyosis with symptomatic uterine fibroids.
+2. Superficial or deep endometriosis not visualized on MRI.
+3. Chronic pelvic congestion syndrome.
+4. Functional abdominal pain (IBS) exacerbating pelvic discomfort.
+5. Irritable bladder or interstitial cystitis contributing to perceived pelvic pain.
+
+**Plan**:
+1. **Pain Management**: Continue her current regimen of hydromorphone taper and ibuprofen PRN. If pain escalates, consider short‑course low‑dose oral corticosteroid for flare.
+2. **Definitive Evaluation**: Advise laparoscopy for diagnostic and therapeutic evaluation if pain persists or worsens, given MRI limitations.
+3. **Imaging**: Repeat pelvic MRI with optimized protocols for endometriosis (high‑resolution T2 sequences, optional 3 T) only if there is a change in clinical status.
+4. **Medical Therapy Trial**: Discuss add‑on estrogen‑progestin therapy or GnRH analogue if pain remains refractory and ovarian function permit.
+5. **Non‑Pharmacologic**: Continue bladder diaries, timed voiding for OAB; refer to physical therapy for pelvic floor dysfunction.
+6. **Follow‑Up**: Return to the office in 4 weeks for symptom review. If pain escalates or new symptoms develop, contact the office immediately or seek urgent care.
+
+**Disposition**: Patient educated on the limitations of MRI, encouraged to monitor pain patterns, and instructed to follow up as outlined.
+
+**Signature**: 
+---
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continued pelvic pain, cyclical flare</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>115/70</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>37</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Stable vitals</li><li>No acute findings on physical exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvic MRI with contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: fibroids, adenomyosis, thin fluid collection, no significant mass</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya expressed frustration over inconclusive imaging but agreed to follow up after symptom progression.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive: ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Same as prior visits; MRI scheduled to evaluate for endometriosis implants</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya underwent a pelvic MRI with IV contrast. The radiology report indicated uterine fibroids, adenomyosis, and incidental fluid within the pouch of Douglas, but no discrete mass lesions. The report suggested that imaging may be suboptimal for definitive endometriosis assessment. The OB‑GYN followed up with Maya, reaffirming that an MRI could miss subtle superficial implants and recommended continued consideration of laparoscopy for definitive evaluation if symptoms persisted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>MRI deemed non‑diagnostic; endometriosis remains a differential. Planning for pain management and potential surgical exploration.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-01-23</h3><div class="visit-meta">Pain Medicine | Reason: Chronic pelvic pain management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 35‑year‑old female presenting for chronic pelvic pain management.\n\nHistory of Present Illness: Maya reports a continuous dull ache in the pelvic region radiating down to her thighs, accompanied by fatigue. She describes the pain as a constant, low‑grade ache that intensifies with prolonged sitting or standing. She has been using hydromorphone 2 mg PO q6–8 h PRN, which she is attempting to taper. The pain is associated with intermittent lower back aches and mild lumbar tenderness. No red‑flag symptoms such as fever, severe bleeding, or neurologic deficits are reported at this visit. Maya reports improvement in sleep with amitriptyline initiation but pain remains significant. She also carries a history of fibromyalgia, IBS, depression, anxiety, uterine fibroids, interstitial cystitis, and overactive bladder.\n\nPast Medical History: Chronic pelvic pain, adenomyosis, uterine fibroids (4 cm intramural), chronic low back pain, fibromyalgia, depression, anxiety, IBS, interstitial cystitis, overactive bladder.\n\nPast Surgical History: None reported.\n\nMedications: Hydromorphone 2 mg PO q6–8 h PRN (taper), Ibuprofen 400 mg PO q6 h PRN, Ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg (oral contraceptive), Diltiazem 30 mg PO BID, Hydroxychloroquine 200 mg PO daily, Amitriptyline 10 mg nightly (new).\n\nAllergies: NKDA.\n\nReview of Systems: Positive for chronic pelvic pain, fatigue, depression, anxiety, GI discomfort (IBS), urinary frequency, overactive bladder. No new headache, rash, visual changes, or weight loss.\n\nPhysical Examination: Vitals stable – BP 118/72, HR 84, Temp 37 °C, RR 18, O₂ sat 98% RA. Musculoskeletal exam: Tenderness localized to L3‑L4 facet region and hypogastric area; no costovertebral angle tenderness; full passive range of motion in lumbar spine; no sacroiliac joint effusion. No neurologic deficits noted.\n\nAssessment: 1) Chronic pelvic pain likely due to adenomyosis and uterine fibroids with overlapping neuropathic component. 2) Fibromyalgia possibly contributing to widespread musculoskeletal tenderness. 3) IBS and interstitial cystitis may be exacerbating visceral pain perception. 4) Persistent opioid use with low doses; risk of tolerance and hyperalgesia. 5) Mental health comorbidities (depression, anxiety) impacting pain perception.\n\nPlan: 1) Continue low‑dose Amitriptyline 10 mg nightly for neuropathic relief and sleep. 2) Incrementally taper Hydromorphone by 0.5 mg every 2 weeks, using a structured taper schedule. 3) Reinforce scheduled NSAID use (ibuprofen 400 mg q6h PRN) and consider adding scheduled acetaminophen 650 mg q6h PRN as adjunct. 4) Refer to pelvic floor physical therapy with emphasis on gentle relaxation techniques; advise avoidance of manipulative modalities due to fibromyalgia discomfort. 5) Maintain bladder diary, timed voiding schedule, and hydration guidelines. 6) Initiate a pain diary (objective pain rating, modifiers, activity). 7) Continue Diltiazem and Hydroxychloroquine for bladder symptoms. 8) Address mood disorders: encourage psychotherapy, consider duloxetine 30 mg daily for mood and neuropathic pain benefit. 9) Discuss non‑opioid adjuvants – consider low‑dose Gabapentin 100 mg at bedtime if pain persists. 10) Order serum TSH, vitamin D, and CBC/chem panel to rule out contributors to fatigue and pain. 11) Educate patient on signs of opioid withdrawal, misuse, and overdose. 12) Schedule follow‑up in 4 weeks for pain reassessment, opioid taper status, and review of pain diary.
+
+Disposition: Patient returned home with instructions to keep pain diary, schedule PT, and contact pain clinic if pain escalates or new symptoms arise.
+
+Signature: [Provider Name], MD
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continuous dull ache, pain radiating to lower back and thighs, fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/72</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>Temp</td><td>37</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lumbar tenderness at L3‑L4, hypogastric tenderness, palpable fibroid</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Amitriptyline 10 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya tolerated amitriptyline; noted slight improvement in sleep but pain remained significant.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span><span class="pill">Intermittent depression</span><span class="pill">Anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive: ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic pelvic pain, fibrosis, IBS, depression, anxiety, ongoing opioid use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the pain clinic visit, Maya described a dull ache radiating down to her thighs. The provider conducted a full musculoskeletal exam, confirming tenderness in the lumbar region and hypogastric area. The pain specialist prescribed low‑dose amitriptyline 10 mg nightly for neuropathic pain and advised a modest increase in physical therapy focusing on pelvic floor relaxation. Maya was also referred for spinal manipulation once per week; however, she reported discomfort during manipulation due to fibromyalgia. The specialist monitored her opioid use and encouraged tapering where possible. She was advised to keep a pain diary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Neuropathic component addressed; ongoing pain attributed to possible endometriosis or fibroid-related. Monitoring for opioid escalation.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-02-02</h3><div class="visit-meta">Emergency Medicine | Reason: Severe pelvic and groin pain flare</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: Maya, 35‑year‑old female with known fibroids, adenomyosis, fibromyalgia, chronic low back pain and infertility presents to ED with a 2‑hour history of severe, cramp‑like right groin pain radiating to the back, described as high‑pitched; accompanied by mild nausea and inability to lie supine. The patient is tearful and reports a prior flare with bowel urgency. She denies fever, chills, vaginal bleeding or discharge.
+
+Vital signs: BP 130/78, HR 99, Temp 37.8°C, RR 24, SpO2 98% on room air.
+
+Physical exam: Tenderness noted over the right groin and right lower quadrant with mild rebound; lower abdominal distension; no guarding or rigidity. No vaginal or cervical discharge. Neurologic exam intact.
+
+Investigations: Abdominal CT with contrast – small functional sigmoid obstruction and minimal free fluid; no ovarian cysts or mass lesions.
+
+Assessment:
+1. Functional sigmoid obstruction/colonic ileus secondary to uterine fibroids and adenomyosis causing acute pelvic pain.
+2. Consider secondary causes: diverticulitis, ovarian torsion/ectopic pregnancy (ruled out by imaging), pelvic inflammatory disease, inflammatory bowel disease flare.
+
+Plan:
+- High‑dose diclofenac 150 mg PO for analgesia.
+- Ondansetron 4 mg PO for nausea.
+- Begin steroid trial: Prednisone 5 mg PO BID for 7 days to assess steroid responsiveness.
+- Prescribe Hydrocortisone 10 mg IV q8h for next 24 h to ensure rapid anti‑inflammatory response.
+- Continue current chronic medication regimen (COC, amitriptyline, diltiazem, hydroxychloroquine).
+- Advise activity modification; maintain bladder diary.
+- Discharge with instructions to avoid lying down and to seek immediate care if pain worsens, fever &gt;38.5°C, or signs of peritonitis.
+- Follow‑up: OB‑GYN clinic within one week to assess pain control, consider laparoscopy or hysteroscopy if persistent; discuss pain management plan.
+- Educate on steroid side‑effects and instructions for taking prednisone.
+- Encourage pain diary and record any bowel changes.
+
+Disposition: Discharged home with prescription for prednisone, hydrocortisone IV (administered by home infusion next 24 h per ED order), and outpatient follow‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe cramp, right groin pain, high‑pitched pain radiating to back, mild nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78</td></tr><tr><td>HR</td><td>99</td></tr><tr><td>Temp</td><td>37.8</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right groin tenderness, mild rebound at right lower quadrant</li><li>Lower abdominal distension</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Abdominal CT with contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: functional sigmoid obstruction; mild uterine wall thickening; minimal free fluid</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Diclofenac 150 mg PO</li><li>Antiemetic (ondansetron)</li><li>Prednisone 5 mg BID for 7 days</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain decreased after dosing but remained high; she followed instructions for steroid trial.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive: ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg</li><li>Amitriptyline 10 mg nightly</li><li>Diltiazem 30 mg BID</li><li>Hydroxychloroquine 200 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous flare with bowel urgency, MRI inconclusive, chronic pelvic pain, fibromyalgia, anxiety</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived with severe pain, audible crying and an inability to lie down. An abdominal CT with contrast was performed; it revealed a small functional sigmoid obstruction, mild uterine wall thickening consistent with adenomyosis, and minimal free fluid. No ovarian cysts or mass lesions were seen. The ED physician administered a high‑dose diclofenac 150 mg orally, antiemetics, and prescribed prednisone 5 mg twice daily for a week to test for steroid responsiveness. Maya was discharged with a prescription for hydrocortisone 10 mg IV 8 hourly for the next 24 hours and followed up in the OB‑GYN clinic within a week.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CT findings non‑specific; functional bowel obstruction likely secondary to pelvic irritants. Steroid trial initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-02-22</h3><div class="visit-meta">Obstetrics &amp; Gynecology | Reason: Follow‑up after steroid trial, weight loss</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after steroid trial, weight loss and worsening pelvic discomfort.
+
+Subjective:
+Maya reports a 5‑lb weight loss over the past month, decreased appetite, and increased pelvic pain despite prior steroid trials. She describes continuous dull pelvic pain radiating to the thighs, fatigue, and depressive symptoms. No fever, abdominal distention, or worsening urinary symptoms. She remains hesitant to proceed with laparoscopy and prefers non‑surgical management.
+
+Objective:
+Vital signs: BP 107/65, HR 84, T 36.9°C, RR 18, SpO₂ 98%. General exam: normal. Abdomen soft, mild tenderness in lower quadrants, no guarding or rebound. L3‑L4 facet tenderness noted. No organomegaly. Neurological exam normal. No rash. Skin supple.
+
+Assessment:
+1. Fibroids/adenomyosis with chronic pelvic pain – steroids ineffective; likely fibromyalgia and chronic low back pain also contribute.
+2. Chronic opioid taper may be contributing to weight loss, fatigue, and appetite decrease.
+3. Depression/anxiety may exacerbate pain perception and appetite.
+4. Rule out emerging malignancy due to sustained weight loss and decreased appetite; imaging pending.
+
+Plan:
+- Order repeat pelvic MRI with contrast (patient will have this imaging next week).
+- Continue current medications: amitriptyline 10 mg nightly, diltiazem 30 mg BID, hydroxychloroquine 200 mg daily, reduced‑dose oral contraceptive.
+- Discuss multidisciplinary pain board review (pain medicine, physiatry, psychology) to tailor analgesia regimen.
+- Consider initiation of duloxetine 30 mg daily or gabapentin 300 mg TID after board evaluation.
+- Counsel on nutritional support: high‑calorie, protein‑rich diet; consider meal‑replacement shakes if oral intake remains inadequate.
+- Continue bladder diary and timed voiding; review urodynamic data if symptoms recur.
+- Labs: CBC, CMP, TSH, 25‑OH vitamin D, CA‑125 to be drawn at next visit.
+- Follow up in 4 weeks or sooner if worsening pain, new abdominal symptoms, unexplained weight loss, fever, or signs of peritoneal irritation.
+
+Recommendation:
+Educate patient on pain journal, encourage regular exercise within pain tolerance, and consider pelvic floor physical therapy. Monitor mental health; continue CBT for anxiety/depression.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weight loss, decreased appetite, worsening pelvic discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>107/65</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General physical exam normal; mild abdominal tenderness, no rebound</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvic MRI with contrast</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya agreed to MRI and follow‑up; remains concerned about her health but prefers non‑surgical options.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span><span class="pill">Depression</span><span class="pill">Anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amitriptyline 10 mg nightly</li><li>Diltiazem 30 mg BID</li><li>Hydroxychloroquine 200 mg daily</li><li>Oral contraceptive (decreased use)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Reduced oral contraception adherence, 5 lb weight loss, ongoing pain, depressive symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The OB‑GYN reviewed Maya’s recent steroid course and noted no significant improvement. A repeat pelvic MRI with contrast was ordered to re‑evaluate for subtle endometriosis. Interim management included continuing current pain regime and encouraging nutritional support. Maya expressed reluctance to return for laparoscopy; the OB‑GYN proposed a multidisciplinary pain board review to tailor medications. No new interventions were introduced at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Repeating MRI shows similar imaging; diagnosis remains elusive. Consideration of therapeutic trial of hormonal suppression without surgery.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-03-05</h3><div class="visit-meta">Pain Medicine | Reason: Pain flare with opioid escalation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Pain flare with opioid escalation.
+
+HPI: Maya presents today with a severe flare of chronic pelvic pain and lower back ache interfering with sleep and daily activities. She reports increased opioid use and states that her pain has escalated to the point where she feels unable to rest. She denies nausea, fever, or changes in urinary symptoms.
+
+Past Medical History: Fibroids, adenomyosis, fibromyalgia, chronic low back pain, infertility, depression, anxiety, chronic pelvic pain, bowel obstruction, interstitial cystitis, IBS, urinary frequency, overactive bladder.
+
+Current Medications: Hydromorphone 2 mg PO q6–8 h PRN (taper), Ibuprofen 400 mg PO q6 h PRN, Oral contraceptive (ethinyl estradiol 0.02 mg + levonorgestrel 0.075 mg), Diltiazem 30 mg PO BID, Hydroxychloroquine 200 mg PO daily, Amitriptyline 10 mg nightly (increased to 20 mg), Diclofenac 150 mg PO, Ondansetron 4 mg PO, Prednisone 5 mg PO BID, Hydrocortisone 10 mg IV q8 h.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for diffuse pelvic and lumbar pain, insomnia, increased opioid use. Negative for fever, chills, new urinary changes, or changes in bowel habits.
+
+Physical Exam:
+- General: Alert, oriented, in mild distress.
+- Vitals: BP 116/70, HR 88, Temp 37 °C, RR 20, SpO₂ 98%.
+- Abdomen: Tender hypogastric area on palpation, no rebound or guarding; lumbar spine tender at L3‑L4.
+- Cardiovascular: Normal PMI, regular rate and rhythm.
+- Neurologic: No focal deficits.
+- Psych: Mild anxiety but cooperative.
+
+Assessment:
+1. Chronic pelvic pain flare likely multifactorial (fibroids/adenomyosis, fibromyalgia, interstitial cystitis, IBS). Pain exacerbation currently being managed with opioid escalation and antidepressant augmentation.
+2. Opioid use escalation; patient is tapering hydromorphone but now requiring additional opioid support for breakthrough pain.
+3. Anxiety/depression may be contributing to pain perception.
+
+Plan:
+- Increase Amitriptyline to 20 mg nightly to enhance neuropathic pain control.
+- Prescribe oral Oxycodone 5 mg PO as needed, up to TID, with instruction to taper after 48 hours if effective.
+- Offer low‑dose ketamine infusion (20 mg over 2 h), patient declined.
+- Reinforce opioid safety education: store away from children, avoid alcohol, report any signs of misuse.
+- Encourage non‑pharmacologic coping: mindfulness meditation, breathing exercises, continued use of heat packs.
+- Continue NSAIDs (Ibuprofen 400 mg q6 h PRN) and keep diltiazem/hydroxychloroquine for bladder symptoms.
+- Continue current contraceptive, diltiazem, hydroxychloroquine, prednisone taper continuation.
+- No new labs or imaging ordered at this time.
+- Schedule follow‑up in 2 weeks for opioid taper assessment. Patient instructed to call earlier if opioid breakthrough persists beyond 48 h or if new symptoms arise.
+- Encourage mental health follow‑up for anxiety/depression management.
+- Consider multidisciplinary pain board review if pain remains uncontrolled after opioid taper.
+
+Disposition: Patient verbalized understanding of plan and is willing to comply. She will return in two weeks for reassessment.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe pelvic pain, back ache, inability to sleep, increased opioid use</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>116/70</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>37</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender hypogastric area, lumbar tenderness, normal cardiovascular exam</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Amitriptyline 20 mg nightly</li><li>Oxycodone 5 mg PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya reported some relief after the new dose, but acknowledged she might need further opioids if pain persists.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span><span class="pill">Depression</span><span class="pill">Anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amitriptyline 20 mg nightly</li><li>Diltiazem 30 mg BID</li><li>Hydroxychloroquine 200 mg daily</li><li>Oxycodone 5 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Opioid escalation, ongoing amitriptyline, high anxiety</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented with a flare, reporting that the pain interfered with sleep and daily activities. The pain specialist increased the amitriptyline dose to 20 mg nightly and prescribed an oral oxycodone 5 mg PRN, 3 times daily, instructing her to taper after 48 hours if pain relief achieved. An adjunctive therapy of low‑dose ketamine infusion (20 mg over 2 hours) was offered but declined. The provider reinforced opioid safety education, scheduled a follow‑up opioid taper assessment in two weeks, and suggested mindfulness exercises to mitigate pain anxiety.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pain remains refractory; opioid use increased. No definitive cause identified; continue multidisciplinary management.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2023-03-12</h3><div class="visit-meta">Psychiatry | Reason: Depression and anxiety management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient reports persistent sadness, irritability, and sleep disturbance.\n\nHistory of Present Illness: 35‑year‑old female with a 10‑year history of SSRI therapy presents for mood symptom evaluation. She reports sustained feelings of sadness over the last few weeks despite being on sertraline 100 mg daily, now with ongoing irritability and restless nights. She denies anhedonia, suicidal ideation, or hopelessness but reports difficulty falling and staying asleep. Pain persists from fibroids, adenomyosis, and chronic low‑back pain, which she believes exacerbates mood symptoms and sleep. She also acknowledges current opioid use (oxycodone 5 mg PRN up to TID) for breakthrough pain.\n\nPast Psychiatric History: Major depressive disorder, generalized anxiety disorder, chronic pain–related mood disturbance.\n\nReview of Systems: Positive for fatigue, pain in lower abdomen and lumbar spine, irritability, and sleep disturbances. No fever, weight loss, suicidal thoughts, or psychotic symptoms.\n\nPhysical Examination: Vitals stable (BP 110/68, HR 80, T 37 °C, RR 18, O₂ sat 98 %). BMI 23.4. Neurologic exam normal. No acute distress noted.\n\nAssessment: 1) Major Depressive Disorder, current episode, moderate severity; 2) Generalized Anxiety Disorder; 3) Chronic pain–associated mood disorder; 4) Insomnia likely secondary to pain and mood.\n\nPlan: • Increase sertraline to 150 mg daily to gain therapeutic benefit and address persistent depressive symptoms. • Initiate trazodone 50 mg at bedtime for sleep and modest mood benefits; monitor for excessive sedation. • Continue current dose of amitriptyline 20 mg nightly (anxiolytic, anticholinergic sleep aid). • Reassess opioid use: consider tapering oxycodone and exploring neuropathic pain agents (duloxetine or gabapentin) to reduce opioid dependence and improve sleep and mood. • Recommend outpatient CBT (4‑6 sessions) and mindfulness meditation app for self‑management of anxiety and sleep. • Continue existing chronic pain regimens (NSAIDs, diltiazem, hydroxychloroquine). • Lifestyle: sleep hygiene, paced physical activity, stress management. • No emergent labs or imaging ordered at this time. \n\nFollow‑up: Patient to return in 4 weeks to review medication tolerability, mood, pain, sleep, and opioid consumption. Urgent evaluation if worsening depression, suicidal ideation, or significant pain breakthrough.\n\nPatient education: Discuss side effects of higher SSRI dose and trazodone; emphasize importance of adherence and prompt reporting of adverse effects. Provided handout on sleep hygiene and coping strategies for anxiety. 
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent sadness, anxiety, irritability, sleep disturbance</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/68</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>37</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 23.4</li><li>Normal neurological exam</li><li>Mood: tearful, depressed affect, anxious mood</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline increased to 150 mg daily</li><li>Trazodone 50 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya expressed relief that mood care was being addressed, but remained worried about pain management.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span><span class="pill">Depression</span><span class="pill">Anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 100 mg daily</li><li>Amitriptyline 20 mg nightly</li><li>Oxycodone 5 mg PRN</li><li>Diltiazem 30 mg BID</li><li>Hydroxychloroquine 200 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>10 years of SSRI (sertraline) therapy, ongoing anxiety, chronic pain</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The psychiatrist evaluated Maya’s mood symptoms, confirming major depressive disorder with generalized anxiety. The clinician suggested augmenting her sertraline to 150 mg daily and adding a short‑term trial of trazodone 50 mg at bedtime for sleep. Cognitive behavioral therapy (CBT) was recommended, and a mindfulness meditation app was prescribed. The psychiatrist noted that the pain may be amplifying depressive symptoms, and that reducing opioid dose could help mood. Maya was advised to follow up in four weeks after medication adjustment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Depression and anxiety being addressed concurrently with pain; no change in pain trajectory, but opioid use may be impacted by mood.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2023-03-26</h3><div class="visit-meta">Obstetrics &amp; Gynecology | Reason: Hormonal therapy adjustment and planning for future diagnostics</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 35‑year‑old female with chronic pelvic pain, adenomyosis, uterine fibroids, interstitial cystitis, IBS, chronic low back pain, fibromyalgia, depression, anxiety. She presents today for hormonal therapy adjustment and planning future diagnostics. She wishes to discontinue her combined oral contraceptive (COC) due to estrogen‑related inflammation and is interested in a progesterone‑only option.
+
+Chief Complaint: Hormonal therapy adjustment and future diagnostic planning.
+
+History of Present Illness: The patient reports ongoing cyclical pelvic pain that has been present for many years, worsening with each menstrual cycle. She previously discontinued her COC one month ago due to side effects and is seeking a regimen that minimizes estrogen exposure. She remains anxious about the underlying cause of her pain.
+
+Past Medical History: Infertility, adenomyosis, uterine fibroids (4‑cm intramural), chronic pelvic pain, chronic low back pain, fibromyalgia, depression, anxiety, interstitial cystitis, inflammatory bowel syndrome (IBS), urinary frequency, overactive bladder.
+
+Medications (current): Hydromorphone 2 mg PO q6–8h PRN (taper), Ibuprofen 400 mg PO q6h PRN, Diltiazem 30 mg PO BID, Hydroxychloroquine 200 mg PO daily, Amitriptyline 20 mg nightly, Diclofenac 150 mg PO, Ondansetron 4 mg PO, Prednisone 5 mg PO BID, Hydrocortisone 10 mg IV q8h, Oxycodone 5 mg PO PRN up to TID, Sertraline 150 mg daily, Trazodone 50 mg nightly. 
+
+Allergies: NKDA.
+
+Review of Systems: 
+- Musculoskeletal: chronic low back pain, pelvic pain. 
+- Genitourinary: urinary frequency, overactive bladder. 
+- GI: IBS. 
+- Psych: depression, anxiety, sleep disturbance.
+
+Physical Examination: Vitals: BP 112/70, HR 84, RR 18, Temp 36.9°C, SpO₂ 98%. 
+Abdominal exam: soft, slight tender over lower quadrants, no palpable masses. No rebound tenderness. 
+Pelvic exam: not performed due to normal prior imaging. 
+
+Diagnostic Studies: Urine pregnancy test negative (consistent with prior result).
+
+Assessment/Plan:
+1. Chronic pelvic pain due to adenomyosis and fibroids. 2. Estrogen‑driven inflammation contributing to cyclical pain. 3. Interstitial cystitis/overactive bladder contributing to urinary symptoms. 4. Chronic back pain/fibromyalgia. 5. Mood disorders.
+
+Plan:
+- Initiate Depo‑Provera 150 mg IM injection today to suppress ovulation and reduce estrogen exposure. Patient educated on injection schedule (every 12 weeks) and possible side effects.
+- Continue current pain management: Hydromorphone taper, NSAIDs (Ibuprofen 400 mg q6h PRN), Amitriptyline 20 mg nightly for neuropathic component, Diltiazem 30 mg BID and Hydroxychloroquine 200 mg daily for interstitial cystitis/overactive bladder.
+- Continue psychiatric meds: Sertraline 150 mg daily, Trazodone 50 mg nightly.
+- Reinforce opioid safety education; monitor for over‑use.
+- No immediate imaging; continue to monitor pain levels. If pain worsens or persists beyond 6 months, schedule repeat pelvic MRI and consider laparoscopy.
+- Multidisciplinary pain board meeting scheduled next week to align analgesic strategies.
+- Encourage maintenance of pain, bladder, and constipation diaries.
+- Discuss stress‑management techniques; CBT and mindfulness.
+
+Follow‑up: Return to OB‑GYN office in 2 weeks for injection recall and pain reassessment. If significant worsening of pain, urinary symptoms, or new concerning signs (fever, rebound tenderness), return sooner or to ED.
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Ongoing cyclical pain, desire to stop oral contraceptive</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>112/70</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Abdominal exam normal, slight tenderness, no masses palpable</li><li>Pregnancy test negative</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pregnancy test</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pregnancy test: negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Depo‑Provera 150 mg IM injection</li><li>Continuation of current pain meds</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya felt optimistic about reducing estrogen-related pain but remained anxious about unknown causes.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Fibroids</span><span class="pill">Adenomyosis</span><span class="pill">Fibromyalgia</span><span class="pill">Chronic low back pain</span><span class="pill">Infertility</span><span class="pill">Depression</span><span class="pill">Anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amitriptyline 20 mg nightly</li><li>Sertraline 150 mg daily</li><li>Trazodone 50 mg nightly</li><li>Oxycodone 5 mg PRN</li><li>Diltiazem 30 mg BID</li><li>Hydroxychloroquine 200 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Discontinued oral contraceptive one month prior due to side effects, wants to avoid estrogen-driven inflammation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The OB‑GYN conferred with Maya about stopping the combined oral contraceptive. She recommended transitioning to a progesterone‑only intramuscular injection (Depo‑Provera 150 mg) every 12 weeks to suppress ovulation while minimizing estrogen exposure. The OB‑GYN explained that the new regimen might reduce cyclical pelvic inflammation but would not resolve existing fibroids or adenomyosis. Maya agreed to an injection on the day of visit and to continue her pain management regimen. The OB‑GYN noted that a laparoscopy would remain an option if pain persisted, but Maya preferred to try medical therapy first. A multidisciplinary pain board meeting was scheduled for next week to align analgesic strategies.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Hormonal suppression initiated; endometriosis still unconfirmed, but inflammatory cycle possibly mitigated. Long-term management remains symptomatic. No current plan for laparoscopy, patient preferring medical approach.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Infertility</span><span class="pill">Adenomyosis</span><span class="pill">Chronic pelvic pain</span><span class="pill">Bowel obstruction</span><span class="pill">Chronic low back pain</span><span class="pill">Fibromyalgia</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Uterine fibroids</span><span class="pill">Interstitial cystitis</span><span class="pill">IBS</span><span class="pill">Urinary frequency</span><span class="pill">Overactive bladder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydromorphone 2 mg PO q6–8h PRN (taper)</li><li>Ibuprofen 400 mg PO q6h PRN</li><li>Diltiazem 30 mg PO BID</li><li>Hydroxychloroquine 200 mg PO daily</li><li>Amitriptyline 20 mg nightly</li><li>Diclofenac 150 mg PO</li><li>Ondansetron 4 mg PO</li><li>Prednisone 5 mg PO BID</li><li>Hydrocortisone 10 mg IV q8h</li><li>Oxycodone 5 mg PO PRN up to TID</li><li>Sertraline 150 mg daily</li><li>Trazodone 50 mg nightly</li><li>Depo‑Provera 150 mg IM</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-01-01 ED visit for acute pelvic pain, nausea, vomiting. Severe crampy pain radiating to lower back. Physical exam: tender lower abdomen with mild guarding. Pelvic ultrasound showed a 4‑cm intramural fibroid and adenomyosis. Treated with IV ondansetron and hydromorphone; discharged with oral hydromorphone taper (2 mg q6–8h PRN) and ibuprofen 400 mg q6h PRN. Follow‑up OB‑GYN scheduled within 3 days.</li><li>2023-01-04 OB‑GYN office visit: patient reported lower abdominal tightness, back ache, diaphoresis; mild abdominal tenderness; normal vitals; pelvic ultrasound showed 4‑cm intramural fibroid, adenomyosis; serum CA‑125 slightly elevated; ordered pelvic MRI; continued COC, hydromorphone taper, ibuprofen; advised pain diary and urgent care if symptoms worsen.</li><li>2023-01-09 Internal Medicine visit: patient presented with urinary frequency (9 voids in 2 hrs), low‑grade fever (38.2°C), suprapubic tenderness, and mild leukocytosis (WBC 11.2×10⁹/L). Physical exam revealed stable vital signs and mild suprapubic discomfort. Laboratory work included CBC with slight leukocytosis, normal BMP, negative urine pregnancy test, and urodynamic study demonstrating an overactive bladder pattern. Management included initiation of diltiazem 30 mg PO BID and hydroxychloroquine 200 mg PO daily for suspected interstitial cystitis/overactive bladder, continuation of hydromorphone taper and ibuprofen PRN, and counseling on hydration, bladder diary, timed voiding, and red‑flag signs. Follow‑up scheduled in 1 week with additional labs and symptom review.</li><li>2023-01-16 Pelvic MRI with IV contrast revealed fibroids, adenomyosis, and thin fluid in the pouch of Douglas; no discrete masses. Patient continued cyclical pelvic pain. Plan: continue current pain regimen (hydromorphone taper, ibuprofen PRN); consider laparoscopy if pain persists; repeat MRI with optimized protocol if clinical status changes; continue bladder diary and timed voiding.</li><li>2023-01-23 Pain Medicine visit: patient reports continuous dull pelvic pain radiating to thighs and fatigue. On hydromorphone taper and amitriptyline 10 mg nightly. Physical exam shows tenderness at L3‑L4 facet and hypogastric area. Plan to taper hydromorphone by 0.5 mg every 2 weeks, continue NSAIDs, consider scheduled acetaminophen if needed, refer to pelvic floor PT, maintain bladder diary, consider duloxetine or gabapentin, and order labs (TSH, vitamin D, CBC/chem).</li><li>2023-02-02 ED visit: patient presented with 2‑hour history of severe cramp‑like right groin pain radiating to back, mild nausea, inability to lie supine. Exam showed right groin and right lower quadrant tenderness with mild rebound, lower abdominal distension, mild rebound tenderness. CT with contrast revealed small functional sigmoid obstruction and minimal free fluid. Treated with diclofenac 150 mg PO, ondansetron 4 mg PO, prednisone 5 mg PO BID for 7 days, hydrocortisone 10 mg IV q8h for 24 h, and instructions to avoid lying down and seek immediate care if pain worsens, fever &gt;38.5°C, or peritoneal signs develop. Discharged with outpatient follow‑up with OB‑GYN within one week; advised to maintain bladder diary and monitor for steroid side‑effects.</li><li>2023-02-22 OB‑GYN follow‑up after steroid trial: patient presented with 5‑lb weight loss, decreased appetite, worsening pelvic pain. Physical exam revealed mild lower quadrant tenderness and L3‑L4 facet tenderness; no guarding or rebound. Current medications continued: amitriptyline 10 mg nightly, diltiazem 30 mg BID, hydroxychloroquine 200 mg daily, reduced‑dose oral contraceptive. Repeat pelvic MRI with contrast scheduled for next week. Labs ordered: CBC, CMP, TSH, vitamin D, CA‑125. Discussed multidisciplinary pain board review and potential initiation of duloxetine or gabapentin after evaluation. Nutritional support advised, bladder diary maintained, mental health monitoring encouraged. Follow‑up scheduled in 4 weeks or sooner if symptoms worsen.</li><li>2023-03-05 Pain Medicine visit: patient reports severe flare of chronic pelvic and lower back pain interfering with sleep and daily activities. Opioid use escalated; analgesic regimen intensified. Amitriptyline dose increased to 20 mg nightly; oral oxycodone 5 mg PO PRN up to TID prescribed for breakthrough pain. Opioid safety education reinforced. Continue NSAIDs, diltiazem, hydroxychloroquine, and prednisone taper. Follow‑up in 2 weeks for opioid taper assessment.</li><li>2023-03-12 Psychiatry visit: patient reports persistent sadness, irritability, and sleep disturbance; on sertraline 150 mg daily, trazodone 50 mg nightly, amitriptyline 20 mg nightly, oxycodone 5 mg PRN up to TID, diltiazem 30 mg BID, hydroxychloroquine 200 mg daily; pain regimen unchanged; CBT and mindfulness recommended; follow‑up in 4 weeks.</li><li>2023-03-26 OB‑GYN visit: patient discontinued combined oral contraceptive, initiated Depo‑Provera 150 mg IM injection, continued current pain and psychiatric management, scheduled follow‑up in 2 weeks; no immediate imaging; multidisciplinary pain board meeting next week.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

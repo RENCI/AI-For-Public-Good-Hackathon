@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 050788b4</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 050788b4</h1><div class="subtitle">Polycystic Ovary Syndrome (PCOS) with Hyperandrogenic Features and Metabolic Complications | Female, 22</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Insulin Resistance, Dyslipidemia, Hypertension, Non‑Alcoholic Fatty Liver Disease, Endometrial Hyperplasia, Subfertility</div><div class="meta-line">Risk Factors: Obesity, Family history of PCOS or type 2 diabetes, Sedentary lifestyle, High‑fat diet, Age at menarche &gt;12 years, High circulating free testosterone, Low sex hormone‑binding globulin (SHBG)</div></div>
+<details><summary>Narrative <span class="preview-text">When Mara first felt the pounding in her lower abdomen at age thirteen, her mother called the pediatrician. The girl had...</span></summary><div class="section-body"><p>When Mara first felt the pounding in her lower abdomen at age thirteen, her mother called the pediatrician. The girl had always been a few pounds heavier than her peers and had a high‑fat lunch routine that rarely included fruit or vegetables. The family history was unremarkable for hormonal disorders, but her grandmother had been diagnosed with type 2 diabetes as a middle‑aged woman—an early clue in a family increasingly aware of metabolic risk.</p><p>The pediatrician noted a regular period and, after asking a few basic questions about growth hormone, dismissed the discomfort as normal “baby pains.” The appointment ended with a recommendation for a balanced diet and a short walk around the block. Mara returned to the school cafeteria with a bag of fries, a cheeseburger, and an occasional slice of pizza—her calorie consumption climbing steadily.</p><p>By fifteen, her first signs of trouble became more obvious. Mara developed a mild, persistent acne on her cheeks and jawline that never cleared after over‑the‑counter antibiotics. Her mother also noticed an increase in facial hair growth, especially on her chin and lower lip, though it was not prominent enough to draw attention. She began to feel self‑conscious and avoided mirrors. In a separate appointment at the family medicine clinic, her primary care provider (PCP) asked about any menstrual irregularities. Mara answered that her periods had become irregular, sometimes falling a week early, sometimes delayed a week past what she’d expected. The PCP asked her to fill out a brief menstrual calendar at home but gave the visit a light closure, suggesting stress and her “inconsistent schedule” as the most likely culprits, and referred her to a local dietitian for a “weight‑management plan.”</p><p>The adolescent dietitian provided a structured meal plan, but Mara’s adherence was erratic; weekends still featured take‑out, and the high fat foods persisted. She continued to gain weight—her BMI rose to 31 by age eighteen. Her sister, at the same age, had recently had a full‑body scan that revealed a small, solid tumor in the breast, which had given Mara a dose of anxiety. The family doctor, already busy with the tumor follow‑up, simply handed her a prescription for an oral contraceptive pill (OCP) to regulate her menses but did not ask why OCPs were being considered or whether a hormonal evaluation should be performed. The pill helped somewhat; she began to notice a reduction in breakthrough bleeding, but the acne worsened.</p><p>At seventeen, Mara’s acne flared dramatically, prompting a visit to a dermatologist. The dermatologist performed a brief physical exam, noting mild facial hirsutism. She prescribed a topical retinoid and a short course of oral antibiotics, but the patient was not offered any hormonal testing. “It’s most likely related to puberty,” she explained. Mara left feeling that something fundamental still lay under the surface.</p><p>In her late teens, a routine lipid panel ordered for the OCP trial revealed elevated triglycerides at 240 mg/dL and low high‑density lipoprotein (HDL) at 32 mg/dL. A second lab drawn months later, because she had not had an appointment in the interim, showed a fasting glucose of 110 mg/dL and a HbA1c of 5.7 %, both just past normal. The PCP, noting the trend, began to comment, “You might be developing insulin resistance,” but stopped short of ordering a 2‑hour glucose tolerance test or screening for polycystic ovary syndrome (PCOS). He gave Mara a prescription for a thiazolidinedione, hoping to improve her insulin sensitivity, but did not ask if she had been evaluated for menstrual or androgen excess.</p><p>By twenty, Mara’s weight had increased to a BMI of 33, and she began to experience a new symptom: a persistent fullness in the mid‑abdomen and dull, aching back pain. Her mother told her that something might be wrong with her liver, prompting an urgent visit to the urgent‑care clinic. A liver enzyme panel returned showing mildly elevated alanine aminotransferase (ALT) and aspartate aminotransferase (AST) at 55 U/L and 48 U/L respectively, with normal bilirubin. The clinician recommended a repeat of these values in a month and a “liver ultrasound” to rule out pathology, citing the “possible fatty liver” given her elevated triglycerides and obesity. The ultrasound came back showing diffuse hepatic steatosis but no focal lesions. In the report’s commentary, the radiologist noted “no evidence of acute process; consider non‑alcoholic fatty liver disease.” No mention of reproductive hormonal work‑up was made.</p><p>At twenty‑two, Mara has had six visits in the last year. She’s weighed 210 lb, her BP sits at 140/88 mm Hg, her fasting glucose is 112 mg/dL, and her lipid panel remains deranged (triglycerides 260 mg/dL, LDL 160 mg/dL, HDL 30 mg/dL). After her routine gynecological review, the OB‑GYN performed a transvaginal ultrasound for her heavy, protracted bleeding. The imaging revealed a thickened endometrial stripe of 12 mm but did not prompt a biopsy—she was advised to start a lower‑dose OCP, hoping to thin the lining. The patient felt relieved that her bleeding would be manageable and did not inquire about why the lining was thickened.</p><p>Now, at 22, Mara has not been formally diagnosed with PCOS. She attends visits as separate specialists: the dermatologist for acne, the PCP for metabolic risks, the OB‑GYN for menstrual irregularities, and the radiologist for liver concerns. Each office deals with a particular symptom but rarely ties them together into a coherent syndrome. She has not undertaken an endocrine panel to check free testosterone, sex hormone‑binding globulin (SHBG), or LH/FSH ratio, nor has she undergone a comprehensive ovarian ultrasound that could have shown characteristic anovulatory cysts. Her family history of type 2 diabetes and her own insulin resistance reinforce a pattern of hyperinsulinemia, yet the subtle signs of hyperandrogenemia—the subtle acne flare, the mild hirsutism, the slight facial hair growth—have been viewed as isolated occurrences.</p><p>Thus, despite a constellation of metabolic and reproductive disturbances, the narrative of her care remains fragmented. The patient feels her health is being managed, but the underlying cause—the hyperandrogenic, insulin‑resistant PCOS—is unseen, allowing her endocrine, hepatic, and vascular complications to silently progress toward endometrial hyperplasia, potential infertility, and a heightened cardiovascular risk profile—diagnosis withheld, prognosis unclear, and the natural course of a chronic, undiagnosed syndrome continuing.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2015-06-03</h3><div class="visit-meta">Pediatrics | Reason: Lower abdominal pain during adolescence</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Pounding lower abdominal pain reported during adolescence.
+
+**History of Present Illness:** 22‑year‑old female presents for evaluation of chronic, intermittent lower abdominal pain described as pounding and associated with slight bloating. Pain is not relieved with rest and has no known precipitating activities. The patient reports regular menstrual cycles with no dysmenorrhea or irregular bleeding. She denies fever, nausea, vomiting, changes in bowel habits, or urinary symptoms.
+
+**Past Medical History:** Insulin resistance, dyslipidemia, hypertension, non‑alcoholic fatty liver disease, endometrial hyperplasia, subfertility.  No prior abdominal surgeries.
+
+**Medications:** None.
+
+**Allergies:** NKDA.
+
+**Family History:** Grandmother with Type 2 diabetes diagnosed at 55.
+
+**Social History:** Former adolescent obesity (age 10–12). Current diet high in fats, high‑fat lunches; no tobacco or alcohol use.
+
+**Review of Systems:** Negative for fever, chills, GI bleed, urinary complaints, and weight change.
+
+**Physical Examination:**
+- **Vitals:** BP 110/68 mmHg, HR 78 bpm, Height 165 cm, Weight 58 kg, BMI 23.5 kg/m².
+- **General:** Well‑appearing, no distress.
+- **Abdomen:** Soft, non‑tender, no masses or organomegaly. Bowel sounds normoactive.
+- **Skin:** No acne or dermatologic lesions.
+
+**Assessment:**  The presentation is most consistent with functional abdominal pain/irritable bowel syndrome in a young adult with no red‑flag symptoms. The absence of tenderness, fever, or gastrointestinal bleeding makes acute intra‑abdominal pathology unlikely.
+
+**Plan:**
+1. Reassure patient that the pain is likely benign and functional.
+2. Counsel on a balanced, low‑fat diet; encourage gradual dietary changes.
+3. Prescribe 30 minutes of brisk walking daily.
+4. Advise adequate hydration and regular bowel habits.
+5. If pain persists &gt;2 weeks or worsens, consider a low‑dose antispasmodic (e.g., hyoscine butylbromide) and evaluation of abdominal imaging.
+6. No labs ordered at this time.
+7. Follow‑up in 3 weeks or sooner if symptoms worsen or new symptoms develop.
+
+**Signature:** Pediatrician</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pounding lower abdominal pain</span><span class="pill">Slight abdominal bloating</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>110/68</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>height</td><td>165 cm</td></tr><tr><td>weight</td><td>58 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 23.5 kg/m²</li><li>Abdominal exam: soft, non-tender</li><li>Skin: no acne</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity for age 10–12</li><li>High-fat lunch routine</li><li>Family history: grandmother type 2 diabetes at 55</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pediatrician noted the patient’s regular menses and a BMI of 23.5. After a brief abdominal exam, no tenderness was found. The pediatrician advised balanced diet, 30 minutes walking daily, and reassurance that the pain was likely normal. No labs were ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>At this point, patient is at risk due to obesity and family history of type 2 diabetes; early hyperandrogenic signs have yet to appear.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2017-03-10</h3><div class="visit-meta">Family Medicine | Reason: Mild acne, irregular menses, abdominal discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+The patient is a 22‑year‑old female who presents with mild facial acne, irregular menstrual cycles, and mild lower abdominal discomfort. She reports persistent comedonal acne, anovulatory cycles with unpredictable timing, and occasional mild pelvic discomfort. She notes that her acne has worsened since initiating the oral contraceptive pill (OCP) and that breakthrough bleeding has improved. She denies pain, fever, or significant weight change, and her mother reports the patient has mild chin hirsutism.
+
+Objective:
+- Vitals: BP 110/68 mmHg, HR 78 bpm, Height 165 cm, Weight 58 kg, BMI 21.4 kg/m² (note: exam noted BMI 24.8 kg/m², likely due to recent weight gain).
+- General: Alert, oriented, well‑appearing.
+- Skin: Mild comedonal acne with papules on cheeks and jawline; fine hirsutism of chin and lower lip.
+- Abdomen: Soft, non‑tender, no organomegaly.
+- Pelvic: No cervical motion tenderness.
+
+Assessment:
+- Polycystic ovary syndrome (PCOS) – anovulatory cycles, hirsutism, acne, and known insulin resistance; meets Rotterdam criteria.
+- Endometrial hyperplasia – patient has documented hyperplasia; ongoing risk mitigated by estrogen‑progestin OCP.
+- Insulin resistance with metabolic syndrome – elevated triglycerides, low HDL, hypertension, and NAFLD.
+- Acne vulgaris secondary to hormonal imbalance – worsened by OCP may reflect estrogen‐driven follicular hyperkeratinization.
+
+Plan:
+1. Continue current OCP (ethinyl estradiol 0.03 mg/d + levonorgestrel 0.15 mg/d) for cycle control and endometrial protection.
+2. Add topical tretinoin 0.1 % cream BID for acne; instruct patient on proper application and potential irritation.
+3. Re‑evaluate breakthrough bleeding and acne severity in 4 weeks.
+4. Repeat fasting lipid panel in 3 months to monitor triglycerides; consider adding a statin or omega‑3 if persistently high.
+5. Refer to dietitian for weight management and dietary counseling; emphasize low‑fat, high‑fiber, balanced meals.
+6. Order baseline endocrine panel next visit: LH/FSH ratio, total testosterone, DHEAS, fasting glucose, HbA1c.
+7. Consider gynecologic referral for endometrial biopsy if breakthrough bleeding continues &gt;4 weeks or any other concerning symptoms.
+8. Educate patient on lifestyle modifications for insulin sensitivity: aerobic exercise 150 min/wk, resistance training, weight goal &lt;5% body weight.
+9. Advise continuation of regular monitoring for NAFLD via ultrasound if liver enzymes remain abnormal.
+
+Discharge instructions provided; patient understands and agrees to plan.
+
+Follow‑up: 4‑week in‑clinic visit for symptom review; repeat labs as indicated. Telephone call if breakthrough bleeding &gt;2 weeks or worsening acne.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent facial acne</span><span class="pill">Irregular periods (sometimes early, sometimes late)</span><span class="pill">Slight lower abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>112/70</td></tr><tr><td>heart_rate</td><td>80 bpm</td></tr><tr><td>height</td><td>168 cm</td></tr><tr><td>weight</td><td>70 kg</td></tr><tr><td>BMI</td><td>24.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 24.8 kg/m²</li><li>Facial acne: comedones, papules on cheeks and jawline</li><li>Fine hirsutism: chin, lower lip</li><li>Antenna: no tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lipid panel (baseline): Total cholesterol 180 mg/dL, LDL 100 mg/dL, HDL 38 mg/dL, Triglycerides 210 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescription of OCP</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported decreased breakthrough bleeding after starting OCP, but noted acne worsened.</p></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Increased facial hair growth on chin (noted by mother)</li><li>High-fat diet continues</li><li>Family history unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The clinician reviewed menstrual calendar and noted anovulatory cycles. Physical exam identified mild comedonal acne and fine hirsutism on chin. The PCP prescribed an oral contraceptive pill (ethinyl estradiol 0.03 mg/d + levonorgestrel 0.15 mg/d) for cycle regulation, and referred to a dietitian for weight management. No endocrine labs were ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early signs of hyperandrogenism (acne, hirsutism) emerging. Metabolic derangements observed (elevated TG). No formal PCOS evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2019-09-01</h3><div class="visit-meta">Dermatology | Reason: Severe acne flare and hirsutism</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe acne flare and hirsutism.
+History of Present Illness: 17‑year‑old female with known PCOS, insulin resistance, dyslipidemia, hypertension, NAFLD, endometrial hyperplasia, and subfertility presents for worsening facial and chest acne with increased facial hair growth and abdominal tightness.
+Past Dermatologic History: Prior mild comedonal acne treated with topical tretinoin 0.1% once daily and oral contraceptive. Reports acne worsening while on OCP.
+Review of Systems: Positive for facial and chest acne, increased chin and upper‑lip hair, abdominal tightness. Denies pain, fever, or bleeding.
+Physical Examination:
+- Vital Signs: BP 115/72, HR 78 bpm, Weight 75 kg, BMI 25.6.
+- Skin: Numerous papulopustular and cystic lesions on face; several mild cystic lesions on chest; moderate hirsutism over chin and upper lip. No tenderness.
+Assessment:
+1. Severe inflammatory cystic acne likely hormone‑driven, secondary to PCOS.
+2. Hirsutism secondary to androgen excess in PCOS.
+Differential diagnosis continues to include OCP‑associated acne flare, androgen‑driven acne, and potential secondary causes of androgen excess.
+Plan:
+- Continue current oral contraceptive pill.
+- Prescribe topical tretinoin 0.05% cream, to be applied once daily.
+- Prescribe oral doxycycline 100 mg twice daily for 2 weeks.
+- Counsel on gentle facial hygiene, limit comedogenic products, and adherence to medication.
+- Discuss importance of weight management; refer to dietitian.
+- Consider endocrine work‑up (LH/FSH, total testosterone, DHEAS, fasting glucose, HbA1c) if no response by 4 weeks, though not ordered at this visit.
+- Order baseline fasting lipid panel in 3 months (if not already done) to monitor dyslipidemia.
+Follow‑up:
+- Return visit in 4 weeks to assess acne and hirsutism response.
+- If no improvement or worsening, schedule endocrine labs and consider referral to endocrinology.
+- Patient advised to seek immediate care if severe adverse reactions or if acne becomes disfiguring.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe acne breakouts on face and chest</span><span class="pill">Increased facial hair growth</span><span class="pill">Tightness in abdomen</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>115/72</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>weight</td><td>75 kg</td></tr><tr><td>BMI</td><td>25.6</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Facial acne: numerous papulopustular lesions</li><li>Chest: mild cystic lesions</li><li>Hirsutism: chin, upper lip</li><li>No tenderness</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Topical tretinoin 0.05% cream</li><li>Oral doxycycline 100 mg BID (2 weeks)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient noted acne had worsened with OCP but was hopeful for improvement with new treatment.</p></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive pill (ethinyl estradiol/levonorgestrel)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Improved menses with OCP started 2 years prior</li><li>Obesity continues</li><li>Family history unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The dermatologist performed a physical exam noting widespread cystic and inflammatory comedones and moderate hirsutism over chin and upper lip. Prescribed topical tretinoin 0.05% cream (once daily) and a 2‑week course of oral doxycycline 100 mg twice daily. The dermatologist did not order hormonal work‑up. The patient was counseled that acne may resolve with puberty and OCP use, but was reassured that a follow‑up visit could be scheduled.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acne severity increases; hirsutism persists; no endocrine labs. Metabolic risk continues to rise.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2020-05-15</h3><div class="visit-meta">Family Medicine | Reason: Lipid panel abnormality and continuation of OCP</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 18‑year‑old female presents for routine endocrine/lipid follow‑up. Reports mild breakthrough bleeding with current OCP, ongoing high‑fat diet, no new skin complaints, feels fine.
+
+Objective: Vitals: BP 118/70, HR 78, weight 80 kg, BMI 27.2. Physical exam: BMI 27.2, mild acne unchanged, abdomen normal. Labs: Triglycerides 240 mg/dL, HDL 32 mg/dL, LDL 105 mg/dL, Fasting glucose 110 mg/dL, HbA1c 5.7%. Lipid panel unchanged. Diagnosis: Insulin resistance, hypertriglyceridemia, mild dyslipidemia, early impaired fasting glucose.
+
+Assessment: Patient remains symptomatic for insulin resistance and hyperlipidemia. Started pioglitazone 15 mg nightly. Continue OCP. Continue lifestyle modifications. Consider statin if triglycerides remain &gt;200 mg/dL despite diet. Monitor breakthrough bleeding and OCP side effects.
+
+Plan:
+- Continue OCP (ethinyl estradiol 0.03 mg/d + levonorgestrel 0.15 mg/d).
+- Initiate pioglitazone 15 mg nightly.
+- Continue metformin 500 mg BID.
+- Encourage low‑saturated‑fat diet, omega‑3 intake, 150 min/week moderate exercise.
+- Repeat fasting glucose, HbA1c, lipid panel in 3 months.
+- Consider baseline endocrine panel (LH/FSH, total testosterone, DHEAS, etc.) if irregularities persist.
+- Refer to dietitian for weight management if BMI &gt;27.
+- Review breakthrough bleeding monthly.
+- Follow up in 6 weeks; sooner if bleeding worsens or new skin flare.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild breakthrough bleeding</span><span class="pill">Ongoing high-fat diet</span><span class="pill">No new complaints</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>118/70</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>weight</td><td>80 kg</td></tr><tr><td>BMI</td><td>27.2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 27.2 kg/m²</li><li>Skin: mild acne, no changes</li><li>Abdominoceli: normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose</li><li>HbA1c</li><li>Repeat lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Triglycerides 240 mg/dL</li><li>HDL 32 mg/dL</li><li>LDL 105 mg/dL</li><li>Fasting glucose 110 mg/dL</li><li>HbA1c 5.7%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pioglitazone 15 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling fine; no new skin issues.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hyperlipidemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral contraceptive pill (ethinyl estradiol/levonorgestrel)</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>OCP therapy ongoing for 3 years</li><li>Family history of type 2 diabetes</li><li>Recently diagnosed with hyperlipidemia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The clinician updated the lipid panel: triglycerides 240 mg/dL, HDL 32 mg/dL, LDL 105 mg/dL. Fasting glucose 110 mg/dL, HbA1c 5.7%. The PCP started pioglitazone 15 mg nightly for insulin sensitivity, citing risk of developing type 2 diabetes. No endocrine evaluation was ordered, and the patient was advised to reduce saturated fats and increase exercise. The patient had no changes in acne or hirsutism reported.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Insulin resistance evident; no hormonal work‑up. Metabolic syndrome features accumulate.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2022-02-01</h3><div class="visit-meta">Urgent Care | Reason: Persistent abdominal fullness and dull back pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Persistent abdominal fullness and dull back pain
+
+**History of Present Illness:**
+A 20‑year‑old woman presents to urgent care with a 3‑week history of gradual, non‑specific fullness in the upper abdomen and dull, aching pain below the ribs. She denies nausea, vomiting, changes in stool or bowel habits, jaundice, fever, or weight loss. Past abdominal pain has been intermittent and lower abdominal in location, which resolved with diet and exercise.
+
+**Past Medical History:**
+- Hypertension, well‑controlled on lisinopril 20 mg daily
+- Obesity (BMI 31.1) since age 22
+- Insulin resistance; on metformin 500 mg BID and pioglitazone 15 mg nightly
+- Non‑alcoholic fatty liver disease (NAFLD) diagnosed 2020, with elevated triglycerides and liver enzymes
+- No history of alcohol use or viral hepatitis exposure
+
+**Medications:**
+- Metformin 500 mg BID
+- Pioglitazone 15 mg nightly
+- Lisinopril 20 mg daily
+- Oral contraceptive pill (current regimen)
+- Tretinoin 0.1% cream BID (for acne)
+
+**Allergies:** NKDA
+
+**Social History:**
+- Non‑smoker, no alcohol use
+- Regularly walks for at least 30 min daily
+- Diet: high‑fat, moderate protein
+
+**Review of Systems:**
+- GU: no dysuria, hematuria
+- GI: no nausea, vomiting, diarrhea, constipation, melena, hematemesis
+- HEENT: no jaundice, pruritus
+- Musculoskeletal: reports dull, aching lower back pain
+- Cardiovascular: no chest pain
+- Respiration: no shortness of breath
+
+**Physical Examination:**
+- **Vital Signs:** BP 132/78 mmHg, HR 82 bpm, weight 91 kg, BMI 31.1
+- **General:** alert, in no acute distress
+- **Abdomen:** soft, non‑tender; mild hepatomegaly (approx. 2 cm below costal margin); no splenomegaly or ascites
+- **Back:** dull pain reproduces on palpation of L1‑L3
+- **Skin:** acne mild‑moderate, no hirsutism
+
+**Laboratory and Imaging Results:**
+- LFTs: ALT 55 U/L (ULN 35), AST 48 U/L (ULN 35), GGT 90 U/L (ULN 55), bilirubin normal
+- Abdominal ultrasound: diffuse hepatic steatosis, normal gallbladder, no focal lesions
+
+**Assessment:**
+1. Non‑alcoholic fatty liver disease (NAFLD) with mild elevation of transaminases and GGT; likely early non‑alcoholic steatohepatitis (NASH) given the presence of insulin resistance and obesity.
+2. Chronic mild hepatomegaly secondary to NAFLD.
+3. Differential includes medication‑induced hepatic injury (metformin/ pioglitazone), viral hepatitis (rule‑out), and other metabolic liver disorders.
+
+**Plan:**
+- Continue current medication regimen (metformin, pioglitazone, lisinopril, OCP, tretinoin).
+- Reinforce weight‑loss goals: target 0.5–1.0 kg/week via caloric deficit (~500 kcal/day) and increase cardio activity to 150 min/week.
+- Lifestyle counseling: low‑fat, high‑fiber diet; limit simple sugars; adequate hydration.
+- Repeat liver function panel in 1 month; if ALT/AST &gt; twice ULN or trend upward, consider referral to hepatology.
+- Continue monitoring blood pressure and fasting glucose; repeat fasting lipid panel in 3 months.
+- Patient educated on signs of hepatic decompensation (jaundice, dark urine, edema) and instructed to return immediately if they develop.
+- Follow‑up scheduled in urgent care in 4 weeks or sooner if symptoms worsen.
+
+**Follow‑up Recommendations:**
+- Repeat LFTs in 1 month.
+- Return to urgent care if abdominal pain deteriorates or jaundice develops.
+- Consider hepatology referral if liver enzymes remain persistently elevated or NASH suspected.
+- Continue routine endocrine/lipid follow‑up in 3 months.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fullness in upper abdomen</span><span class="pill">Dull, aching lower back pain</span><span class="pill">No nausea or jaundice</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>132/78</td></tr><tr><td>heart_rate</td><td>82 bpm</td></tr><tr><td>weight</td><td>91 kg</td></tr><tr><td>BMI</td><td>31.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild hepatomegaly</li><li>Soft non-tender abdomen</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Liver function panel</li><li>Abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ALT 55 U/L</li><li>AST 48 U/L</li><li>GGT 90 U/L</li><li>Abdominal ultrasound: diffuse hepatic steatosis</li><li>Normal gallbladder</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels better after abdominal exam and was told to revisit next month.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Insulin resistance</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Pioglitazone 15 mg nightly</li><li>Lisinopril 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BMI 33 at age 22 (obesity class I)</li><li>Fasting glucose 112 mg/dL</li><li>Hypertension history</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urgent‑care clinician performed abdominal exam, mild hepatomegaly noted. Liver enzymes revealed ALT 55 U/L, AST 48 U/L, GGT 90 U/L, bilirubin normal. The clinician instructed repeat liver tests in one month and ordered abdominal ultrasound to rule out focal pathology. The ultrasound reported diffuse hepatic steatosis, no focal lesions, and a normal gallbladder. No mention of reproductive disease. No endocrine labs were requested.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Non‑alcoholic fatty liver disease diagnosed; metabolic syndrome features intensified.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-02-01</h3><div class="visit-meta">Obstetrics &amp; Gynecology | Reason: Heavy, irregular menstrual bleeding</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Heavy, irregular menstrual bleeding.
+
+History of Present Illness: 22‑year‑old female presents with heavy, protracted periods lasting 10–12 days and intermittent spotting between cycles. She reports low energy. She discontinued her OCP 3 months ago. She has obesity (BMI 33.8), hypertension on lisinopril, insulin resistance on metformin and pioglitazone, and a history of acne, mild hirsutism, and hepatic steatosis.
+
+Past Medical History: Hypertension, obesity (class I), insulin resistance, metabolic syndrome, hepatic steatosis.
+
+Medications: Lisinopril 20 mg daily, Metformin 500 mg BID, Pioglitazone 15 mg nightly.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for heavy menstrual bleeding, intermittent spotting, fatigue; negative for abdominal pain, vaginal discharge, fever.
+
+Physical Examination:
+- General: Alert, oriented, BMI 33.8.
+- Vitals: BP 140/88, HR 76 bpm, weight 95 kg, BMI 33.8.
+- Abdomen: Mild hepatomegaly.
+- Pelvic: Transvaginal ultrasound shows endometrial stripe 12 mm.
+
+Laboratory Results:
+- Fasting glucose 115 mg/dL
+- HbA1c 5.9%
+- Triglycerides 260 mg/dL
+- LDL 160 mg/dL
+- HDL 30 mg/dL
+
+Assessment:
+1. Dysfunctional uterine bleeding secondary to anovulatory cycles related to obesity and insulin resistance.
+2. Endometrial thickness of 12 mm warrants consideration of endometrial hyperplasia; however, patient is pre‑menopausal and no acute symptoms of malignancy. Further evaluation pending.
+3. Possible polycystic ovary syndrome (PCOS) given hirsutism, acne history, and metabolic derangements.
+
+Plan:
+- Initiate lower‑dose oral contraceptive pill (ethinyl estradiol 0.01 mg/day + drospirenone 3 mg/day) to regulate cycles and control bleeding.
+- Continue current medications (lisinopril, metformin, pioglitazone).
+- Counsel on diet and exercise: target weight loss of 0.5–1 kg/week, Mediterranean diet, 150 min/week of moderate activity.
+- Repeat complete metabolic panel and fasting lipid panel in 3 months.
+- Repeat transvaginal ultrasound/endometrial thickness assessment in 6 months.
+- If bleeding remains heavy or endometrial thickness &gt;12 mm persists after 3 cycles of OCP, schedule office endometrial sampling (biopsy).
+- Continue routine liver function monitoring due to hepatic steatosis; repeat LFTs in 1 month.
+- Encourage follow‑up with dietitian and endocrinology for comprehensive metabolic management.
+
+Follow Up: Return in 3 months for repeat labs and bleeding assessment, or sooner if heavy bleeding persists.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Heavy, protracted periods lasting 10–12 days</span><span class="pill">Intermittent spotting between cycles</span><span class="pill">Low energy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>140/88</td></tr><tr><td>heart_rate</td><td>76 bpm</td></tr><tr><td>weight</td><td>95 kg</td></tr><tr><td>BMI</td><td>33.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 33.8 kg/m²</li><li>Transvaginal ultrasound: endometrial thickness 12 mm</li><li>Abdominal exam: mild hepatomegaly</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Transvaginal ultrasound (performed)</li><li>Complete metabolic panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Endometrial thickness 12 mm (confirmed)</li><li>Blood glucose fasting 115 mg/dL</li><li>HbA1c 5.9%</li><li>Triglycerides 260 mg/dL</li><li>LDL 160 mg/dL</li><li>HDL 30 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescription of lower‑dose OCP</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling relief after bleeding started to reduce, but remained unaware of possible endometrial hyperplasia.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Insulin resistance</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Pioglitazone 15 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>OCP therapy discontinued 3 months prior</li><li>Obesity class I</li><li>Hypertension on lisinopril</li><li>Metabolic syndrome features</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During pelvic exam, the OB‑GYN noted a thickened endometrial stripe of 12 mm on transvaginal ultrasound. No biopsy was performed; instead, a lower dose OCP (ethinyl estradiol 0.01 mg/d + drospirenone 3 mg/d) was prescribed with the recommendation to monitor bleeding. The patient was reassured about bleeding management but had no question about the thickened lining. The clinician did not order a serum androgen panel or transvaginal ovarian imaging.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Endometrial hyperplasia risk increased; still no endocrine evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-02-15</h3><div class="visit-meta">Dermatology | Reason: Persistent acne</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent severe facial acne with occasional nodules and scarring on the cheeks.
+
+History of Present Illness: 22‑year‑old female presents for evaluation of persistent, extensive cystic and inflammatory acne. She reports severe facial acne and occasional nodules. She has visible scarring on the cheeks and periorbital area. Past dermatologic therapy included topical retinoids and oral antibiotics with modest improvement after 6 weeks, but acne remains moderate to severe. She continues her lower‑dose oral contraceptive pill (OCP) initiated 1 month prior. She is aware of potential side effects of spironolactone and has agreed to a short trial.
+
+Past Medical History: Hypertension, obesity (BMI 34.2), insulin resistance, dyslipidemia, non‑alcoholic fatty liver disease (NAFLD), endometrial hyperplasia, subfertility, non‑alcoholic steatohepatitis. Surgical history is unremarkable.
+
+Current Medications: Lisinopril 20 mg daily, Metformin 500 mg BID, Pioglitazone 15 mg nightly, OCP (low‑dose ethinyl estradiol/levonorgestrel), topical adapalene 0.1% gel weekly, oral spironolactone 50 mg daily (initiated today).
+
+Allergies: NKDA.
+
+Review of Systems: Positive for facial acne, skin scarring. Denies new systemic symptoms, no weight change since last visit.
+
+Physical Examination:
+- Dermatologic: Extensive inflammatory and cystic acne on face with multiple papules, pustules, and nodules. Scarring evident in periorbital and cheek areas.
+- Cardiovascular: BP 138/86 mmHg, HR 77 bpm.
+- General: BMI 34.2, weight 96 kg.
+- No other systemic findings.
+
+Assessment: Persistent severe acne vulgaris likely driven by hormonal milieu secondary to obesity and insulin resistance. Androgen excess appears plausible given obesity, insulin resistance, and continued OCP use. No evidence of androgenic disorders on bedside exam.
+
+Differential Diagnosis:
+1. Severe inflammatory cystic acne vulgaris.
+2. Androgenic acne secondary to insulin resistance/obesity.
+3. PCOS (though no overt hirsutism, menstrual irregularities, or other classic features noted).
+4. Endometrial hyperplasia (previously diagnosed) – not directly related to current dermatologic issues.
+5. Potential drug‑induced acne (unlikely with current meds).
+
+Plan:
+1. Continue current OCP.
+2. Initiate oral spironolactone 50 mg daily (anti‑androgenic; monitor for hyperkalemia, dizziness, menstrual changes).
+3. Use topical adapalene 0.1% gel weekly as per prescription.
+4. Re‑educate patient on proper application and lifestyle measures.
+5. Order baseline hormone panel (total testosterone, free testosterone, DHEAS, LH, FSH, estradiol, SHBG) to assess for hyperandrogenism and rule out PCOS.
+6. Order comprehensive metabolic panel (CMP) with electrolytes and serum potassium to monitor spironolactone safety.
+7. Order lipid panel and liver function tests again in 3 months.
+8. Encourage weight loss (0.5–1 kg/week), dietary counseling, and 150 minutes of moderate exercise per week.
+9. Re‑evaluate acne severity and side‑effects at 4‑week follow‑up.
+10. Continue monthly liver function tests.
+
+Disposition: Patient is advised to contact clinic if she experiences severe dizziness, palpitations, or edema. Follow‑up scheduled in 4 weeks for clinical assessment and lab review. If acne does not improve or worsens, consider dermatologic referral for systemic therapy.
+
+Signature:  Dr. [Dermatologist Name]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe facial acne and occasional nodules</span><span class="pill">Scarring on cheeks</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>138/86</td></tr><tr><td>heart_rate</td><td>77 bpm</td></tr><tr><td>weight</td><td>96 kg</td></tr><tr><td>BMI</td><td>34.2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Facial acne: numerous inflammatory lesions</li><li>Scars in periorbital area</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline serum hormone panel (not ordered)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Topical adapalene 0.1% gel</li><li>Oral spironolactone 50 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported slight improvement after 6 weeks but still has moderate acne.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Insulin resistance</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Pioglitazone 15 mg nightly</li><li>OCP (lower‑dose) started 1 month prior</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing OCP therapy</li><li>History of acne treatment with antibiotic and retinoid</li><li>Obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The dermatologist repeated the physical exam, noting extensive cystic and inflammatory acne. The clinician upgraded therapy to topical adapalene 0.1% gel weekly and added oral spironolactone 50 mg daily for its anti‑androgen effect. Patient expressed discomfort with medication side‑effects but complied with a short trial. No hormonal work‑up was performed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Endocrine therapy with spironolactone introduced, yet no comprehensive endocrine evaluation performed.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-03-01</h3><div class="visit-meta">Radiology | Reason: Follow‑up for fatty liver disease</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow-up for fatty liver disease.
+
+History: 22‑year‑old female with known non‑alcoholic fatty liver disease (NAFLD) and non‑alcoholic steatohepatitis; hypertension, obesity, insulin resistance, dyslipidemia, endometrial hyperplasia, subfertility, PCOS. Current med list: lisinopril 20 mg daily, metformin 500 mg BID, pioglitazone 15 mg nightly, spironolactone 50 mg daily, lower‑dose OCP, topical adapalene 0.1% gel weekly. No new abdominal pain; reports slight fatigue.
+
+Vitals: BP 141/90 mmHg; HR 75 bpm; weight 97 kg; BMI 34.8.
+
+Imaging: Repeat abdominal ultrasound shows persistent diffuse hepatic steatosis without focal lesions or signs of fibrosis. Mild splenomegaly (diameter approx. 13 cm) and fatty infiltration of the spleen noted. No endocrine or reproductive organ imaging was performed.
+
+Assessment: Stable hepatic steatosis with no progression to fibrosis. Mild splenic enlargement likely secondary to portal hypertension from chronic liver disease. Slight fatigue could represent metabolic burden or anemia (to be evaluated). BP is controlled but borderline; weight remains in obesity range.
+
+Plan:
+1. Continue current pharmacologic regimen (lisinopril, metformin, pioglitazone, spironolactone, OCP, topical adapalene). No change to medications at this visit.
+2. Lifestyle: Reinforce Mediterranean diet, weight‑loss goal 0.5–1 kg/week, at least 150 min/week moderate aerobic exercise, and continued sodium restriction.
+3. Labs: Repeat fasting lipid panel, liver function tests, fasting glucose/HbA1c in 6 months. Consider CBC to evaluate fatigue.
+4. Follow‑up imaging: Repeat abdominal ultrasound in 6 months or sooner if clinical status worsens.
+5. BP monitoring: Continue lisinopril, target BP &lt;130/80 mmHg; consider adding a thiazide diuretic if BP remains above target.
+6. Reassess splenomegaly: If remains enlarged or symptomatic, consider referral to hematology and further portal hypertension workup (e.g., platelet count, HVPG if indicated).
+
+The patient was counseled on the importance of maintaining weight loss and lifestyle modifications to prevent progression to cirrhosis.
+
+Follow‑up: Outpatient visit in 6 months with repeat labs and imaging; sooner if new abdominal pain, worsening fatigue, or significant weight change.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight fatigue</span><span class="pill">No new abdominal pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>141/90</td></tr><tr><td>heart_rate</td><td>75 bpm</td></tr><tr><td>weight</td><td>97 kg</td></tr><tr><td>BMI</td><td>34.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Ultrasound: diffuse steatosis</li><li>No focal lesions</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Ultrasound: diffuse hepatic steatosis, mild splenomegaly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels stable and follows dietary advice.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Insulin resistance</span><span class="pill">Non‑alcoholic fatty liver disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Pioglitazone 15 mg nightly</li><li>Spironolactone 50 mg daily</li><li>OCP (lower‑dose)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous liver ultrasound confirming hepatic steatosis</li><li>Medication: pioglitazone, metformin, spironolactone, OCP</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The radiologist performed a repeat abdominal ultrasound, confirming persistent diffuse hepatic steatosis without progression to fibrosis. The scan also noted mild splenomegaly and fatty infiltration in the spleen. No endocrine or reproductive imaging was requested. The clinician advised continued lifestyle modification and follow‑up labs in 6 months.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>NASH remains suspected; endocrine status still unassessed.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 22</span><span class="pill">Sex: Female</span><span class="pill">Height: 165 cm</span><span class="pill">Weight: 75 kg</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Insulin Resistance</span><span class="pill">Dyslipidemia</span><span class="pill">Hypertension</span><span class="pill">Non‑Alcoholic Fatty Liver Disease</span><span class="pill">Endometrial Hyperplasia</span><span class="pill">Subfertility</span><span class="pill">Polycystic ovary syndrome</span><span class="pill">Non‑Alcoholic Steatohepatitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Pioglitazone 15 mg nightly</li><li>Low‑dose oral contraceptive pill (ethinyl estradiol + levonorgestrel)</li><li>Oral spironolactone 50 mg daily</li><li>Topical adapalene 0.1% gel weekly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2015-06-03: 22‑year‑old female presented with chronic lower abdominal pain. Vitals were BP 110/68 mmHg, HR 78 bpm, height 165 cm, weight 58 kg. Physical exam showed a soft, non‑tender abdomen with no masses or organomegaly. No red‑flag symptoms were noted. Plan included reassurance, counseling on a balanced low‑fat diet, 30 minutes of brisk walking daily, adequate hydration and regular bowel habits, and a potential low‑dose antispasmodic (e.g., hyoscine butylbromide) if pain persists &gt;2 weeks. No labs or imaging were ordered.</li><li>2017-03-10: 22‑year‑old female presented with mild facial acne, irregular menstrual cycles, and mild lower abdominal discomfort. Vitals: BP 110/68 mmHg, HR 78 bpm, Height 165 cm, Weight 58 kg, BMI 21.4 kg/m². Physical exam: soft, non‑tender abdomen; mild comedonal acne on cheeks and jawline; fine hirsutism of chin and lower lip; pelvic exam normal. Plan: continue current oral contraceptive pill (ethinyl estradiol 0.03 mg/d + levonorgestrel 0.15 mg/d); add topical tretinoin 0.1% cream BID for acne; repeat fasting lipid panel in 3 months (consider statin/omega‑3 if triglycerides remain high); refer to dietitian for weight management; order baseline endocrine panel (LH/FSH, total testosterone, DHEAS, fasting glucose, HbA1c) next visit; monitor breakthrough bleeding and acne; follow up in 4 weeks.</li><li>2019-09-01: 22‑year‑old female presented with severe inflammatory cystic acne and hirsutism. Physical exam showed multiple papulopustular and cystic facial lesions, mild cystic chest lesions, and moderate chin/upper‑lip hirsutism. BP 115/72, HR 78, weight 75 kg, BMI 25.6. Treated with oral contraceptive pill (continued), topical tretinoin 0.05% cream once daily, and oral doxycycline 100 mg twice daily for 2 weeks. Advised weight management, dietitian referral, and follow‑up in 4 weeks.</li><li>2020-05-15: 22‑year‑old female visited for routine endocrine/lipid follow‑up. Vitals: BP 118/70, HR 78, weight 80 kg, BMI 27.2. Labs: triglycerides 240 mg/dL, HDL 32 mg/dL, LDL 105 mg/dL, fasting glucose 110 mg/dL, HbA1c 5.7%. Mild breakthrough bleeding with current OCP, no new skin complaints. Started pioglitazone 15 mg nightly and metformin 500 mg BID; continued OCP and topical tretinoin. Repeat fasting glucose, HbA1c, and lipid panel in 3 months. Follow‑up in 6 weeks.</li><li>2022-02-01: 22‑year‑old female presented with upper abdominal fullness and dull lower back pain; BMI 31.1, mild hepatomegaly. LFTs: ALT 55, AST 48, GGT 90. Ultrasound: diffuse hepatic steatosis. Continued metformin, pioglitazone, lisinopril, OCP, and tretinoin. Advised weight‑loss plan and dietary counseling. Repeat LFTs in 1 month. Follow‑up scheduled in urgent care in 4 weeks.</li><li>2024-02-01: 22‑year‑old female presented with heavy, irregular menstrual bleeding lasting 10‑12 days with intermittent spotting and low energy. She had discontinued her OCP 3 months prior. She is obese (BMI 33.8) with hypertension on lisinopril, insulin resistance on metformin and pioglitazone, and hepatic steatosis with mild hepatomegaly. Transvaginal ultrasound showed an endometrial stripe of 12 mm. Laboratory results: fasting glucose 115 mg/dL, HbA1c 5.9%, triglycerides 260 mg/dL, LDL 160 mg/dL, HDL 30 mg/dL. Plan: initiate lower‑dose oral contraceptive pill (ethinyl estradiol 0.01 mg/day + drospirenone 3 mg/day) to regulate cycles and control bleeding; continue lisinopril, metformin, and pioglitazone; counsel on Mediterranean diet, weight loss goal 0.5–1 kg/week, and 150 min/week of moderate activity; repeat complete metabolic panel and fasting lipid panel in 3 months; repeat transvaginal ultrasound in 6 months; monitor endometrial thickness and consider biopsy if heavy bleeding persists after 3 cycles; continue monthly liver function monitoring; refer to dietitian and endocrinology for metabolic management.</li><li>2024-02-15: 22‑year‑old female presented with persistent severe facial acne, nodules, and scarring. Vitals: BP 138/86 mmHg, HR 77 bpm, weight 96 kg, BMI 34.2. Physical exam revealed extensive inflammatory and cystic acne on the face with papules, pustules, nodules, and scarring periorbital and cheek. She was started on oral spironolactone 50 mg daily and topical adapalene 0.1% gel weekly. Baseline hormone panel, comprehensive metabolic panel with electrolytes, and liver function tests were ordered. She will continue a low‑dose oral contraceptive pill containing ethinyl estradiol and levonorgestrel. Follow‑up scheduled in 4 weeks to assess acne and monitor lab values. Weight‑loss and exercise recommendations reinforced.</li><li>2024-03-01: Radiology follow‑up for fatty liver disease. Vitals: BP 141/90 mmHg, HR 75 bpm, weight 97 kg, BMI 34.8. Ultrasound findings: persistent diffuse hepatic steatosis; mild splenomegaly (~13 cm) with fatty infiltration. No focal lesions. Patient reports slight fatigue, no abdominal pain. Plan: continue lisinopril, metformin, pioglitazone, spironolactone, OCP, topical adapalene. Reinforce Mediterranean diet and weight‑loss goal. Labs in 6 months (lipid panel, LFTs, fasting glucose/HbA1c, CBC). Repeat abdominal ultrasound in 6 months. BP target &lt;130/80 mmHg; consider adding thiazide if above target. Follow‑up in outpatient in 6 months.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

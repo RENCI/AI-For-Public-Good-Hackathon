@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 70d81e52</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 70d81e52</h1><div class="subtitle">Invasive Breast Carcinoma of the Left Breast, &gt;5 cm (T3), with Distant Metastasis (M3), Stage IV | Female, 55</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Obesity, Type 2 Diabetes Mellitus, Hypertension</div><div class="meta-line">Risk Factors: Family history of breast cancer, BRCA1/BRCA2 mutation, Early menarche (&lt;12 yr), Late menopause (&gt;55 yr), Endogenous or exogenous estrogen exposure, High‑fat diet, Alcohol consumption, Breastfeeding history</div></div>
+<details><summary>Narrative <span class="preview-text">**The Fall, 2023 – The Beginning**  On a rainy Tuesday in the first week of March, Margaret Johnson, a 55‑year‑old accou...</span></summary><div class="section-body"><p>**The Fall, 2023 – The Beginning**</p><p>On a rainy Tuesday in the first week of March, Margaret Johnson, a 55‑year‑old accountant, felt a small thickening in her left breast while shaving. “It’s just a bump,” she told her physician, thinking of a benign cyst. Her mother had been diagnosed with breast cancer at 48, and her family history made Margaret feel a nagging unease. For the rest of the week she paid it no heed, but when she noticed a new, hard‑to‑pinpoint mass under her left nipple that persisted for two weeks, she scheduled an appointment with her OB‑GYN.</p><p>During the visit, Dr. Patel performed a quick clinical breast exam. Margaret’s large 6‑cm mass was firm, irregular, and non‑mobile, with mild erythema but no palpable lymph nodes. “We need imaging. I’m going to order a diagnostic mammogram and ultrasound,” Dr. Patel said. Margaret’s medical history was uncomplicated aside from her long‑standing obesity (BMI 33), type 2 diabetes mellitus managed with metformin 500 mg BID and occasional insulin, and hypertension on lisinopril 10 mg daily. She had been drinking a glass of wine each night for the last twenty years, began estrogen therapy for menopausal symptoms at 52, and had never stopped her high‑fat diet of fast food and fried dishes. She had only had two children, both breastfeeding for two years each, and her menarche at age 10 and menopause at 58 made her a high‑risk profile.</p><p>**Diagnostic Work‑Up (March–April)**</p><p>On March 15th, Margaret’s diagnostic mammogram revealed an irregular, hypodense mass in the upper outer quadrant of the left breast, measuring 6.3 cm. The ultrasound confirmed a hypoechoic lesion with indistinct margins. A core needle biopsy the next day yielded an invasive ductal carcinoma, estrogen receptor‑positive, progesterone receptor‑positive, HER2‑negative, Ki‑67 30%. Margins were close. The pathology report also noted a likely BRCA1 mutation, given her family history and genetic testing result performed concurrently. A staging CT of the chest, abdomen, and pelvis showed a 3‑cm liver lesion in segment V and a sclerotic bone lesion in T9. A bone scan demonstrated increased uptake in the right femoral shaft and humerus.</p><p>By April 5th, the oncology team had convened. “This is stage IV – metastatic breast cancer,” Dr. Nguyen, a medical oncologist, announced. “We want to start systemic therapy as soon as possible to control disease dissemination.” They prescribed a first‑line combination of an aromatase inhibitor (exemestane 25 mg daily) with the possibility of adding a CDK4/6 inhibitor if her tumor had high proliferation. However, with HER2‑negative disease, a biologic agent was not indicated. Margaret’s endocrine status (post‑menopausal) made her amenable to hormonal therapy, potentially reducing side effects in the context of obesity and diabetes.</p><p>**Early Treatment Challenges (May–June)**</p><p>Margaret tolerated the aromatase inhibitor well but reported a gradual decline in energy. She gained 5 kg in the first month despite her best efforts, and her HbA1c rose from 7.2% to 8.1% during a flare of hyperglycemia that required an insulin dose adjustment. Metformin was discontinued on June 4th because of rising serum creatinine and mild neuropathic symptoms. In June, a review of her bone scan showed new uptake in the left clavicle, raising suspicion of further skeletal involvement.</p><p>On May 26th, Margaret had a routine follow‑up. She complained of increasing breast pain radiating to her left shoulder, described as “aching and throbbing.” She also found the mass larger, more tender, and noted redness on the skin around it. Palpation revealed an enlarged left axillary lymph node that had been unidentifiable before. Her oncologist, Dr. Nguyen, performed a fine‑needle aspiration of the node; cytology confirmed metastatic carcinoma. “Her disease is progressing,” Dr. Nguyen said.</p><p>Margaret’s oncology team decided to initiate a chemotherapy regime, switching from endocrine therapy to letrozole plus a taxane. “The goal is to shrink the primary and reduce metastases,&quot; said Dr. Nguyen. The plan included gemcitabine, but after a week, Margaret developed grade 3 peripheral neuropathy, prompting a dose reduction of the taxane.</p><p>**Mid‑Course Decline (July–August)**</p><p>In July, at her routine CT chest/abdomen/pelvis, the liver metastasis had increased in size from 3 cm to 4.5 cm, and a new small lesion appeared in segment II. Bone scan in early August revealed diffuse uptake over the lumbar spine and left pelvis. Margaret’s right hip had started to become painful, limiting her ambulation. She began weight‑bearing with a cane but reported significant fatigue after walking only 20 minutes. Her diabetes lab work had shown a fasting glucose of 180 mg/dL, and she was unable to maintain adequate glycemic control on insulin alone.</p><p>Her oncologist held the taxanes and added a HER2‑targeted therapy off‑label, trastuzumab, given her high proliferation index and some preliminary evidence of HER2 overexpression on immunohistochemistry. Margaret experienced a mild febrile reaction with the first infusion. Her oncology team monitored her closely for cardiac function because of her HTN.</p><p>**Compromise and palliative transition (September–October)**</p><p>In September, Margaret’s liver metastases progressed further. She was hospitalized on September 10th for hypoglycemia, hyperemesis, and severe fatigue. Her liver function tests were abnormal (AST 132 U/L, ALT 148 U/L, ALP 560 U/L), and total bilirubin 2.1 mg/dL. Her oncology team decided to discontinue chemotherapy in favor of supportive care, citing diminishing returns and quality‑of‑life concerns. Margaret and her family attended a palliative care consult.</p><p>She was started on oral morphine for bone pain and low‑dose prednisone to manage edema and weight loss. Diabetic management returned to basal‑bolus insulin therapy, and her dietitian suggested a low‑glycemic, calorie‑restricted diet, but Margaret struggled with adherence.</p><p>**Final Months (November – January)**</p><p>Margaret’s quality of life deteriorated. By mid‑November, she had lost 12 kg from a baseline of 160 lbs, and her HbA1c was 10.5%. She began developing severe back pain, with a newly developed paraparesis (right leg weakness, left leg pain). An MRI of the spine revealed a T12 vertebral body metastasis causing compression of the spinal cord. She underwent emergent spinal stabilization surgery, but postoperative complications included a wound infection and persistent paraplegia.</p><p>In early December, she was readmitted with cholestasis and severe nausea. She was re‑initiated on an intravenous chemotherapy regimen (capecitabine) in a bid to control the hepatic disease, but tolerability was low. Her appetite was minimal, and she requested a return to her home, where she spent the next two weeks under hospice care.</p><p>**Outcome and Reflection**</p><p>Margaret’s disease course exemplified a rapidly worsening metastatic breast cancer trajectory in a patient with several comorbidities and risk factors that compounded her clinical management. Her early menopause, estrogen therapy, family history, and BRCA1 mutation set her up for a highly aggressive tumor phenotype, while obesity and diabetes worsened her response to therapy. Each decision to add or change therapy was made in consideration of her quality of life but ultimately could not halt disease progression, culminating in death in late January 2024.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-03-01</h3><div class="visit-meta">Obstetrics &amp; Gynecology | Reason: Observed left breast thickening while shaving</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Patient observed left breast thickening while shaving.
+
+**History of Present Illness:** 55‑year‑old woman presents with a 6‑cm firm, irregular, non‑mobile mass just inferior to the left nipple noted during self‑inspection. She reports mild discomfort associated with the area and mild erythema. No pain with movement or palpation. No prior breast surgeries or trauma.
+
+**Past Medical History:** Obesity, Type 2 Diabetes Mellitus, Hypertension, estrogen therapy (1 mg daily) started at age 52. Family history of breast cancer. Pending BRCA1 mutation testing.
+
+**Medications:** Metformin 500 mg twice daily, Lisinopril 10 mg daily, Estrogen therapy 1 mg daily.
+
+**Allergies:** NKDA.
+
+**Review of Systems:** Negative for dyspnea, chest pain, urinary symptoms or systemic signs.
+
+**Vital Signs:** BP 138/84 mmHg, HR 78 bpm, Temp 98.6 °F, Weight 160 lb, BMI 33.
+
+**Physical Examination:** Focused breast exam revealed a 6‑cm firm, irregular, non‑mobile mass located under the left nipple with mild erythema. No palpable axillary or supraclavicular lymphadenopathy. Right breast normal. No skin dimpling or nipple retraction.
+
+**Assessment:** 1. Left breast mass, likely suspicious for malignancy given size, firmness, irregularity, and lack of mobility. 2. Secondary consideration: inflammatory breast disease or large fibroadenoma, but erythema raises concern for inflammatory changes.
+
+**Plan:**
+1. Order diagnostic mammogram and breast ultrasound of the left breast. 2. Counsel patient on the need for imaging and potential need for core‑needle biopsy if imaging is suspicious. 3. Continue current medication regimen; encourage tighter glycemic and blood pressure control. 4. Discuss lifestyle modifications: weight loss, reduced alcohol intake, balanced diet. 5. Recommend routine self‑breast exam and prompt re‑evaluation if symptoms worsen.
+
+**Follow‑up:** Patient will be scheduled for a second visit in 4 weeks to review imaging results; if imaging suggests malignancy, expedited referral to surgical oncology for biopsy.
+
+**Patient Education:** Discussed the importance of rapid evaluation, potential risks, and what to look for at home such as new masses, discharge, pain, or skin changes. Provided verbal and written materials on breast cancer risk reduction and management of potential anxiety.
+
+**Signature:** Dr. Patel, OB/GYN</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">thickening in left breast</span><span class="pill">firm hard mass under nipple</span><span class="pill">mild discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>Weight</td><td>160 lb</td></tr><tr><td>BMI</td><td>33</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm, irregular mass 6 cm under left nipple</li><li>Mild erythema</li><li>No palpable axillary lymph nodes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Diagnostic mammogram</li><li>Breast ultrasound</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Agreed to imaging; scheduled follow‑up.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Estrogen therapy 1 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity</li><li>Type 2 Diabetes Mellitus</li><li>Hypertension</li><li>Estrogen therapy started age 52</li><li>High‑fat diet</li><li>Alcohol consumption</li><li>Family history of breast cancer</li><li>BRCA1 mutation testing pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel performed a focused breast examination, noting a 6 cm firm, irregular, non‑mobile mass under the left nipple with mild erythema and no palpable lymphadenopathy. She explained the need for imaging to rule out malignancy and prescribed a diagnostic mammogram and breast ultrasound. Margaret agreed to the imaging and scheduled the next appointment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Mass suspected malignant; recommended diagnostic imaging and further workup.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-03-15</h3><div class="visit-meta">Radiology | Reason: Diagnostic mammogram and ultrasound of left breast mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 55‑year‑old female presenting for diagnostic imaging of a left breast mass. Findings: Diagnostic bilateral mammogram demonstrates an irregular, hypodense left upper outer quadrant mass measuring 6.3 cm (2.5‑3.0 cm on two orthogonal views). Ultrasound of the left breast confirms a 6.3 cm hypoechoic lesion with indistinct margins, no internal calcifications, and no evidence of axillary adenopathy. These imaging features are highly suspicious for a malignant lesion. The patient has known risk factors including obesity (BMI 33), type 2 diabetes mellitus, long‑term estrogen therapy, a strong family history of breast cancer, and pending BRCA1 mutation testing. The clinical history of a firm, hard mass noted on self‑examination with mild discomfort aligns with mammographic findings. I discussed the imaging results with the patient, emphasizing the need for tissue diagnosis and she expressed mild anxiety regarding a possible malignancy. A core‑needle breast biopsy of the lesion was scheduled for the next day. No procedural intervention was performed during this visit. The patient remains on her current medications (metformin, lisinopril, estrogen therapy) and was advised to continue them. The patient was instructed to limit alcohol intake, continue weight‑management efforts, and resume regular self‑breast examination. Follow‑up: Return for biopsy pathology results within 2 days. If pathology confirms malignancy, referral to breast surgical oncology for definitive management will be arranged. The patient will also receive a prompt referral for genetic counseling regarding BRCA1 once results are available.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">thickening in left breast</span><span class="pill">firm hard mass under nipple</span><span class="pill">mild discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>139/85</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>Weight</td><td>160 lb</td></tr><tr><td>BMI</td><td>33</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Radiologic evidence of a 6.3‑cm irregular mass in left breast</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Core‑needle breast biopsy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Margaret scheduled biopsy for next day; expressed mild anxiety regarding potential malignancy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Estrogen therapy 1 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity</li><li>Type 2 Diabetes Mellitus</li><li>Hypertension</li><li>Estrogen therapy</li><li>High‑fat diet</li><li>Alcohol consumption</li><li>Family history of breast cancer</li><li>BRCA1 mutation testing pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The radiology suite performed a diagnostic mammogram, revealing an irregular, hypodense 6.3‑cm mass in the upper outer quadrant of the left breast. An ultrasound confirmed a hypoechoic lesion with indistinct margins. Dr. Patel discussed the findings with Margaret and arranged for a core‑needle biopsy the following day.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Imaging confirms suspicious mass; proceeding to histopathologic diagnosis.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-03-16</h3><div class="visit-meta">Medical Oncology | Reason: Core‑needle biopsy of left breast mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Core‑needle biopsy of left breast mass.
+
+History of Present Illness: Patient is a 55‑year‑old woman with a 6‑cm irregular, firm mass in the left breast. She underwent core‑needle biopsy, which returned a high‑grade neoplasm that is estrogen and progesterone receptor‑positive with close margins. Recent imaging (contrast CT chest/abdomen/pelvis and bone scan) revealed a 3‑cm hepatic lesion, a sclerotic T9 vertebral lesion, and new uptake in the right femur and humerus. The findings are suggestive of metastatic disease.
+
+Review of Systems: Positive for breast thickening, firm mass under the nipple, and mild discomfort over the left breast. Denies fever, weight loss, night sweats, or other systemic symptoms.
+
+Physical Examination: Breast: 6‑cm irregular, hard mass in the left upper outer quadrant with mild erythema. No axillary lymphadenopathy noted.
+
+Vital Signs: BP 140/88, HR 80, Temp 98.6 °F, Weight 161 lb, BMI 33.
+
+Assessment:
+1. Invasive ductal carcinoma of the left breast, ER/PR positive, HER2 negative; close margins.
+2. Suspected metastatic disease to bone (T9, femur, humerus) and liver.
+
+Plan:
+- Stop estrogen therapy (1 mg daily) given hormone‑positive tumor.
+- Initiate letrozole 2.5 mg PO daily as first‑line endocrine therapy.
+- Consider fulvestrant 500 mg IM at week 0, 2, 4, then monthly if clinically indicated.
+- Begin denosumab 120 mg SC every 4 weeks to address bone metastases; provide calcium 500 mg PO daily and vitamin D 800 IU daily.
+- Continue metformin 500 mg BID and lisinopril 10 mg daily.
+- Refer to breast surgical oncology for definitive management (re‑excision versus mastectomy) and to radiation oncology for bone pain control.
+- Discuss lifestyle modification: weight management, increased physical activity, limit alcohol, maintain balanced diet.
+- Monitor blood pressure and glycemic control; adjust antihypertensive or antidiabetic therapy as needed.
+- Schedule next oncology visit in 4 weeks for clinical assessment.
+- Repeat contrast CT chest/abdomen/pelvis in 3 months; bone scan in 4 months.
+- Educate patient on signs of tumor lysis syndrome, bone pain, and to report new symptoms promptly.
+
+The patient expressed distress at the findings but agreed to commence therapy.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">thickening in left breast</span><span class="pill">firm hard mass under nipple</span><span class="pill">mild discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>Weight</td><td>161 lb</td></tr><tr><td>BMI</td><td>33</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Persistent 6‑cm mass in left breast</li><li>Mild erythema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast CT chest/abdomen/pelvis</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 3‑cm liver lesion, sclerotic T9 lesion</li><li>Bone scan: increased uptake right femur, humerus</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Margaret was distressed upon learning of advanced disease but agreed to start systemic therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Estrogen therapy 1 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity</li><li>Type 2 Diabetes Mellitus</li><li>Hypertension</li><li>Estrogen therapy</li><li>High‑fat diet</li><li>Alcohol consumption</li><li>Family history of breast cancer</li><li>BRCA1 mutation confirmed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Margaret underwent a core‑needle biopsy under local anesthesia. Pathology returned showing invasive ductal carcinoma, ER+, PR+, HER2-, Ki‑67 30%. Margins were close. BRCA1 mutation was confirmed. Dr. Nguyen reviewed the results and discussed staging. A contrast CT scan of chest/abdomen/pelvis revealed a 3‑cm hepatic lesion in segment V and a sclerotic T9 bone lesion; bone scan showed new uptake in right femur and humerus.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IV metastatic breast cancer confirmed. Initiate systemic therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-04-05</h3><div class="visit-meta">Medical Oncology | Reason: Initiate systemic therapy for metastatic breast cancer</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Discussion and initiation of systemic therapy.
+
+History of Present Illness:
+A 55‑year‑old female with known metastatic hormone‑receptor–positive breast cancer presents for routine oncology follow‑up. She reports mild fatigue but denies pain, nausea, vomiting, or other new symptoms. On examination, a 6‑cm firm, erythematous mass is noted in the left breast. She is post‑menopausal and is currently on letrozole 2.5 mg PO daily, but the patient has expressed interest in switching to a different endocrine agent.
+
+Past Medical History: Obesity (BMI 34), Type 2 diabetes mellitus (HbA1c 7.2 %), hypertension (BP 140/88 mm Hg), metastatic breast cancer (ER/PR‑positive, HER2‑negative), bone metastases treated with denosumab.
+
+Medications: Metformin 500 mg BID, Lisinopril 10 mg daily, Letrozole 2.5 mg daily, Denosumab 120 mg SC q4 wk, Calcium 500 mg PO daily, Vitamin D 800 IU daily.
+
+Allergies: NKDA.
+
+Social History: High‑fat diet, moderate alcohol consumption, BMI 34, no tobacco use.
+
+Review of Systems: Denies new chest pain, shortness of breath, fever, chills, or new joint pains.
+
+Physical Examination:
+- General: Alert, oriented, in no acute distress.
+- Vital signs: BP 140/88 mm Hg, HR 80 bpm, Temp 98.6 °F, Weight 165 lb, BMI 34.
+- Breast: 6‑cm firm, erythematous mass in left breast, no palpable lymphadenopathy.
+- Musculoskeletal: No new pain or deformities.
+
+Laboratory Results:
+- CBC: Normal.
+- CMP: Normal hepatic and renal panels.
+- HbA1c: 7.2 %.
+- Fasting glucose: 150 mg/dL.
+
+Assessment:
+1. Metastatic ER/PR‑positive invasive ductal carcinoma – progressing locally with new symptom of mild fatigue.
+2. Ongoing type 2 diabetes mellitus – near–target control.
+3. Hypertension – well‑controlled.
+
+Plan:
+- Initiate exemestane 25 mg PO daily, discontinuing letrozole. Discussed rationale: aromatase inhibitor more appropriate for post‑menopausal patient and potential benefit in this scenario.
+- Discuss possible addition of a CDK4/6 inhibitor (palbociclib, ribociclib, or abemaciclib) contingent upon Ki‑67 / proliferation index assessment from pathology report.
+- Continue current supportive medications: Metformin, Lisinopril, Denosumab q4 wk, Calcium, Vitamin D.
+- Monitor hepatic function and complete blood count at baseline and every 4 weeks during initial 3 months of therapy; monitor fasting glucose and HbA1c every 3 months.
+- Repeat CT chest/abdomen/pelvis in 3 months to evaluate treatment response.
+- Bone scan every 3 months to monitor bone disease progression.
+- Counsel on bone health: weight‑bearing exercise, smoking cessation (none), limit alcohol, continue calcium and vitamin D.
+- Encourage dietary counseling for weight loss; refer to dietitian.
+- Advise routine self‑breast examination monthly and prompt reporting of new symptoms.
+- Continue breast‑cancer genetic counseling; BRCA1 mutation already confirmed; consider prophylactic surgery or enhanced surveillance.
+- Follow‑up visit in 4 weeks to assess tolerance, side‑effects, and discuss next steps.
+
+Disposition: Patient appears well; informed about therapy changes and side‑effect profile. Arranged pharmacist counseling regarding exemestane.
+
+Prepared by: Dr. Nguyen, MD
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>Weight</td><td>165 lb</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>6‑cm breast mass, firm, erythematous</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>HbA1c</li><li>Fasting glucose</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP normal</li><li>HbA1c 7.2%</li><li>Fasting glucose 150 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Exemestane 25 mg oral daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Margaret reported mild nausea initially, but tolerated the medication well and expressed eagerness to start therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV breast cancer</span><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Estrogen therapy 1 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity</li><li>Type 2 Diabetes Mellitus</li><li>Hypertension</li><li>Estrogen therapy</li><li>High‑fat diet</li><li>Alcohol consumption</li><li>Family history breast cancer</li><li>BRCA1 mutation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen explained treatment options and initiated exemestane 25 mg daily, noting its suitability in post‑menopausal women. He also discussed potential addition of a CDK4/6 inhibitor if the tumor demonstrated high proliferation, which would be evaluated later. Baseline labs were ordered to monitor therapeutic effects and organ function.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Endocrine therapy begun; monitor for response, side effects, and metabolic impact.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-05-26</h3><div class="visit-meta">Medical Oncology | Reason: Review of breast pain and mass progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Mrs. Margaret presents for a review of her breast cancer status. She reports worsening pain in her left breast that now radiates to the left shoulder. The mass has increased in size, is more tender, and the overlying skin is erythematous. She also notes a palpable axillary node. She denies fever, chills, or night sweats.
+
+**Objective:**
+* Physical exam reveals an enlarged, tender, erythematous left breast mass with induration extending over the upper outer quadrant. A 2‑cm mobile, firm axillary lymph node is palpable.
+* Vital signs: BP 148/92 mmHg, HR 85 bpm, Temperature 98.4 °F, Weight 170 lb, BMI 35.
+* Labs: CBC, CMP, LFTs, and HbA1c obtained today and are within normal limits, with HbA1c remaining 8.1 %.
+
+**Assessment:**
+Progressive metastatic, hormone‑receptor positive breast cancer with local progression. The size increase and erythema raise concern for inflammatory breast carcinoma in the setting of existing metastatic disease. Differential includes local recurrence, superimposed infection/abscess, and treatment‑related skin changes.
+
+**Plan:**
+1. Initiate systemic therapy with letrozole 2.5 mg PO daily and paclitaxel 80 mg/m² IV q3 weeks. Dose adjustments will be made for neuropathy.
+2. Continue bone‑targeted therapy: denosumab 120 mg SC q4 weeks, calcium 500 mg PO daily, vitamin D 800 IU daily.
+3. Adjust diabetes management: insulin basal‑bolus regimen titrated to achieve fasting glucose 80–110 mg/dL and post‑prandial &lt;150 mg/dL.
+4. Monitor for neuropathy and consider neuropathy‑friendly agents if symptoms worsen.
+5. Repeat CBC, CMP, LFTs prior to each chemotherapy cycle.
+6. Follow-up imaging: repeat CT chest/abdomen/pelvis in 3 months; bone scan annually.
+7. Address weight gain and BMI 35: referral to dietitian and structured exercise program.
+8. Educate on signs of infection or skin breakdown and to report any new symptoms promptly.
+
+**Outcome:**
+Patient consented to therapy, began regimen on date of visit. She acknowledges the plan and is comfortable with the management strategy.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">increasing breast pain radiating to left shoulder</span><span class="pill">larger, tender mass</span><span class="pill">redness around skin</span><span class="pill">palpable axillary lymph node</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>148/92</td></tr><tr><td>HR</td><td>85</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>Weight</td><td>170 lb</td></tr><tr><td>BMI</td><td>35</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Enlarged, tender breast mass</li><li>Redness around the mass</li><li>Palpable axillary lymph node</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver function tests</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP normal</li><li>LFTs within limits</li><li>HbA1c 8.1%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Letrozole 2.5 mg daily</li><li>Paclitaxel IV 80 mg/m² q3w</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Margaret reported significant peripheral neuropathy after first paclitaxel cycle, prompting a dose reduction for subsequent cycles.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV breast cancer</span><span class="pill">Endocrine therapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Exemestane 25 mg daily</li><li>Insulin basal‑bolus (changed recently)</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Endocrine therapy with exemestane for 6 weeks</li><li>Weight gain 5 kg</li><li>HbA1c rose to 8.1%</li><li>Metformin discontinued June 4</li><li>New bone uptake in left clavicle</li><li>Diabetes requiring insulin dose adjustment</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen evaluated Margaret’s worsening pain and noted a larger, more erythematous mass and a palpable axillary node. Fine‑needle aspiration confirmed metastatic carcinoma. He explained that the tumor had progressed despite aromatase inhibition. The plan was to initiate chemotherapy: letrozole 2.5 mg daily plus paclitaxel IV every 3 weeks. A concurrent gemcitabine was considered but delayed due to neuropathy risk. The patient consented and began the regimen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Endocrine therapy failure; started taxane‑based chemotherapy. Neuropathy noted after first cycle.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-07-15</h3><div class="visit-meta">Medical Oncology | Reason: CT review showing disease progression and plan adjustment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of recent CT showing disease progression and adjustment of systemic therapy.
+
+History of Present Illness: 55‑year‑old female with metastatic ER/PR‑positive/HER2+ breast cancer presents for therapeutic review after a recent contrast CT revealing enlargement of known hepatic metastases (4.5 cm) and a new lesion, as well as diffuse skeletal uptake on bone scan. She reports progressive fatigue, right‑hip pain limiting ambulation, difficulty walking &gt;20 min, and worsening back discomfort. She previously had paclitaxel‐induced neuropathy leading to a taxane hold. Trastuzumab was continued under cardiac monitoring; taxanes were permanently discontinued. The plan emphasizes pain control, glycemic management, and supportive care.
+
+Past Medical History: Obesity (BMI 34), Type 2 DM, hypertension, metastatic breast cancer.
+
+Medications: Metformin 500 mg BID, Lisinopril 10 mg daily, Letrozole 2.5 mg daily, Paclitaxel IV 80 mg/m² q3 weeks (discontinued), Insulin basal–bolus regimen, Denosumab 120 mg SC q4 weeks, Calcium 500 mg PO daily, Vitamin D 800 IU daily. No known drug allergies.
+
+On‑Exam: Vitals: BP 150/90, HR 82, Temp 98.3 °F, Weight 155 lb, BMI 34. Physical exam notable for tender liver edge, right‑hip tenderness, diminished right‑leg range of motion, and mild back tenderness.
+
+Investigations: Echocardiogram performed pre‑trastuzumab – LVEF 55%. Liver function tests: AST 112 U/L, ALT 115 U/L, ALP 480 U/L.
+
+Assessment: 1. Progressive metastatic breast cancer with hepatic and bone involvement. 2. Hepatocellular enzyme elevation likely due to tumor burden and possible drug effect; no evidence of cardiotoxicity. 3. Ongoing pain and functional limitation secondary to bone metastases.
+
+Differential: (a) Metastatic disease progression; (b) Drug‑induced hepatotoxicity (trastuzumab/letrozole); (c) Fatigue and anemia from disease; (d) Osteonecrosis of the jaw (rare with denosumab – monitor). No acute cardiac failure.
+
+Plan:
+• Continue trastuzumab IV every 3 weeks.
+• Discontinue paclitaxel permanently; switch systemic therapy to fulvestrant 250 mg IM monthly plus a CDK4/6 inhibitor (palbociclib 125 mg PO daily on 3/1 schedule) with close CBC monitoring as per recent Ki‑67.
+• Maintain letrozole and denosumab; consider switching to exemestane if tolerance issues.
+• Pain management: Initiate opioid analgesic (e.g., oxycodone 5 mg PO q6h PRN) and continue NSAIDs if not contraindicated; refer to palliative care for radiation to right hip and spine.
+• Glycemic control: Adjust basal insulin dose (titration to aim for fasting glucose 140–180 mg/dL) and add pramlintide PRN for post‑meal spikes. Continue metformin as tolerated.
+• BP control: Increase lisinopril to 20 mg daily, add amlodipine 5 mg daily.
+• Continue calcium and vitamin D supplementation.
+• Monitor LFTs at baseline, every cycle, and repeat imaging in 3 months.
+• Cardiac: Repeat echo in 6 months or sooner if symptomatic.
+• Referral: Palliative care, physiotherapy for gait and hip strength.
+
+Follow‑Up: Return in 4 weeks for CBC, CMP, LFTs, and assessment of pain. Repeat CT chest/abdomen/pelvis in 3 months; bone scan every 3 months. Call immediately if sudden chest pain, shortness of breath, new fatigue, or signs of infection.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">right hip pain limiting ambulation</span><span class="pill">difficulty walking &gt;20 min</span><span class="pill">worsening back discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/90</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temp</td><td>98.3°F</td></tr><tr><td>Weight</td><td>155 lb</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender liver edge</li><li>Right hip tenderness</li><li>Right leg diminished range of motion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram</li><li>Liver function tests</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Echo: LVEF 55%</li><li>LFTs: AST 112 U/L, ALT 115 U/L, ALP 480 U/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Trastuzumab IV</li><li>Baseline pain management</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Margaret experienced a mild febrile reaction after the first trastuzumab infusion, but otherwise tolerated the drug.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV breast cancer</span><span class="pill">Taxane-based chemotherapy held</span><span class="pill">Diabetes uncontrolled</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Letrozole 2.5 mg daily (stopped last month)</li><li>Trastuzumab 7.5 mg/kg IV q3w (off‑label started 5 weeks ago)</li><li>Insulin basal–bolus</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Taxane hold due to neuropathy</li><li>Hepatic progression: liver metastasis grew to 4.5 cm + new lesion</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen reviewed the latest CT that showed enlargement of existing liver metastases and a new lesion, as well as diffuse skeletal uptake. Cardiac monitoring was performed in anticipation of trastuzumab therapy, which may have cardiotoxicity. Trastuzumab was continued; taxanes were permanently discontinued. A supportive care plan was emphasized, including pain control and glycemic management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continued disease progression. Shifted to targeted therapy (trastuzumab) despite HER2 negativity; endocrine and taxane therapies discontinued.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-09-10</h3><div class="visit-meta">Internal Medicine | Reason: Hospital admission for hypoglycemia, hyperemesis, worsening fatigue, and liver dysfunction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Hospital admission for refractory hypoglycemia, hyperemesis, worsening fatigue, and marked jaundice.
+
+History of Present Illness: Margaret, a 55‑year‑old woman with metastatic breast cancer and uncontrolled type 2 diabetes mellitus, was admitted with multiple episodes of hypoglycemia (glucose 50–60 mg/dL), persistent nausea and vomiting, severe fatigue, and new onset jaundice. She reports that her hypoglycemia was treated with insulin adjustments and dietary measures, but glucose swings remain between 80–120 mg/dL. She also reports significant bone pain radiating to her back and pelvis.
+
+Past Medical History: Metastatic breast adenocarcinoma with hepatic and bone involvement, type 2 diabetes mellitus, hypertension, obesity (BMI 33), chronic liver disease, chronic pain.
+
+Medications (current inpatient): Morphine 10 mg PO q4h PRN, Prednisone 10 mg daily, Insulin basal‑bolus regimen, Ondansetron 4 mg PO q6h PRN, Metoclopramide 10 mg PO q8h PRN, Pramlintide PRN, Denosumab 120 mg SC q4 weeks, Calcium 500 mg PO daily, Vitamin D 800 IU daily, Lisinopril 20 mg daily, Amlodipine 5 mg daily, Metformin 500 mg BID (continued if tolerated).
+
+Allergies: NKDA.
+
+Social History: Former smoker, drinks socially, lives with husband.
+
+Review of Systems: Positive for nausea, vomiting, fatigue, jaundice, bone pain; negative for chest pain, dyspnea, weight loss, pruritus.
+
+Physical Examination: Vitals: BP 130/82, HR 88, Temp 37.0°C, Weight 150 lb, BMI 33. General: icteric sclera, abdominal tenderness RUQ, palpable liver edge. Cardiac: regular rhythm. Pulmonary: clear to auscultation. Extremities: no edema. Neurologic: alert, oriented, no focal deficits. Skin: dry, mild jaundice.
+
+Labs: CBC and CMP normal. LFTs: AST 132 U/L, ALT 148 U/L, ALP 560 U/L, total bilirubin 2.1 mg/dL. Blood glucose 80–120 mg/dL.
+
+Assessment: 1. Refractory hypoglycemia secondary to advanced liver disease and impaired gluconeogenesis. 2. Hyperemesis in setting of hepatotoxicity and malignancy. 3. Fatigue due to chronic disease, malnutrition, and pain. 4. Advanced metastatic breast cancer now transitioned to palliative care.
+
+Plan: - Continue insulin basal‑bolus; consider dose reduction and sliding‑scale for glucose control.  - If hypoglycemia persists, initiate continuous subcutaneous dextrose infusion.  - Antiemetics: ondansetron 4 mg PO q6h PRN, metoclopramide 10 mg PO q8h PRN.  - Prednisone 10 mg daily for hepatic edema; taper over 2–3 weeks.  - Morphine 10 mg PO q4h PRN for bone pain; monitor constipation.  - Nutritional support: refer dietitian; consider enteral feeding if oral intake &lt; 50% for &gt;3 days.  - Denosumab 120 mg SC q4 wk, calcium and vitamin D supplementation.  - Monitor CBC, CMP, LFTs, glucose every 48–72 hours.  - Repeat abdominal imaging in 4 weeks.  - Discuss hospice and advance care planning; transfer to inpatient palliative care.  - Follow up with palliative care within 48 h; internal medicine follow‑up 2–4 weeks or sooner if symptoms worsen.
+
+Disposition: Stable for transfer to inpatient palliative care unit.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">hypoglycemic episodes</span><span class="pill">persistent nausea/vomiting</span><span class="pill">severe fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/82</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>37.0°C</td></tr><tr><td>Weight</td><td>150 lb</td></tr><tr><td>BMI</td><td>33</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Icteric sclera</li><li>Abdominal tenderness, palpable liver edge</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver function tests</li><li>Blood glucose monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP normal</li><li>LFTs as above</li><li>Blood glucose fluctuated 80–120 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg PO q4h PRN</li><li>Prednisone 10 mg daily</li><li>Insulin adjustment</li><li>Rescue antiemetics</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Margaret reported improved comfort but persistent fatigue; she agreed to palliative care referral.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV breast cancer with hepatic metastases</span><span class="pill">Uncontrolled diabetes mellitus</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Trastuzumab 7.5 mg/kg IV q3w</li><li>Insulin basal–bolus</li><li>Lisinopril 10 mg daily</li><li>Morphine PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Advanced hepatic disease</li><li>High LFTs</li><li>Diabetes control poor</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Margaret was admitted with refractory hypoglycemia, hyperemesis, profound fatigue, and marked jaundice. Labs revealed AST 132 U/L, ALT 148 U/L, ALP 560 U/L, total bilirubin 2.1 mg/dL. The oncology team decided to discontinue trastuzumab and all chemotherapy, shifting to palliative care. Low‑dose prednisone was started for edema, and morphine was initiated for bone pain. She received insulin adjustments and supportive nutrition.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Discontinuation of systemic therapy; management shifted to palliative; hepatic dysfunction worsening.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-11-15</h3><div class="visit-meta">Neurosurgery | Reason: Emergency spinal stabilization for T12 compression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Emergency spinal stabilization for T12 compression. 
+
+History of Present Illness: 55‑year‑old female with metastatic breast cancer presented to the ED with acute worsening of back pain and new onset right lower‑limb weakness. MRI revealed a T12 vertebral body metastasis compressing the spinal cord. Emergency posterior fusion with vertebral body resection was performed. Intraoperative cultures grew *Staphylococcus aureus*; IV cefazolin 1g q8h was started. Post‑operatively the patient developed a wound infection and persistent paraplegia. She was transferred to the palliative care unit for comfort measures.
+
+Past Medical History: Obesity (BMI 33), Type 2 DM, HTN, metastatic breast cancer, chronic liver disease, chronic pain.
+
+Medications on hand: Metformin 500 mg BID; Lisinopril 20 mg daily; Letrozole 2.5 mg daily; Insulin basal–bolus regimen; Denosumab 120 mg SC q4 weeks; Calcium 500 mg PO daily; Vitamin D 800 IU daily; Trastuzumab IV q3w; Fulvestrant 250 mg IM monthly; Palbociclib 125 mg PO daily (3/1 schedule); Oxycodone 5 mg PO q6h PRN; Amlodipine 5 mg daily; Pramlintide PRN; Morphine 10 mg PO q4h PRN; Prednisone 10 mg daily; Ondansetron 4 mg PO q6h PRN; Metoclopramide 10 mg PO q8h PRN; IV cefazolin 1 g q8h; Morphine CR/PRN.
+
+Vital Signs: BP 135/85 mmHg; HR 80 bpm; Temp 37.2°C; Weight 140 lb; BMI 33.
+
+Physical Examination: Tenderness over T12 region. Right lower extremity strength 3/5, left 4/5. Decreased sensation below T12. No abdominal tenderness.
+
+Assessment: T12 vertebral body metastasis from breast cancer causing acute spinal cord compression with resultant paraplegia. Post‑operative wound infection with *S. aureus*. Ongoing systemic disease with hepatic metastases.
+
+Plan: 1) Continue IV cefazolin 1g q8h until cultures are negative and sensitivity is confirmed.
+2) Continue wound care per palliative service.
+3) Maintain steroids with prednisone 10 mg daily.
+4) Pain management: continue morphine PRN, consider gabapentin for neuropathic component.
+5) Continue oncologic therapy: trastuzumab, fulvestrant, palbociclib as per schedule.
+6) Monitor glycemic control closely; adjust basal insulin as needed.
+7) Monitor LFTs weekly due to hepatic involvement.
+8) Re‑evaluate with MRI spine in 4 weeks or sooner if neurologic status changes.
+9) Discuss hospice referral with family and palliative care team.
+10) Provide psychological support and advanced care planning.
+
+Follow‑up: Patient remains in palliative care unit; daily wound checks, pain assessment. Next oncologic follow‑up is scheduled with oncology on 2023‑12‑01. Patient and family will have regular interdisciplinary rounds.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe back pain</span><span class="pill">right leg weakness</span><span class="pill">left leg pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/85</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>37.2°C</td></tr><tr><td>Weight</td><td>140 lb</td></tr><tr><td>BMI</td><td>33</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender T12 vertebral region</li><li>Right leg 3/5 strength, left leg 4/5</li><li>Sensation decreased below T12</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI lumbar spine</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: T12 compression; post‑op debridement</li><li>Blood cultures: Staphylococcus aureus</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Posterior spinal instrumentation</li><li>Surgical debridement</li><li>IV cefazolin 1 g q8h</li><li>Morphine CR/PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Paraplegia persisted; wound infection controlled after antibiotics, but overall function remained limited.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV breast cancer</span><span class="pill">Spinal cord compression at T12</span><span class="pill">Uncontrolled diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg PO q4h PRN</li><li>Prednisone 10 mg daily</li><li>Insulin basal–bolus</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Spinal cord compression after systemic therapy discontinued</li><li>Hepatic metastases</li><li>Diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with acute worsening back pain and new right lower limb weakness. MRI demonstrated a T12 vertebral body metastasis compressing the spinal cord. The neurosurgical team performed emergency posterior fusion and vertebral body resection. Intraoperative cultures grew Staphylococcus aureus, and IV cefazolin was started. Post‑operatively, the patient developed a wound infection and persistent paraplegia. She was transferred to the palliative care unit for comfort measures.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Neurological decline due to spinal metastasis; surgical intervention performed with complications; hospice care initiated.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Breast cancer</span><span class="pill">Metastatic breast disease</span><span class="pill">Chronic liver disease</span><span class="pill">Chronic pain</span><span class="pill">Spinal cord compression</span><span class="pill">S. aureus wound infection</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 20 mg daily</li><li>Letrozole 2.5 mg daily</li><li>Insulin basal–bolus regimen</li><li>Denosumab 120 mg SC q4 weeks</li><li>Calcium 500 mg PO daily</li><li>Vitamin D 800 IU daily</li><li>Trastuzumab IV q3w</li><li>Fulvestrant 250 mg IM monthly</li><li>Palbociclib 125 mg PO daily (3/1 schedule)</li><li>Oxycodone 5 mg PO q6h PRN</li><li>Amlodipine 5 mg daily</li><li>Pramlintide PRN</li><li>Morphine 10 mg PO q4h PRN</li><li>Prednisone 10 mg daily</li><li>Ondansetron 4 mg PO q6h PRN</li><li>Metoclopramide 10 mg PO q8h PRN</li><li>IV cefazolin 1 g q8h</li><li>Morphine CR/PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-03-01: Patient presented with a 6‑cm firm, irregular, non‑mobile mass in the left breast noted during self‑inspection. Vital signs: BP 138/84 mmHg, HR 78 bpm, weight 160 lbs, BMI 33. Diagnostic mammogram and breast ultrasound ordered. Medications started: Metformin 500 mg BID, Lisinopril 10 mg daily, Estrogen therapy 1 mg daily. Advised lifestyle modifications and routine self‑breast exam. Follow‑up scheduled in 4 weeks for imaging review.</li><li>2023-03-15: Diagnostic mammogram and ultrasound of the left breast revealed an irregular hypodense mass measuring 6.3 cm in the left upper outer quadrant; ultrasound confirmed a 6.3 cm hypoechoic lesion with indistinct margins, no internal calcifications, and no axillary adenopathy. These findings were highly suspicious for malignancy. No procedural intervention was performed; a core‑needle breast biopsy was scheduled for the next day. Medications remained Metformin 500 mg BID, Lisinopril 10 mg daily, Estrogen therapy 1 mg daily. Patient was advised to limit alcohol intake, continue weight‑management efforts, and resume regular self‑breast examination. Follow‑up: return for biopsy pathology results within 2 days; if malignancy confirmed, referral to breast surgical oncology and genetic counseling for BRCA1 testing will be arranged.</li><li>2023-03-16: Core‑needle biopsy of left breast mass revealed high‑grade, ER/PR‑positive invasive ductal carcinoma with close margins. Contrast CT and bone scan identified 3 cm hepatic lesion, sclerotic T9 vertebral lesion, and new uptake in right femur and humerus suggestive of metastatic disease. Estrogen therapy discontinued; letrozole 2.5 mg PO daily initiated. Denosumab 120 mg SC q4 wk started for bone metastases; calcium 500 mg PO daily and vitamin D 800 IU daily prescribed. Metformin and lisinopril continued. Patient referred to surgical oncology for definitive local therapy and to radiation oncology for bone pain control. Follow‑up scheduled in 4 weeks; repeat CT in 3 months; bone scan in 4 months. Lifestyle modifications advised.</li><li>2023-04-05: Discussed initiation of exemestane 25 mg daily for metastatic hormone‑receptor positive breast cancer; letrozole discontinued. Patient reports mild fatigue. Exam notes 6‑cm firm erythematous left breast mass; no lymphadenopathy. Labs CBC, CMP, HbA1c, fasting glucose normal. Plan: monitor CBC, CMP, glucose, HbA1c at 4 weeks; repeat CT chest/abdomen/pelvis in 3 months; bone scan every 3 months; consider CDK4/6 inhibitor after Ki‑67 assessment; weight‑loss counseling. Follow‑up in 4 weeks.</li><li>2023-05-26: Review of progressive breast pain and mass enlargement. Reports worsening pain radiating to left shoulder, tender erythematous mass and palpable axillary node. BP 148/92 mmHg, weight 170 lb, BMI 35. Labs CBC, CMP, LFTs, HbA1c normal with HbA1c 8.1%. Started letrozole 2.5 mg daily and paclitaxel 80 mg/m² IV q3 weeks. Initiated insulin basal‑bolus regimen. Continue denosumab 120 mg SC q4 weeks, calcium 500 mg PO daily, vitamin D 800 IU daily. Monitor CBC/CMP/LFTs each cycle, repeat CT chest/abdomen/pelvis in 3 months, bone scan annually. Weight management referral provided. Educated on infection signs. Follow‑up as ordered.</li><li>2023-07-15: Patient reviewed recent imaging showing enlargement of hepatic metastases and a new lesion; right‑hip pain and back discomfort noted. Paclitaxel permanently discontinued. Systemic therapy switched to trastuzumab IV q3w, fulvestrant monthly, and palbociclib daily on a 3/1 schedule. Pain managed with oxycodone and NSAIDs. Glycemic control adjusted with basal insulin titration and pramlintide PRN. Blood pressure optimized with lisinopril increased to 20 mg and addition of amlodipine 5 mg daily. LFTs abnormal; monitoring planned. Palliative care and physiotherapy referrals made.</li><li>2023-09-10: Hospital admission for refractory hypoglycemia, hyperemesis, fatigue, and jaundice. Patient experienced multiple low glucose episodes (50–60 mg/dL), persistent nausea/vomiting, severe fatigue, icteric sclera, RUQ abdominal tenderness, and a palpable liver edge. Labs: AST 132, ALT 148, ALP 560, total bilirubin 2.1 mg/dL. Managed with insulin basal‑bolus, Prednisone 10 mg daily, Morphine 10 mg PO q4h PRN, Ondansetron 4 mg PO q6h PRN, and Metoclopramide 10 mg PO q8h PRN. Daily glucose monitoring, weekly CBC/CMP/LFTs, and nutritional support arranged. Transfer to inpatient palliative care scheduled, with advance care planning.</li><li>2023-11-15: Emergency posterior spinal fusion at T12 for metastatic breast cancer with spinal cord compression; postoperative wound infected with Staphylococcus aureus treated with IV cefazolin; patient continues oncologic therapy and pain management, remains in palliative care.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

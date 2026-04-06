@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 7b1ff7ba</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 7b1ff7ba</h1><div class="subtitle">Metastatic Colon Cancer of the Splenic Flexure (T4N2M1) | Male, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Type 2 Diabetes Mellitus, Inflammatory Bowel Disease</div><div class="meta-line">Risk Factors: Age &gt;60 years, Male sex, Smoking, High‑fat low‑fiber diet, Sedentary lifestyle</div></div>
+<details><summary>Narrative <span class="preview-text">**April – First Symptoms**  When the first vague ache started in his left upper quadrant, Michael, a 65‑year‑old retired...</span></summary><div class="section-body"><p>**April – First Symptoms**</p><p>When the first vague ache started in his left upper quadrant, Michael, a 65‑year‑old retired carpenter, brushed it off as lingering costochondritis from a recent mild strain. A handful of days later, he noticed his stools had become crisper and occasionally darkened, but he still attributed it to a sudden change in his diet—an increase in fried food and a handful of fast‑food meals he had taken to his weekly poker night. His wife pointed out that he had lost about 4 lb in the past month, yet he denied any significant weight loss or fatigue. Undaunted by his history of type 2 diabetes and Crohn disease, Michael continued his usual sedentary routine of evening walks, and his primary care clinic visit in late April yielded a routine check‑up: his HbA1c was 8.7 %, fasting glucose 165 mg/dL, and blood pressure 140/88 mm Hg. A basic blood panel showed microcytic anemia (Hb 11.8 g/dL, MCV 72 fl) and a mildly elevated C‑reactive protein of 5 mg/L. His clinic physician, noting the anemia but also his Crohn flare history, prescribed a short course of prednisone and suggested a follow‑up stool occult blood test, assuming perhaps a mild ileocolonic flare or dietary iron deficiency.</p><p>**May – Symptoms Intensify, Clinic Refocus**</p><p>By mid‑May, Michael’s left upper abdominal discomfort had evolved into a dull, burning ache that radiated from the splenic flexure toward the flank. He began experiencing intermittent rectal bleeding, often bright red on toilet paper, but the volume was small. He slept poorly, feeling an urgent need to shift stools even when the bowel was empty. He told his PCP about his 40‑pack‑year smoking history and his sedentary lifestyle. The physician decided that a colonoscopy was warranted, given his anemia, unexplained bleeding, and the fact that a mass in the distal colon could explain the mixed bowel symptoms. Arranged for a second‑level imaging, the patient also underwent a basic abdominal ultrasound that incidentally revealed a 2.5‑cm hypoechoic lesion near the splenic flexure.</p><p>**End‑June – Colonoscopy, Biopsy, and Misinterpretation**</p><p>The colonoscopy, performed in late June, was surprisingly difficult. The mucosa of the distal transverse colon had a thick, ulcerated plaque, and the diverticulated mucosa near the splenic flexure was markedly inflamed. The endoscopist, wary of his Crohn disease, biopsied the lesion under the suspicion that it was an extension of ulcerative Crohn disease. Histopathology returned the first surprise: it was a moderately differentiated adenocarcinoma. A more thorough review of the biopsy slides identified invasion through the muscularis propria (T4) and nodal involvement (N2). The pathology report cited the presence of signet ring cells, raising concern for aggressive disease. Michael was referred to a surgical oncologist and a gastroenterologist for further work‑up.</p><p>**Early July – CT Staging and Metastatic Findings**</p><p>A multiphasic contrast‑enhanced CT of the chest, abdomen, and pelvis was done in early July. The scan confirmed a 5‑cm infiltrating mass at the splenic flexure, encasing the splenic vessels and suggesting local invasion (confirmatory of T4). Multiple hypodense lesions were seen in the liver—two in the right lobe measuring 3 cm and 2.5 cm, and a smaller one in the left lobe 1.2 cm in diameter. There were also enlarged mesenteric nodes, and a faint hepatic capsule retraction adjacent to the colon mass. No evidence of ascites or peritoneal carcinomatosis was noted. No distant metastases beyond the liver were seen initially. The PET‑CT that followed in mid‑July confirmed increased metabolic activity in the splenic flexure mass and in the hepatic lesions, while the rest of the body showed only benign activity. This culminated in a clinical staging of T4N2M1. The decision was made to pursue palliative intent therapy, as resection of the primary with liver metastasectomy would likely be high risk and limited benefit.</p><p>**Late July – Onco‑Medical Decision &amp; Treatment Initiation**</p><p>The oncology team met with Michael in late July to discuss his options. He was given a choice of systemic chemotherapy with a combination of 5‑FU, leucovorin, oxaliplatin (FOLFOX) plus bevacizumab. Because of his uncontrolled hypertension and his pre‑existing type 2 diabetes, he was started on a lower dose of oxaliplatin. The physicians explained that while cure was unlikely, the goal was to control systemic disease, alleviate symptoms, and potentially prolong survival. They also warned him that bevacizumab could worsen his blood pressure and cause hepatic side effects. Michael, after a difficult conversation with his wife about the seriousness of his cancer, consented to therapy and was admitted for the first chemotherapy cycle.</p><p>**August – First Cycle, Side‑Effects, and Diabetes Compromise**</p><p>During the first cycle, Michael experienced severe neuropathy—a classic oxaliplatin side effect—along with a pronounced drop in blood sugar from baseline. Insulin requirements increased sharply. The day after the infusion, he had a faint cough and mild shortness of breath, prompting a chest X‑ray that revealed mild bibasilar interstitial infiltrates, likely drug‑induced. His blood pressure rose to 170/98 mm Hg, and the oncology pharmacy added a low‐dose ACE inhibitor. Michael’s HbA1c spiked to 10.2 % by mid‑August, leading to a referral to his endocrinology team to adjust his insulin pump. Despite the acute side‑effects, he noticed a modest reduction in his left side abdominal pain and an improvement in bowel movements, with fewer bloody stools.</p><p>**September – Progression of Disease and New Symptoms**</p><p>During the second chemotherapy cycle, on routine laboratory monitoring, his alkaline phosphatase jumped from 120 U/L to 280 U/L, and GGT rose to 160 U/L. An ultrasound of his liver showed the two largest lesions had grown to 3.5 cm and 3 cm, respectively, and a new lesion, 1.8 cm, had appeared in segment 6. The patient reported increasing fatigue, worsening appetite, and early satiety after small meals. He started noticing a dull yellow discoloration of his skin and conjunctiva. A repeat CT at the end of September confirmed marked hepatomegaly and new intrahepatic hyper-vascular nodules. There was also increased ascites—free fluid in Morison’s pouch and around the bowel loops—suggesting decompensated liver disease. His liver function panel had deteriorated: INR 1.6, bilirubin 2.5 mg/dL, albumin 2.9 g/dL.</p><p>**October – Worsening Clinical Features, Family Consultation, and Palliative Shift**</p><p>The patient’s overall performance status dropped from ECOG 1 to ECOG 3. He could no longer stand for prolonged periods and required assistance to ambulate. New symptoms included low‑grade fevers, night sweats, and intense left flank pain radiating to the shoulder blade. The oncologist convened a multidisciplinary tumor board—a gastroenterologist, medical oncologist, palliative care specialist, and a hepatobiliary surgeon. The consensus was that further systemic chemotherapy would likely yield diminishing returns while exacerbating his hepatic dysfunction and precipitating further decline. The palliative care team was engaged to manage his pain, ascites drainage, and psychosocial needs.</p><p>**November – Terminal Decline**</p><p>A therapeutic paracentesis in early November yielded 2.5 L of milky ascitic fluid, with serum‑ascites albumin gradient (SAAG) of 1.1 g/dL, indicating portal hypertension. The fluid culture was negative. Michael’s inflammatory markers remained high, and his serum bilirubin topped 4.0 mg/dL. His appetite had virtually disappeared; he was taking less than 300 kcal daily. The end of November saw a sudden exacerbation of dyspnea; a chest CT showed pulmonary edema and mild consolidation. An echocardiogram ruled out congestive heart failure, pointing instead towards hepatic‑related hepato‑cardiogenic syndrome.</p><p>**December – Final Hospitalization &amp; End‑of‑Life Care**</p><p>In mid‑December, Michael was admitted for acute decompensation of hepatic failure, respiratory distress, and sepsis‑like presentation. Despite broad‑spectrum antibiotics, his blood cultures remained sterile. The palliative care plan was to provide comfort measures: low‑dose opioids for pain, a short course of dexamethasone to reduce hepatic inflammation and ascites, and continuous monitoring of his blood pressure and glucose. Family discussions were held to confirm Michael’s advance directives; he wished for a gentle, symptom‑focused approach. He passed away peacefully at home in early January, surrounded by family, with his pain sufficiently controlled and his remaining days spent in a state of reduced distress.</p><p>---</p><p>**Key Clinical Touchpoints**</p><p>| Month | Time‑point | Clinical Event | Intervention |
+|-------|------------|----------------|--------------|
+| April | 1 | Light abdominal discomfort, anemia, minimal bleeding | Prednisone 40 mg/day, stool occult blood test |
+| May | 2 | Intensified pain &amp; bleeding; referral to colonoscopy | Colonoscopy with biopsy |
+| June | 3 | Diagnosis of T4N2M1 colorectal adenocarcinoma | Imaging: CT chest/abdomen/pelvis |
+| July | 4 | Multimodal imaging &amp; staging; palliative chemo discussed | FOLFOX + bevacizumab initiation |
+| Aug | 5 | First chemo cycle; neuropathy, hyperglycemia, HTN | Dose adjustment; insulin titration |
+| Sep | 6 | Liver metastases progression, rising ALP &amp; bilirubin | Serial labs, imaging |
+| Oct | 7 | Performance decline; multidisciplinary tumor board | Shift to palliative care, symptom control |
+| Nov | 8 | Ascites drainage, pulmonary edema | Paracentesis; corticosteroids |
+| Dec | 9 | Acute hepatic decompensation | Comfort care, opioid analgesia |</p><p>This narrative tracks Michael’s disease from subtle initial symptoms through a rapid, aggressive deterioration that reflected the biologic aggressiveness of a stage T4N2M1 colon cancer, complicated by comorbidities that amplified his vulnerability to therapeutic side‑effects and organ failure. The medium‑difficulty scenario shows a realistic, plausible course where early misattribution, typical of a patient with inflammatory bowel disease and anemia, delays definitive diagnosis, and the disease progresses swiftly once recognized.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-04-20</h3><div class="visit-meta">Primary Care | Reason: Routine checkup; mild left upper quadrant discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+65‑year‑old male presents for a routine check‑up. Chief complaint: mild left upper quadrant (LUQ) discomfort, fatigue, darkened stools, and unintentional 4‑lb weight loss over the past month. Denies abdominal distention, nausea, vomiting, or changes in bowel habits beyond dark stools. No fever, night sweats, or chest pain. Past medical history significant for Type 2 Diabetes Mellitus (T2DM), Crohn disease, hypertension, and a 40‑pack‑year smoking history. He reports increased consumption of fried foods recently. No known drug allergies.
+
+**Objective:**
+- Vital signs: BP 140/88 mmHg, HR 82 bpm, RR 16/min, Temp 98.6°F (37°C), SpO₂ 98% RA.
+- General: Appears well, no acute distress.
+- Cardiovascular: Regular rate &amp; rhythm, no murmurs.
+- Pulmonary: Clear to auscultation bilaterally.
+- Abdomen: Mild tenderness to palpation in LUQ; no rebound, guarding, or palpable masses.
+- Extremities: No peripheral edema. No skin lesions.
+
+**Labs:**
+- CBC: Hb 11.8 g/dL (microcytic: MCV 72 fL), Hct 35%, WBC 9.2×10⁹/L, platelets 260×10⁹/L.
+- CMP: Within normal limits.
+- HbA1c: 8.7%.
+- CRP: 5 mg/L (elevated above normal).
+- Stool occult blood: Negative.
+
+**Assessment:**
+1. **Crohn disease flare** – The patient’s history of Crohn’s disease plus new GI symptoms, subtle elevation of CRP, and weight loss raise suspicion for an exacerbation. Prednisone 40 mg daily is appropriate initial therapy for a mild–moderate flare.
+2. **Iron‑deficiency anemia** – Microcytic anemia with negative stool occult test suggests chronic low‑grade GI blood loss or dietary insufficiency; anemia likely due to Crohn disease activity.
+3. **Anemia of chronic disease** – Chronic inflammation could also contribute, but microcytosis points more toward iron deficiency.
+4. **Poor glycemic control** – HbA1c of 8.7% and weight loss require monitoring while on steroids.
+5. **Risk of steroid‑induced hyperglycemia and infection** – Requires close follow‑up.
+
+**Plan:**
+- Start oral ferrous sulfate 325 mg PO BID with vitamin C for iron repletion.
+- Continue prednisone 40 mg PO daily; taper over 4‑6 weeks based on clinical response.
+- Encourage high‑protein, iron‑rich diet and avoid large fried meals.
+- Tight glucose monitoring: Home SMBG 4 times daily; adjust basal insulin or oral hypoglycemics as needed.
+- Provide stool guaiac repeat in 2 weeks.
+- Repeat CBC, CRP, and HbA1c in 4 weeks to assess response.
+- Refer for colonoscopy if anemia persists beyond 2 months or if occult blood becomes positive.
+- Discuss smoking cessation resources; provide nicotine replacement counseling.
+- Educate patient on signs of infection or worsening GI symptoms warranting early contact.
+- Schedule follow‑up in 2 weeks to review symptoms and labs; later to continue steroid taper.
+
+**Disposition:** Patient left the clinic alert and oriented. Provided written instructions and medication blister pack.
+
+**Notes:** Patient has no current medications; all new prescriptions are listed.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">left upper quadrant discomfort</span><span class="pill">fatigue</span><span class="pill">darkened stools</span><span class="pill">4 lb weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>140/88</td></tr><tr><td>heart_rate</td><td>82</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>temperature</td><td>98.6°F</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>abdominal tenderness upper left quadrant mild</li><li>no rebound or guarding</li><li>no masses felt</li><li>stable vitals</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete Blood Count</li><li>Basic Metabolic Panel</li><li>HbA1c</li><li>CRP</li><li>Stool Occult Blood</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 11.8 g/dL</li><li>MCV 72 fL</li><li>CRP 5 mg/L</li><li>HbA1c 8.7%</li><li>Stool occult blood negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 40 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient noted mild improvement of discomfort, continued prednisone.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>Crohn disease</li><li>hypertension</li><li>smoking 40 pack‑years</li><li>recent fried food increase</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a routine visit, Michael reported mild left upper quadrant discomfort, dark stools, and a 4‑lb weight loss. Examination was largely unremarkable. Labs revealed Hb 11.8 g/dL, microcytic anemia, and CRP 5 mg/L. Prednisone 40 mg daily was started for a suspected Crohn flare; a stool occult blood test was ordered. Patient was advised on diet and follow‑up labs.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anemia likely nutritional; Crohn flare suspected; colon malignancy not yet excluded.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-05-15</h3><div class="visit-meta">Primary Care | Reason: Increasing abdominal discomfort and intermittent rectal bleeding</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Increasing abdominal discomfort and intermittent rectal bleeding.
+
+History of Present Illness: Patient is a 65‑year‑old male with known type 2 diabetes mellitus, Crohn disease, and hypertension who presents for worsening left upper quadrant (LUQ) abdominal pain radiating to the flank and bright red rectal bleeding. He reports poor sleep, urgency to defecate, and subjective anemia. Pain is dull, non‑radiating beyond the flank. Symptoms have progressed over the last week despite current prednisone 40 mg daily. No fever, chills, or weight loss beyond the 4‑lb loss noted in the prior visit. He denies melena, vomiting, or change in stool caliber. Denies recent travel or antibiotic use.
+
+Past Medical History: Type 2 diabetes mellitus, Crohn disease (active flare), hypertension.
+
+Past Surgical History: None.
+
+Medications: Metformin 1000 mg BID; Lisinopril 10 mg daily; Prednisone 40 mg daily; Ferrous sulfate 325 mg PO BID.
+
+Allergies: NKDA.
+
+Social History: Former smoker (10 pack‑year), denies alcohol abuse.
+
+Review of Systems: Positive for abdominal pain, bright red rectal bleeding, urgency, poor sleep; negative for fever, chills, melena, vomiting, weight gain.
+
+Physical Examination:
+  • General: Alert and oriented, in no acute distress.
+  • Vitals: BP 138/86, HR 80, RR 18, Temp 98.5 °F, SpO₂ 98%.
+  • Abdomen: Mild tenderness in LUQ, no guarding or rebound. No palpable masses. Bowel sounds normoactive.
+  • Rectal: Fresh blood present; digital rectal exam normal, no masses.
+  • Cardiovascular, Pulmonary, Musculoskeletal: Normal.
+
+Labs/Imaging: Bedside abdominal ultrasound shows a 2.5 cm hypoechoic lesion adjacent to the splenic flexure. Colonoscopy pending; stool occult blood kit completed.
+
+Assessment:
+  1. Suspected colonic mass at the splenic flexure, likely malignant or benign neoplasm. Colonoscopy and further imaging (CT colonography/CT abdomen) will clarify.
+  2. Crohn disease flare with focal disease adjacent to splenic flexure, contributing to pain and bleeding.
+  3. Anemia secondary to chronic blood loss and iron deficiency, partly responsive to iron supplementation.
+
+Plan:
+  • Order colonoscopy within 5 days. Pending results, plan for CT abdomen/pelvis with contrast for further lesion characterization.
+  • Continue prednisone 40 mg daily; taper if colonoscopy confirms malignancy or if disease activity decreases.
+  • Continue ferrous sulfate 325 mg PO BID until CBC normalizes (target Hgb &gt; 12 g/dL).
+  • Metformin 1000 mg BID continues; adjust dose if HbA1c or renal function changes.
+  • Lisinopril 10 mg daily; monitor BP.
+  • Educate patient on signs of worsening bleeding (black tarry stool, dizziness) and advise immediate return to ED if occurring.
+  • Counsel on smoking cessation (referral to quitline).
+  • Discuss colorectal cancer screening; if colonoscopy confirms mass, proceed with oncologic referral.
+  • Follow up in one week or sooner if symptoms worsen; arrange CBC, CMP, LDH and CRP prior to colonoscopy visit.
+  • Reinforce sleep hygiene and stress management.
+
+Patient was anxious but compliant; provided education and referrals. He will receive a stool occult blood kit to continue use at home and will be contacted by the GI team regarding scheduling.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dull upper abdominal pain radiating to flank</span><span class="pill">bright red rectal bleeding</span><span class="pill">poor sleep</span><span class="pill">urgency to defecate</span><span class="pill">anemia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>138/86</td></tr><tr><td>heart_rate</td><td>80</td></tr><tr><td>respiratory_rate</td><td>18</td></tr><tr><td>temperature</td><td>98.5°F</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>abdominal tenderness left upper quadrant mild</li><li>no masses palpated</li><li>rectal examination normal except fresh blood</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Colonoscopy</li><li>Abdominal Ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Ultrasound: 2.5 cm hypoechoic lesion near splenic flexure</li><li>Colonoscopy pending</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referred for colonoscopy</li><li>Administered stool occult blood kit</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxious but compliant with referral plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>prednisone 40 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>prednisone course</li><li>suspected Crohn flare</li><li>smoking history</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient reported worsened upper abdominal pain and bright red bleeding. An urgent colonoscopy was scheduled due to anemia and bleeding. A bedside abdominal ultrasound demonstrated a 2.5 cm hypoechoic lesion near the splenic flexure. Patient was referred for colonoscopy and further imaging.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Suspicious lesion identified; biopsy needed to rule out malignancy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-06-28</h3><div class="visit-meta">Gastroenterology | Reason: Colonoscopy with biopsy for suspected colon lesion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Colonoscopy with biopsy for suspected colon lesion.
+
+History of Present Illness:
+A 65‑year‑old male with known Crohn disease, type 2 diabetes mellitus, and hypertension presents for a colonoscopy that was performed 5 days ago at our facility. The procedure revealed a thick, ulcerated plaque and an inflamed area near the splenic flexure. One or more biopsies were taken from the lesion. The patient reports persistent upper abdominal pain, primarily left upper quadrant, and intermittent bright red rectal bleeding over the past few weeks.
+
+Past Medical History: Crohn disease (ulcerative type), type 2 diabetes mellitus, hypertension.
+Past Surgical History: None.
+Current Medications: Metformin 1000 mg BID, Lisinopril 10 mg daily, Prednisone 40 mg daily, Ferrous sulfate 325 mg BID.
+Allergies: NKDA.
+
+Physical Examination:
+Vitals: stable. Abdomen soft with mild tenderness in the left upper quadrant. No palpable masses. Rectal examination normal.
+
+Assessment:
+1. Crohn disease flare involving the colon – consistent with the ulcerated plaque seen on colonoscopy and the patient’s history of disease activity.
+2. Possible colonic neoplasia (adenocarcinoma or dysplastic polyp) – the morphology of the lesion and its ulcerative nature raise concern, especially in the context of inflammatory bowel disease.
+3. Differential includes benign inflammatory polyp, granulomatosis with immunologic activation, and colonic diverticulitis with ulceration.
+
+Plan:
+- Await final histopathology report.  If dysplasia or malignancy is identified, refer to colorectal surgery and oncology for staging and management.
+- Continue current prednisone dose of 40 mg daily for steroid tapering; plan gradual taper over 4–6 weeks depending on flare control.
+- Continue metformin 1000 mg BID for diabetes control; monitor HbA1c in 6 weeks.
+- Continue lisinopril 10 mg daily for hypertension; monitor blood pressure weekly.
+- Continue ferrous sulfate 325 mg BID until iron studies normalize.
+- Order laboratory work: CBC with differential, CMP, CRP, ESR, stool occult blood test, fecal calprotectin.
+- Consider starting a biologic agent (e.g., infliximab) if steroid taper is inadequate or if histology shows dysplasia.
+- Educate the patient on signs of worsening bleeding, abdominal pain, weight loss, or anemia; advise to seek care promptly.
+- Schedule follow‑up in 2 weeks to review pathology and adjust immunomodulatory therapy as needed. If pathology shows neoplasia, schedule colonoscopy repeat in 6 months or sooner as indicated by oncological consensus.
+
+The patient was informed about the uncertain histological finding and the need for close follow‑up. He was upset but understood the next steps.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent upper abdominal pain</span><span class="pill">intermittent bleeding</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>136/84</td></tr><tr><td>heart_rate</td><td>78</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>temperature</td><td>98.4°F</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>abdomen soft, mild tenderness left upper quadrant</li><li>no masses palpable</li><li>rectal exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Histopathology</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pathology: moderately differentiated adenocarcinoma, T4, N2, signet ring cells</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Colonoscopy</li><li>Biopsy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient upset by diagnosis but understood next steps.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>prednisone 40 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>ulcerative Crohn disease</li><li>prednisone</li><li>ulcerated plaque biopsy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Colonoscopy revealed a thick, ulcerated plaque and an inflamed area near the splenic flexure. A biopsy was taken. Histology reported a moderately differentiated adenocarcinoma, T4 invasion, N2 nodal involvement, and signet ring cells. Diagnosis confirmed metastatic colorectal cancer. Patient was referred to surgical oncology and gastroenterology for staging.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage T4N2M0 confirmed; awaiting liver imaging.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-07-10</h3><div class="visit-meta">Medical Oncology | Reason: CT staging and discussion of therapeutic options</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for CT staging results discussion and therapeutic options following recent abdominal imaging and symptom recurrence.
+
+History of Present Illness: 65‑year‑old male with known T2DM, Crohn disease on prednisone 40 mg daily, and hypertension presents with persistent left upper quadrant abdominal pain, dark stools, and a 10‑lb unintentional weight loss over the past month. Denies fever or chills. No recent change in bowel habits except occasional bright‑red stool. Prior colonoscopy 2 weeks ago demonstrated a thick, ulcerated plaque at the splenic flexure with biopsy pending.
+
+Past Medical History: Crohn disease, type 2 diabetes mellitus, hypertension, iron deficiency anemia.
+
+Medications: Prednisone 40 mg PO qd, ferrous sulfate 325 mg PO bid, metformin 1000 mg PO bid, lisinopril 5 mg PO qd.
+
+Allergies: None reported.
+
+Physical Examination: Vitals stable; BP 150/92, HR 82, RR 18, Temp 98.7°F, SpO2 97% on room air. Abdomen: soft, non‑distended; tenderness to palpation in LUQ without rebound or guarding; no palpable masses. No organomegaly appreciated. Cardiovascular and respiratory exams unremarkable.
+
+Imaging: CT chest/abdomen/pelvis shows a 5 cm enhancing mass in the splenic flexure region and multiple hepatic lesions concerning for metastatic disease. PET‑CT demonstrates hypermetabolic activity in the colon region and hepatic lesions, concordant with CT findings.
+
+Assessment: Findings consistent with stage IV colorectal adenocarcinoma with synchronous liver metastases. Differential considerations include Crohn disease–associated pseudopolyp versus true neoplastic lesion; however, imaging and PET strongly favor malignant etiology.
+
+Plan:
+1. Initiate systemic therapy with FOLFOX (oxaliplatin, leucovorin, 5‑FU) plus bevacizumab per standard regimen.
+2. Schedule first chemotherapy cycle in 2 weeks.
+3. Continue prednisone 40 mg daily with plan to taper over 6 weeks once systemic therapy is underway; monitor for steroid‑related hyperglycemia and hypertension.
+4. Continue metformin, ferrous sulfate, and low‑dose lisinopril 5 mg daily.
+5. Counsel patient on potential chemotherapy toxicities (neutropenia, neuropathy, hypertension) and importance of reporting any new or worsening symptoms.
+6. Order baseline labs prior to therapy: CBC with differential, CMP, liver function tests, CRP, ESR, HbA1c.
+7. Repeat CBC, CMP, and LFTs 10 days after initiation of chemo.
+8. Monitor blood pressure daily; consider up-titration of lisinopril if hypertension persists.
+9. Schedule follow‑up in 3 weeks to review lab results, assess tolerability, and plan subsequent chemotherapy cycle.
+10. Advise early reporting of any GI bleeding, abdominal pain worsening, or signs of infection.
+
+Disposition: Patient verbalized understanding of treatment intent and potential side‑effects; consented to treatment.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent left upper abdominal pain</span><span class="pill">dark stools</span><span class="pill">weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>150/92</td></tr><tr><td>heart_rate</td><td>82</td></tr><tr><td>respiratory_rate</td><td>18</td></tr><tr><td>temperature</td><td>98.7°F</td></tr><tr><td>oxygen_saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>abdominal tenderness left upper quadrant</li><li>stable vitals</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT Chest/Abdomen/Pelvis</li><li>PET-CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 5 cm infiltrating mass, hepatic metastases (2.5 cm, 3 cm, 1.2 cm)</li><li>PET: increased activity in colon mass &amp; liver lesions</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Scheduled first cycle of FOLFOX + bevacizumab</li><li>Initiated low‑dose lisinopril 5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient accepted therapy after discussion of side‑effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span><span class="pill">colon adenocarcinoma T4N2M1</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>prednisone 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>biopsy‑confirmed carcinoma</li><li>prednisone taper</li><li>liver metastases suspected</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>CT chest/abdomen/pelvis showed a 5 cm splenic flexure mass infiltrating the spleen and multiple liver lesions (largest 3 cm). PET‑CT confirmed metabolic activity. Staging T4N2M1 was established. Discussed palliative systemic therapy. Started FOLFOX (low-dose oxaliplatin) with bevacizumab. Added low‑dose lisinopril for hypertension.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed metastatic disease; systemic therapy initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-08-05</h3><div class="visit-meta">Medical Oncology | Reason: First chemotherapy cycle and management of side‑effects</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: First chemotherapy cycle with FOLFOX plus bevacizumab; management of acute side‑effects.
+
+History of Present Illness: 65‑year‑old male with metastatic colon adenocarcinoma (T4N2M1, liver mets) presented for first cycle of FOLFOX + bevacizumab. During infusion he developed acute peripheral neuropathy characterized by severe tingling, numbness in feet and hands, with cold sensitivity. He also reported classic hypoglycemia symptoms (diaphoresis, shakiness) and a mild dry cough with shortness of breath. Patient noted a sudden drop in blood glucose and responded to increased insulin pump rate. Blood pressure spiked, requiring an additional dose of an ACE inhibitor. Chest X‑ray showed mild bibasilar interstitial infiltrates.
+
+Past Medical History: Type 2 diabetes mellitus (insulin pump, metformin 1000 mg BID), Crohn disease (prednisone 20 mg daily), hypertension (lisinopril 10 mg daily), metastatic colon cancer.
+
+Medications: Metformin 1000 mg BID, insulin pump, lisinopril 10 mg daily, prednisone 20 mg daily, enalapril 2.5 mg daily added, FOLFOX + bevacizumab regimen (5‑FU 500 mg/m², Leucovorin 400 mg, Oxaliplatin 40 mg/m², Bevacizumab 5 mg/kg).
+
+Allergies: NKDA.
+
+Vitals: BP 170/98 mmHg, HR 88 bpm, RR 20/min, Temp 98.4°F, SpO2 95% on room air.
+
+Physical Examination: Peripheral numbness in feet and hands; no abdominal tenderness; no new masses on palpation.
+
+Assessment:
+1. Oxaliplatin‑induced acute peripheral neuropathy – acute sensory neuropathy with cold sensitivity.
+2. Hypoglycemia due to chemotherapy‑induced hyperinsulinemia or insulin‑pump over‑dosage; glucose dropped to 55 mg/dL during infusion.
+3. Mild interstitial infiltrates – likely chemotherapy‑related pneumonitis or early infection.
+4. Worsening hypertension – probably bevacizumab‑associated.
+
+Plan:
+- Continue current chemotherapy regimen with close monitoring; no dose modification at this time.
+- Adjust insulin pump algorithm: increase basal rate and reduce bolus factor; document glucose logs.
+- Continue enalapril 2.5 mg daily; titrate to 5 mg as tolerated if BP remains &gt;160/90.
+- Symptomatic neuropathy: start gabapentin 300 mg PO Q12h; educate on cold‑avoiding measures.
+- Monitor blood glucose every 5–10 min during infusion and 30 min post‑infusion; maintain 80–180 mg/dL.
+- Repeat chest X‑ray in 7 days; if infiltrates progress or respiratory symptoms worsen, obtain chest CT and consider empiric antibiotics.
+- Continue prednisone 20 mg daily, plan taper per Crohn disease flare management.
+- Counsel patient on signs of infection, neuropathic pain exacerbation, and hypoglycemia; advise to carry glucometer.
+- Schedule next oncology visit in 3 weeks for lab review, toxicity assessment, and next chemo cycle planning.
+
+Follow‑up recommendations: Blood glucose monitoring, BP checks, neuropathy assessment, pulmonary infiltrate follow‑up, next chemo cycle scheduling, insulin pump review.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe peripheral neuropathy</span><span class="pill">hypoglycemia symptoms</span><span class="pill">mild cough with shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>170/98</td></tr><tr><td>heart_rate</td><td>88</td></tr><tr><td>respiratory_rate</td><td>20</td></tr><tr><td>temperature</td><td>98.4°F</td></tr><tr><td>oxygen_saturation</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>peripheral numbness in feet and hands</li><li>no abdominal tenderness</li><li>no new masses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Blood glucose trends</li><li>Insulin dose log</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CXR: mild bibasilar interstitial infiltrates</li><li>Glucose: 55 mg/dL during infusion</li><li>BP: 170/98</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>FOLFOX + bevacizumab infusion</li><li>5‑FU 500 mg/m²</li><li>Leucovorin 400 mg</li><li>Oxaliplatin 40 mg/m²</li><li>Bevacizumab 5 mg/kg</li><li>Increased insulin doses</li><li>Enalapril 2.5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reported tingling and numbness, blood glucose spikes managed with insulin adjustments.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span><span class="pill">colon adenocarcinoma T4N2M1</span><span class="pill">liver metastases</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>prednisone 20 mg daily</li><li>insulin pump</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>first chemo cycle</li><li>prednisone taper</li><li>hypertension</li><li>diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Administered FOLFOX + bevacizumab infusion. Developed acute neuropathy with cold sensitivity. Blood glucose abruptly dropped; insulin requirement increased. Chest X‑ray revealed mild bibasilar interstitial infiltrates. Hypertension worsened; low‑dose ACE inhibitor added. Adjusted insulin pump dosing accordingly.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First cycle tolerated with neuropathy and metabolic complications; disease continues to progress.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-09-20</h3><div class="visit-meta">Medical Oncology | Reason: Second chemotherapy cycle and monitoring hepatic progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for second cycle of FOLFOX + bevacizumab and monitoring of hepatic progression.
+
+History of Present Illness: 65‑year‑old male with metastatic colorectal cancer, currently on second cycle of FOLFOX + bevacizumab. He reports worsening fatigue, loss of appetite, early satiety, jaundice, and increased abdominal girth since last visit. He notes left flank pain that has intensified over the past week. He has no new bleeding episodes or overt GI symptoms.
+
+Past Medical History: Type 2 diabetes mellitus (insulin pump), Crohn’s disease (prednisone 20 mg daily), hypertension (lisinopril 10 mg, enalapril 2.5 mg), mild chronic anemia, and known hepatic metastases with progressive enlargement.
+
+Current Medications: Prednisone 20 mg PO daily, Metformin 1000 mg PO BID, Ferrous sulfate 325 mg PO BID, Lisinopril 10 mg daily, Enalapril 2.5 mg daily, Gabapentin 300 mg PO Q12 h, Insulin pump (dose titrated).
+
+Allergies: NKDA.
+
+Review of Systems: Positive for fatigue, anorexia, early satiety, jaundice, abdominal distention, and left flank pain. Negative for hematuria, chest pain, dyspnea, or neurologic changes.
+
+Physical Examination:
+- General: Cachectic, jaundiced.
+- Vitals: BP 165/95 mmHg, HR 84 bpm, RR 18/min, Temp 37.2°C, SpO2 97% on room air.
+- HEENT: Conjunctival icterus present.
+- Neck: No jugular venous distension.
+- Cardiovascular: Regular rhythm, S3 present.
+- Respiratory: Normal breath sounds, mild inspiratory crackles at bases.
+- Abdomen: Distended; positive fluid wave with ascites; palpable liver edge 2 cm below costal margin; mild tenderness at left flank.
+- Extremities: No peripheral edema.
+- Neurologic: Alert, oriented; no focal deficits.
+
+Laboratory and Imaging:
+- LFT panel: ALP 280 U/L, GGT 160 U/L, Bilirubin total 2.5 mg/dL, Albumin 2.9 g/dL, INR 1.6.
+- Coagulation: Mildly prolonged PT/INR.
+- Abdominal ultrasound: Enlarged hepatic lesions (3.5 cm &amp; 3 cm) + new 1.8 cm nodules; ascites present.
+- CT abdomen: Hepatomegaly, infiltrative intrahepatic nodules, moderate ascites.
+
+Assessment:
+1. Progressive hepatic metastases with resultant hepatic decompensation secondary to tumor burden.
+2. Chemotherapy‑induced hepatotoxicity (FOLFOX/ bevacizumab) contributing to cholestasis.
+3. Portal hypertension with ascites.
+
+Plan:
+- Continue second cycle of FOLFOX + bevacizumab; monitor closely.
+- Initiate diuretic therapy: Furosemide 20 mg PO daily + Spironolactone 100 mg PO daily to manage ascites.
+- Recommend daily weight monitoring and abdominal girth measurement; instruct patient to report sudden increase.
+- Hold bevacizumab in case of bleeding risk; consider delaying next cycle until INR normalizes (target INR &lt;1.3).
+- Continue insulin pump with careful glucose monitoring due to hepatic insulin resistance.
+- Continue prednisone 20 mg daily for Crohn’s disease; plan taper over 8 weeks.
+- Monitor LFTs, INR, CBC, electrolytes every 2 weeks.
+- Consider portal pressure measurement if ascites refractory to diuretics.
+- Counsel patient on signs of variceal bleeding and hepatic encephalopathy.
+- Follow‑up: next oncology visit in 3 weeks (pre‑chemo assessment). If worsening jaundice or ascites: immediate appointment.
+
+Disposition: Patient tolerating chemotherapy with manageable side effects. Advised to maintain follow‑up schedule and report any new symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">loss of appetite</span><span class="pill">early satiety</span><span class="pill">jaundice</span><span class="pill">increased abdominal girth</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>165/95</td></tr><tr><td>heart_rate</td><td>84</td></tr><tr><td>respiratory_rate</td><td>18</td></tr><tr><td>temperature</td><td>98.5°F</td></tr><tr><td>oxygen_saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>ascites in abdomen</li><li>jaundice ocular</li><li>palpable liver edge 2 cm below costal margin</li><li>pain in left flank</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Liver Function Panel</li><li>Abdominal Ultrasound</li><li>CT Abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>LFTs: ALP 280, GGT 160, Bilirubin 2.5, INR 1.6, Albumin 2.9</li><li>Ultrasound: hepatic lesions enlarged, ascites</li><li>CT: hepatomegaly, enlarged lesions, new ascites</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Second cycle FOLFOX + bevacizumab</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feels more fatigued, reduced appetite. Insulin fluctuating.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span><span class="pill">colon adenocarcinoma T4N2M1</span><span class="pill">liver metastases with hepatic dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>enalapril 2.5 mg daily</li><li>insulin pump</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>progressive liver disease</li><li>previous chemo cycles</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Second chemo cycle administered. Labs: ALP 280 U/L, GGT 160 U/L. Abdominal ultrasound: hepatic lesions enlarged (3.5 cm, 3 cm) + new 1.8 cm nodules. CT confirms ascites, hepatomegaly, intrahepatic nodules. INR 1.6, bilirubin 2.5 mg/dL, albumin 2.9 g/dL. Hepatic decompensation noted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Hepatomegaly progressing; hepatic function worsening.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-10-15</h3><div class="visit-meta">Multidisciplinary Tumor Board | Reason: Assess disease progression and shift to palliative care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Assessment of disease progression and shift to palliative care.
+
+Patient: 65‑year‑old male with known T4N2M1 colon adenocarcinoma, hepatic metastases, rapidly progressive liver failure, and malignant ascites.  The patient has completed two cycles of FOLFOX + bevacizumab and is now exhibiting an ECOG performance status of 3, low‑grade fevers, night sweats, and severe left flank pain radiating to the shoulder blade.
+
+Findings: Imaging (CT abdomen/pelvis) shows progressive hepatomegaly and new ascites.  LFTs demonstrate worsening INR and bilirubin.  Physical exam: abdominal distension with ascites, reduced abdominal tone, and pain on flank palpation.  Vitals are as follows: BP 160/96 mmHg, HR 90 bpm, RR 19/min, Temp 99.0 °F, SpO2 96% on room air.
+
+Multidisciplinary Tumor Board Consensus: Given the extent of hepatic dysfunction, recent chemotherapy complications, and poor performance status, further systemic chemotherapy is deemed futile and poses unacceptable risk.  The board recommends transition to palliative care with a focused pain regimen and supportive measures.
+
+Assessments:
+- Progressive metastatic colorectal carcinoma with hepatic metastases and malignant ascites.
+- Hepatic synthetic dysfunction contributing to coagulopathy.
+- Possible superimposed infection (fever, night sweats) – to be differentiated from tumor burden.
+- Pain likely from tumor infiltration of flank and potential sympathetic plexus involvement.
+
+Plan:
+1. Pain and symptom control:
+   - Morphine sulfate PO 10 mg q6h PRN for breakthrough pain.  Reassess analgesic adequacy after 24 hrs.
+   - Low‑dose dexamethasone PO 4 mg daily to reduce inflammation and edema.
+   - Consider adding a short‑acting opioid (e.g., hydromorphone 2 mg PO q4h PRN) if pain remains uncontrolled.
+2. Hepatic function:
+   - Continue low‑dose diuretics (furosemide 20 mg daily, spironolactone 100 mg daily) to manage ascites.
+   - Monitor INR, bilirubin, and albumin every 2 weeks (if clinically feasible).
+3. Infection surveillance:
+   - Obtain a full CBC with differential, CMP, CRP, ESR, and blood cultures if fever persists beyond 48 hrs.
+   - Consider abdominal paracentesis for cell count &amp; cultures if ascites becomes tense or infection is suspected.
+4. Oncology:
+   - Discontinue all systemic chemotherapy agents.
+   - Document transition to palliative care and advise hospice enrollment.
+5. Supportive care:
+   - Initiate referral to Palliative Care Specialist.
+   - Discuss goals of care with patient and family; document advanced directives.
+   - Coordinate with Social Work and Chaplaincy for psychosocial support.
+6. Follow‑up:
+   - Daily interdisciplinary rounding in hospice setting.
+   - Lab reassessments every 2 weeks or sooner if clinical status changes.
+   - Pain medication review every 48 hrs in the first 72 hrs, then weekly.
+   - Adjust diuretics based on daily weights and ascites status.
+
+The patient and family have consented to the palliative care plan and reported modest improvement in pain control with the new regimen.
+
+This note documents the multidisciplinary agreement to discontinue cytotoxic therapy and to focus on quality‑of‑life measures for the remainder of the patient’s care.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">performance status ECOG 3</span><span class="pill">low‑grade fevers</span><span class="pill">night sweats</span><span class="pill">intense left flank pain radiating to shoulder blade</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>160/96</td></tr><tr><td>heart_rate</td><td>90</td></tr><tr><td>respiratory_rate</td><td>19</td></tr><tr><td>temperature</td><td>99.0°F</td></tr><tr><td>oxygen_saturation</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>abdominal distension with ascites</li><li>reduced abdominal muscle tone</li><li>pain when palpating flank</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Review of all prior imaging</li><li>Lab review</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: progressive hepatomegaly, new ascites</li><li>LFTs: worsening INR, bilirubin</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine PO 10 mg q6h</li><li>Dexamethasone PO 4 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Accepts palliative approach; reports moderate pain control improvement.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span><span class="pill">colon adenocarcinoma T4N2M1</span><span class="pill">liver metastases</span><span class="pill">ascites</span><span class="pill">severe hepatic dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>enalapril 2.5 mg daily</li><li>insulin pump</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>rapid liver deterioration</li><li>multiple chemotherapy cycles</li><li>new pain</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Tumor board reviewed imaging, labs, performance status. Consensus: further systemic chemotherapy likely futile and risky given hepatic failure. Shift to palliative care. Initiated pain regimen: morphine 10 mg PO q6h. Low‑dose dexamethasone 4 mg PO daily. Discussed goals of care with patient and family. Referred to palliative care specialist.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Shift from curative to palliative focus. Disease burden high; hepatic function poor.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-11-10</h3><div class="visit-meta">Palliative Care | Reason: Ascites drainage and symptom management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 65‑year‑old male presents for ascites drainage and symptom management. 
+
+History of Present Illness: Patient with metastatic colorectal cancer involving the liver and portal hypertension has been receiving palliative chemotherapy until October 15, when transition to palliative care was initiated. He reports increased abdominal distension, discomfort associated with ascites drainage, fatigue, loss of appetite, congestive symptoms, and intermittent dyspnea. Recent therapeutic paracentesis of 2.5 L milky fluid was performed for symptomatic relief. No abdominal pain or tenderness noted. He remains on a complex medication regimen including steroids and opioids for pain control and diuretics for ascites.
+
+Past Medical History: Type 2 Diabetes Mellitus, Inflammatory Bowel Disease (Crohn’s), Hypertension, Colorectal adenocarcinoma with metastatic hepatic disease, Portal hypertension, Recurrent ascites.
+
+Current Medications: Prednisone 20 mg PO daily, Metformin 1000 mg PO BID, Ferrous sulfate 325 mg PO BID, Lisinopril 10 mg PO daily, Enalapril 2.5 mg PO daily, Gabapentin 300 mg PO Q12h, Insulin pump (dose adjusted today), Furosemide 20 mg PO daily, Spironolactone 100 mg PO daily, Morphine sulfate PO 30 mg q6h, Dexamethasone PO 8 mg daily.
+
+Allergies: NKDA.
+
+Vital Signs: BP 158/94, HR 86, RR 20, Temp 98.6 °F, SpO2 95% on room air.
+
+Physical Exam: Flank abdominal distension, no tenderness, jaundice present, mild dyspnea on exertion.
+
+Assessment: 1) Symptomatic refractory ascites secondary to portal hypertension and hepatic metastases – managed with current diuretics and recent therapeutic paracentesis. 2) Progressive hepatic failure evidenced by rising bilirubin (4 mg/dL) and INR (1.8). 3) Pain and discomfort managed with opioid escalation to 30 mg PO q6h. 4) Steroid therapy adjusted to 8 mg dexamethasone daily to address hepatic inflammation. 5) Nutrition: poor appetite, ongoing malnutrition.
+
+Plan: 
+- Continue paracentesis as needed for symptomatic relief; monitor volume and signs of spontaneous bacterial peritonitis. 
+- Maintain current diuretic regimen; assess daily weight and abdominal girth. 
+- Dexamethasone 8 mg PO daily, Prednisone 20 mg PO daily taper plan. 
+- Morphine sulfate 30 mg PO q6h; titrate for breakthrough pain and dyspnea. 
+- Insulin pump adjustments ongoing based on glucose monitoring. 
+- Continue gabapentin 300 mg Q12h for neuropathy. 
+- Monitor LFTs, INR, CBC, electrolytes every 2 weeks (next labs due 2024‑11‑24). 
+- Review pain score and SpO2 hourly; adjust opioids/dexes as needed. 
+- Discuss goals of care; patient desires comfort‑focused care. Revisit advanced directives.
+- Supportive nutrition: oral supplements, consider enteral feeding if oral intake inadequate.
+
+Follow‑up: Daily hospice interdisciplinary rounds; pain and symptom review every 24 h; dietitian and social worker consult. Next outpatient visit scheduled for 2025‑01‑04 or sooner if symptoms worsen.
+
+Signature: Dr. _____, Palliative Care Specialist</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">increased abdominal distension</span><span class="pill">ascites drainage discomfort</span><span class="pill">fatigue</span><span class="pill">loss of appetite</span><span class="pill">congestive symptoms</span><span class="pill">dyspnea intermittent</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>158/94</td></tr><tr><td>heart_rate</td><td>86</td></tr><tr><td>respiratory_rate</td><td>20</td></tr><tr><td>temperature</td><td>98.6°F</td></tr><tr><td>oxygen_saturation</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>flank abdominal distension</li><li>no tenderness</li><li>jaundice present</li><li>respiratory: mild dyspnea on exertion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Paracentesis fluid analysis</li><li>Liver function panel</li><li>Fluid culture</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Paracentesis: 2.5L milky fluid, SAAG 1.1 g/dL, negative culture</li><li>LFTs: Bilirubin 4 mg/dL, INR 1.8</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Paracentesis</li><li>Dexamethasone 8 mg daily</li><li>Adjusted insulin dosages</li><li>Opioid dose increased to 30 mg PO q6h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slightly improved abdominal discomfort; continues to accept comfort care. Appetite remains poor.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span><span class="pill">colon adenocarcinoma T4N2M1</span><span class="pill">ascites</span><span class="pill">liver dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>enalapril 2.5 mg daily</li><li>insulin pump</li><li>morphine 20 mg PO q6h</li><li>dexamethasone 4 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>large ascites</li><li>recent paracentesis</li><li>ongoing opioid analgesia</li><li>diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Performed therapeutic paracentesis of 2.5 L milky ascitic fluid; SAAG 1.1 g/dL indicating portal hypertension. Fluid culture negative. Increased dexamethasone to 8 mg daily to reduce hepatic inflammation. Discussed end‑of‑life wishes and patient’s desire for comfort care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Advanced hepatic failure, refractory ascites, ongoing disease progression.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-12-12</h3><div class="visit-meta">Palliative Care (Hospice Inpatient) | Reason: Acute decompensation, respiratory distress, sepsis‑like presentation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Mr. M, a 65‑year‑old male with metastatic colon adenocarcinoma (T4N2M1) and end‑stage hepatic failure, was admitted to hospice for acute respiratory distress and a sepsis‑like presentation.  The patient developed worsening dyspnea with tachypnea (RR 22) and nasal flaring.  Chest CT demonstrated pulmonary edema and mild bibasilar consolidation; an echocardiogram excluded low ejection fraction (LVEF 55%) and ruled out congestive heart failure.  Blood cultures, CBC, and BMP were unremarkable (no infection).  Given the hepatic‑related hepato‑cardiogenic syndrome and his oncologic prognosis, the care team focused on comfort measures only.
+
+Assessment:  The patient’s acute respiratory compromise is most consistent with hepato‑cardiogenic pulmonary edema secondary to advanced liver failure rather than infectious sepsis.  Diabetes control remains suboptimal, with noted hyperglycemia; insulin adjustments were made.  Blood pressure is labile; antihypertensives were titrated to avoid excessive hypotension.  No further diagnostic workup (e.g., bronchoscopy or antibiotics) is warranted per the family’s end‑of‑life wishes.
+
+Plan:  1. Continue low‑dose morphine 30 mg PO q6h for dyspnea and pain.  2. Dexamethasone 8 mg PO qd for anti‑inflammatory/vasogenic edema control.  3. Maintain antihypertensive regimen (enalapril titrated, lisinopril), monitoring blood pressure and serum electrolytes twice daily.  4. Adjust insulin pump basal and bolus rates to maintain glucose 140‑180 mg/dL.  5. O2 supplementation as needed to keep SpO₂ &gt; 92%; use nasal cannula or BiPAP if clinically indicated.  6. Continue monitoring respiratory status, abdominal girth, ascites, and mental status every shift.  7. Daily hospice interdisciplinary rounds; review comfort goals each morning.  8. No new antibiotics, diuretics, or invasive diagnostics unless family re‑opens the discussion.  9. Discuss potential transition to palliative sedation if refractory dyspnea or agitation develops.
+
+Follow‑up:  Next interdisciplinary assessment scheduled in 48 hours or sooner if respiratory status worsens.  Family to be present for all discussions.  Advance directives reviewed at each visit; current preference remains symptom control only.
+
+The patient remains oriented with mild confusion, and his pain has remained minimal.  He continues to breathe comfortably on low‑flow oxygen and reports no new dyspnea after the latest interventions.  All comfort measures will be continued following the family’s wishes.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">acute dyspnea</span><span class="pill">pulmonary edema</span><span class="pill">mild consolidation on chest CT</span><span class="pill">low heart function</span><span class="pill">hyperglycemia</span><span class="pill">BP variability</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>145/80</td></tr><tr><td>heart_rate</td><td>92</td></tr><tr><td>respiratory_rate</td><td>22</td></tr><tr><td>temperature</td><td>99.1°F</td></tr><tr><td>oxygen_saturation</td><td>90%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>tachypneic, nasal flaring</li><li>crackles bibasilar</li><li>jaundiced skin</li><li>ascites</li><li>altered mental status mild confusion</li><li>abdomen soft but distended</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT</li><li>Echocardiogram</li><li>Blood cultures</li><li>CBC</li><li>BMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest CT: pulmonary edema, mild consolidation</li><li>Echocardiogram: LVEF 55%</li><li>CBC: WBC 9.5k</li><li>Blood cultures: sterile</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Low‑volume intravenous diuretics avoided due to renal function</li><li>Dexamethasone 8 mg PO</li><li>Morphine 30 mg PO q6h</li><li>Antihypertensive titration</li><li>Insulin titration</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable comfort measures; minimal pain reported; remained oriented but anxious.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">Crohn disease</span><span class="pill">hypertension</span><span class="pill">colon adenocarcinoma T4N2M1</span><span class="pill">ascites</span><span class="pill">hepatic failure</span><span class="pill">respiratory failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin 1000 mg BID</li><li>lisinopril 10 mg daily</li><li>enalapril 2.5 mg daily</li><li>insulin pump</li><li>morphine 30 mg PO q6h</li><li>dexamethasone 8 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>hepatic failure</li><li>previous pulmonary edema</li><li>no infection evidence</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient admitted for acute respiratory distress secondary to hepatic‑related hepato‑cardiogenic syndrome. Chest CT showed pulmonary edema and mild consolidation. Echocardiogram ruled out congestive heart failure. No bacterial source found. Provided comfort care: low‑dose opioids, dexamethasone, antihypertensives titrated. Monitored glucose and BP. Family discussed end‑of‑life wishes; patient opted for symptom relief only.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal hepatic failure with respiratory decompensation. End‑of‑life care in place.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Inflammatory Bowel Disease</span><span class="pill">Hypertension</span><span class="pill">Colorectal adenocarcinoma</span><span class="pill">Metastatic colorectal cancer with hepatic involvement</span><span class="pill">Portal hypertension</span><span class="pill">Ascites</span><span class="pill">End‑stage liver failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 20 mg PO daily</li><li>Metformin 1000 mg PO BID</li><li>Ferrous sulfate 325 mg PO BID</li><li>Lisinopril 10 mg PO daily</li><li>Enalapril 2.5 mg PO daily</li><li>Gabapentin 300 mg PO Q12h</li><li>Insulin pump (dose adjusted)</li><li>Spironolactone 100 mg PO daily</li><li>Morphine sulfate PO 30 mg q6h</li><li>Dexamethasone PO 8 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2024-04-20: Routine check‑up with mild left upper quadrant discomfort, fatigue, darkened stools, and unintentional 4‑lb weight loss. Vital signs stable; mild LUQ tenderness noted. Laboratory results revealed microcytic anemia (Hb 11.8 g/dL, MCV 72 fL), elevated CRP (5 mg/L), and negative stool occult blood. Started prednisone 40 mg PO daily for Crohn disease flare and ferrous sulfate 325 mg PO BID for iron‑deficiency anemia. Follow‑up labs (CBC, CRP, HbA1c) in 4 weeks and stool occult repeat in 2 weeks; smoking cessation counseling offered.</li><li>2024-05-15: Patient presents with worsening left upper quadrant pain radiating to flank and bright red rectal bleeding. Mild tenderness on LUQ noted. Bedside abdominal ultrasound shows a 2.5 cm hypoechoic lesion near splenic flexure. Plan colonoscopy within 5 days and CT abdomen/pelvis with contrast pending. Continue prednisone 40 mg daily, ferrous sulfate 325 mg BID, metformin 1000 mg BID, and lisinopril 10 mg daily. Blood pressure 138/86. Follow‑up in one week or sooner if symptoms worsen.</li><li>2024-06-28: Colonoscopy with biopsy for suspected colon lesion performed 5 days earlier. Endoscopy revealed a thick, ulcerated plaque and inflamed area near the splenic flexure. Patient reports persistent left upper quadrant pain and intermittent bright red rectal bleeding. Continued prednisone 40 mg daily with plan for gradual taper over 4–6 weeks, metformin 1000 mg BID, lisinopril 10 mg daily, and ferrous sulfate 325 mg BID. Ordered CBC with differential, CMP, CRP, ESR, stool occult blood test, and fecal calprotectin. Awaiting histopathology results; follow‑up scheduled in 2 weeks to review pathology and adjust immunomodulatory therapy. Consideration for biologic agent if steroid taper inadequate or pathology suggests dysplasia. Monitoring schedule includes weekly blood pressure checks and periodic labs.</li><li>2024-07-10: Discussed CT/PET‑CT staging revealing a 5 cm splenic flexure mass and multiple hepatic lesions. Initiated systemic therapy with FOLFOX plus bevacizumab; continued prednisone 40 mg daily with planned taper over 6 weeks, metformin, ferrous sulfate, and lisinopril 5 mg daily. Baseline labs (CBC, CMP, LFTs, CRP, ESR, HbA1c) ordered. Planned first chemotherapy cycle in 2 weeks, with follow‑up in 3 weeks to review labs and assess tolerability.</li><li>2024-08-05: First FOLFOX+bevacizumab chemotherapy cycle; acute oxaliplatin‑induced peripheral neuropathy treated, hypoglycemia resolved with insulin pump adjustment, mild interstitial infiltrates noted on chest X‑ray, BP spiked managed with added enalapril. Initiated gabapentin for neuropathy, continued prednisone 20 mg daily, and scheduled next chemo cycle in 3 weeks.</li><li>2024-09-20: Second cycle of FOLFOX + bevacizumab administered; initiated diuretic therapy (furosemide 20 mg daily, spironolactone 100 mg daily) for ascites; noted progressive hepatic metastases with ascites, jaundice, and elevated LFTs (ALP 280 U/L, GGT 160 U/L, total bilirubin 2.5 mg/dL, albumin 2.9 g/dL); blood pressure 165/95 mmHg. Plan to monitor LFTs, INR, CBC, electrolytes every 2 weeks, weigh daily, and assess for worsening ascites.</li><li>2024-10-15: Tumor board consensus to transition patient to palliative care due to progressive hepatic failure and poor performance status. Discontinued FOLFOX/bevacizumab. Initiated morphine sulfate 10 mg PO q6h and dexamethasone 4 mg PO daily for pain; continued low‑dose diuretics for ascites. Daily hospice interdisciplinary rounds planned, labs reassessed every 2 weeks, pain reviewed every 48 hrs.</li><li>2024-11-10: Palliative care visit for ascites – therapeutic paracentesis performed; diuretics maintained; morphine increased to 30 mg q6h; dexamethasone raised to 8 mg daily; labs and weight monitoring planned.</li><li>2024-12-12: Hospitalized for acute respiratory distress; findings: tachypnea (RR 22) with SpO₂ 90%; chest CT revealed pulmonary edema and mild bibasilar consolidation; bedside echo normal EF 55%; CBC, BMP, blood cultures unremarkable. Continued comfort regimen: morphine 30 mg PO q6h, dexamethasone 8 mg PO daily, antihypertensive regimen maintained (enalapril 2.5 mg PO daily titrated as needed, lisinopril 10 mg daily), insulin pump adjusted to target glucose 140‑180 mg/dL, spironolactone 100 mg PO daily for ascites. Furosemide avoided due to renal function. O2 administered via nasal cannula or BiPAP to keep SpO₂ &gt;92%. Daily hospice interdisciplinary rounds; BP, glucose, electrolytes, O₂ sat monitored twice daily; no new antibiotics or invasive procedures ordered.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

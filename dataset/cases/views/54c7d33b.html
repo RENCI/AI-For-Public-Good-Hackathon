@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 54c7d33b</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 54c7d33b</h1><div class="subtitle">Multiple Sclerosis Relapse | Female, 35</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Depression, Anxiety, Sleep disturbances, Hypertension, Rheumatoid arthritis</div><div class="meta-line">Risk Factors: Smoking, Vitamin D deficiency, High baseline disease activity, Previous frequent relapses, Obesity</div></div>
+<details><summary>Narrative <span class="preview-text">**A 35‑Year‑Old Woman’s Journey Through a Worsening Course of Relapsing‑Remitting Multiple Sclerosis**  When 35‑year‑old...</span></summary><div class="section-body"><p>**A 35‑Year‑Old Woman’s Journey Through a Worsening Course of Relapsing‑Remitting Multiple Sclerosis**</p><p>When 35‑year‑old Maya first noticed a flicker of double vision at the office, she chalked it up to the long hours at her computer and the stress of a looming deadline. She hadn’t been feeling well in the way that a flu would make her feel, but she did notice a mild, burning tingling on the inner left thigh that came and went, almost like the phantom sensation some patients feel after a long flight. Maya had been living with relapsing‑remitting multiple sclerosis (RRMS) for six years, diagnosed at 29 after a first optic neuritis episode that left her with a subtle field defect. She was on intramuscular interferon‑beta‑1a (Avonex) once a week and had had a dozen relapses—most of them brief and self‑limited—over the past five years. She was also grappling with a chronic, multifaceted medical profile: a 10‑year history of rheumatoid arthritis (RA) she managed with low‑dose methotrexate and adalimumab, hypertension on lisinopril, sleep‑disturbance insomnia that kept her up for hours, and a depressive disorder that she had been treating with sertraline. With a BMI of 30.8 and a 10‑pack‑year smoking history, her risk profile was high for disease progression.</p><p>---</p><p>### Episode One – A Subtle Onset</p><p>**Week 0‑1 – Quiet Unsteadiness**</p><p>Maya awoke with a feeling of “stiffness” in her left arm. She told her sister she’d felt “like a bolt of static” running down the arm, but nothing else. She pushed the thought aside as stress and decided to finish a pending spreadsheet. However, as the day progressed, faint, intermittent blurriness hit the left side of her vision, especially when she switched between her computer&#x27;s high‑contrast white background and the dark gray of the monitor. She also found her bladder feeling “always full.”</p><p>She tried to ignore the symptoms. Her depression had made her wary of seeing new doctors; she feared that further medical interventions would only compound her anxiety. She continued her nightly dose of sertraline (100 mg) and drank a glass of wine each evening as a way to ease the creeping anxiety that had, in the months since her last relapse, been a constant companion.</p><p>**Week 2 – The Urgent Care Visit**</p><p>Maya’s daughter noticed the wobble in Maya’s gait the next morning, a subtle clumsy misstep that became apparent when Maya walked the two‑block subway to the grocery store. She told her mother, who insisted she see a doctor. Maya walked into the urgent‑care center, clutching a phone‑case that had been shaken in a spill. Dr. Patel, the attending, noted a mild left‑sided upper‑extremity weakness (Medical Research Council grade 4/5) and a slightly slowed left‑sided hand grip. No ocular abnormalities were noted on bedside fundoscopy. The neurologic exam was largely unremarkable except for the subtle gait imbalance and the mild visual blurring that resolved after the patient rested in the waiting room.</p><p>Because of the subtlety of the findings—a mild weakness that could be attributed to the “morning stiffness” many office workers experience—the urgen­t‑care visit ended with a recommendation to return to her primary care provider if symptoms worsened. Maya left the center, noting only a slight improvement after a short rest.</p><p>**Week 4 – Outpatient Neurology Appointment**</p><p>The next month, Maya’s symptoms grew slightly more pronounced. She began to feel a “tickling” sensation in her left leg that spread to the left forearm. The visual blurring, once intermittent, now lingered for a few minutes. Maya’s daughter reported that Maya had been having trouble sleeping; she was waking up gasping before having to use the bathroom.</p><p>Maya&#x27;s primary care doctor, Dr. Lin, asked if she had done any imaging since the last MRI two years ago. Maya had missed her scheduled MRI appointments for months, citing her depression, lack of energy, and transportation issues. Dr. Lin scheduled a neurologic consultation for that same week.</p><p>At the neurology office, Dr. Patel performed a thorough neurologic exam: there was a 60‑% reduction of sensation to pinprick in the left thigh and calf, mild left arm pronation weakness, and an inability to perform finger‑to‑nose coordination on the left side. She asked Maya about any recent trauma or infections—none— and she also inquired about her sleep quality, medication adherence, and lifestyle habits.</p><p>**Decision Point 1 – MRI and Steroid Trial**</p><p>Given the constellation of subtle but progressive symptoms, Dr. Patel advised a brain MRI with contrast. Maya had not had a scan in three years. She reluctantly agreed; the radiology technologist noted that Maya had a faint aura of anxiety as she lay in the MRI machine, but she completed the scan successfully.</p><p>The MRI revealed a new enhancing lesion in the left posterior parietal white matter (size 1.2 cm) with T2 hyperintensity, and a second non‑enhancing area in the right juxtacortical region. There were no cystic changes or mass effect. Maya’s MRI findings coupled with her neurologic exam confirmed a new inflammatory demyelinating event—a relapse.</p><p>Dr. Patel recommended starting high‑dose intravenous methylprednisolone (1 g daily) for five days, followed by a taper of oral prednisone over four weeks, to control the inflammatory process. Maya expressed concern about the side effects: elevated blood sugar, insomnia, mood swings. She also worried about her hypertension and had been told by her cardiologist that steroids could worsen her blood pressure. Dr. Patel explained that the benefits outweighed the risks in the acute setting and that she would monitor her blood pressure daily at home and during follow‑up visits.</p><p>Maya agreed, perhaps because a relapse that could damage her vision or speech would be too painful to risk. She received the steroid infusion in the hospital and started tapering upon discharge. She was advised to keep her hypertension medications, watch for mood changes, and re‑check blood glucose.</p><p>---</p><p>### Episode Two – A Relapse That Reverses Her Progress</p><p>**Week 5 – Slippage**</p><p>Two weeks after finishing the steroid taper, Maya noticed a new symptom: on the left side of her face, a “tight‑jaw” feeling that would spike on the edge of a conversation. She had a subtle left facial droop when she mimicked a big smile. She thought it might be a migraine or a dental issue and postponed her follow‑up. At the end of the month, she could no longer hold her tablet&#x27;s grip when checking the grocery list—her left hand tremored like a shivering leaf. Her daughter reminded her she needed to see the neurologist.</p><p>**Week 7 – Return to Neurology**</p><p>At her neurology visit two weeks later, Dr. Patel noted left facial weakness (House‑Brackmann grade III), mild left hand tremor, and increased spasticity in the left leg. Maya had also had a faint, transient sensation of “feeling like someone was touching her left forearm”. Dr. Patel ran a new MRI, which revealed enhancement along the left pyramidal tract (corticospinal tract). The scan also showed an old lesion in the left internal capsule that had not been previously noted.</p><p>The clinical picture suggested another new inflammatory event—yet Maya was still on low‑dose prednisone taper (50 mg daily), and her depression medication, sertraline, had been at a steady 100 mg daily for the last three months.</p><p>Given the rapidly escalating relapse pattern, Dr. Patel considered stepping up to a higher‑efficacy disease‑modifying therapy (DMT). She explained the options: natalizumab, alemtuzumab, ocrelizumab, cladribine. Maya was uneasy about immunosuppression, citing her rheumatoid arthritis. She had been on adalimumab (Humira) for RA—an anti‑TNF biologic that is not indicated for MS. She worried that adding an immunosuppressant would increase infection risk and might exacerbate her RA. She also feared the possibility of worsening her hypertension and depression. Maya preferred to stay on interferon but recognized the pattern of frequent relapses.</p><p>**Decision Point 2 – Escalation with Ocrelizumab Amid Dual Immune Challenges**</p><p>Dr. Patel suggested starting ocrelizumab (the first anti‑CD20 monoclonal antibody for RRMS and primary progressive MS). Ocrelizumab requires an infusion every six months; it depletes B‑cells and has a lower infection risk compared to alemtuzumab. Dr. Patel also proposed tapering methotrexate over several weeks to reduce overlapping immunosuppression. She coordinated with Maya’s rheumatologist, who agreed to reduce methotrexate to 7.5 mg one‑in‑two‑weeks, and advised the patient to report any new infections quickly.</p><p>Despite these reassurances, Maya’s anxiety flared; she refused to commit to the infusion clinic and chose to continue monthly interferon. She also missed her next neurologic follow‑up.</p><p>The clinical picture worsened. In the months that followed, Maya’s left arm weakness progressed from 4/5 to 3/5, and she experienced increased difficulty with speech intelligibility. Her sleep remained disrupted, and she reported a low mood with feelings of hopelessness. Her wife began to feel that Maya was “taking on less responsibility”.</p><p>---</p><p>### Episode Three – Severe Neurologic Decline Requiring Plasma Exchange</p><p>**Month 10 – A Worsening Relapse**</p><p>Three months after her last neurologic appointment, Maya collapsed into her office chair, the left arm shaking uncontrollably. She was taken to the emergency department where a third MRI revealed new enhancing lesions in the cervical spinal cord, specifically at the C3‑C5 level, with the “doughnut” appearance that sometimes signals active plaques at the spinal level. Her neurologic exam was dramatic: left upper limb strength 2/5, left lower limb strength 2–3/5, brisk reflexes in left extremities, and gait that required a hand‑crank. She also had urinary urgency and constipation.</p><p>Dr. Patel, now in her care, initiated a high‑dose methylprednisolone pulse (1 g IV daily) for the first five days. Maya’s blood glucose rose from 115 mg/dL to 210 mg/dL, and her blood pressure spiked to 170/100 mmHg. She was treated with insulin sliding‑scale and required a morning dose of labetalol for her hypertension. During the steroid pulse, her insomnia worsened, and she developed a tearful episode at night, citing a “fear of being alone” and “not wanting to lose my dignity”.</p><p>When her neurologic status remained unchanged after the steroid therapy, Dr. Patel proposed therapeutic plasma exchange (plasmapheresis), a salvage treatment that removes circulating pathogenic antibodies and inflammatory mediators. Plasmapheresis, however, requires central venous access and repeated sessions—two or three per week for three to five weeks.</p><p>**Decision Point 3 – The Harsh Reality of Plasmapheresis**</p><p>Maya, who was already coping with a depressive episode manifested as suicidal ideation (she had a brief phone conversation with a crisis line earlier), was hesitant to undergo the procedure. Dr. Patel scheduled a meeting with Maya’s primary care, rheumatology, and a psychiatric liaison. Together, they weighed the risks of infection (due to low B‑cell counts if ocrelizumab were started), the chance of worsening RA flares (due to the immunomodulatory shift), and the psychosocial burden of repeated hospital visits. Maya eventually agreed to three sessions of plasma exchange, but with the proviso that she wanted to have a scheduled psychiatric session after each session to process the trauma of the hospital experience.</p><p>After the third plasma exchange, Maya’s weakness modestly improved (to left upper limb 3/5, left lower limb 3/5). She still had urinary retention and had to use intermittent catheterization. Her MRI after the last session showed a decrease in contrast enhancement of the cervical cord, but a new lesion appeared in the right thalamus—an MRI sign of continued disease activity.</p><p>---</p><p>### Episode Four – A Stalled Plateau and a New DMT Dilemma</p><p>**Month 15 – A New Era of Stagnation**</p><p>Maya’s neurologic status plateaued. She had recovered a bit—left arm movements more controlled, speech clearer—but she was no longer able to stand without assistance. She had chronic low‑grade pain in knees and shoulders—a comorbidity of RA and MS—requiring periodic physiotherapy. Her sleep remained fragmentary. She now used a manual wheelchair at home and in the clinic. Her depression had worsened; she was no longer taking sertraline because she felt it induced “brain fog” and “exhaustion.” Dr. Patel had suggested restarting sertraline at a lower dose (25 mg) and adding a sleep aid (eszopiclone) to her regimen, but Maya remained skeptical.</p><p>Her rheumatologist had stopped methotrexate after her most recent infection (nasopharyngitis) and had switched her adalimumab to a biosimilar. Yet her RA remained well controlled. Dr. Patel continued to advocate for a high‑efficacy DMT but recommended a cautious approach due to the risk of opportunistic infections.</p><p>After detailed counseling with Dr. Patel, Maya agreed to start cladribine tablets. Cladribine was chosen because it offers a short course (two annual treatment courses) and may be more acceptable to Maya because it does not require daily infusion or frequent clinic visits. The plan included a complete blood count and immunoglobulin assessment prior to initiation.</p><p>**Cladribine Course and Adverse Events**</p><p>Maya received cladribine 3.5 mg/kg over five days in her first 10‑day cycle, then again six months later. A week after the first cycle, she developed a fever (38.9°C) and mucosal thrush. She was prescribed oral fluconazole and a course of broad‑spectrum antibiotics for a possible sinus infection. Her blood counts dropped modestly, but her neutrophil count remained above 1.0 × 10^9/L. Because she had a high BMI, her appetite was poor, and she lost about 4 kg over the next month.</p><p>Maya’s depression flared anew during the cladribine course. She reported feeling “lost” and “like nobody cared.” She saw a psychotherapist twice a week. Her wife had been involved in counseling to improve communication and coping. Maya began a daily journal to monitor mood swings, food intake, and sleep patterns.</p><p>---</p><p>### Episode Five – The Unavoidable Deterioration</p><p>**Month 21 – New Symptoms Appear**</p><p>Three months after the second cladribine cycle, Maya reported a new problem: a sudden, severe burning pain in her right calf that persisted at night, along with a tingling sensation in her right toes. Clinically, Dr. Patel noted an absent ankle jerk and reduced proprioception. She ordered a lumbar puncture that revealed an oligoclonal band pattern (typical of RRMS). An MRI of the lumbar spine identified a new enhancing lesion at the L5‑S1 level—consistent with a progressive demyelinating process.</p><p>Maya had been following the same sleep‑inducing protocol as before, but she still woke up multiple times during the night. Her blood pressure had fluctuated, ranging between 120/70 and 160/96 mmHg; she was not fully compliant with her antihypertensives due to a fear that steroids or immunosuppressants would worsen her hypertension. In an early morning emergency visit, the neurologist found that her urinary retention had worsened: she could no longer void naturally and needed intermittent catheterization every 12 hours.</p><p>**Clinical Decision Point – Acceptance of a Progressive Trajectory**</p><p>At a comprehensive neurologic review, Dr. Patel explained that Maya’s disease had entered a state of secondary progressive worsening—a transition from early relapse-remitting to a continuous decline. This transition is not reversible; the focus shifts from controlling acute relapses to managing chronic progression, symptom management, and supportive care. Dr. Patel recommended a multidisciplinary approach: neurologist, rheumatologist, psychiatrist, physiotherapist, occupational therapist, dietitian, and social worker.</p><p>Maya was advised to maintain her RA medication (adalimumab remained, but the rheumatologist advised careful monitoring for infections). She was counselled on a low‑salt, low‑fat diet to control blood pressure. A nutritionist devised a meal plan to counter her weight stagnation (BMI 30.5) and address vitamin D deficiency—she was started on 2000 IU vitamin D daily. The physical therapist designed a program of gait training with a wheelchair, stretching, and gentle strengthening exercises within her endurance limits.</p><p>Her sleep continued to be disturbed; Dr. Patel referred her to a sleep specialist for polysomnography. Early evidence of REM sleep dysregulation was common in MS. The sleep specialist suggested cognitive behavioral therapy for insomnia (CBT‑I), along with timed exercise during the day to promote natural sleep cycles.</p><p>**Mental Health – The Unrelenting Depression**</p><p>Maya’s psychiatric care intensified. The mental health team shifted her antidepressant to venlafaxine, monitoring for blood pressure changes. She attended weekly psychotherapy focusing on coping strategies, grief over lost mobility, and acceptance of disease progression. Family support groups were introduced, and her husband attended counseling sessions to adapt.</p><p>**Outcome – Worsening**</p><p>Despite intensified, multidisciplinary efforts, Maya’s condition continued to decline. Over the next nine months, she began to lose further voluntary motor control in her left hand, developing a claw hand that impaired her ability to handle daily tasks. She required assistance with feeding and personal hygiene. Her urinary incontinence increased, leading to urinary tract infections. Her blood pressure became more labile, requiring two antihypertensive medications concurrently.</p><p>Her depression deepened. She reported feelings of guilt for requiring so much care and a sense that life’s meaningful activities were gone. She struggled with nighttime insomnia and had frequent nightmares of being unable to move.</p><p>In the last clinic visit, Maya expressed a desire to “take control” by asking if a spinal cord stimulator might help with spasticity and pain. Dr. Patel discussed spinal cord stimulators with a specialized pain clinic. Maya had a comprehensive consultation and was placed on a trial. After a month, she reported mild reduction in muscle spasticity but still had persistent pain episodes. She opted to continue with the trial but remained uncertain about the long future.</p><p>---</p><p>### Postscript – Lessons from a Hard Case</p><p>Maya’s journey illustrates a realistic, medically plausible course of a highly active RRMS patient with multiple risk factors and comorbidities. Her disease trajectory demonstrates:</p><p>- **Atypical/subtle initial manifestations** that can masquerade as stress or other nonspecific symptoms; a subtle optic neuritis and tingling early on.</p><p>- **Compounding factors**: obesity, smoking, vitamin D deficiency, high baseline disease activity; these factors accelerate relapse frequency and disease progression.</p><p>- **Complicated comorbidities**: depression, anxiety, RA, hypertension, sleep disturbance, and the psychological burden of frequent hospital visits and complex medication regimens.</p><p>- **Decision points** that challenge both patient autonomy and clinical recommendations: refusing high‑efficacy immunomodulators, hesitating to undergo plasma exchange, declining certain antibiotics due to fear of infection, and balancing RA treatment with MS management.</p><p>- **Progressive deterioration** despite multimodal interventions: escalation to cladribine, yet the disease ultimately transitioned into a secondary‑progressive trajectory with continuous loss of function.</p><p>- **Holistic supportive care** as the final frontier: psychosocial support, physiotherapy, occupational therapy, dietitian guidance, and comprehensive pain management.</p><p>Maya’s case is emblematic of real-world scenarios where early subtle symptoms are misattributed, comorbidities add layers of complexity, and multiple risk factors accelerate disease progression—a sobering reminder that early proactive intervention and coordinated multidisciplinary care are paramount.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-05</h3><div class="visit-meta">Urgent Care Physician | Reason: Mild left arm weakness, intermittent blurring of vision, and bladder urgency</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">S: Maya, 35F, presents to urgent care with mild left arm weakness, intermittent blurred vision, and sensation of bladder fullness.  She reports symptoms began 3 days ago, intermittent, no associated dysarthria or seizures.  Past medical history includes rheumatoid arthritis (methotrexate 7.5 mg weekly and adalimumab 40 mg q2w), hypertension (lisinopril 10 mg daily), major depressive disorder (sertraline 100 mg daily), anxiety, insomnia, obesity (BMI 30.8), and smoking (10 pack‑years).  No known drug allergies. Medications unchanged.
+
+O: Vitals: BP 135/82, HR 78, RR 16, Temp 36.7°C, SpO₂ 98%. Cardiovascular exam normal. Pulmonary exam normal. Neuro exam: left upper extremity distal strength 4/5 (wrist extensors and fingers). Upper extremity muscle bulk normal. Reflexes symmetric. Sensory exam intact. No facial droop, normal gait with subtle ataxia. Fundoscopic exam normal. No meningeal signs.
+
+A: The clinical picture is suggestive of an acute demyelinating event, most likely multiple sclerosis (optic neuritis and arm weakness). Alternative considerations include cervical radiculopathy/stenosis, ischemic optic neuropathy, or transient ischemic attack. Immediate imaging is warranted.
+
+P: 1. Order urgent MRI brain with contrast and cervical spine MRI. 2. Arrange neurology referral (Dr. Patel) with same‑day or next‑available appointment. 3. Continue current antihypertensive, antidepressant, and RA medications. 4. Counsel on smoking cessation and weight‑management. 5. Advise patient to seek emergency care if weakness or vision worsens or if she develops seizures, new headaches, or falls. 6. Follow‑up in urgent care or neurology within 1–2 weeks.
+
+Plan: Patient will schedule neurology referral; we will follow up by phone if she develops red‑flag symptoms.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left arm weakness</span><span class="pill">Intermittent blurred vision</span><span class="pill">Feeling of bladder fullness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left upper extremity strength 4/5</li><li>Normal fundoscopy</li><li>Subtle gait imbalance</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No immediate medication changes; patient remained stable and scheduled neurology referral.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 7.5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Relapsing‑remitting multiple sclerosis (diagnosed 6 years ago, on interferon‑β1a 1x/week)</li><li>Rheumatoid arthritis (on methotrexate 7.5 mg weekly and adalimumab 40 mg q2w)</li><li>Hypertension (lisinopril 10 mg daily)</li><li>Major depressive disorder (sertraline 100 mg daily)</li><li>Anxiety, insomnia, obesity (BMI 30.8)</li><li>Smoker (10 pack‑years)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented with mild left arm weakness and intermittent blurred vision. Physical exam revealed MRC 4/5 strength in left distal upper extremity, normal fundoscopy, and a subtle gait imbalance. The clinician advised neurology referral and repeated the importance of MRI. She was left scheduled for an appointment with Dr. Patel.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial subclinical MS relapse signs; no imaging yet. Patient will undergo MRI to identify new lesions.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-01-25</h3><div class="visit-meta">Neurologist | Reason: Increased neurological symptoms: gait clumsiness, tingling, blurred vision; poor sleep</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient reports worsening neurological symptoms, including left thigh tingling, left forearm tickle, persistent blurred vision, difficulty sleeping, and urinary urgency.
+
+History of Present Illness: 35‑year‑old female with a 5‑year history of rheumatoid arthritis and hypertension presents for a second neurologic evaluation. She reports an increase in gait clumsiness, tingling in the left thigh, and a mild left‑hand pronation weakness over the past two weeks. She also notes persistent blurred vision and poor sleep quality. She denies recent trauma, fever, weight loss, or paresthesias beyond the left leg. She has had prior MRI 2 years ago that was missed due to depression.
+
+Past Medical History: Rheumatoid arthritis, hypertension, depression, anxiety, insomnia, obesity.
+
+Medications: Methotrexate 7.5 mg weekly, Adalimumab 40 mg every 2 weeks, Lisinopril 10 mg daily, Sertraline 100 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for neurologic symptoms as noted; negative for headache, chest pain, palpitations, or recent infections; sleep difficulty noted.
+
+Physical Examination:
+• Vitals: BP 140/86 mmHg, HR 80 bpm, RR 15/min, Temp 36.8°C, SpO₂ 97%.
+• HEENT: Visual acuity decreased bilaterally (blurred), pupils equal, round, reactive; fundoscopic exam unremarkable.
+• CV/Resp: Normal rate, no murmurs, lungs clear.
+• Musculoskeletal: Left thigh and calf sensory decreased 60%; left arm pronation strength 4/5; left finger‑to‑nose impaired.
+• Neurologic: Cranial nerves II‑XII intact except for mild dysmetria left; reflexes 2+ symmetrical; gait moderately unsteady.
+• Skin: No rash or lesions.
+
+Assessment:
+The new 1.2‑cm enhancing lesion in the left posterior parietal white matter with a second non‑enhancing juxtacortical lesion is highly suggestive of a demyelinating process, most compatible with relapsing‑remitting multiple sclerosis (RRMS). Alternatives include neuromyelitis optica spectrum disorder, CNS lymphoma, and infectious demyelination; however, recent clinical course and imaging favor RRMS.
+
+Plan:
+1. Begin high‑dose IV methylprednisolone 1 g/d for 5 days, followed by a 4‑week oral prednisone taper (starting 60 mg daily for 1 week, then 40 mg for 1 week, 20 mg for 1 week, then 10 mg for 1 week). Monitor for steroid side effects.
+2. Advise patient to monitor blood pressure and fasting glucose daily during and after steroid course.
+3. Schedule ophthalmologic evaluation for baseline vision and fundus exam.
+4. Repeat brain MRI with gadolinium in 3 months to assess treatment response.
+5. Discuss the initiation of disease‑modifying therapy (e.g., interferon‑β or glatiramer acetate) pending MRI follow‑up and multidisciplinary neurology assessment.
+6. Address sleep hygiene strategies and consider sleep specialist referral.
+7. Counsel on weight management, smoking cessation, and regular exercise.
+8. Provide urgent care instructions—seek evaluation if vision changes worsened, new neurologic deficits, or seizures.
+
+Education provided on steroid side‑effects, importance of medication adherence, and potential benefits of disease‑modifying therapy. Patient expressed understanding and consent.
+
+Follow‑up scheduled in 2 weeks for clinical reassessment and review of BP/glucose logs, with a subsequent 3‑month MRI appointment.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left thigh tingling</span><span class="pill">Left forearm tickle</span><span class="pill">Persistent blurred vision</span><span class="pill">Difficulty sleeping</span><span class="pill">Uro urgency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/86</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lower extremity 60% sensory decrease left thigh/calf</li><li>Left arm pronation strength 4/5</li><li>Finger‑to‑nose impaired left</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Brain MRI with gadolinium</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>New 1.2‑cm enhancing left posterior parietal lesion; second non‑enhancing juxtacortical lesion right side</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Plan for IV methylpred 1 g/day for 5 days</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Concerned about steroid side effects; agreed to therapy for fear of worsening vision or speech. Committed to daily BP checks.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 7.5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Missed scheduled MRI 2 years prior due to depression</li><li>Transportation issues</li><li>Medication adherence noted for interferon and adalimumab</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel performed a comprehensive neurologic exam revealing 60% pinprick sensory loss in left thigh and calf, mild motor weakness in left pronation, and impairment of finger‑to‑nose on the left. He ordered a brain MRI with contrast. A new 1.2‑cm enhancing lesion in left posterior parietal white matter was identified, confirming a new inflammatory demyelinating event. Dr. Patel initiated 1‑g IV methylprednisolone daily for five days with a planned oral prednisone taper over four weeks. Maya was advised to monitor blood pressure and blood glucose during and after therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed relapse of RRMS with new enhancing lesion; initiation of high‑dose steroids.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-01-26</h3><div class="visit-meta">Inpatient Neurologist | Reason: Start high‑dose IV methylprednisolone for MS relapse</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 3 – Date: 2024-01-26
+
+Chief Complaint:
+High-dose IV methylprednisolone for suspected acute RRMS relapse.
+
+History of Present Illness:
+35-year-old female with relapsing-remitting multiple sclerosis (RRMS), rheumatoid arthritis, hypertension, depression, anxiety, insomnia, and obesity presents for inpatient management of an acute relapse. She received 1 g IV methylprednisolone daily for 5 days. During treatment she developed hyperglycemia (fasting glucose 150–210 mg/dL) requiring insulin sliding scale, and blood pressure elevation (170/100 mmHg) treated with labetalol 100 mg BID. She also reported increased sedation, worsening insomnia, anxiety, and mood swings after the third day. MRI after completion of steroids showed no new lesions; the known 1.2 cm juxtacortical lesion remained stable.
+
+Past Medical History:
+- RRMS (diagnosed 2019)
+- Rheumatoid arthritis
+- Hypertension
+- Depression
+- Anxiety
+- Insomnia
+- Obesity
+
+Past Surgical History:
+- None
+
+Medications:
+- Interferon‑β1a 1.0 mg IM weekly
+- Methotrexate 7.5 mg weekly
+- Adalimumab 40 mg q2w
+- Lisinopril 10 mg daily
+- Sertraline 100 mg daily
+- Prednisone 5 mg PO daily (tapering)
+
+Allergies:
+- NKDA
+
+Review of Systems:
+- Neurologic: worsening left arm strength, blurred vision, bladder urgency (history)
+- Endocrine: hyperglycemia noted
+- Cardiovascular: HTN, treated with labetalol
+- Psychiatric: insomnia, anxiety, mood swings
+
+Physical Examination:
+- General: Alert, oriented, cooperative. No acute distress.
+- Vital signs: BP 148/90, HR 82, RR 16, Temp 37.0°C, SpO₂ 98% (room air).
+- HEENT: Normocephalic, atraumatic. Visual acuity 20/20 OU.
+- HEENT: no papilledema.
+- Neuro: Cranial nerves II–XII intact. Motor strength 5/5 in all extremities except mild fatigue on 4th/5th day. Reflexes 2+ symmetric. Sensation intact. Coordination normal. Gait stable.
+- Cardiovascular: S4, no murmurs.
+- Respiratory: Clear breath sounds bilaterally.
+- Abdomen: Soft, non-tender, no organomegaly.
+- Extremities: No edema.
+
+Labs:
+- CBC: WNL
+- CMP: WNL
+- Fasting glucose: 125→210 mg/dL during course
+- MRI brain: Stable 1.2 cm juxtacortical lesion; no new enhancement.
+
+Assessment:
+1. RRMS relapse – responded to intravenous methylprednisolone.
+2. Steroid-induced hyperglycemia.
+3. Steroid-induced hypertension.
+4. Steroid-related mood and sleep disturbances.
+5. No evidence of infection or new CNS disease.
+
+Plan:
+- Discharge on oral prednisone taper starting 10 mg PO daily the day after stopping IV steroids, with gradual taper over the next 4 weeks.
+- Continue antihypertensive therapy; resume labetalol 100 mg BID. Monitor BP twice daily.
+- Continue insulin sliding-scale as needed for hyperglycemia; encourage carbohydrate monitoring.
+- Advise lifestyle measures: low‑glycemic diet, weight management, regular exercise.
+- Continue disease-modifying therapy: Interferon‑β1a, Methotrexate, Adalimumab per current schedule.
+- Maintain current psychiatric regimen. Consider sleep hygiene counseling; consider low-dose Zolpidem PRN if insomnia persists.
+- Schedule outpatient neurology follow-up in 2 weeks.
+- Repeat brain MRI with gadolinium in 3 months to assess for new activity.
+- Ophthalmology screening (baseline after relapse) in 1 month.
+- Counsel on smoking cessation, weight loss, and regular monitoring of BP and glucose.
+
+Follow-up recommendations:
+• Return to outpatient neurology within 2 weeks or sooner if new neurologic symptoms.
+• Follow disease‑modifying therapy as prescribed.
+• Monitor fasting glucose and blood pressure at each visit.
+• Continue labetalol and insulin as needed.
+• Address mood‑symptom and insomnia with multidisciplinary support.
+
+Prepared by: [Neurologist Name], MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None (treatment preparation)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>148/90</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>37.0°C</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal neurologic exam after first 48 hours; mild fatigue</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Fasting glucose</li><li>Baseline MRI brain</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC WNL</li><li>CMP WNL</li><li>Fasting glucose 115→210 mg/dL</li><li>MRI showed stable 1.2‑cm enhancing lesion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV methylpred 1 g daily x5</li><li>Insulin sliding scale</li><li>Labetalol 100 mg BID</li><li>Prednisone taper 10 mg next day</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Noted improvement in muscle strength, but increased insomnia, anxiety, and mood swings. She agreed to continue taper and blood pressure medication.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 7.5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Sertraline 100 mg daily</li><li>Prednisone 5 mg PO daily (taper schedule)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous relapse on steroids</li><li>No current infections</li><li>Family history of autoimmune disease</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya admitted for a five‑day IV methylprednisolone course. Baseline labs included CBC, CMP, fasting glucose. She received 1 g methylpred IV daily; blood glucose rose to 150–210 mg/dL, managed with insulin sliding scale. Blood pressure rose to 170/100 mmHg and was treated with labetalol 100 mg BID. She reported increased sedation and insomnia after the third day. After five days, MRI brain showed no new enhancement; she was discharged on a prednisone taper and instructed to continue antihypertensives and glucose monitoring.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Steroid therapy partially mitigated inflammatory activity; however, sustained hyperglycemia and hypertension noted. MS relapse under control but patient remains vulnerable to recurrence.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-02-15</h3><div class="visit-meta">Neurologist | Reason: New facial droop and tremor; progression of left‑side deficits</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #4 – 2024-02-15
+
+Chief Complaint: New left facial droop and tremor, progressive left‑side deficits.
+
+History of Present Illness: Patient is a 35‑year‑old female with a history of relapsing‑remitting multiple sclerosis (RRMS) treated with interferon‑β1a, methotrexate, and adalimumab, who presents today with progressive new left facial weakness, postural tremor of the left hand, and spasticity in the left lower extremity. These symptoms began approximately 1 week ago and have been worsening. She completed a prednisone taper finished 10 days prior. She reports anxiety regarding medication changes and concerns about infection risk with higher‑efficacy disease‑modifying therapies (DMTs).
+
+Past Medical History: Rheumatoid arthritis, hypertension, depression, anxiety, insomnia, obesity.
+
+Medications: Interferon‑β1a 1.0 mg IM weekly, Methotrexate 7.5 mg weekly, Adalimumab 40 mg q2w, Lisinopril 10 mg daily, Sertraline 100 mg daily, Prednisone 50 mg daily (taper), Labetalol 100 mg BID, Insulin sliding‑scale as needed.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for left facial tightness, left hand tremor, left leg spasticity, insomnia. No fever, rash, or weight loss.
+
+Physical Examination:
+- General: Alert, oriented, in no acute distress.
+- Vital signs: BP 150/88 mmHg, HR 78 bpm, RR 15 /min, Temp 36.7 °C, SpO₂ 97% on room air.
+- Neurologic: House‑Brackmann Grade III left facial weakness; postural tremor of the left hand; spastic hyperreflexia with increased tone in left lower extremity, 4/5 strength; otherwise normal cranial nerves, sensory, and cerebellar exams.
+
+Laboratory/Imaging: MRI brain with gadolinium obtained this visit shows a new enhancing lesion along the left corticospinal tract and an old internal capsule lesion.
+
+Assessment:
+1. RRMS relapse with new enhancing lesion along left corticospinal tract correlating with clinical findings.
+2. Acute exacerbation of left‑side spasticity and facial weakness secondary to demyelination.
+3. Chronic hypertension controlled on lisinopril and labetalol.
+4. Diabetes on insulin sliding‑scale, requiring close glycemic monitoring.
+5. Anxiety and insomnia likely exacerbated by recent steroid use.
+
+Plan:
+- Continue current interferon‑β1a, methotrexate, and adalimumab.
+- Maintain prednisone 50 mg daily, tapering to completion over next 2 weeks.
+- Reinforce blood pressure monitoring twice daily; if readings &gt;160/100 mmHg, add or increase antihypertensives.
+- Continue insulin sliding‑scale with glucose checks every 4 hours.
+- Discuss escalation DMT options (natalizumab, alemtuzumab, ocrelizumab, cladribine) and monitor for infection risk; patient will defer until next follow‑up.
+- Initiate low‑dose baclofen 5 mg PO at bedtime for spasticity; titrate as tolerated.
+- Provide occupational therapy referral for facial exercises and hand tremor management.
+- Continue sertraline for depression/anxiety; adjust dose if symptoms worsen.
+- Sleep hygiene education again; if insomnia persists, consider low‑dose zolpidem PRN instead of increasing prednisone.
+
+Follow‑up: 
+- Neurology appointment in 2 weeks to evaluate response to taper, review blood pressure, glucose, and discuss escalation options.
+- Repeat brain MRI with gadolinium in 3 months or sooner if symptoms worsen.
+- Ophthalmology baseline exam in 1 month.
+- Contact neurologist or primary care if neurological deficits worsen, new pain, or infection signs.
+
+Signature: Dr. Patel, Neurologist.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left facial tightness, droop when smiling</span><span class="pill">Left hand tremor</span><span class="pill">Left leg spasticity</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/88</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>House‑Brackmann III left facial</li><li>Left hand tremor (postural)</li><li>Spastic hyperreflexia left leg</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI brain with gadolinium</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Left corticospinal tract enhancement</li><li>Old internal capsule lesion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue prednisone taper 50 mg; plan completion in 2 weeks</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxiety over medication changes; committed to interferon and prednisone taper. Expressed willingness to consider higher‑efficacy DMT if relapse frequency increases.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 7.5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Sertraline 100 mg daily</li><li>Prednisone 50 mg daily (taper)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent steroid taper completed 10 days prior</li><li>Inadequate adherence to sleep hygiene</li><li>Current medications unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel noted House‑Brackmann grade III facial weakness on the left, mild hand tremor, and marked spasticity in the left lower extremity. Given the new deficits, an urgent MRI brain was ordered. The MRI revealed enhancing lesion along the left corticospinal tract and an old internal capsule lesion. Dr. Patel emphasized the high relapse rate and discussed escalation options: natalizumab, alemtuzumab, ocrelizumab, cladribine. Maya expressed hesitation due to RA and infection concerns. She chose to continue interferon while awaiting follow‑up. The prednisone taper was planned to complete within two weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Second relapse confirmed by MRI; ongoing aggressive disease activity necessitates DMT escalation. Patient refusing immunosuppression; monitoring interval increased.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-03-20</h3><div class="visit-meta">Inpatient Neurologist | Reason: Severe relapse: lower‑extremity weakness, urinary urgency, constipation; start plasma exchange</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 35‑year‑old female with relapsing‑remitting MS presents to the ward following a severe relapse with left upper‑limb 2/5, left lower‑limb 2–3/5 weakness, urinary urgency, and constipation. She reports no fever, chest pain, or new headaches. She is anxious about the length of hospitalization and potential infection risk with upcoming plasma exchange (PEX).
+
+Past medical history: RRMS (on IFN‑β1a, methotrexate, adalimumab), rheumatoid arthritis, hypertension, type 2 diabetes mellitus, depression, anxiety, insomnia, obesity.
+
+Medications: interferon‑β1a 1.0 mg IM weekly, methotrexate 7.5 mg weekly, adalimumab 40 mg q2w, lisinopril 10 mg daily, sertraline 100 mg daily, prednisone taper (30 mg daily; to be weaned post‑PEX), insulin sliding scale, labetalol 100 mg BID, baclofen 5 mg PO at bedtime.
+
+Objective:
+- Vitals: BP 172/100, HR 90, RR 17, Temp 37.2 °C, SpO₂ 96 % on room air.
+- Neuro exam: Left upper limb strength 2/5, left lower limb strength 2–3/5, brisk reflexes left, no sensory loss reported, sphincter urgency, constipation.
+- Labs: CBC (WBC 3.5 ×10⁹/L, mild leukopenia), CMP normal, fasting glucose 210 mg/dL, chest X‑ray clear. MRI cervical spine with gadolinium shows new enhancing lesions at C3–C5.
+
+Assessment:
+1. Acute demyelinating relapse of RRMS with cervical involvement – most likely cause of progressive motor deficits and autonomic symptoms.
+2. Transverse myelitis as differential, given cervical cord lesions and progressive weakness.
+3. Exclusion of infectious causes – normal temperature, chest X‑ray, and lack of infectious symptoms; however, PEX will necessitate vigilance for sepsis.
+
+Plan:
+- Continue high‑dose IV methylprednisolone 1 g daily for total of 5 days (already completed). 
+- Initiate therapeutic plasma exchange, 1 session on admission and then twice weekly for 3 weeks (total 6 sessions). 
+- Manage steroid‑induced hyperglycemia with insulin sliding scale; target glucose 140–180 mg/dL. 
+- Continue labetalol 100 mg BID, monitor BP twice daily. 
+- Post‑PEX, taper oral prednisone starting 10 mg daily → decrease by 2.5 mg weekly over 6 weeks; hold until resolution of deficits. 
+- Continue disease‑modifying therapy (IFN‑β1a, methotrexate, adalimumab) unchanged. 
+- Maintain antihypertensive and insulin regimen. 
+- Psychiatric support: arrange outpatient counseling and in‑hospital psychiatric consult after each PEX session. 
+- Infection prophylaxis: maintain strict hand hygiene, monitor for fever, chills, WBC trends; repeat CBC before every PEX session.
+- Re‑evaluate neurologic status weekly; repeat MRI cervical spine 2 weeks after completion of PEX to assess lesion evolution.
+- Encourage early mobilization with physical therapy; manage constipation with stool softeners and diet.
+- Educate patient on signs of infection, hypertension, hypoglycemia, and when to seek immediate care.
+
+Disposition: Admit for PEX, continue inpatient monitoring, return to neurology clinic one week post‑discharge, and schedule MRI at 6 weeks post‑PEX. Follow‑up with rheumatology and psychiatry as per needs.
+
+Signature: Dr. ________  (Inpatient Neurologist)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left upper limb 2/5, left lower limb 2–3/5</span><span class="pill">Urgent bladder, constipation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>172/100</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>RR</td><td>17</td></tr><tr><td>Temp</td><td>37.2°C</td></tr><tr><td>SpO2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left upper limb strength 2/5</li><li>Left lower limb 2–3/5</li><li>Brisk reflexes left</li><li>Urinary urgency, constipation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI cervical spine with gadolinium</li><li>CBC</li><li>CMP</li><li>Fasting glucose</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Enhancing lesions C3–C5</li><li>CBC: mild leukopenia 3.5k</li><li>CMP normal</li><li>Fasting glucose 210 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV methylpred 1 g daily x5</li><li>Insulin sliding scale</li><li>Labetalol 100 mg BID</li><li>Plasma exchange (first session at admission)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Noted persistent weakness; emotional distress over possible hospital stay. Agreed to continue PEX, requested psychiatric follow‑up after each session.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 7.5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Sertraline 100 mg daily</li><li>Prednisone 30 mg daily (tapering)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed steroid taper 2 weeks prior</li><li>Baseline hyperglycemia 210 mg/dL during prior hospital stay</li><li>Recent mild mood swings</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya was admitted for severe relapse. Neurologic exam revealed left upper limb strength 2/5, left lower 2–3/5, brisk reflexes, and inability to ambulate without assistance. An urgent MRI cervical spine showed new enhancing lesions at C3–C5 levels. Given the progressive deficits and incomplete steroid response, Dr. Patel initiated high‑dose IV methylpred 1 g daily for five days. Blood glucose spiked to 210 mg/dL; insulin sliding scale was applied. Hypertension was managed with labetalol BID. After the steroid course, residual deficits persisted; Dr. Patel introduced therapeutic plasma exchange (PEX), scheduled twice weekly for three weeks. Maya consented, concerned about infection risk, and requested psychiatric support during the PEX course.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Severe relapse with new cervical cord lesions; steroid therapy insufficient, initiating PEX to remove pathogenic antibodies. MS disease activity remains high.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-04-07</h3><div class="visit-meta">Neurologist | Reason: Post‑PEX review; partial motor recovery, ongoing urinary issues</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient Maya, a 35‑year‑old female, returned for post‑PEX follow‑up. She reports modest gains in motor strength after three plasma exchange sessions. Current neurologic exam reveals left upper and lower extremity strength of 3/5, brisk reflexes, and reduced but persistent spasticity. Urinary retention is still present, requiring intermittent catheterization. She expresses anxiety regarding disease progression and difficulty managing spasticity and urinary symptoms.
+
+Vitals: BP 160/95, HR 78, RR 16, Temp 36.9°C, SpO₂ 97%. Blood pressure is at the upper limit of control with dual antihypertensives.
+
+MRI cervical spine shows decreased gadolinium enhancement at C3‑C5 compared with prior imaging, but a new right thalamic enhancing lesion (0.8 cm) is identified. This imaging finding is concerning for additional active demyelinating disease. No new spinal cord compression or hemorrhage is seen.
+
+Assessment:
+1. Active relapsing‑remitting multiple sclerosis – new active lesion in the right thalamus. 2. Residual motor paresis and spasticity secondary to demyelination. 3. Chronic urinary retention, likely due to spinal cord involvement. 4. Psychosocial distress related to disease activity.
+
+Plan:
+• Continue disease‑modifying therapy: interferon‑β1a 1.0 mg IM weekly, methotrexate 7.5 mg weekly, adalimumab 40 mg q2w.
+• Maintain current antihypertensive regimen (lisinopril 10 mg daily, labetalol 100 mg BID) and monitor BP twice daily.
+• Continue insulin sliding‑scale for glucose control; perform blood glucose profile to guide insulin dosing.
+• No new disease‑modifying medications added at this visit.
+• Refer to physiotherapy for gait and spasticity management; begin early mobilization program.
+• Offer referral to pain specialist for refractory spasticity; potential escalation of baclofen dosing or transition to oral diazepam if indicated.
+• Continue baclofen 5 mg at bedtime for spasticity; titrate as tolerated.
+• Repeat cervical spine MRI in 2 weeks post‑PEX to assess treatment response.
+• Repeat brain MRI with contrast in 3 months to monitor new lesions.
+• Counsel on sleep hygiene, weight management, and depression/anxiety coping strategies; maintain sertraline 100 mg daily.
+• Continue monitoring fasting glucose and CBC prior to any future PEX sessions or high‑dose steroids.
+• Discuss potential for escalation of therapy (e.g., natalizumab, ocrelizumab) if disease activity persists.
+
+Patient is aware of plan and is scheduled for follow‑up in 2 weeks. She will also receive a referral to the rheumatology clinic for ongoing assessment of rheumatoid arthritis and to the ophthalmology clinic for baseline neuro‑ophthalmic evaluation.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left upper limb 3/5, left lower limb 3/5</span><span class="pill">Urinary retention</span><span class="pill">Continued spasticity</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>160/95</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.9°C</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left upper limb 3/5</li><li>Left lower limb 3/5</li><li>Reduced spasticity, brisk reflexes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Follow‑up MRI cervical spine</li><li>Blood glucose profile</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Reduced enhancement at C3–C5; new right thalamic enhancing lesion 0.8 cm</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to physiotherapy</li><li>Referral to pain clinic</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya hopeful about partial recovery but remains anxious about progression. Expresses need for more support in managing spasticity and urinary symptoms.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 7.5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Hydrochlorothiazide 12.5 mg daily</li><li>Sertraline 100 mg daily</li><li>Prednisone off (taper completed)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 3 sessions of PEX</li><li>Residual urinary retention requiring intermittent catheterization</li><li>Blood pressure now controlled with dual antihypertensives</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After three plasma exchange sessions Maya reported modest improvement in motor strength. Neurologic exam now shows left upper limb 3/5, left lower limb 3/5, reduced spasticity though reflexes remain brisk. MRI cervical spine indicates decreased enhancement; however, new right thalamic lesion now visible. Dr. Patel reinforced the importance of a multidisciplinary approach. Initiated a physiotherapy plan for gait training and offered referral to pain specialist for spasticity management. No new medications were added at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Partial motor recovery post‑PEX; new thalamic lesion indicates ongoing disease activity. Clinical stability but risk of further relapse remains. Multidisciplinary care recommended.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-04-20</h3><div class="visit-meta">Multidisciplinary Team (Neurology, Rheumatology, Psychiatry) | Reason: Discussion of disease‑modifying therapy escalation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+The patient, a 35‑year‑old female with known RRMS, RA, HTN, type 2 DM, anxiety, depression, insomnia, and obesity, presents for a multidisciplinary discussion of disease‑modifying therapy (DMT) escalation. She reports persistent left arm weakness, mood fluctuations, and disturbed sleep. She is anxious about immunosuppression but is willing to proceed with cladribine after thorough counseling.
+
+**Objective:**
+- Vital signs: BP 155/90, HR 80, RR 15, Temp 36.8°C, SpO2 98%. 
+- Neurologic exam: left arm weakness 3/5, spastic hyperreflexia left lower limb, mild tremor. No new sensory deficits.
+- Laboratory: CBC pending, IgG 900 mg/dL (normal), HBV/HCV negative.
+- Imaging: Recent MRI shows new enhancing lesions in the brain and spinal cord.
+
+**Assessment:**
+1. Active relapsing‑remitting MS with new enhancing lesions and progressive motor deficits after 4 relapses in 12 months. 
+2. RA stable on methotrexate 5 mg weekly and adalimumab 40 mg q2w; mild immunosuppression noted.
+3. Depression/anxiety secondary to disability, currently on sertraline 100 mg daily.
+4. HTN inadequately controlled on lisinopril 10 mg and HCTZ 12.5 mg; labetalol 100 mg BID for additional BP control.
+5. Type 2 DM with occasional hyperglycemia during steroid courses; insulin sliding scale PRN.
+6. Obesity contributing to overall morbidity.
+
+**Plan:**
+- Initiate cladribine 3.5 mg/kg over 5 consecutive days starting May 2024. Continue interferon‑β1a weekly until completion of first cladribine course; then discontinue.
+- Continue methotrexate 5 mg weekly, adalimumab 40 mg q2w, lisinopril 10 mg daily, HCTZ 12.5 mg daily, labetalol 100 mg BID, insulin sliding scale as needed, baclofen 5 mg at bedtime.
+- Psychiatry: Increase sertraline to 150 mg daily if mood symptoms persist; reinforce sleep hygiene and consider low‑dose zolpidem PRN for insomnia.
+- Rheumatology: Monitor for infection risk; consider prophylactic measures if CBC falls below 3.5 × 10^3/µL.
+- Educate patient on infection signs, fever (&lt;38.0°C), and prompt reporting.
+- Orders: repeat CBC in 1 week (baseline for cladribine), CBC prior to each subsequent cladribine cycle; serologic vaccine screening if not up‑to‑date.
+- Ophthalmology: Baseline dilated exam in 1 month post‑cladribine per MS protocols.
+- MRI brain with gadolinium in 6 months to assess disease activity.
+- Counseling: Discuss weight‑loss strategies, exercise referral, and routine blood glucose and BP monitoring.
+
+**Follow‑up:**
+- Neurology in 2 weeks for CBC, symptom status, and MRI planning.
+- Rheumatology in 1 month.
+- Psychiatry in 1‑2 weeks for mood and sleep assessment.
+- Ophthalmology in 1 month.
+- Next MRI brain in 6 months.
+- Patient to return sooner if fever, infection, or notable worsening of depression/anxiety.
+
+**Signature:**
+[Multidisciplinary Team]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent left arm weakness</span><span class="pill">Mood fluctuations</span><span class="pill">Sleep disturbance</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>155/90</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left arm weakness 3/5</li><li>Mild tremor</li><li>Spastic hyperreflexia left lower limb</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete blood count</li><li>Serum immunoglobulin G</li><li>Hepatitis B/C serology</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC pending</li><li>IgG 900 mg/dL (normal)</li><li>HBV/HCV negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Plan for cladribine 3.5 mg/kg over 5 days</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxious about immunosuppression; decides to proceed with cladribine, hoping for better disease control. Expresses willingness to stop interferon after initiating new DMT.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Hydrochlorothiazide 12.5 mg daily</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing relapses (now 4 in past 12 months)</li><li>Persistent interferon ineffective</li><li>Mild depression exacerbated by disability</li><li>RA stable on adalimumab, methotrexate reduced to 5 mg weekly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Neurologist Dr. Patel presented MRI findings including new enhancing lesions in the brain and spinal cord. Rheumatologist Dr. Gomez evaluated the RA regimen, noting stable disease but mild immunosuppression concerns. Psychiatrist Dr. Lee discussed depression severity and sleep issues, recommending adjustment of sertraline. Together, they proposed cladribine as a short course DMT, citing its manageable dosing and lower infection risk compared to alemtuzumab. Maya consented to cladribine after careful discussion. CBC, IgG, and hepatitis panel were ordered before initiation. The plan: first course of cladribine in May 2024; monitor for fever, infection, and mood changes.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to higher‑efficacy DMT (cladribine). Current disease activity remains high; patient motivated for change.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-05-02</h3><div class="visit-meta">Neurologist | Reason: First cladribine course initiation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Date: 2024-05-02
+Visit #: 8
+Chief complaint: Initiation of first course of cladribine
+History of present illness: Patient Maya, 35‑year‑old female with relapsing‑remitting MS, RA, HTN, T2DM, depression, anxiety, insomnia, obesity, is being initiated on cladribine 3.5 mg/kg orally daily for 5 consecutive days. Baseline CBC normal (WBC 7.5 ×10^9/L, neutrophils 4.5 ×10^9/L). She was admitted to the infusion center, received the full 5‑day course without immediate adverse events. No fever, no flu‑like symptoms, no oral ulcers noted. Neurologic exam remains normal. Vitals stable.
+Physical Examination: Vitals BP 145/88 mmHg, HR 75 bpm, RR 15/min, Temp 36.7 °C, SpO2 97%. Normal cranial nerves, strength 5/5 all extremities, normal gait, no tremor, normal reflexes.
+Assessment: The patient tolerates cladribine well. No early cytopenia; CBC on day 5 shows WBC 6.8 ×10^9/L, neutrophils 4.2 ×10^9/L. Differential includes expected mild leukopenia from cladribine and potential for infection. No immediate neuro‑adverse events.
+Plan:
+1. Continue cladribine as planned for 5 days.
+2. Repeat CBC on day 5 (completed) and continue monitoring CBC prior to each future cycle.
+3. Educate patient to monitor for flu‑like symptoms, fever ≥38.0 °C, oral ulcers, and report promptly.
+4. Continue current disease‑modifying therapy: Interferon‑β1a 1.0 mg IM weekly, methotrexate 5 mg weekly, adalimumab 40 mg q2w.
+5. Continue antihypertensives (lisinopril 10 mg, HCTZ 12.5 mg, labetalol 100 mg BID) and insulin sliding scale as needed for glucose control.
+6. Psychiatric meds: Sertraline 100 mg daily; consider 150 mg if mood symptoms recur.
+7. Baclofen 5 mg PO at bedtime for spasticity.
+8. Baseline ophthalmology exam in 1 month post‑cladribine.
+9. MRI brain with gadolinium 6 months after first cladribine cycle.
+10. Follow‑up neurology visit in 1 week to review CBC results, symptomatology, and tolerance; next visit scheduled for 6 months.
+11. Continue routine monitoring of BP, glucose, and CBC prior to each cladribine cycle as per protocol.
+
+Signature: [Neurologist Name]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None (treatment administration)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/88</td></tr><tr><td>HR</td><td>75</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal neurologic exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC before infusion</li><li>CBC on day 5</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC on day 5: WBC 6.8 × 10^9/L</li><li>Neutrophils 4.2 × 10^9/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Cladribine oral tablets 3.5 mg/kg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight fatigue after first few days, otherwise tolerating well. Continues interferon as planned.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Cladribine 3.5 mg/kg (daily for 5 days)</li><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Hydrochlorothiazide 12.5 mg daily</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC normal</li><li>No viral infections recently</li><li>No acute symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya was brought to the infusion center for the first cladribine cycle. Baseline CBC displayed WBC 7.5 × 10^9/L, Neutrophils 4.5 × 10^9/L. She received cladribine over 5 consecutive days (total 17.5 mg/kg). No immediate adverse events. She was advised to monitor for flu‑like symptoms, fever, or oral ulcers. She would return in one week for CBC and to assess tolerance.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiated cladribine, first cycle completed successfully. WBC slightly decreased but within safe range. Monitoring continues.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-06-06</h3><div class="visit-meta">Neurologist | Reason: Post‑cladribine follow‑up, infection assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+Patient reports low‑grade fever (38.9 °C), oral thrush, sore throat, and increased anxiety about her illness.
+
+History of Present Illness:
+A 35‑year‑old female with relapsing‑remitting MS, RA, HTN, type 2 DM, depression, anxiety, insomnia, obesity, and a recent first cycle of cladribine (completed). She presents with a 2‑day history of fever, oral ulcerations, and mild pharyngitis. No reported dysphagia or dyspnea.
+
+Past Medical History:
+- RRMS on Interferon‑β1a IM weekly; cladribine first cycle completed; methotrexate 5 mg weekly; adalimumab 40 mg q2w.
+- RA
+- HTN
+- Type 2 DM on insulin sliding scale
+- Depression, anxiety, insomnia.
+
+Medications (current):
+Cladribine (completed), Interferon‑β1a 1.0 mg IM weekly, Methotrexate 5 mg weekly, Adalimumab 40 mg q2w, Lisinopril 10 mg daily, Hydrochlorothiazide 12.5 mg daily, Sertraline 100 mg daily.
+
+Allergies:
+NKDA.
+
+Physical Examination:
+Vitals: BP 139/85 mmHg, HR 82 bpm, RR 16 /min, Temp 38.9 °C, SpO₂ 97% RA.
+General: Alert, cooperative, slight distress.
+HEENT: Oral mucosa shows multiple white curd‑like plaques on tongue, palate, and buccal mucosa consistent with candidiasis; mild erythema of pharynx without exudate.
+Neck: No JVD, no lymphadenopathy.
+Heart: Regular rate; no murmurs.
+Lungs: Clear.
+Neuro: Strength 5/5 in all extremities; reflexes normal; no focal deficits.
+
+Labs:
+CBC: WBC 1.8 × 10⁹/L, ANC 0.8 × 10⁹/L, Hgb 12.2 g/dL, Hct 35%; Platelets 150 × 10⁹/L.
+Inflammatory markers: CRP 4.2 mg/L.
+Blood cultures sent.
+
+Assessment:
+1. Severe neutropenia (ANC 0.8) secondary to cladribine, complicated by oropharyngeal candidiasis.
+2. Mild bacterial pharyngitis (likely secondary to neutropenic immunosuppression).
+3. Infection‑related anxiety and mild depressive symptoms.
+
+Plan:
+- Antifungal: Fluconazole 150 mg orally once daily for 10 days.
+- Empiric antibiotics: Amoxicillin‑clavulanate 875/125 mg orally twice daily for 10 days.
+- Continue current MS, RA, HTN, DM, psychiatric, and spasticity regimens.
+- Monitor CBC in 1 week; repeat ANC before any additional immunosuppressive therapy.
+- Counsel patient on fever‑precautions, hand hygiene, and early reporting of worsening symptoms.
+- Consider prophylactic antibiotics for neutropenic fever if ANC remains &lt;0.5 × 10⁹/L.
+- Psychiatric follow‑up: reinforce coping strategies, monitor mood; defer initiation of venlafaxine until infection resolves.
+- Adjust adalimumab dosing interval temporarily if ANC remains low.
+
+Follow‑up Recommendations:
+1. Return in 1 week for CBC and clinical assessment.
+2. If fever or oral lesions persist beyond 3 days, consider IV fluconazole and review infectious disease consult.
+3. Continue to monitor blood glucose, blood pressure, and mood status during infection.
+4. Resume routine neurologic follow‑up by 3 months post‑cladribine cycle per protocol.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Low‑grade fever (38.9 °C)</span><span class="pill">Mouth and oropharyngeal thrush</span><span class="pill">Sore throat</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>139/85</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>38.9°C</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Oral thrush</li><li>Mild pharyngitis</li><li>Normal strength 5/5</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Inflammatory markers</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 1.8 × 10^9/L</li><li>ANC 0.8 × 10^9/L</li><li>CRP 4.2 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Fluconazole 150 mg QD</li><li>Amoxicillin-clavulanate 875/125 mg BID</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxious about fever, accepted treatment. Mood somewhat depressed but cooperated. Schedules a follow‑up for CBC.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Cladribine (completed first cycle)</li><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Hydrochlorothiazide 12.5 mg daily</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Mild neutropenia (ANC 1.2 × 10^9/L)</li><li>Recent upper respiratory infection 2 weeks ago</li><li>Current medications unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the visit, Maya reported a fever of 38.9 °C and a mild oral thrush. Examination revealed oral ulcerations and mild pharyngitis. Labs were sent: CBC showed WBC 1.8 × 10^9/L (ANC 0.8 × 10^9/L). She was started on oral fluconazole 150 mg QD for 10 days and broad‑spectrum amoxicillin‑clavulanate for possible bacterial infection. Her mental status remained stable, but she expressed heightened anxiety and sadness regarding illness. Dr. Lee recommended starting venlafaxine but postponed due to the current infection. Maya agreed to continue fluconazole and returned for a CBC in one week.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cladribine caused mild neutropenia with secondary infection. MS relapse status unknown; planning next cycle in June 2025. Depression worsening noted.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2024-07-10</h3><div class="visit-meta">Neurologist | Reason: Progressive decline review; new lower‑extremity lesion, worsening urinary retention</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Progressive decline review; new right calf burning pain with nocturnal awakening; worsening urinary retention.
+
+History of Present Illness:
+Maya, 35‑year‑old female with relapsing‑remitting MS, presented for a routine follow‑up but reported a new, severe burning pain in the right calf that awakens her at night. She additionally reports significant anxiety about disease progression and frequent nocturnal awakenings. She has a history of urinary retention that now requires intermittent catheterization.
+
+Past Medical History: MS on interferon‑β1a, cladribine (first cycle completed May), methotrexate 5 mg weekly, adalimumab 40 mg q2w; hypertension on lisinopril 10 mg, hydrochlorothiazide 12.5 mg, labetalol 100 mg BID; type 2 DM; neutropenia; rheumatoid arthritis; depression, anxiety, insomnia, obesity.
+
+Medications: Cladribine (cycle completed May), Interferon‑β1a 1.0 mg IM weekly, Methotrexate 5 mg weekly, Adalimumab 40 mg q2w, Lisinopril 10 mg daily, Hydrochlorothiazide 12.5 mg daily, Sertraline 100 mg daily.
+
+Social: Obese, good drug compliance overall except for antihypertensive adherence.
+
+Physical Examination:
+• Vitals: BP 158/92 mmHg, HR 79 bpm, RR 16 /min, Temp 36.8 °C, SpO₂ 98%.
+• Neurologic: Right lower extremity – absent ankle jerk, reduced proprioception in toes, mild burning pain. Left lower extremity – spasticity, hyperreflexia. No focal deficits elsewhere.
+• Genitourinary: Intermittent catheterization required.
+
+Imaging &amp; Labs:
+• Lumbar puncture – oligoclonal bands positive.
+• Lumbar spine MRI – new enhancing lesion at L5‑S1, 0.9 cm.
+• CBC – WBC 4.5 ×10⁹/L, ANC 0.8 ×10⁹/L.
+• Lipid panel – pending.
+• HbA1c – 5.9%.
+
+Assessment:
+1. Relapsing‑remitting MS – active relapse with new spinal cord lesion and oligoclonal bands.
+2. Neuropathic pain – burning right calf likely radicular from L5‑S1 lesion.
+3. Urinary retention secondary to MS demyelination.
+4. Depression and anxiety exacerbated by disease activity and pain.
+5. Insomnia with nocturnal awakening due to pain and mood disturbance.
+6. Hypertension uncontrolled on current regimen.
+7. Risk of infection with dual biologics and upcoming cladribine cycle.
+
+Plan:
+• Continue cladribine – second cycle scheduled September 2024; obtain CBC in 1 week before cycle.
+• Maintain Interferon‑β1a until next disease‑modifying therapy is confirmed; consider discontinuation after second cycle.
+• Continue adalimumab 40 mg q2w and methotrexate 5 mg weekly for RA; monitor for infections.
+• Initiate Vitamin D 2000 IU daily.
+• Start Venlafaxine 37.5 mg nightly for mood support and neuropathic pain; titrate to 75 mg nightly if tolerated.
+• Antihypertensive adjustment: Lisinopril up to 20 mg daily; add Amlodipine 5 mg nightly for BP control.
+• Initiate CBT‑I with sleep specialist – referral added.
+• Refer to physiotherapy for gait training and spasticity management.
+• Educate patient on infection symptoms and prompt reporting; continue fluconazole for oral candidiasis.
+• Monitor CBC, neutrophil count before cladribine; check complete metabolic panel as needed.
+• Continue sertraline 100 mg; consider dose increase to 150 mg if mood symptoms persist.
+
+Follow‑Up:
+• Neurology in 2 weeks for CBC review, BP/HR monitoring, and pain assessment.
+• Repeat lumbar spine MRI in 3 months to assess lesion evolution.
+• Rheumatology in 4 weeks to monitor RA therapy and infection risk.
+• Sleep specialist within 2 weeks for CBT‑I initiation.
+• Physical therapy 2–3 sessions per week for 6 weeks.
+• Ophthalmology baseline exam 1 month after completion of cladribine cycles.
+
+Patient was educated on the plan, infection precautions, and instructed to call the office if she develops fever, sore throat, or worsening pain.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe burning pain in right calf overnight</span><span class="pill">Anxiety about progression</span><span class="pill">Nightly awakenings</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>158/92</td></tr><tr><td>HR</td><td>79</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Absent right ankle jerk</li><li>Reduced proprioception</li><li>Spasticity on left leg</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Lumbar puncture</li><li>Lumbar spine MRI</li><li>CBC</li><li>Lipid panel</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>LP: Oligoclonal bands present</li><li>Lumbar MRI: Enhancing lesion L5‑S1 0.9 cm</li><li>CBC: WBC 4.5 × 10^9/L</li><li>HbA1c 5.9%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated venlafaxine 37.5 mg nightly</li><li>Vitamin D 2000 IU daily</li><li>Added amlodipine 5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Expressed willingness to follow new medication plan, though anxious about infection risk with dual biologics. Seeks more counseling support.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Cladribine (cycle pending)</li><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 10 mg daily</li><li>Hydrochlorothiazide 12.5 mg daily</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Cladribine second course pending</li><li>Last MRI showed new lesion L5‑S1</li><li>Urinary retention requiring catheterization</li><li>Poor medication adherence for antihypertensives</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented with a new burning right calf pain and severe nocturnal awakening. Neurologic exam noted absent ankle jerk on right, reduced proprioception in toes. A lumbar puncture revealed oligoclonal bands. MRI lumbar spine displayed new enhancing lesion at L5‑S1. She described escalating depressive symptoms and insomnia. Dr. Patel recommended a comprehensive plan: continue cladribine (second cycle scheduled in September), maintain interferon until next DMT is stable, continue adalimumab and methotrexate for RA, start vitamin D 2000 IU daily, initiate venlafaxine 37.5 mg nightly for mood and pain, and refer to sleep specialist. Adjust antihypertensive regimen to lisinopril 20 mg daily and add amlodipine 5 mg daily for better BP control. Dr. Lee discussed CBT‑I to improve sleep. Dr. Gomez reviewed RA therapy and agreed to maintain adalimumab with monitoring for infection. A physiotherapist was also consulted for gait training.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease has transitioned toward secondary progressive phenotype with new spinal lesion; ongoing relapses despite cladribine. Multidisciplinary plan active.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2024-09-01</h3><div class="visit-meta">Pain Specialist | Reason: Trial of spinal cord stimulator for spasticity and pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Trial of spinal cord stimulator (SCS) for refractory spasticity and burning calf pain.
+
+History of Present Illness: Maya, a 35‑year‑old female with multiple sclerosis (MS), rheumatoid arthritis (RA), hypertension, depression, anxiety, insomnia, and obesity, presents for a trial SCS placement. She reports chronic right calf burning pain, left hand clawing, and difficulty with activities of daily living (ADLs). Previous pharmacologic management has been inadequate. A diagnostic nerve block failed, prompting consideration of SCS.
+
+Past Medical History: MS with multiple enhancing lesions (most recent at L5‑S1), RA on methotrexate, interferon‑β1a, and adalimumab, hypertension on lisinopril and amlodipine, type 2 diabetes mellitus, depression on sertraline, anxiety on venlafaxine, insomnia on low‑dose zolpidem PRN.
+
+Allergies: NKDA.
+
+Physical Examination: Awake, alert, oriented. Vitals: BP 162/95 mmHg, HR 79 bpm, RR 15/min, Temp 36.7°C, SpO₂ 98%. Neurologic: Spasticity markedly reduced after lead placement (spasticity score 5/10 from baseline 10/10); hand clawing unchanged; strength 5/5 overall; reflexes brisk left lower extremity. No new focal deficits. Pain intensity in right calf: 7/10 at rest, improves to 5/10 during SCS stimulation.
+
+Procedure: Leads placed at T10–L2 under conscious sedation. Immediate reduction in spasticity noted; residual burning pain persists. The patient consented to trial leads and understands criteria for permanent implantation.
+
+Assessment: 1) MS‑related spasticity – significant improvement with SCS trial.
+2) Neuropathic burning pain in right calf – partial, but persists during trial.
+3) Hand clawing – likely due to upper limb MS lesion; no change.
+4) Psychological factors (anxiety, depression) may amplify pain perception.
+
+Differential Diagnoses: • MS‑associated spasticity and neuropathic pain
+• radiculopathy or conus medullaris syndrome secondary to new L5‑S1 lesion
+• Post‑herpetic neuralgia (unlikely, no dermatomal rash)
+• Medication‑induced pain (less likely)
+
+Plan:
+1. If ≥50% improvement in spasticity and pain scores, proceed with permanent SCS implantation.
+2. Continue current disease‑modifying therapy: interferon‑β1a 1.0 mg IM weekly, methotrexate 5 mg weekly, adalimumab 40 mg q2w. 
+3. Maintain antihypertensives: lisinopril 20 mg daily, amlodipine 5 mg daily. Monitor BP closely.
+4. Adjust venlafaxine: maintain 37.5 mg nightly; titrate to 75 mg nightly if pain not adequately controlled.
+5. Continue sertraline 100 mg daily; evaluate mood with PHQ‑9 at follow‑up.
+6. Keep insomnia regimen: low‑dose zolpidem PRN only.
+7. Monitor CBC and CMP before each cladribine cycle; next cycle scheduled September 2024.
+8. Provide patient education on SCS parameters, battery life, and potential complications (lead migration, infection, neurologic deficits).
+9. Schedule neurology consult for MRI brain with gadolinium in 3 months to evaluate new L5‑S1 lesion.
+10. Refer to physiotherapy for spasticity management and functional training.
+11. Encourage adherence to sleep hygiene and anxiety coping strategies. Consider counseling if anxiety escalates.
+
+Follow‑Up: Return in 4 weeks for clinical assessment, SCS battery interrogation, BP check, CBC, and to decide on permanent implantation.
+
+Assessment and Plan Summary: Trial SCS shows promising reduction in spasticity but incomplete pain control. Patient is a candidate for permanent implantation pending further symptom improvement. Continuation of current pharmacologic and disease‑modifying therapies is recommended, with close monitoring for metabolic and hematologic complications from cladribine and hypertension.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic right calf pain, left hand clawing, difficulty with ADLs</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>162/95</td></tr><tr><td>HR</td><td>79</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Reduced spasticity after SCS</li><li>Hand clawing remains</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>SCS trial result</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>SCS trial success – reduced spasticity score 5/10</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Trial spinal cord stimulator</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Noted improvement in spasticity, but still anxious about future treatment steps.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Cladribine (scheduled second cycle in September)</li><li>Interferon‑β1a 1.0 mg IM weekly</li><li>Methotrexate 5 mg weekly</li><li>Adalimumab 40 mg q2w</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Venlafaxine 37.5 mg nightly</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive MS, left hand clawing limiting daily tasks</li><li>Inadequate pain control with oral medications</li><li>Previous psychiatric hospitalization</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pain specialist reviewed Maya’s pain history, noting refractory spasticity, burning calf pain, and hand clawing. After a diagnostic nerve block failed, a trial spinal cord stimulator (SCS) was offered. Maya consented, with the understanding of a temporary lead placement followed by permanent implantation if effective. The procedure was performed under conscious sedation; leads placed at T10–L2. Immediate reduction in spasticity reported, though pain persisted. Dr. Patel was notified to monitor neurologic status and ensure no flare during SCS procedure. Maya was advised to continue her current meds and schedule a follow‑up in 4 weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>SCS trial positive for spasticity relief. MS progression continues; patient will be assessed for permanent implantation.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2024-10-15</h3><div class="visit-meta">Neurologist | Reason: Comprehensive review of progressive disease, palliative goals</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Comprehensive review of progressive MS with palliative goals. 
+
+**History of Present Illness**: Maya presents for a routine review of her progressive relapsing‑remitting MS (RRMS) and associated comorbidities. She reports worsening urinary incontinence, significant depressive symptoms, nocturnal awakenings, and difficulty ambulating in her manual wheelchair. She has an implanted spinal cord stimulator (SCS) placed last month, with partial relief of spasticity and calf pain. Her neurologic exam reveals left hand clawing, 2/5 strength in both lower extremities, spasticity graded 2+, and no new focal deficits. She has a history of multiple inflammatory exacerbations treated with methotrexate, adalimumab, cladribine, and episodic steroids, with varying success.
+
+**Past Medical History**: RRMS, rheumatoid arthritis (RA), hypertension (HTN), depression, anxiety, insomnia, obesity, type 2 diabetes mellitus (T2DM) requiring intermittent insulin, chronic urinary retention.
+
+**Medication List**: Current: Cladribine (2nd course completed), Adalimumab 40 mg q2w, Methotrexate 5 mg weekly, Lisinopril 20 mg daily, Amlodipine 5 mg daily, Venlafaxine 75 mg nightly, Sertraline 100 mg daily, Metformin for diabetes (not listed but implicit), Hydrocortisone 0.5% eye drops as needed.
+
+**Review of Systems**: Positive for urinary incontinence, nocturia, depressive mood, anxiety, insomnia, spasticity, proximal weakness, left hand clawing.
+
+**Physical Examination**:
+- Vital Signs: BP 165/100, HR 81, RR 16, Temp 36.6°C, SpO₂ 97%. 
+- General: Alert, oriented, appears fatigued.
+- Neurologic: Cranial nerves intact except mild left facial mild weakness. Upper extremities: left hand clawing with 2/5 strength bilaterally. Lower extremities: 2/5 strength, spasticity grade 2+. Reflexes brisk on left side. No new sensory deficits.
+- Systemic: No acute pain, no signs of infection.
+
+**Labs/Test Results**: 
+- CBC: Normal. 
+- HbA1c: 6.0%.
+- Lipid panel pending.
+
+**Assessment**:
+1. Progressive RRMS with secondary progressive features, evidenced by decline in motor function, new brain lesion on MRI, and lack of response to disease‑modifying therapy. 
+2. Neurogenic bladder causing urinary incontinence; needs continence management. 
+3. Spasticity grade 2+ contributing to gait difficulty; needs symptomatic control. 
+4. Depression and anxiety worsening; ongoing psychiatric support required. 
+5. HTN uncontrolled on current regimen; needs close monitoring.
+
+**Plan**:
+1. Continue Adalimumab for RA; monitor CBC and infection signs. 
+2. Maintain Venlafaxine 75 mg nightly and Sertraline 100 mg daily; consider psychotherapy escalation if mood worsens. 
+3. Initiate Baclofen 10 mg PRN for spasticity; titrate as needed. 
+4. Refer to Occupational Therapy for home modifications and wheelchair transfer training. 
+5. Enroll in a peer counseling group for MS and supportive mental health. 
+6. Discuss hospice/palliative care options; review hospice criteria if decline continues.  
+7. Continue Lisinopril 20 mg and Amlodipine 5 mg; consider adding hydralazine/HCTZ or ARB if BP remains &gt;140/90. 
+8. Continue monitoring of HbA1c; advise dietician referral for weight management. 
+9. Schedule follow‑up labs: CBC in 2 weeks, lipid panel in 4 weeks, HbA1c repeat in 3 months. 
+10. Neurology follow‑up in 4 weeks to reassess functional status, MRI brain in 6 months, and evaluate SCS efficacy.
+
+**Patient Education**: Reviewed importance of adherence to medication, infection prevention especially with immunomodulators, and timely reporting of fevers or infections. Discussed safety precautions for wheelchair ambulation. 
+
+**Disposition**: Maya accepted the palliative approach, expressed relief at having a concrete plan and is hopeful for future options. 
+
+**Summary**: Focus on symptom management, mobilization support, psychiatric care, and vigilant monitoring of comorbid conditions. 
+
+---
+
+**Follow‑up**: Neurology in 4 weeks; Rheumatology in 6 weeks to discuss RA regimen; Primary Care and Endocrinology for BP and DM monitoring; Occupational Therapy within 2 weeks; Psychotherapy group participation; Palliative care consult as needed.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continued functional decline, severe urinary incontinence, nocturnal awakening, mood depression</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>165/100</td></tr><tr><td>HR</td><td>81</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.6°C</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left hand clawing</li><li>Lower limb strength 2/5</li><li>Spasticity 2+</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Lipid panel</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>HbA1c 6.0%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Baclofen 10 mg PRN</li><li>Continued venlafaxine</li><li>Referral to occupational therapy</li><li>Counseling group referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Expressed acceptance of palliative goals, yet remains hopeful for future treatments. Feeling relieved after clear plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">RRMS</span><span class="pill">RA</span><span class="pill">HTN</span><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Insomnia</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Cladribine (completed 2nd course)</li><li>Adalimumab 40 mg q2w</li><li>Methotrexate 5 mg weekly</li><li>Lisinopril 20 mg daily</li><li>Amlodipine 5 mg daily</li><li>Venlafaxine 75 mg nightly</li><li>Sertraline 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Permanent SCS implanted last month</li><li>Interferon discontinued due to insufficient benefit</li><li>Cladribine second cycle completed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the visit, Maya reported persistent urinary incontinence, escalating depressive symptoms, and difficulty with ambulation in the manual wheelchair. Neurologic exam showed left hand clawing, reduced lower extremity strength 2/5, spasticity grade 2+. Blood work revealed normal CBC. The neurologist discussed shift to palliative care approach focusing on symptom control, mobility assistance, and mental health support. Maya expressed acceptance of limited disease‑modifying options. The plan: continue adalimumab for RA, monitor for infections; maintain venlafaxine for mood; start baclofen 10 mg PRN for spasticity; refer to occupational therapist for home modifications; enroll in a counseling group for MS; review hospice options if decline continues. Dr. Lee confirmed ongoing psychotherapy. Dr. Patel will monitor for any acute neurological deterioration.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>MS progressed to secondary progressive with plateau; no further high‑efficacy DMT considered due to cumulative immunosuppression and comorbidities. Focus shifted to supportive, palliative care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Depression</span><span class="pill">Anxiety</span><span class="pill">Sleep disturbances</span><span class="pill">Hypertension</span><span class="pill">Rheumatoid arthritis</span><span class="pill">Insomnia</span><span class="pill">Obesity</span><span class="pill">Relapsing‑remitting multiple sclerosis</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Neutropenia</span><span class="pill">Oral candidiasis</span><span class="pill">Neuropathic pain</span><span class="pill">Urinary retention</span><span class="pill">Neurogenic bladder</span><span class="pill">Progressive MS</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Cladribine</li><li>Adalimumab 40 mg q2w</li><li>Methotrexate 5 mg weekly</li><li>Lisinopril 20 mg daily</li><li>Hydrochlorothiazide 12.5 mg daily</li><li>Amlodipine 5 mg daily</li><li>Venlafaxine 75 mg nightly</li><li>Sertraline 100 mg daily</li><li>Metformin</li><li>Baclofen 10 mg PRN</li><li>Hydrocortisone 0.5% eye drops as needed</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with mild left arm weakness, intermittent blurred vision, and bladder urgency; neurologic exam revealed left upper extremity 4/5 strength, subtle ataxia, normal reflexes, and intact sensation; ordered urgent MRI of brain with contrast and cervical spine MRI; arranged neurology referral and advised smoking cessation, weight management, and to seek emergent care if symptoms worsen.</li><li>Neurologic evaluation noted increased gait clumsiness, left thigh tingling, left forearm tickle, persistent blurred vision, difficulty sleeping, and urinary urgency. Physical exam revealed mild dexterity impairment, left thigh/calf decreased sensation, left hand pronation weakness, mild dysmetria, and moderately unsteady gait. Brain MRI showed new enhancing lesion in left posterior parietal white matter and a second non‑enhancing juxtacortical lesion. Initiated IV methylprednisolone 1 g daily for 5 days, followed by 4-week oral prednisone taper. Ordered repeat brain MRI with gadolinium in 3 months, baseline ophthalmologic evaluation, and advised monitoring BP and glucose. Discussed possible disease‑modifying therapy after MRI follow‑up. Sleep hygiene strategies advised. Follow‑up scheduled in 2 weeks.</li><li>Inpatient neurologist treated relapsing‑remitting multiple sclerosis relapse with IV methylprednisolone 1 g daily for 5 days. During treatment developed hyperglycemia (fasting glucose 150–210 mg/dL) requiring insulin sliding scale; blood pressure elevation (170/100 mmHg) managed with labetalol 100 mg BID. Reported increased sedation, worsening insomnia, anxiety, and mood swings. MRI after completion showed no new lesions; the known 1.2 cm juxtacortical lesion remained stable. Discharged on oral prednisone taper starting 10 mg daily, with gradual taper over 4 weeks. Initiated labetalol 100 mg BID and continued antihypertensive therapy; instructed to monitor BP twice daily. Continued insulin sliding scale as needed for hyperglycemia. Continued disease‑modifying therapy with Interferon‑β1a, methotrexate, and adalimumab. Psychiatric regimen maintained with sertraline; sleep hygiene counseling offered, and low‑dose zolpidem PRN for insomnia if needed. Outpatient neurology follow‑up scheduled in 2 weeks; repeat brain MRI with gadolinium in 3 months; baseline ophthalmology exam in 1 month; regular monitoring of fasting glucose and BP recommended.</li><li>Visit #4 – 2024-02-15: patient presented with new left facial droop, left hand tremor, and left leg spasticity. Neurologic exam showed House‑Brackmann Grade III left facial weakness, postural tremor, spastic hyperreflexia, and 4/5 strength in the left lower extremity. MRI brain demonstrated a new enhancing lesion along the left corticospinal tract and an old lesion in the internal capsule. Treatment plan included continuation of Interferon‑β1a, methotrexate, and adalimumab; initiation of a prednisone 50 mg daily taper over 2 weeks; prescribing Baclofen 5 mg at bedtime for spasticity; and maintaining existing antihypertensive, antidiabetic, and psychiatric medications. Follow‑up in 2 weeks with repeat brain MRI in 3 months and baseline ophthalmology exam in 1 month.</li><li>Visit #5 – 2024-03-20: patient admitted with severe relapse presenting with marked left upper limb 2/5 and left lower limb 2–3/5 weakness, urinary urgency, and constipation. Neuro exam confirmed brisk left reflexes; no sensory loss. MRI cervical spine with gadolinium revealed new enhancing lesions at C3–C5. Labs showed leukopenia, normal CMP, fasting glucose 210 mg/dL. Vitals: BP 172/100, HR 90, RR 17, Temp 37.2°C, SpO₂ 96%. Completed 5 days of IV methylprednisolone 1 g daily. Initiated therapeutic plasma exchange (six sessions, twice weekly for three weeks). Managed hyperglycemia with insulin sliding scale aiming 140–180 mg/dL. Continued Labetalol 100 mg BID and monitored BP twice daily. Post‑PEX, started oral prednisone taper beginning 10 mg daily, decreasing 2.5 mg weekly over six weeks. Disease‑modifying therapy (interferon‑β1a, methotrexate, adalimumab) and antihypertensive, insulin, sertraline, baclofen regimens maintained. Provided psychiatric support with outpatient counseling and inpatient consult after each PEX session. Infection prophylaxis emphasized hand hygiene, fever monitoring, CBC before each PEX. Scheduled weekly neurologic assessments, repeat cervical spine MRI two weeks post‑PEX, early mobilization with PT, constipation management. Planned discharge with neurology follow‑up one week after discharge and rheumatology/ophthalmology reviews within a month.</li><li>Visit #6 – 2024-04-07: Post‑PEX follow‑up noted modest motor improvement with left upper/lower extremity strength 3/5, brisk reflexes, residual spasticity, and urinary retention requiring intermittent catheterization. MRI cervical spine showed decreased C3–C5 enhancement and a new 0.8 cm right thalamic enhancing lesion. BP 160/95 on dual antihypertensives. Continued disease‑modifying therapy, antihypertensives, insulin sliding‑scale, sertraline, baclofen 5 mg at bedtime, and prednisone taper. Referrals to physiotherapy, pain specialist, rheumatology, and ophthalmology scheduled; repeat cervical spine MRI in 2 weeks and brain MRI in 3 months.</li><li>Multidisciplinary team reviewed escalation of disease‑modifying therapy. Noted persistent left arm weakness (3/5), spasticity in left lower limb, mild tremor, and new enhancing brain/spinal cord lesions on MRI. Planned initiation of cladribine 3.5 mg/kg over 5 days in May 2024, continuation of interferon‑β1a (to discontinue after first cladribine course), maintenance of methotrexate 5 mg weekly, adalimumab 40 mg q2w, antihypertensives lisinopril 10 mg daily plus HCTZ 12.5 mg daily and labetalol 100 mg BID, insulin sliding‑scale, baclofen 5 mg at bedtime. Discussed sertraline increase to 150 mg if mood symptoms persist, low‑dose zolpidem PRN. Orders: baseline CBC in 1 week, CBC before each cladribine cycle, ophthalmology baseline exam 1 month post‑cladribine, MRI brain with gadolinium in 6 months. Follow‑up with neurology, rheumatology, psychiatry, ophthalmology as scheduled.</li><li>Visit 8 – 2024-05-02: Initiated first course of cladribine 3.5 mg/kg orally daily for 5 days; baseline CBC normal and no immediate adverse events were observed. Neurologic examination remained normal with strength 5/5 in all extremities; vitals stable (BP 145/88 mmHg). Continued existing medications: interferon‑β1a, methotrexate, adalimumab; antihypertensives lisinopril, hydrochlorothiazide, labetalol; insulin sliding scale; sertraline; baclofen. Plan includes routine CBC monitoring before each future cladribine cycle, baseline ophthalmology exam 1 month after completion, MRI brain with gadolinium 6 months after first cycle, and follow‑up neurology visit in 1 week for CBC review and tolerance assessment.</li><li>Visit #9 – 2024-06-06: patient presented with low‑grade fever (38.9°C), oral thrush, sore throat, and increased anxiety. Exam revealed oral mucosal white plaques consistent with oropharyngeal candidiasis; mild pharyngitis, no focal neuro deficits. Labs indicated leukopenia with ANC 0.8×10⁹/L, CRP 4.2 mg/L. Started fluconazole 150 mg daily and amoxicillin‑clavulanate 875/125 mg twice daily for 10 days. Advised monitoring CBC in one week, continued existing MS, RA, HTN, DM, psychiatric, and spasticity regimens. Follow‑up scheduled in one week for CBC and clinical assessment.</li><li>Visit #10 – 2024-07-10: Patient presented with progressive decline review; new severe burning pain in right calf, nocturnal awakenings, anxiety about disease progression, and chronic urinary retention requiring intermittent catheterization. Examination revealed right lower extremity absent ankle jerk, reduced proprioception in toes, mild burning pain and left lower extremity spasticity. Lumbar spine MRI showed a new 0.9 cm enhancing lesion at L5‑S1; lumbar puncture positive for oligoclonal bands; CBC showed WBC 4.5×10⁹/L with ANC 0.8×10⁹/L. BP 158/92 mmHg. Plan included initiation of a second cycle of cladribine scheduled for September 2024 with CBC check 1 week prior, continuation of interferon‑β1a and adalimumab, introduction of Venlafaxine 37.5 mg nightly for mood support and neuropathic pain, titration to 75 mg if tolerated, addition of amlodipine 5 mg nightly for BP control, dose increase of lisinopril to 20 mg daily, initiation of vitamin D 2000 IU daily, continuation of sertraline 100 mg, monitoring of CBC and metabolic panel, outpatient referrals to physiotherapy, sleep specialist, rheumatology, and ophthalmology as scheduled.</li><li>Visit #11 – 2024-09-01: Patient underwent trial spinal cord stimulator placement at T10–L2 under conscious sedation. Immediate reduction in spasticity to a score of 5/10 (from 10/10) and partial reduction in right calf burning pain (baseline 7/10 to 5/10 during stimulation). No new focal deficits noted. Current disease‑modifying therapy, antihypertensives, anxiolytics, antidepressants, insomnia regimen, and cladribine cycle remain unchanged. Plan to reassess for permanent SCS implantation in 4 weeks, monitor CBC/CMP before next cladribine cycle, and schedule brain MRI with gadolinium in 3 months.</li><li>Visit #12 – 2024-10-15: Patient presented for routine review of progressive multiple sclerosis with palliative goals. Reported worsening urinary incontinence, depressive symptoms, nocturnal awakenings, and difficulty ambulating in wheelchair. Neurologic exam showed left hand clawing, 2/5 strength bilaterally in lower extremities, spasticity grade 2+, mild left facial weakness, and brisk reflexes on left side; no new sensory deficits. CBC normal, HbA1c 6.0%. Plan: continue current disease‑modifying drugs, add Baclofen 10 mg PRN for spasticity, refer OT for home modifications, enroll in peer counseling, consider palliative care consult, continue antihypertensives Lisinopril 20 mg and Amlodipine 5 mg, monitor BP, schedule labs (CBC in 2 wks, lipid panel in 4 wks, HbA1c repeat in 3 mo) and MRI brain with gadolinium in 6 mo.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

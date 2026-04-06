@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case fd250a23</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: fd250a23</h1><div class="subtitle">High‑grade undifferentiated sigmoid colon adenocarcinoma with distant metastases | Male, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Type 2 diabetes, Obesity, Chronic kidney disease, Diverticulosis</div><div class="meta-line">Risk Factors: High red meat consumption, Smoking, Sedentary lifestyle, Age &gt; 50</div></div>
+<details><summary>Narrative <span class="preview-text">**A 65‑year‑old man with a rapidly worsening course of sigmoid colon cancer**  ---  ### Week 0: First warning signs  Tho...</span></summary><div class="section-body"><p>**A 65‑year‑old man with a rapidly worsening course of sigmoid colon cancer**</p><p>---</p><p>### Week 0: First warning signs</p><p>Thomas “Tom” Reed was a 65‑year‑old retired construction supervisor who had always been proud of his “hard‑body” and his love of hearty meals. He was a 1‑pack‑a‑day smoker, spent his retirement hours gardening or watching television, and enjoyed a diet high in red meat and processed foods. His medical history was dominated by type 2 diabetes (HbA1c 8.2 %), class II obesity (BMI = 32.7 kg/m²), chronic kidney disease stage 3 (eGFR 32 mL/min/1.73 m²), and diverticulosis diagnosed 10 years ago on an abdominal CT done for an unrelated abdominal pain episode.</p><p>During a routine walk in the park, Tom felt a dull, pressing ache on the left lower quadrant of his abdomen that had been building for about a week. It was mild enough that he went to bed the same evening, hoping it would subside. The next morning, he noticed a small amount of bright‑red blood on the toilet paper—the first time this had happened in his adult life. He chalked it up to hemorrhoids and did not tell anyone.</p><p>---</p><p>### Week 1: First primary‑care visit</p><p>Tom called his family doctor, Dr. Huang, after the stool‑blood episode. Dr. Huang asked about abdominal pain, changes in bowel habit, weight loss, fatigue, or night sweats. Tom mentioned “just the usual stuff, I guess. A little pain in my lower left side and some blood a couple of days ago.” He also reported a 10 lb unintentional weight loss over the last month—lost mainly from his thighs and hips. He added that his diabetes medications seemed to require dose adjustments, but the doctor had not been sure why. At the interview, Tom rated his pain 3/10, intermittent, occurring after heavy meals.</p><p>Physical examination revealed a soft abdomen with mild left‑lower‑quadrant tenderness but no palpable mass. No obvious bleeding source was found on digital rectal exam. Vital signs were within normal limits except for mild hypertension (150/88 mm Hg). Dr. Huang ordered a basic metabolic panel (BMP), complete blood count (CBC), HbA1c, and a stool guaiac test, and suggested a colonoscopy after a week.</p><p>---</p><p>### Week 2: Laboratory findings and colonoscopy</p><p>The BMP revealed creatinine 2.1 mg/dL (baseline 1.9 mg/dL), BUN 30 mg/dL, and mild hyperglycemia (FPG 172 mg/dL). CBC showed low hemoglobin 9.8 g/dL and leukopenia of 3.8 × 10⁹/L. Dr. Huang arranged an urgent colonoscopy.</p><p>During the procedure the gastroenterologist found a 4‑cm ulcerated, fungating mass in the mid‑sigmoid colon, with friable edges. The surrounding mucosa appeared inflamed, consistent with diverticulosis flare. Biopsy specimens were taken. The colonoscope was able to traverse the mass but could not fully visualize beyond it because of severe luminal narrowing.</p><p>---</p><p>### Week 3: Pathology and staging</p><p>The pathology report returned the next day, confirming a high‑grade undifferentiated adenocarcinoma with sarcomatoid features—consistent with a mucinous or signet‑ring component. The specimen showed high mitotic index and loss of glandular differentiation.</p><p>An urgent contrast‑enhanced CT scan of the chest, abdomen, and pelvis was ordered. The scan showed: a thickening of the sigmoid colon wall with a 4‑cm infiltrating mass; enlarged mesenteric lymph nodes; a 2.8‑cm hypodense lesion in the right hepatic lobe; multiple peritoneal implants—suggesting stage IV disease (T4N2M1). No distant metastatic disease beyond the liver and peritoneum was identified.</p><p>Given the aggressive histology and stage, Tom was referred to oncology on the same day.</p><p>---</p><p>### Week 4: First oncology consultation</p><p>Oncologist Dr. Liu met Thomas in a private office at the cancer center. Dr. Liu explained the findings: an aggressive, undifferentiated tumor that had already metastasized. He described the standard first‑line regimens (FOLFOX or CAPOX), but emphasized that Tom’s CKD and recent leukopenia limited the use of oxaliplatin and irinotecan, which are nephrotoxic or can cause profound myelosuppression. Capecitabine was also cautioned—its active metabolites are largely renally excreted, and dose adjustment is required. Thus, a full therapeutic trial would carry high risk of complications.</p><p>The plan was to start a **palliative dose‑reduced FOLFOX** (5‑FU + leucovorin + low‑dose oxaliplatin) every two weeks, using a prophylactic growth‑factor if leukopenia recurred. The goal was symptom palliation and modest survival benefit.</p><p>Tumor markers (CEA) were sent; baseline CEA was 23 ng/mL (normal &lt;5). The oncology team also recommended a short course of corticosteroids for inflammation and a proton‑pump inhibitor to protect the stomach.</p><p>---</p><p>### Week 6: First chemo cycle and early toxicities</p><p>The first cycle of chemotherapy was delivered. During the 5‑FU infusion, Tom experienced mild nausea and a diffuse abdominal crampy pain for the rest of the day. He did report a mild increase in stool frequency (3–4 loose stools per day). The oncology nurse noted that his creatinine was 2.4 mg/dL and his leukocytes dropped to 2.9 × 10⁹/L. Dr. Liu decided to reduce the oxaliplatin dose by 25 % and to monitor his bone marrow counts closely.</p><p>Meanwhile, his diabetes flared – fasting glucose 210 mg/dL, requiring a small uptick in insulin. He also had a minor bleeding episode from the tumor site—bright‑red blood in stool—prompting the oncology team to give him an oral tranexamic acid to stabilize clots.</p><p>---</p><p>### Month 2: Radiologic progression and new symptoms</p><p>At the next follow‑up, Tom’s performance status had declined from ECOG 0 to ECOG 1 (some fatigue, but still able to drive). A repeat CT scan showed that the hepatic lesion had enlarged to 3.5 cm, the peritoneal implants had increased in number, and a new 1.2‑cm nodule appeared in the lung apex (pulmonary metastasis). The sigmoid mass was still present but had grown to 5 cm with impending obstruction.</p><p>He began to complain of an increasingly oppressive sense of fullness in the abdomen, especially after meals, and intermittent colicky abdominal pain. His weight had fallen another 15 lb in total over the past two months. Hemoglobin had dropped to 7.8 g/dL. The hematology team gave him erythropoietin and packed cell transfusions. In light of his CKD and the progressive tumor burden, the oncology team discussed that **palliative care** might be a more appropriate focus.</p><p>---</p><p>### Month 2.5: Attempts at re‑staging and management changes</p><p>Dr. Liu presented the case at a multidisciplinary tumor board. Several options were considered:  
+1. **Second‑line chemotherapy** (e.g., fluorouracil + bevacizumab). Bevacizumab, however, is contraindicated in patients with significant kidney disease as it may precipitate proteinuria or worsen hypertension.  
+2. **Brachytherapy or external beam radiation** directed at the sigmoid mass to relieve obstructive symptoms.  
+3. **Placement of a covered self‑expanding metal stent** to bypass the occlusion, allowing for oral intake and potentially a better quality of life.</p><p>The radiation oncology team suggested a low‑dose palliative radiation course (10 Gy in 2 fractions) targeting the sigmoid mass and peritoneal implants, hoping to reduce local pain and bleeding. Tom consented, understanding the risks of mucositis and limited long‑term benefit.</p><p>---</p><p>### Month 3: New complications and rapid decompensation</p><p>Two weeks after radiation, Tom admitted to the emergency department with a sudden onset of severe crampy abdominal pain, vomiting, and a feeling of distension. Imaging (CT abdomen with contrast) revealed a massive bowel obstruction at the site of the sigmoid mass, with a fluid‑filled proximal colon and evidence of fecal loading. The team also found worsening ascites, which had been slowly accumulating in previous scans. Laboratory values: hemoglobin 6.3 g/dL, leukopenia 2.1 × 10⁹/L, creatinine 2.8 mg/dL, BUN 42 mg/dL, and sodium 130 mmol/L (hyponatremia).</p><p>An urgent decompressive sigmoidoscopic procedure was attempted but failed due to extensive tumor invasion. He was then catheterized, started on broad‑spectrum antibiotics for suspected peritonitis, and scheduled for a **surgical oncologic resection** deemed high risk given his CKD, leukopenia, and overall frailty.</p><p>During this period, his diabetes remained poorly controlled; his insulin requirement doubled. The oncology team re‑evaluated his goals: given the rapid decline, a full oncologic operation was unlikely to benefit, and the risk of peri‑operative death was high.</p><p>The palliative care team was consulted. The patient, family, and clinicians discussed realistic expectations, including the transition from aggressive oncology to comfort‑focused care. The patient expressed a wish to remain alive as long as possible but did not consent to further major surgery or chemotherapy.</p><p>---</p><p>### Month 3.5: Transition to hospice and end of life</p><p>After a brief period on the inpatient step‑down unit—where he received palliative medication management, nutritional support (high‑protein, low‑solids diet) and psychosocial counseling—Tom was moved to a home hospice unit. His pain, managed with oral morphine and scheduled NSAIDs, was reasonably controlled until the last week. Blood transfusions were continued intermittently as needed. The family received supportive counseling and education regarding the disease process and expected trajectory.</p><p>On **Day 1 of hospice**, Tom passed away peacefully at home after a short period of confusion, an inability to retain liquids, and acute renal failure from persistent obstruction and sepsis. No autopsy was performed. The cause of death was recorded as complications of metastatic colorectal cancer with obstructive colitis complicated by renal failure.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-01</h3><div class="visit-meta">Primary Care | Reason: Abdominal pain and rectal bleeding</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Abdominal pain and rectal bleeding.
+
+History of Present Illness:
+Thomas Reed, 65‑year‑old male, presents with a 7‑day history of dull left‑lower‑quadrant (LLQ) abdominal pain, rated 3/10, worsening after meals. He reports a single episode of bright‑red blood on the toilet paper. He also notes an unintentional 10‑lb weight loss over the past month. No fever, nausea, vomiting, changes in bowel habits, or urinary symptoms reported.
+
+Past Medical History:
+- Type 2 diabetes mellitus
+- Class II obesity (BMI ~35)
+- Chronic kidney disease stage III (eGFR 30–59 ml/min/1.73m²)
+- Diverticulosis (diagnosed 5 years ago)
+- Hypertension
+
+Medications: None (currently not on glucose or antihypertensive therapy)
+
+Allergies: NKDA
+
+Social History: 1‑pack‑a‑day smoker for 40 years, moderate alcohol use, retired.
+
+Review of Systems: Positive for abdominal pain, rectal bleeding, weight loss; negative for fever, chills, nausea, vomiting, melena, hematochezia beyond single episode, changes in bowel habits, urinary symptoms.
+
+Physical Examination:
+Vital signs: BP 150/88 mmHg, HR 78 bpm, RR 14 /min, Temp 36.9°C, SpO₂ 97% on room air.
+General: Alert, oriented, in no acute distress.
+Abdomen: Soft, mild LLQ tenderness on palpation, no rebound, guarding, or masses. Bowel sounds normal.
+Rectal exam: Normal tone, no masses, no obvious bleeding source, digital rectal exam negative.
+
+Assessment:
+Chief complaints of LLQ abdominal pain with bright‑red rectal bleeding raise concerns for a source of lower GI bleeding. Differential diagnosis includes:
+1. Diverticular hemorrhage (most likely given history of diverticulosis)
+2. Colorectal carcinoma (age &gt;60, weight loss, rectal bleeding)
+3. Ischemic colitis (vascular disease risk factors)
+4. Inflammatory bowel disease flare (less likely but possible)
+5. Hemorrhoidal bleeding (unlikely given DRE negative)
+6. Colonic angiodysplasia (possible in CKD and older patients)
+
+Plan:
+1. Order baseline labs: BMP, CBC, HbA1c, stool guaiac.
+2. Schedule colonoscopy within the next week to identify source of bleeding and evaluate for neoplasm.
+3. Advise patient to monitor for worsening pain, recurrent bleeding, or signs of anemia (fatigue, dizziness) and seek immediate care if these occur.
+4. Discuss lifestyle modifications: weight‑loss plan, dietary fiber and hydration, smoking cessation counseling.
+5. Continue to monitor blood pressure; encourage follow‑up for hypertension management.
+6. Re‑evaluate diabetes control and consider initiating or titrating glucose‑lowering therapy after initial labs and renal function assessment.
+
+No immediate prescriptions were necessary. Patient advised to avoid NSAIDs.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">3/10 left lower quadrant abdominal pain</span><span class="pill">bright‑red rectal bleeding</span><span class="pill">10‑lb unintentional weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/88</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen with mild LLQ tenderness</li><li>No palpable abdominal mass</li><li>Digital rectal exam: no obvious bleeding source</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Basic metabolic panel (BMP)</li><li>Complete blood count (CBC)</li><li>HbA1c</li><li>Stool guaiac test</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 20 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Type 2 diabetes mellitus</li><li>Class II obesity</li><li>Chronic kidney disease stage 3</li><li>Diverticulosis</li><li>Hypertension</li><li>Smoker 1‑pack‑a‑day</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas Reed presented to Dr. Huang with a week‑long dull left‑lower‑quadrant abdominal pain that had worsened after meals. He noted a single episode of bright‑red blood on the toilet paper and a 10‑lb weight loss over the past month. Dr. Huang performed a focused history and physical exam, noting mild LLQ tenderness but no palpable mass. He confirmed the absence of obvious bleeding source on digital rectal exam. He ordered a basic metabolic panel, CBC, HbA1c, and stool guaiac, and advised a colonoscopy within one week to investigate the bleeding and pain.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial clinical suspicion of colonic pathology. Plan for colonoscopy and evaluation of anemia and kidney function.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-08</h3><div class="visit-meta">Gastroenterology | Reason: Urgent colonoscopy after positive stool guaiac</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Urgent colonoscopy after positive stool guaiac.
+
+History of Present Illness: 65‑year‑old male with type 2 diabetes mellitus, obesity, CKD stage 3, diverticulosis, and hypertension presents for an urgent colonoscopy following a positive stool guaiac test and intermittent right‑lower‑quadrant and left‑lower‑quadrant abdominal pain (3/10) with recent bright‑red rectal bleeding. He reports a 7‑day history of dull LLQ pain worsening after meals, a 10‑lb unintentional weight loss, and a single episode of bright‑red bleeding. No fever, nausea, or vomiting.
+
+Past Medical History: T2DM (HbA1c 7.6%), CKD stage 3, hypertension, diverticulosis.
+
+Medications: Metformin 1000 mg BID, Insulin glargine 20 units nightly, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Aspirin 81 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for intermittent LLQ pain and bright‑red rectal bleeding; negative for fever, chills, nausea, vomiting, change in bowel habits beyond bleeding.
+
+Physical Examination: Not performed during procedure; prior exam noted soft abdomen, mild LLQ tenderness, no rebound or guarding; DRE normal.
+
+Procedure: Colonoscopy performed under conscious sedation. A 4‑cm ulcerated, fungating lesion with friable edges and adjacent inflamed mucosa was identified in the mid‑sigmoid colon. Scope passed the lesion but could not traverse the narrowed lumen beyond it. Multiple biopsy specimens were obtained.
+
+Assessment:
+1. Suspected malignant colorectal neoplasm (colorectal adenocarcinoma) based on size, ulceration, fungation, and friable edges.
+2. Diverticular disease with possible associated inflammatory mass.
+3. Ischemic colitis – less likely given location and appearance.
+
+Plan:
+1. Send biopsy specimens for histopathology and immunohistochemistry.
+2. Once pathology reports are available, arrange CT chest/abdomen/pelvis with contrast for staging.
+3. Refer to colorectal surgery for possible resection.
+4. Continue current medications; monitor renal function due to CKD.
+5. Counsel patient on signs of worsening bleeding, infection, or obstruction; advise contacting clinic if symptoms recur.
+6. Schedule a follow‑up in 2 weeks to review pathology results and imaging plan.
+7. Encourage high‑fiber diet, adequate hydration, and weight‑loss measures.
+
+Disposition: Discharged post‑procedure with clear instructions. Patient tolerated sedation well and expressed understanding of next steps.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Intermittent LLQ abdominal pain</span><span class="pill">Bright‑red rectal bleeding</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>152/90</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Colonoscopy: 4‑cm ulcerated sigmoid mass, unable to traverse completely, biopsies obtained</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 20 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Positive stool guaiac</li><li>Recent episode of rectal bleeding</li><li>History of diverticulosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The gastroenterology team performed an urgent colonoscopy under conscious sedation. They identified a 4‑cm ulcerated, fungating mass in the mid‑sigmoid colon with friable edges and surrounding inflamed mucosa consistent with diverticular disease flare. The scope passed the mass but could not fully traverse the narrowed lumen beyond it. Biopsy specimens were taken for histologic evaluation. The patient tolerated the procedure well and was discharged with instructions to follow up with pathology and oncologic staging.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Mass suspicious for malignancy; proceed with pathological confirmation and staging imaging.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-15</h3><div class="visit-meta">Radiology/Pathology | Reason: Pathology report and staging CT</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Radiology/Pathology Note – 2026-03-15**
+
+**Chief Complaint**: Discussion of pathology report and staging CT findings.
+
+**History &amp; Prior Visits**: This is the third visit following a 7‑day history of mild left lower quadrant abdominal pain and occasional rectal bleeding, a 4‑cm ulcerated sigmoid lesion identified on colonoscopy, and a biopsy that has now been reviewed by the pathology service. The patient has known type 2 diabetes mellitus, obesity, CKD stage 3, diverticulosis, and hypertension, and is on metformin, insulin glargine, lisinopril, atorvastatin, and low‑dose aspirin. No new therapies were initiated previously.
+
+**Anamnesis**: The patient reports mild left lower quadrant abdominal pain (3/10) that worsens after meals and occasional rectal bleeding, without changes in stool caliber, melena, or hematochezia. He denies fever, chills, weight loss beyond what has been noted previously, or dyspnea.
+
+**Vitals**: BP 148/86, HR 82, RR 14, Temp 37.0 °C, SpO₂ 97% on room air.
+
+**Current Imaging**: Contrast‑enhanced CT of the chest, abdomen, and pelvis reveals a 4‑cm sigmoid mass with mild central necrosis, mesenteric lymphadenopathy, a 2.8‑cm hypodense hepatic lesion suspicious for metastasis, multiple peritoneal implants (most prominent in the pelvis and omentum), and a 1.2‑cm solitary pulmonary nodule. No evidence of obstruction, perforation, or additional visceral disease.
+
+**Pathology**: Review of the sigmoid mucosal biopsies shows malignant cells exhibiting sarcomatoid differentiation, high mitotic activity, and areas of spindle‑shaped tumor cells. Immunohistochemistry is pending but suggests an undifferentiated carcinoma with sarcomatoid features.
+
+**Assessment**:
+1. Advanced sigmoid colon carcinoma with sarcomatoid differentiation, clinically staged as at least T3–T4 with regional nodal involvement and metastatic spread to the liver, peritoneum, and lungs.
+2. Differential includes conventional adenocarcinoma with sarcomatoid transformation versus primary sarcoma of the colon.
+3. Patient remains a candidate for systemic therapy; the advanced nature of disease precludes curative intent surgery and points toward a palliative, disease‑control strategy.
+
+**Plan**:
+- **Oncology Referral**: Immediate referral to medical oncology for staging work‑up and formulation of a systemic palliative chemotherapy plan, taking into account CKD stage‑3 renal function and comorbidities.
+- **Supportive Care**: Continue current diabetes, hypertension, hyperlipidemia, and antiplatelet regimens. Consider dose adjustments of chemotherapeutic agents per renal function. Initiate anti‑nausea prophylaxis and assess for pain management needs.
+- **Radiation Oncology**: Discuss potential localized radiation for palliation of the sigmoid mass if symptomatic.
+- **Follow‑up Imaging**: Repeat cross‑sectional imaging (CT chest/abdomen/pelvis) at 8 weeks to evaluate treatment response.
+- **Laboratory Monitoring**: Baseline labs including CBC, CMP, LDH, and tumor markers (CEA) prior to therapy; repeat every cycle.
+- **Palliative Consult**: Engage palliative care early to address symptom control, psychosocial support, and advance care planning.
+
+**Signature**: [Radiology/Pathology Service]
+
+**Patient Education &amp; Counseling**: The patient was informed of the malignant diagnosis, metastatic spread, and the necessity for systemic therapy. Discussed the importance of adherence to oncologic treatment, potential toxicities, and the role of palliative care in maximizing quality of life.
+
+**Disposition**: Patient has been notified of oncology referral and instructed to contact the oncology clinic for scheduling. He was advised to monitor for signs of bleeding, obstruction, or infection, and to seek care promptly if such symptoms arise.
+
+**End of Note**</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild LLQ abdominal pain</span><span class="pill">Occasional rectal bleeding</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>148/86</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>Temp</td><td>37.0</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pathology: high‑grade undifferentiated adenocarcinoma, sarcomatoid features</li><li>CT: sigmoid mass 4 cm, liver 2.8 cm, peritoneal implants, lung nodule 1.2 cm</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 20 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Biopsy of sigmoid mass</li><li>CT imaging</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pathologist reviewed specimen slides and confirmed a high‑grade undifferentiated adenocarcinoma with sarcomatoid differentiation, high mitotic index, and loss of glandular architecture. The radiologist reported the contrast‑enhanced CT chest, abdomen, and pelvis, demonstrating a 4‑cm sigmoid mass, mesenteric lymphadenopathy, a 2.8‑cm hypodense hepatic lesion, and multiple peritoneal implants, consistent with stage IV disease. With these findings, the patient was referred to oncology for palliative treatment planning.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Aggressive, metastatic colorectal cancer with liver and peritoneal spread. Initiate palliative chemotherapy with dose adjustments for CKD and leukopenia.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-27</h3><div class="visit-meta">Oncology | Reason: First oncology consultation and treatment planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: First oncology consultation for metastatic sigmoid colon cancer.
+History of Present Illness: 65‑year‑old male with known stage IV sigmoid colon cancer (sarcomatoid histology) presents for initiation of systemic therapy. He reports progressive weight loss (~10 lb), chronic abdominal discomfort described as dull LLQ pain exacerbated post‑prandial, and generalized fatigue. He has a history of CKD stage 3, hypertension, type 2 diabetes mellitus, obesity, and diverticulosis. Recent labs showed leukopenia and uncontrolled fasting glucose (180–210 mg/dL).
+Physical Examination: Not documented in this visit.
+Assessment: Metastatic colorectal carcinoma (sigmoid primary with hepatic, peritoneal, and pulmonary lesions). The patient’s comorbid CKD and prior leukopenia warrant a modified chemotherapy approach. Baseline CEA is 23 ng/mL.
+Plan:
+1. Initiate dose‑reduced FOLFOX every 2 weeks: 5‑FU 240 mg/m² IV + leucovorin 90 mg/m² IV + oxaliplatin 20 mg/m² IV.
+2. Prescribe oral prednisone 10 mg daily to mitigate mucositis and hyperglycemia.
+3. Start omeprazole 20 mg daily for gastric protection.
+4. Discontinue metformin (renal impairment) and adjust insulin regimen as required.
+5. Monitor CBC, CMP, renal function, and blood glucose prior to each cycle.
+6. Consider prophylactic G‑CSF if neutrophil count falls &lt;1.0 ×10⁹/L.
+7. Discuss potential side‑effects, dose adjustments, and symptom monitoring.
+Differential:
+- Stage IV colorectal carcinoma with multi‑metastatic spread.
+- Chemotherapy‑induced myelosuppression secondary to reduced dose regimen.
+- Hyperglycemic crisis related to corticosteroid use.
+Follow‑up:
+- Return in 2 weeks for CBC/CMP, insulin adjustment, and next chemotherapy cycle.
+- Repeat CEA and imaging (CT chest/abdomen/pelvis) in 3 months.
+- Contact oncology nursing if signs of neutropenic fever, severe mucositis, or severe GI bleeding.
+- Continue antihypertensive, lipid‑lowering, and antiplatelet therapy.
+- Lifestyle counseling on diet, fluid intake, and activity as tolerated.
+
+Thank you.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weight loss</span><span class="pill">Abdominal discomfort</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/85</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CEA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CEA: 23 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated dose‑reduced FOLFOX chemotherapy</li><li>Prescribed oral prednisone 10 mg daily</li><li>Started omeprazole 20 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 20 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV sigmoid colon cancer</li><li>CKD stage 3</li><li>Leukopenia from prior labs</li><li>Fasting glucose 180–210 mg/dL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Liu explained the aggressive histology and metastatic spread, and the limitations imposed by chronic kidney disease and leukopenia on standard agents. He recommended starting a dose‑reduced FOLFOX regimen (5‑FU 240 mg/m² IV, leucovorin 90 mg/m² IV, oxaliplatin 20 mg/m² IV) every two weeks, with a prophylactic G‑CSF if leukopenia recurred. The plan also included short‑course oral prednisone 10 mg daily and omeprazole 20 mg daily for gastric protection. A baseline CEA of 23 ng/mL was noted. The treatment goal was symptom palliation and modest survival benefit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First line palliative chemotherapy started with dose reduction owing to CKD and leukopenia.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-04-10</h3><div class="visit-meta">Oncology | Reason: First chemotherapy cycle and symptom assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: First chemotherapy cycle and symptom assessment.
+
+History of Present Illness: 65‑year‑old male with stage IV sigmoid colon cancer currently on a dose‑reduced FOLFOX regimen. He completed his first cycle of 5‑FU (75 mg/m²) with leucovorin (90 mg/m²) and oxaliplatin (15 mg/m²). During infusion he reported mild nausea and crampy abdominal pain. Post‑infusion labs showed an increase in serum creatinine from 2.1 to 2.4 mg/dL and a leukocyte count of 2.9 × 10⁹/L. Glucose was 210 mg/dL; insulin glargine was increased by 5 units nightly. An oral tranexamic acid 1 g PO BID was prescribed for tumor‑related bleeding.
+
+Assessment: Mild chemotherapy‑related gastrointestinal toxicity (likely mucositis/enteritis) with secondary bleeding. CKD stage 3 with modest worsening; leukopenia but ANC not yet &lt;1 × 10⁹/L. The patient is stable hemodynamically with adequate oxygenation.
+
+Plan:
+- Continue dose‑reduced oxaliplatin for remaining cycles.
+- Maintain current dose of 5‑FU and leucovorin.
+- Continue prednisone 10 mg daily and omeprazole 20 mg daily.
+- Tranexamic acid 1 g BID for bleeding control.
+- Re‑check CBC, CMP, and glucose 2‑3 days after the next infusion to evaluate for further renal or hematologic decline and to adjust insulin.
+- Consider prophylactic G‑CSF (filgrastim 300 µg SC daily beginning day 5 of cycle) if ANC falls &lt;1 × 10⁹/L or if neutropenic fever develops.
+- Add ondansetron 8 mg PO q8h for antiemetic prophylaxis during subsequent cycles.
+- Educate patient on signs of sepsis (fever &gt;38.0°C, chills, tachycardia) and advise to contact oncology if experienced.
+- Continue dietary counseling: high‑fiber, adequate hydration, and avoidance of trigger foods. Consider stool softener if constipation continues.
+- Follow up in 2 weeks for clinical exam and repeat labs.
+- Repeat CT chest/abdomen/pelvis in 3 months or sooner if clinical deterioration.
+
+The patient tolerated the chemotherapy well with mild side effects. He will remain on the shortened regimen and remain under close monitoring for renal function, leukopenia, and bleeding.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild nausea</span><span class="pill">Diffuse abdominal cramp</span><span class="pill">Loose stools (3–4 per day)</span><span class="pill">Occasional bright‑red bleeding</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/82</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Creatinine: 2.4 mg/dL</li><li>Leukocytes: 2.9 × 10⁹/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>5‑FU infusion</li><li>Leucovorin 90 mg/m² IV</li><li>Oxaliplatin reduced to 15 mg/m² IV</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li><li>Tranexamic acid 1 g PO BID</li><li>Insulin adjustment</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Tolerated chemotherapy with mild side effects; noted slight improvement in appetite but persistent abdominal discomfort.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Oncology treatment</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 20 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent chemotherapy</li><li>CKD stage 3</li><li>Leukopenia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the chemotherapy infusion, Tom tolerated 5‑FU with mild nausea and crampy abdominal pain. After the session, a blood draw revealed creatinine of 2.4 mg/dL (up from 2.1) and leukocytes 2.9 × 10⁹/L. The oncology team reduced oxaliplatin by 25 % and continued with the shortened course. Insulin was increased by 5 units nightly to address a fasting glucose of 210 mg/dL. He was given an oral tranexamic acid 1 g PO BID for tumor‑related bleeding.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early signs of sub‑optimal renal clearance; leukopenia remains a concern. Adjusting chemotherapy dose to protect renal function while maintaining disease control.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-05-15</h3><div class="visit-meta">Oncology | Reason: CT follow‑up and supportive care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Contrast-enhanced CT follow-up and supportive care.
+
+History of Present Illness: The patient is a 65-year-old male with known metastatic stage IV sigmoid colon cancer who presents for routine imaging follow-up. The repeat CT chest, abdomen, and pelvis showed progression of disease with a new 3.5-cm hepatic lesion, increased peritoneal implants, a 1.2-cm pulmonary nodule, and an enlarged sigmoid mass now 5 cm with impending obstruction. He has a new hemoglobin of 7.8 g/dL, which prompted two units of packed RBCs and continuation of erythropoietin supplementation. The patient reports worsening fatigue, post-prandial abdominal fullness, an unintentional 15-lb weight loss over the past two months, and intermittent melena. He denies pain or overt GI bleeding but notes mild abdominal discomfort, especially after meals. He is currently able to drive but reports a decline in performance status from 0 to 1.
+
+Past Medical History: Type 2 diabetes mellitus (poorly controlled), obesity, CKD stage 3, diverticulosis, hypertension, stage IV sigmoid colon cancer, anemia, current transfusions, ongoing erythropoietin therapy.
+
+Medications: Metformin 1000 mg BID, Insulin glargine 30 units nightly, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Aspirin 81 mg daily, Prednisone 10 mg daily, Omeprazole 20 mg daily, Erythropoietin 6000 IU subQ daily, Tranexamic acid 1 g PO BID, Ondansetron 8 mg PO q8h, 5-FU 75 mg/m2 IV, Leucovorin 90 mg/m2 IV, Oxaliplatin 15 mg/m2 IV.
+
+Review of Systems: Positive for fatigue, abdominal fullness, weight loss, intermittent melena. Negative for chest pain, dyspnea, fever, constipation, or overt rectal bleeding.
+
+Physical Examination:
+- Vital signs: BP 136/80 mmHg, HR 78 bpm, RR 14 breaths/min, Temp 36.7 °C, SpO2 97 %.
+- General: The patient appears cachectic with mild paleness.
+- Cardiovascular: Regular rate &amp; rhythm, no murmurs.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Soft with marked fullness, tenderness over mid-sigmoid region, no rebound or guarding.
+- Extremities: No edema.
+- Dermatologic: Mild conjunctival pallor.
+
+Assessment:
+1. Progressive metastatic sigmoid colon cancer with liver metastasis, peritoneal carcinomatosis and a pulmonary nodule. Disease is now likely incurable and symptoms are worsening.
+2. Severe anemia secondary to GI blood loss from the sigmoid tumor and possibly occult hepatic bleeding.
+3. Poor glycemic control in the setting of CKD (insulin adjusted to 30 units nightly).
+4. Decreased performance status (KPS 70%).
+
+Plan:
+- Continue current systemic therapy with palliative intent; discontinue further cytotoxic cycles given disease progression and neutropenia (WBC 3.0 ×10⁹/L).
+- Maintain prednisone 10 mg daily for anti-inflammatory effects.
+- Continue erythropoietin 6000 IU subQ daily and monitor Hb every 2 weeks; give PRBC transfusion as needed to keep Hb &gt;8 g/dL.
+- Continue tranexamic acid 1 g BID to reduce bleeding.
+- Continue omeprazole 20 mg daily; consider adding sucralfate if ulceration suspected.
+- Continue ondansetron 8 mg q8h for nausea; add aprepitant if breakthrough nausea.
+- Continue insulin glargine 30 units nightly; re-check blood glucose in 48 h and adjust as needed.
+- Provide counseling regarding symptom control: start low-dose opioid (hydromorphone 0.5 mg PO q4h PRN) for abdominal fullness and fatigue; assess pain score.
+- Discuss hospice referral; patient expressed desire for comfort-focused care.
+- Arrange palliative care consult.
+- Follow-up in 2 weeks for review of labs and symptom status; if decline, consider hospice admission.
+- No new diagnostic tests ordered at this visit.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue</span><span class="pill">Abdominal fullness after meals</span><span class="pill">Weight loss (15 lb over 2 months)</span><span class="pill">Occasional melena</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/80</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen with marked fullness</li><li>Tenderness over mid‑sigmoid region</li><li>Mild pallor of conjunctiva</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: liver 3.5 cm, peritoneal implants increased, lung nodule 1.2 cm, sigmoid 5 cm</li><li>Hemoglobin: 7.8 g/dL</li><li>Leukocytes: 3.0 × 10⁹/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Transfusion 2 units PRBC</li><li>Erythropoietin 6000 IU daily</li><li>Continuation of prednisone, omeprazole, tranexamic acid</li><li>Insulin increased to 30 units nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain manageable, but abdominal fullness worsened; patient expressed concern about future interventions.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 25 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous chemotherapy</li><li>Recent transfusions</li><li>Erythropoietin therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A repeat contrast‑enhanced CT chest, abdomen, and pelvis revealed the hepatic lesion had enlarged to 3.5 cm, new peritoneal implants, a 1.2 cm pulmonary nodule, and the sigmoid mass progressed to 5 cm with impending obstruction. Hemoglobin fell to 7.8 g/dL; the oncology team administered two units of packed red blood cells and continued erythropoietin. Tom’s ECOG performance status had dropped from 0 to 1; he reported increased fatigue but was still able to drive. Discussions about escalating care goals took place, and the plan shifted toward palliative intent with an emphasis on symptom relief.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Tumor burden increased, hepatic and peritoneal disease progressed, leading to obstructive symptoms and worsening anemia.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-05-25</h3><div class="visit-meta">Multidisciplinary Tumor Board | Reason: Treatment planning after disease progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Treatment planning after disease progression.
+
+Patient: 65‑year‑old male with metastatic sigmoid sarcomatoid carcinoma, CKD stage 3, diabetes mellitus type 2, obesity, hypertension, anemia, and diverticulosis. Current medications include metformin 1000 mg BID, insulin glargine 30 units nightly, lisinopril 20 mg daily, atorvastatin 40 mg nightly, aspirin 81 mg daily, prednisone 10 mg daily, omeprazole 20 mg daily, tranexamic acid 1 g PO BID, ondansetron 8 mg PO q8 h, erythropoietin 6000 IU subQ daily, hydromorphone 0.5 mg PO q4 h PRN. No allergies.
+
+History of present illness: The patient has progressive bowel obstruction secondary to a 5‑cm sigmoid mass, peritoneal implants, and hepatic metastases. Recent CT shows new hepatic lesion, increased peritoneal disease, and impending obstruction. He reports persistent abdominal pain, occasional bleeding, and fatigue. He had two units PRBC, erythropoietin, and hydromorphone for palliation. Chemotherapy was discontinued. He remains on systemic supportive medications.
+
+Physical exam: BP 135/78, HR 80, RR 16, Temp 36.8 °C, SpO2 97 %. Abdomen tender over mid‑abdomen with distension.
+
+Assessment:
+1. Metastatic sigmoid sarcomatoid carcinoma with peritoneal carcinomatosis – disease progression.
+2. Symptomatic abdominal obstruction.
+3. Ongoing anemia and leukopenia.
+4. CKD stage 3 with dose‑constrained therapy.
+
+Plan:
+- Proceed with low‑dose palliative external‑beam radiation to abdominal region and peritoneal lesions (10 Gy in 2 fractions) per radiation oncology recommendation.
+- Continue current systemic support: metformin, insulin glargine, lisinopril, atorvastatin, aspirin, prednisone, omeprazole, tranexamic acid, ondansetron, erythropoietin, hydromorphone.
+- Monitor CBC, CMP, creatinine, and glucose prior to each radiation fraction and 5 days post‑radiation.
+- Re‑assess abdominal pain and obstruction symptoms; if worsening, coordinate placement of covered self‑expanding metal stent.
+- Maintain vigilance for bleeding – continue tranexamic acid, monitor hemoglobin.
+- Educate patient on signs of obstruction or worsening pain; instruct to call oncology team if symptoms escalated.
+- Continue oncology follow‑up; consider palliative care consult for symptom management.
+
+This treatment plan balances disease palliation with the patient’s renal function constraints and current clinical status.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent abdominal pain</span><span class="pill">Occasional bleeding</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/78</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Painful tenderness over the mid‑abdomen</li><li>Abdominal distension</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Radiation therapy 10 Gy in 2 fractions (planned)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 30 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CKD stage 3</li><li>Leukopenia</li><li>Recent chemotherapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The tumor board reviewed the latest imaging and clinical status. Options included (1) second‑line chemotherapy with fluorouracil plus bevacizumab—contraindicated due to CKD; (2) palliative external beam radiation for obstruction control; (3) placement of a covered self‑expanding metal stent to relieve colonic obstruction. The radiation oncology team favored a low‑dose palliative course targeting the sigmoid mass and peritoneal implants (10 Gy in 2 fractions). The decision was made to proceed with radiation while maintaining current systemic support and considering future stent placement if symptoms worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Planning shift from systemic chemotherapy to local palliative modalities due to organ dysfunction and progressive disease.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-06-05</h3><div class="visit-meta">Radiation Oncology | Reason: Completion of radiation therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 65‑year‑old male with metastatic sarcomatoid carcinoma of the sigmoid colon presenting for completion of a two‑fraction, 10 Gy external‑beam palliative course. The second fraction of 5 Gy was delivered without acute toxicity. The patient tolerated the treatment well, reporting a modest reduction in abdominal pain and persistent mild rectal bleeding. One week post‑fraction a mild mucositis developed, resolving with supportive care (topical agents and adequate hydration). He denies nausea, vomiting, fever, or urinary symptoms. He continues to have occasional bright‑red bleeding, but has not required transfusion this week.
+
+Subjective:
+- Mild rectal bleeding, occasional bright‑red stools
+- Minimal abdominal discomfort
+- No new symptoms such as fever, altered bowel habits, or dyspnea
+
+Objective:
+- Vitals: BP 135/78 mmHg, HR 80 bpm, RR 16/min, Temp 36.7 °C, SpO₂ 97% on room air
+- Physical: Soft abdomen, no rebound or guarding; rectal exam reveals tolerable mucositis, no active bleeding noted during exam
+- Labs: None obtained during this visit; pending CBC, CMP, creatinine, and glucose from prior visit to be reviewed upon return
+
+Assessment:
+1. Metastatic sigmoid colon cancer – currently receiving palliative EBRT. Stable post‑treatment.
+2. Mild radiation‑induced mucositis – resolving with supportive care.
+3. Chronic anemia, likely multifactorial from tumor bleeding and CKD; hemoglobin 7.8 g/dL last week.
+4. Active mild rectal bleeding – likely from tumor/vascular injury; managed with tranexamic acid.
+
+Plan:
+- Continue current medication regimen: Metformin (discontinued in earlier visit due to CKD; ensure follow‑up), insulin glargine, lisinopril, atorvastatin, aspirin, prednisone 10 mg daily, omeprazole, tranexamic acid 1 g PO BID, erythropoietin 6000 IU subQ daily, hydromorphone PRN, ondansetron as needed.
+- Initiate oral tranexamic acid 1 g PO BID as ongoing prophylaxis for bleeding.
+- Continue supportive care for mucositis – topical sucralfate, oral analgesics, and hydration.
+- Monitor CBC, CMP, creatinine, and glucose every 2–3 weeks (or sooner if symptomatic). If hemoglobin falls below 7.5 g/dL or bleeding increases, consider transfusion.
+- Consider repeat sigmoidoscopy in 4–6 weeks if bleeding persists or worsens.
+- Continue pain management with hydromorphone while monitoring for respiratory depression.
+- Educate patient on signs of worsening bleeding, infection, or respiratory compromise.
+- Schedule next radiation oncology follow‑up in 2 weeks or sooner if new symptoms occur.
+
+Patient was advised to contact the oncology office immediately if bleeding increases, blood pressure spikes, or if he experiences new abdominal pain, shortness of breath, or signs of infection. All care is coordinated through the multidisciplinary tumor board. He verbally consented to the plan and was provided written instructions.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild rectal bleeding</span><span class="pill">Minimal abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/78</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen</li><li>Tolerable mucositis in rectal exam</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Radiation therapy: 10 Gy total in 2 fractions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in abdominal discomfort; minimal mucositis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 30 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previously scheduled radiation</li><li>Ongoing anemia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel administered the second of two fractionated 5 Gy external beam radiation to the sigmoid colon and peritoneal implants. Tom tolerated the treatment with minimal adverse effects. A mild mucositis developed over the next week, which resolved with supportive care. No acute complications were noted. The patient reported a modest reduction in abdominal pain after the first fraction and continued to have occasional bleeding.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Radiation provided localized palliation; no change in metastatic burden; systemic disease continues to worsen.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2026-06-10</h3><div class="visit-meta">Emergency Medicine | Reason: Acute abdominal pain and obstruction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 65‑year‑old male with acute severe colicky abdominal pain, vomiting, and distension.
+
+History of Present Illness: Patient presents to the ED with sudden onset of intense left lower quadrant abdominal pain radiating to the mid‑abdomen, associated with multiple episodes of non‑bilious vomiting over the past 6 hours. He reports progressive abdominal fullness and visible distension. No prior bowel movements in 12 hours. He denies fever, chest pain, dyspnea, or recent travel.
+
+Past Medical History: Type 2 diabetes mellitus, Obesity, CKD stage 3, hypertension, stage IV sigmoid colon cancer (sigmoid sarcomatoid carcinoma), anemia, poorly controlled diabetes, palliative radiation therapy.
+
+Medications (current at presentation): Metformin 1000 mg BID, insulin glargine 30 units nightly, lisinopril 20 mg daily, atorvastatin 40 mg nightly, aspirin 81 mg daily, prednisone 10 mg daily, omeprazole 20 mg daily, erythropoietin 6000 IU subq daily, tranexamic acid 1 g PO BID, hydromorphone 0.5 mg PO q4h PRN, ondansetron 8 mg PO q8h.
+
+Allergies: NKDA.
+
+Physical Examination:
+- General: Alert, diaphoretic, in obvious discomfort.
+- Vitals: BP 130/70 mmHg, HR 95/min, RR 20/min, Temp 38.2°C, SpO2 94% RA.
+- HEENT: Dry mucous membranes.
+- Chest: Clear to auscultation, no wheezes.
+- Abdomen: Distended, tympanic throughout, marked tenderness especially in LLQ. No rebound or guarding. Bowel sounds absent.
+- Extremities: No edema.
+- Neuro: Awake, oriented x3.
+
+Labs: CBC—Hb 6.3 g/dL, WBC 2.1 ×10⁹/L, Platelets 150 ×10⁹/L; BMP—Cr 2.8 mg/dL, BUN 42 mg/dL, Na 130 mmol/L, K 4.1 mmol/L, Cl 98 mmol/L, CO₂ 18 mmol/L; Blood cultures drawn.
+
+Imaging: CT abdomen with contrast demonstrates a massively dilated proximal colon with abrupt transition at the distal sigmoid colon, consistent with mechanical obstruction. Ascites noted increased compared to prior imaging.
+
+Assessment:
+1. Large bowel obstruction secondary to progressive metastatic sigmoid colon cancer with impending perforation and sepsis risk.
+2. Hypovolemia and metabolic acidosis secondary to obstruction‑related fluid loss.
+3. Severe anemia likely from chronic GI bleeding and tumor lysis.
+4. Leukopenia secondary to chemotherapy‑induced marrow suppression.
+
+Plan:
+- Initiate broad‑spectrum IV antibiotics: Ceftriaxone 2 g q24h IV and Metronidazole 500 mg q8h IV.
+- Nasogastric tube suction placed; continue suction and monitor output.
+- Aggressive IV fluid resuscitation with isotonic saline, titrate to urine output &gt;0.5 mL/kg/h; correct electrolytes (Na, K).
+- Transfuse 2 units PRBC to raise Hgb &gt;7.5 g/dL.
+- Pain control: Hydromorphone 0.5 mg PO q4h PRN, consider IV if inadequate.
+- Continue oncology‑managed medications (prednisone, omeprazole, tranexamic acid, ondansetron) unchanged.
+- Maintain insulin glargine 30 units nightly; adjust for hyperglycemia as needed.
+- Transfer to oncology inpatient unit for palliative care and decision‑making regarding mechanical bypass or stenting.
+- Monitor vitals, urine output, NG output, and abdominal exam every 2–4h; labs (CBC, BMP) q6h.
+- Obtain repeat CT if clinical deterioration or perforation suspected.
+- Discuss goals of care with patient/family; arrange palliative care consult.
+
+Follow‑up Recommendations: Close inpatient monitoring in oncology ward; repeat abdominal imaging if worsening abdominal pain or signs of perforation; continue antibiotics for at least 48–72h or until source control; consider percutaneous drainage or endoscopic stent if obstruction persists; maintain hydration and electrolyte balance; monitor renal function closely in setting of CKD stage 3 and nephrotoxic medications.
+
+Signature: EM
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden severe colicky abdominal pain</span><span class="pill">Vomiting</span><span class="pill">Abdominal distension</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/70</td></tr><tr><td>HR</td><td>95</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>38.2</td></tr><tr><td>SpO2</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tympanic over LLQ</li><li>Tenderness throughout abdomen</li><li>Absent bowel sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen with contrast</li><li>CBC</li><li>BMP</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: large proximal colon dilatation with transition at sigmoid mass</li><li>Hb 6.3 g/dL</li><li>Leukocytes 2.1 × 10⁹/L</li><li>Creatinine 2.8 mg/dL</li><li>BUN 42 mg/dL</li><li>Sodium 130 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Broad‑spectrum antibiotics (ceftriaxone + metronidazole)</li><li>Nasogastric tube suction</li><li>IV fluids and electrolyte correction</li><li>Transfused 2 units PRBC</li><li>Initiated palliative ICU support</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain increased, minimal relief from analgesics; progressive lethargy despite fluids.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span><span class="pill">Palliative radiation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 30 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive sigmoid mass</li><li>Radiation therapy</li><li>CKD stage 3</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient arrived with intense abdominal pain, vomiting, and a visibly distended abdomen. Physical exam revealed a tender, tympanic abdomen with tympany over the left lower quadrant. Lab work demonstrated hypovolemia and metabolic acidosis: Hb 6.3 g/dL, WBC 2.1 × 10⁹/L, creatinine 2.8 mg/dL, BUN 42 mg/dL, sodium 130 mmol/L. A CT abdomen with contrast revealed a large proximal colon dilatation with a distal transition point at the sigmoid mass, confirming bowel obstruction. Ascites had increased since the last scan. Broad‑spectrum antibiotics (ceftriaxone 2 g IV q24h + metronidazole 500 mg IV q8h), nasogastric tube suction, fluid resuscitation, and close monitoring were initiated. Attempts at sigmoidoscopic decompression failed due to dense tumor invasion. The patient was transferred to the oncology service for inpatient palliative care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Obstructive colitis with peritonitis risk; tumor burden precipitating mechanical obstruction; renal dysfunction worsening.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2026-06-15</h3><div class="visit-meta">Surgical Oncology | Reason: Assessment for operative intervention</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 65‑year‑old male with known stage IV sigmoid colon cancer, CKD stage 3, hypertension, diabetes, obesity, and anemia, who presented to the operating suite for evaluation of mechanical bowel obstruction. The surgical team reviewed his pre‑operative assessment and, given extensive peritoneal disease, tumor burden, and comorbidities, determined that operative intervention would have a high risk of morbidity and limited benefit. Decision was made to forgo surgery and transition to comfort‑focused care. Patient and family were counseled on expected trajectory and hospice referral was initiated.
+
+On exam he has persistent abdominal pain, reduced oral intake, abdominal guarding, distention, pale conjunctiva and a febrile temperature of 38.5 °C. Vitals: BP 125/72 mmHg, HR 92 bpm, RR 22/min, SpO₂ 96%. Examination is consistent with mechanical obstruction with possible peritonitis.
+
+Given the high operative risk, no surgery was performed. IV ceftriaxone 2 g q24 h and metronidazole 500 mg q8 h were continued, along with morphine 4 mg IV q4 h PRN for pain. Existing oncology and supportive medications (metformin, insulin glargine, lisinopril, atorvastatin, aspirin, prednisone, omeprazole, erythropoietin, tranexamic acid) were maintained.
+
+Assessment:
+1) Mechanical bowel obstruction from metastatic sigmoid colon carcinoma with impending perforation or infection.
+2) Advanced metastatic colorectal cancer with limited therapeutic options.
+3) CKD‑stage 3 limiting further aggressive therapy.
+
+Plan:
+- Transfer patient to inpatient hospice/palliative care unit.
+- Continue IV ceftriaxone, metronidazole, and morphine as per comfort needs.
+- Monitor vitals, fluid status, electrolytes, urine output, and abdominal exam every 4 h.
+- Maintain current diabetes, BP, and oncologic support medications.
+- Provide family counseling, facilitate goals‑of‑care documentation, and arrange hospice referral.
+- Reassess pain and comfort twice daily and adjust analgesia accordingly.
+- No further surgical or systemic oncologic interventions will be pursued.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent abdominal pain</span><span class="pill">Reduced oral intake</span><span class="pill">Signs of peritonitis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>125/72</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>38.5</td></tr><tr><td>SpO2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender abdomen with guarding</li><li>Abdominal distension</li><li>Pale conjunctiva</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>No surgical procedure; continued IV antibiotics</li><li>Supportive measures (pain control with morphine 4 mg IV q4h PRN)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Decreased oral intake; pain well‑controlled with morphine; decision to focus on comfort care accepted by patient and family.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span><span class="pill">Palliative radiation</span><span class="pill">Bowel obstruction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Insulin glargine 30 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li><li>Ceftriaxone 2 g IV q24h</li><li>Metronidazole 500 mg IV q8h</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bowel obstruction</li><li>Peritonitis risk</li><li>CKD stage 3</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In the operating suite, the surgeon evaluated Tom for a potential laparoscopic resection of the sigmoid lesion to relieve obstruction and remove the tumor bulk. After reviewing a detailed pre‑operative assessment, the surgical team concluded that the combined risks of severe leukopenia, advanced CKD, significant anemia and a high likelihood of postoperative mortality outweighed potential benefit. The decision was made to forgo surgery and transition to comfort‑focused inpatient care. The patient and family were counseled on expected trajectory and the plan for hospice referral following stabilization.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Operative option deemed too high risk; palliative and hospice care chosen. Tumor progression continues unabated.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2026-07-01</h3><div class="visit-meta">Hospice | Reason: Transition to home hospice</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Clinical Note – Visit #11
+
+Subjective:
+The patient, a 65‑year‑old male with known type 2 diabetes mellitus, CKD stage 3, refractory metastatic sigmoid colon cancer (stage IV), anemia, and obesity, presents for a home hospice transition assessment. Family reports that the patient’s pain is well‑controlled with oral morphine, but the patient experiences significant fatigue, limited oral intake due to dysphagia and early satiety, and ongoing low‑grade abdominal discomfort. He denies new or worsening nausea, vomiting, or recent bleeding episodes. The family reports that the patient is compliant with current medications and is emotionally stable at home.
+
+Objective:
+Vital signs: BP 120/70 mmHg, HR 88 bpm, RR 18/min, Temp 36.9°C (98.4°F), SpO2 97% on room air. Physical exam: Well‑mannered, responsive to family; soft abdomen with no distension or peritoneal signs; pale conjunctiva noted. No new lesions or skin breakdown.
+
+Assessment:
+1. Progressive metastatic sigmoid colon cancer with impending mechanical obstruction – remains the priority issue, although the patient is currently not exhibiting overt obstruction symptoms.
+2. Chronic anemia secondary to gastrointestinal bleeding, managed with erythropoietin and tranexamic acid.
+3. Type 2 diabetes mellitus, poorly controlled on basal‑bolus regimen, now reduced due to limited oral intake.
+4. End‑stage renal disease CKD stage 3 – ongoing monitoring required, especially with current nephrotoxic and hyperosmolar medications.
+5. Pain currently controlled with morphine sulfate 10 mg PO q4h and NSAID (ibuprofen 400 mg PO BID) for mild GI discomfort.
+
+Plan:
+- Continue current analgesic regimen: Morphine sulfate 10 mg PO q4h PRN for breakthrough pain; ibuprofen 400 mg PO BID to address mild non‑opioid pain.
+- Maintain erythropoietin 6000 IU subcut daily, tranexamic acid 1 g PO BID, and supportive measures (high‑protein, low‑solid diet).
+- Adjust insulin glargine to 20 units nightly with basal‑bolus modifications as per intake; consider insulin sliding scale on days of reduced oral intake.
+- Continue aspirin 81 mg QDay, prednisone 5 mg QDay, omeprazole 20 mg QDay, and monitor for GI bleeding.
+- Schedule regular hospice visits every 2–3 days for symptom control, psychosocial support, and family counseling. Each visit will include pain assessment, nutritional review, medication reconciliation, and advance care planning.
+- Monitor laboratory values (CBC, BMP, hemoglobin, electrolytes) every 2–3 weeks or sooner if clinical status changes (e.g., worsening anemia, signs of infection).
+- Continue to keep the patient’s environment comfortable, encourage mobility as tolerated, and maintain hydration.
+- Family education on expectations for disease progression, recognition of signs needing urgent attention (e.g., increased abdominal pain, vomiting, fever, dyspnea), and the importance of advance directive reviews.
+- No new diagnostic tests are ordered at this time; we will reassess if new symptoms develop.
+
+The patient and family express acceptance of the hospice plan and understand the focus on comfort and quality of life.
+
+Follow‑up:
+- Next hospice contact scheduled for July 4, 2026, or sooner if there is a change in symptoms. Contact nurse if any significant worsening in pain, bleeding, or functional status.
+- Coordinate with oncology and palliative care for any potential interventions if obstruction signs worsen.
+- Review advance directives and ensure that the patient’s goals of care remain documented in the medical record.
+
+Prepared by: [Clinician Name], Hospice Specialist</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain</span><span class="pill">Limited oral intake</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/70</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen, no distension</li><li>Pale conjunctiva</li><li>Well‑mannered, responsive to family</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine sulfate 10 mg PO q4h</li><li>Ibuprofen 400 mg PO BID</li><li>Erythropoietin 6000 IU subcut daily</li><li>Insulin basal‑bolus adjustment</li><li>Omeprazole 20 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain well‑controlled; minimal agitation; weight stable during short hospice stay.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 30 units nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 5 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li><li>Morphine sulfate 10 mg PO q4h</li><li>Ibuprofen 400 mg PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Palliative chemotherapy</li><li>Radiation therapy</li><li>Progressive obstruction</li><li>Anemia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The hospice team arrived at home to assess Tom’s comfort needs. Pain was managed with oral morphine, scheduled NSAIDs, and PRN rescue doses. Nutrition was addressed with a high‑protein, low‑solids diet. Insulin therapy was adjusted for limited intake (basal‑bolus regimen reduced). The family received counseling about expected prognosis and palliative interventions. Regular visits were scheduled for symptom control and psychosocial support.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Shift to comfort care; symptoms managed; no new disease progression reported.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2026-07-08</h3><div class="visit-meta">Hospice | Reason: Natural death at home</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Hospice Note – Visit #12 – 2026-07-08
+
+Chief Complaint: Natural death at home. Mr. Reed was under home hospice care.
+
+Encounters:
+- At 7:00 PM, Mr. Reed’s breathing became irregular and his pulse slowed. Despite supplemental oxygen the patient became hypoxemic. No reversible cause was identified.
+- Family elected to forgo all additional interventions.
+- Mr. Reed passed peacefully at home.
+
+Assessment:
+- Terminal decline of metastatic Stage IV sigmoid colon cancer (sarcomatoid carcinoma). Natural death with no reversible pathology.
+- No active symptom management required; comfort measures were already in place.
+
+Plan:
+- Document death in hospice chart. No further medical orders necessary.
+- Provide family with bereavement resources and encourage visits as appropriate.
+- Hospice team will remain on call for any additional support.
+
+Medications (continued up until death):
+- Insulin glargine 20 units nightly
+- Aspirin 81 mg daily
+- Prednisone 5 mg daily
+- Omeprazole 20 mg daily
+- Erythropoietin 6000 IU subcut daily
+- Tranexamic acid 1 g PO BID
+- Morphine sulfate 10 mg PO q4h
+- Ibuprofen 400 mg PO BID</div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/68</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>36.5</td></tr><tr><td>SpO2</td><td>95%</td></tr></table></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">CKD stage 3</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Stage IV sigmoid colon cancer</span><span class="pill">Anemia</span><span class="pill">Diabetes poorly controlled</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 units nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 5 mg daily</li><li>Omeprazole 20 mg daily</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li><li>Morphine sulfate 10 mg PO q4h</li><li>Ibuprofen 400 mg PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Home hospice care</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At approximately 7:00 PM, Tom’s breathing became irregular and his pulse slowed. The hospice team noted a rapid decline, with hypoxemia despite supplemental O₂. After confirming the absence of reversible causes, the family agreed to forgo further interventions. Mr. Reed passed peacefully at home. A formal death certificate was issued with the cause of death listed as complications of metastatic colorectal cancer with obstructive colitis leading to renal failure. No autopsy was performed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal event from disease‑related complications; hospice care completed.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes</span><span class="pill">Obesity</span><span class="pill">Chronic kidney disease</span><span class="pill">Diverticulosis</span><span class="pill">Hypertension</span><span class="pill">Metastatic sigmoid colon carcinoma</span><span class="pill">Anemia</span><span class="pill">Large bowel obstruction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg PO q4h</li><li>Ibuprofen 400 mg PO BID</li><li>Erythropoietin 6000 IU subcut daily</li><li>Tranexamic acid 1 g PO BID</li><li>Omeprazole 20 mg daily</li><li>Prednisone 5 mg daily</li><li>Aspirin 81 mg daily</li><li>Insulin glargine 20 units nightly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>&quot;Patient presented with 7‑day history of dull left‑lower‑quadrant abdominal pain (3/10) worsening after meals, one episode of bright‑red rectal bleeding, and unintentional 10‑lb weight loss. Vitals: BP 150/88, HR 78, RR 14, temp 36.9°C, SpO₂ 97% RA. Physical exam: soft abdomen, mild LLQ tenderness without rebound or guarding; normal bowel sounds; digital rectal exam normal. Labs ordered: basic metabolic panel, complete blood count, HbA1c, stool guaiac test. Colonoscopy scheduled within one week to evaluate bleeding source and screen for colorectal pathology. Patient advised to monitor pain, bleeding, signs of anemia; counselled on weight‑loss plan, increased fiber and hydration, smoking cessation, and BP monitoring. No prescriptions were given today. Follow‑up to review labs and colonoscopy results; consider initiation/titration of glucose‑lowering therapy after assessment of renal function.&quot;</li><li>&quot;Urgent colonoscopy performed following positive stool guaiac and intermittent right‑lower‑quadrant and left‑lower‑quadrant pain. A 4‑cm ulcerated, fungating lesion with friable edges identified in the mid‑sigmoid colon; multiple biopsies obtained. Patient discharged post‑procedure with clear instructions regarding monitoring for bleeding, infection, or obstruction. Plans include histopathology of biopsies, CT chest/abdomen/pelvis with contrast for staging upon results, referral to colorectal surgery, continuation of current medications, monitoring renal function, and follow‑up in 2 weeks to review pathology and imaging.&quot;</li><li>&quot;Radiology/Pathology visit: Contrast‑enhanced CT demonstrated a 4‑cm sigmoid mass with central necrosis, mesenteric lymphadenopathy, a 2.8‑cm hepatic lesion, multiple peritoneal implants, and a 1.2‑cm pulmonary nodule. Pathology review confirmed malignant sarcomatoid carcinoma. Plan included referral to medical oncology for systemic palliative therapy and baseline labs before treatment.&quot;</li><li>&quot;Oncology consultation for metastatic sigmoid colon cancer. Initiated dose‑reduced FOLFOX regimen, started prednisone 10 mg daily, and prescribed omeprazole 20 mg daily. Metformin discontinued due to CKD; insulin glargine continued with future dose adjustment. Baseline CEA ordered. Plan to monitor CBC, CMP, renal function, and glucose before each cycle; consider prophylactic G‑CSF if neutropenia. Follow‑up in 2 weeks, repeat imaging in 3 months.&quot;</li><li>&quot;Visited oncology for first dose‑reduced FOLFOX cycle; received 5‑FU, leucovorin, oxaliplatin. Reported mild nausea, diffuse abdominal cramps, loose stools 3–4/day, occasional bright‑red bleeding. Labs: serum creatinine 2.4 mg/dL (up from 2.1), leukocyte 2.9 ×10⁹/L, glucose 210 mg/dL. Insulin glargine increased to 20 units nightly. Tranexamic acid 1 g PO BID prescribed for bleeding; ondansetron 8 mg PO q8h added for antiemetic prophylaxis. Continue prednisone 10 mg daily, omeprazole 20 mg daily, and existing cardiovascular meds. Plan to monitor CBC, CMP, glucose 2–3 days after next infusion; consider prophylactic G‑CSF if ANC &lt;1×10⁹/L; follow‑up in 2 weeks; repeat CT in 3 months.&quot;</li><li>&quot;Visit 6: CT follow‑up showed disease progression with a new 3.5‑cm hepatic lesion, increased peritoneal implants, a 1.2‑cm pulmonary nodule, and a sigmoid mass now 5cm with impending obstruction. Hemoglobin dropped to 7.8 g/dL; patient received two units PRBC and continued erythropoietin. Symptoms noted fatigue, abdominal fullness after meals, 15‑lb unintentional weight loss over two months, and intermittent melena. Ongoing systemic therapy (FOLFOX) was discontinued due to progression and neutropenia; palliative intent care initiated. Low‑dose hydromorphone (0.5mg PO q4h PRN) started for abdominal fullness and fatigue. Insulin dose increased to 30 units nightly; metformin re‑started. Erythropoietin, tranexamic acid, omeprazole, prednisone, ondansetron, lisinopril, atorvastatin, and aspirin were continued.&quot;</li><li>&quot;Visit 7: Multidisciplinary tumor board review on 2026‑05‑25. Patient with progressive metastatic sigmoid sarcomatoid carcinoma and impending bowel obstruction. Plan includes low‑dose palliative external‑beam radiation 10 Gy in 2 fractions to abdominal and peritoneal lesions. Continued current systemic support medications (metformin, insulin glargine, lisinopril, atorvastatin, aspirin, prednisone, omeprazole, tranexamic acid, ondansetron, erythropoietin, hydromorphone). Monitoring of CBC, CMP, creatinine, glucose before each fraction and 5 days post‑radiation. Reassessment of abdominal pain and obstruction symptoms; consideration of covered self‑expanding metal stent if worsening. Follow‑up oncology review in 4 weeks; palliative care referral considered.&quot;</li><li>&quot;Radiation oncology visit: completed second 5‑Gy fraction of palliative EBRT with no acute toxicity; patient reports modest reduction in abdominal pain, persistent mild rectal bleeding; mild mucositis developed one week post‑fraction, resolved with supportive care; vitals normal; physical exam soft abdomen, rectal mucositis without active bleeding; no labs taken this visit. Plan to continue existing medications, monitor CBC/CMP/creatinine/glucose every 2‑3 weeks, consider transfusion if Hb &lt;7.5 g/dL, consider repeat sigmoidoscopy if bleeding persists, and schedule next follow‑up in 2 weeks.&quot;</li><li>&quot;Emergency department visit on 2026-06-10: patient presented with acute severe colicky left‑lower‑quadrant abdominal pain, vomiting, and abdominal distension. Vitals were BP 130/70 mmHg, HR 95/min, RR 20/min, Temp 38.2°C, SpO2 94%. Physical exam revealed a distended, tympanic abdomen with marked LLQ tenderness and absent bowel sounds. Labs showed Hb 6.3 g/dL, WBC 2.1 ×10⁹/L, Cr 2.8 mg/dL, BUN 42 mg/dL, Na 130 mmol/L, K 4.1 mmol/L, Cl 98 mmol/L, CO₂ 18 mmol/L, and negative blood cultures. CT abdomen with contrast demonstrated massive proximal colon dilation with abrupt transition at the distal sigmoid, consistent with mechanical obstruction, and increased ascites. Treatment included initiation of ceftriaxone 2 g IV q24h and metronidazole 500 mg IV q8h, nasogastric suction, aggressive IV isotonic saline for fluid resuscitation, transfusion of 2 units PRBC to raise hemoglobin &gt;7.5 g/dL, continuation of hydromorphone 0.5 mg PO q4h PRN for pain, and continuation of existing oncology‑managed medications. Patient was transferred to the oncology inpatient palliative unit for further management and decision making concerning mechanical bypass or stenting. Ongoing monitoring of vitals, urine output, and abdominal exam was scheduled every 2–4 hours, with labs (CBC, BMP) every 6 hours. Appropriate goals‑of‑care discussions were planned.&quot;</li><li>&quot;Visit 10: Surgical oncology evaluation for mechanical bowel obstruction; decision to forgo surgery due to high operative risk; continued IV ceftriaxone, metronidazole, and initiated morphine 4 mg IV q4h PRN for pain; existing medications maintained; patient transferred to inpatient hospice/palliative care unit.&quot;</li><li>&quot;Visit 11 (July 1, 2026) hospice transition assessment: patient remains home, pain controlled with oral morphine; mild fatigue, limited oral intake, nausea no. Physical exam normal abdominal, pale conjunctiva noted. Hospice plan: continue morphine 10 mg PO q4h, ibuprofen 400 mg PO BID, erythropoietin 6000 IU subcut daily, tranexamic acid 1 g PO BID, omeprazole 20 mg daily, prednisone 5 mg daily, aspirin 81 mg daily, insulin glargine 20 units nightly with sliding scale adjustments; schedule hospice visits 2–3 days; monitor CBC/BMP every 2–3 weeks; educate family; no new tests ordered.&quot;</li><li>&quot;Patient died at home after terminal decline; breathing became irregular and hypoxemic, family elected to forgo interventions; no further care was administered.&quot;</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

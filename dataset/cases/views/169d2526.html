@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 169d2526</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 169d2526</h1><div class="subtitle">Community-acquired pneumonia | Male, 60</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic obstructive pulmonary disease (COPD), Heart failure, Diabetes mellitus, Chronic kidney disease, Smoking</div><div class="meta-line">Risk Factors: Smoking, Recent hospitalization, Recent influenza infection</div></div>
+<details><summary>Narrative <span class="preview-text">On a cool, gray November morning, Henry—the kind of man who had spent most of his life breathing the haze from a thousan...</span></summary><div class="section-body"><p>On a cool, gray November morning, Henry—the kind of man who had spent most of his life breathing the haze from a thousand cigarette butts—opened his eyes to a low, throbbing cough that had been lurking since he’d fallen ill with the flu a week earlier. The influenza had been a brief, fierce burst of fever, muscle aches, and a relentless cough that left him near his bed. He’d recovered, feeling a touch better, but the cough had not vanished. The chest felt tight, his breath had become a hurried effort, and his heart beat a notch too fast whenever the sun came through the blinds.</p><p>Henry called his primary‑care provider, a nurse practitioner who’d always managed his COPD with albuterol‑ipratropium inhalers, his congestive heart failure with lisinopril and furosemide, and his type‑2 diabetes with metformin—though in this case the drug was held because his kidneys were already in trouble. The visit, over the phone, revealed that Henry’s fever had risen to 38.5 °C, his cough had turned from dry to productive, and he felt an odd pressure in his chest when he’d climbed the stairs to the kitchen. He was reminded to take his inhaler, to keep his diabetes meds on hold, and a presumptive diagnosis of community‑acquired pneumonia (CAP) was offered, with a recommendation of oral azithromycin to be taken for seven days.</p><p>In the days that followed, the symptoms didn’t abate. With each breath, Henry felt a little more winded; his shortness of breath had progressed from “I can’t get a full breath” to “I’m gasping even when I’m lying down.” By the fourth day after his flu, he woke up with a sharp pain in his right lower chest, a sudden cold sweat, and his heart racing at 110 beats per minute. He had also begun to feel “pressure” in his chest, a sensation that made him think of heart trouble—a red flag for his heart failure. Realizing that the fever (now 39 °C) and his rising heart rate were signs of something serious, he drove himself into the emergency department.</p><p>In the ED, the nurse quickly noted his respiratory rate at 26 breaths per minute, oxygen saturation at 88 % on room air, a crackle sound over the left lower lung field, and distant heart sounds. His blood pressure was 120/70 mmHg, but his respirations were laboriously shallow. A quick chest X‑ray in the waiting room confirmed a dense, right lower lobe consolidation, the classic sign of bacterial pneumonia. The triage doctor ordered a CBC, electrolytes, blood cultures, and started him on intravenous ceftriaxone (1 g) and azithromycin (500 mg daily) as empiric therapy, while also giving him supplemental oxygen at 4 L via nasal cannula.</p><p>Henry’s medical history was a cocktail of risk factors—active smoker, COPD, CHF, diabetes, and chronic kidney disease stage 3 (baseline creatinine 1.4 mg/dL). His recent 2‑week hospitalization for a urinary tract infection—treated with ciprofloxacin—had left him a little more frail. The clinicians were aware that choosing antibiotics in the presence of CKD required careful adjustment to avoid nephrotoxicity.</p><p>The next day, his chest X‑ray was repeated: the infiltrate had grown. His white blood cell count ballooned to 18 000 /µL with a left shift, and his C‑reactive protein peaked at 150 mg/L. The rapid antigen influenza test was negative, ruling out a lingering viral infection. Henry’s creatinine had climbed to 1.8 mg/dL, a sign that the kidneys were fighting a second battle against the infection and the drugs. The nephrology consult suggested reducing the ceftriaxone dose to 500 mg daily and monitoring renal function closely.</p><p>Despite these adjustments, by day 4 of admission Henry’s breathing worsened to a respiratory rate of 32, and his oxygen desaturation dropped to 82 % even on 6 L/min. He complained of a sharp, left-sided chest pain that had been a dull ache for several days but suddenly became more intense. His heart sounds had become faint, and a new, low‑range murmur could be heard over the apex—consistent with fluid overload in heart failure. He was placed on a non‑invasive ventilation mask, but even that failed to improve his saturation beyond 88 %. His nursing team noted that the urine output had become scant—only 200 mL per day—raising suspicion of prerenal azotemia or acute tubular necrosis.</p><p>Day 5 marked a turning point: Henry was intubated and transferred to the intensive care unit. In the PICU, the team added furosemide boluses (20 mg IV) to attempt to mobilize fluid, but his pulmonary edema on serial chest X‑rays persisted. The bedside echo showed an ejection fraction of 40 %—decreased from his baseline 45 %—and a severely dilated left ventricle with mild tricuspid regurgitation. He was also started on a low dose of levophed (norepinephrine) to maintain a mean arterial pressure of at least 65 mmHg.</p><p>Henry’s course took on the complex arc of a high‑stakes battle. By day 7, his serum creatinine had risen to 2.5 mg/dL, and his urine output was less than 50 mL in the past 24 hours. A trial of a diuretic infusion still failed to yield enough diuresis. The nephrology team recommended initiating continuous renal replacement therapy (CRRT) to aid the kidneys and reduce the risk of further nephrotoxicity from antibiotics. The decision was made, and CRRT was initiated within hours.</p><p>In the ensuing days, Henry’s clinical picture remained stubbornly unidirectional. The sputum cultures returned a multidrug‑resistant *Pseudomonas aeruginosa*, prompting a shift from ceftriaxone to cefepime—a potent antipseudomonal but also a known nephrotoxin. The nephrologists adjusted the CRRT parameters to balance antibiotic removal and kidney support. Meanwhile, his inflammatory markers stayed high (CRP 80 mg/L), and a second chest X‑ray on day 10 revealed more extensive bilateral infiltrates—indicative of a superimposed pneumonia or progression of the original infection.</p><p>Henry’s diabetes remained a constant background tension. His glucose readings fluctuated wildly—from hypoglycemic episodes during the first 48 hours of ICU stay to hyperglycemic spikes at 280–320 mg/dL later on. The endocrinology team added insulin infusion to keep the glucose in a tight, albeit challenging, range. Unfortunately, the repeated adjustments and the continuous CRRT made insulin management a minefield.</p><p>As day 12 dawned, Henry’s oxygenation was critically low. Even with 100 % FiO₂ and a high‑flow nasal cannula, his hemoglobin saturation could not exceed 85 %. The surgical team discussed potential thoracostomy, but imaging showed no pleural effusion or pneumothorax. The only viable option was to secure a ventilator through intubation, which had already happened; the decision now was whether to apply a high‑volume, low‑pressure ventilator strategy to keep his alveoli open without causing barotrauma.</p><p>Despite escalation of care—including the addition of a corticosteroid taper (prednisone 40 mg PO daily) to blunt the inflammatory cascade—Henry’s hemodynamics continued to wobble. Lactate levels climbed to 4.2 mmol/L, indicating possible septic shock. The infection specialist switched the regimen to meropenem (1 g every 8 hours) and linezolid to cover any potential MRSA in the lungs—an antibiotic combo that, while thorough, pushed his kidneys to the brink.</p><p>On day 15, the multi‑organ failure narrative became unavoidable. Henry’s heart rate fluctuated between 110 and 140; his blood pressure dipped below 90 mmHg despite vasopressor support. Renal function remained at its nadir, and the CRRT was unable to keep pace with the kidney’s deterioration. The ventilator settings had reached the threshold of safe lung protective strategies: high positive end‑expiratory pressure (PEEP) at 20 cm H₂O, a tidal volume of 6 mL/kg ideal body weight, yet his arterial oxygenation was still languishing below 70 mmHg on FiO₂ 100 %. Electrocardiograms revealed left heart strain, and lactate had risen to 6 mmol/L.</p><p>Family members, who had travelled from out of state to sit by Henry’s side, watched a life that was slowly slipping away. They were asked to weigh the decision of continuing aggressive therapy versus comfort care. In the end, the family, the palliative care team, and the ICU physicians decided to transition Henry to a care plan focused on comfort, acknowledging that the trajectory was one of worsening despite every possible intervention.</p><p>In the quiet of the ICU room, Henry’s breathing was now rhythmic, though shallow, and the oxygen we breathed into his lungs was a quiet, unassertive hiss. His chest, once a battlefield of wheezes and crackles, settled into an almost still repose, and the machines that held his heart and kidneys at bay went quiet. The story of Henry—a 60‑year‑old man with an arsenal of comorbidities, fighting a community‑acquired pneumonia that spiraled into multi‑organ failure—underscored the fragile interplay between infection, pre‑existing disease, and the limits of modern medicine. It left a narrative that a future clinician could walk through the visits, the labs, the decisions, and the progression of care in a detailed, realistic trajectory, a story of a disease course that relentlessly worsened.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-10-01</h3><div class="visit-meta">Primary Care Nurse Practitioner | Reason: Telephone consult for worsening cough after recent influenza</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Telephone consult for worsening cough after recent influenza.
+HPI: 60‑year‑old male with known COPD, CHF, T2DM, CKD Stage 3 and history of smoking presents via telemedicine with a low, throbbing productive cough, fever 38.5 °C, mild dyspnea on exertion, chest tightness, and palpitations. Symptoms started one week after an uncomplicated influenza infection. Patient reports no chest pain but reports a persistent cough with yellow sputum and feeling “throbbing” in chest. He reports heart rate feels elevated and denies shortness of breath at rest.
+PMHx: COPD with frequent exacerbations, CHF NYHA Class II on lisinopril 10 mg daily and furosemide 20 mg daily, T2DM on metformin 1000 mg BID (held due to CKD), CKD Stage 3 (Cr 1.4 mg/dL), recent 2‑week hospitalization for UTI on ciprofloxacin, smoker.
+Current Medications: Albuterol/ipratropium inhaler PRN, Lisinopril 10 mg daily, Furosemide 20 mg daily, Metformin 1000 mg BID (held).
+Allergies: NKDA.
+Review of Systems: Positive for productive cough, fever, dyspnea on exertion, chest tightness; negative for chest pain, orthopnea, edema, urinary symptoms.
+Vitals (home thermometer, pulse oximeter reading): HR 104 bpm, BP 115/68 mmHg, RR 22 breaths/min, Temp 38.5 °C, SpO₂ 91 % on room air.
+Assessment: Likely secondary bacterial pneumonia superimposed on recent influenza in a patient with COPD; acute COPD exacerbation; potential CHF decompensation; differential includes viral/ bacterial respiratory infection, and drug‑induced arrhythmia from metformin.
+Plan:
+1. Prescribe Azithromycin 500 mg PO daily for 7 days to treat presumed bacterial pneumonia.
+2. Continue albuterol/ipratropium inhaler PRN for COPD symptoms.
+3. Continue lisinopril 10 mg daily and furosemide 20 mg daily for CHF.
+4. Hold metformin until kidney function improves.
+5. Counsel patient to monitor SpO₂; if SpO₂ remains &lt;94 % or symptoms worsen (increased dyspnea, chest pain, severe cough), seek ED urgently.
+6. Advise patient to rest, stay hydrated, use acetaminophen for fever/aches.
+7. Follow‑up telecall in 48 hrs to reassess vitals and symptom trajectory.
+
+Note: No in‑person exam was performed; all decisions made based on patient report and home vitals. Encourage patient to monitor pulse, SpO₂, and to keep home thermometer.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">low, throbbing cough</span><span class="pill">productive sputum</span><span class="pill">fever 38.5°C</span><span class="pill">dyspnea on exertion</span><span class="pill">chest tightness</span><span class="pill">palpitations</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>104 bpm</td></tr><tr><td>blood_pressure</td><td>115/68 mmHg</td></tr><tr><td>respiratory_rate</td><td>22 breaths/min</td></tr><tr><td>temperature</td><td>38.5 °C</td></tr><tr><td>oxygen_saturation</td><td>91% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>None (telephone visit)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Azithromycin 500 mg PO daily</li><li>Counsel to hold metformin</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Smoking history</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Lisinopril 10 mg daily</li><li>Furosemide 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>influenza infection one week ago</li><li>COPD with frequent exacerbations</li><li>CHF NYHA II on lisinopril 10 mg daily and furosemide 20 mg daily</li><li>Type 2 diabetes on metformin 1000 mg BID (held due to CKD)</li><li>Stage 3 CKD (Cr 1.4 mg/dL)</li><li>recent 2‑week hospitalization for UTI on ciprofloxacin</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The nurse practitioner received a call from Henry reporting a persistent productive cough and new fevers after recent influenza. After a structured telemedicine assessment, the clinician reviewed his vitals (from a home thermometer) and noted tachycardia and hypoxia. An empiric community-acquired pneumonia diagnosis was given with prescription of oral azithromycin 500 mg daily for seven days, continuation of his inhaler, and counsel to hold metformin. The PCP advised him to return to the ED if symptoms worsened or if he experienced chest pain or severe shortness of breath.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient develops presumptive CAP on telehealth consult; no laboratory data yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-10-05</h3><div class="visit-meta">Emergency Medicine | Reason: Chest pain, worsening dyspnea, low oxygen saturation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 60‑year‑old male presents to ED with worsening chest pain, dyspnea, and hypoxia.
+History of Present Illness: Mr. Henry reports sharp right lower chest pain radiating to the back, associated with cold sweats. Symptoms began 2 days ago and have progressively worsened. He denies weight loss or night sweats. He states he is normally able to climb one flight of stairs without difficulty. He reports increased shortness of breath at rest and requires supplemental oxygen at home overnight.
+Past Medical History: Chronic Obstructive Pulmonary Disease, Heart Failure, Type 2 Diabetes Mellitus, Chronic Kidney Disease Stage 3, smoking history (quit 10 years ago, 45 pack‑years), recent influenza, recent UTI hospitalization.
+Medications: Albuterol/ipratropium inhaler PRN, Lisinopril 10 mg daily, Furosemide 20 mg daily, Metformin held.
+Physical Examination:
+• Vitals: HR 110 bpm, BP 120/70 mmHg, RR 26 bpm, Temp 39.0 °C, SpO₂ 88% on RA, 95% on 4 L O₂ NC.
+• General: Alert, anxious, in mild respiratory distress.
+• Cardiovascular: Distant heart sounds, regular rhythm, no murmurs.
+• Pulmonary: Fine crackles at left lung base; rales at right lower lobe with consolidation; no wheezes.
+• Abdomen: Soft, nontender, normal bowel sounds.
+• Extremities: No JVD, no peripheral edema.
+Labs and Imaging:
+• Chest X‑ray: Right lower lobe consolidation.
+• CBC: WBC 16,000/µL, neutrophils 80%.
+• CMP: Creatinine 1.8 mg/dL (baseline 1.4 mg/dL), BUN 30 mg/dL, bicarbonate 22 mEq/L.
+• Blood cultures: pending.
+• Rapid influenza antigen: negative.
+Assessment: The presentation is most consistent with acute bacterial pneumonia secondary to right lower lobe consolidation with possible exacerbation of COPD and heart failure. Differential includes pulmonary embolism, acute coronary syndrome, and CHF decompensation.
+Plan:
+1. Initiate IV ceftriaxone 1 g q24h and IV azithromycin 500 mg q24h (renal function monitored, dose remains unchanged in CKD stage 3). Consider switching azithromycin to oral if clinically stable.
+2. Continue home metered‑dose inhaler PRN. Add nebulized ipratropium bromide 0.5 mg q4h if wheezing develops.
+3. Maintain IV fluids as needed; avoid volume overload. Continue furosemide 20 mg orally; consider increasing to 40 mg QD if worsening pulmonary crackles or rising creatinine.
+4. Supplemental oxygen titrated to maintain SpO₂ &gt;94%. Consider ICU transfer if worsening.
+5. Repeat CBC, CMP, and renal panel daily. Re‑order chest x‑ray in 48 h.
+6. Notify primary cardiology for CHF optimization and possible adjustment of ACE inhibitor.
+7. Discuss discharge planning: If clinically stable after 48 h of IV therapy, consider discharge on oral antibiotics (e.g., levofloxacin 500 mg PO daily for 7 days plus doxycycline 100 mg BID for 5 days) and close follow‑up.
+Follow‑up: Admit to medical floor for close monitoring (or discharge as outpatient if stable), review in 48 h, urgent follow‑up with PCP or pulmonology the next week.
+Disposition: Admit to Med Floor for IV antibiotics, fluid management, and pulmonary monitoring.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sharp right lower chest pain</span><span class="pill">cold sweats</span><span class="pill">rapid heart rate 110 bpm</span><span class="pill">dyspnea at rest</span><span class="pill">sleep‑dependent hypoxia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>110 bpm</td></tr><tr><td>blood_pressure</td><td>120/70 mmHg</td></tr><tr><td>respiratory_rate</td><td>26 breaths/min</td></tr><tr><td>temperature</td><td>39.0 °C</td></tr><tr><td>oxygen_saturation</td><td>88% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RR 26 breaths/min</li><li>SaO2 88% on 4 L O2</li><li>Distant heart sounds</li><li>Fine crackles at left lung base</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>CBC</li><li>CMP/chemistry panel</li><li>Blood cultures</li><li>Rapid influenza antigen test</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CXR: Right lower lobe consolidation</li><li>CBC: WBC 16,000/µL, neutrophils 80%</li><li>Cr 1.8 mg/dL (baseline 1.4)</li><li>Influenza antigen: negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV ceftriaxone 1 g</li><li>IV azithromycin 500 mg</li><li>Oxygen 4 L/min by nasal cannula</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Smoking history</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Lisinopril 10 mg daily</li><li>Furosemide 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD</li><li>CHF</li><li>Diabetes</li><li>CKD stage 3</li><li>Recent influenza</li><li>Recent UTI hospitalization</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Henry arrives to the ED with chest pain and dyspnea that appears to be progressing. The triage nurse records vitals and initiates supplemental oxygen at 4 L/min via nasal cannula. A chest X‑ray demonstrates right lower lobe consolidation. A CBC, comprehensive metabolic panel, electrolytes, blood cultures, and nasopharyngeal rapid influenza test (negative) are ordered. IV ceftriaxone 1 g and azithromycin 500 mg are administered empirically. The patient is monitored closely and the ED team is notified of the worsening renal function on the preliminary labs.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CAP confirmed; renal function begins to deteriorate; CKD stage 3 now complicated by mild azotemia.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-10-06</h3><div class="visit-meta">Internal Medicine | Reason: Hospital admission for CAP with worsening renal function</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Hospital admission with worsening renal function.
+
+**History of Present Illness:**
+60‑year‑old male with COPD, heart failure, type 2 DM, CKD stage 3, and a significant smoking history was admitted on 2023‑10‑05 with a right lower lobe infiltrate and acute renal injury.  On 2023‑10‑06, daily monitoring shows persistent fever (38.9 °C), productive cough, dyspnea on exertion, increasing chest pain, and markedly reduced urine output (200 mL/day).  WBC peaked at 18 000/µL, Cr rose to 1.9 mg/dL, and BUN at 38 mg/dL.  Repeat CXR confirms enlargement of the right lower lobe opacity.
+
+**Vitals (current):**
+- HR: 102 bpm
+- BP: 118/74 mmHg
+- RR: 28 breaths/min
+- Temp: 38.9 °C
+- SpO₂: 90% on 5 L/min O₂
+
+**Physical Exam:**
+- Distant heart sounds, fine crackles bilaterally in lower lung fields, SOB on minimal exertion.
+
+**Assessment:**
+1. Community‑acquired pneumonia (right lower lobe) with ongoing inflammatory response.
+2. Sepsis (community‑acquired) with evidence of systemic infection.
+3. Acute on chronic renal failure (elevated Cr/BUN) likely multifactorial—contributory elements include sepsis‑related hypoperfusion, nephrotoxic antibiotics, and volume shifts.
+4. Exacerbation of chronic heart failure, possible pulmonary congestion.
+
+**Plan:**
+- **Antibiotics:** Continue IV ceftriaxone 500 mg q24h (dose reduced to limit nephrotoxic potential) and azithromycin 500 mg IV q24h.
+- **Diuresis:** Continue IV furosemide 20 mg q12h, titrate up to 40 mg q12h if urine output remains &lt;30 mL/kg/24 h or if pulmonary congestion worsens.
+- **Fluid Management:** Carefully titrate IV fluids to avoid volume overload; monitor daily intake/output.
+- **Cardiology/Heart Failure:** Consider holding lisinopril 10 mg daily due to rising Cr; reassess in 48 h based on renal trend.
+- **Monitoring:** Daily CBC, CMP, and renal panel; repeat chest X‑ray in 48–72 h.
+- **Oxygenation:** Maintain SpO₂ &gt;94% with supplemental O₂; titrate O₂ support as clinical status improves.
+- **Nephrology Consult:** Ongoing collaboration for potential antibiotic adjustment and ACE‑I management.
+- **Patient Education:** Counsel on cautious hydration to maintain adequate urine output while avoiding overload; instruct to report fevers &gt;38.9 °C, worsening dyspnea, or O₂ sat &lt;90%.
+- **Disposition:** Continue IV antibiotics and supportive care; transition to oral antibiotics if clinically stable after completion of a 48‑hour IV course and improvement in leukocytosis and pulmonary findings.
+
+**Follow‑up:** 48‑hour review in inpatient rounding; adjust plan based on laboratory trends and clinical status.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent fever 38.9°C</span><span class="pill">productive cough</span><span class="pill">dyspnea on exertion</span><span class="pill">increasing chest pain</span><span class="pill">lower urinary output 200 mL/day</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>102 bpm</td></tr><tr><td>blood_pressure</td><td>118/74 mmHg</td></tr><tr><td>respiratory_rate</td><td>28 breaths/min</td></tr><tr><td>temperature</td><td>38.9 °C</td></tr><tr><td>oxygen_saturation</td><td>90% on 5 L/min O2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RR 28 breaths/min</li><li>O2 sat 90% on 5 L/min</li><li>Distant heart sounds</li><li>Fine crackles bilateral lower lung fields</li><li>SOB on minimal exertion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat CXR</li><li>CBC</li><li>CMP/chemistry panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CXR: Enlargement of right lower lobe opacity</li><li>WBC 18,000/µL</li><li>Cr 1.9 mg/dL</li><li>BUN 38 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ceftriaxone dose adjusted to 500 mg q24</li><li>Azithromycin 500 mg IV q24</li><li>Furosemide 20 mg IV q12 for fluid status</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Smoking history</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Lisinopril 10 mg daily</li><li>Furosemide 20 mg daily</li><li>IV ceftriaxone 1 g q24</li><li>IV azithromycin 500 mg q24</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent ED visit</li><li>Elevated WBC and Cr</li><li>Current on IV ceftriaxone 1 g q24</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After overnight monitoring, the inpatient team determines that the patient’s pneumonia is not improving; the right lower lobe infiltrate progressed on repeat CXR and WBC peaked at 18,000/µL. The nephrology consult is obtained, and the decision is made to reduce ceftriaxone to 500 mg daily while continuing azithromycin. IV fluids are carefully titrated to avoid volume overload. The daily labs show Cr rising to 1.9 mg/dL and BUN ascending. The plan is to continue IV antibiotics, monitor renal function, and address fluid status with diuretics.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cap progression with worsening renal function; antibiotic regimen adjusted for CKD.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-10-08</h3><div class="visit-meta">Pulmonology / Cardiology | Reason: Severe hypoxia, pulmonary edema, decreased urine output</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe hypoxia, pulmonary edema, and oliguria.
+
+History of Present Illness: 60-year-old male with known COPD, congestive heart failure (HF), type 2 diabetes, CKD stage 3, and history of acute bacterial pneumonia presents with progressive dyspnea, left chest pain and anuria. On admission (Visit #3) he had right lower lobe consolidation with acute on chronic renal failure (Cr 1.9 mg/dL, BUN 38 mg/dL). He was started on ceftriaxone 1 g IV q24h and azithromycin 500 mg IV q24h, furosemide 20 mg IV q12h, and was monitored for urine output (&gt;30 mL/kg/24h). Despite treatment, his respiratory status worsened; he was transferred to the ICU with progressive hypoxemia, pulmonary crackles, and hemodynamic instability. Non‑invasive ventilation was ineffective, prompting intubation and initiation of lung‑protective mechanical ventilation (tidal volume 6 mL/kg IBW, PEEP 12 cm H₂O). Point‑of‑care echo showed EF 40%, mild tricuspid regurgitation, and LV dilation. MAP remained &lt;65; norepinephrine 0.05 μg/kg/min was started. Urine output remained &lt;200 mL/day, prompting initiation of continuous renal replacement therapy (CRRT) for oliguria and drug clearance.
+
+Assessment:
+1. Severe sepsis with septic shock secondary to bacterial pneumonia – supported by fever, leukocytosis, elevated CRP (80 mg/L), hypotension, and multi‑organ dysfunction.
+2. Acute cardiogenic pulmonary edema secondary to chronic systolic HF exacerbation – echo confirms reduced EF and LV dilation; pulmonary crackles. 
+3. Acute on chronic renal failure requiring CRRT – serum creatinine 2.5 mg/dL and BUN 52 mg/dL, oliguria.
+4. Possible acute respiratory distress syndrome (ARDS) contributing to refractory hypoxemia – PaO₂ 55 mmHg on FiO₂ 100% with high PEEP.
+
+Plan:
+- Continue ICU care with mechanical ventilation on a lung‑protective strategy.
+- Maintain norepinephrine infusion; titrate to MAP &gt;65 mmHg; consider adjunct vasopressin if required.
+- Continue ceftriaxone 1 g IV q24h and azithromycin 500 mg IV q24h; obtain cultures (blood, sputum, urine) and adjust antibiotics per sensitivities.
+- Furosemide 20 mg IV bolus; thereafter consider low‑dose continuous infusion (0.5 mg/h) if fluid status permits.
+- CRRT settings: CVVH with a dialysate flow 2.5 L/h; adjust electrolytes and monitor fluid balance.
+- Hold potentially nephrotoxic agents (metformin, lisinopril). Continue albuterol/ipratropium nebulizers PRN.
+- Daily arterial blood gases, electrolytes, renal panel, and complete metabolic panel.
+- Repeat bedside echo in 24–48 h to assess EF and fluid status.
+- Repeat chest X-ray in 24 h to evaluate pulmonary edema.
+- Consult cardiology for HF management (consider diuretic strategy, ACE inhibitor hold decision). 
+- Reassess vasopressor dependence daily; wean as MAP improves.
+- Transition to intermittent hemodialysis once CRRT discontinued.
+
+Disposition: Continue ICU admission; anticipate a 48–72 hour period of stabilization before potential step‑down.
+
+Follow‑Up: Next-day review with intensivist; review culture results; evaluate need for antibiotic change; monitor urine output hourly; daily physical therapy consult for mobility as tolerated.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">rapid breathing (32/min)</span><span class="pill">oxygen saturation 82% on 6 L</span><span class="pill">sharp left chest pain</span><span class="pill">dyspnea at rest</span><span class="pill">no urine output (&lt;200 mL/day)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>112 bpm</td></tr><tr><td>blood_pressure</td><td>115/72 mmHg</td></tr><tr><td>respiratory_rate</td><td>32 breaths/min</td></tr><tr><td>temperature</td><td>38.8 °C</td></tr><tr><td>oxygen_saturation</td><td>82% on 6 L/min O2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Intubated, mechanical ventilator</li><li>Pulmonary edema crepitations bilaterally</li><li>Weak peripheral pulses</li><li>Systolic murmur at apex</li><li>No abdominal tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bedside echo</li><li>ABG</li><li>Cr, BUN</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Echo: EF 40%, LV dilation, mild TR</li><li>ABG: pH 7.28, PaO2 55 mmHg on FiO2 100%</li><li>Cr 2.5 mg/dL</li><li>BUN 52 mg/dL</li><li>CRP 80 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Intubation and mechanical ventilation</li><li>Norepinephrine infusion</li><li>Furosemide 20 mg IV bolus</li><li>CRRT initiation</li><li>Antibiotics continued: Ceftriaxone 500 mg q24, Azithromycin 500 mg q24</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Smoking history</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Lisinopril 10 mg daily</li><li>Furosemide 20 mg IV q12</li><li>IV ceftriaxone 500 mg q24</li><li>IV azithromycin 500 mg q24</li><li>IV furosemide 20 mg bolus 8 AM</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>On IV ceftriaxone 500 mg</li><li>Azithromycin 500 mg IV</li><li>Furosemide 20 mg IV q12</li><li>Persistent pulmonary infiltrates</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient is transferred to the ICU due to progressive respiratory failure and cardiogenic pulmonary edema. Non‑invasive ventilation is initiated but is ineffective. ICU team intubates Henry with an endotracheal tube, starts mechanical ventilation with a lung‑protective strategy (tidal volume 6 mL/kg IBW, PEEP 12 cm H2O). A point‑of‑care echo shows EF 40%, mild tricuspid regurgitation, dilated LV. Norepinephrine 0.05 µg/kg/min is started to maintain MAP &gt;65. Continuous renal replacement therapy (CRRT) is initiated to manage oliguria and drug clearance. The patient is also given a bolus of furosemide 20 mg IV to attempt fluid mobilization.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multi‑organ failure: respiratory, renal, cardiac. CRRT started to manage AKI and adjust antibiotic dosing.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-10-10</h3><div class="visit-meta">Infectious Disease | Reason: Change in antibiotics based on culture results</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 60‑year‑old male with COPD, HFrEF, T2DM, CKD stage 3 and multi‑organ failure on CRRT, norepinephrine and insulin infusions. He remains intubated with persistent fever (38.4 °C), lethargy, and unchanged right lower lobe pulmonary infiltrates. Sputum cultures grew multi‑drug resistant *Pseudomonas aeruginosa*; blood cultures remain negative. CRP is modestly decreasing to 70 mg/L but remains high. Serum lactate elevated at 4.2 mmol/L and arterial blood gases show PaO₂ 60 mmHg on 100 % FiO₂. Given culture data and concern for inadequate source control, the infectious disease consultant altered antibiotics as follows:
+
+• Cefepime 1 g IV q12 h (dose adjusted for CRRT clearance)
+• Meropenem 1 g IV q8 h
+• Linezolid 600 mg IV q12 h (for MRSA coverage)
+
+The regimen was chosen to broaden anti‑Pseudomonal coverage while minimizing nephrotoxicity; cefepime provides 4‑th‑generation cephalosporin activity and is renally cleared, meropenem complements coverage, and linezolid provides MRSA coverage without nephrotoxicity. The patient continues on insulin infusion targeting 140–180 mg/dL, furosemide 20 mg IV q12 h (infusion adjusted for CRRT), and norepinephrine titrated to maintain MAP &gt;65 mmHg.
+
+The patient’s lactate remains elevated, suggesting ongoing hypoperfusion despite antimicrobial therapy and pressor support. No new source of infection has been identified, but ventilator‑associated pneumonia remains a concern. Repeat imaging (chest X‑ray or CT) and consideration of bronchoscopy with bronchoalveolar lavage will be obtained to evaluate for unresolved infiltrate or additional focus. Given the MDR phenotype, a review of susceptibility to *Pseudomonas* is pending; if resistance to both cefepime and meropenem develops, escalation to ceftolozane/tazobactam or polymyxin‑based therapy per susceptibility will be considered.
+
+Assessment: 1) Sepsis due to MDR *P. aeruginosa* pneumonia with persistent hypoperfusion; 2) Multi‑organ failure (cardiac, renal, hepatic) exacerbated by sepsis; 3) Ongoing nephrotoxicity risk from antibiotics and underlying CKD.
+
+Plan:
+1. Continue current antibiotic regimen with dose adjustments as per CRRT clearance; obtain therapeutic drug monitoring for cefepime and meropenem troughs. 2. Daily CBC, CMP, and renal panel; monitor serum creatinine, BUN, electrolytes. 3. Serial lactate measurements every 6–8 h until trending down. 4. Repeat ABG and ABx cultures at 24 h. 5. Repeat chest imaging at day 3 or sooner if clinical deterioration. 6. Evaluate for source control – obtain bronchoscopy/bronchoalveolar lavage if no improvement by day 2. 7. Maintain insulin infusion; adjust as per glucose trend. 8. Continue norepinephrine titration to maintain MAP ≥65 mmHg. 9. Continue furosemide and CRRT as per fluid balance goals. 10. Discuss with pharmacy for potential de‑escalation if cultures show susceptibility to fewer agents.
+
+The patient is instructed to continue sedation monitoring; no new allergies identified. Family will be updated and reassured of aggressive treatment plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent fever 38.4°C</span><span class="pill">lethargy</span><span class="pill">unchanged pulmonary infiltrates</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>118 bpm</td></tr><tr><td>blood_pressure</td><td>110/68 mmHg</td></tr><tr><td>respiratory_rate</td><td>34 breaths/min (ventilator)</td></tr><tr><td>temperature</td><td>38.4 °C</td></tr><tr><td>oxygen_saturation</td><td>84% on FiO2 100%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Intubated, ventilated</li><li>Pulmonary infiltrates unchanged</li><li>No peripheral edema</li><li>Weak pulse</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat ABG</li><li>Serum lactate</li><li>CRP</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ABG: PaO2 60 mmHg on FiO2 100%</li><li>Serum lactate 4.2 mmol/L</li><li>CRP 70 mg/L</li><li>Blood cultures negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Cefepime 1 g q12 (CRRT adjusted)</li><li>Meropenem 1 g q8</li><li>Linezolid 600 mg q12</li><li>Insulin infusion</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Multi‑organ failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Lisinopril 10 mg daily</li><li>IV furosemide 20 mg q12</li><li>IV ceftriaxone 500 mg q24</li><li>IV azithromycin 500 mg q24</li><li>CRRT infusion</li><li>Norepinephrine infusion</li><li>Insulin infusion (started 7/15 days in)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT ongoing</li><li>Evolving pneumonia</li><li>Prior antibiotic therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sputum cultures grow multi‑drug resistant Pseudomonas aeruginosa (MDR). The infectious disease consultant recommends switching from ceftriaxone to cefepime 1 g q12 adjusted for CRRT clearance. Meropenem 1 g q8 and linezolid 600 mg q12 are added to cover possible MRSA and broaden coverage. The antibiotic regimen is re‑balanced to minimize nephrotoxicity while maintaining adequate serum levels. The patient’s CRP decreases modestly to 70 but remains high. The metabolic panel continues to show rising creatinine and BUN. The insulin infusion continues to target glucose 140–180 mg/dL.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pseudomonas pneumonia; antibiotic escalation; CRRT continues; increasing multi‑organ dysfunction.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-10-13</h3><div class="visit-meta">Critical Care | Reason: Septic shock, refractory hypoxia, consideration of comfort care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe refractory hypoxia, hemodynamic instability, and persistent lactic acidosis in a 60‑year‑old male with COPD, HFrEF, T2DM, and CKD stage 3.
+
+History of Present Illness: The patient has been in the ICU for 8 days for severe pneumonia complicated by multi‑organ failure. Despite escalating support (high‑PEEP ventilation, CRRT, broad‑spectrum antibiotics, vasopressors, high‑dose steroids), arterial oxygenation remains &lt;70% on 100% FiO2, MAP is 62 mmHg on norepinephrine 0.08 µg/kg/min, and serum lactate is 6 mmol/L. Recent multidisciplinary family meeting concluded that further escalation would not improve prognosis; family chooses comfort‑focused care.
+
+Physical Examination: Intubated, ventilated with high PEEP (20 cm H2O). Weak peripheral pulses, SpO2 70% on 100% FiO2. No lung crackles due to low tidal volume. Cardiovascular exam: tachycardia 140 bpm, weak pulse. Respiratory: rapid (RR 36) with minimal chest excursion.
+
+Labs: ABG pH 7.24, PaO2 50 mmHg on FiO2 100%; lactate 6 mmol/L; CRP 60 mg/L.
+
+Assessment: Refractory hypoxic respiratory failure secondary to severe bacterial pneumonia with sepsis, septic shock, and multi‑organ failure. Acute respiratory distress syndrome (ARDS) secondary to infection and underlying COPD. The patient has irreversible organ dysfunction despite optimal ICU therapy.
+
+Plan:
+1. Comfort‑care transition: Reduce intensity of support – wean norepinephrine to standby, maintain low‑volume ventilatory setting to keep SpO2 ≥70%. No further escalation of antibiotics; discontinue cefepime, meropenem, and linezolid.
+2. Continue current supportive measures that provide comfort: CRRT for volume control, low‑dose prednisone 40 mg PO daily (continued for anti‑inflammatory effect), insulin infusion to control hyperglycemia, and furosemide 20 mg IV q12h for fluid status.
+3. Palliative care consult: initiate symptom‑management plan (acetaminophen, low‑dose opioids for dyspnea, anticholinergics if needed). Provide psychosocial and spiritual support.
+4. Documentation: Update code status to DNR/DNI; record advance directives.
+5. Family communication: Schedule next family meeting within 24 hrs to discuss goals, symptom expectations, and hospice resources.
+6. Monitor: Daily ABG, lactate trend, BP, urine output, and mental status of family. No further imaging or cultures.
+
+The patient is under a comfort‑care regimen with no further escalation of antibiotics, and the ICU team will continue to assess for potential hospice referral.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent hypoxia &lt;70% on FiO2 100%</span><span class="pill">hemodynamic instability</span><span class="pill">persistent lactate 6 mmol/L</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>140 bpm</td></tr><tr><td>blood_pressure</td><td>88/52 mmHg (MAP 62)</td></tr><tr><td>respiratory_rate</td><td>36 breaths/min (ventilator)</td></tr><tr><td>temperature</td><td>38.0 °C</td></tr><tr><td>oxygen_saturation</td><td>70% on FiO2 100% with PEEP 20 cm H2O</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Intubated, high‑PEEP ventilation</li><li>Weak peripheral pulses</li><li>SPO2 70% on high FiO2</li><li>No lung crackles noted due to low volume</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Arterial blood gas</li><li>Serum lactate</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ABG: pH 7.24, PaO2 50 mmHg on FiO2 100%</li><li>Serum lactate 6 mmol/L</li><li>CRP 60 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>High‑PEEP ventilation</li><li>Norepinephrine weaned to standby</li><li>CRRT continued</li><li>Prednisone continued</li><li>Palliative care consult</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">CKD stage 3</span><span class="pill">Septic shock</span><span class="pill">Multi‑organ failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Lisinopril 10 mg daily</li><li>IV furosemide 20 mg q12</li><li>IV cefepime 1 g q12</li><li>IV meropenem 1 g q8</li><li>IV linezolid 600 mg q12</li><li>CRRT</li><li>Norepinephrine infusion</li><li>Prednisone 40 mg PO daily</li><li>Insulin infusion</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT, antibiotics</li><li>Norepinephrine 0.08 µg/kg/min</li><li>High‑dose steroids (prednisone 40 mg PO daily) start 12 days</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The ICU team notes that despite escalating support—high‑PEEP ventilation, CRRT, vasopressors, and broad‑spectrum antibiotics—the patient remains in septic shock and severe refractory hypoxia. Lactate peaks at 6 mmol/L. The team has a multidisciplinary discussion with the family. After reviewing prognosis and the persistent multi‑organ failure, the family opts for comfort‑focused care. The medical team reduces the intensity of interventions: vasopressors are weaned, ventilator support is maintained at a low‑volume setting to maintain oxygenation, and a palliative care consult is started. The patient is placed under a comfort‑care regimen with no further escalation of antibiotics.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Septic shock, multi‑organ failure; transition to comfort care.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-10-15</h3><div class="visit-meta">Palliative Care | Reason: Symptom management and care plan reassessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 60‑year‑old male with advanced COPD, heart failure, CKD, and sepsis‑related multi‑organ failure presents for palliative reassessment of goals and comfort plan.
+
+History of Present Illness:
+- The patient has been in progressive decline over the past few weeks, now requiring intubation, CRRT, and vasopressor support for septic shock. On 2023‑10‑13 we transitioned to comfort care: antibiotics were discontinued, prednisone 40 mg PO daily was initiated, and code status updated to DNR/DNI. No further therapeutic escalation is pursued.
+- During this visit the family was updated on the patient’s disease trajectory. The patient continues to experience dyspnea, chest pain, and fatigue, all of which are addressed with comfort measures.
+- Current comfort regimen: scheduled morphine 5 mg IV q4h PRN and a continuous infusion (2 mg/hr) + albuterol nebulisation q4h for bronchospasm.
+
+Review of Systems:
+- Respiratory: Shortness of breath, bronchospasm, need for 100% FiO₂ with PEEP 15.
+- Cardiovascular: Weak peripheral pulses, MAP 53; hemodynamically unstable but no new arrhythmias.
+- Neurologic: No new focal deficits; remains sedated for comfort.
+- GI: No nausea/vomiting.
+- Others: Fatigue, mild chest discomfort.
+
+Past Medical History:
+- COPD with chronic bronchitis (emphysema likely).
+- Heart failure with reduced EF 40%.
+- Diabetes mellitus type 2.
+- CKD stage 3.
+- Chronic hypertension.
+- Acute bacterial pneumonia complicated by ARDS, septic shock, multi‑organ failure.
+
+Current Medications:
+- Morphine infusion 2 mg/hr.
+- Morphine PRN 5 mg IV q4h.
+- Albuterol nebulisation q4h.
+- Albuterol/ipratropium inhaler PRN.
+- furosemide 20 mg IV q12h.
+- Insulin infusion.
+- Prednisone 40 mg PO daily.
+- Continuous renal replacement therapy (CRRT).
+- No other antibiotics; all discontinued.
+
+Allergies: NKDA.
+
+Vitals (at time of visit):
+- HR: 110 bpm
+- BP: 80/45 mmHg (MAP 53)
+- RR: 30 breaths/min (ventilator set)
+- Temp: 37.8°C
+- SpO₂: 78% on 100% FiO₂, PEEP 15 cm H₂O
+
+Physical Examination:
+- Intubated and mechanically ventilated.
+- Lung fields: clear with low volume (ventilator settings noted).
+- Heart: weak peripheral pulses; no murmurs.
+- Extremities: cool, weak pulses.
+- Abdomen: soft, non‑tender.
+
+Laboratory / Diagnostic Findings:
+- ABG: pH 7.27, PaO₂ 58 mmHg on FiO₂ 100%; PaCO₂ 64 mmHg, HCO₃ 19, lactate 3.4 mmol/L.
+- Hemoglobin: 9.8 g/dL.
+- Hematocrit: 29%.
+- BUN/creatinine within CRRT parameters.
+- Lactate trending upward, consistent with ongoing tissue hypoxia.
+
+Assessment:
+1. Refractory hypoxemia (ARDS) in the setting of advanced COPD and heart failure.
+2. Multi‑organ failure secondary to septic shock; now in a palliative phase.
+3. Pain and dyspnea, currently being managed with opioid infusion and bronchodilators.
+4. Mild anemia (Hb 9.8) likely multifactorial: chronic disease, blood loss, CRRT.
+5. Persistent fever (37.8°C) likely due to inflammatory response; however, no new infection source per current evaluation.
+
+Plan:
+- Continue morphine infusion 2 mg/hr; titrate based on pain and dyspnea scales. Add anti‑emetic dexamethasone 4 mg q8h PRN to mitigate opioid‑related nausea.
+- Maintain albuterol nebulisation q4h; consider adding ipratropium as needed for bronchospasm.
+- Continue furosemide 20 mg IV q12h to manage fluid overload; monitor daily weights and lung exam.
+- Maintain CRRT parameters; adjust dialysate composition to optimize electrolytes.
+- Continue prednisone 40 mg PO daily for anti‑inflammatory effect.
+- Continue insulin infusion; target glucose 140–180 mg/dL.
+- No further antibiotics; wound cultures negative; keep family informed that aggressive treatment is not pursued.
+- Consider addition of 4‑hydroxybutyl‑propanol (short‑acting benzodiazepine) for agitation or severe dyspnea if needed.
+- Monitor SpO₂; if comfort‑driven goal is SpO₂ &gt;85% with minimal discomfort, consider weaning PEEP if physiologic stability allows.
+- Daily multidisciplinary rounds with palliative, ICU, nephrology, pharmacy, and nursing.
+
+Follow‑up Recommendations:
+- Family meeting today to reaffirm goals and discuss hospice transition.
+- Schedule next palliative care assessment within 24–48 hours to reassess comfort plans.
+- Home hospice services to be arranged should the patient go to a care facility or die in hospital.
+- Provide psychosocial support to family; coordinate with social work.
+- Document all changes in pain scores and dyspnea (using 0–10 scale) and adjust medication doses accordingly.
+- Continuation of current comfort regimen until patient’s comfort or end-of‑life.
+
+Patient and family expressed acceptance of current plan and understanding of prognosis.
+
+Signed: Palliative Care Team</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dyspnea</span><span class="pill">pain in chest</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>110 bpm</td></tr><tr><td>blood_pressure</td><td>80/45 mmHg (MAP 53)</td></tr><tr><td>respiratory_rate</td><td>30 breaths/min (ventilator)</td></tr><tr><td>temperature</td><td>37.8 °C</td></tr><tr><td>oxygen_saturation</td><td>78% on FiO2 100% with PEEP 15 cm H2O</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Intubated, ventilated</li><li>Clear lung fields on auscultation (low volume)</li><li>Weak peripheral pulses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ABG</li><li>Hemoglobin</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ABG: pH 7.27, PaO2 58 mmHg on FiO2 100%</li><li>Hemoglobin 9.8 g/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine infusion 2 mg/hr</li><li>Albuterol nebulization q4h</li><li>Adjusted CRRT parameters</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">CKD stage 3</span><span class="pill">Septic shock</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>IV furosemide 20 mg q12</li><li>CRRT</li><li>Prednisone 40 mg PO daily</li><li>Insulin infusion</li><li>Palliative meds (acetaminophen, morphine PRN)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Comfort care plan</li><li>No further antibiotic escalation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Palliative team visits to reassess goals and adjust comfort regimens. Pain control is optimized with scheduled morphine 5 mg IV q4h PRN and a continuous infusion. Short‑acting beta‑agonist nebulization for bronchodilation is added for shortness of breath. The family is updated on progression and encouraged to focus on quality of life. The care team confirms that no further therapeutic interventions are being pursued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to comfort‑only care; ongoing supportive measures.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-10-18</h3><div class="visit-meta">Intensive Care | Reason: End‑of‑life observation and family support</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**ICU Comfort Care Evaluation – Visit 8**
+
+**Patient:** 60‑year‑old male with COPD, HFrEF, T2DM, CKD stage 3, former septic shock, currently on comfort measures.
+
+**Chief Complaint**: End‑of‑life observation and family support.
+
+**Subjective**: Family reports that the patient remains well‑composed with no new complaints. No spontaneous pain, no anxiety, minimal spontaneous breathing.
+
+**Objective**:
+- **Vital signs**: HR 90 bpm, BP 78/38 mmHg (MAP 55 mmHg), RR 22 breaths/min (ventilator), Temp 37.5 °C, SpO₂ 80 % on FiO₂ 60 % with PEEP 10 cm H₂O.
+- **Labs**: CBC – Hb 9.5 g/dL, WBC 12 000/µL; CRP 55 mg/L.
+- **Exam**: Intubated, ventilated on low‑flow mode. Sedation provides comfort; patient is not in distress.
+
+**Assessment**:
+The patient is in a steady end‑of‑life status with stable hemodynamics under comfort measures. No new physiologic derangements or complications are identified. The comfort‑sedation regimen keeps the patient calm and pain‑free. Current organ support is adequate: CRRT for CKD stage 3, ongoing furosemide for fluid control, insulin infusion for glycemic control, and low‑dose prednisone for anti‑inflammatory effect. He remains on a DNR/DNI status with palliative care consult.
+
+**Plan**:
+1. Continue current comfort‑sedation protocol – Lorazepam 1 mg/hr infusion, Morphine 5 mg IV q4h PRN.
+2. Maintain CRRT and furosemide 20 mg IV q12h.
+3. Keep insulin infusion titrated to target BG 140‑180 mg/dL.
+4. Continue low‑flow oxygen (FiO₂ 60 %, PEEP 10) to preserve comfort.
+5. Monitor vitals and sedation depth every 4 h; adjust rates as needed.
+6. Family support: encourage regular visits, provide emotional counseling, and document family discussions regarding goals of care.
+7. No new interventions or diagnostics planned.
+8. Review goals and hospice resources with palliative team daily.
+
+**Disposition**: Plan to keep patient on current comfort strategy through end of life or until family wishes to consider hospice transfer.
+
+**Disposition notes**: None planned for discharge; will continue inpatient supportive care until death.
+
+**Signature**: 
+Intensive Care Team
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">minimal spontaneous breathing</span><span class="pill">stable hemodynamics under support</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>90 bpm</td></tr><tr><td>blood_pressure</td><td>78/38 mmHg (MAP 55)</td></tr><tr><td>respiratory_rate</td><td>22 breaths/min (ventilator)</td></tr><tr><td>temperature</td><td>37.5 °C</td></tr><tr><td>oxygen_saturation</td><td>80% on FiO2 60% with PEEP 10 cm H2O</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Intubated, ventilated</li><li>Stable vital signs with comfortable sedation</li><li>No signs of distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 9.5 g/dL, WBC 12,000/µL</li><li>CRP 55 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lorazepam infusion 1 mg/hr</li><li>Morphine 5 mg IV q4h</li><li>CRRT continued</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">CKD stage 3</span><span class="pill">Septic shock</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>IV furosemide 20 mg q12</li><li>CRRT</li><li>Prednisone 40 mg PO daily</li><li>Insulin infusion</li><li>Morphine 5 mg IV q4h PRN</li><li>Sedation (lorazepam 1 mg q6h IV)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Comfort care plan in place</li><li>Palliative sedation started</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The ICU team checks the patient’s vital signs and notes steady state under comfort measures. The family remains present. The team confirms that the patient has no new symptoms and continues to receive comfort medications. No additional interventions are planned. The patient is kept on low‑flow oxygen and minimal ventilatory support to maintain comfort. The team assures the family of ongoing support and emotional care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient in a stable comfort state; ongoing palliative monitoring.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 60</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease (COPD)</span><span class="pill">Heart failure</span><span class="pill">Diabetes mellitus</span><span class="pill">Chronic kidney disease</span><span class="pill">Smoking</span><span class="pill">Acute bacterial pneumonia</span><span class="pill">Acute on chronic renal failure</span><span class="pill">Sepsis</span><span class="pill">Multi‑organ failure</span><span class="pill">Ventilator‑associated pneumonia</span><span class="pill">Septic shock</span><span class="pill">Acute respiratory distress syndrome (ARDS)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol/ipratropium inhaler PRN</li><li>Albuterol nebulisation q4h</li><li>Morphine infusion 2 mg/hr</li><li>Morphine PRN 5 mg IV q4h</li><li>furosemide 20 mg IV q12h</li><li>Insulin infusion</li><li>Prednisone 40 mg PO daily</li><li>Continuous renal replacement therapy (CRRT)</li><li>Dexamethasone 4 mg q8h PRN</li><li>Lorazepam 1 mg/hr infusion</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Telephone consult on 2023-10-01 for worsening cough post‑influenza. Patient 60M with productive cough, fever 38.5°C, dyspnea on exertion, chest tightness, and palpitations. Home vitals: HR104 bpm, BP115/68 mmHg, RR22 breaths/min, Temp38.5°C, SpO₂91% on room air. Prescribed Azithromycin 500mg PO daily for 7 days; continued albuterol/ipratropium inhaler PRN, lisinopril 10mg daily, furosemide 20mg daily; metformin held. Advised SpO₂ monitoring, rest, hydration, acetaminophen for fever, urgent care if SpO₂ &lt;94% or worsening symptoms. Follow‑up telecall in 48hrs.</li><li>Admitted on 2023-10-05 for acute bacterial pneumonia with right lower lobe consolidation. Initial vitals: HR 110 bpm, BP 120/70 mmHg, RR 26 breaths/min, Temp 39.0°C, SpO₂ 88% on room air (95% on 4L O₂). Chest X‑ray confirmed right lower lobe consolidation. Labs showed WBC 16,000/µL with 80% neutrophils and creatinine 1.8 mg/dL. Started IV ceftriaxone 1g q24h and IV azithromycin 500mg q24h, nebulized ipratropium 0.5mg q4h PRN, supplemental oxygen to maintain SpO₂ &gt;94%, continued furosemide 20mg PO daily and lisinopril 10mg daily. Scheduled repeat CBC, CMP, and chest X‑ray in 48hrs. Discharged planned on oral antibiotics if clinically stable after 48hrs of IV therapy.</li><li>Hospital admission on 2023-10-06 for persistent fever, productive cough, dyspnea, and worsening renal function (Cr 1.9 mg/dL, BUN 38 mg/dL). Chest X‑ray showed enlargement of right lower lobe opacity. Continued IV ceftriaxone 500 mg q24h and azithromycin 500 mg IV q24h; started IV furosemide 20 mg q12h; lisinopril held. Daily CBC, CMP, renal panel, and repeat chest X‑ray in 48–72 hrs. Monitoring urine output (&gt;30 mL/kg/24h) and O₂ saturations (&gt;94%).</li><li>2023-10-08 ICU admission: 60M with severe hypoxia, pulmonary edema, oliguria. Intubated and placed on lung‑protective mechanical ventilation (tidal 6mL/kg IBW, PEEP12 cm H₂O). Bedside echo showed EF40%, mild tricuspid regurgitation, LV dilation. MAP &lt;65 mmHg; norepinephrine 0.05 µg/kg/min initiated. Urine output &lt;200 mL/day → continuous renal replacement therapy started. Ceftriaxone 1g IV q24h and azithromycin 500 mg IV q24h continued. Furosemide 20 mg IV bolus then infusion 0.5 mg/h. Metformin and lisinopril held. Daily arterial blood gases, electrolytes, renal panel, echocardiogram, and chest X‑ray ordered; cultures obtained.</li><li>Intubated 60‑year‑old male with COPD, HFrEF, T2DM, CKD stage 3 on CRRT and norepinephrine. Persistent fever 38.4 °C, lethargy, unchanged right lower lobe infiltrates. Sputum culture grew MDR Pseudomonas aeruginosa. Antibiotics changed to cefepime 1 g IV q12h (CRRT adjusted), meropenem 1 g IV q8h, and linezolid 600 mg IV q12h. Continued insulin infusion, furosemide 20 mg IV q12h, norepinephrine titration, CRRT. Daily CBC/CMP/renal panel, serial lactate, repeat ABG, imaging, and bronchoscopy considered if no improvement. No new allergies.</li><li>Visit 6 (2023-10-13): ICU patient with refractory hypoxic respiratory failure and septic shock. Transitioned to comfort‑care: antibiotic therapy discontinued (cefepime, meropenem, linezolid); prednisone 40 mg PO daily started; continued furosemide 20 mg IV q12h, insulin infusion, CRRT; norepinephrine weaned to standby; low‑volume ventilatory support maintained. Palliative care consulted; code status updated to DNR/DNI; hospice resources discussed.</li><li>Visit 8 (2023-10-18): ICU comfort‑care evaluation; patient remains stable under sedation. Lorazepam 1 mg/hr infusion and morphine 5 mg IV q4h PRN are used for comfort. Furosemide 20 mg IV q12h continued. Insulin infusion and prednisone 40 mg PO daily remain. CRRT ongoing. Vitals: HR 90, BP 78/38, RR 22 on ventilator, Temp 37.5 °C, SpO₂ 80% on FiO₂ 60% with PEEP 10. No new complications noted; plan to continue comfort measures.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

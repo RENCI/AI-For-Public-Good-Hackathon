@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case afa1f607</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: afa1f607</h1><div class="subtitle">Acute symptomatic seizures due to recent traumatic brain injury | Male, 35</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Migraine, Depression</div><div class="meta-line">Risk Factors: Family history of epilepsy, Head trauma, Alcohol use during pregnancy</div></div>
+<details><summary>Narrative <span class="preview-text">John Martinez, a 35‑year‑old construction supervisor, had never had a medical problem serious enough to make him think t...</span></summary><div class="section-body"><p>John Martinez, a 35‑year‑old construction supervisor, had never had a medical problem serious enough to make him think twice about his health. He could walk a mile without a breath of air, drank a few beers on the weekend, and had a longstanding history of episodic migraines that he typically managed with over‑the‑counter analgesics. He also had been hospitalized a few times for major depressive episodes, for which he had been on a stable dose of sertraline. His father had a history of untreated seizures in his thirties, and his mother, who had been a chronic drinker during her pregnancy, had passed down a family pedigree of neurological susceptibility that John had acknowledged only in passing.</p><p>On a rainy Thursday afternoon, the day that would become the turning point of his medical story, John was attempting to lift a heavy metal beam when the load tipped. He slipped on the slick floor, slammed his forehead against a steel beam, and fell heavily onto the concrete. He heard the thud and, momentarily, the world swerved in a green haze of motion. The next thing he remembered was the white light of the emergency department, the smell of antiseptic, and the sight of a nurse holding his wrist and pulling a cuff around his arm.</p><p>**Day 0–1: ED and First Seizure**</p><p>At the ED, a cranial CT scan revealed a left frontal subdural hematoma measuring 2 mm in thickness with a small midline shift. There were no signs of skull fracture. John was admitted to the neurosurgical unit for close observation. He slept poorly that evening, waking every hour with a throbbing headache that had a migraine quality—pulsatile, accompanied by photophobia and an aura of blurred vision. Early on the next morning, he suddenly became rigid, his left arm jerking in a stereotyped clonic motion that lasted about 18 seconds before he fell to the floor. The episode was witnessed by the nurse and stopped spontaneously within a minute.</p><p>Lorazepam 1 mg IV was given, and the patient&#x27;s vital signs stabilized. The neurologist, Dr. Patel, noted the resemblance of the seizure to previous focal events seen in patients with parenchymal contusion. An electroencephalogram (EEG) was scheduled for the same day. John was kept on continuous cardiac monitoring and had a lumbar puncture performed to rule out intracranial infection, which returned normal.</p><p>**Day 2–3: Early Management and Differential Warnings**</p><p>The EEG from day 2 showed frequent sharp‑wave discharges over the left temporoparietal region with evolving electrographic seizures, which suggested that the subdural hematoma was indeed the precipitating event. Based on the EEG findings and the known risk factor of a family history of epilepsy, Dr. Patel empirically started levetiracetam 500 mg twice daily. The dose was chosen to balance efficacy and side effects because John’s baseline liver function tests were normal, but his mother’s alcoholism history made liver toxicity a concern for any future antiepileptic therapies.</p><p>Meanwhile, the psychiatric team visited John, noting that the sudden stress of the accident had triggered a rebound of depressive symptoms: low mood, anhedonia, and intrusive thoughts of the fall. His sertraline dose remained unchanged for now. The migraine team was consulted, and John was given a trial of sumatriptan for acute headache, as the migraine phenotype was partially overlapping with his new post-traumatic headaches.</p><p>**Day 4–5: Second Seizure and Med Change**</p><p>Despite the levetiracetam, John had a second seizure at home on day 4. It was a generalized tonic–clonic event that lasted approximately 3 minutes. The family called emergency services, and John arrived at the ED with post‑ictal confusion. A repeat head CT showed a small increase in the size of the subdural collection, now 3 mm with a midline shift of 4 mm. Dr. Patel, after reviewing the imaging, decided to transfer John to the surgical floor for definitive management. However, an operative plan for a burr‑hole evacuation was put on hold, because the hematoma was considered to be small and the patient was otherwise clinically stable.</p><p>The neurology team, in consultation with the neurosurgeon, stepped up levetiracetam to 1000 mg twice daily and added lacosamide 100 mg once daily to broaden antiepileptic coverage. The family expressed anxiety, and Dr. Patel discussed the importance of adherence and the risk of breakthrough seizures. He also explained that the improvement of his depression and anxiety would help reduce the likelihood of seizure triggers.</p><p>**Week 2: Rehabilitation and Stabilization**</p><p>After the two seizures, John remained in the hospital for a week with serial imaging and EEG checks. A repeat CT after 48 hours demonstrated slight regression of the hematoma to 2 mm, and clinical symptoms had improved. His EEG now had only occasional sharp‑wave discharges, and there were no evolving seizures. The neurology team decided to maintain the dual antiepileptic drug regimen and monitor for side effects, such as dizziness or irritability, given John&#x27;s history of depression and his own reports of feeling “foggy” in the mornings.</p><p>He began a course of physical therapy under the guidance of Dr. Gomez, a certified neuro‑rehabilitator. John was able to ambulate with a short walker, though a mild right‑side spasticity persisted that was likely secondary to the left‑frontal lobe injury. The occupational therapist noted subtle deficits in executive function—John struggled with task sequencing, which paralleled his migraine aura of “brain fog” that sometimes made him feel unable to concentrate.</p><p>**Week 3–4: Transition Home and Ongoing Improvement**</p><p>On discharge day, the treating team confirmed that John’s headache pattern had shifted toward more of a chronic tension‑type rather than a migraine aura. His levetiracetam dose was scheduled to continue at 1000 mg BID. Lacosamide remained at 100 mg QHS. A final EEG 48 hours before discharge showed no epileptiform discharges, providing reassurance of acute stability.</p><p>John’s follow‑up appointments were planned at the neurology clinic in one week, the psychiatric clinic two weeks after, and the neurosurgery outpatient clinic in six weeks for a follow‑up CT. He was advised to avoid alcohol and limit strenuous activity, to stay hydrated, and to continue taking sertraline 50 mg daily to support mood stability. His mother’s history of alcoholism was discussed with him in the context of avoiding family‑predisposed triggers—most notably, limiting exposure to potentially triggering substances and ensuring a supportive, low‑stress home environment.</p><p>**Outcome and Reflection**</p><p>Over the next month, John reported that his headaches had become less frequent and no longer accompanied the classic migraine aura. His depressive symptoms had abated, and he reported an increase in mood and a renewed interest in his hobbies. The neurologist noted that John had had no further seizures and his EEG remained normal. Because John&#x27;s brain injury was subacute but he had not progressed to a permanent epilepsy syndrome, he was considered “improving” on the acuity scale. His risk for future seizures was lowered from a high suspicion (familial history and acute symptomatic event) to a moderate risk, contingent on continued AED compliance and careful monitoring. The rehabilitation teams noted improved gait speed and decreased spasticity, with an overall return to baseline functional mobility.</p><p>John remained on a low‑dose levetiracetam regimen for a further six months, with plans to trial a weaning schedule if the EEG remained stable. He and his primary care provider also instituted an updated psychiatric care plan that included mindfulness‑based cognitive therapy to address the lingering cognitive fog and a relapse prevention strategy for depression. By the end of the third month, John had returned to his construction duties with a modified shift schedule, marking his return to life with the knowledge that his new neurological status, though improved, would require vigilance.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-08-01</h3><div class="visit-meta">Emergency Medicine | Reason: Head injury with witnessed seizure post-accident</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Head injury with witnessed seizure post‑accident.
+
+History of Present Illness: 35‑year‑old male with a history of migraine and depression presents to the ED after a fall from his own height. Witnesses observed a generalized tonic seizure lasting approximately 1 minute. He was subsequently found to be loss of consciousness immediately post‑fall. He reports a throbbing headache, blurred vision, and photophobia.
+
+Past Medical History: Migraine, Depression.
+Past Surgical History: None.
+Medications: None.
+Allergies: NKDA.
+Social History: Non‑smoker, occasional alcohol.
+Family History: Positive for epilepsy (maternal side).
+
+Physical Examination:
+- Vitals: BP 140/90 mmHg, HR 110/min (tachycardic), RR 20/min, Temp 98.6°F, SpO2 98% on room air.
+- General: Awake, alert, oriented x3, no acute distress.
+- HEENT: Laceration over frontal region, left-sided scalp tenderness.
+- Neurologic: Cranial nerves II–XII intact. Strength 4+/5 on the right upper extremity, 5/5 elsewhere. No focal sensory deficits noted.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema, pulses 2+ at all sites.
+
+Assessment:
+1. Traumatic subdural hematoma (2 mm left frontal) with mild midline shift – stable, requiring close neurologic monitoring.
+2. Generalized tonic seizure secondary to acute head trauma; differential includes acute post‑traumatic seizure versus underlying seizure disorder.
+3. Post‑ictal state – patient remains confused but oriented.
+
+Plan:
+1. Admit to Neurosurgery Observation Unit with continuous cardiac telemetry and neurologic monitoring.
+2. Order urgent EEG on the day of admission to evaluate for epileptiform activity.
+3. Continue IV isotonic fluids (1 L NS) to maintain euvolemia.
+4. Consider starting levetiracetam 500 mg PO BID once the patient can tolerate oral intake if EEG shows interictal discharges or to prophylactically reduce seizure recurrence.
+5. Neurosurgical consult to review imaging and determine need for burr hole or craniotomy – currently observation due to small size and stable appearance.
+6. Repeat head CT in 12 hrs if neurological status changes or if patient becomes obtunded.
+7. Pain management: Acetaminophen 650 mg PO q6h PRN, avoid NSAIDs due to potential for bleeding.
+8. Continue screening for depression; arrange psychiatric follow‑up.
+9. Educate patient regarding signs of increased intracranial pressure (reduced consciousness, worsening headache, vomiting, new neurologic deficits) and advise urgent return to ED if any.
+
+Disposition: Admitted.
+
+Significant Labs: CBC, BMP, lactate, lumbar puncture (normal).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Loss of consciousness</span><span class="pill">Generalized tonic seizure</span><span class="pill">Headache</span><span class="pill">Blurred vision</span><span class="pill">Photophobia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Head laceration at frontal region</li><li>Left‑sided scalp tenderness</li><li>Neurologic exam: awake, oriented, CN II–XII intact</li><li>Right‑sided weakness 4+/5</li><li>Left arm clonic during seizure</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Head CT</li><li>CBC</li><li>BMP</li><li>Lactate</li><li>EEG planned</li><li>Lumbar puncture</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Head CT: 2 mm left frontal subdural hematoma with mild midline shift, no fracture</li><li>CBC: WBC 9.5, Hgb 13.7, Plt 240</li><li>BMP: normal</li><li>Lactate 1.2</li><li>Lumbar puncture: normal opening pressure, no infection</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV lorazepam 1 mg</li><li>IV fluids 1 L NS</li><li>Sedation as needed</li><li>Admitted to neurosurgical unit</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Seizure terminated after lorazepam; remained alert with mild postictal confusion.</p></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Traumatic brain injury</li><li>History of migraines</li><li>History of depression</li><li>Family history of epilepsy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presents to the ED after a fall with a witnessed generalized tonic seizure. He is brought to the trauma bay, initial vital signs are stable but tachycardic. A noncontrast head CT is obtained, revealing a 2 mm left frontal subdural hematoma with mild midline shift and no skull fracture. CBC, BMP, and lactate are within normal limits. A lumbar puncture is performed to rule out infection and is normal. An initial seizure is treated with IV lorazepam 1 mg, which terminates the episode. He is admitted to the neurosurgical observation unit for monitoring with continuous cardiac telemetry and an EEG is scheduled for the same day. He is also placed on IV fluids 1 L NS and observed for postictal recovery.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute symptomatic seizure due to traumatic subdural hematoma. Monitoring required. EEG pending.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-08-03</h3><div class="visit-meta">Neurology | Reason: Follow-up after traumatic injury; assessment of seizure activity</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 35‑year‑old male presents for post‑traumatic injury follow‑up. Denies new seizures; reports ongoing throbbing headache, photophobia, mild confusion. No nausea or vomiting. No new focal deficits beyond left arm weakness noted on exam.
+
+Objective: Vitals: BP 138/86, HR 102, RR 18, Temp 98.4°F, SpO2 98%. Neurologic exam reveals left upper motor neuron pattern: left arm 4+/5, mild spasticity, brisk reflexes. No focal seizure observed. All other systems normal. Repeat head CT shows slight increase to 3 mm subdural hematoma without midline shift. Routine EEG demonstrates frequent sharp‑wave discharges over the left temporoparietal region. Liver function panel remains within normal limits.
+
+Assessment:
+1. Enlarging subdural hematoma (post‑traumatic subdural hematoma) – slight increase but asymptomatic.
+2. Post‑traumatic epilepsy – interictal sharp‑wave discharges; no clinical seizures to date.
+3. Migraine headache – episodic history, current headache throbbing, photophobia.
+4. Depressive episode – currently stable on sertraline.
+
+Plan:
+- Initiate levetiracetam 500 mg PO BID for seizure prophylaxis.
+- Prescribe sumatriptan 50 mg PRN for migraine headaches.
+- Continue sertraline 50 mg daily.
+- Educate patient on medication adherence and red‑flag neurological signs (new weakness, worsening headache, visual changes).
+- Repeat head CT in 1 month or sooner if clinical status changes.
+- Seizure diary and headache log to be maintained.
+- Follow up in neurology clinic in 2 weeks; outpatient neurosurgery consult in 4 weeks.
+- Psychiatric follow‑up as needed; monitor mood symptoms.
+
+This plan addresses both the acute neurosurgical concern and the risk of post‑traumatic epilepsy while optimizing headache control and mood stability.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Headache (throbbing, migraine‑like)</span><span class="pill">Photophobia</span><span class="pill">Mild confusion</span><span class="pill">No seizures since admission</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/86</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neuro exam: left arm 4+/5, mild spasticity, brisk reflexes</li><li>Other systems normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>EEG</li><li>Repeat head CT</li><li>Liver function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>EEG: Frequent sharp‑wave discharges over left temporoparietal region with evolving electrographic seizures</li><li>Head CT: slight increase to 3 mm subdural hematoma, no midline shift</li><li>LFTs normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Levetiracetam 500 mg PO BID</li><li>Sumatriptan 50 mg PRN for headache</li><li>Continue sertraline 50 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports ongoing headaches but no seizures; tolerates new medication well.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depressive episode</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous focal seizure on admission</li><li>History of migraines (episodic, usually treated with OTC analgesics)</li><li>Depressive episodes treated with sertraline 50 mg/day</li><li>Family history of untreated epilepsy in father</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Neuro exam reveals left upper motor neuron pattern: left arm weakness 4+/5, mild spasticity, brisk left reflexes. No focal seizure observed. A routine EEG is performed, showing frequent sharp‑wave discharges over the left temporoparietal region with evolving electrographic seizures. A repeat head CT shows a slight increase to 3 mm subdural hematoma without midline shift. Liver function tests remain normal. Based on the EEG findings and known family history, levetiracetam 500 mg PO BID is initiated. Sumatriptan 50 mg is prescribed PRN for headache; sertraline is continued unchanged. The patient is instructed on medication adherence and signs of breakthrough seizures.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early focal seizure activity secondary to subdural hematoma. Initiated antiepileptic therapy with levetiracetam. Headache may represent post‑traumatic migraine; considered triptan therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-08-05</h3><div class="visit-meta">Neurosurgery | Reason: Recurrent generalized tonic‑clonic seizure; evaluation for surgical intervention</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Recurrent generalized tonic‑clonic seizure; evaluation for surgical intervention.
+
+**History of Present Illness**: 35‑year‑old male presents to the neurosurgery clinic on 2023-08-05 for a post‑ictal neurological assessment. The patient reports a generalized tonic‑clonic seizure that occurred at home approximately 3 minutes in duration, after which he experienced confusion and a brief period of disorientation that resolved spontaneously within 30 minutes. He denies any new focal seizures or loss of consciousness after the event. He describes a throbbing headache localized to the left frontal region, mild left arm weakness, and increased sensation of “tightness” in the left arm. He has not had any seizures in the past 24 hours.
+
+**Past Medical History**: Migraine, depression, epilepsy (provoked), left frontal subdural hematoma from fall 4 days ago.
+
+**Medications**: Sertraline 50 mg daily, Levetiracetam 500 mg BID (now increased to 1000 mg BID), Lacosamide 100 mg QHS (new), Lorazepam 2 mg PRN every 6 hours.
+
+**Allergies**: NKDA.
+
+**Review of Systems**: Positive for post‑ictal confusion, headache, left arm weakness. No dizziness, visual changes, dysarthria, or new focal deficits.
+
+**Physical Examination**:
+- **Vital Signs**: BP 135/85 mmHg, HR 100 bpm, RR 18/min, Temp 98.4°F, SpO₂ 97%
+- **General**: Alert, oriented to person, place, time.
+- **Neurologic**: Cranial nerves II-XII grossly intact. Motor: Left upper extremity 4+/5 strength, mild spasticity; right upper extremity 5/5. Reflexes: Brisk left biceps; remaining reflexes 2+. Sensory intact. Coordination normal. Gait unremarkable.
+- **Other**: No focal deficits beyond left arm weakness.
+
+**Imaging &amp; Studies**:
+- **Head CT**: 3 mm subdural hematoma anterior left frontal; 4 mm midline shift; no new bleed.
+- **MRI Brain**: Confirms subdural collection anterior left frontal, no parenchymal lesions.
+- **EEG**: Occasional sharp-wave discharges, no evolving seizures.
+- **Laboratory**: CBC, CMP within normal limits.
+
+**Assessment**:
+1. **Recurrent generalized tonic‑clonic epilepsy** secondary to trauma‑induced subdural hematoma – likely provoked by ongoing subdural collection.
+2. **Small left frontal subdural hematoma with mild midline shift** – no acute mass effect, clinically stable.
+3. **Left upper‑motor‑neuron pattern (weakness, spasticity, brisk reflexes)** – likely due to subdural irritation.
+4. **Possible post‑traumatic epilepsy** – given history of seizures within days of injury.
+
+**Plan**:
+- **Medical Management**: Continue Levetiracetam 1000 mg BID. Add Lacosamide 100 mg QHS to broaden anti‑epileptic coverage. Provision of Lorazepam 2 mg PRN every 6 hours for breakthrough seizures.
+- **Surgical Consideration**: Burr‑hole evacuation deferred due to small volume and clinical stability; will repeat neuroimaging in 2–4 weeks.
+- **Monitoring**: Maintain seizure diary, headache log, and document any focal changes.
+- **Mental Health**: Discussed potential mood improvements with seizure control; encourage adherence to Sertraline. Provide reassurance regarding anxiety.
+- **Follow‑Up**: Neurology follow‑up in 2 weeks; Neurosurgery outpatient visit in 4 weeks for repeat CT/MRI and possible surgical evaluation. Continue routine labs (CBC/CMP) annually; sooner if symptomatic.
+- **Patient Education**: Reviewed seizure warning signs, importance of medication adherence, and when to seek emergent care (e.g., prolonged seizures, new focal deficits).
+
+**Disposition**: Patient remains neurologically stable, no current seizures; discharged with updated medication regimen and follow‑up plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Post‑ictal confusion after generalized tonic‑clonic seizure</span><span class="pill">Headache</span><span class="pill">Left arm weakness</span><span class="pill">No current seizures</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/85</td></tr><tr><td>HR</td><td>100</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neuro exam: left arm 4+/5 weakness, mild spasticity</li><li>Right side normal</li><li>Reflexes brisk left</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Head CT</li><li>MRI brain</li><li>EEG</li><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Head CT: 3 mm subdural hematoma, 4 mm midline shift, no acute bleed</li><li>EEG: Occasional sharp waves, no evolving seizures</li><li>MRI: subdural collection anterior left frontal, no additional pathology</li><li>CBC, CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Levetiracetam increased to 1000 mg BID</li><li>Lacosamide 100 mg QHS added</li><li>Lorazepam PRN 2 mg/6 h</li><li>Continue sertraline 50 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feels more stable; no seizures in past 24 hrs; tolerates new meds with mild dizziness but no severe side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depression</span><span class="pill">Epilepsy (provoked)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li><li>Levetiracetam 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent generalized tonic‑clonic seizure at home on day 4</li><li>Subdural hematoma on imaging</li><li>Previous focal seizures during admission</li><li>Depression managed with sertraline 50 mg</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient presents with post‑ictal confusion following a generalized tonic‑clonic seizure that lasted approximately 3 minutes. A repeat noncontrast head CT shows a 3 mm subdural hematoma with a 4 mm midline shift; no new bleed noted. The neurosurgeon discusses burr‑hole evacuation but opts against immediate surgery due to the small size of the hematoma and clinical stability. The neurology team increases levetiracetam to 1000 mg BID and adds lacosamide 100 mg QHS to broaden antiepileptic coverage. Lorazepam 2 mg/6 h PRN is made available for breakthrough seizures. The patient is counseled on medication adherence and seizure warning signs, and anxiety is addressed by explaining the potential benefit of seizure control on mood. No new seizures occur afterward.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Subdural hematoma stable with slight enlargement; seizures persisting after monotherapy; dual AED chosen. Surgical intervention deferred due to risk/benefit.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-08-12</h3><div class="visit-meta">Physical Medicine &amp; Rehabilitation | Reason: Post‑acute rehab; evaluate functional recovery</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑acute rehabilitation; evaluation of functional recovery.\n\nHistory of Present Illness: 35‑year‑old male presents for follow‑up of traumatic subdural hematoma and post‑traumatic brain injury (TBI) status after recent fall with generalized tonic seizure. The patient has been on dual antiepileptic therapy (levetiracetam 1000 mg BID, lacosamide 100 mg QHS) and is taking sertraline for depression, sumatriptan for migraine, acetaminophen PRN, and lorazepam PRN. He reports mild right‑side spasticity, left arm weakness, executive dysfunction, and ongoing headaches. His mood has improved slightly and he notes increased functional independence. No new seizures reported.\n\nPhysical Exam: Vitals stable: BP 130/80, HR 90, RR 18, Temp 98.5 °F, SpO₂ 98%. Neurologic: Upper extremity strength left 4+/5, right 5/5; mild spasticity right side; gait stable with walker, no balance deficits noted. Cognitive: mild slowed processing, intact memory, executive function mildly impaired (task sequencing errors). Speech: pragmatic language normal.\n\nImaging/Tests: Repeat head CT shows regression of subdural hematoma to 2 mm, no midline shift. CBC and CMP normal.\n\nAssessment: 1) Residual traumatic subdural hematoma (stable, regressed) – no surgical intervention indicated. 2) Mild right‑side spasticity – likely post‑TBI spasticity, responding to PT. 3) Left upper‑motor neuron pattern (moderate weakness) – consistent with frontal lobe injury; improving with therapy. 4) Executive dysfunction – early post‑TBI cognitive deficit; improved but warrants continued OT/ST intervention. 5) Post‑traumatic epilepsy risk – controlled with current AEDs; no new seizures. 6) Migraine headaches – improving, likely related to TBI.\n\nPlan: Continue current medication regimen unchanged. Maintain PT 3x/week focused on gait, strength, and spasticity management. OT continue task sequencing drills with emphasis on executive function. ST to continue pragmatic language and executive tasks. Continue dual AED therapy; monitor for breakthrough seizures. Maintain headache and seizure diary. Repeat head CT in 6 weeks to confirm continued regression. Neuro‑rehab goal: ambulate without assistive device within 3 months, improve executive task sequencing to &lt;3 errors per task. Neuro‑psychiatric follow‑up with neurology in 2 weeks; neurosurgery outpatient review in 4 weeks. Patient educated on seizure precautions and signs of recurrence. Encourage adherence to medications and therapy sessions.\n\nPatient understanding confirmed. The patient will return for the next multidisciplinary rehabilitation evaluation on 2023-09‑01 or sooner if new symptoms arise.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild right‑side spasticity</span><span class="pill">Left arm weakness</span><span class="pill">Executive dysfunction</span><span class="pill">Ongoing headaches</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Upper extremity strength: left 4+/5, right 5/5</li><li>Mild spasticity on right side</li><li>Gait: stable with walker</li><li>Cognitive: mild slowed processing, intact memory</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat head CT</li><li>Baseline CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Head CT: 2 mm subdural hematoma, regression, no midline shift</li><li>CBC &amp; CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Physical therapy 3×/week: gait &amp; strength</li><li>Occupational therapy: task sequencing drills</li><li>Speech therapy: executive function tasks</li><li>Continue current medications</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reports less headache, mood improved slightly, feels more functional.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depression</span><span class="pill">Epilepsy (provoked)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li><li>Levetiracetam 1000 mg BID</li><li>Lacosamide 100 mg QHS</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Rehab initiation</li><li>Previous seizures and ongoing AED therapy</li><li>Depression</li><li>Migraine history</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The neuro‑rehab team evaluates the patient’s gait, muscle tone, and cognitive function. Upper extremity strength is left 4+/5, right 5/5; mild spasticity noted on the right side. Gait assessment with a walker is stable. Occupational therapy focuses on task sequencing and executive function; speech therapy evaluates pragmatic language. Repeat head CT demonstrates regression to a 2 mm subdural hematoma with no midline shift. Baseline labs are normal. The patient is encouraged to continue dual AED therapy and is reassured about seizure risk reduction. Rehabilitation goals include ambulation without aid and improved executive tasks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Gradual improvement in neurological deficits, hematoma regressing, low seizure frequency. Continue dual AED until stable.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-08-19</h3><div class="visit-meta">Neurology | Reason: Discharge planning; review of investigations, medications, future follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit 5 – 2023‑08‑19
+
+Chief Complaint: Discharge planning; review of investigations, medications, future follow‑up
+
+History: 35‑year‑old male with migraine, major depressive disorder, traumatic subdural hematoma, traumatic brain injury, and post‑traumatic epilepsy. Current admission for left frontal subdural hematoma (2 mm) with residual left‑arm weakness and mild spasticity. Chronic meds: levetiracetam 1000 mg PO BID, lacosamide 100 mg QHS, sertraline 50 mg daily, sumatriptan 50 mg PRN, lorazepam 2 mg PRN as needed, acetaminophen 650 mg q6h PRN. No known allergies.
+
+Review of Systems: Patient reports mild headaches, mild residual spasticity, mood stable. No reports of new seizures, focal neurologic deficits, or autonomic instability.
+
+Physical Exam: Vitals stable: BP 128/78, HR 88, RR 18, Temp 98.6 °F, SpO₂ 98%. Neurologic exam: strength 4+/5 in left upper extremity, mild right‑sided spasticity, gait normal with walker use, no cranial nerve deficits, sensory intact. No focal seizures observed.
+
+Investigations: Final pre‑discharge EEG – normal. Repeat head CT 48 h prior to discharge – stable, no midline shift. CBC and CMP – within normal limits.
+
+Assessment: Stabilized post‑traumatic subdural hematoma with no evidence of ongoing hemorrhage; post‑traumatic epilepsy under therapeutic control; post‑traumatic headache evolving toward tension‑type; residual spasticity and left‑arm weakness consistent with previous injury but not progressing.
+
+Plan:
+1. Discharge medication regimen: 
+   - Levetiracetam 1000 mg PO BID
+   - Lacosamide 100 mg QHS
+   - Sertraline 50 mg daily
+   - Sumatriptan 50 mg PO PRN for headache flare
+   - Lorazepam 2 mg PO PRN every 6 hrs if agitation/seizure
+   - Acetaminophen 650 mg PO q6h PRN for pain
+2. Educate patient on medication adherence, seizure‑prevention strategies, and headache diary maintenance.
+3. Discharge instructions: Continue PT and OT as per rehab plan, maintain walker use, avoid high‑risk activities until fully cleared.
+4. Follow‑up schedule: 
+   - 1 week: Neurology rehab assessment
+   - 2 weeks: Psychiatry follow‑up for mood and medication titration
+   - 6 weeks: Neurosurgery outpatient CT to confirm hematoma resolution
+5. Patient to report any new seizures, worsening headaches, or neurological deficits immediately.
+
+Disposition: Patient ready for discharge; consent obtained, all medications reviewed and explained.
+
+Signed: _________________________
+Neurology (MD)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No seizures</span><span class="pill">Mild headaches</span><span class="pill">Mild residual spasticity</span><span class="pill">Mood stable</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/78</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neuro exam normal except left arm 4+/5 weakness, mild right spasticity</li><li>Gait normal with walker</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Final EEG (pre‑discharge)</li><li>Repeat head CT 48 h prior to discharge</li><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>EEG: Normal, no epileptiform discharges</li><li>CT: 2 mm subdural hematoma, no shift</li><li>CBC &amp; CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Finalize discharge meds</li><li>Counsel on seizure warning signs</li><li>Reinforce medication adherence</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No further seizures; headaches less frequent; mood improved significantly.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depression</span><span class="pill">Epilepsy (provoked)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li><li>Levetiracetam 1000 mg BID</li><li>Lacosamide 100 mg QHS</li><li>Sumatriptan 50 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>No breakthrough seizures</li><li>Headache evolution from migraine to tension‑type</li><li>Depression stable on sertraline</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Final pre‑discharge evaluation confirms no seizures on recent EEG, a stable 2 mm subdural hematoma on CT, and normal labs. The patient is educated on seizure warning signs and medication adherence. Discharge medications are finalized: levetiracetam 1000 mg BID, lacosamide 100 mg QHS, sertraline 50 mg daily, sumatriptan 50 mg PRN for any headache flare. The neurology team sets future follow‑up visits in 1 week (rehab), 2 weeks (psychiatry), and 6 weeks (neurosurgery outpatient CT).</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient has no evidence of acute seizures; hematoma resolved; risk of future seizures moderate; plan for follow‑up.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-08-26</h3><div class="visit-meta">Neurology | Reason: Routine post‑discharge follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine post‑discharge follow‑up.
+
+History of Present Illness: 35‑year‑old male presents for routine neurology follow‑up 3 days after discharge. Reports no seizures, no new headaches, and mood remains stable. Patient continues to track a seizure and headache diary. No new medications or side effects reported. No new symptoms since discharge.
+
+Past Medical History: Migraine, major depressive disorder, traumatic subdural hematoma, traumatic brain injury, post‑traumatic epilepsy, provoked epilepsy.
+
+Medications: Sertraline 50 mg PO daily, Levetiracetam 1000 mg PO BID, Lacosamide 100 mg QHS, Sumatriptan 50 mg PRN, Lorazepam 2 mg PRN every 6 h, Acetaminophen 650 mg PO q6h PRN. No known allergies.
+
+Review of Systems: Positive for stable mood; negative for neurologic events, headache, or medication side effects.
+
+Physical Examination:
+- Vital Signs: BP 125/78 mmHg, HR 86 bpm, RR 18 /min, Temp 98.4 °F, SpO₂ 98 %.
+- General: Alert, oriented. 
+- Neurologic: Cranial nerves II‑XII intact. Strength: left upper extremity 4+/5, right upper extremity 5/5, lower extremities 5/5. No spasticity. Gait steady, heel‑to‑toe. No sensory deficits. Reflexes 2+ symmetrical. No cerebellar dysfunction.
+- Headache: None. 
+
+Laboratory Results: CBC, CMP, and LFTs all within normal limits. No evidence of AED toxicity.
+
+Assessment: Stable post‑traumatic epilepsy on dual AED therapy with no breakthrough seizures. Residual mild left arm weakness likely from chronic post‑traumatic changes; no new deficits. Migraine well‑controlled on PRN sumatriptan. Depression remains stable. Traumatic subdural hematoma has resolved to 2 mm with no midline shift. Neuro exam remains unchanged.
+
+Plan:
+1. Continue current medication regimen as ordered.
+2. Discuss AED taper: If outpatient EEG remains normal and there are no clinical events, consider gradual taper of levetiracetam and lacosamide over 6 months.
+3. Order an outpatient EEG to confirm continued seizure suppression.
+4. Provide brief counseling on medication adherence and seizure‑precaution education.
+5. Schedule next neurology visit in 6 weeks to reassess neurologic status, review EEG, and plan tapering if appropriate.
+6. Continue PT/OT as per rehab team.
+7. Encourage patient to maintain seizure &amp; headache diary.
+
+Disposition: Stable discharge home from clinic. Patient advised to call clinic if seizures, new neurologic symptoms, or medication intolerances occur.
+
+Thank you. Signatures:_________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Routine review; no seizures or headaches</span><span class="pill">Mood stable</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>125/78</td></tr><tr><td>HR</td><td>86</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neuro exam normal; mild left arm weakness 4+/5</li><li>Gait steady; no spasticity noted</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>LFTs</li><li>EEG (optional)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC, CMP, LFTs normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue current meds</li><li>Discuss potential AED taper after 6 months</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Headaches rare, mood stable, no side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depression</span><span class="pill">Epilepsy (provoked)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li><li>Levetiracetam 1000 mg BID</li><li>Lacosamide 100 mg QHS</li><li>Sumatriptan 50 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stable on dual AED, no breakthrough seizures</li><li>No severe side effects reported</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The neurology clinic review confirms stable neuro exam: left arm strength 4+/5, no spasticity, no seizure activity. CBC, CMP, and LFTs are normal, with no evidence of AED toxicity. The patient is encouraged to continue current medications and is informed of the possibility to taper AEDs after 6 months if EEG remains normal. Next appointment scheduled for 6 weeks to monitor progress and discuss gradual tapering. A brief counseling session on medication adherence is also offered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable on dual AED; no seizures; consider gradual taper after 6 months based on EEG &amp; clinical stability.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-09-02</h3><div class="visit-meta">Psychiatry | Reason: Depression management, evaluate mood, medication review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 35‑year‑old male presents for routine follow‑up of depression management and medication review.
+
+History of Present Illness: The patient reports feeling &quot;a bit better&quot; with occasional low mood, no suicidal ideation or homicidal thoughts. He has not had any new seizures or significant headaches. He continues to manage migraine with sumatriptan PRN. He feels hopeful, less anxious, and is eager to resume work.
+
+Past Psychiatric History: Prior depressive episodes treated with sertraline. Current minimal depressive symptomatology (PHQ‑9 score 6) and minimal anxiety (GAD‑7 score 5) observed.
+
+Past Neurologic History: Post‑traumatic subdural hematoma and provoked epilepsy managed with levetiracetam and lacosamide. Recent neuroimaging stable.
+
+Medications: Sertraline 50 mg PO daily, levetiracetam 1 000 mg PO BID, lacosamide 100 mg PO QHS, sumatriptan 50 mg PO PRN.
+
+Allergies: NKDA.
+
+Physical Examination:
+- Vitals: BP 127/80, HR 84, RR 18, Temp 98.5 °F, SpO₂ 98%.
+- Mental Status: Alert, oriented x3, mood mildly upbeat, affect congruent, no SI/HI observed.
+
+Assessment:
+1. Minimal depressive symptoms (current PHQ‑9 6) – stable, likely well‑controlled on sertraline.
+2. Minimal generalized anxiety – stable.
+3. Controlled provoked epilepsy – no new seizures, medications tolerated.
+4. Migraine – managed PRN.
+
+Plan:
+- Continue sertraline 50 mg PO daily.
+- Reinforce adherence to current AED regimen.
+- Encourage mindfulness‑based CBT and a low‑stress environment to reduce seizure triggers.
+- Continue seizure and headache diary.
+- No medication changes at this visit.
+- Schedule psychiatric follow‑up in 2 weeks.
+- Routine neurology follow‑up per prior plan; repeat head CT in 6 weeks; EEG as indicated.
+- Encourage regular physical therapy and occupational therapy per neurorehabilitation.
+- Counsel patient on lifestyle modifications (sleep hygiene, stress management) and when to seek emergency care (new seizures, worsening headaches, suicidal ideation).
+
+Disposition: Patient discharged home with instructions to maintain current regimen and diary; instructions to call office if any new seizures or psychiatric concerns arise.
+
+Provider: [Signature].</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mood slightly improved, occasional low mood</span><span class="pill">No suicidal ideation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>127/80</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mental status: alert, oriented, mood mildly upbeat, affect congruent, no suicidal ideation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PHQ‑9 questionnaire</li><li>GAD‑7</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PHQ‑9 score 6 (minimal depression)</li><li>GAD‑7 score 5 (minimal anxiety)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reinforce mindfulness CBT</li><li>Continue sertraline 50 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feels hopeful, less anxious, wants to resume work.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depression</span><span class="pill">Epilepsy (provoked)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li><li>Levetiracetam 1000 mg BID</li><li>Lacosamide 100 mg QHS</li><li>Sumatriptan 50 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous depressive episodes, sertraline therapy</li><li>Seizure history (provoked)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>PHQ‑9 assessed mood, yielding a score of 6 (minimal depression). GAD‑7 indicated minimal anxiety. The psychiatrist reinforced the benefit of consistent medication adherence, explored mindfulness‑based CBT, and discussed the importance of a low‑stress environment to reduce seizure triggers. No medication change was made; sertraline 50 mg continued. The patient expressed optimism about returning to work and adherence to the treatment plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Depression controlled on sertraline; minimal side effects; mood improvement supports seizure risk reduction.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Depression</span><span class="pill">Traumatic subdural hematoma</span><span class="pill">Traumatic brain injury</span><span class="pill">Post-traumatic epilepsy</span><span class="pill">Provoked epilepsy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levetiracetam 1000 mg PO BID</li><li>Lacosamide 100 mg QHS</li><li>Lorazepam 2 mg PRN every 6 hrs</li><li>Sertraline 50 mg daily</li><li>Sumatriptan 50 mg PRN</li><li>Acetaminophen 650 mg PO q6h PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-08-01: 35‑year‑old male presents after fall with generalized tonic seizure and head injury. Exam shows left frontal subdural hematoma 2 mm, mild midline shift. Admitted to neurosurgery observation with telemetry. Received IV lorazepam 1 mg and 1 L normal saline. Plan: perform EEG, repeat head CT if neuro status changes, start levetiracetam 500 mg PO BID if indicated, administer acetaminophen 650 mg q6h PRN, monitor neuro status, psychiatric follow‑up. No new allergies.</li><li>2023-08-03: Follow‑up for post‑traumatic injury. Patient reports ongoing throbbing headache, photophobia, mild confusion; no new seizures. Neurologic exam shows left upper motor neuron pattern with left arm weakness 4+/5, mild spasticity. Repeat head CT shows slight increase to 3 mm subdural hematoma, no midline shift. EEG demonstrates frequent sharp‑wave discharges over left temporoparietal region. Initiated levetiracetam 500 mg BID for seizure prophylaxis, sumatriptan 50 mg PRN for migraine, continued sertraline 50 mg daily. Advised seizure and headache diary, scheduled neurology follow‑up in 2 weeks, neurosurgery outpatient in 4 weeks.</li><li>2023-08-05: 35‑year‑old male with recurrent generalized tonic‑clonic seizure, post‑ictal confusion, left frontal headache, and left arm weakness. Examination: BP 135/85, HR 100, neuro exam shows left upper extremity 4+/5 strength, mild spasticity; otherwise intact. Imaging: head CT 3 mm left frontal subdural hematoma with 4 mm midline shift; MRI confirms subdural collection, no parenchymal lesions. EEG: occasional sharp‑wave discharges. Labs: CBC/CMP normal. Management: continue levetiracetam 1000 mg PO BID, add lacosamide 100 mg QHS, provide lorazepam 2 mg PRN every 6 hrs. Plan: repeat neuroimaging in 2–4 weeks; neurology follow‑up in 2 weeks; neurosurgery outpatient in 4 weeks. Seizure and headache diary maintained.</li><li>2023-08-12: Post‑acute rehab evaluation: mild right‑side spasticity, left arm weakness (4+/5 left, 5/5 right), executive dysfunction, ongoing headaches. Repeat head CT shows regression of subdural hematoma to 2 mm, no midline shift. Vitals stable (BP 130/80, HR 90, RR 18, Temp 98.5°F, SpO₂ 98%). Neuro‑rehab plan unchanged: continue PT 3x/week, OT task sequencing, ST executive tasks; maintain dual AED therapy, seizure and headache diary. Repeat head CT in 6 weeks; neurology follow‑up in 2 weeks; neurosurgery outpatient in 4 weeks.</li><li>2023-08-19: Discharge planning for 35‑year‑old male with post‑traumatic subdural hematoma (2 mm) and controlled post‑traumatic epilepsy. Physical exam stable; strength 4+/5 left upper extremity, mild right‑sided spasticity, no new seizures. Final EEG normal; repeat head CT stable. Discharged on levetiracetam 1000 mg PO BID, lacosamide 100 mg QHS, sertraline 50 mg daily, sumatriptan 50 mg PRN, lorazepam 2 mg PRN, acetaminophen 650 mg PO q6h PRN. Advised PT/OT continuation, walker use, seizure‑prevention education, headache diary. Follow‑ups: neurology rehab 1 week, psychiatry 2 weeks, neurosurgery CT 6 weeks.</li><li>2023-08-26: Routine neurology follow‑up 3 days post‑discharge; patient reports no seizures, no new headaches, mood stable. Neurologic exam intact, mild left arm weakness 4+/5. Labs normal. EEG ordered. Plan: continue current med regimen; consider gradual AED taper over 6 months if EEG normal; continue PT/OT and diary maintenance.</li><li>2023-09-02: 35‑year‑old male presents for routine depression follow‑up. Reports mild improvement in mood, no new seizures or headaches. Continues current medications (sertraline, levetiracetam, lacosamide, sumatriptan) with no changes. Advised to maintain seizure/ headache diary, continue PT/OT, repeat head CT in 6 weeks, next psychiatry visit in 2 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

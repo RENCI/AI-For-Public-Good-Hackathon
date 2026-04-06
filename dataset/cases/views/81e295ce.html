@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 81e295ce</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 81e295ce</h1><div class="subtitle">Stage IV Squamous Cell Carcinoma of the Lower Lobe of the Lung | Male, 98</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic Obstructive Pulmonary Disease (COPD), Chronic Bronchitis, History of Tuberculosis, Bronchiectasis, Hypertension, Type 2 Diabetes Mellitus, Coronary Artery Disease, Chronic Kidney Disease, Osteoporosis, Geriatric Frailty</div><div class="meta-line">Risk Factors: Heavy cigarette smoking (high pack‑year history), Radon exposure, Asbestos exposure, Ambient air pollution, Occupational dust exposure, Family history of lung cancer, Genetic mutations (EGFR, ALK, KRAS)</div></div>
+<details><summary>Narrative <span class="preview-text">**Mr. Thomas Harding** was a 98‑year‑old retired machinist who lived alone in a modest two‑story home. He had a lifetime...</span></summary><div class="section-body"><p>**Mr. Thomas Harding** was a 98‑year‑old retired machinist who lived alone in a modest two‑story home. He had a lifetime of heavy tobacco use—he smoked over a pack a day for 45 years—and a history of occupational dust exposure in a dusty foundry, plus intermittent exposure to radon and asbestos in a rental apartment in the 1970s. His medical record carried a dense list of chronic illnesses: irreversible airflow limitation due to COPD and chronic bronchitis, a prior bout of pulmonary tuberculosis at age 54 that had left residual calcified lesions and a dilated right lower lobe bronchi, bronchiectasis that produced a persistent, low‑grade sputum production, essential hypertension, type‑2 diabetes mellitus poorly controlled on oral agents, stable coronary artery disease with a history of percutaneous coronary intervention, stage 3 chronic kidney disease, osteoporosis, and the inevitable geriatric frailty that had made his gait increasingly cautious.</p><p>---</p><p>### 1. First Red Flag – The Persistent Cough (Week 0–4)</p><p>In early March, Mr. Harding began to notice a dry cough that no longer seemed to be an old habit. He reported the cough as “sudden and persistent” and found it more disturbing at night, often waking in the middle of the night. For his own part, he blamed it on a new cold; for his primary care physician, it was deemed an exacerbation of his chronic bronchitis. The patient was advised to increase use of his albuterol inhaler and to try an inhaled steroid. A chest X‑ray sent to the urgent‑care clinic showed a patch of increased opacity in the right lower lobe but was interpreted as “likely post‑influenza bronchitis” given the context of his known bronchiectasis.</p><p>During this period, the cough was accompanied by a mild wheeze, but he insisted his breathing felt “normal enough.” He began to lose 1–2 pounds, which he shrugged off as part of normal aging. His routine bloodwork, done in the week of his first visit, showed a mild normocytic anemia (hemoglobin 11.0 g/dL), modestly elevated ESR, and a fasting glucose of 138 mg/dL. No abnormality in his urinalysis.</p><p>### 2. The First Imaging – The Turning Point (Week 5–8)</p><p>In a follow‑up visit at the community clinic, the pulmonologist reviewed the chest radiograph again, now noting a more defined mass‑like appearance in the mid–right lower zone with an ill‑defined peripheral margin and associated calcifications reminiscent of his old TB lesions. A thoracic CT scan was ordered. He went to the urban hospital for the scan, arriving in a wheelchair with a mild palliative‑grade frailty.</p><p>The CT scan revealed a 5.5‑cm spiculated lesion in the lower lobe of the right lung, with evidence of regional hilar and mediastinal lymph node enlargement. A PET‑CT scan demonstrated hypermetabolic activity within the mass and scattered uptake in the left adrenal gland and right hepatic lobe, raising immediate concern for metastatic disease. A CT‑guided core needle biopsy of the lung mass confirmed an anaplastic squamous cell carcinoma, with immunohistochemistry positive for p63 and cytokeratin 5/6. Molecular testing for EGFR, ALK, and KRAS was negative.</p><p>On the same day, a pulmonologist convened a multidisciplinary discussion via teleconference—including cardiology, anesthesiology, oncology, and palliative care consult—about the implications of a stage IV carcinoma in a 98‑year‑old with significant comorbidities. After a lengthy family call in which the daughter in Florida was on the line with tears, it was decided that curative intent therapy would be futile. The goal was to preserve comfort and dignity.</p><p>The oncology team advised against systemic chemotherapy, citing the patient’s poor renal function, frailty, and poor performance status (Karnofsky Score 30). The patient was advised that short‑course radiotherapy to the primary site (two fractions of 2000 cGy) might palliate dyspnea related to mass effect but would not prolong survival. Mr. Harding consented, opting for the less invasive option.</p><p>### 3. Early Palliative Measures (Month 2)</p><p>Mr. Harding’s first radiation session was administered on the 12th of April. He reported mild fatigue and a sense of relief during the subsequent days as the cough subsided. However, a week later, he developed a productive cough with purulent sputum and became tachypneic, reaching 28 breaths per minute and a PaCO₂ of 58 mmHg on a simple pulse oximetry. At this point, his COPD was in apparent exacerbation triggered by the developing pneumonia.</p><p>He was sent to the hospital. A low‑dose CT scan revealed a new left lower lobe infiltrate, likely secondary bacterial pneumonia. Empiric antibiotics were started with ceftriaxone and azithromycin. The chest tube was not inserted as his pleural effusion was minimal. He was discharged on oral prednisone 20 mg daily for one week, a change from his usual inhaled corticosteroid, and advised to stay in the hospital for a repeat CT or to seek emergency care if breathing worsened.</p><p>During that month, he had a sudden, mild blood‑tinged sputum episode. He denied hemoptysis, but the pulmonologist felt this could herald bleeding from the tumor. A bronchoscopy schedule was moved to the following month.</p><p>### 4. Complications – The First Episode of Hemoptysis (Month 3)</p><p>In early May, while in his bedroom, Mr. Harding coughed up a small amount of dark‑red sputum. He went to urgent care, where an emergent chest X‑ray showed a slight hyperdensity adjacent to the right lower lung lesion. Hemoptysis was brief, with no significant blood loss. On the day of the visit, he had a blood pressure of 170/92 and an elevated heart rate of 102 bpm. The pulmonologist decided to proceed with a diagnostic bronchoscopy in the hospital’s endoscopic unit to determine the source.</p><p>Bronchoscopy found an ulcerated mass at the base of the lobar bronchus of the right lower lobe. There was active bleeding when the scope passed the lesion, but a topical epinephrine spray and cautery achieved hemostasis. The biopsy reaffirmed squamous cell carcinoma. The tumor had a high proliferative index (Ki‑67 35%). Importantly, at this juncture, Mr. Harding’s creatinine had risen to 1.6 mg/dL, and he was now stage 3b chronic kidney disease, limiting the use of nephrotoxic agents.</p><p>Given the patient’s frailty, the oncology team opted not to pursue any systemic therapy beyond symptomatic management. The hospitalist increased the prednisone to 40 mg daily, a plan to keep with a taper, expecting to counter tumor‑related inflammation. The patient, however, developed a mild cough again around day 5, now producing thick sputum with occasional blood streaks, prompting the addition of inhaled ipratropium to his regimen.</p><p>### 5. A Rapid Deterioration – The Acute Exacerbation (Month 4)</p><p>In mid‑June, Mr. Harding returned to the hospital on a Thursday morning with worsening shortness of breath, confusion, and a sudden drop in oxygen saturation to 84% on room air. He was in his bedroom, pacing anxiously, holding a blanket tighter around his chest. He was drowsy but not obtunded, and his pupils were equal. The nurse called for an emergency physician to examine him. His vitals were: BP 140/88 mmHg, HR 112 bpm, RR 30/min, Sat 86% on 3 L/min nasal cannula, T 99.5°F.</p><p>The ED team performed a rapid bedside chest X‑ray that highlighted a new left pleural effusion, a possible left diaphragmatic elevation and the right lower lobe mass now appearing more rounded. The left pleural fluid appeared serosanguineous on aspiration, and a thoracentesis was performed. Fluid analysis showed 45 cells/µL, mostly neutrophils, exudative protein level 3.8 g/dL, LDH 900 IU/L, negative Gram stain, and cultures pending. No malignant cells were seen on cytology, although the cytology specimen was often inadequate from pleural fluid in elderly patients.</p><p>Simultaneously, the ED received a call from the neurology team: his daughter reported that over the past 12 hours he had been increasingly disoriented and confused, unable to answer simple questions, and now could not sit upright without assistance. A bedside head CT scan was performed without contrast, showing no acute intracranial hemorrhage but mild cortical sulci effacement and no mass effect. The neurology consulted for a possible metabolic encephalopathy. The labs showed a serum sodium of 128, a serum glucose of 110 mg/dL, BUN 28 mg/dL, creatinine 1.7 mg/dL.</p><p>The ICU team was consulted on Thursday night. With the patient’s advanced age, significant comorbidities, and the rapidly progressing respiratory compromise, they considered the utility of intubation and mechanical ventilation uncertain. In a shared decision‑making session with the patient’s daughter (present in the ICU), the family expressed desire to limit the intensity of interventions to avoid further suffering. They declined intubation and heavy sedation, preferring to stay on non‑invasive oxygen and comfort measures. The ICU team instituted high‑flow nasal cannula at 50% FiO₂ and offered a low‑dose opioid infusion for dyspnea control. Palliative care was consulted the next morning.</p><p>### 6. The Final Weeks – Worsening Illness and Transition to Hospice (Months 5–6)</p><p>In July, Mr. Harding’s condition continued to falter. He had persistent tachypnea, an oxygen requirement climbing to 4 L/min to maintain saturation above 88%. His dyspnea and cough progressed to a constant, deep‑throated moan. The pain score rose to 7/10 for chest pain that he denied earlier; he became increasingly restless. His appetite had dwindled further; he refused to swallow. Blood tests indicated a rising white count of 15,000/µL, mild hyponatremia 125, and a rising creatinine 2.0 mg/dL.</p><p>On the second week of July, while sleeping in his bedroom, Mr. Harding suddenly became unresponsive. His daughter called 911, and the ambulance arrived within minutes. EMS found him in an altered mental state, no pulse detected after 9 minutes of basic CPR. Emergency services declared a presumed cardiac arrest due to underlying metabolic derangements. No return of spontaneous circulation.</p><p>The family was notified in the hospital. After discussion, the daughter chose to place the patient on hospice care with comfort measures only; pain was managed with morphine infusion, and the focus shifted to providing a dignified end. Within days, Mr. Harding had passed peacefully during the night, surrounded by his daughter and pet cat, the family and hospice nurses providing reassurance, and the care team documenting the patient’s wishes.</p><p>---</p><p>**Reflection**</p><p>Mr. Thomas Harding’s disease course illustrates the relentless trajectory of Stage IV squamous cell carcinoma of the lung in the very elderly with extensive comorbidities. The initial cough, misinterpreted as a COPD exacerbation, eventually revealed the malignant mass on imaging that could not be resected or treated aggressively. His frailty, chronic respiratory disease, and the interplay of systemic inflammation, hypercapnia, and infection propelled his condition to a point where aggressive life‑prolonging measures were not only unlikely to succeed but might have caused undue suffering. The narrative underscores the importance of early palliative intervention, shared decision‑making, and a compassionate focus on quality of life for patients at the end of life.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-03-10</h3><div class="visit-meta">Primary Care | Reason: Persistent dry cough with nighttime awakening</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Patient:** Mr. H. – 98‑year‑old male
+
+**Chief Complaint:** Persistent dry cough with nighttime awakening.
+
+**History of Present Illness:** Mr. H reports a 3‑week history of a dry cough that has begun disturbing his sleep. He describes mild wheezing and notes a gradual loss of 1–2 lb over the past month. He has no fever, chills, chest pain, or dyspnea. No sputum production. The cough is non‑productive and worse at night. No recent travel or sick contacts. He denies recent antibiotic use.
+
+**Past Medical History:** COPD with chronic bronchitis; prior COPD exacerbations; hypertension; type 2 diabetes mellitus; coronary artery disease; stage 3 chronic kidney disease; bronchiectasis; former TB exposure; osteoporosis; frailty.
+
+**Social History:** Former smoker, 1.6 pack‑years at age 45, quit &gt;40 yrs ago. Lives alone; limited mobility.
+
+**Current Medications:** None. NKDA.
+
+**Physical Examination:**
+- *Vitals:* BP 122/78 mm Hg; HR 78 bpm; RR 18 /min; Temp 98.6 °F; SpO₂ 97 % on room air.
+- *General:* Alert, oriented, appears frail.
+- *HEENT:* No nasal discharge.
+- *Chest:* Mild inspiratory wheeze bilaterally; clear lung fields on auscultation; no suprasternal retractions.
+- *Extremities:* No clubbing, cyanosis, or edema.
+- *Abdomen:* Soft, non‑tender.
+
+**Laboratory Results:**
+- Hb 11.0 g/dL; ESR 30 mm/hr; Fasting glucose 138 mg/dL; Creatinine 1.2 mg/dL.
+- Chest X‑ray: Right lower lobe patchy opacities interpreted as post‑influenza bronchitis.
+
+**Assessment:**
+1. COPD exacerbation with post‑influenza bronchitis.
+2. Possible mild bacterial superinfection – no clear signs of pneumonia at this time.
+3. Unintentional weight loss possibly due to decreased oral intake from cough.
+
+**Plan:**
+- **Inhalation Therapy:** Continue albuterol 2 puffs BID PRN; add fluticasone/salmeterol DPI 1 puff BID as prescribed.
+- **Symptom Control:** Encourage use of cough suppressant PRN if needed, but avoid anticholinergics due to frailty.
+- **Nutrition &amp; Weight:** Discuss appetite; consider referral to dietitian; ensure adequate hydration.
+- **Vaccinations:** Offer flu shot if not received this season; educate on pneumococcal vaccine.
+- **Monitoring:** Educate patient and caregiver on red‑flag symptoms (increased dyspnea, fever, productive cough) and to seek care promptly.
+- **Follow‑up:** Return visit in 2 weeks; if cough persists &gt;4 weeks or worsens, consider sputum culture and empirical antibiotic therapy for possible bacterial bronchial infection.
+- **Documentation:** Note patient’s medication initiation and explain inhaler technique at discharge.
+- **Social Support:** Verify availability of caregiver assistance for inhaler adherence and dietary needs.
+
+**Signature:**
+
+[Primary Care Physician]
+
+---
+
+**Key Points:**
+- COPD exacerbation with post‑influenza bronchitis.
+- Initiated inhaled steroid and LABA/ICS combination.
+- Weight loss addressed with dietitian referral.
+- Vaccinations advised.
+- 2‑week follow‑up with criteria for early return.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dry cough</span><span class="pill">wheezing</span><span class="pill">1–2 lbs weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/78</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>SpO₂</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild inspiratory wheeze bilaterally</li><li>Clear lung fields on auscultation</li><li>No suprasternal retractions</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray – right lower lobe patchy opacities, interpreted as post‑influenza bronchitis</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Albuterol 2 puffs BID as needed</li><li>Fluticasone/salmeterol DPI 1 puce BID</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He tolerated the medication changes well, reported mild improvement in cough but continued to lose 1–2 lb.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">chronic bronchitis</span><span class="pill">hypertension</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">coronary artery disease</span><span class="pill">stage 3 chronic kidney disease</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol rescue inhaler (5 µg/actuation SABA)</li><li>fluticasone/salmeterol DPI (100 µg/actuation inhaled corticosteroid/long‑acting β₂ agonist)</li><li>lisinopril 20 mg daily</li><li>metformin 500 mg BID</li><li>rosuvastatin 10 mg nightly</li><li>aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD, chronic bronchitis, COPD exacerbations, hypertension, type 2 DM, coronary artery disease</li><li>1.6% pack‑year smoking history from 45 years</li><li>history of TB</li><li>bronchiectasis</li><li>stage 3 CKD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Harding presented to his family physician after several weeks of a new dry cough that disturbed his sleep. The exam revealed a mild wheeze and normal chest auscultation. Laboratory data returned: hemoglobin 11.0 g/dL, ESR 30 mm/hr, fasting glucose 138 mg/dL, creatinine 1.2 mg/dL. He was told this was a COPD exacerbation; inhaler use was increased and an inhaled steroid dose was added. He was scheduled for a chest X‑ray in the urgent‑care clinic.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of cough misattributed to COPD. No malignancy suspected yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-04-05</h3><div class="visit-meta">Pulmonology | Reason: Re-evaluation of persistent cough and new radiographic findings</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Clinic Note – Pulmonology – Visit #2 (2024-04-05)**
+
+**Patient:** Mr. Robert Harding, 98‑year‑old male. 
+
+**Chief complaint:** Re‑evaluation of persistent cough and new radiographic findings.
+
+**History of present illness:** Mr. Harding presents for a follow‑up after an abnormal chest X‑ray and a new right lower lobe opacity noted on a recent chest X‑ray. He reports a 3‑week history of a dry cough, nocturnal awakening, mild wheeze, and a 1–2 lb weight loss. He has a longstanding history of COPD and bronchiectasis, prior tuberculosis, hypertension, type 2 diabetes, coronary artery disease, stage 3 CKD, osteoporosis, and frailty. He denies fever or hemoptysis.
+
+**Review of systems:** 
+- Respiratory: cough (dry), wheeze, dyspnea at rest is mild, RR 20/min.
+- Constitutional: mild weight loss, no fevers.
+- Cardiovascular: no chest pain.
+- Others: All other systems negative.
+
+**Medications (current):** 
+- Albuterol rescue inhaler (2 puffs PRN).
+- Fluticasone/salmeterol DPI 1 puff BID.
+- Lisinopril 10 mg daily.
+- Metformin 500 mg BID.
+- Rosuvastatin 10 mg daily.
+- Aspirin 81 mg daily.
+
+**Allergies:** NKDA.
+
+**Vital signs:** 
+- Blood pressure: 140/85 mmHg
+- Heart rate: 82 bpm
+- Respiratory rate: 20/min
+- Temperature: 98.7 °F
+- SpO₂: 95% on room air
+
+**Physical exam:** 
+- HEENT: upper airway clear.
+- Chest: reduced breath sounds at right lower lung base, mild inspiratory wheeze, no crackles, no clubbing.
+- Cardiovascular: regular rhythm, no murmurs.
+- Abdomen: soft, non‑tender.
+- Extremities: no edema.
+- Neurologic: alert and oriented, intact cognition.
+
+**Imaging and diagnostics:**
+- **Repeat CXR**: right lower lobe opacity, more defined.
+- **Chest CT**: 5.5 cm peripheral opacity in RLL with regional hilar/mediastinal lymphadenopathy.
+- **PET‑CT**: hypermetabolic activity in RLL lesion (SUVmax 12); mild uptake in left adrenal gland and right hepatic lobe.
+- **CT‑guided core needle biopsy**: atypical cells; definitive histology pending.
+
+**Assessment:**
+1. Suspected primary non‑small cell lung carcinoma (ground‑glass to solid, peripheral) with regional lymphadenopathy. 
+2. Possible metastatic foci to adrenal and hepatic regions (based on PET). 
+3. Differential also includes infectious etiologies (reactivation TB, fungal infection), bronchiectasis exacerbation, COPD flare, and lung abscess.
+
+**Plan:**
+- **Oncologic work‑up:** Await histopathology reports; will discuss definitive treatment should malignancy be confirmed.
+- **Palliative radiotherapy:** Initiated 2 fractions of 2000 cGy on the day of visit (scheduled for next day) to relieve respiratory symptoms and control local disease.
+- **Medication management:** Continue current inhaler therapy; no changes to maintenance meds. Consider adding low‑dose prednisone if radiation side‑effects or inflammation arise.
+- **Supportive care:** Nutrition consult for weight loss; refer to home health for assistance with activity and daily living given frailty.
+- **Follow‑up:** 
+  * Day‑1 post‑radiation review of pain, dyspnea, and tolerability.
+  * Telephone check‑in at 1 week to assess symptom control and side‑effects.
+  * Imaging (CT chest) in 4–6 weeks or sooner if clinical deterioration.
+  * Palliative care consult to address goals of care and advanced directive discussion.
+
+**Signature:** 
+Pulmonologist, MD
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent dry cough</span><span class="pill">nighttime awakening</span><span class="pill">mild wheeze</span><span class="pill">recently lost 1–2 lb</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/85</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>98.7°F</td></tr><tr><td>SpO₂</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Upper airway clear</li><li>Reduced breath sounds at right lower lung base</li><li>No clubbing</li><li>Mild inspiratory wheeze</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT scan</li><li>PET‑CT scan</li><li>CT‑guided core needle biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest CT – 5.5 cm spiculated mass in right lower lobe with peripheral margin, regional hilar and mediastinal lymphadenopathy</li><li>PET‑CT – hypermetabolic activity in mass (SUVmax 12), mild uptake in left adrenal gland and right hepatic lobe</li><li>Biopsy – invasive squamous cell carcinoma, p63+ and CK5/6+; EGFR/ALK/KRAS negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Administered 2 fractions of 2000 cGy palliative radiotherapy (scheduled for next day)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed relief that a diagnosis was reached but accepted palliative intent. He remained cognitively intact at discharge.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">hypertension</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">coronary artery disease</span><span class="pill">stage 3 CKD</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol rescue inhaler</li><li>fluticasone/salmeterol DPI</li><li>lisinopril</li><li>metformin</li><li>rosuvastatin</li><li>aspirin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD, bronchiectasis, TB sequelae, prior cough exacerbation</li><li>recent hospital visit for chest X‑ray</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On examination, Mr. Harding was slightly tachypneic. A repeat chest X‑ray was reviewed, showing a more defined, spiculated opacity in the right lower lobe. The pulmonologist ordered a chest CT, follow‑up PET‑CT, and arranged for a CT‑guided core needle biopsy on the same day. The patient was consented for the procedures, and a multidisciplinary teleconference was convened with oncology, cardiology, anesthesiology, and palliative care. The focus of this meeting was to discuss treatment limits given his advanced age and comorbidities.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IV squamous cell carcinoma diagnosed; metastatic to left adrenal and right hepatic lobe. Renal function limited systemic therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-04-12</h3><div class="visit-meta">Radiation Oncology | Reason: Palliative radiation to primary lung mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Palliative radiotherapy for primary lung mass.
+
+History of Present Illness: Mr. Harding, 98‑year‑old male, presents for a planned two‑fraction course of palliative radiotherapy to a 5.5 cm peripheral lung mass identified on CT and PET‑CT. He reports mild fatigue after the treatment and a notable reduction in his chronic dry cough over the subsequent two days. No acute respiratory distress or new symptoms were noted.
+
+Past Medical History: COPD, bronchiectasis, prior TB, hypertension, type 2 diabetes, coronary artery disease, stage 3 CKD, osteoporosis, frailty.
+
+Medications: Albuterol rescue inhaler, fluticasone/salmeterol DPI, lisinopril 10 mg daily, metformin 500 mg BID, rosuvastatin 10 mg nightly, aspirin 81 mg daily. No new medications were added.
+
+Allergies: NKDA.
+
+Social History: Lives at home with caregiver support; ambulates with wheelchair.
+
+Review of Systems: Positive for dry cough and post‑radiation fatigue; otherwise unremarkable.
+
+Physical Examination: No acute distress. Vitals: BP 128/80 mmHg, HR 76 bpm, RR 18 /min, Temp 98.5 °F, SpO₂ 96 % RA. Cardiovascular: Regular rate and rhythm, normal heart sounds. Pulmonary: Clear breath sounds bilaterally, no wheeze or crackles. Abdomen: Soft, non‑tender. Extremities: No edema.
+
+Assessment: Palliative radiotherapy to a malignant primary lung mass has resulted in symptomatic improvement of cough. Mild fatigue is consistent with post‑radiation effect. No evidence of radiation pneumonitis or acute infection at this time.
+
+Plan:
+1. Continue current anti‑COPD regimen (albuterol rescue and fluticasone/salmeterol DPI) and other chronic medications.
+2. Monitor for signs of radiation pneumonitis (fever, dyspnea, new cough) and initiate low‑dose prednisone if suspected.
+3. Encourage adequate rest, hydration, and adequate caloric intake.
+4. Provide home health nurse for assistance with medications and activity modification.
+5. Schedule follow‑up: repeat chest CT in 4–6 weeks to assess tumor response and rule out progression.
+6. Weekly telephone contact with oncology for symptom surveillance.
+7. Palliative care consultation to discuss goals of care and advanced directives.
+8. Educate caregiver on monitoring SpO₂ and seeking prompt care for any sudden decline.
+
+The patient and caregiver are satisfied with the plan and understand the palliative intent of therapy.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dry cough</span><span class="pill">post‑radiation fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/80</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>SpO₂</td><td>96% RA</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No acute distress</li><li>Normal heart sounds</li><li>Clear lung fields</li><li>Soft abdomen</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Delivered 2000 cGy x2 radiotherapy fractions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He reported feeling less cough, a slight sense of relief, but experienced mild fatigue and wanted to rest.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV SCC of right lower lobe</span><span class="pill">COPD</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">hypertension</span><span class="pill">type 2 DM</span><span class="pill">CAD</span><span class="pill">stage 3 CKD</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol rescue inhaler</li><li>fluticasone/salmeterol DPI</li><li>lisinopril</li><li>metformin</li><li>rosuvastatin</li><li>aspirin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Underwent CT and PET‑CT diagnosis of stage IV SCC</li><li>2 fractions of 2000 cGy radiation planned</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Harding was transported by wheelchair to the oncology department for two fractions of radiotherapy. The session was uneventful; he reported mild fatigue and noted an immediate decrease in cough intensity during the next two days. No acute toxicities were observed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑radiation short‑term symptom relief; underlying disease remains advanced.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-04-18</h3><div class="visit-meta">Hospitalist/Pulmonology | Reason: Hospital admission for COPD exacerbation and pneumonia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 98‑year‑old male admitted for acute exacerbation of COPD with presumed bacterial pneumonia.
+
+History of Present Illness: Patient reports a 3‑day history of productive cough with purulent sputum, worsening dyspnea on minimal exertion, mild fever, and tachypnea. He had a recent course of prednisolone 20 mg/day started by pulmonology 1 week ago for COPD flare. He reports no chest pain, hemoptysis, or recent travel.
+
+Past Medical History: Severe COPD with bronchiectasis, prior TB, coronary artery disease, CKD stage 3, type 2 DM, hypertension, osteoporosis, geriatric frailty, and recent palliative radiotherapy to a peripheral lung mass.
+
+Medications on Admission: Albuterol rescue inhaler; fluticasone/salmeterol DPI (1 puff BID); lisinopril; metformin; rosuvastatin; aspirin; prednisone 20 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for productive cough, dyspnea, mild fever; negative for chest pain, orthopnea, paroxysmal nocturnal dyspnea, weight change.
+
+Physical Examination:
+- General: Alert, ambulatory, in mild respiratory distress.
+- Vitals: BP 132/84 mmHg, HR 88 bpm, RR 28/min, Temp 100.4 °F, SpO₂ 90% on 3 L/min nasal cannula, PaCO₂ 58 mmHg.
+- HEENT: No JVD.
+- Chest: Decreased breath sounds at left lower lobe, fine crackles, no wheeze.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema.
+
+Impression &amp; Assessment:
+1. Acute bacterial pneumonia (left lower lobe infiltrate with mild pleural effusion) superimposed on chronic COPD exacerbation.
+2. COPD exacerbation likely triggered by infection.
+3. Risk of fluid overload from CPAP due to CKD.
+4. Monitoring for potential radiation‑induced pneumonitis remains pending.
+
+Plan:
+1. Antibiotics: Continue ceftriaxone 2 g IV q24h and azithromycin 500 mg PO daily. Plan to transition to oral amoxicillin 875 mg PO BID for remaining course once patient tolerates PO; total antibiotic duration 10 days.
+2. Steroids: Continue prednisone 20 mg PO daily for 5 days, then taper 10 mg PO for next 5 days.
+3. Bronchodilators: Albuterol 2 puffs q8h PRN, continue fluticasone/salmeterol DPI 1 puff BID.
+4. Oxygen: Maintain 3 L/min NC to target SpO₂ ≥92%; titrate as needed.
+5. Hydration &amp; electrolytes: Encourage oral fluids; monitor labs (CBC, CMP) daily.
+6. Diuretic: Consider low‑dose furosemide 10 mg PO if fluid overload suspected.
+7. Vaccinations: Review pneumococcal and influenza status; schedule if due.
+8. Follow‑up: Outpatient clinic visit in 5 days to assess response; repeat chest X‑ray and CBC in 1 week; consider repeat CT if no clinical improvement.
+9. Education: Instruct patient and caregiver to seek emergent care if dyspnea worsens, oxygen drops &lt;90% on room air, or new chest pain develops.
+10. Additional: Continue cardiology, endocrinology, and nephrology follow‑up; coordinate with palliative care for goals of care continuity.
+
+Disposition: Patient discharged after 5 days of inpatient care in clinically stable condition. Provided oral medication list and instructions.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">productive cough with purulent sputum</span><span class="pill">tachypnea</span><span class="pill">dyspnea on minimal exertion</span><span class="pill">mild fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/84</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>28</td></tr><tr><td>Temp</td><td>100.4°F</td></tr><tr><td>SpO₂</td><td>90% on 3 L/min nasal cannula</td></tr><tr><td>PaCO₂</td><td>58 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lung: decreased breath sounds left lower lobe with crackles</li><li>No wheeze</li><li>BP 132/84</li><li>RR 28</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Low‑dose chest CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT – new infiltrate in left lower lobe, mild effusion 1 cm</li><li>CBC – WBC 12,000/µL</li><li>CRP 8 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV ceftriaxone 2 g daily</li><li>Oral azithromycin 500 mg daily</li><li>Oral prednisone 20 mg daily</li><li>Albuterol 2 puffs q8h PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient improved; cough diminished, sputum became less purulent. Discharged with instructions for oral meds and follow‑up appointments.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV SCC</span><span class="pill">COPD</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">hypertension</span><span class="pill">type 2 DM</span><span class="pill">CAD</span><span class="pill">stage 3 CKD</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol rescue inhaler</li><li>fluticasone/salmeterol DPI</li><li>lisinopril</li><li>metformin</li><li>rosuvastatin</li><li>aspirin</li><li>prednisone 20 mg daily for 1 week (as per pulmonology)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent radiotherapy for SCC</li><li>COPD exacerbation history</li><li>history of TB, bronchiectasis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Upon admission, the patient was tachypneic with hypoxia. A low‑dose chest CT was performed, showing a new left lower lobe infiltrate consistent with bacterial pneumonia. Empiric antibiotics were started with ceftriaxone 2 g IV daily and azithromycin 500 mg PO daily. He was continued on oral prednisone 20 mg daily to address COPD inflammatory response. Discharged after 5 days with plan to follow up in clinic and a recommendation to seek emergency care if breathing worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Developed bacterial pneumonia secondary to immunosuppression from steroids; still stage IV SCC.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-05-05</h3><div class="visit-meta">Pulmonology | Reason: Hemoptysis and diagnostic bronchoscopy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: The patient, a 98‑year‑old male with a history of COPD, bronchiectasis, prior TB, and a 5.5 cm peripheral lung mass treated with palliative radiotherapy, presented with a new episode of hemoptysis noted as a dark‑red streak in sputum. During the visit, he reported coughing up a small amount of dark‑red sputum with minimal blood loss.
+
+History of Present Illness: The patient had a recent COPD exacerbation and was on ceftriaxone, azithromycin, and prednisone for infectious pneumonia. Despite resolution of the acute infection, he developed a minor hemoptysis episode. He was transferred to the endoscopic unit for diagnostic bronchoscopy.
+
+Procedure Details: Under topical anesthesia, a bronchial scope was performed. Active bleeding was observed in the right lower lobe segmental bronchus. Bleeding was controlled with topical epinephrine spray and electrocautery. A repeat suction biopsy was obtained for cytology.
+
+Post‑Procedure Course: The patient tolerated the procedure well, developed no further bleeding, and was discharged after three days of observation with a plan for inpatient palliative care at home.
+
+Vital Signs (post‑bronchoscopy): BP 162/90 mmHg, HR 102 bpm, RR 20 /min, Temp 98.9 °F, SpO₂ 94%. Prior to procedure: BP 170/92, HR 102, RR 22, Temp 98.9 °F, SpO₂ 94%.
+
+Examination: Clear lung fields bilaterally, no active bleeding noted, nasal passages patent. No wheeze or crackles.
+
+Investigations: Bronchial brush cytology obtained. CBC showed hemoglobin 10.8 g/dL, platelets 220,000 /µL, creatinine 1.6 mg/dL (↑ from baseline 1.4). No eosinophilia, WBC within normal limits.
+
+Assessment:
+1. Hemoptysis – most likely secondary to previously irradiated lung tissue and underlying bronchiectasis. Differential includes airway tumor recurrence, infection, or pulmonary embolism.
+2. Chronic anemia secondary to chronic disease and possible blood loss.
+3. Hypertension (BP 162/90) – requires adjustment of antihypertensive regimen.
+
+Plan:
+- Continue current systemic corticosteroid taper (20 mg BID to 40 mg for 2 days then taper to 20 mg) to reduce airway inflammation.
+- Continue inhaled bronchodilator therapy: albuterol PRN and fluticasone/salmeterol DPI BID. Add ipratropium sulfate 2 puffs BID for bronchial secretions.
+- Continue ceftriaxone 2 g IV daily and azithromycin 500 mg PO daily for 5 days, with plan to finish course upon discharge.
+- Monitor renal function; hold metformin for 24 h if renal function worsens.
+- Continue lisinopril 10 mg daily; consider adding low‑dose clonidine if BP remains uncontrolled.
+- Encourage oral iron supplementation if anemia persists.
+- Order bronchoscopy cytology review; if malignant cells are identified, consult oncology.
+- Repeat chest CT in 4–6 weeks to evaluate residual lesion and recurrence.
+- Follow up with palliative care team for symptom management and goals of care discussions.
+- Advise patient/caregiver to monitor for new or worsening hemoptysis, shortness of breath, or fevers; call office or ED if any occur.
+
+Disposition: Discharged to home under inpatient palliative care. Patient tolerated procedure well and will continue current medication regimen.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">small amount of dark‑red sputum</span><span class="pill">blood pressure 170/92</span><span class="pill">tachycardia 102 bpm</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>170/92</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>98.9°F</td></tr><tr><td>SpO₂</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Post‑bronchoscopy, no signs of bleeding</li><li>Clear lung fields</li><li>BP 162/90</li><li>RR 20</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bronchial brush cytology</li><li>Complete blood count</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC – Hemoglobin 10.8 g/dL</li><li>Platelets 220,000/µL</li><li>Creatinine 1.6 mg/dL (rise from 1.4)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Topical epinephrine spray</li><li>Bronchial cautery</li><li>Prednisone 40 mg daily</li><li>Ipratropium sulfate 2 puffs BID</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient noted mild cough with some thick sputum streaked with blood; overall comfort improved with new inhaler.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV SCC</span><span class="pill">COPD</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">hypertension</span><span class="pill">type 2 DM</span><span class="pill">CAD</span><span class="pill">stage 3 CKD</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol rescue inhaler</li><li>fluticasone/salmeterol DPI</li><li>lisinopril</li><li>metformin</li><li>rosuvastatin</li><li>aspirin</li><li>prednisone 20 mg daily</li><li>azithromycin 500 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV SCC</li><li>prior radiotherapy</li><li>COPD exacerbation this month</li><li>new hemoptysis episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the visit, the patient reported a brief coughing up of a dark‑red streak with no significant blood loss. He was taken to the endoscopic unit for a diagnostic bronchoscopy. Under topical anesthesia, a bronchial scope revealed an ulcerated mass at the base of the right lower lobe bronchus. Active bleeding was controlled with topical epinephrine and cautery. A repeat suction biopsy confirmed squamous cell carcinoma (Ki‑67 35%). The hospitalist increased prednisone to 40 mg daily to address tumor‑related inflammation and added inhaled ipratropium 2 puffs BID as a bronchodilator. The patient tolerated the procedure well and stayed in the hospital for 3 days before being discharged with a plan for inpatient palliative care at home.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Bronchoscopic control of bleeding; renal function worsened but remains stage 3b CKD; no systemic therapy pursued.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-06-15</h3><div class="visit-meta">Emergency Medicine | Reason: Acute respiratory distress and confusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute respiratory distress and confusion.
+
+History of Present Illness:
+A 98‑year‑old male with COPD, bronchiectasis, prior TB, CAD, CKD stage 3b, and current glucocorticoid therapy presented with sudden onset shortness of breath, hypoxia, and altered mental status. A bedside chest x‑ray demonstrated a new left pleural effusion and a rounded right lower lobe mass. Thoracentesis yielded serosanguineous exudate with neutrophil predominance; cultures are pending and cytology negative for malignant cells. Neurology was consulted for confusion; head CT was negative for hemorrhage but showed mild cortical sulci effacement. Labs show hyponatremia (Na 128 mmol/L), rising creatinine (1.7 mg/dL), BUN 28 mg/dL. He was started on high‑flow nasal cannula 50 % FiO₂ and a fentanyl infusion for dyspnea. The family declined intubation; comfort care was instituted. Palliative care was involved the following morning.
+
+Physical Examination:
+- Vital Signs: BP 140/88 mmHg, HR 112 bpm, RR 30 /min, Temp 99.5 °F, SpO₂ 84 % on 3 L/min NC, Glucose 110 mg/dL.
+- HEENT: No focal deficits.
+- Chest: Diminished breath sounds left lower lung field, dullness to percussion.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema.
+
+Assessment:
+1. Acute exacerbation of COPD with probable bacterial pneumonia complicated by exudative pleural effusion (likely infectious, cytology negative for malignancy). 2. Hyponatremia—most likely SIADH or adrenal insufficiency from chronic steroid use, but also contributory renal disease. 3. Confusion—multifactorial (hypoxia, metabolic derangement, medications). 4. Acute on chronic respiratory failure; patient not a candidate for mechanical ventilation per family wishes.
+
+Plan:
+- Continue comfort‑focused therapy: High‑flow nasal cannula 50 % FiO₂ titrated to keep SpO₂ &gt;88 %. Continue fentanyl infusion 10 µg/hr for dyspnea; titrate as needed.
+- Steroids: Continue prednisone 40 mg daily per baseline; consider taper if no further flare.
+- Inhaled therapy: Albuterol rescue as needed; continue fluticasone/salmeterol DPI and ipratropium BID.
+- Renal and electrolytes: Hold metformin; monitor creatinine and Na daily. Consider hypertonic saline if symptomatic hyponatremia persists.
+- Infection: No active organisms on cultures; empirical antibiotics discontinued. Continue to watch for signs of sepsis.
+- Palliative care: Ongoing involvement for goals of care; family counseling regarding prognosis.
+- Follow‑up imaging: Repeat chest X‑ray in 48 hrs to assess pleural fluid and mass size.
+- Labs: Daily BMP, CBC, cultures as needed.
+- Disposition: Comfort care in ED with family present; transition to hospice when appropriate.
+
+Disposition:
+Patient remains in comfort‑care mode; no intubation. Family declined invasive interventions. Palliative care will transition to home hospice if family wishes. Patient is stable on high‑flow nasal cannula and opioid infusion.
+
+Signed:
+EMT/ER Physician</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">shortness of breath</span><span class="pill">confusion</span><span class="pill">rapidly declining oxygen saturation</span><span class="pill">new left pleural effusion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>112</td></tr><tr><td>RR</td><td>30</td></tr><tr><td>Temp</td><td>99.5°F</td></tr><tr><td>SpO₂</td><td>84% on 3 L/min nasal cannula</td></tr><tr><td>Glucose</td><td>110 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Chest: diminished breath sounds left lower lung field</li><li>Left shoulder full of pleural fluid</li><li>No focal neurological deficits</li><li>Soft abdomen</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Thoracentesis fluid analysis</li><li>Head CT</li><li>Basic metabolic panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray – left pleural effusion, round right lower lobe mass</li><li>Thoracentesis – 45 cells/µL neutrophils, protein 3.8 g/dL, LDH 900 IU/L, cytology negative for malignant cells</li><li>Head CT – no hemorrhage, mild effacement</li><li>BMP – Na 128 mmol/L, K 4.2, Cl 97, BUN 28, Cr 1.7, eGFR ~32 mL/min</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>High‑flow nasal cannula 50% FiO₂</li><li>Opioid (fentanyl) infusion 10 µg/hr</li><li>Palliative care consult</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient remained drowsy but did not require intubation; comfort measures maintained; daughter expressed desire for limited therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV SCC</span><span class="pill">COPD</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">hypertension</span><span class="pill">type 2 DM</span><span class="pill">CAD</span><span class="pill">stage 3b CKD</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol rescue inhaler</li><li>fluticasone/salmeterol DPI</li><li>lisinopril</li><li>metformin</li><li>rosuvastatin</li><li>aspirin</li><li>prednisone 40 mg daily</li><li>ipratropium 2 puffs BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV SCC</li><li>post‑radiotherapy</li><li>COPD exacerbation</li><li>recent hemoptysis</li><li>CKD stage 3b</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Harding arrived at the ED on a Thursday morning with sudden respiratory distress. A bedside chest X‑ray showed a new left pleural effusion and a more rounded right lower lobe mass. Thoracentesis was performed; fluid was serosanguineous, exudative with neutrophils predominating. Cultures were pending with no organisms identified. Neurology was consulted for new confusion; bedside head CT was negative for intracranial bleed but showed mild cortical sulci effacement. Labs revealed hyponatremia (Na 128 mmol/L), rising creatinine 1.7 mg/dL, and BUN 28 mg/dL. The ICU team discussed the option of intubation; the patient’s daughter declined invasive ventilation. Comfort care was instituted with high‑flow nasal cannula (50% FiO₂) and an opioid infusion for dyspnea. Palliative care was involved next morning.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute respiratory failure with pleural effusion; metabolic derangement; decision to avoid mechanical ventilation.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-07-12</h3><div class="visit-meta">Palliative Care | Reason: Hospice admission and final care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #7 – 2024‑07‑12 – Palliative Care Note
+
+Chief Complaint:
+- Hospice admission and final comfort care.
+
+History of Present Illness:
+The patient, a 98‑year‑old male with a significant comorbid burden (COPD, bronchiectasis, prior TB, hypertension, type 2 DM, CAD, CKD stage 3b, osteoporosis, frailty), was brought to our hospice unit by his daughter after a telephone consultation.  He had been recently hospitalized (Visit 6) for acute respiratory distress, confusion, and hypoxia.  At the time of admission he was unable to swallow, increasingly confused, exhibiting chronic cough, and restless.  He had been on a chronic prednisone taper (40 mg daily) and inhaled bronchodilators.  No spontaneous breath effort was appreciated on examination and he rapidly progressed to respiratory failure despite supportive measures.  He passed peacefully during the night, surrounded by family and his pet cat.
+
+Physical Examination (at admission):
+- Unresponsive, no spontaneous respiration
+- No palpable masses
+- Dull breath sounds bilaterally with no adventitious sounds
+- Soft, non‑tender abdomen
+
+Vital signs were not obtained because the patient was not ventilated.
+
+Interventions:
+1. Fentanyl infusion titrated to 10 µg/hr for dyspnea control.
+2. Diphenhydramine 25 mg IV q6h PRN for chronic cough.
+3. Oral hydration + brief meals via oral sips as tolerated; fluid administration with O/NS 250 mL q8h IV for comfort.
+4. Anticipatory guidance provided to family regarding the natural course and signs of imminent death.
+
+Diagnostic Work‑up:
+- No new laboratory or imaging studies were ordered at this visit.
+
+Assessment:
+The patient is in the terminal phase of advanced pulmonary disease, most consistent with end‑stage COPD exacerbated by a large peripheral lung mass (likely non‑small cell carcinoma) and comorbid conditions that have led to multiorgan decline.  He also had delirium secondary to hypoxia/infection and overall frailty.  Given the rapid decline and acceptance of comfort‑focused care, the decision was made to transition to hospice and discontinue all non‑beneficial therapies.
+
+Plan:
+- Continue fentanyl infusion and PRN diphenhydramine for symptom control.
+- Maintain IV hydration as permissible for comfort.
+- Monitor for spontaneous breathing; discontinue oxygen support as patient elects comfort only.
+- No further diagnostic work‑up or therapeutic interventions are indicated.
+- Provide bereavement counseling resources to the family.
+- No formal follow‑up appointments; discharge the patient from the hospice home after the event and arrange for grief support.
+
+The patient passed peacefully during the night with his daughter present; all comfort goals were met.  Family was given information on available support services.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">inability to swallow</span><span class="pill">increased confusion</span><span class="pill">chronic cough</span><span class="pill">restlessness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>N/A</td></tr><tr><td>HR</td><td>N/A</td></tr><tr><td>RR</td><td>N/A</td></tr><tr><td>Temp</td><td>98.0°F</td></tr><tr><td>SpO₂</td><td>N/A</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Patient unresponsive; no spontaneous breath effort</li><li>No palpable masses</li><li>Dull breath sounds</li><li>Soft abdomen</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Fentanyl infusion 10 µg/hr</li><li>Diphenhydramine 25 mg IV q6h PRN for cough</li><li>Hydration via O/NS 250 mL q8h IV</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Not applicable – patient transitioned to comfort care and passed peacefully.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV SCC</span><span class="pill">COPD</span><span class="pill">bronchiectasis</span><span class="pill">history of TB</span><span class="pill">hypertension</span><span class="pill">type 2 DM</span><span class="pill">CAD</span><span class="pill">stage 3b CKD</span><span class="pill">osteoporosis</span><span class="pill">frailty</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>prednisone 40 mg daily (taper ongoing)</li><li>ipratropium 2 puffs BID</li><li>albuterol rescue inhaler PRN</li><li>metformin 500 mg BID</li><li>lisinopril 20 mg</li><li>rosuvastatin 10 mg</li><li>aspirin 81 mg</li><li>fentanyl patch 50 µg/h (added during hospice)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV SCC with metastatic disease</li><li>COPD exacerbation</li><li>CKD stage 3b</li><li>frailty</li><li>multiple hospitalizations for infection</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The daughter called to arrange hospice admission after Mr. Harding became increasingly unresponsive. He was brought to the hospice unit, where a palliative team established a comfort‑focused plan: fentanyl infusion to control dyspnea, antihistamines for cough, and a low‑dose opioid for pain. He was assisted with oral hydration and brief meals. Despite supportive care, his respiratory drive waned and he eventually passed peacefully during the night, surrounded by his daughter and pet cat.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal phase of stage IV SCC; end‑of‑life care with hospice.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 98</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Obstructive Pulmonary Disease (COPD)</span><span class="pill">Chronic Bronchitis</span><span class="pill">History of Tuberculosis</span><span class="pill">Bronchiectasis</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Coronary Artery Disease</span><span class="pill">Chronic Kidney Disease</span><span class="pill">Osteoporosis</span><span class="pill">Geriatric Frailty</span><span class="pill">Lung cancer</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Fentanyl infusion 10 µg/hr</li><li>Diphenhydramine 25 mg IV q6h PRN</li><li>IV hydration 250 mL q8h</li><li>Prednisone 40 mg daily</li><li>Ipratropium 2 puffs BID</li><li>Albuterol rescue inhaler PRN</li><li>Lisinopril 20 mg daily</li><li>Rosuvastatin 10 mg daily</li><li>Aspirin 81 mg daily</li><li>Fentanyl patch 50 µg/h</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>98‑year‑old male presented with 3‑week dry cough, nocturnal awakening, mild wheeze, 1–2 lb weight loss. Vitals normal; SpO₂ 97%. Chest exam: mild inspiratory wheeze bilaterally, clear fields. Labs: Hb 11.0 g/dL, ESR 30 mm/hr, fasting glucose 138 mg/dL, creatinine 1.2 mg/dL. Chest X‑ray: right lower lobe patchy opacities consistent with post‑influenza bronchitis. Initiated albuterol 2 puffs BID PRN and fluticasone/salmeterol DPI 1 puff BID. Advised dietitian referral, flu and pneumococcal vaccinations, and follow‑up in 2 weeks.</li><li>98‑year‑old male revisited on 2024‑04‑05 for persistent cough and new right lower lobe opacity. Physical exam: reduced breath sounds at right lower lung base, mild inspiratory wheeze. Repeat CXR confirmed RLL opacity; chest CT revealed a 5.5 cm peripheral lesion with regional hilar/mediastinal lymphadenopathy. PET‑CT showed hypermetabolic activity in the lesion (SUVmax 12) and mild uptake in left adrenal gland and right hepatic lobe. CT‑guided core needle biopsy performed with atypical cells pending histology. Palliative radiotherapy 2 fractions of 2000 cGy delivered on day of visit. Medications continued: Albuterol rescue, fluticasone/salmeterol DPI, Lisinopril, Metformin, Rosuvastatin, Aspirin. Supportive care referrals made for nutrition and home health due to frailty. Follow‑up includes post‑radiation review, weekly telephone check‑in, repeat CT chest in 4–6 weeks, and palliative care consult for goals of care.</li><li>98‑year‑old male received second fraction of palliative radiotherapy to a 5.5 cm peripheral lung mass on 2024‑04‑12. Post‑treatment evaluation indicated mild fatigue and improvement of chronic dry cough over two days. Vitals stable (BP 128/80 mmHg, HR 76 bpm, RR 18 /min, temp 98.5 °F, SpO₂ 96%). Physical exam showed clear breath sounds bilaterally, no wheeze or crackles, soft abdomen, no edema. No acute respiratory distress. Current COPD and chronic disease medications were continued unchanged. Plan included monitoring for radiation pneumonitis, encouraging rest/hydration, home health nursing support, repeat chest CT in 4–6 weeks, weekly oncology telephone check‑ins, and ongoing palliative care consultation.</li><li>98‑year‑old male admitted for acute exacerbation of COPD with presumed bacterial pneumonia. Admit noted productive cough with purulent sputum, worsening dyspnea on minimal exertion, mild fever, tachypnea, and SpO₂ 90% on 3 L/min nasal cannula. Physical exam showed decreased breath sounds at left lower lobe, fine crackles, and PaCO₂ 58 mmHg. Started ceftriaxone 2 g IV daily and azithromycin 500 mg PO daily, and prednisone 20 mg PO daily for 5 days with planned taper. Oxygen maintained at 3 L/min NC to target SpO₂ ≥ 92 %. Hydration encouraged, labs (CBC, CMP) monitored daily, and low‑dose furosemide considered if fluid overload. Low‑dose chest CT and CRP obtained. Discharged after 5 days in clinically stable condition with instructions for 10‑day course of antibiotics, tapering steroids, home oxygen as needed, and outpatient follow‑up in 5 days with repeat chest X‑ray in 1 week.</li><li>98‑year‑old male presented with new episode of minor hemoptysis. Bronchoscopy revealed active bleeding in right lower lobe segmental bronchus, controlled with topical epinephrine and electrocautery; biopsy obtained. Hemoglobin 10.8 g/dL. Discharged after 3 days observation; continued inhaled bronchodilators (albuterol, fluticasone/salmeterol, ipratropium), systemic prednisone 40 mg BID for 2 days then taper, antibiotics (ceftriaxone 2 g IV, azithromycin 500 mg PO) for 5 days, metformin held if renal worsens, lisinopril and statin maintained. Follow‑up with palliative care and repeat chest CT in 4–6 weeks.</li><li>98‑year‑old male presented to emergency department with acute respiratory distress, confusion, and hypoxia. New findings included a left pleural effusion and a right lower lobe mass on chest X‑ray. Thoracentesis yielded serosanguineous exudate with neutrophil predominance; cultures pending and cytology negative for malignancy. Labs showed hyponatremia (Na 128 mmol/L) and rising creatinine (1.7 mg/dL). Managed with high‑flow nasal cannula 50 % FiO₂, fentanyl infusion 10 µg/hr for dyspnea, continued chronic prednisone 40 mg daily, and inhaled bronchodilators. Antibiotics were discontinued; metformin was held. Palliative care involvement led to comfort‑focused therapy; family declined intubation. Follow‑up plans include repeat chest X‑ray in 48 hrs, daily BMP and CBC monitoring, bedside monitoring, and transition to hospice when appropriate.</li><li>Visit #7 – 2024‑07‑12 – Palliative Care admission to hospice. Patient was unresponsive, with no spontaneous respiration or breath effort. Dull breath sounds bilaterally, soft abdomen, no masses noted. Interventions: fentanyl infusion 10 µg/hr, diphenhydramine 25 mg IV q6h PRN for chronic cough, IV hydration 250 mL q8h. Comfort‑focused care; all non‑beneficial therapies discontinued. Patient passed peacefully during the night surrounded by family.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

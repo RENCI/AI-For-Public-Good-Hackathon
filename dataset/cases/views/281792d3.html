@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 281792d3</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 281792d3</h1><div class="subtitle">Acute Nephrolithiasis caused by an 8‑mm renal pelvic stone | Male, 35</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Comorbidities: Metabolic syndrome, Obesity, Hypertension</div><div class="meta-line">Risk Factors: Dehydration, High sodium intake, High protein diet, Family history of nephrolithiasis, Low fluid intake</div></div>
+<details><summary>Narrative <span class="preview-text">**Acute Stone Episode: A 35‑Year‑Old Man with Metabolic Syndrome**  **Day 0 – Sudden Onset of Pain**   In the late after...</span></summary><div class="section-body"><p>**Acute Stone Episode: A 35‑Year‑Old Man with Metabolic Syndrome**</p><p>**Day 0 – Sudden Onset of Pain**  
+In the late afternoon, Mark Thompson, a 35‑year‑old software engineer, woke at the office from a cramped lunch break. The first thing he noticed was a sharp, constant pain in the left flank that shot toward his groin. Within thirty minutes, nausea filled his nausea and he vomited once. Mark’s family history – his mother and an older brother both had kidney stones – flashed across his mind, but he had never thought his weight (BMI ≈ 33 kg/m²) and his penchant for salty, protein‑rich meals could predispose him that way. He called a rideshare and described the pain to the driver, asking to be taken to the nearest urgent‑care center.</p><p>**Day 0 – Urgent‑Care Evaluation**  
+At the urgent‑care clinic, the nurse documented a 10‑on‑10 left‑sided flank pain, a temperature of 98.6 °F, and blood pressure of 160/95 mmHg. Mark admitted a two‑day history of limited fluid intake (roughly 1.5 L water in total), a high sodium lunch (≈ 3000 mg), and a protein‑rich dinner (≈ 100 g of protein). He had a history of metabolic syndrome – elevated fasting glucose (108 mg/dL) and triglycerides (180 mg/dL) – but never had formal diabetes care, and his hypertension medications had recently been uptitrated from amlodipine 5 mg to 10 mg due to elevated readings at his last PCP visit.</p><p>The nurse ordered a complete metabolic panel, a urinalysis (UA), and a non‑contrast CT scan of the abdomen and pelvis for diagnostic clarity. A bedside ultrasound was deferred because the clinical suspicion for an obstructing stone was high.</p><p>**Day 0 – Imaging and Diagnosis**  
+The emergent non‑contrast CT scan revealed a solitary, 8‑mm calcific density in the left renal pelvis with mild left hydronephrosis. No surrounding fat stranding or perinephric fluid collections were present. The right kidney showed no abnormalities and the ureters were smooth and caliectatic. The imaging findings were classic for a sizable, obstructing renal pelvic stone.</p><p>**Day 0 – Initial Management**  
+Physician‑assistant Dr. Patel reviewed the imaging and Mark’s vitals. He noted the stone’s size was beyond the likelihood of spontaneous passage (stoke 8 mm in the renal pelvis historically passes &lt;10% spontaneously). He decided to proceed with an interdisciplinary approach: urgent urology consult, aggressive hydration, pain control, medical expulsive therapy, and blood‑pressure management.</p><p>- **Hydration**: A 0.9% saline infusion was started at 250 mL/h to raise urine volume and dilute stone fragments. Mr. Thompson was instructed to sip water and avoid further high‑salt meals.  
+- **Analgesia**: An IV ketorolac 30 mg was given, followed by oral oxycodone‑acetaminophen 5/325 mg twice daily as needed, with a scheduled taper plan.  
+- **Medical Expulsive Therapy (MET)**: Tamsulosin 0.4 mg orally once daily was started to relax ureteral smooth muscle.  
+- **Hypertension**: Labetalol 100 mg IV bolus (repeat every 15 min up to 500 mg total) was given to bring systolic pressure below 140 mmHg before discharge. A short‑acting calcium channel blocker (nicardipine) infusion was considered but ultimately deferred due to satisfactory pressure control.  
+- **Monitoring**: Urine output was recorded; urine pH was 6.2. The UA showed gross hematuria and microscopic red blood cells consistent with stone passage. No leukocyte esterase or nitrites; cultures were not pending.</p><p>Dr. Patel scheduled a follow‑up urology visit in 14 days and recommended a repeat non‑contrast CT to confirm stone passage.</p><p>**Day 3 – First Signs of Stone Passage**  
+Mark began to feel a shift in pain intensity; the worst cramp was less intense, and he reported passing a pink, papery piece of tissue on the way to work that morning. He called the urology clinic to confirm the passage; a phone consultation confirmed his symptom was consistent with stone expulsion. The clinic advised him to use the same hydration regimen and to keep a diary of pain episodes.</p><p>**Day 7 – Symptom Resolution and Follow‑Up Imaging**  
+Mark’s pain had almost completely resolved by the seventh day. He logged a final episode of sudden flank discomfort followed by a clear burst of urine with no hematuria. He was still taking the tamsulosin and had tapered the opioids. His blood pressure held between 120/70–130/80 mmHg on his current amlodipine 10 mg regimen.</p><p>**Day 10 – Routine Follow‑Up**  
+At his routine 10‑day follow‑up with his PCP, Mark noted no residual pain, no flank tenderness, and that his weight had decreased by 3 kg after starting a modest exercise routine. Blood work showed a serum creatinine of 0.9 mg/dL, and his metabolic panel was unchanged. The PCP referred him to a dietitian and reinforced the importance of limiting sodium, moderating protein intake, and maintaining 2–3 L of fluid per day.</p><p>**Day 14 – Clearance and Resolution**  
+The urology clinic confirmed Mark’s stone had passed. A repeat non‑contrast CT scan showed the left kidney free of calculi, no residual obstruction, and normal hydronephrosis resolution. Mark was instructed to maintain the same hydration and urine-pH‑manipulating strategy for a month to prevent recurrence, and to continue his blood‑pressure regimen. He was advised to keep a monthly fluid intake log.</p><p>**Retrospective Summary**  
+From the first sharp cramp in the late afternoon to full symptom resolution 14 days later, Mark’s journey exemplified the textbook presentation of acute nephrolithiasis due to an 8‑mm renal pelvic stone in someone with metabolic syndrome and obesity. His pre‑existing risk factors — dehydration, high sodium and protein intake, and family history — set the stage for stone formation, but prompt imaging, aggressive hydration, appropriate analgesics, and tamsulosin facilitated a swift and uncomplicated passage. His blood‑pressure was managed effectively, underscoring the importance of addressing comorbid conditions parallel to stone workup. The case ended with a resolved stone, a clear imaging window, and an actionable plan to reduce future recurrence risk.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-01</h3><div class="visit-meta">Urgent Care | Reason: Acute left flank pain with nausea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 35‑year‑old male presents with acute left flank pain of 2 hours duration, rated 10/10, associated with nausea, vomiting, and pain radiating to the groin.
+
+History of Present Illness: Patient reports sudden sharp left flank pain. No prior similar episodes. He mentions recent limited fluid intake (~1.5 L over 2 days), a high‑sodium lunch (~3000 mg Na), and a protein‑rich dinner (~100 g protein). No fever, chest pain, or dyspnea.
+
+Past Medical History: Metabolic syndrome (fasting glucose 108 mg/dL, triglycerides 180 mg/dL), hypertension (on amlodipine 5 mg daily, uptitrated to 10 mg recently).
+
+Medications: None at time of presentation besides amlodipine 10 mg daily.
+
+Allergies: NKDA.
+
+Family History: Mother and brother with kidney stones.
+
+Social History: BMI 33 kg/m²; no tobacco or alcohol use noted.
+
+Review of Systems: Positive for left flank pain, nausea, vomiting, groin discomfort. Negative for fever, chills, dysuria.
+
+Vital Signs: BP 160/95 mmHg, HR 98 bpm, Temp 98.6 °F, RR 18/min, SpO₂ 98% on room air.
+
+Physical Examination: Left flank tenderness with costovertebral angle tenderness. No abdominal distension or rebound tenderness. No palpable masses.
+
+Labs/Imaging: CBC and CMP within normal limits (Creatinine 0.9 mg/dL, BUN 15 mg/dL, Na 140 mEq/L, K 4.2 mEq/L). UA shows gross hematuria, microscopic red blood cells; no leukocyte esterase or nitrites. Non‑contrast CT abdomen/pelvis demonstrates obstruction of left renal pelvis with mild hydronephrosis; no other calculi identified.
+
+Assessment and Plan:
+1. **Left renal colic due to a presumed ureteral stone** – imaging confirms obstruction and hydronephrosis.
+   - **Pain control**: IV ketorolac 30 mg (given). Prescribed oral oxycodone/acetaminophen 5 mg/325 mg BID PRN for breakthrough pain; advise tapering.
+   - **Medical expulsive therapy**: Initiated tamsulosin 0.4 mg daily.
+   - **Hydration**: IV 0.9% saline 250 mL/h ongoing;
+   Patient instructed to maintain 2–3 L oral fluids daily.
+   - **Blood pressure management**: IV labetalol 100 mg bolus administered; repeated until SBP &lt;140 mmHg; continue amlodipine at 10 mg daily, consider adjustment post‑in‑clinic visit.
+2. **Differential diagnoses**: pyelonephritis (ruled out by UA), acute hydronephrosis from obstruction, musculoskeletal strain (unlikely given imaging findings).
+3. **Follow‑up**: Schedule urology consult in 2 days for stone expulsion assessment and potential lithotripsy referral if symptomatic. Re‑evaluate BP and metabolic management; consider nephrology input if recurrence.
+4. **Patient education**: Discuss importance of fluid intake, low‑salt diet, adequate protein moderation; advise to seek emergency care if pain worsens, fever develops, or vomiting persists.
+5. **Disposition**: Discharged with prescription and instructions. Vital signs and vitals documented.
+
+Disposition: Discharged in stable condition.
+
+Signed: Urgent Care Physician Assistant – [Name]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left flank pain (10/10)</span><span class="pill">Nausea</span><span class="pill">Vomiting</span><span class="pill">Pain radiating to groin</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>160/95 mmHg</td></tr><tr><td>Heart Rate</td><td>98 bpm</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>18/min</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left flank tenderness</li><li>Costovertebral angle tenderness</li><li>No fever, no abdominal distension</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Comprehensive Metabolic Panel (CMP)</li><li>Urinalysis (UA)</li><li>Non‑contrast CT abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 8‑mm calculi in left renal pelvis with mild hydronephrosis</li><li>CMP: Creatinine 0.9 mg/dL, Na 140 mEq/L, K 4.2 mEq/L, BUN 15 mg/dL</li><li>UA: Gross hematuria, microscopic red blood cells, no leukocyte esterase or nitrites</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV 0.9% saline 250 mL/h</li><li>IV ketorolac 30 mg</li><li>IV labetalol 100 mg bolus</li><li>Oral tamsulosin 0.4 mg daily</li><li>Oral oxycodone/acetaminophen 5/325 mg BID PRN</li><li>Discharge counseling and instructions</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg once daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Limited fluid intake (~1.5 L over 2 days)</li><li>High‑sodium lunch (~3000 mg)</li><li>Protein‑rich dinner (~100 g protein)</li><li>Metabolic syndrome (elevated fasting glucose 108 mg/dL, triglycerides 180 mg/dL)</li><li>Hypertension on amlodipine 5 mg daily, recently uptitrated to 10 mg</li><li>Family history of kidney stones (mother, brother)</li><li>BMI ~33 kg/m²</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark presented with sudden, sharp left flank pain and vomiting. The nurse recorded vitals and documented his recent fluid and dietary history. A complete metabolic panel, urinalysis, and non‑contrast CT abdomen/pelvis were ordered. A bedside ultrasound was deferred. The physician‑assistant reviewed the CT finding of an 8‑mm stone in the left renal pelvis with mild hydronephrosis, confirming acute nephrolithiasis. IV hydration (250 mL/h saline) was started, IV ketorolac 30 mg was given for pain, and oral oxycodone/acetaminophen 5/325 mg twice daily was prescribed as needed with a taper plan. Tamsulosin 0.4 mg daily was started for medical expulsive therapy. An IV labetalol 100 mg bolus was given and repeated until systolic pressure dropped below 140 mmHg. The patient was discharged with instructions to maintain 2–3 L of fluid daily, avoid high‑salt and high‑protein meals, and to follow up with urology in 2 days.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute nephrolithiasis due to an 8‑mm renal pelvic stone; no perinephric inflammation noted.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-02</h3><div class="visit-meta">Urology | Reason: Follow‑up after acute stone episode</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Follow‑up after acute episode of left flank pain and gross hematuria.
+
+**History of Present Illness:** 35‑year‑old male presents for second‑day visit after an acute episode of left flank pain radiating to the groin with gross hematuria, managed in Urgent Care (Visit 1). Patient reports minimal pain today and passage of a pink, papery urine fragment. No fever, chills, or new urinary symptoms. Pain has markedly improved since discharge. Patient is compliant with IV hydration, oral oxycodone/acetaminophen taper, and tamsulosin 0.4 mg daily.
+
+**Past Medical History:** Metabolic syndrome, obesity, hypertension (on amlodipine 10 mg daily). No prior urologic history.
+
+**Medications:** Amlodipine 10 mg daily, Tamsulosin 0.4 mg daily, Oxycodone/acetaminophen 5/325 mg PRN (tapering).
+
+**Allergies:** NKDA.
+
+**Vital Signs:** Blood Pressure 120/76 mmHg; Heart Rate 88 bpm; Temperature 36.8 °F; Respiratory Rate 16 /min; SpO₂ 99%.
+
+**Physical Examination:**
+- Left flank: mild tenderness on palpation; no costovertebral angle rebound.
+- Abdomen: soft, non‑distended; no organomegaly.
+- Overall: well‑appearing, no acute distress.
+
+**Laboratory / Imaging:**
+- Urinalysis: trace blood, negative leukocyte esterase, negative nitrites.
+- Baseline metabolic panel: values pending (will review once available).
+
+**Assessment:**
+1. **Acute left renal calculus** – evidence of obstruction noted on CT from previous day with mild hydronephrosis; resolution of gross hematuria suggests passage of stone.
+2. **Residual microscopic hematuria** – trace blood on UA; likely due to recent stone passage; low risk.
+3. **Hypertension** – controlled with amlodipine.
+4. **Obesity / metabolic syndrome** – unchanged.
+
+**Plan:**
+- Continue tamsulosin 0.4 mg daily for an additional 2 weeks to facilitate any remaining stone passage.
+- Maintain aggressive hydration (≥2.5 L/day) and continue to monitor for recurrence of hematuria or pain.
+- Continue opioid taper as prescribed; advise patient to use acetaminophen alone for breakthrough pain if needed.
+- Repeat non‑contrast CT of abdomen/pelvis in 14 days if persistent pain or hematuria; otherwise no imaging at this time.
+- Re‑evaluate serum creatinine and electrolytes (baseline metabolic panel) when results returned. Adjust medications if needed.
+- Blood pressure: continue amlodipine; check BP at home; contact office if BP &gt;140/90.
+- **Follow‑up:** Schedule in‑office follow‑up in 2 weeks for clinical reassessment and review of imaging/labs.
+- Educate patient on signs of recurrent obstruction (acute pain, hematuria, fever) and to seek emergent care if occur.
+
+**Disposition:** Discharged home with instructions; no changes to Amlodipine dosage.
+
+**Provider:** Dr. [Name], MD, Urology</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild left flank discomfort</span><span class="pill">Passing pink, papery urine segment</span><span class="pill">No fever or chills</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>120/76 mmHg</td></tr><tr><td>Heart Rate</td><td>88 bpm</td></tr><tr><td>Temperature</td><td>36.8°F</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left flank mild tenderness</li><li>Abdomen soft, non‑distended</li><li>No costovertebral angle rebound</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis</li><li>Baseline metabolic panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>UA: Trace hematuria, no leukocyte esterase, no nitrites</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue tamsulosin 0.4 mg daily</li><li>Continue opioid taper</li><li>Reassurance and discharge instructions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain markedly reduced; no fever or new symptoms.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Hypertension</span><span class="pill">Resolved acute nephrolithiasis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg once daily</li><li>Tamsulosin 0.4 mg once daily</li><li>Oxycodone/acetaminophen 5/325 mg PRN (tapering)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT from previous day showing stone</li><li>IV hydration and pain control</li><li>Tamsulosin 0.4 mg daily started</li><li>Partial pain relief and first passage of tissue</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark reported minimal pain and the passage of a pink urine fragment. Physical exam was essentially normal with only mild left flank tenderness. Urinalysis was repeated to confirm hematuria resolution; results showed trace blood and no infection. The physician confirmed stone passage and advised Mark to continue aggressive hydration, maintain tamsulosin for an additional two weeks, and to have a repeat non‑contrast CT at 14 days if needed. Pain control instructions were reinforced and the opioid taper was continued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stone likely passed; mild residual pain resolved; patient in recovery phase; planned for clearance imaging.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-11</h3><div class="visit-meta">Primary Care | Reason: Routine check after stone episode</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Mark presents for routine wellness visit. He reports a 3 kg weight loss over the past two weeks, no pain, and that his blood pressure feels well controlled. He denies any dysuria, hematuria, fever or other symptoms. He reports continued use of amlodipine 10 mg daily and tamsulosin 0.4 mg daily for the next two weeks. He has completed the oxycodone/acetaminophen taper and is satisfied with his care. He has been advised to maintain 2–3 L fluids per day and has a dietitian referral to reinforce sodium, protein moderation and structured exercise.
+
+**Objective:**
+Vitals: BP 128/78 mmHg, HR 80 bpm, T 36.9 °C, RR 16/min, SpO₂ 99 %. BMI 31.5 kg/m² (↓ from 33).
+Physical exam: Abdomen soft, non‑distended, no tenderness; cardiovascular exam normal, heart sounds regular; no abdominal or CVA tenderness. No residual signs of recent stone passage.
+
+**Assessment:**
+1. Metabolic syndrome – stable on current therapy. Improved metabolic profile (creatinine 0.9 mg/dL, fasting glucose 105 mg/dL, triglycerides 180 mg/dL, LDL 110 mg/dL) and decreased BMI. 
+2. Hypertension – controlled on amlodipine 10 mg daily (BP 128/78 mmHg). 
+3. Recent nephrolithiasis – complete resolution of symptoms, stone likely passed, no current pain or hematuria. 
+4. Unexplained weight loss – weight loss appears attributable to increased activity and dietary modifications; no acute pathology identified.
+
+**Plan:**
+- Continue amlodipine 10 mg daily.  
+- Complete tamsulosin 0.4 mg daily for the remaining 2 weeks; discontinue afterward.  
+- Continue the dietitian‑based fluid and dietary plan.  
+- Reorder fasting glucose and lipid panel in 6 months to monitor metabolic control.  
+- Encourage gradual, consistent weight loss toward BMI goal of &lt;30 kg/m².  
+- If recurrence of flank pain, hematuria, or new urinary symptoms arise, repeat urinalysis and, if indicated, repeat CT scan.
+- Continue routine annual preventive care and vaccinations as indicated.
+- Follow‑up primary care visit in 3 months or sooner if any new symptoms develop.
+
+**Medications:**
+- Amlodipine 10 mg PO daily (continue)
+- Tamsulosin 0.4 mg PO daily (finish in 2 weeks)
+
+**Follow‑up Recommendations:**
+- Dietitian referral to reinforce fluid intake, sodium and protein moderation, structured exercise.
+- Monitor weight, BP, and metabolic labs at next visit.
+- Urology follow‑up only if symptoms recur.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No pain</span><span class="pill">Weight loss of 3 kg in past 2 weeks</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>128/78 mmHg</td></tr><tr><td>Heart Rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>36.9°F</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 31.5 kg/m² (↓ from 33)</li><li>Abdomen soft, non‑distended</li><li>Cardiovascular normal, heart sounds regular</li><li>No tenderness on abdominal palpation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Comprehensive metabolic panel</li><li>Fasting glucose</li><li>Lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Creatinine 0.9 mg/dL</li><li>Fasting glucose 105 mg/dL</li><li>Triglycerides 180 mg/dL</li><li>LDL 110 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to dietitian</li><li>Advised to maintain 2–3 L fluid/day</li><li>Continue amlodipine 10 mg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feels better; satisfied with care plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Tamsulosin 0.4 mg daily (to be completed in 2 weeks)</li><li>Oxycodone/acetaminophen PRN (completed taper)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Follow‑up with urology indicates stone passage</li><li>Weight loss and mild exercise improvement</li><li>Continued use of amlodipine 10 mg and tamsulosin 0.4 mg</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark presented for routine follow‑up. He reported a steady weight loss, no pain, and well‑controlled blood pressure. The physician performed a standard wellness exam and ordered a comprehensive metabolic panel, fasting glucose, and lipid panel. Results confirmed stable renal function and improved metabolic profile. A dietitian referral was made to reinforce fluid intake, reduce sodium and protein, and develop a structured exercise plan. No imaging was ordered at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stone passed; metabolic control improving; recurrence prevention strategies initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-15</h3><div class="visit-meta">Urology | Reason: Stone clearance confirmation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Stone clearance confirmation.
+
+**History of Present Illness:** 35‑year‑old male presents for routine urology follow‑up after acute left flank pain episode (Visit 1) and subsequent stone passage. He reports no current pain and no hematuria. Prior to this visit, a repeat non‑contrast CT abdomen/pelvis was performed, showing no residual obstruction and resolution of ureteral dilation.
+
+**Past Medical History:** Metabolic syndrome, hypertension.
+
+**Current Medications:** Amlodipine 10 mg daily; Tamsulosin 0.4 mg daily discontinued this visit.
+
+**Allergies:** NKDA.
+
+**Vitals:** BP 125/75 mmHg, HR 82 bpm, Temp 36.7 °F, RR 16/min, SpO₂ 99%.
+
+**Physical Examination:** Abdomen soft, non‑distended; no flank tenderness; vital signs stable.
+
+**Assessment:** The non‑contrast CT confirms complete clearance of a left renal pelvis stone (most likely calcium oxalate) with no residual obstruction or dilation. The patient’s symptoms have resolved. Ongoing risk for recurrence remains due to metabolic syndrome, hypertension, and dietary factors.
+
+**Plan:**
+1. Discontinue tamsulosin permanently.
+2. Counsel on long‑term prevention: maintain adequate daily hydration (≥2.5 L), keep a monthly fluid intake log, reduce sodium and animal protein intake, and pursue structured exercise.
+3. Consider low‑dose thiazide (12.5 mg daily) if risk for recurrence remains high; discuss with PCP.
+4. No further imaging is required unless recurrent symptoms (flank pain, hematuria) arise.
+5. Urology follow‑up not scheduled; PCP to monitor renal function, metabolic panel, and blood pressure.
+6. Educated patient to notify clinic if new symptoms develop.
+
+**Disposition:** Discharged home. PCP will be notified of stone clearance; urology clinic will not schedule routine follow‑up unless recurrence. 
+
+**Follow‑up:** Continue current antihypertensive regimen. Maintain fluid and dietary modifications. If recurrent flank pain or hematuria develops, schedule urgent evaluation and possible imaging.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No current pain</span><span class="pill">No hematuria</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>125/75 mmHg</td></tr><tr><td>Heart Rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>36.7°F</td></tr><tr><td>Respiratory Rate</td><td>16/min</td></tr><tr><td>SpO2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Abdomen soft, non‑distended</li><li>No flank tenderness</li><li>Vital signs stable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Non‑contrast CT abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: No calculus, hydronephrosis resolved</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discontinue tamsulosin</li><li>Counsel patient on recurrence prevention</li><li>Provide follow‑up instructions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Glad to have no stone; plans for prevention accepted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Hypertension</span><span class="pill">Resolved nephrolithiasis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Tamsulosin 0.4 mg daily (completed 2 weeks ago)</li><li>Oxycodone/acetaminophen PRN (completed taper)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Urology follow‑up Day 2 indicated stone passage</li><li>Continued hydration and tamsulosin for total of 2 weeks</li><li>No residual symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the visit, a repeat non‑contrast CT abdomen/pelvis was performed to confirm stone clearance. The scan showed no residual calculi and resolution of hydronephrosis. The patient was relieved, and the physician discussed long‑term prevention: maintain adequate hydration, reduce sodium and animal protein intake, consider a low‑dose thiazide if recurrence risk remains high, and stop tamsulosin permanently. Instructions to keep a monthly fluid intake log were given. The patient was discharged with normal follow‑up and the urology clinic will notify PCP if any recurrent symptoms arise.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stone has passed and clearance confirmed. Patient is now in remission with no residual acute symptoms; focus shifts to long‑term recurrence prevention.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>amlodipine 10 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2026-03-01 Urgent Care visit: Patient presented with acute left flank pain radiating to the groin, accompanied by nausea and vomiting. Examination revealed left flank tenderness and costovertebral angle tenderness. Laboratory studies including CBC, CMP, and urinalysis were within normal limits except for gross hematuria on UA. A non‑contrast CT of the abdomen and pelvis demonstrated obstruction of the left renal pelvis with mild hydronephrosis, consistent with a ureteral stone. Pain was managed with IV ketorolac and an oral prescription of oxycodone/acetaminophen 5/325 mg BID PRN for breakthrough pain. Medical expulsive therapy was initiated with tamsulosin 0.4 mg daily, and adequate hydration was recommended. Blood pressure was elevated (160/95 mmHg); IV labetalol was administered to reduce SBP below 140 mmHg while continuing amlodipine 10 mg daily. The patient was discharged with instructions and scheduled for urology follow‑up in 2 days.</li><li>2026-03-02 Urology follow‑up: Patient, 35‑year‑old male, returned for second‑day follow‑up after acute flank pain episode. Reported minimal pain, passage of pink papery urine fragment, no fever. Physical exam: mild left flank tenderness, soft abdomen, no CVA tenderness. UA: trace blood, negative leukocyte esterase/nitrites. BP 120/76 mmHg. Continued tamsulosin 0.4 mg daily for 2 weeks, aggressive hydration ≥2.5 L/day, opioid taper, no change to amlodipine. Repeat CT in 14 days if hematuria/pain persists. No new medications or allergies.</li><li>2026-03-11 Primary Care visit: Routine wellness exam with 3 kg weight loss and controlled BP 128/78 mmHg. BMI 31.5 kg/m² (↓30). Labs: creatinine 0.9 mg/dL, fasting glucose 105 mg/dL, triglycerides 180 mg/dL, LDL 110 mg/dL. Continued amlodipine 10 mg daily and tamsulosin 0.4 mg daily for remaining 2 weeks. Dietitian referral for fluid intake, sodium/protein moderation, structured exercise. Follow‑up primary care in 3 months; fasting glucose and lipid panel to be repeated in 6 months.</li><li>2026-03-15 Urology follow‑up: Stone clearance confirmed by non‑contrast CT; no residual obstruction or hydronephrosis. Patient asymptomatic with normal vitals. Tamsulosin discontinued. Patient advised ongoing hydration ≥2.5 L/day, monthly fluid intake log, reduced sodium and animal protein intake, structured exercise. Consideration of low‑dose thiazide 12.5 mg daily discussed with PCP.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

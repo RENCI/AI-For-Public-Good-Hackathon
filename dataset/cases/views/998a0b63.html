@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 998a0b63</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 998a0b63</h1><div class="subtitle">Central Lung Carcinoma (main bronchus) Stage IV with ipsilateral multiple tumors | Female, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic obstructive pulmonary disease, Emphysema, Bronchiectasis, Tuberculosis, Cardiovascular disease due to smoking</div><div class="meta-line">Risk Factors: Cigarette smoking, Second‑hand smoke exposure, Occupational exposure to asbestos, Radon exposure, Silica exposure, Prior thoracic radiation, Genetic predisposition (EGFR, ALK mutations)</div></div>
+<details><summary>Narrative <span class="preview-text">Ms. Lina Reyes had spent most of her adult life breathing the air of a city that never stopped. A former factory worker,...</span></summary><div class="section-body"><p>Ms. Lina Reyes had spent most of her adult life breathing the air of a city that never stopped. A former factory worker, she had lived in a building with poor ventilation and was exposed to asbestos in the steel works, radon emanating from the mine‑rich soil under her apartment, and a small amount of silica from the dust that settled on her tools. She had smoked a pack a day for 35 years, quitting just a few months before her 60th birthday, but the habit had left her respiratory tract scarred and her lungs weakened. In addition to the weight of her past, Lina carried a long list of chronic conditions that made the days feel like one long lungful of air: chronic obstructive pulmonary disease (COPD) with a pattern of emphysema and bronchiectasis, the sequelae of a TB infection at 40 that left her with persistent bronchial dilation in the right lung, a heart that had given way to coronary artery disease after a myocardial infarction three years earlier, and a series of hospital stays for pneumonias. She carried two doses of influenza vaccine annually, but her inhalers could barely keep the wheeze from tightening her chest.</p><p>**Initial Symptoms – Months ago**</p><p>It began in the middle of a hot July afternoon. Lina felt a dry cough that had nothing to do with the pollen in the air. At first, it was a mild annoyance that she dismissed as another flare of her COPD. By end‑of‑July, the cough had become a constant, dry, hacking type that made it hard to finish her morning coffee. She also noticed an increased need to use her rescue inhaler, and on a damp Saturday, she awoke with a mild wheeze that her usual inhaler only barely soothed.</p><p>In late July, she scheduled a visit with her primary care physician. Ms. Reyes, a diligent patient, had kept a spreadsheet of her symptoms: wheeze, cough, occasional sputum, and a persistent sensation of tightness in her lower chest. The physician noted the lack of improvement after the addition of a higher‑dose short‑acting beta‑agonist and prescribed a short course of oral prednisone to cover a possible COPD exacerbation. Lina tried the steroids for five days, but her cough persisted and her breathlessness worsened. The physician advised her to get a chest X‑ray, a step Lina’s history promised she would take.</p><p>**Radiographic Reveal – Early August**</p><p>August 2nd: with a sense of growing frustration, Lina walked to the local radiology center. The chest X‑ray showed a subtle, hazy opacity right of the tracheal bifurcation—right upper lobe in shape, but not quite localized. The radiologist described a “blunting of the right costophrenic angle and mild widening of the right pulmonary artery.” Her primary care doctor, seeing no acute danger in the image, scheduled a pulmonology consult for the following week, hoping the opacity had nothing to do with a bacterial infection she had caught during a recent trip to the Midwest.</p><p>**Pulmonology Evaluation – Mid‑August**</p><p>August 17th felt like a long time for Lina. The pulmonologist’s office smelled of antiseptic but also of the faint scent of coffee—something her older brother loved. On examination, Mia, the respiratory fellow, noted a mild, coarse crackle over the mid and lower left lung fields, but surprisingly, the right lung field where the opacity was on X‑ray was oddly clear. There was a low‑grade, non‑productive cough that Lina insisted was all the time. Her vital signs showed a heart rate in the 80s, a blood pressure that hovered near 140/85, and an oxygen saturation of 94% on room air. Her lung function tests were consistent with her known severe COPD—FEV1 of 1.2 L (45% predicted), FVC of 2.8 L, and a notable FEV1/FVC ratio of 42%.</p><p>Mia ordered a high‑resolution CT scan for July 28th, after Lina’s last week‑long steroid burst. The scan, performed on August 28th, revealed a 3.2‑cm central mass in the right main bronchus, extending to the right upper lobe carina. Multiple ipsilateral pulmonary nodules measured up to 5 mm, and a few enlarged mediastinal nodes (stations 7 and 10) were noted. In addition, the right lower lobe had a small area of cavitation, likely from old TB changes.</p><p>Given her age, extensive smoking history, and the central tumor’s characteristics, Mia had already suspected malignancy. She suggested bronchoscopy the next day. Lina, already exhausted by the last three weeks of cough, refused the idea of a possible biopsy. But Lina’s comorbidities made the potential for a quick, minimally invasive diagnosis worth the risk.</p><p>**Bronchoscopic Biopsy – Late August**</p><p>On September 1st, Lina made her way to the university hospital. The bronchoscopy was quick: a mucosal ulceration at the tracheal bifurcation, easily re‑sected. The tissue was sent to pathology, and within a week, the results arrived. It was adenocarcinoma, with a clear epidermal growth factor receptor (EGFR) exon 19 deletion—a mutation that made her a potential candidate for targeted therapy.</p><p>Immunohistochemistry also yielded a low proliferation index (Ki‑67 around 15%) but noted the tumor’s highly vascular nature. The staging was determined as T3N2M0 — central tumor with extensive ipsilateral nodal involvement, which according to the 8th edition of TNM, translates to stage IIIb. However, given that the patient had a history of prior thoracic radiation and significant comorbidities, the oncology team decided that systemic therapy, rather than a surgical approach, would be the best course, as surgery for central tumors with nodal disease in a 68‑year‑old with COPD would carry unacceptable morbidity.</p><p>**First-Line Targeted Therapy – Early September to Early November**</p><p>On September 5th, Lina was seen in the oncology clinic. Dr. Patel explained that because her tumor had an EGFR mutation, the standard of care would be a reversible third‑generation tyrosine kinase inhibitor, osimertinib, at 80 mg daily. The drug could potentially shrink the tumor, alleviate the obstruction at the bronchial bifurcation, and delay progression for months. Lina, who had already gone through several hospitalizations for exacerbations of COPD, accepted the treatment. She was also instructed to keep her inhaler regimen but to alert the oncology team immediately if she experienced fever, chills, or new breathlessness.</p><p>Her first week on osimertinib was marked by some improvement: her cough had become less frequent, and the wheezing that had filled her mornings had lessened. However, in early October, Lina presented to the emergency department with a moderate hemoptysis event—about a half teaspoon of blood mixed with sputum. Dr. Patel explained that bleeding from the tumor could be a side‑effect of the therapy, especially given the tumor’s central location. To manage this, he switched her from the daily oral medication to a daily dose of 40 mg with a dose‑reduced schedule until a follow‑up CT could be arranged.</p><p>A CT scan in mid‑October suggested a slight decrease in tumor size (from 3.2 to 3.0 cm), and the airway obstruction seemed less severe. The multiple ipsilateral nodules were unchanged. The disease seemed controlled, or at least stable—an encouraging sign.</p><p>**Progression – Early 2026**</p><p>In January, Lina’s routine follow‑up revealed that the hemoptysis had become a daily feature. Her pulse oximetry readings dropped to 90% on room air, and her BMI decreased by 4% in a month—the signs of systemic progression. A repeat CT on January 18th, 2026, showed a new 2‑cm nodule in the left lower lobe, an enlarged left supraclavicular node, and now new bone lesions in the L5 vertebra and left sacrum—signs of extrathoracic spread. The central tumor had grown back to 3.4 cm, partially obstructing the main bronchus again.</p><p>Dr. Patel called Lina and her family into his office. After discussing the new stage IV designation, the potential benefits, and the risks of systemic therapies, they decided to move from targeted therapy to first‑line platinum‑based chemotherapy. Given her history of COPD and a prior exposure to radiation, the oncology team chose a combination of carboplatin (area under the curve 5) and pemetrexed 500 mg/m² every three weeks, with close monitoring for myelosuppression, renal toxicity, and lung toxicity. She was also started on a low dose of prednisone and had her inhaler regimen renewed. A dose of 30 Gy fractionated radiation was planned to the right main bronchus over two weeks, to provide local control and relieve dyspnea.</p><p>**Second-Line Therapy and Symptoms Worsening – Spring 2026**</p><p>In March, after three cycles of chemotherapy, Lina’s blood counts had dropped. A platelet count of 35,000/mm³ and absolute neutrophil count of 1000/mm³ required her to be dose‑modified. She was also experiencing worsening fatigue, a loss of appetite, and a new onset of paresthesias in her left hand—likely early radiation-induced neuropathy. She complained of a throbbing pain in the left shoulder that was not relieved by over‑the‑counter analgesia.</p><p>On the next visit, Dr. Patel proposed a switch to a second‑line agent: a docetaxel at 75 mg/m² Q3W, as the tumor had progressed by 40% according to RECIST criteria. However, the risk of neuropathy and hematologic suppression was higher in a patient with pre‑existing anemia and COPD. Lina accepted, but decided to accompany the infusion with palliative care to manage breakthrough symptoms.</p><p>In May, the palliative care team recommended increased oxygen supplementation due to her SpO₂ on 2 L nasal cannula falling to 88%. The oncology team also discussed the possibility of a lung‑tooth (palliative) radiation field to the bronchial area to reduce tumor mass effect. Lina had a brief period of relief—her cough decreased, and she was able to sleep for the first time in weeks—but it was fleeting.</p><p>**End‑Stage Care – Summer 2026**</p><p>By August, Lina’s daily life was constrained to a small set of activities: resting in her recliner, feeding her through a straw because swallowing was difficult, and breathing through a portable oxygen concentrator. Her weight had plummeted to 115 pounds from the original 135. Her chest X‑ray showed a collapsed right lower lobe and a persistent mediastinal mass with signs of bronchial obstruction. She had no longer any significant cough but had a persistent wheeze, and her dyspnea was now described as an “air hungry chest.” Her cardiovascular status was stable on low‑dose beta‑blocker and ACE inhibitor, but she was too weak for any major procedures.</p><p>In September, her oxygen requirement climbed to 4 L via venturi mask. The oncology team deemed further systemic therapy futile and recommended focusing on symptom control. The palliative care team stepped up: high‑dose opioids for breakthrough pain, high‑dose methylprednisolone to reduce airway inflammation, and a thorough counseling session with Lina and her family to discuss end‑of‑life planning. Her mental state remained lucid enough to comprehend the decline and to speak with her daughters about her wishes.</p><p>**Reflection**</p><p>From the first dry cough on a humid July day to the day Lina passed away in the quiet of her home in early November 2026, her disease had shown an unrelenting pace. Each diagnostic test, each new medication, each line of therapy became a temporary reprieve as the tumor circled the edges of her heart and lungs once again. The comorbidities that had defined her for decades—COPD, old TB, heart disease, and a history of thoracic radiation—shaped every decision, from the dosing of chemotherapy to the choice of not re‑irradiating the main bronchus. Her genetic profile provided a momentary hope for a targeted inhibitor, but biology, not human decision, ultimately dictated a worsening trajectory.</p><p>The path Lina traveled is, in many ways, a textbook chronicle of a central lung carcinoma in a high‑risk smoker with multifactorial comorbidities. Yet it is also a narrative of resilience and of the medical system’s attempt to give her each interval a chance at relief. The story ends not with triumph over disease but with the humility of recognizing the limits of modern medicine in the face of a relentless, multifaceted malignancy.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-07-15</h3><div class="visit-meta">Primary Care | Reason: Dry cough and wheeze</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">S: 68‑year‑old female presents with a one‑month history of persistent dry cough, mild wheeze, and increased use of her rescue albuterol inhaler. She reports no fever, chest pain, or hemoptysis. No significant weight loss or night sweats.
+O: Vitals stable – HR 92 bpm, BP 140/85 mmHg, SpO₂ 94% on room air. Physical examination shows normal heart sounds, mild inspiratory wheeze over both lung fields, and decreased breath sounds over the right upper lung field. No cyanosis or peripheral edema noted.
+A: Acute exacerbation of chronic obstructive pulmonary disease (COPD) with presumptive infectious component. Differential diagnoses include: 1) Acute exacerbation of COPD with possible bacterial or viral infection, 2) Pneumonia (consider right upper lobe infiltrate), 3) Bronchiectasis flare, 4) Post‑radiation lung changes or reactivation of tuberculosis, 5) Pulmonary embolism (low‑probability, but considered given reduced oxygen saturation and recent activity level).
+P: • Prescribe oral prednisone 30 mg daily for 5 days. • Continue maintenance inhalers: albuterol (PRN), ipratropium BID, budesonide/formoterol 200/6 mcg BID. • Order chest X‑ray (radiology center) to evaluate for infiltrate, consolidation, or other pathology. • Counsel patient to maintain hydration, avoid pollutants, and continue cardiac medications (lisinopril, atorvastatin, aspirin). • Call clinic if cough worsens, new fever, increased dyspnea, or oxygen saturation falls below 90%.
+MO: Follow‑up in 5 days or sooner if symptoms worsen. Review chest X‑ray results and adjust therapy accordingly. 
+
+Plan: Monitor response to steroid taper and inhaler use. If imaging shows pneumonia, initiate appropriate antibiotics. If no improvement after steroids, consider a longer course or alternative therapy. If imaging raises suspicion for TB or malignancy, refer to pulmonology for further workup.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dry cough</span><span class="pill">shortness of breath</span><span class="pill">wheeze</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>92 bpm</td></tr><tr><td>Blood Pressure</td><td>140/85 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild inspiratory wheeze bilaterally</li><li>decreased breath sounds at RHUL</li><li>no cyanosis or edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray (to be performed at local radiology center)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 30 mg daily for 5 days</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg inhaler PRN</li><li>Ipratropium bromide 25 mcg mist inhaler BID</li><li>Budesonide/Formoterol 200/6 mcg inhaler BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD with emphysema and bronchiectasis</li><li>prior pulmonary tuberculosis</li><li>coronary artery disease</li><li>previous myocardial infarction 3 years ago</li><li>prior thoracic radiation therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. Reyes presented to the clinic with a persistent dry cough that had begun in July. She reported increased use of her rescue inhaler and mild wheeze. A physical exam revealed normal heart sounds, mild inspiratory wheezing over both lung fields, and decreased breath sounds at the right upper lobe. The PCP diagnosed a likely COPD exacerbation, prescribed oral prednisone 30 mg daily for 5 days, and ordered a chest X‑ray to evaluate possible infection or new pathology. Ms. Reyes was advised to adhere to the steroid course and to keep her inhalers as usual. No immediate imaging was performed at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation presumed COPD exacerbation; imaging pending.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-08-02</h3><div class="visit-meta">Radiology | Reason: Review of chest X‑ray</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Radiology Note – Chest X‑ray Review (Visit #2)**
+
+Patient: Ms. Reyes, 68‑year‑old female
+
+**Chief Complaint:** Review of chest radiograph
+
+**History of Present Illness:**
+Ms. Reyes presents to the radiology center for a follow‑up review of a chest X‑ray that was obtained during her initial visit (Visit #1). She reports a persistent dry cough and mild wheeze that have not improved sufficiently despite recent prednisone therapy (30 mg daily for one week, discontinued 10 days ago). She is a former smoker (45 pack‑years) with a significant history of COPD, emphysema, bronchiectasis, prior tuberculosis, and coronary artery disease. She is on maintenance inhalers (albuterol PRN, ipratropium BID, budesonide/formoterol 200/6 µg BID) and cardiovascular medications (lisinopril 10 mg QD, atorvastatin 20 mg nightly, aspirin 81 mg daily). She denies fever, dyspnea, chest pain, or hemoptysis.
+
+**Vital Signs (at time of review):**
+- Heart Rate: 90 bpm
+- Blood Pressure: 138/82 mmHg
+- Oxygen Saturation: 93% on room air
+
+**Radiographic Findings (posterior‑anterior and lateral film):**
+- Subtle hazy opacity in the right upper lung lobe (RHUL) adjacent to the right main bronchus
+- Mild blunting of the right costophrenic angle
+- Slight widening of the right pulmonary artery
+- No overt consolidation or pleural effusion
+
+**Impression:**
+The findings are non‑specific; the subtle RHUL opacity could represent a small infectious infiltrate, a patchy bronchiectatic change, an early neoplastic process, or post‑TB sequelae. Mild right PA widening may be benign or reflect chronic pulmonary hypertension secondary to COPD and emphysema.
+
+**Assessment:**
+1. Chronic obstructive pulmonary disease (COPD) with bronchiectasis – ongoing
+2. Persistent subclinical infiltrate in RHUL – likely infection or post‑TB sequelae
+3. Possible early lung neoplasm – needs further imaging
+
+**Plan:**
+- **Pulmonary Medicine Consult**: Referral to pulmonology for comprehensive assessment, CT chest with contrast if indicated, and sputum studies.
+- **Imaging**: Order a high‑resolution CT of the chest (with/without contrast) to better characterize the RHUL opacity, evaluate for possible neoplasm, and assess airway disease.
+- **Laboratory Studies**: CBC, BMP, CRP/ESR, sputum Gram stain and culture, and TB quantiferon (if not recent).
+- **Medication Review**: Continue current inhaler regimen; consider short‑course oral steroids only if inflammatory infiltrate confirmed.
+- **Follow‑up**: Return to radiology for follow‑up imaging in 4–6 weeks or earlier if symptoms worsen.
+- **Patient Education**: Reinforce adherence to inhalers, smoking cessation (if applicable), vaccinations (influenza, pneumococcal), importance of early reporting of fever, new sputum, or worsening dyspnea.
+
+**Disposition**: Ms. Reyes was informed of the findings and agreed to pulmonology referral. She was advised to contact the clinic urgently if her oxygen saturation falls below 90% or if new symptoms develop.
+
+**Radiologist:**
+[Name], MD, Radiology
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent dry cough</span><span class="pill">mild wheeze</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>90 bpm</td></tr><tr><td>Blood Pressure</td><td>138/82 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>93% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild inspiratory wheeze</li><li>clear lung fields apart from RHUL opacity on imaging</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: subtle RHUL opacity, blunted right costophrenic angle, mild right PA widening</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate PRN</li><li>Ipratropium bromide BID</li><li>Budesonide/Formoterol BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 30 mg daily (ending 10 days ago)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent PCP visit with prednisone course</li><li>COPD and bronchiectasis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. Reyes arrived at the radiology center to have her chest X‑ray reviewed. The film showed a subtle hazy opacity adjacent to the right main bronchus with mild blunting of the right costophrenic angle and a slight widening of the right pulmonary artery. The radiologist’s report suggested a non‑specific infiltrate but raised concern for a possible neoplastic process given the patient’s extensive smoking history. The PCP was notified and a referral to pulmonary medicine was recommended. Ms. Reyes expressed frustration but agreed to proceed with a pulmonology consult.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Imaging raised suspicion for underlying mass; pulmonology referral arranged.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-08-17</h3><div class="visit-meta">Pulmonology | Reason: Evaluation for persistent cough and imaging abnormality</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Pulmonology Visit Note – Visit #3 – 2025‑08‑17
+
+Patient: Ms. Reyes, 68 yr old female
+
+Chief complaint: Persistent dry cough and shortness of breath with imaging abnormality.
+
+History of present illness: Ms. Reyes presents for routine follow‑up after recent high‑resolution CT chest. She reports an ongoing dry cough and increased shortness of breath over the past several weeks. She has used her albuterol PRN more frequently and continues to experience mild wheezing. The cough is non‑productive and has not been associated with fever, chest pain, or hemoptysis.
+
+Past medical history: COPD (severe), emphysema, bronchiectasis, prior pulmonary tuberculosis (treated), coronary artery disease.
+
+Medications: Albuterol sulfate PRN; Ipratropium bromide BID; Budesonide/Formoterol 200/6 µg BID; Lisinopril 10 mg daily; Atorvastatin 20 mg nightly; Aspirin 81 mg daily; Prednisone 30 mg daily (completed 10 days ago).
+
+Allergies: NKDA.
+
+Review of systems: Positive for chronic cough and dyspnea on exertion. Denies fever, chills, weight loss, or night sweats.
+
+Physical Examination:
+- General: Alert, oriented, no distress.
+- Vitals: HR 88 bpm, BP 140/85 mmHg, SpO2 94% RA.
+- HEENT: No nasal discharge.
+- Respiratory: Mild inspiratory wheeze bilaterally, crackles at left lung base, clear right lung fields, no accessory muscle use, no cyanosis.
+- Cardiovascular: Regular rate/rhythm, no murmurs.
+- Extremities: No edema.
+
+Pulmonary Function Test (PFT): FEV1 1.2 L (45% predicted), FEV1/FVC 42% – severe airflow limitation.
+
+Imaging: Recent high‑resolution CT chest (performed 2025‑08‑28) shows a 3.2‑cm central mass in the right main bronchus, multiple ipsilateral nodules ≤5 mm, enlarged mediastinal nodes (stations 7 &amp; 10), and right lower lobe cavitation.
+
+Assessment:
+1. Suspected bronchogenic carcinoma (central mass with lymphadenopathy and nodules). The presence of cavitation raises concern for post‑tuberculous sequelae but cannot be excluded.
+2. COPD exacerbation – controlled with current inhaler regimen.
+3. Bronchiectasis – likely contributory to chronic cough.
+4. Post‑TB pulmonary changes – possible residual disease.
+
+Plan:
+- Proceed with diagnostic bronchoscopy on 2025‑09‑01 to obtain tissue diagnosis and cytology of the central mass and mediastinal nodes.
+- Advise sputum collection for cytology (if possible) prior to bronchoscopy; send for AFB and fungal cultures to rule out re‑activation tuberculosis.
+- Continue current inhaled therapy: albuterol PRN, ipratropium BID, budesonide/formoterol BID.
+- Taper and discontinue short‑course prednisone; if acute exacerbation signs develop, re‑initiate low‑dose prednisone (e.g., 5 mg BID) under close review.
+- Consider referral to thoracic oncology for further staging (PET‑CT) once histology is available.
+- Encourage smoking cessation counseling (if applicable) and influenza/vaccination.
+- Reinforce adherence to cardiac medications, and schedule a follow‑up in 2 weeks to review bronchoscopy pathology results, or sooner if symptoms worsen.
+- Patient education: notify the clinic or ER if experiencing fever, chills, worsening cough, new hemoptysis, or oxygen desaturation &lt;90%.
+
+Disposition: Patient will return for bronchoscopy; follow‑up in 2 weeks.
+
+Prepared by: [Pulmonology Fellow Name], MD
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">ongoing dry cough</span><span class="pill">increased shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>88 bpm</td></tr><tr><td>Blood Pressure</td><td>140/85 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild inspiratory wheeze</li><li>crackles at left base</li><li>no accessory muscle use</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>High‑resolution CT chest</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 3.2‑cm central mass in right main bronchus, multiple ipsilateral nodules ≤5 mm, enlarged mediastinal nodes stations 7 &amp; 10, right lower lobe cavitation</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate PRN</li><li>Ipratropium bromide BID</li><li>Budesonide/Formoterol BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 30 mg daily (ending 10 days ago)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray with hazy RHUL opacity</li><li>Recent prednisone course</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. Reyes was evaluated by a pulmonology fellow. Detailed lung function testing revealed FEV1 1.2 L (45% predicted) and an FEV1/FVC ratio of 42%, confirming severe airflow limitation. Auscultation was notable for mild crackles in the left lower lobe and clear right lung fields. The fellow reviewed her recent chest X‑ray and ordered a high‑resolution CT of the chest on 2025‑08‑28 to rule out malignancy. The CT was performed and showed a 3.2‑cm central mass in the right main bronchus extending to the right upper lobe carina, multiple ipsilateral nodules up to 5 mm, enlarged mediastinal stations 7 and 10, and a small cavitary area in the right lower lobe consistent with old TB. The pulmonologist explained the findings, informed Ms. Reyes of a high likelihood of lung cancer, and scheduled a bronchoscopy on 2025‑09‑01. The patient was advised to continue her inhalers and to arrange for a sputum cytology collection if possible.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CT confirms central bronchial mass; bronchoscopy planned.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-09-05</h3><div class="visit-meta">Medical Oncology | Reason: Initiation of first‑line targeted therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Initiation of first‑line targeted therapy for stage IIIb right main bronchus adenocarcinoma.
+
+**History &amp; Findings:**
+- Patient 68‑yr‑old female with known COPD, emphysema, bronchiectasis, prior TB, coronary artery disease, and a biopsy‑confirmed EGFR‑mutated right main bronchus adenocarcinoma (CT mass 3.2 cm, mediastinal nodes).
+- Current medications: Albuterol PRN, Ipratropium BID, Budesonide/Formoterol BID, Lisinopril 10 mg, Atorvastatin 20 mg nightly, Aspirin 81 mg, Prednisone 5 mg (maintenance).
+- Symptoms reported: dry cough, mild wheeze, and shortness of breath; stable for a week with mild improvement in cough.
+- Vital signs: HR 90 bpm, BP 138/80, SpO₂ 94% RA.
+- Physical exam: mild inspiratory wheeze; otherwise clear lung fields.
+
+**Assessment:**
+- EGFR‑mutated stage IIIb adenocarcinoma of the right main bronchus – initiating osimertinib 80 mg PO QD.
+- Stable COPD with controlled symptoms on inhalers.
+- No acute infection or drug toxicity noted on presentation.
+
+**Plan:**
+1. Start osimertinib 80 mg daily – monitor for dermatologic rash, interstitial lung disease, QT prolongation, and transaminitis.
+2. Instruct patient to call office for fever, chills, or worsening dyspnea.
+3. Continue current inhaled therapy (Albuterol, Ipratropium, Budesonide/Formoterol) and cardiovascular medications.
+4. Maintain low‑dose prednisone (5 mg) while on osimertinib.
+5. Labs: CBC with differential, CMP, LFTs at 4 weeks to monitor for hematologic or hepatic toxicity.
+6. Imaging: CT chest with contrast at 8‑12 weeks to assess response.
+7. Assess for signs of QT prolongation – obtain EKG in 4‑6 weeks.
+8. Encourage inhaled steroid adherence, smoking cessation counseling, and pulmonary rehab if functional status declines.
+9. Discuss potential need for dose adjustment or discontinuation if significant adverse events occur.
+
+**Follow‑up:** 4 weeks from today for laboratory review and symptom check; 8‑12 weeks for imaging evaluation. Early visit if new respiratory symptoms or systemic signs develop.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dry cough</span><span class="pill">mild wheeze</span><span class="pill">shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>90 bpm</td></tr><tr><td>Blood Pressure</td><td>138/80 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild inspiratory wheeze</li><li>clear chest auscultation</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Bronchoscopic biopsy: adenocarcinoma, EGFR exon 19 deletion, Ki‑67 ~15%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started osimertinib 80 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Improved cough frequency; minimal side effects reported</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span><span class="pill">adenocarcinoma of right main bronchus (stage IIIb)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate PRN</li><li>Ipratropium bromide BID</li><li>Budesonide/Formoterol BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Osimertinib 80 mg daily (starting today)</li><li>Prednisone 5 mg daily (maintenance)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Bronchoscopic biopsy showing adenocarcinoma with EGFR exon 19 deletion</li><li>CT findings of central mass 3.2 cm</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel reviewed Ms. Reyes’ biopsy and imaging results, confirming an EGFR exon 19 deletion–positive adenocarcinoma staged T3N2M0 (IIIb). He discussed the rationale for first‑line osimertinib, explaining its targeted action and expected side effects. Osimertinib 80 mg orally once daily was started today, with a daily inhaler schedule continued. The oncologist instructed Ms. Reyes to monitor for fever, chills, or new-onset dyspnea, and to contact them immediately if these arise. Ms. Reyes reported mild improvement in cough over the last week and accepted the treatment plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Targeted therapy initiated; early response noted.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-10-02</h3><div class="visit-meta">Emergency Medicine | Reason: Hemoptysis and worsening dyspnea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Hemoptysis and worsening dyspnea
+
+History of Present Illness: Ms. Reyes, a 68‑year‑old female with a long history of COPD, bronchiectasis, prior tuberculosis, coronary artery disease, and stage IIIb right main bronchus adenocarcinoma (currently on osimertinib 80 mg daily), presented to the ED with a single episode of approximately ½ teaspoon of blood in sputum and a marked increase in shortness of breath. She reports feeling less dyspneic 12 hours after admission. Past medication list includes albuterol inhaler PRN, ipratropium BID, budesonide/formoterol BID, lisinopril 10 mg daily, atorvastatin 20 mg nightly, aspirin 81 mg daily, osimertinib 80 mg daily, and prednisone 5 mg daily.
+
+Past Medical History: COPD, bronchiectasis, prior TB, coronary artery disease, lung adenocarcinoma (stage IIIb), on osimertinib. No known drug allergies.
+
+Review of Systems: Positive for hemoptysis, increased shortness of breath, wheeze. No fever, chest pain, or hemoptysis recurrence.
+
+Physical Examination: Vitals: HR 98 bpm, BP 135/78 mmHg, SpO2 92% on RA, Temp 98.6°F. General: alert, in mild respiratory distress. HEENT: no conjunctival pallor. Lungs: mild wheeze at apex, bibasal crackles, no egophony. Heart: regular rhythm, no murmurs. Extremities: no clubbing, no edema.
+
+Imaging &amp; Labs: Chest CT showed a 3.0 cm right main bronchus mass, stable mediastinal lymph nodes, no new lesions. CBC: Hgb 12.1 g/dL, WBC 6.5 K/µL, Plt 210 K/µL. BMP: Na 139, K 3.8, Cl 105, HCO3 24, BUN 18, Cr 1.0.
+
+Assessment: 1) Tumor‑related hemoptysis likely secondary to osimertinib‑induced necrosis of central bronchial mass. 2) COPD exacerbation superimposed on bronchiectasis. 3) No evidence of infection or pulmonary embolism.
+
+Plan:
+- Reduce osimertinib to 40 mg daily on alternate days to mitigate bleeding risk.
+- Initiate prednisone 10 mg daily (baseline 5 mg). Continue current inhaler regimen.
+- Admit for observation; monitor SpO2, vitals, and hemoglobin twice daily.
+- Repeat CBC and BMP daily until Hgb &gt;12 or stable; if declining, consider bronchoscopic evaluation.
+- Educate patient on signs of worsening hemoptysis, cough, and breathing.
+- Discharge with oral prednisone 10 mg daily, alternate‑day osimertinib 40 mg, albuterol PRN, ipratropium BID, budesonide/formoterol BID, lisinopril, atorvastatin, aspirin.
+- Arrange follow‑up with oncology in 48 hours to review bleeding status and consider dose adjustment.
+- Pulmonology follow‑up in 4 days; repeat chest CT in 8 weeks to assess tumor size.
+- Advise to maintain hydration, avoid anticoagulants, and report any return of hemoptysis.
+- If hemoptysis recurs or increases, return to ED immediately.
+
+Disposition: Discharged home with close monitoring and scheduled outpatient follow‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">hemoptysis ~½ teaspoon</span><span class="pill">increasing shortness of breath</span><span class="pill">wheeze</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>98 bpm</td></tr><tr><td>Blood Pressure</td><td>135/78 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>92% on room air</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild wheeze at apex</li><li>bibasal crackles</li><li>no plethoric conjunctiva</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT (acute)</li><li>CBC</li><li>BMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 3.0 cm central mass, stable nodes</li><li>CBC: Hgb 12.1 g/dL, WBC 6.5 K/µL, Plt 210 K/µL</li><li>BMP: Na 139, K 3.8, Cl 105, HCO3 24, BUN 18, Cr 1.0</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reduced osimertinib to 40 mg daily alternate days</li><li>Prednisone 10 mg daily</li><li>Albuterol PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reported decreased cough frequency and improved dyspnea within 12 hours of admission</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span><span class="pill">adenocarcinoma of right main bronchus (stage IIIb)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol PRN</li><li>Ipratropium BID</li><li>Budesonide/Formoterol BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Osimertinib 80 mg daily (starting 9‑05)</li><li>Prednisone 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>On osimertinib 80 mg daily</li><li>Previous mild cough improvement</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. Reyes presented to the ED complaining of a single episode of approximately half a teaspoon of blood mixed with sputum and increased shortness of breath. Physical exam revealed mild wheeze, basal crackles, and normal vital signs except for a slightly lower SpO₂. A chest CT performed in the ED showed a 3.0 cm right main bronchus mass, stable mediastinal nodes, and no new lesions. Hemoptysis was attributed to tumor necrosis induced by osimertinib. The oncologist, consulted over the phone, decided to reduce osimertinib to 40 mg daily on an alternate‑day schedule to mitigate bleeding risk while maintaining therapeutic activity. The patient was admitted for observation, started on a low‑dose prednisone 10 mg daily, and instructed to use her inhalers as needed. She reported mild improvement in dyspnea 12 hours post‑admission and was discharged with close follow‑up.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Dose adjustment to mitigate hemoptysis; tumor stable on imaging.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-01-20</h3><div class="visit-meta">Medical Oncology | Reason: Assessment of disease progression and planning second‑line therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Medical Oncology Consultation – 2026 Jan 20**
+
+**Chief Complaint:** Assessment of disease progression and planning second‑line therapy.
+
+**History of Present Illness:** Ms. Reyes, a 68‑year‑old female with stage IV EGFR‑mutated adenocarcinoma of the right main bronchus currently on osimertinib, presents for a comprehensive oncology review. She reports daily hemoptysis, progressively worsening dyspnea now requiring 3 L/min supplemental oxygen, and a 10‑pound weight loss over the past month. She also notes increasing fatigue. The patient has been compliant with albuterol, ipratropium, and budesonide/formoterol inhalers, and has been taking low‑dose prednisone 10 mg daily. She previously had a 1‑month reduction in osimertinib dose (40 mg alternate days) due to early progression.
+
+**Past Medical History:** COPD, emphysema, bronchiectasis, prior TB, coronary artery disease, grade 1 anemia (Hgb 11 g/dL), metastatic bone disease.
+
+**Medications:**
+- Albuterol PRN
+- Ipratropium BID
+- Budesonide/Formoterol 200/6 µg BID
+- Lisinopril 10 mg daily
+- Atorvastatin 20 mg nightly
+- Aspirin 81 mg daily
+- Osimertinib 40 mg alternate days
+- Prednisone 10 mg daily
+
+**Allergies:** None known.
+
+**Review of Systems:** Positive for cough, hemoptysis, shortness of breath, weight loss, fatigue. Negative for fever, night sweats, chest pain, or neurologic deficits.
+
+**Physical Examination:**
+- **Vital Signs:** HR 102/min, BP 130/70 mmHg, SpO₂ 90% RA, Temp 98.4 °F.
+- **Respiratory:** Mild wheeze bilaterally; bibasal crackles; reduced breath sounds on the right.
+- **Cardiovascular:** Normal rate/rhythm; no murmurs.
+- **General:** Cachectic, BMI 18.5.
+- **Lymph:** No palpable cervical nodes.
+
+**Imaging:** Repeat contrast‑enriched CT chest/abdomen/pelvis demonstrates a new 2 cm left lower lobe nodule, enlarged left supraclavicular lymph node, and osseous lesions in L5 and sacrum—consistent with extra‑thoracic disease spread.
+
+**Labs:** CBC shows Hgb 11.0 g/dL, WBC 5.5 k/µL, Plt 155 k/µL. CMP is within normal limits, Cr 0.9 mg/dL.
+
+**Assessment:**
+1. Progression of EGFR‑mutated lung adenocarcinoma with new extrathoracic metastases and continued central airway involvement.
+2. Hemoptysis likely tumor‑related; monitor for airway bleeding.
+3. Cachexia and progressive dyspnea secondary to tumor burden and COPD.
+
+**Differential Diagnosis Considerations:**
+- Progressive tumor growth with airway infiltration
+- Radiation pneumonitis (anticipatory, pending future therapy)
+- Infectious processes: reinfection with TB, bacterial pneumonia
+- Cardiac‑related pulmonary edema
+- Bronchiectasis exacerbation
+
+**Plan:**
+- Initiate second‑line systemic therapy: Carboplatin (AUC 5) IV q3wk + Pemetrexed 500 mg/m² IV q3wk.
+- Continue low‑dose prednisone 10 mg daily during chemotherapy.
+- Palliative radiotherapy 30 Gy in 10 fractions to the right main bronchus over 2 weeks.
+- Continue baseline inhaler regimen; add supplemental O₂ at home as needed.
+- Nutritional counseling to address weight loss; consider referral to dietitian.
+- Monitor CBC, CMP, and LFTs prior to each chemo cycle.
+- If hemoptysis worsens, consider bronchoscopic evaluation or endobronchial therapy.
+- Maintain cardiac medications unchanged.
+- Provide supportive care: pain control, anxiety management, advance care planning.
+
+**Follow‑Up:**
+- Return to oncology clinic in 3 weeks for first cycle assessment.
+- Repeat CBC and CMP before each cycle.
+- Evaluate oxygen requirement and symptom burden.
+- Coordinate with radiation oncology for the scheduled palliative course.
+- Encourage reporting of any new hemoptysis, fever, or sudden dyspnea.
+
+**Signature:**
+[Oncology Service]
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">daily hemoptysis</span><span class="pill">increasing breathlessness</span><span class="pill">weight loss</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>102 bpm</td></tr><tr><td>Blood Pressure</td><td>130/70 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>90% on room air</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild wheeze</li><li>bibasal crackles</li><li>cachexia, BMI 18.5</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast CT chest/abdomen/pelvis</li><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 2 cm left lower lobe nodule, left supraclavicular node, L5 and sacral bone lesions</li><li>CBC: Hgb 11.0 g/dL, WBC 5.5 K/µL, Plt 155 K/µL</li><li>CMP: Normal electrolytes, Cr 0.9</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated carboplatin (AUC5) + pemetrexed 500 mg/m² (first cycle planned)</li><li>Prescribed prednisone 10 mg daily</li><li>Scheduled 30 Gy in 10 fractions to right main bronchus</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Accepts chemotherapy regimen; expresses hope for symptom relief</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span><span class="pill">adenocarcinoma of right main bronchus (stage IV, metastases to bone and left lung)</span><span class="pill">grade 1 anemia (Hgb 11.0 g/dL)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol PRN</li><li>Ipratropium BID</li><li>Budesonide/Formoterol BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Osimertinib 40 mg alternate days</li><li>Prednisone 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Osimertinib reduced dosing for 2 months</li><li>Intermittent hemoptysis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. Reyes was seen for a comprehensive oncology review. She reported daily hemoptysis, worsening dyspnea requiring 3 L of oxygen, and notable weight loss of 10 pounds over the past month. Physical exam was significant for wheeze, mild crackles, and a cachectic appearance. A repeat contrast‑enhanced CT of the chest/abdomen/pelvis was ordered, revealing a new 2 cm nodule in the left lower lobe, enlarged left supraclavicular node, and osseous lesions in L5 and sacrum—consistent with extrathoracic spread (stage IV). The oncologist explained that first‑line EGFR therapy had induced early progression and offered a platinum‑based regimen. A carboplatin (AUC5) plus pemetrexed 500 mg/m² every 3 weeks was planned, along with low‑dose prednisone and a 30 Gy palliative radiation schedule to the right main bronchus over two weeks. Ms. Reyes consented to the plan, and a chemotherapy infusion schedule was set.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed stage IV disease with bone metastases; started second‑line therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-09-01</h3><div class="visit-meta">Palliative Care | Reason: Symptom management and hospice planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Symptom management and hospice planning.
+
+**S:** Mrs. Reyes, 68‑year‑old female, calls home, presents with worsening fatigue, worsening left‑shoulder ache radiating down the arm, persistent wheeze, difficulty swallowing, and an 8‑lb weight loss over the past month. Reports increased need for rescue albuterol and feels that pain, dyspnea and appetite have worsened. She has seen her daughter and hospice team today; both are present.
+
+**O:** Vital signs: HR 95 bpm, BP 128/68 mmHg, SpO₂ 88% on 4 L nasal cannula, Temp 98.2 °F. Cachectic appearance, mild left‑hand swelling consistent with chronic radiation neuropathy. Auscultation: bilateral wheeze, bibasal crackles. Oxygen delivered via venturi mask at 4 L. Physical exam is otherwise unremarkable.
+
+**Labs:** CBC: Hgb 10.2 g/dL, WBC 4.8 k/µL, Plt 140 k/µL. CMP: BUN 18, Cr 0.8, Na 138. No new abnormalities.
+
+**Assessment:** Mrs. Reyes is in the end‑stage phase of stage IV right‑main bronchial adenocarcinoma with extensive metastatic disease and progressive airway obstruction. Her oxygen requirement has increased to 4 L to maintain SpO₂ ~88 %. Pain and dyspnea are reasonably controlled with current opiates; recent adjustment of morphine to 10 mg PRN and addition of methylprednisolone 40 mg IV daily has improved both wheezing and left‑shoulder discomfort. Dysphagia and fatigue likely reflect tumor invasion and systemic disease burden. The patient is appropriately enrolled in hospice; comfort‑only care is the focus.
+
+**Diagnoses Considered:** 1. Progressive central airway obstruction due to metastatic bronchial carcinoma. 2. Pulmonary edema or pneumonia as a complication of advanced disease. 3. Esophageal involvement or radiation‑related dysphagia. 4. Ongoing medication side‑effects (corticosteroid withdrawal, opioid‑induced constipation). 5. Radiation pneumonitis in the irradiated lung field.
+
+**Plan:**
+1. Continue morphine 10 mg orally BID as PRN for breakthrough pain; consider tapering hydromorphone if morphine reaches therapeutic level.
+2. Maintain methylprednisolone 40 mg IV daily to reduce airway inflammation; monitor for hyperglycemia and infection.
+3. Keep prednisone 10 mg daily for baseline anti‑inflammatory support.
+4. Continue routine inhalers (albuterol PRN, ipratropium BID, budesonide/formoterol BID) and monitor response.
+5. Maintain O₂ 4 L via venturi mask; titrate to keep SpO₂ between 88–92 % while minimizing distress.
+6. Arrange for weekly hospice nursing visits; coordinate home oxygen supply and nebulizer use if needed.
+7. Refer for swallow evaluation by speech‑language pathology; consider diet modification or placement of PEG tube if swallowing deteriorates.
+8. Keep hydration and caloric intake as tolerated; involve dietitian for nutritional counseling.
+9. Provide psychosocial support; review advanced directives and ensure comfort measures are documented.
+10. Educate family on signs of acute distress, bleeding, or infection; provide 24/7 hospice phone number.
+
+**Follow‑up:** Monthly hospice review or sooner if acute symptoms worsen. Monitor SpO₂ trend, pain scores, swallowing function, and hydration status.
+
+**Sign‑off:** Dr. Lee, Hospice Palliative Care</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent fatigue</span><span class="pill">ache in left shoulder</span><span class="pill">wheezing</span><span class="pill">difficulty swallowing</span><span class="pill">weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Heart Rate</td><td>95 bpm</td></tr><tr><td>Blood Pressure</td><td>128/68 mmHg</td></tr><tr><td>Oxygen Saturation</td><td>88% on 4 L nasal cannula</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>wheeze</li><li>bibasal crackles</li><li>mild left hand swelling</li><li>cachectic appearance</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hgb 10.2 g/dL, WBC 4.8 K/µL, Plt 140 K/µL</li><li>CMP: BUN 18, Cr 0.8, Sodium 138</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg PRN</li><li>Hydromorphone 4 mg PRN</li><li>Methylprednisolone 40 mg IV once daily</li><li>Oxygen 4 L via venturi mask</li><li>Increased prednisone to 10 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Comfortable with hospice; minimal pain after medication adjustments</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">emphysema</span><span class="pill">bronchiectasis</span><span class="pill">prior TB</span><span class="pill">coronary artery disease</span><span class="pill">adenocarcinoma of right main bronchus (stage IV)</span><span class="pill">bone metastases</span><span class="pill">radiation neuropathy of left hand</span><span class="pill">grade 2 anemia (Hgb 10.2 g/dL)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol PRN</li><li>Ipratropium BID</li><li>Budesonide/Formoterol BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Prednisone 10 mg daily</li><li>Pemetrexed 500 mg/m² (last dose 10 weeks ago)</li><li>Carboplatin 5 (last dose 10 weeks ago)</li><li>Morphine 10 mg oral BID (increased to PRN pain)</li><li>Hydromorphone 4 mg PRN for breakthrough pain</li><li>Oxygen 4 L via venturi mask</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Two cycles of carboplatin/pemetrexed</li><li>30 Gy radiotherapy to right main bronchus</li><li>Prednisone 10 mg daily</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Lee from the hospice team visited Ms. Reyes at home. After a gentle conversation noting her dignity and her daughter’s presence, the team performed a symptom assessment. Her SpO₂ on 4 L nasal cannula was 88%, and she reported worsening shoulder pain, fatigue, and difficulty swallowing. Physical exam confirmed wheeze, mild crackles, and a mildly swollen left hand (neuropathy). A CBC showed Hgb 10.2 g/dL, WBC 4.8 K/µL, Plt 140 K/µL. The palliative care team increased morphine to 10 mg PRN, added methylprednisolone 40 mg IV once daily to reduce airway inflammation, and initiated a hospice referral for comfort‑only care. Ms. Reyes and her family discussed comfort measures, advanced directives, and support resources. She agreed to hospice enrollment, and the team arranged for scheduled nursing visits and home oxygen support.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>End‑stage disease; focus on symptom palliation and hospice care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Tuberculosis</span><span class="pill">Cardiovascular disease due to smoking</span><span class="pill">Bronchogenic carcinoma</span><span class="pill">EGFR‑mutated right main bronchus adenocarcinoma</span><span class="pill">Metastatic bone disease</span><span class="pill">Extrathoracic metastases</span><span class="pill">Cachexia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Osimertinib 40 mg daily on alternate days</li><li>Prednisone 10 mg daily</li><li>Methylprednisolone 40 mg IV daily</li><li>Morphine 10 mg orally BID PRN</li><li>Albuterol sulfate inhaler PRN</li><li>Ipratropium bromide 0.5 mg BID</li><li>Budesonide/Formoterol 200/6 μg BID</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Carboplatin IV q3wk</li><li>Pemetrexed IV q3wk</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with a 1-month history of dry cough, wheeze, and increased albuterol use. Vitals: HR 92, BP 140/85, SpO₂ 94% on room air. Physical exam showed mild inspiratory wheeze bilaterally, decreased breath sounds in the right upper lung field, with no cyanosis or peripheral edema. Prescribed oral prednisone 30 mg daily for 5 days, continued maintenance inhalers (albuterol PRN, ipratropium BID, budesonide/formoterol 200/6 mcg BID). Ordered chest X‑ray to evaluate for infiltrate or consolidation. Patient advised hydration, avoidance of pollutants, and continued cardiac medications (lisinopril, atorvastatin, aspirin). Follow‑up scheduled in 5 days or sooner if symptoms worsen or oxygen saturation falls below 90%.</li><li>Patient returned for review of chest X‑ray. Persistent dry cough and mild wheeze were noted. Radiology identified a subtle hazy opacity in the right upper lung lobe, mild right costophrenic angle blunting, and slight right pulmonary artery widening. No consolidation or pleural effusion. Orders: high‑resolution CT chest with contrast, CBC, BMP, CRP/ESR, sputum Gram stain and culture, TB quantiferon. Pulmonary medicine consult requested. Continue maintenance inhaler therapy and cardiovascular medications. Prednisone recently discontinued.</li><li>Patient returned for pulmonology follow‑up after recent high‑resolution CT showing a 3.2‑cm right main bronchus mass with mediastinal lymphadenopathy and right lower lobe cavitation. Physical exam: mild inspiratory wheeze bilaterally, crackles at left lung base, SpO₂ 94% RA. PFT: severe airflow limitation (FEV1 1.2 L, 45% predicted). Plan: schedule bronchoscopy on 2025‑09‑01 to obtain tissue from the central mass and nodes; obtain sputum cytology with AFB and fungal cultures; continue current inhaled therapy; taper prednisone; consider thoracic oncology referral; follow‑up in 2 weeks.</li><li>Patient initiated osimertinib 80 mg daily for EGFR‑mutated stage IIIb right main bronchus adenocarcinoma; continued low‑dose prednisone 5 mg daily and existing inhalers; advised monitoring for rash, interstitial lung disease, QT prolongation, and transaminitis; labs (CBC, CMP, LFTs) scheduled in 4 weeks; chest CT with contrast planned in 8‑12 weeks.</li><li>Patient presented to ED with hemoptysis (~½ teaspoon of sputum) and worsening dyspnea. Vitals: HR 98, BP 135/78, SpO₂ 92% RA. Physical exam: mild wheeze at apex, bibasal crackles, no egophony. Chest CT shows stable 3.0 cm right main bronchus mass; CBC WBC 6.5 K, Hgb 12.1 g/dL; BMP normal. Admitted; started prednisone 10 mg daily (up from 5 mg) and reduced osimertinib to 40 mg alternate days. Discharged with close follow‑up; repeat chest CT in 8 weeks.</li><li>Patient presents with daily hemoptysis, worsening dyspnea requiring supplemental oxygen, 10‑lb weight loss, and fatigue. Physical exam shows cachectic appearance, BMI 18.5, mild wheeze bilaterally, bibasal crackles. Repeat contrast‑enhanced CT reveals new 2 cm left lower lobe nodule, enlarged left supraclavicular lymph node, osseous lesions at L5 and sacrum. Initiated second‑line therapy with Carboplatin IV q3wk and Pemetrexed IV q3wk, continued prednisone 10 mg daily, and planned palliative radiotherapy to right main bronchus. Supplemental O₂ advised. Follow‑up in 3 weeks for chemo cycle assessment.</li><li>Patient evaluated in palliative care for symptom management and hospice enrollment. Worsening dyspnea required 4 L O₂ to maintain SpO₂ 88–92%; increased fatigue, left shoulder pain, dysphagia, and weight loss. Ongoing opioids (morphine 10 mg PRN for breakthrough pain) and IV methylprednisolone 40 mg daily; baseline prednisone 10 mg daily continued. Inhalers maintained (albuterol PRN, ipratropium BID, budesonide/formoterol BID). O₂ titrated to 4 L via venturi mask. Hospice care initiated with weekly nursing visits, swallow evaluation planned, dietary counseling, and psychosocial support. Follow‑up scheduled monthly or sooner if acute symptoms worsen.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

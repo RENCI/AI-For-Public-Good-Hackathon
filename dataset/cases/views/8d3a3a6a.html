@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 8d3a3a6a</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 8d3a3a6a</h1><div class="subtitle">Acute Obsessive–Compulsive Disorder (OCD) Crisis | Female, 30</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Major Depressive Disorder, Panic Disorder, Social Anxiety Disorder, Alcohol Use Disorder, Diabetes Mellitus Type 2</div><div class="meta-line">Risk Factors: Recent job loss, Traumatic event (e.g., physical assault), Sleep deprivation, History of substance use, High familial loading for OCD and anxiety disorders</div></div>
+<details><summary>Narrative <span class="preview-text">**A Narrative of a 30‑Year‑Old Woman’s Acute OCD Crisis and Subsequent Recovery**  When the call to the police came in t...</span></summary><div class="section-body"><p>**A Narrative of a 30‑Year‑Old Woman’s Acute OCD Crisis and Subsequent Recovery**</p><p>When the call to the police came in the middle of a rainy Sunday afternoon, Maya had already been wrestling with a storm inside her own mind for the past month. The police had arrived to investigate a physical assault on her in the parking lot of a downtown bar. The assailant slipped a silver coin into her pocket—an odd, jarring detail that would unknowingly trigger a cascade of obsessive thoughts. In the week that followed, Maya was already in full spiral: she could not sleep, she could not eat, she could not let herself step outside. The stressors that fed the crisis were many: a sudden loss of her marketing job two weeks earlier, a history of alcohol use, a family pedigree of OCD and anxiety, a long‑standing diagnosis of type 2 diabetes mellitus that had been poorly controlled for years, and an unresolved sadness that had been drifting at the back of her mind since high school.</p><p>---</p><p>### Week 1 – The Trigger and Early Intrusion</p><p>**Day 1** – The assault. The silver coin left behind. Maya’s mind fixated on whether she had left it in an alley, on an elevator, on her own phone. “If it’s still there, it’s a threat,” she whispered to herself. Sleep fell away as her thoughts spiraled; she stayed awake for 24 hours, glancing at the coin in the refrigerator until it seemed to vanish. She began to feel an unrelenting fear that strangers might approach her again.</p><p>**Day 2** – Obsessions intensified. She became preoccupied with the possibility that the coin could be a weapon or a bomb. The urge to keep checking the coin, to search every nook of her apartment, grew into frantic compulsions. She woke up at 3 a.m., ran a second full circuit of the apartment, and laid the coin in a new spot, only to see it again in a different context. Panic attacks began—sudden, shaking, as if she were drowning in an invisible tide.</p><p>**Day 3** – Social anxiety flared. At her apartment complex’s community center, she noticed a group of neighbors chatting, a group that she felt she couldn’t join because “they would think I’m crazy.” She avoided the hallway entirely, staying inside for the rest of the day and night. Her blood glucose hovered at 250 mg/dL at two points when she was on the brink of a panic attack; she avoided checking sugar because checking seemed to reinforce the anxiety.</p><p>---</p><p>### Week 2 – Escalation and First Medical Contact</p><p>**Day 7** – Panic and depressive mood collided. She woke up and could not summon the energy to get her diabetic insulin or check her glucose. She made a phone call to her mother, “I’m not sleeping. I can’t breathe.” The voice on the other end of the line was distant. Her mother suggested an appointment with her primary care doctor, hoping to get something that would “make her feel better.”</p><p>**Day 9** – At the urgent‑care clinic, Maya admitted, “I keep seeing that coin. I keep feeling like I’m about to die.” The nurse took her vitals: BP 138/88, HR 98, glucose 260 mg/dL. She was given a short injection of lorazepam to calm the acute panic; the medication produced a brief relief but her intrusive thoughts persisted.</p><p>**Day 10** – Discharged with a referral to psychology and a prescription for sertraline 25 mg nightly. She also got a glucose meter and a diabetes education sheet, because her doctor noted: “If you’re not checking your blood sugar you’re missing clues to your overall mental state.” Maya left the clinic feeling a little relieved but mostly confused. She was told to call an anxiety hotline if symptoms worsened.</p><p>---</p><p>### Week 3 – First Psychiatric Consultation</p><p>**Day 14** – Maya’s first outpatient psychiatric visit. She was taken into a calm room and asked: “Tell me what’s been happening when you think about the coin?” She described a sense of impending doom, a compulsion to check and re‑check the coin, and the inability to sleep because the thought persisted. The psychiatrist noted the presence of major depressive symptoms—low mood, lack of interest in her cat, tearful at the mention of friends. The patient also confessed a pattern of nightly drinking: a bottle of wine to “sleep” followed by feelings of guilt.</p><p>The psychiatrist used a brief “Yale‑Brown Obsessive Compulsion Scale” to gauge severity (score 27, high). He started sertraline at 25 mg nightly (increase to 50 mg next week, if tolerated). A cognitive‑behavioural therapist (CBT) was scheduled for a joint session. An initial psycho‑education plan was set: sleep hygiene, routine of avoiding alcohol, and a glucose‑monitoring schedule. For the next session, Maya would practice “exposure with response prevention” (ERP) where she would deliberately not check the coin for 1–2 minutes at a time.</p><p>**Day 17** – The first exposure session. With the therapist’s guidance, Maya kept her phone out of her hand, turned off the lights, and walked through the hallway without looking at the coin for 3 minutes. The anxiety surged; her heart rate spiked. After the session, Maya reported that her heart rate was still high but she could see a slight drop after the 4th minute. She left feeling “stunned,” a typical response to initial ERP.</p><p>---</p><p>### Week 4–6 – Medication Dose Increase and Comorbidity Management</p><p>**Day 24** – Sertraline increased to 50 mg nightly (tolerated). She began noticing a small, but measurable decline in the intensity of intrusive thoughts: from a &quot;constant chatter at 10/10&quot; to 6/10 at night. She also slept through most of a third of an hour, often waking around 4 a.m., though she still struggled to find a new pattern.</p><p>**Day 27** – First follow‑up with her primary care provider for diabetes. She reported irregular glucose readings and missed doses of insulin. The PCP reviewed her insulin regimen and added a basal insulin adjustment. The PCP also referred her to a dietician who recommended a carbohydrate‑controlled meal plan and suggested that she limit alcohol consumption to no more than one drink per day, if at all.</p><p>**Day 35** – Maya began a weekly alcohol‑use counseling group. She confessed a pattern of “coping drinking” after the assaults and in social situations. The group leader provided a “stop‑drink” plan and offered peer support. By week 11, Maya reported having had three sobriety check‑ins during the month and a near‑complete abstinence.</p><p>---</p><p>### Week 7–10 – Progress and Relapse Attempts</p><p>**Day 42** – On a routine CBT session, the therapist noted that Maya still had the compulsion to check the coin, but now she’d check the coin no more than 3–4 times a day (instead of 15). She described a “panic threshold” lower than before. In the session, she practiced an ERP exercise where she purposely left the coin in a cupboard, turned the lights off, and walked out of her apartment while the therapist timed a 10‑minute exposure. She had heart racing but survived. By the end of the session, she claimed a sense of “power back” over the obsession.</p><p>**Day 49** – A panic attack episode after a work‑related email, where Maya felt “it’s over.” She called her therapist, and they performed a mini‑breathing exercise. Sertraline seemed to have a delayed effect on panic. She also reported an elevated glucose reading at 300 mg/dL when she had a coffee and a pastry before a meeting. Her dietician recommended a low‑glycemic index snack.</p><p>**Day 58** – A brief relapse: Maya began checking the coin 8 times during the day after seeing someone else holding a coin. She realized the pattern and wrote a note to herself: “You’re not a threat.” The note was a small but powerful tool. The therapist used a “self‑talk” technique, praising her for recognizing the compulsion.</p><p>---</p><p>### Week 11–13 – Stabilization and Consolidation</p><p>**Day 65** – Maya reports sleeping through the night with only brief awakenings at 5 a.m. She no longer feels the need to re‑check the coin. She has reduced her insomnia from 6 hours to 5.5 hours nightly. Her blood sugar has stabilized between 120–180 mg/dL in fasting. She lost 5 pounds on a balanced diet plan and reported that she no longer feels guilt over her drinking habits.</p><p>**Day 71** – A comprehensive review with her psychiatrist: sertraline 50 mg nightly plus a tapering 20 mg schedule for the next two weeks. The therapist recommends continuing ERP every other week and practicing mindfulness meditation to anchor herself during intrusive thoughts. The diabetes educator shows her a trend graph and the value of consistent glucose monitoring.</p><p>**Day 78** – Maya’s social anxiety has noticeably improved. She joins a book club without checking her phone after minutes of conversation. She has started a part‑time job at a local community center—a step forward that reduces both financial and psychological stress. She feels a sense of control that was missing after her job loss and the assault.</p><p>---</p><p>### Week 13–15 – Follow‑up and Outcome</p><p>**Day 86** – Maya meets once more with the CBT therapist. Her symptoms are reported as mild: occasional intrusive images of coins that she acknowledges, but she now refrains from any checks. Her depressive mood has also improved; she finds the cat’s purr enjoyable again. She no longer uses alcohol as a coping mechanism.</p><p>**Day 94** – A final psychiatric assessment: OCD severity score at 6/28. Mood depressed at 4/30 but with no suicidal ideation. The psychiatrist writes a note of encouragement and continues sertraline and optional short‑term CBT maintenance.</p><p>**Day 100 (Final Clinical Visit)** – Maya leaves the clinic with a plan:  
+- Continue sertraline 50 mg nightly for at least 6 months.  
+- Attend CBT once a month for maintenance.  
+- Keep a daily log of glucose and mood rating.  
+- Practice a 5‑minute breathing exercise whenever she feels intrusive anxiety.</p><p>She walks out with a light feeling, a sense that the coin is nothing more than a silver coin again, and a new confidence that her life can be lived beyond the panic, depression, and compulsions.</p><p>---</p><p>### Summary</p><p>The acute OCD crisis that began with an assault and spiraled into obsessive checks, panic attacks, and depression was addressed through a multi‑disciplinary plan. The progression from initial intrusive thoughts to full ERP and pharmacotherapy illustrates a typical but detailed therapeutic track. Maya’s comorbid diabetes required active glucose monitoring, while her substance use history was tackled through counseling and self‑help strategies. A careful schedule of medication titration, therapist‑led ERP, sleep hygiene, and social reintegration enabled a steady decline in symptom severity. By the end of 100 days, the narrative shows a clear shift from crisis to improvement, culminating in a stable, hopeful outlook.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-05-01</h3><div class="visit-meta">Urgent Care - Primary Care Physician | Reason: Acute anxiety, intrusive thoughts about a silver coin, inability to sleep</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: Maya, 30‑year‑old female presents to urgent care with acute anxiety, intrusive thoughts concerning a silver coin, and inability to sleep.
+
+Chief Complaint: &quot;I keep thinking about the silver coin and I can’t sleep. I had a panic attack yesterday.&quot;
+
+History of Present Illness: Maya reports chronic intrusive thoughts about a silver coin that became a trigger following a recent assault. She experienced a panic attack within the past 24 h with rapid breathing, trembling hands, and a sense of impending doom. She has a history of Major Depressive Disorder, Panic Disorder, Social Anxiety Disorder, and Alcohol Use Disorder. No current medication regimen. She reports insomnia for 3 days, agitation, and difficulty performing daily activities. She noted that her job was lost roughly 2 weeks ago.
+
+Past Medical History: Type 2 Diabetes Mellitus. No hospitalizations. No known drug allergies.
+
+Physical Examination: Vitals 138/88 mmHg, HR 98 bpm, Temp 98.6 °F, O₂ sat 97 % on room air. Patient alert, oriented to person. Observed tense posture, tremulous hands, rapid breathing during the anxiety episode.
+
+Assessment: Acute anxiety with intrusive thoughts likely precipitated by traumatic reminder and recent stressors; exacerbated Panic Disorder. Hyperglycemia (fingerstick glucose 260 mg/dL) likely stress‑related; no evidence of DKA. No obvious signs of alcohol withdrawal.
+
+Plan:
+1. Pharmacologic:
+   - Lorazepam 1 mg IV (administered, brief anxiolysis achieved).  Discontinue after resolution of acute episode.
+   - Start sertraline 25 mg orally nightly (titrated gradually).  Counsel to begin at 25 mg and increase to 50 mg after 2 weeks if tolerated.
+   - Administer 20 g oral glucose for hyperglycemia. Provide home glucometer and reinforce self‑monitoring.
+2. Non‑pharmacologic:
+   - Provide education on relaxation techniques (deep breathing, progressive muscle relaxation).
+   - Provide referral to psychiatrist for psychotherapy and medication management.
+   - Encourage psychosocial support via anxiety helpline (988).
+   - Safety plan: discuss risk for self-harm; consider involving mental health crisis team next.
+3. Follow‑up: Arrange appointment with psychiatry within 7 days. If anxiety worsens or if glucose ≥300 mg/dL, return to urgent care.
+4. Diabetes management: Reinforce SMBG twice daily, dietary counseling, and contact endocrinology if control remains poor.
+
+The patient was advised to monitor her glucose, take the prescribed sertraline nightly, and seek psychotherapeutic support. She was discharged with instructions to return if she experiences refractory anxiety, worsening sleep or glucose &gt;300 mg/dL.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">agitated, sleep disturbance, panic attacks, intrusive thoughts about silver coin</span><span class="pill">difficulty performing daily activities</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/88</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>Glucose</td><td>260 mg/dL</td></tr><tr><td>O2Sat</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tense posture, tremors in hands, rapid breathing during anxiety episode</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Point‑of‑care fingerstick glucose</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Glucose 260 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lorazepam 1 mg IV</li><li>Glucose 20 g oral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Brief relief of anxiety after lorazepam; intrusive thoughts persisted but patient was somewhat calmer.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent assault leading to silver coin trigger</li><li>Job loss two weeks prior</li><li>History of alcohol use</li><li>T1D poorly controlled</li><li>Major depressive disorder</li><li>Panic disorder</li><li>Social anxiety disorder</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived to the urgent care clinic visibly distressed. The nurse recorded her vitals and noted her blood glucose at 260 mg/dL. She described chronic thoughts of the silver coin being a threat and a recent panic attack. The doctor administered lorazepam 1 mg IV, which provided brief anxiolysis. A short‑acting oral glucose (20 g) was also given, and a home glucose meter was provided. Maya was given a referral to a psychiatrist and a prescription for sertraline 25 mg nightly. She was encouraged to monitor glucose daily and to seek psychosocial support via an anxiety helpline.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial acute OCD crisis with comorbid panic and depression; acute glucose elevation reflecting stress response.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-05-02</h3><div class="visit-meta">Primary Care Physician | Reason: Follow‑up on acute anxiety and diabetes management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit 2 – 2024‑05‑02 – Primary Care Follow‑up
+
+Subjective:
+Maya presents for follow‑up of acute anxiety and diabetes management. She reports persistent intrusive thoughts, sleep disruption, lack of energy, and depressed mood. She continues to have elevated blood glucose readings (average 260‑270 mg/dL) despite current basal insulin. She is on sertraline 25 mg nightly and reports good adherence.
+
+Objective:
+Vitals: BP 140/90 mmHg, HR 94 bpm, Temp 98.7°F, Glucose 260 mg/dL (fingerstick), O₂ Sat 98%. BMI 31 kg/m². No acute distress. Examination otherwise unremarkable. Labs: CBC normal; CMP mild hyperglycemia; HbA1c 10.8%.
+
+Assessment:
+1) Type 2 Diabetes Mellitus poorly controlled (HbA1c 10.8%, fasting glucose high). 2) Major Depressive Disorder – ongoing symptoms with insomnia and low energy. 3) Panic/Generalized Anxiety Disorder – ongoing intrusive thoughts. 4) Alcohol Use Disorder – patient open to group therapy. 5) Insomnia related to anxiety.
+
+Plan:
+1) Intensify insulin therapy – increased basal glargine to X units at bedtime (documented in chart). Continue self‑monitoring 3 times daily. 2) Continue sertraline 25 mg nightly; review in 4 weeks. 3) Refer to dietitian for carbohydrate‑consistent diet and glucose monitoring education. 4) Enroll in Alcoholics Anonymous or similar support group. 5) Discuss sleep hygiene and relaxation techniques; schedule psychiatry consultation if anxiety worsens. 6) Order repeat HbA1c in 3 months, and re‑check fasting glucose in 1‑2 weeks. 7) Follow‑up PCP in 4 weeks for repeat labs and medication adjustments. Encourage use of safety plan if anxiety escalates.
+
+Patient education: Reviewed glucose monitoring, consistent meals, adherence to insulin changes, and sertraline. Maya is motivated to improve control and expressed relief at having a structured plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent intrusive thoughts, sleep disruption, lack of energy</span><span class="pill">high blood glucose readings</span><span class="pill">depressed mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>94</td></tr><tr><td>Temp</td><td>98.7°F</td></tr><tr><td>Glucose</td><td>260 mg/dL</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 31 kg/m², no acute distress</li><li>Tachycardia 94 bpm</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC - normal</li><li>CMP - mild elevated fasting glucose</li><li>HbA1c 10.8%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discussion of medication adherence</li><li>Education on glucose monitoring</li><li>Referral to dietitian</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient motivated to improve glucose control; expressed relief at having a structured plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Urgent care visit with acute anxiety, lorazepam, sertraline 25 mg prescribed</li><li>No change in insulin regimen</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya came in at 9 a.m. reporting ongoing anxiety and sleeplessness. The PCP reviewed her glucose logs, noting elevated readings around 270 mg/dL. She was advised to check glucose 3 times daily and to maintain a consistent carbohydrate intake. PCP noted the need for a more aggressive diabetes plan and adjusted her basal insulin. A dietitian referral was provided. Counseling for alcohol use was discussed; Maya expressed willingness to attend a group. The PCP reinforced medication adherence for sertraline.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continuing acute OCD and anxiety; comorbid uncontrolled diabetes noted. PCP initiates active diabetes management.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-05-06</h3><div class="visit-meta">Psychiatric Specialist | Reason: Comprehensive psychiatric evaluation and initiation of SSRI</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Comprehensive psychiatric evaluation and initiation/increase of SSRI.
+
+History of Present Illness: Maya is a 30‑year‑old female with a history of Major Depressive Disorder, Panic Disorder, Social Anxiety Disorder, Alcohol Use Disorder, and Type 2 Diabetes Mellitus. She was started on sertraline 25 mg nightly one week prior to this visit. During the past week she has reported compulsive safety checking, frequent panic episodes, chronic insomnia, low mood, anhedonia, and guilt over late‑night alcohol consumption.
+
+Past Psychiatric History: Sertraline 25 mg nightly (1 week), Lorazepam 1 mg PRN for acute anxiety episodes.
+
+Medical History: Diabetes mellitus type 2, on basal insulin glargine (dose titrated to X units nightly). No known drug allergies.
+
+Vitals: BP 135/85 mmHg, HR 90 bpm, Temp 98.6 °F, SpO2 98%.
+
+Mental Status Examination: Alert and oriented x3. Affect constricted, mood flat. Eye contact brief, speech normal rate and volume. Thought content: preoccupation with checking behaviors and guilt over alcohol use. No suicidal or homicidal ideation.
+
+Physical Exam: Notable for mild physical anxiety, otherwise unremarkable.
+
+Labs: Baseline CBC, CMP, and lipid panel all within normal limits.
+
+Assessment:
+1. Major Depressive Disorder, moderate – continued with sertraline, monitor for efficacy and side‐effects.
+2. Panic Disorder – SSRI beneficial, continue current course.
+3. Social Anxiety Disorder – no change in management, continue psychoeducation.
+4. Alcohol Use Disorder – continued AA participation, encourage abstinence.
+5. Type 2 Diabetes Mellitus – glucose control continuing.
+
+Plan:
+- Increase sertraline to 50 mg nightly after one week if tolerated.
+- Initiate CBT referral; schedule first session within 2 weeks.
+- Reinforce sleep hygiene, alcohol avoidance, and self‑monitoring of blood glucose.
+- Continue basal insulin glargine at current dose.
+- Lorazepam 1 mg PRN for acute anxiety; review need in future.
+- Repeat CBC, CMP, HbA1c in 3 months.
+
+Follow‑up:
+- Psychiatric follow‑up in 1 week to assess tolerability of sertraline dose increase and review mood/anxiety symptoms.
+- Continue regular PCP follow‑up for diabetes management.
+- Encourage daily sleep logs and alcohol diaries.
+- Contact clinic immediately if worsening anxiety, suicidal thoughts, or serotonergic side‑effects.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">obsessive thoughts of coin, compulsive checking, panic episodes, insomnia</span><span class="pill">low mood, anhedonia, guilt over late‑night drinking</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/85</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal mental status exam aside from anxiety; eye contact brief; mood: flat; affect: constricted</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC, CMP, lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC, CMP, lipid panel all within normal limits</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed willingness to start CBT; concerns about increasing SSRIs but agreed to monitor for side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly started 1 week prior</li><li>Lorazepam used for acute anxiety</li><li>High family history of OCD and anxiety</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived for her first psychiatric visit. She was assessed using the Yale‑Brown Obsessive Compulsive Scale, scoring 27. The psychiatrist confirmed a diagnosis of OCD with comorbid MDD. Sertraline was increased to 25 mg nightly, with instruction to increase to 50 mg after one week if tolerated. A CBT referral was arranged, and psychoeducation on sleep hygiene, alcohol avoidance, and glucose monitoring was delivered. The therapist explained exposure with response prevention (ERP) and will schedule joint sessions.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiation of SSRI therapy; ERP plan in place. Depressive symptoms noted; medication tolerability to be monitored.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-05-09</h3><div class="visit-meta">CBT Therapist | Reason: First ERP exposure session</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #4 – 2024-05-09\n\nChief Complaint: First ERP exposure session for coin obsession.\n\nHistory of Present Illness: 30‑year‑old female with comorbid Type 2 diabetes, MDD, panic disorder, social anxiety, and alcohol use disorder presented for first ERP exposure. During a 45‑minute CBT session, the client performed a 3‑minute exposure: she left the coin in the living‑room cupboard, turned off the lights, and walked to the hallway without checking the coin. Heart rate spiked to 130 bpm, tremors noted; client reported feeling overwhelmed but acknowledged a slight drop in anxiety at 3 min. Therapist guided diaphragmatic breathing and discussed self‑talk strategies. A homework log to record triggers and ERP attempts was issued.\n\nVitals: BP 132/84, HR 85, Temp 98.5°F, O₂Sat 98%.\n\nAssessment: Acute panic response during ERP, but early evidence of anxiety reduction. No medical complications. Psychomotor agitation, likely precipitated by unmedicated exposure at present dose of sertraline 25 mg. The exposure produced expected physiological hyperarousal; client tolerated and reported “stunning.”\n\nPlan: 1. Continue ERP homework; aim for 5 exposures over next week, gradually increasing duration.\n   2. Reinforce diaphragmatic breathing and cognitive restructuring.\n   3. Review sertraline dose: discuss increase to 50 mg nightly after one week if well tolerated.\n   4. Maintain daily glucose logs; monitor for hypoglycemia during anxious episodes.\n   5. Follow‑up CBT session in 7 days; psychiatrist consult in 1 week.\n   6. Encourage relaxation techniques at home, scheduled bedtime routine.\n   7. Provide safety plan for potential anxiety escalation.\n\nSignature:\nCBT Therapist</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">intense anxiety when not checking coin; heart racing during exposure</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/84</td></tr><tr><td>HR</td><td>85</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No acute medical issues; physical exam limited to vital signs</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>ERP training; diaphragmatic breathing</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya described the session as “stunning” and expressed concern over potential relapse but committed to the homework.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly started 1 week ago</li><li>ERP discussion with psychiatrist</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a 45‑minute session, Maya practiced a 3‑minute ERP: she left the coin in the living‑room cupboard, turned off the lights, and walked to the hallway without checking. Heart rate spiked to 130 bpm, tremors noted. Maya reported feeling overwhelmed but acknowledged a slight drop in anxiety after 3 minutes. The therapist guided her through diaphragmatic breathing and discussed self‑talk strategies to counter compulsion. A homework log was given to record triggers and ERP attempts.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early ERP exposure shows physiological anxiety but partial adaptation. Medication dose unchanged.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-05-16</h3><div class="visit-meta">Psychiatric Specialist | Reason: Follow‑up on SSRI dose and symptom assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Chief complaint: Follow‑up on SSRI dose and symptom assessment.
+
+Psychiatric history: 30‑year‑old female with major depressive disorder (MDD), panic disorder, social anxiety disorder, alcohol use disorder (AUD) and type 2 diabetes mellitus (T2DM). She reports moderate improvement in mood scales. Intrusive thoughts decreased from 10/10 to 6/10 at night. Occasional panic attacks remain. No new or worsening side‑effects noted.
+
+Medical history: T2DM, hypertension, BMI 31.
+
+Past medication: Sertraline 25 mg nightly (2 weeks), insulin glargine X units nightly, metformin (dose as per last visit). Lorazepam 1 mg PRN for acute anxiety.
+
+Allergies: NKDA.
+
+**Objective:**
+Vitals: BP 130/82 mmHg; HR 88 bpm; Temp 98.6 °F; O₂Sat 98%.
+Physical/Neuro: Vitals stable; no psychomotor agitation. Mental status: normal affect, mild dysphoria, intact cognition, no suicidal ideation.
+
+Laboratory: Sertraline serum level 35 ng/mL (within therapeutic range).
+
+**Assessment:**
+1. MDD – partial response to sertraline, still symptomatic.
+2. Panic disorder – occasional panic attacks, managed with CBT and PRN benzodiazepine.
+3. Social anxiety disorder – stable, under treatment.
+4. AUD – moderate alcohol intake, no withdrawal symptoms.
+5. T2DM – HbA1c 10.8% pending; glucose logs ongoing.
+
+**Plan:**
+- Increase sertraline to 50 mg nightly; monitor for adverse effects.
+- Continue weekly CBT with ERP homework; emphasize diaphragmatic breathing and cognitive restructuring.
+- Provide and review mood chart at next visit.
+- Maintain insulin glargine and metformin; continue glucose self‑monitoring; refer to dietitian.
+- Lorazepam 1 mg PRN for severe panic; counsel on limited use and risk of dependence.
+- Repeat sertraline level in 1 month if side‑effects or inadequate response.
+- Safety planning; advise contacting emergency services if self‑harm thoughts or unmanageable panic.
+- Follow‑up psychiatric visit in 1 week.
+
+Disposition: Patient educated on dose increase, side‑effect profile, encouraged to keep mood chart, and instructed to return if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">reduction in intrusive thought intensity, still occasional panic</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/82</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP stable, HR normal, no psychomotor agitation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Sertraline therapeutic level (optional)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Sertraline level 35 ng/mL (within therapeutic range)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline increased to 50 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient hopeful about symptom improvement; expressed willingness to continue CBT each week.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly for 2 weeks</li><li>Completed first CBT session with ERP</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Psychiatric consult after week two of sertraline. Mood scales indicated moderate improvement. The psychiatrist increased sertraline to 50 mg nightly. Maya reported a decline in intrusive thoughts from 10/10 to 6/10 at night. No significant side effects noted. The therapist reiterated ERPs for future sessions. A mood chart was provided for weekly review.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>SSRI dose increased with good tolerability. Symptom severity trending downward.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-05-19</h3><div class="visit-meta">Endocrinology / Primary Care | Reason: Diabetes management review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Diabetes management review.
+
+History of Present Illness: 30‑year‑old female with Type 2 DM, Major Depressive Disorder, Panic Disorder, Social Anxiety Disorder, and Alcohol Use Disorder. She presents for routine review of glycemic control. Current insulin regimen is glargine 20 U nightly; she reports frequent pre‑prandial readings &gt;250 mg/dL and irregular dosing patterns. She also reports difficulty adhering to a consistent monitoring schedule, likely exacerbated by recent psychosocial stressors and anxiety episodes. She is aware of her high HbA1c (10.8%) and is motivated to improve her glucose management.
+
+Review of Systems: 
+• Endocrine: Intermittent hyperglycemia, no hypoglycemic events noted.
+• Psychiatric: Anxiety, depression, alcohol use. 
+• Cardiovascular: No chest pain, palpitations.
+• Neurologic: No neuropathic pain or tingling.
+
+Physical Examination: 
+• General: Alert, oriented, no acute distress.
+• Cardiovascular: BP 128/86 mmHg, HR 88 bpm, regular.
+• Respiratory: T 98.5 °F, O₂ sat 98% on room air.
+• Abdomen: Soft, non‑tender, BMI 31 kg/m².
+• Extremities: No peripheral edema, no neuropathic signs.
+
+Assessment: 
+1. Uncontrolled Type 2 DM (HbA1c 10.8%) due to inadequate basal insulin dosing and inconsistent dose timing.
+2. Possible stress‑induced hyperglycemia secondary to anxiety/sleep disturbances.
+3. Non‑adherence to insulin and glucose‑monitoring routine likely contributing to elevated readings.
+
+Plan: 
+• Increase insulin glargine from 20 U to 25 U nightly.
+• Initiate a basal‑bolus adjustment plan: start with a basal‑bolus regimen (glargine 25 U at bedtime, premixed or rapid‑acting insulin before meals) to be titrated in outpatient clinic.
+• Reinforce self‑monitoring of blood glucose before each meal and at bedtime; record values in a log for review.
+• Refer to dietitian to create a carbohydrate‑controlled meal plan tailored to her preferences and alcohol use.
+• Emphasize importance of good sleep hygiene, stress reduction techniques, and continued engagement with CBT.
+• Continue sertraline 50 mg nightly; review dosing in psychiatry visit.
+• Lorazepam 1 mg PRN for severe anxiety spikes.
+• Order HbA1c in 4 weeks to assess response to insulin escalation; repeat fasting glucose and lipid panel in 3 months.
+• Educate on hypoglycemia recognition and management.
+
+Follow‑up: 
+• Endocrinology follow‑up in 4 weeks to review glucose logs, titrate insulin, and assess HbA1c.
+• Dietitian appointment within 2 weeks to discuss meal planning.
+• Psychiatric follow‑up as scheduled (next visit in 1 week) to discuss sertraline adjustment and CBT progress.
+• Encourage daily log submissions via patient portal.
+
+Patient verbalized understanding of plan and expressed commitment to adhere to new dosing schedule and monitoring routine.
+
+Signed,
+Endocrinologist</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">intermittent hyperglycemia, medication adherence issues</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/86</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 31 kg/m², A1c 10.8%, no neuropathic signs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 10.8%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine increased to 25 units nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient acknowledged difficulty with consistency but committed to logging glucose more regularly.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Insulin glargine 20 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>HbA1c 10.8%</li><li>Irregular insulin dosing</li><li>Recent stress and anxiety may affect glucose</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The endocrinologist reviewed glucose logs showing frequent readings &gt;250 mg/dL. Insulin glargine dose increased to 25 units nightly. A basal‑bolus adjustment plan was discussed. The patient was urged to check glucose before meals and to record patterns. A dietician was recommended to create a carb‑controlled meal plan. The clinician also noted the importance of sleep and stress management on glycemic control.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diabetes improved with new insulin regimen; education ongoing.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-05-27</h3><div class="visit-meta">Substance Use Counselor | Reason: Alcohol use counseling group introduction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Participation in Alcohol Use Counseling Group Introduction.
+
+S: Maya, a 30‑year‑old female with a history of Type 2 Diabetes Mellitus, Major Depressive Disorder, Panic Disorder, Social Anxiety Disorder, and Alcohol Use Disorder, attended her first structured group for alcohol recovery.  She reports nightly alcohol consumption (primarily wine) as a coping strategy for anxiety and subsequent guilt following a recent assault.  She disclosed feeling “guilty” about her drinking and expressed motivation to reduce intake to no more than one drink per day.  Maya agreed to maintain a drinking log and will utilize the facilitator’s stop‑drink plan.
+
+O: Vitals: BP 128/84 mmHg, HR 86 bpm, Temp 98.4 °F, O₂Sat 98%.  Physical examination was otherwise unremarkable.  No signs of acute withdrawal were noted.
+
+A: Primary: Alcohol Use Disorder – current episode with ongoing alcohol consumption.  Co‑occurring: Major Depressive Disorder (stable on sertraline 50 mg nightly), Panic Disorder, Social Anxiety Disorder.  The patient maintains stable glucose control on insulin glargine 25 U nightly.
+
+P: 1. Continue group counseling twice weekly with facilitator and peer support.
+2. Initiate individual check‑ins once per week to monitor drinking logs and adjust coping strategies.
+3. Reinforce self‑monitoring of blood glucose and sleep hygiene.
+4. Continue sertraline 50 mg nightly and insulin glargine 25 U nightly; no dosage adjustments at this time.
+5. Encourage continued CBT exposure exercises and ERP homework for anxiety.
+6. No new laboratory or pharmacological interventions at this visit.
+7. Schedule follow‑up with group facilitator in 2 weeks; one‑on‑one counseling next week; PCP and endocrinology appointments as previously scheduled.
+
+Overall, Maya reports feeling hopeful and reduced shame related to her alcohol use and is committed to the outlined plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">nightly drinking to cope with anxiety, guilt about alcohol</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/84</td></tr><tr><td>HR</td><td>86</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal physical exam</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Alcohol use counseling group</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling hopeful and less shame; committed to reducing alcohol intake.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Insulin glargine 25 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of weekly wine intake for sleep, increased after assault</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya attended her first group session on alcohol use. The facilitator introduced a 12‑step framework and a stop‑drink plan. Maya expressed feeling guilty about nightly consumption. She agreed to limit alcohol to no more than one drink per day and to use the log to track intake. The group provided peer support and the facilitator offered ongoing one‑on‑one check‑ins.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Alcohol use disorder addressed; patient engaged in group therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-06-03</h3><div class="visit-meta">Psychiatric Specialist | Reason: Mid‑treatment review of OCD severity</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Mid‑treatment review of symptom severity.
+
+History of Present Illness: The patient is a 30‑year‑old female with known Type 2 Diabetes Mellitus, Major Depressive Disorder, Panic Disorder, Social Anxiety Disorder, Alcohol Use Disorder, and Hypertension. This is a follow‑up psychiatric visit (Visit #8) following initiation of sertraline 50 mg nightly two weeks ago. Y‑BOCS score 18/40, indicating moderate obsessive‑compulsive symptoms. The patient reports reduced checking behaviors to 3–4 times daily and occasional intrusive thoughts. She reports feeling more in control after two CBT sessions focusing on exposure and response prevention (ERP) and practicing mindfulness meditation.
+
+Past Medications and History: Sertraline 50 mg nightly, insulin glargine 25 U nightly, metformin, lorazepam 1 mg PRN. Alcohol intake reduced to 1 drink per week. No new medical events since last visit.
+
+Review of Systems: No acute psychiatric distress, mood stable. No reports of suicidality, psychosis, or significant anxiety currently. No alcohol withdrawal symptoms. General: denies chest pain, palpitations, abdominal pain. Neuro: no headaches. Cardiovascular: normal. Respiratory: clear. Endocrine: normal glucose self‑monitoring.
+
+Physical Findings: Vitals: BP 129/83 mmHg; HR 85 bpm; Temp 98.6 °F; O2Sat 98 %. No acute distress.
+
+Laboratory: Sertraline steady‑state level 48 ng/mL (therapeutic).
+
+Assessment:
+1) Obsessive‑compulsive disorder – moderate severity (Y‑BOCS 18).
+2) Major depressive disorder – mild‑moderate, improving.
+3) Panic disorder – mild.
+4) Social anxiety disorder – mild.
+5) Alcohol use disorder – remission with current intake.
+6) Type 2 Diabetes Mellitus – poorly controlled (HbA1c 10.8% from prior visit).
+7) Hypertension – controlled.
+
+Plan:
+- Continue sertraline 50 mg nightly.
+- Initiate a short‑term 20‑mg taper over the next 2 weeks: reduce dose by 10 mg each week (50 → 40 → 30 mg) and thereafter maintain 30 mg nightly. Re‑evaluate in 2 weeks for taper tolerability and symptom trajectory.
+- Encourage ongoing CBT homework: 10‑minute ERP exposures daily; 5‑minute mindfulness meditation each morning.
+- Continue lorazepam 1 mg PRN for acute anxiety, reinforce safe usage.
+- Continue insulin glargine 25 U nightly and metformin as prescribed; advise ongoing glucose self‑monitoring; consider follow‑up HbA1c in 4 weeks.
+- Reinforce alcohol use reduction; continue 1 drink per week; maintain alcohol log.
+- No new medication changes at this time.
+
+Follow‑up:
+- Psychiatric follow‑up in 2 weeks to assess taper progress and symptom changes.
+- Endocrinology follow‑up in 4 weeks for HbA1c.
+- Dietitian appointment within 2 weeks as per prior order.
+- Continue CBT sessions and exposure homework; contact the therapist if anxiety escalates.
+
+Encourage patient to contact the office if suicidal thoughts, panic attacks, or medication side effects occur.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">reduced compulsions to 3–4 checks/day, occasional intrusive thoughts</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>129/83</td></tr><tr><td>HR</td><td>85</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No acute psychiatric distress; mood stable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Sertraline steady‑state level (optional)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Sertraline level 48 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discussion of tapering schedule</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient confident in progress; feels more in control after CBT sessions.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Insulin glargine 25 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly for 2 weeks</li><li>Completed 2 CBT sessions</li><li>Alcohol intake decreased to 1 drink/week</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Psychiatrist assessed OCD using Y‑BOCS; score 18/40. Therapy notes indicated improved coping. The psychiatrist recommended continuing sertraline at 50 mg nightly, adding a short‑term taper of 20 mg next two weeks for maintenance. CBT homework emphasized ERP with 10‑minute exposures. The patient was encouraged to practice mindfulness meditation for 5 minutes each morning.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>OCD severity reduced; sertraline steady‑state achieved; ongoing CBT essential.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-06-10</h3><div class="visit-meta">CBT Therapist | Reason: Secondary ERP session and relapse prevention</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #9 – 2024-06-10
+
+S: Maya presented for a secondary ERP session and relapse‑prevention planning. She reports a recent panic episode triggered by seeing a passerby holding a coin; the visual cue prompted an urge to check the coin, leading to 8 checks within the last 48 hours. During the session she performed a 10‑minute ERP exposure: left the coin on the counter, closed the front door, walked to the mailbox without looking. Her heart rate spiked twice but she described feeling empowered afterward. Maya affirmed the use of self‑talk (“You are not a threat”) and will carry a written confidence note in her bag. She also practiced diaphragmatic breathing and identified early triggers. She remains emotionally stable, reports gratitude for support and notes a sense of progress.
+
+O: Vitals recorded – BP 127/82 mmHg, HR 84 bpm, Temp 98.5°F, O2Sat 98%. Physical exam unremarkable, no acute complications noted.
+
+A: Current focus remains on anxiety disorder with OCD features (coin obsession) and comorbid panic disorder. Symptoms have improved with ERP but remain present. No medical complications. Medication regimen is stable.
+
+P: 1. Continue 50 mg sertraline nightly; monitor tolerability.
+   2. Continue insulin glargine 25 U nightly and metformin; reassure regarding exercise tolerance.
+   3. Use lorazepam 1 mg PRN only for acute panic episodes; review use at next psychiatrist visit.
+   4. Reinforce daily ERP homework (exposure to coins in low‑stress settings) and breathing exercises.
+   5. Write and carry confidence note; review after next exposure.
+   6. Early recognition of triggers: self‐monitor checks, log in diary.
+   7. Encourage sleep hygiene, regular alcohol intake limits (≤1 drink/day) as per substance use counselor.
+   8. Schedule next CBT session in 1 week; psychiatric follow‑up in 2 weeks; endocrinology in 4 weeks.
+   9. Maintain glucose logs; review HbA1c in 4 weeks.
+
+Plan includes a relapse‑prevention strategy focusing on early symptom identification and coping skills practice. No new tests ordered.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">panic attack triggered by sight of another coin; increased check frequency to 8 times</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>127/82</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No acute physical complications</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>ERP exposure; diaphragmatic breathing</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient felt relieved after performing the exposure; noted decreased self‑talk. Expressed gratitude for support.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Insulin glargine 25 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent relapse attempt, ERP homework completed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a 45‑minute session, Maya described a recent panic episode after seeing a passerby holding a coin. She noted an urge to check the coin and performed a 10‑minute ERP exposure: she left the coin on the kitchen counter, closed the door, and walked to the mailbox without looking. Heart rate spiked twice but she reported feeling empowered post‑session. The therapist praised self‑talk (“You are not a threat”) and reinforced the use of a written note in her bag to reinforce confidence. A relapse prevention plan was created, including early recognition of triggers and use of breathing exercises.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Relapse attempt managed successfully with ERP; coping skills strengthened.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2024-07-30</h3><div class="visit-meta">Psychiatric Specialist | Reason: Final assessment after 100‑day course</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Final assessment after 100‑day course of combined pharmacologic and CBT treatment for OCD, depression, and associated anxiety.
+
+History &amp; Course: The patient is a 30‑year‑old female with a longstanding comorbid psychiatric and medical profile including type 2 diabetes mellitus, hypertension, major depressive disorder (MDD), panic disorder, social anxiety disorder, and alcohol use disorder. She has received a 100‑day structured course of sertraline titrated to 50 mg nightly, along with monthly CBT sessions consisting of exposure and response prevention (ERP) focused on her silver coin obsession. Throughout treatment she reported a steady decline in intrusive thoughts (Y‑BOCS from 18/40 at visit 8 to 6/28 at this visit), minimal residual anxiety, no panic attacks in the past week, and a depressive symptom profile near remission (PHQ‑9 4/27). She denies current suicidal or homicidal ideation.
+
+Vitals: Blood pressure 127/80 mmHg, heart rate 81 bpm, temperature 98.4 °F, O₂ saturation 99 % on room air.
+
+Mental Status: Alert, oriented, cooperative. Mood: cheerful; affect congruent. Thought content: no delusions or thoughts of self‑harm. Cognitive: intact attention, no deficits.
+
+Recent Labs: Hemoglobin A1c 6.8 %, indicating satisfactory glucose control after recent basal insulin adjustment.
+
+Assessment: Patient demonstrates sustained remission of OCD symptoms and minimal depressive symptoms on current sertraline dose; no evidence of acute anxiety or panic. Diabetes is well controlled but remains above optimal target; hypertension is stable.
+
+Differential Diagnoses Considered:
+1. Residual obsessive‑compulsive symptoms
+2. Panic disorder
+3. Generalized anxiety disorder / social anxiety
+4. Major depressive disorder (remission)
+5. Alcohol use disorder (substance‑related disorder)
+6. Diabetes mellitus type 2
+
+Plan:
+- Continue sertraline 50 mg nightly;
+- Maintain CBT maintenance program for one month with emphasis on ERP homework, diaphragmatic breathing, and sleep hygiene;
+- Continue insulin glargine 25 U nightly and metformin as per prior regimen;
+- Encourage alcohol reduction to ≤1 drink/day and maintain drinking log;
+- Schedule routine glucose monitoring and weight assessment;
+- Order repeat HbA1c in 3 months and CMP in 6 months;
+- Blood pressure check at each visit; if ≥140/90 discontinue or adjust antihypertensive as appropriate.
+- Address any residual anxiety or panic episodes with prompt lorazepam PRN 0.5–1 mg.
+
+Follow‑Up Recommendations:
+1. Psychiatric follow‑up in 3 months (2024‑10‑31) for medication review and CBT assessment.
+2. Endocrinology follow‑up in 3 months to review HbA1c and insulin regimen.
+3. Continue dietitian appointments every 8–12 weeks.
+4. If alcohol consumption increases or psychosocial stressors arise, schedule a short‑term substance use counseling session.
+5. If any new or worsening symptoms occur, patient advised to contact office or seek urgent care.
+
+Patient education provided regarding medication adherence, monitoring for serotonin syndrome with benzodiazepine use, and lifestyle modifications for diabetes and hypertension control.
+
+The patient expressed relief and confidence in managing her symptoms, thanking the team for the collaborative care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">occasional intrusive images, no compulsive checking; improved mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>127/80</td></tr><tr><td>HR</td><td>81</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>O2Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal mental status; mood cheerful, affect normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c 6.8% (latest lab)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 6.8%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continuation of sertraline 50 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient positive; feels empowered; reports stable glucose and mood.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Insulin glargine 25 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly, 100 days; CBT monthly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The psychiatrist conducted a comprehensive review. Y‑BOCS score 6/28, PHQ‑9 4/27. Sertraline and CBT were effective; patient had no suicidal ideation or severe depressive symptoms. The psychiatrist recommended continuing sertraline for at least 6 months and scheduling a follow‑up in three months. A month‑long maintenance CBT plan was outlined. The patient expressed confidence that the coin is a normal object and no longer a threat. She thanked the team and reported a sense of control over her life.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute OCD crisis resolved; patient transitioned to maintenance phase with stabilized mood and glucose control.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 30</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span><span class="pill">Diabetes Mellitus Type 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lorazepam 1 mg PRN</li><li>Sertraline 50 mg nightly</li><li>Insulin glargine 25 U nightly</li><li>Metformin (dose as per last visit)</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Urgent care visit on 2024-05-01 for acute anxiety with intrusive thoughts about a silver coin, panic attack, and insomnia. Vitals: BP 138/88 mmHg, HR 98 bpm, Temp 98.6°F, O₂ sat 97%, glucose 260 mg/dL. Lorazepam 1 mg IV was administered; sertraline 25 mg nightly was initiated. Fingerstick glucose test ordered. Patient advised on relaxation techniques, sleep hygiene, self‑monitoring of glucose, referral to psychiatry, and follow‑up in 7 days.</li><li>2024-05-02 PCP follow‑up for ongoing anxiety and diabetes control. Vitals: BP 140/90 mmHg, HR 94 bpm, Temp 98.7°F, glucose 260 mg/dL, O₂ sat 98%, BMI 31 kg/m². Lab results: HbA1c 10.8%, CBC normal, CMP mild hyperglycemia. Blood glucose self‑monitoring continued. Basal insulin glargine dose increased to X units nightly prescribed. Sertraline 25 mg nightly continued. Referrals: dietitian appointment, Alcoholics Anonymous enrollment. Tests ordered: CBC, CMP, HbA1c repeat in 3 months. Follow‑up PCP in 4 weeks.</li><li>2024-05-06 Psychiatric Specialist visit: Evaluation of ongoing anxiety, depressive symptoms, and diabetes management. Sertraline 25 mg nightly continued; plan to increase to 50 mg after one week if tolerated. Initiated CBT referral. Basal insulin glargine continued at current dose. Lorazepam 1 mg PRN for acute anxiety. Labs CBC, CMP, lipid panel normal; repeat in 3 months. Follow‑up psychiatric visit in one week.</li><li>2024-05-09 CBT visit: First ERP exposure for coin obsession; performed a 3‑minute exposure leading to heart rate spike to 130 bpm and tremors. Client reported slight anxiety reduction and “stunning” after exposure. Therapist used diaphragmatic breathing and self‑talk. Vitals: BP 132/84, HR 85, Temp 98.5°F, O₂Sat 98%. No medical complications. Plan: continue ERP homework, discuss sertraline dose increase, monitor glucose logs, follow‑up in 7 days.</li><li>2024-05-16 Psychiatric Specialist visit: Patient reports moderate improvement in mood and reduced intrusive thoughts (from 10/10 to 6/10 at night). Occasional panic attacks persist. Vitals stable: BP 130/82 mmHg, HR 88 bpm, Temp 98.6°F, O₂Sat 98%. Serum sertraline level 35 ng/mL within therapeutic range. Plan to increase sertraline to 50 mg nightly, continue CBT with ERP homework, maintain insulin glargine and metformin, continue glucose self‑monitoring, refer to dietitian, counsel on Lorazepam use, repeat sertraline level in one month, and review mood chart on next visit.</li><li>2024-05-19 Endocrinology visit: Reviewed diabetes management; vitals: BP 128/86 mmHg, HR 88 bpm, Temp 98.5°F, O₂Sat 98%. Current HbA1c 10.8%; insulin glargine increased from 20 U to 25 U nightly; plan to initiate basal‑bolus regimen with rapid‑acting insulin before meals to titrate in outpatient clinic; reinforced glucose monitoring before meals and at bedtime, dietitian referral for carbohydrate‑controlled meal plan, continued sertraline 50 mg nightly and Lorazepam 1 mg PRN; ordered HbA1c in 4 weeks. Follow‑up in endocrinology in 4 weeks, dietitian appointment within 2 weeks, psychiatric follow‑up as scheduled.</li><li>2024-05-27 Substance Use Counselor visit: patient attended first structured group for alcohol recovery. Vitals: BP 128/84 mmHg, HR 86 bpm, Temp 98.4°F, O₂Sat 98%. No signs of acute withdrawal. Discussed motivation to reduce alcohol intake to ≤1 drink/day, maintain drinking log, continue sertraline 50 mg nightly and insulin glargine 25 U nightly. No medication changes. Plan includes group counseling twice weekly, weekly individual check‑ins, continued CBT and ERP homework, self‑monitoring of blood glucose and sleep hygiene. No labs ordered.</li><li>Psychiatric follow‑up on 2024-06-03: mid‑treatment review of OCD. Vitals: BP 129/83 mmHg, HR 85 bpm, Temp 98.6°F, O₂Sat 98%. Y‑BOCS 18/40. Reported reduced checking (3–4 times/day), occasional intrusive thoughts, improved control after 2 CBT sessions. Plan: continue sertraline 50 mg nightly with 20‑mg taper to 30 mg over 2 weeks; lorazepam 1 mg PRN; maintain insulin glargine 25 U nightly and metformin; continue CBT, ERP, mindfulness. Follow‑ups: psychiatric in 2 weeks, endocrinology in 4 weeks, dietitian within 2 weeks.</li><li>Visit #9 – 2024-06-10 CBT Therapist: Secondary ERP session, relapse‑prevention. Patient experienced panic episode triggered by coin sight, performed 10‑min exposure with HR spikes, reported empowerment. Vitals: BP 127/82 mmHg, HR 84 bpm, Temp 98.5°F, O₂Sat 98%. Medication regimen unchanged: sertraline 50 mg, insulin glargine 25 U, metformin, lorazepam PRN. Plan to continue daily ERP homework, breathing, sleep hygiene, alcohol limits, schedule next CBT in 1 week, psychiatric in 2 weeks, endocrinology in 4 weeks; maintain glucose logs; no new labs.</li><li>2024-07-30 Psychiatric Specialist final assessment: Vitals BP 127/80 mmHg, HR 81 bpm, Temp 98.4°F, O₂ sat 99%. Hemoglobin A1c 6.8%. Symptoms: reduced intrusive thoughts, no panic attacks last week, near remission of depressive symptoms. Medications continued: sertraline 50 mg nightly, insulin glargine 25 U nightly, metformin, lorazepam PRN 0.5‑1 mg. Plan: maintain current regimen, CBT maintenance, repeat HbA1c in 3 months, order CMP in 6 months, follow‑up psychiatry 2024‑10‑31, endocrinology 2024‑10‑31.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

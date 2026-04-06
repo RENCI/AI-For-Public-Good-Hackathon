@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case af93e7be</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: af93e7be</h1><div class="subtitle">Grade 1 Localized Prostate Cancer (Unspecified Site) | Male, 70</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia, Hypertension, Diabetes mellitus, Obesity, Chronic renal impairment</div><div class="meta-line">Risk Factors: Age ≥ 50, Family history of prostate cancer, High‑fat diet, Low fruit/vegetable intake, Excessive alcohol consumption</div></div>
+<details><summary>Narrative <span class="preview-text">When Mr K. first walked into the primary‑care clinic in late October of 2023, he was a 70‑year‑old retired clerk who tol...</span></summary><div class="section-body"><p>When Mr K. first walked into the primary‑care clinic in late October of 2023, he was a 70‑year‑old retired clerk who told the nurse that he had been dealing with an “icky” sense of having to pee all the time, especially at night. He had been going to the bathroom three to four times during daylight hours and up to six–seven times after midnight. The sensation was mild, but it was getting in the way of his sleep: “I can’t keep a full night’s rest.” He reported a new difficulty in starting his stream at the bathroom, a weak pull, and intermittent hesitation. He assured his physician that he had not had any pain or blood in the urine, that he had no flank pain, and that his appetite and weight had remained stable for the past six months.</p><p>The physical exam was essentially normal. His vital signs were a blood‑pressure reading of 150/95 mmHg, a BMI of 30.8, a heart rate of 78 beats per minute on a normal sinus rhythm, a fasting blood glucose of 145 mg/dL (HbA1c 7.3 % on a background diet and metformin 1000 mg BID), and a well‑muscled but slightly puffy abdomen. His review of systems revealed hypertension, type 2 diabetes, and a chronic “slight” kidney complaint that he described more as a “high creatinine” than a painful condition. His history was notable for heavy beer drinking in his younger years (3–4 beers a week for 45 years), a high‑fat diet with minimal fruit or vegetable intake, and a father who died of prostate cancer at age 68. He also admitted to a 20‑year history of benign prostatic hyperplasia (BPH), which he had treated sporadically with over‑the‑counter medications.</p><p>In that first encounter, the office staff drew a PSA, ordered a DRE, and asked him to obtain a renal function panel. The PSA came back at 4.6 ng/mL (upper limit of normal 4.0 ng/mL). The DRE was “soft” with a slight enlargement of the transition zone. His basic metabolic panel revealed a serum creatinine of 1.8 mg/dL (eGFR 35 mL/min/1.73 m² according to CKD‑EPI), consistent with stage‑3 chronic kidney disease (CKD). Mr K. was instructed to keep hydrated, to avoid NSAIDs, and to schedule a urology consult for further workup. He was told that a PSA that high in his age group warranted further evaluation, but that the current clinical picture was not alarming enough for immediate surgery.</p><p>Within two weeks he was on the urology waiting list. That afternoon the urologist, Dr L, performed a repeat DRE, and the digital impression of the prostate was again soft but with an area of mild induration in the right transition zone. The PSA was now 4.8 ng/mL. Dr L ordered an ultrasound of the prostate and a transrectal ultrasound‑guided prostate biopsy. The ultrasound showed an 4 cm rounded gland, typical of BPH. The biopsy, performed in the clinic’s office suite, sent to pathology confirmed a 6 × 6 mm focus of cancer in the right peripheral zone. Gleason 3 + 3 (score 6) – a low‑grade, grade 1, localized prostate cancer. The pathology report noted that cancer was confined to a single core, with no evidence of extraprostatic extension, and the tumor was clinically staged as T2a–T3a depending on how you interpret imaging and biopsies.</p><p>At the next appointment (two months from the first visit) Mr K. was advised that his low-risk, low‑volume cancer meant that he could pursue *active surveillance* rather than immediate surgery. The urologist explained that because he had other significant comorbidities – hypertension, diabetes, CKD stage 3, and a history of BPH – a definitive intervention such as radical prostatectomy or radiation might be risky. The first step would be to see how his PSA behaved over the next few months with minimal intervention. Dr L recommended that the patient start tamsulosin 0.4 mg BID to relieve his lower urinary tract symptoms. Dr L also suggested a trial of finasteride 5 mg daily because it had proved to reduce prostate size in BPH and could keep the transition zone from expanding.</p><p>The patient began tamsulosin one month later and reported a modest improvement: he could start his stream more easily and his nocturia fell from six to four times per night. However, he told his nephrologist that his blood‑pressure remained 150/95 mmHg and his fasting glucose was 140 mg/dL. The nephrologist added valsartan 160 mg nightly for resistant hypertension and switched his metformin regimen to 500 mg BID to minimize nephrotoxicity. The nephrologist also advised that the patient restrict protein intake and avoid high‑salt foods, in part because the drug list, high‑fat diet, and CKD predisposed him to nephrolithiasis.</p><p>At six months from the first visit, Mr K. came into the clinic with a slightly higher PSA of 5.2 ng/mL, a tiny uptick from the baseline. He was still on tamsulosin and finasteride, but he complained that he had yet to experience a meaningful change in his urinary frequency. Dr L decided to intensify BPH relief: finasteride was increased to 5 mg daily (he had already been on that dose). There was an added discussion of the fact that PSA can be influenced by BPH and by finasteride; PSA might even be suppressed by finasteride. Dr L therefore decided to track PSA trends over the next year.</p><p>Nine months into his active surveillance, his PSA climbed to 6.8 ng/mL, and the DRE now hinted at a slightly firm zone on the left side of the prostate. The patient also noticed that he was feeling more fatigued, that his usual 5‑kilometer walk had become a 1‑kilometer brisk march, and that he had begun losing 2–3 lb over the preceding month, even though he was still eating a high‑fat, low‑vegetable diet. His HbA1c had risen to 7.9 %, and his blood pressure had spiked to 172/98 mmHg despite the addition of a diuretic. The nephrologist noted a rise in creatinine to 2.0 mg/dL, which was worrisome given his progressive diabetes and hypertension.</p><p>Mr K.’s next urology visit (12 months from the first one) found PSA at 8.4 ng/mL and a suspicious lump on the right side of the prostate that was not present two months earlier. A repeat transrectal ultrasound, now coupled with a CT of the pelvis and a bone scan, revealed a 1.2 cm hypodense lesion adjacent to the seminal vesicles, suggestive of local extension. The bone scan was equivocal for bone metastasis – there were small uptake spots at the spine, but they were non‑specific in the context of an acute fracture or osteoporosis.</p><p>Dr L now had a difficult conversation: given Mr K.’s comorbidities (severe CKD, uncontrolled diabetes, hypertension, obesity) and his new local spread, the usual definitive options – radical prostatectomy and radical radiation therapy – were high risk. The risks of a 15–20 % peri‑operative mortality for radical prostatectomy were amplified by a eGFR of 30 mL/min. Radiation, while less invasive, could cause severe radiation cystitis and rectal toxicity in a patient with a predisposed urinary tract and a high risk of GI side effects due to his diet.</p><p>A multidisciplinary discussion was convened. The oncologist proposed external beam radiation therapy (EBRT) with androgen deprivation therapy (ADT) for the next six months, but the patient was not on a hormone therapy schedule, and the nephrologist cautioned that ADT (i.e. LHRH agonists like leuprolide or antagonists like degarelix) could worsen his metabolic profile, worsen his insulin resistance, elevate his testosterone‑related cardiometabolic risk, and potentially exacerbate his CKD by causing fluid overload. After considering the options, Mr K. decided to defer definitive therapy and instead pursue a *transurethral resection of the prostate* (TURP) to relieve his urinary obstruction. The urology team explained that TURP would not impact the cancer per se but could relieve his urinary obstruction, improve his quality of life, and temporarily prevent acute urinary retention. The patient agreed, as he was reluctant to undergo a major operation in the middle of his metabolic disease.</p><p>TURP was performed during the winter of 2024, with the usual perioperative precautions: intraprostatic blood pressure control, intra‑operative magnesium and calcium supplementation, and preoperative prophylactic antibiotics (ceftriaxone) to cover his urosepsis risk. The surgery went well. He was discharged home after 36 h with catheter patency, a postoperative serum creatinine of 2.1 mg/dL, and an HbA1c of 8.0 %. However, in the two weeks after discharge, he described a new dull aching pain in his lower back, a new sensation of pressure in his pelvis, and an inability to sit for more than 10 min. He called his primary‑care doctor, who prescribed a mild opioid regimen (hydrocodone 4 mg every 6 h as needed) and arranged a follow‑up with the urology department.</p><p>On his follow‑up visit at month 15 from baseline, Mr K.’s PSA was now 12.7 ng/mL. The DRE had become markedly suspicious, with a hard mass palpable through the capsule. An MRI pelvis showed a lesion that now extended beyond the prostate capsule into adjacent neurovascular bundles. The bone scan demonstrated several foci of increased uptake at the lumbar vertebrae and the left femoral neck—early signs of bone metastasis. His serum creatinine had climbed to 2.3 mg/dL, and his HbA1c rose to 8.7 %. His blood pressure remained uncontrolled despite triple therapy (ARB, diuretic, and a calcium‑channel blocker). He complained daily of “tremendous pain” in the lower back and pelvis, and he found himself needing to sit on a wheelchair rather than moving about his house.</p><p>During a hospital admission at month 18 in late summer, Mr K. presented with a severe urinary tract infection that led to sepsis and a delirious episode. He suffered a right hip fracture that required internal fixation. During the hospital stay, his doctors noted that he had been unable to adhere to dietary recommendations, that he had been losing the last 10 lb in the last month, and that he was experiencing profound fatigue even after an IV push antibiotic. They consulted palliative care, who agreed that further oncologic intervention would likely prolong suffering rather than provide meaningful benefit. They recommended a shift to comfort‑focused care, with a focus on managing pain, maintaining continence, and providing psychosocial support to Mr K. and his family.</p><p>The narrative of Mr K.’s case is that a once‑low‑risk, low‑grade prostate cancer began under the veil of a benign prostatic hyperplasia that was not fully addressed by pharmacologic therapy. His comorbidities—hypertension, diabetes, CKD, obesity—created a fragile physiological reserve, limiting his options for definitive therapy. In addition, his risk factors (age, family history, high‑fat diet, low fruit/vegetable intake, excessive alcohol) may have contributed to rapid progression. After 18 months, he was no longer in a position for successful curative treatment; he was in the throes of progressive metastatic disease with systemic symptoms, a deteriorating kidney function, and a frail musculoskeletal system. The outcome, thus, was unequivocally “worsening.”</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-10-15</h3><div class="visit-meta">Primary Care | Reason: Frequent urination, nocturia, weak stream</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">SOAP Note – Mr. K, 70-year-old male
+
+Subjective:
+- Chief complaint: Frequent urination, nocturia, weak stream.
+- History of present illness: Patient reports irritative lower urinary tract symptoms with difficulty initiating voiding, nocturia 6–7 times per night, daytime frequency 3–4 times per day, weak stream, hesitation, and occasional “stop-start” pattern. Symptoms begun over the last 6 months and have gradually worsened. No hematuria, urinary urgency, or fever.
+- Past medical history: Hypertension, type 2 diabetes mellitus, benign prostatic hyperplasia (BPH), chronic kidney disease stage 3, obesity (BMI 30.8).
+- Social history: Heavy beer drinking, high‑fat diet, sedentary lifestyle.
+- Family history: Father with prostate cancer.
+- Medications: Metformin 1000 mg BID.
+- Allergies: NKDA.
+- Review of systems: Positive for urinary symptoms; negative for chest pain, dyspnea, weight loss, fever, or recent infections.
+
+Objective:
+- Vital signs: BP 150/95 mmHg, HR 78 bpm, BMI 30.8, fasting glucose 145 mg/dL, HbA1c 7.3 %.
+- General: Alert, oriented, no acute distress.
+- Abdomen: Slightly distended, no organomegaly, mild prostate fullness on DRE.
+- Digital rectal exam: Prostate soft, slightly enlarged transition zone, no nodules or induration.
+- Urine: Clear, no gross hematuria.
+- Labs: PSA 4.6 ng/mL (ULN 4.0), serum creatinine 1.8 mg/dL, eGFR 35 ml/min/1.73 m².
+
+Assessment:
+1. Benign prostatic hyperplasia – confirmed by DRE findings and history of LUTS.
+2. Borderline elevated PSA with family history of prostate cancer; concern for early malignant change but findings remain within BPH spectrum.
+3. Stage 3 chronic kidney disease – stable but requires monitoring with ongoing diabetes and hypertension management.
+4. Type 2 diabetes mellitus – suboptimally controlled (HbA1c 7.3 %).
+5. Uncontrolled hypertension – systolic 150 mmHg, diastolic 95 mmHg.
+
+Plan:
+- Continue Metformin 1000 mg BID.
+- Counsel patient on increased hydration; avoid NSAIDs to mitigate further renal injury.
+- Dietary counseling: reduce alcohol intake, limit saturated fats, aim for weight loss.
+- Initiate referral to urology for further evaluation (TRUS, possible prostate biopsy, discussion of alpha‑blocker therapy).
+- Schedule renal function labs in 3 months to monitor eGFR.
+- Hypertension management: start low‑dose thiazide diuretic (HCTZ 12.5 mg daily) with close BP monitoring; consider adding ACE inhibitor if tolerated.
+- Diabetes: consider adding GLP‑1 receptor agonist (e.g., liraglutide) if weight loss desired and within renal safety limits; continue current regimen.
+- Follow‑up in PCP office 3 months to review labs, BP, glucose, and discuss urology findings.
+
+Patient education provided about the significance of PSA monitoring, importance of weight loss, and potential complications of CKD. The patient verbalized understanding and consented to the plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">nocturia (6–7 times/night)</span><span class="pill">daytime frequency (3–4 times)</span><span class="pill">weak urinary stream</span><span class="pill">hesitation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>150/95 mmHg</td></tr><tr><td>HeartRate</td><td>78 bpm</td></tr><tr><td>BMI</td><td>30.8</td></tr><tr><td>FastingGlucose</td><td>145 mg/dL</td></tr><tr><td>HbA1c</td><td>7.3%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Urine clear, no gross hematuria</li><li>Breasts and lymph nodes normal</li><li>Abdominal exam: slightly distended abdomen</li><li>Digital rectal exam: prostate soft, small palpable bulge, no nodules</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>Digital rectal examination</li><li>Basic metabolic panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 4.6 ng/mL</li><li>DRE: soft, mild enlargement of transition zone</li><li>Serum creatinine: 1.8 mg/dL (eGFR 35)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on hydration, NSAID avoidance</li><li>Referral to urology</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">BPH</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>Type 2 Diabetes Mellitus</li><li>Benign prostatic hyperplasia</li><li>Chronic kidney disease (self‑reported high creatinine)</li><li>Heavy beer drinking</li><li>High‑fat diet</li><li>Family history of prostate cancer</li><li>Obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr K reported irritative lower urinary tract symptoms and difficulty initiating urination. Physical exam was unremarkable. The PCP ordered PSA, DRE, and a basic metabolic panel to assess renal function. Counsel was given on hydration and NSAID avoidance. A urology referral was scheduled.</p><p>The PSA returned 4.6 ng/mL (upper normal 4.0). DRE was soft with slight enlargement. The metabolic panel showed creatinine 1.8 mg/dL (eGFR 35 mL/min/1.73 m²), confirming stage 3 CKD. The PCP advised continuation of current diabetes regimen and initiated discussion for urology evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of irritative LUTS; PSA borderline high; BPH confirmed; CKD stage 3; patient referred to urology for further evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-10-29</h3><div class="visit-meta">Urology | Reason: Urological evaluation of urinary symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Urological evaluation of urinary symptoms. 
+
+**History of Present Illness:** A 70‑year‑old male with a history of benign prostatic hyperplasia (BPH), hypertension (HTN), type 2 diabetes mellitus (DM), obesity, and chronic kidney disease (CKD) stage 3 presents for a repeat urologic evaluation. The patient reports irritative lower urinary tract symptoms (LUTS) including frequency, urgency, nocturia, and a weak stream. There is no reported hematuria or bladder pain. No prior interventions for BPH have been tried; this is the second visit to urology following a comprehensive evaluation on 2023‑10‑15. 
+
+**Past Medical History:** HTN, DM type 2, obesity (BMI 30.8 kg/m²), CKD stage 3, BPH. 
+
+**Medications:** Metformin 1000 mg BID; Hydrochlorothiazide 12.5 mg daily. 
+
+**Allergies:** No known drug allergies. 
+
+**Vital Signs (2023‑10‑29):** 
+- Blood pressure: 148/92 mmHg 
+- Heart rate: 80 bpm 
+- BMI: 30.8 kg/m² 
+- Fasting glucose: 140 mg/dL 
+
+**Physical Examination:** 
+- Genitourinary: Digital rectal exam (DRE) reveals a soft prostate with mild induration in the right transition zone, no palpable nodules beyond the transition zone. 
+- No suprapubic tenderness, bladder distension absent. 
+
+**Labs / Imaging:** 
+- Serum PSA: 4.8 ng/mL (previously 4.6 ng/mL). 
+- Transrectal ultrasound (TRUS): 4 cm prostate gland, typical of mild‑to‑moderate BPH. 
+- TRUS‑guided prostate biopsy performed in clinic: 6 × 6 mm focus of prostate tissue in the right peripheral zone, no malignant cells reported (benign prostatic hyperplasia, no acute prostatitis, no evidence of atypia). 
+
+**Assessment:** 
+1. Benign prostatic hyperplasia with symptom progression (irritative LUTS, weak stream). 
+2. PSA mildly above upper limit of normal but stable; biopsy negative for malignancy, although a solitary focus was noted. 
+3. Chronic kidney disease stage 3 (eGFR ~35 mL/min/1.73 m²) – important when selecting medication and monitoring renal function. 
+
+**Plan:** 
+- Initiate alpha‑blocker therapy: Tamsulosin 0.4 mg nightly (will monitor for efficacy and hypotension). 
+- Continue current antihypertensive regimen; counsel on diet and weight loss to improve HTN and diabetic control. 
+- Schedule PSA re‑check at 6 months. 
+- Repeat renal panel (serum creatinine, eGFR) in 3 months and again at 6 months. 
+- Discuss potential for 5‑alpha‑reductase inhibitor (e.g., finasteride 5 mg daily) if prostate volume &gt;35 mL or PSA &gt;4 ng/mL, with caution regarding renal function. 
+- Educate patient on signs of acute urinary retention (AUR) and when to seek emergent care. 
+- Follow up with urology in 4 weeks for symptom response to tamsulosin and review labs; earlier visit if worsening LUTS or new hematuria. 
+- Consider prostate MRI or repeat TRUS‑guided biopsy in 12 months if PSA increases or if clinical suspicion for low‑grade prostate cancer remains. 
+
+**Patient Education:** Reviewed lifestyle modifications for BPH and CKD management, risk of AUR, and importance of adherence to medication and follow‑up schedule.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">irritative LUTS</span><span class="pill">weak stream</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>148/92 mmHg</td></tr><tr><td>HeartRate</td><td>80 bpm</td></tr><tr><td>BMI</td><td>30.8</td></tr><tr><td>FastingGlucose</td><td>140 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Prostate soft, slight hardening on right side</li><li>No palpable nodules beyond transition zone</li><li>Digital rectal exam consistent with BPH</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat DRE</li><li>PSA</li><li>Transrectal ultrasound</li><li>Prostate biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>DRE: mild induration right side</li><li>PSA: 4.8 ng/mL</li><li>TRUS: 4 cm prostate</li><li>Biopsy: 6 × 6 mm Grade 1 cancer, Gleason 3+3</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">BPH</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BPH</li><li>Past urinary complaints</li><li>CKD stage 3</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr L performed a repeat DRE noting a soft prostate with mild induration in the right transition zone. PSA increased to 4.8 ng/mL. An ultrasound of the prostate demonstrated a 4 cm gland typical of BPH. A transrectal ultrasound‑guided prostate biopsy was performed in clinic. Pathology revealed a 6 × 6 mm focus of cancer in the right peripheral zone, Gleason 3+3 (score 6), Grade 1, confined to a single core. Tumor stage estimated as T2a–T3a. The urologist explained the diagnosis, emphasized low‑grade, low‑volume disease, and recommended active surveillance given comorbidities.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosis of low‑grade localized prostate cancer staged T2a–T3a; plan for active surveillance due to CKD, hypertension, and diabetes.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-12-15</h3><div class="visit-meta">Urology | Reason: Discuss active surveillance plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Discussion of active surveillance plan for possible low‑grade prostate cancer and continued management of benign prostatic hyperplasia (BPH) associated lower‑tract urinary symptoms.
+
+History and Findings: 70‑year‑old male with hypertension, type 2 diabetes mellitus, BPH, CKD stage 3, and obesity (BMI 30.8). Current medications: Metformin 1000 mg BID, HCTZ 12.5 mg daily, Tamsulosin 0.4 mg nightly. Patient reports persistent lower‑tract urinary symptoms: weak stream, residual discomfort, and nocturia (4 times nightly). No acute urinary retention or pain reported. DRE: prostate soft, no palpable nodules, but noted bladder fullness. PSA 4.8 ng/mL (slightly above ULN). Previous prostate biopsy confirmed benign hyperplasia. No new systemic complaints.
+
+Physical Examination: Blood pressure 150/95 mmHg, heart rate 78 bpm, BMI 30.8, fasting glucose 138 mg/dL.
+
+Assessment:
+1. Benign prostatic hyperplasia with moderate LUTS.
+2. Chronic kidney disease stage 3 (eGFR ~35 mL/min/1.73 m²).
+3. Uncontrolled hypertension and type 2 diabetes (HbA1c 7.3% on last visit).
+4. Active surveillance ongoing for low‑risk prostate findings.
+
+Plan:
+- Initiate finasteride 5 mg daily to reduce prostate volume and improve LUTS over 6–12 months.
+- Continue tamsulosin 0.4 mg BID (switched from nightly due to persistent weak stream).
+- Continue current antihypertensive and antidiabetic regimen.
+- Schedule PSA and digital rectal exam every 6 months for surveillance.
+- Repeat renal panel (sCr, eGFR) in 3 months to monitor CKD progression.
+- Advise dietary sodium restriction, weight loss, adequate hydration, and avoid NSAIDs.
+- Instruct patient to report acute urinary retention, fever, or worsening pain immediately.
+- Follow‑up visit in 4 weeks to assess symptom progression and medication tolerance; earlier if symptoms deteriorate.
+
+Patient understands plan, reports modest improvement in stream and reduction in nocturia to 4 times/night.
+
+Future Directions: Continue active surveillance per NCCN guidelines, with potential consideration of imaging or repeat biopsy if PSA trends upward or new concerning symptoms appear.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">continued LUTS</span><span class="pill">weak stream</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>150/95 mmHg</td></tr><tr><td>HeartRate</td><td>78 bpm</td></tr><tr><td>BMI</td><td>30.8</td></tr><tr><td>FastingGlucose</td><td>138 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Prostate soft, no palpable nodules</li><li>Bladder fullness noted on rectal exam</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin 0.4 mg BID</li><li>Finasteride 5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient noted initial modest improvement in stream; nocturia decreased to 4 times overnight.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">BPH</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of BPH</li><li>CKD stage 3</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr L explained that the low‑risk cancer allowed active surveillance. He prescribed tamsulosin 0.4 mg BID to relieve LUTS and started finasteride 5 mg daily for BPH management. The plan was to monitor PSA and repeat DRE every 6 months.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiation of pharmacologic BPH therapy, planned active surveillance; baseline PSA 4.8 ng/mL.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-04-15</h3><div class="visit-meta">Urology | Reason: Reassessment of PSA and LUTS</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Reassessment of PSA and Lower Urinary Tract Symptoms (LUTS). 
+
+History of Present Illness: 70‑year‑old male presents for routine follow‑up. He reports persistent urinary frequency and a weak stream, with slightly improved nocturia. He has been on tamsulosin 0.4 mg BID and finasteride 5 mg daily for 4 months. His PSA has increased modestly from 4.8 ng/mL to 5.2 ng/mL. Blood pressure remains elevated at 152/96 mmHg, fasting glucose 140 mg/dL. 
+
+Past Medical History: Hypertension, type 2 diabetes mellitus, benign prostatic hyperplasia, chronic kidney disease stage 3, obesity. No known drug allergies. 
+
+Current Medications: Metformin 1000 mg BID, hydrochlorothiazide 12.5 mg daily, tamsulosin 0.4 mg BID, finasteride 5 mg daily. 
+
+Physical Examination: BP 152/96 mmHg, HR 76 bpm, BMI 30.7 kg/m², Fasting glucose 140 mg/dL. Abdomen soft, no organomegaly. Digital rectal exam: prostate soft, mild left‑side induration, no nodules. Skin/pelvic exam normal. 
+
+Laboratory/Imaging: PSA 5.2 ng/mL. Renal panel pending, eGFR 31 mL/min/1.73 m². 
+
+Assessment &amp; Plan: 
+1. Benign prostatic hyperplasia – symptoms stable, modest PSA rise within active surveillance limits. Continue tamsulosin 0.4 mg BID and finasteride 5 mg daily. Consider urodynamic study if symptoms worsen. 
+2. Prostate surveillance – no suspicious nodules; continue PSA every 6 months and DRE annually. 
+3. Hypertension – BP remains elevated; consider uptitration of hydrochlorothiazide or addition of an ACE inhibitor pending renal function. 
+4. Diabetes – fasting glucose 140 mg/dL; monitor as per PCP; continue metformin. 
+5. CKD stage 3 – monitor eGFR every 3 months; avoid NSAIDs, ensure adequate hydration. 
+
+Plan: Continue current therapy unchanged. Repeat PSA and DRE in 6 months; repeat renal function in 3 months. Follow up with urology in 4 weeks for routine visit; return to PCP if BP &gt;150/90 mmHg or new urinary retention/hematuria develops.
+
+Lifestyle: Encourage weight loss, sodium restriction, adequate hydration, and avoidance of bladder irritants.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent urinary frequency</span><span class="pill">weak stream</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>152/96 mmHg</td></tr><tr><td>HeartRate</td><td>76 bpm</td></tr><tr><td>BMI</td><td>30.7</td></tr><tr><td>FastingGlucose</td><td>140 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Prostate soft, mild induration left side</li><li>No new nodules</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 5.2 ng/mL</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient still reports frequent urination, but notes slight improvement in nocturia.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">BPH</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Tamsulosin 0.4 mg BID</li><li>Finasteride 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BPH treatment with tamsulosin and finasteride</li><li>CKD stage 3</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr L reviewed the rising PSA (now 5.2 ng/mL) but noted it is modest. He reaffirmed the active surveillance plan and emphasized regular PSA monitoring. No changes to medication were made.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>PSA incrementally rising; active surveillance continued; no new clinical findings.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-06-15</h3><div class="visit-meta">Nephrology | Reason: Hypertension and kidney function management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 70‑year‑old male presents for routine nephrology follow‑up for uncontrolled hypertension and CKD stage 3.
+
+History of Present Illness: Patient reports escalating fatigue, a 2–3 lb weight loss over past month, and increased urinary frequency consistent with ongoing BPH symptoms. Despite a three‑drug antihypertensive regimen (HCTZ 12.5 mg daily, Metformin 1000 mg BID, Tamsulosin 0.4 mg BID, Finasteride 5 mg daily), his blood pressure remains elevated.
+
+Review of Systems: Positive for fatigue, weight loss, increased urinary frequency. Denies chest pain, shortness of breath, fever, edema.
+
+Past Medical History: Hypertension, type 2 diabetes mellitus, benign prostatic hyperplasia, chronic kidney disease stage 3, obesity (BMI 29.9). No known drug allergies.
+
+Medications: Metformin 1000 mg BID, HCTZ 12.5 mg daily, Tamsulosin 0.4 mg BID, Finasteride 5 mg daily. Adding Amlodipine 5 mg daily.
+
+Physical Examination:
+- General: Alert, cooperative, 70 yo male. No distress.
+- Vitals: BP 172/98 mmHg, HR 78 bpm, BMI 29.9, fasting glucose 150 mg/dL.
+- Cardiovascular: Normal rate/rhythm, no murmurs.
+- Respiratory: Clear to auscultation.
+- Abdomen: Soft, non‑tender, no organomegaly. No ascites.
+- Extremities: No peripheral edema.
+- Genitourinary: No visible scrotal or penile abnormalities.
+
+Labs: 
+- Serum creatinine 2.0 mg/dL, eGFR 28 mL/min/1.73 m².
+- HbA1c 7.9%.
+- PSA 6.8 ng/mL.
+
+Assessment:
+1. Hypertension likely refractory to current regimen, now added amlodipine.
+2. CKD stage 3 with progressive renal dysfunction.
+3. Diabetes mellitus with moderately controlled glycemia.
+4. Benign prostatic hyperplasia with rising PSA – continue surveillance.
+
+Plan:
+- Initiate amlodipine 5 mg daily.
+- Continue HCTZ 12.5 mg, Metformin 1000 mg BID, Tamsulosin 0.4 mg BID, Finasteride 5 mg daily.
+- Reinforce dietary sodium restriction (&lt;2 g/day) and protein load reduction (0.6 g/kg ideal body weight).
+- Counsel on weight loss, adequate hydration, avoidance of NSAIDs.
+- Order repeat renal panel (serum creatinine, BUN, electrolytes, urinalysis) in 4 weeks.
+- Continue PSA monitoring every 6 months; maintain urology follow‑up.
+- Schedule nephrology follow‑up in 4 weeks to assess BP control and kidney function.
+- Instruct patient to monitor for signs of worsening renal function (e.g., decreased urine output, swelling) and to seek prompt evaluation if occurring.
+
+Disposition: Patient understood plan and will adhere to dietary counseling. No acute issues requiring immediate referral.
+
+Follow‑up: 4 weeks nephrology (renal panel), PSA in 6 months, urology in 4 weeks.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">weight loss</span><span class="pill">increased urinary frequency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>172/98 mmHg</td></tr><tr><td>HeartRate</td><td>78 bpm</td></tr><tr><td>BMI</td><td>29.9</td></tr><tr><td>FastingGlucose</td><td>150 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Swellings minimal, ascites absent</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>HbA1c</li><li>Serum creatinine</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 6.8 ng/mL</li><li>HbA1c: 7.9 %</li><li>Serum creatinine: 2.0 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 5 mg daily (added)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed concern over diet but will adhere to dietary counseling.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">BPH</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Tamsulosin 0.4 mg BID</li><li>Finasteride 5 mg daily</li><li>Valsartan 160 mg nightly</li><li>Hydrochlorothiazide 25 mg daily</li><li>Amlodipine 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent weight loss (2–3 lb), escalating fatigue, poor diet</li><li>BPH therapy ongoing</li><li>CKD progression</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The nephrologist reviewed recent labs: creatinine 2.0 mg/dL (eGFR 28), HbA1c 7.9 %, and uncontrolled hypertension despite a three‑drug regimen. He reinforced dietary sodium restriction and protein load reduction, added a calcium‑channel blocker (amlodipine 5 mg daily), and recommended follow‑up renal panel in 4 weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CKD stage 3b with rising creatinine, uncontrolled BP, and worsening glycemic control. PSA continues to climb, suggesting potential prostate disease progression.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-09-15</h3><div class="visit-meta">Urology | Reason: Reevaluation of prostate cancer progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for a reevaluation of his prostate condition and to discuss treatment options in light of recent imaging.\n\nHistory of Present Illness: 70‑year‑old male with a known history of BPH, CKD stage 3b, hypertension, and type 2 diabetes presents with worsening urinary retention and new pelvic discomfort.  He has been on tamsulosin 0.4 mg BID and finasteride 5 mg daily for the past year with ongoing PSA rise (from 6.8 to 6.9 ng/mL on last visit).  Recent TRUS, CT pelvis, and bone scan were performed.  TRUS identified a 1.2 cm hypodense lesion adjacent to the seminal vesicles; CT confirmed extension into adjacent tissues, and bone scan revealed faint uptake at the lumbar spine (L3‑L5) and left femoral neck.  He reports increased difficulty voiding, occasional urgency, and intermittent pelvic pressure.  No hematuria or gross dysuria noted.
+\nReview of Systems: Positive for increased frequency, urgency, urinary retention; negative for fever, chills, weight loss, hematuria, or systemic symptoms.
+\nPhysical Examination: Vitals – BP 160/97 mmHg, HR 80 bpm, BMI 29.8.  Digital rectal exam reveals a hard focus palpable on the right lateral prostate; overall prostate size approx 4 cm with soft consistency.  No palpable nodules elsewhere and no perineal tenderness.  Abdominal exam shows mild bladder distension.  No pelvic lymphadenopathy palpable.
+\nAssessment: 1) Probable prostate cancer with locally advanced disease (T3a‑T3b) given imaging findings and PSA trend. 2) Chronic kidney disease stage 3b with deteriorating renal function (creatinine 2.0 mg/dL, eGFR 28). 3) Uncontrolled hypertension (BP &gt;160/90). 4) BPH contributing to urinary retention.
+\nPlan: 1) Discussed potential treatment options for the prostate lesion, including radical prostatectomy, radiation, hormonal therapy, and definitive urinary relief by TURP.  In consideration of renal function, age, comorbidities, and patient preference, TURP was chosen for symptomatic relief.  2) Admit for TURP under spinal anesthesia; intraoperative assessment of prostate tissue and biopsies of the hard focus for histopathology.  3) Pre‑operative labs: CBC, CMP, coagulation profile, PSA, and repeat renal panel.  4) Continue current medical therapy: Metformin 500 mg BID, Tamsulosin 0.4 mg BID, Finasteride 5 mg daily, Valsartan 160 mg nightly, HCTZ 25 mg daily, Amlodipine 5 mg daily.  5) Post‑operative: Monitor urine output, maintain adequate hydration, avoid NSAIDs, follow up with bladder scan.  6) Post‑operative PSA testing at 6 weeks and thereafter every 6 months, renal function panel at each follow‑up.  7) Continue antihypertensive therapy; consider addition of a third agent if BP remains &gt;140/90.  8) Coordinate care with nephrology for ongoing CKD management and with endocrinology for diabetes control.
+\nDisposition: Will proceed to the OR for TURP.  Patient educated on expected recovery and complications, signed informed consent.  Scheduled for a post‑operative urology visit in 2 weeks and nephrology visit in 4 weeks.
+\nSignature: Dr. L (Urologist)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">worsening urinary retention</span><span class="pill">new pelvic discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>160/97 mmHg</td></tr><tr><td>HeartRate</td><td>80 bpm</td></tr><tr><td>BMI</td><td>29.8</td></tr><tr><td>FastingGlucose</td><td>142 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Hard focus palpable on right side of prostate</li><li>Lesser but noticeable swelling of left lower bladder wall</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>TRUS</li><li>CT pelvis</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TRUS: 1.2 cm lesion adjacent to seminal vesicle</li><li>CT pelvis: local extension</li><li>Bone scan: faint uptake at L3-L5, left femoral neck</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discussed TURP</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient requested immediate TURP for symptom relief;</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Chronic kidney disease stage 3b</span><span class="pill">BPH</span><span class="pill">Low‑grade prostate cancer</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Tamsulosin 0.4 mg BID</li><li>Finasteride 5 mg daily</li><li>Valsartan 160 mg nightly</li><li>Hydrochlorothiazide 25 mg daily</li><li>Amlodipine 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Tamsulosin and finasteride for BPH</li><li>Persistent PSA rise</li><li>Recent imaging</li><li>CKD stage 3b</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr L reviewed new imaging: a TRUS, CT pelvis, and bone scan. TRUS identified a 1.2 cm hypodense lesion adjacent to seminal vesicles; CT confirmed local extension. Bone scan showed equivocal uptake at the lumbar spine. The urologist explained that local spread suggests disease progression (T3b). Patient was advised of limited definitive options due to comorbidities and offered TURP for urinary relief. After discussing risks, the patient elected TURP.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Evidence of local extension (T3) and possible early bone involvement. Treatment options limited; TURP selected for BPH relief and quality‑of‑life improvement.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-12-01</h3><div class="visit-meta">Urology | Reason: Post‑operative follow‑up after TURP</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑operative follow‑up after TURP (2 weeks post‑discharge).
+
+History of Present Illness: The patient is a 70‑year‑old male who underwent TURP for symptomatic BPH with a concurrent low‑grade prostate cancer lesion that was biopsied intra‑operatively. He is now seen 2 weeks post‑op. He reports dull lower‑back ache and pelvic pressure, with limited ability to sit. He denies fever, dysuria, hematuria, urinary retention, or new onset urinary frequency. He has been tolerating urinary flow better than pre‑op.
+
+Past Medical History: Hypertension (stage‑2), Type 2 Diabetes Mellitus, Chronic Kidney Disease stage 3b, benign prostatic hyperplasia, low‑grade prostate cancer.
+
+Medications: Metformin 500 mg BID, Finasteride 5 mg daily, Valsartan 160 mg nightly, Hydrochlorothiazide 25 mg daily, Amlodipine 5 mg daily, Hydrocodone 4 mg PRN as needed.
+
+Allergies: None Known.
+
+Vital Signs: BP 165/99 mmHg, HR 82 bpm, BMI 29.7, Fasting glucose 148 mg/dL, Creatinine 2.1 mg/dL.
+
+Physical Examination:
+- Genitourinary: Catheter tip intact, no evidence of infection, no clot in urine.
+- Abdomen: Mild suprapubic tenderness, no rebound/guarding.
+- Back: Mild tenderness over lower lumbar, no neurological deficits.
+- Other systems: Unremarkable.
+
+Labs/Imaging: Serum creatinine elevated to 2.1 mg/dL, HbA1c 8.0 %. MRI pelvis ordered and pending.
+
+Assessment:
+1. Post‑operative pain and discomfort 2 weeks after TURP – likely benign, responsive to analgesia.
+2. Possible post‑operative hematoma or fluid collection – MRI pending.
+3. Uncontrolled hypertension – requires adjustment of antihypertensive regimen.
+4. Suboptimal glucose control – HbA1c 8.0 %.
+5. CKD stage 3b – ongoing monitoring.
+6. Low‑grade prostate cancer – under surveillance.
+
+Plan:
+- Continue hydrocodone 4 mg PRN q6h for pain, avoid NSAIDs.
+- Rest, avoid heavy lifting, limit prolonged sitting.
+- Educate on signs of post‑op complications: fever, worsening back pain, hematuria, urinary retention.
+- Schedule MRI pelvis in 1 month (results to guide further management).
+- Continue current antihypertensives; consider adding a third agent or adjusting doses if BP &gt;140/90; consult nephrology as needed.
+- Continue Metformin 500 mg BID; review insulin requirement if glycemic targets not met.
+- Monitor renal function (creatinine/eGFR) at each visit.
+- PSA, DRE, and renal panel at 6‑month interval for cancer surveillance.
+- Follow‑up visit in 4 weeks if symptoms worsen or before MRI result review.
+- Return precautions: fever &gt;38.0 °C, increasing pain, hematuria, urinary retention.
+
+Disposition: Discharged with instructions and scheduled MRI.
+
+Signatures: ____________________
+
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">post‑op abdominal discomfort</span><span class="pill">lower back pain (2 weeks post‑discharge)</span><span class="pill">difficulty sitting</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>165/99 mmHg</td></tr><tr><td>HeartRate</td><td>82 bpm</td></tr><tr><td>BMI</td><td>29.7</td></tr><tr><td>FastingGlucose</td><td>148 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Catheter tip intact, no signs of urosepsis</li><li>Abdomen mild tenderness in suprapubic area</li><li>Lower back mild tenderness, no neurological deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI pending</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Hydrocodone PRN 4 mg q6h as needed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated pain med; reported improved urinary urgency compared to pre‑op.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Chronic kidney disease stage 3b</span><span class="pill">BPH</span><span class="pill">Low‑grade prostate cancer</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Finasteride 5 mg daily</li><li>Valsartan 160 mg nightly</li><li>Hydrochlorothiazide 25 mg daily</li><li>Amlodipine 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>TURP surgical discharge</li><li>Current medications</li><li>CKD stage 3b</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was seen 2 weeks after TURP. Creatinine was 2.1 mg/dL; HbA1c 8.0 %. He reported dull lower‑back ache and pelvic pressure with limited sitting tolerance. The urologist gave a course of hydrocodone 4 mg PRN for pain, advised rest, and scheduled a follow‑up MRI of the pelvis in 1 month. The patient was counselled on postoperative complications and advised to monitor for signs of infection or clot.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>TURP performed; cystic area resolved; kidney function slightly worsened to 2.1 mg/dL. No evidence of cancer progression on imaging at this point.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-01-15</h3><div class="visit-meta">Urology | Reason: Reassessment of metastatic progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Reassessment of disease progression.
+
+History: 70‑year‑old male with HTN, type 2 DM, CKD stage 3c, BPH, and metastatic prostate adenocarcinoma (bone). Presents with worsening back and pelvic pain, wheelchair dependence, fatigue, and dysphagia to liquids. Recent labs: PSA 12.7 ng/mL, creatinine 2.3 mg/dL, HbA1c 8.7 %. MRI pelvis shows extracapsular extension into neurovascular bundles. Bone scan demonstrates increased uptake at L3‑L5 and left femoral neck. BP 170/99 mmHg on triple therapy. Patient expresses distress over pain but prefers to continue palliative opioid regimen.
+
+Assessment:
+- Progressive metastatic prostate adenocarcinoma with bone involvement.
+- Uncontrolled hypertension despite Valsartan 160 mg nightly, HCTZ 25 mg daily, Amlodipine 5 mg daily.
+- CKD stage 3c, worsening kidney function.
+- Poorly controlled type 2 diabetes, HbA1c 8.7 %.
+- Dysphagia likely opioid‑related or local progression.
+
+Plan:
+1. Continue finasteride 5 mg daily (no change).
+2. Continue Valsartan 160 mg nightly, HCTZ 25 mg daily, Amlodipine 5 mg daily; add a fourth antihypertensive (e.g., carvedilol 6.25 mg BID) after nephrology input.
+3. Continue Metformin 500 mg BID.
+4. Opioid: maintain hydrocodone 4 mg PRN q6h; if breakthrough pain, consider 2 mg hydromorphone PRN q6h.
+5. NSAID avoidance due to CKD.
+6. Enroll patient in palliative oncology program for pain control, nutritional support, and dysphagia management.
+7. Refer to speech‑language pathology for evaluation of swallowing.
+8. Schedule follow‑up with nephrology in 2 weeks to re‑assess renal function and adjust antihypertensives.
+9. Repeat PSA and DRE in 6 months; repeat creatinine/creatinine clearance every 4 weeks.
+10. Encourage weight reduction, sodium restriction, and rigorous glycemic control; follow up with endocrinology as needed.
+11. Continue home health physical therapy for mobility.
+12. Educate patient on adherence to medications and report any worsening pain, swelling, urinary symptoms, or dysphagia.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe back and pelvic pain</span><span class="pill">wheelchair use</span><span class="pill">fatigue</span><span class="pill">difficulty swallowing liquids</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>170/99 mmHg</td></tr><tr><td>HeartRate</td><td>84 bpm</td></tr><tr><td>BMI</td><td>28.9</td></tr><tr><td>FastingGlucose</td><td>160 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Hard mass palpable through prostate capsule</li><li>Lumbar vertebral tenderness</li><li>Limited range of motion of lower limbs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>MRI pelvis</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA: 12.7 ng/mL</li><li>MRI pelvis: extracapsular extension</li><li>Bone scan: increased uptake L3‑L5, left femoral neck</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to palliative care</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed distress over pain; agreed to palliative support.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Chronic kidney disease stage 3c</span><span class="pill">BPH</span><span class="pill">Metastatic prostate adenocarcinoma (bone)</span><span class="pill">Low‑grade primary tumor</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Finasteride 5 mg daily</li><li>Valsartan 160 mg nightly</li><li>Hydrochlorothiazide 25 mg daily</li><li>Amlodipine 5 mg daily</li><li>Hydrocodone 4 mg PRN q6h</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Post‑TURP status</li><li>CKD stage 3c</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr L reviewed the latest labs: PSA now 12.7 ng/mL. MRI pelvis revealed extension beyond prostate capsule into neurovascular bundles. Bone scan showed increased uptake at lumbar vertebrae and left femoral neck, suggestive of bone metastases. The patient’s kidney function was now 2.3 mg/dL, HbA1c 8.7 %, and blood pressure remained uncontrolled on triple therapy. Dr L discussed palliative care options, referred the patient to palliative oncology team for pain control, and continued NSAID‑avoidant opioid regimen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease now metastatic with bone involvement; kidney function deteriorated to stage 4; pain control paramount.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2025-04-01</h3><div class="visit-meta">Inpatient Internal Medicine | Reason: Sepsis from urinary tract infection and hip fracture management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:\nMr. K is a 70‑year‑old male with known hypertension, type 2 diabetes, CKD stage 4, BPH, metastatic prostate cancer on palliative care, and a recent right femoral neck fracture. He was brought to the ED with high‑grade fever, confusion, and intense right hip pain. He reports urinary urgency and increased frequency for the past 24 h.\n\nObjective:\nVitals: BP 180/105 mmHg, HR 96, RR 22, Temp 39.3°C, O₂ sat 98% RA, BMI 28.8, fasting glucose 165 mg/dL.\nExam: Alert but disoriented; right hip tenderness with limited range of motion; mild suprapubic tenderness; lower urinary tract appears normal.\nLabs: Leukocytosis 18,000 /µL, creatinine 2.5 mg/dL. UA shows +WBC, +nitrites. Blood cultures positive for E. coli. CXR (not shown) was clear.\nImaging: Pelvic radiograph – right femoral neck fracture.\n\nAssessment:\n1. Sepsis secondary to uncomplicated cystitis with E. coli bacteremia – likely source of confusion and fever.\n2. Acute right femoral neck fracture from a fall – requiring surgical fixation.\n3. AKI stage 4 superimposed on CKD – likely pre‑renal from sepsis and nephrotoxic exposure (diuretics).\n4. Delirium likely multifactorial (infection, pain, hypoxia, medications).\n5. Metastatic prostate cancer – current status stable on palliative care.\n\nPlan:\n- Continue IV ceftriaxone 2 g q24 h; hold metformin until renal function improves.\n- IV fluids bolus 30 mL/kg over 1 h, then 2 L/day; monitor urine output (≥0.5 mL/kg/h).\n- Continue norepinephrine infusion; titrate to MAP 65‑70 mmHg.\n- Hold HCTZ; evaluate BP 90 min intervals; consider low‑dose amlodipine titration if needed.\n- Urinary catheter for bladder drainage (if retention remains).\n- Post‑operative orthopedic follow‑up: weight‑bearing status, DVT prophylaxis with LMWH 40 mg SC daily unless contraindicated.\n- Pain: continue hydrocodone PRN; consider scheduled oxycodone 5 mg q6 h if pain remains &gt;5/10.\n- Delirium: re‑orientation, sleep aids, early mobilization, avoid anticholinergics.\n- Renal: daily CBC, BMP; nephrology consult for potential dialysis candidacy; hold nephrotoxic meds.\n- Palliative: coordinate with oncology and palliative team on goals of care; discuss comfort measures and possible escalation of analgesics.\n- Labs: CBC, BMP, CRP each 24 h; cultures repeat 48 h; ABG if needed.\n- Imaging: repeat pelvis X‑ray postoperative; CT abdomen/pelvis if hematuria or persistent creatinine rise.\n\nDisposition: Patient will remain in the internal medicine ward; monitored by ICU staff for vasopressor support.\n\nFollow‑up Recommendations:\n- Next‑day review of vitals, urine output, and laboratory trends.\n- Repeat blood cultures at 48 h; adjust antibiotics if culture sensitivities change.\n- Dialysis assessment by nephrology if Cr &gt;4.0 mg/dL or oliguria &gt;12 h.\n- Orthopedic surgical review for post‑operative pain control and activity level.\n- Palliative consultation for goals‑of‑care discussion, pain optimization, and psychosocial support.\n- Family meeting for prognosis and advance care planning.\n- Transition to hospice care if disease burden and organ failure preclude meaningful recovery.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever</span><span class="pill">confusion</span><span class="pill">right hip pain</span><span class="pill">urinary urgency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BloodPressure</td><td>180/105 mmHg</td></tr><tr><td>HeartRate</td><td>96 bpm</td></tr><tr><td>BMI</td><td>28.8</td></tr><tr><td>FastingGlucose</td><td>165 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Alert but confusional</li><li>Right hip tenderness and limited movement</li><li>Abdominal exam: mild suprapubic tenderness, no guarding</li><li>Lower urinary tract: no visible swelling</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis</li><li>Urine culture</li><li>Blood cultures</li><li>X‑ray pelvis</li><li>CBC</li><li>BMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>UA: +WBC, +nitrites</li><li>Urine culture: E. coli (SUS)</li><li>Blood cultures: E. coli</li><li>X‑ray: right femoral neck fracture</li><li>CBC: leukocytosis 18,000/mm³</li><li>BMP: elevated creatinine 2.5 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV ceftriaxone 2 g q24h</li><li>IV fluids</li><li>Norepinephrine infusion</li><li>Palliative analgesics</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient’s mental status improved with antibiotic therapy but remained fatigued; pain was intense in the hip.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Chronic kidney disease stage 4</span><span class="pill">BPH</span><span class="pill">Metastatic prostate cancer</span><span class="pill">Palliative care</span><span class="pill">Right hip fracture</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Finasteride 5 mg daily</li><li>Valsartan 160 mg nightly</li><li>Hydrochlorothiazide 25 mg daily</li><li>Amlodipine 5 mg daily</li><li>Hydrocodone 4 mg PRN q6h</li><li>Metformin 500 mg BID</li><li>Palliative analgesics</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Severe UTI leading to sepsis</li><li>Right hip fracture from fall</li><li>Metastatic prostate cancer</li><li>CKD stage 4</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr K was admitted with high‑grade fever, delirium, and acute right hip pain. Urinalysis positive for leukocytes and nitrites; urine culture grew E. coli. Blood cultures confirmed sepsis. An X‑ray showed a right hip fracture. He was started on IV ceftriaxone, aggressive IV fluids, and norepinephrine for septic shock. Orthopedic surgery performed internal fixation of the right hip. Palliative care was consulted to focus on comfort, symptom management, and psychosocial support. Kidney function continued to decline; dialysis was considered but not initiated due to patient preference.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Sepsis from UTI; acute fracture complicating mobility; progressive metastatic disease; advancing CKD; palliative focus now.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 70</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">Chronic renal impairment</span><span class="pill">Chronic kidney disease stage 3b</span><span class="pill">Chronic kidney disease stage 3c</span><span class="pill">Prostate cancer</span><span class="pill">Metastatic prostate adenocarcinoma (bone metastases)</span><span class="pill">CKD stage 4</span><span class="pill">Acute kidney injury</span><span class="pill">Urinary tract infection</span><span class="pill">Sepsis</span><span class="pill">Right femoral neck fracture</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Finasteride 5 mg daily</li><li>Valsartan 160 mg nightly</li><li>Hydrochlorothiazide 25 mg daily</li><li>Amlodipine 5 mg daily</li><li>Hydrocodone 4 mg PRN</li><li>IV ceftriaxone 2 g q24h</li><li>Norepinephrine infusion</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit 1 on 2023-10-15: Presented with frequent urination, nocturia 6–7 times/night, daytime frequency 3–4 times, weak stream, hesitation, and difficulty initiating voiding. Vital signs: BP 150/95 mmHg, HR 78 bpm, BMI 30.8, fasting glucose 145 mg/dL, HbA1c 7.3%. Physical exam noted mild prostate fullness on DRE; prostate soft, slightly enlarged transition zone. Labs showed PSA 4.6 ng/mL (slightly above ULN 4.0), serum creatinine 1.8 mg/dL, eGFR 35 mL/min/1.73 m². Plan: continue Metformin 1000 mg BID; start HCTZ 12.5 mg daily; counsel on hydration, NSAID avoidance, diet, weight loss; refer to urology for further evaluation; schedule renal labs in 3 months; follow up PCP in 3 months.</li><li>Visit 2 on 2023-10-29: Re-evaluation of BPH symptoms; DRE revealed mild induration of right transition zone; 4 cm prostate on transrectal ultrasound; PSA 4.8 ng/mL; prostate biopsy showed benign hyperplasia; initiated tamsulosin 0.4 mg nightly; advised on acute urinary retention symptoms; repeat PSA in 6 months; renal panel in 3 and 6 months; follow-up urology in 4 weeks.</li><li>Visit 3 on 2023-12-15: Discussed active surveillance for low‑grade prostate disease; initiated finasteride 5 mg daily and switched tamsulosin to BID; continued antihypertensive and antidiabetic regimen; PSA/DRE every 6 months, repeat renal panel in 3 months; counseling on diet, sodium restriction, hydration, NSAID avoidance; follow‑up in 4 weeks.</li><li>Visit 4 on 2024-04-15: Urology reevaluation of BPH symptoms and PSA. Patient remains on tamsulosin 0.4 mg BID, finasteride 5 mg daily; PSA increased to 5.2 ng/mL from 4.8. BP 152/96, fasting glucose 140. Physical exam: soft prostate with mild left‑side induration; no nodules. Plan: continue medications, repeat PSA/DRE in 6 months, renal labs in 3 months, follow up urology in 4 weeks. Encourage weight loss, sodium restriction, hydration.</li><li>Visit 5 on 2024-06-15: Nephrology follow‑up for uncontrolled hypertension and CKD. Vital signs: BP 172/98, HR 78, BMI 29.9, fasting glucose 150 mg/dL; labs showed serum creatinine 2.0 mg/dL, eGFR 28, PSA 6.8 ng/mL, HbA1c 7.9%. Added Amlodipine 5 mg daily to antihypertensive regimen. Plan: continue Metformin, HCTZ, Tamsulosin, Finasteride; dietary sodium and protein restriction; repeat renal panel in 4 weeks; PSA monitoring every 6 months; follow‑ups nephrology and urology in 4 weeks.</li><li>Visit 6 on 2024-09-15: Patient evaluated for worsening urinary retention and new pelvic discomfort. Vitals: BP 160/97 mmHg, HR 80 bpm, BMI 29.8. DRE revealed a hard focus on the right lateral prostate; prostate size ~4 cm soft. TRUS showed a 1.2 cm hypodense lesion near seminal vesicles; CT confirmed extension into adjacent tissues; bone scan revealed faint uptake at L3–L5 and left femoral neck. Planned TURP for symptomatic relief; a biopsy of the hard focus was taken intraoperatively. Pre‑operative labs ordered: CBC, CMP, coagulation profile, PSA, and repeat renal panel. Medications continued: Metformin 500 mg BID, Tamsulosin 0.4 mg BID, Finasteride 5 mg daily, Valsartan 160 mg nightly, Hydrochlorothiazide 25 mg daily, Amlodipine 5 mg daily. Post‑operative plan: monitor urine output, maintain hydration, avoid NSAIDs, bladder scan follow‑up. Post‑operative PSA at 6 weeks and every 6 months, renal function panel at each visit. Continued antihypertensive therapy with potential addition of a third agent if BP remains &gt;140/90. Coordination with nephrology for CKD and endocrinology for diabetes control.</li><li>Visit 7 on 2024-12-01: Post‑operative follow‑up after TURP. Patient reports dull lower‑back ache, pelvic pressure, limited sitting, improved urinary flow, no fever, dysuria, hematuria, or retention. Physical exam: GU catheter tip intact, mild suprapubic tenderness, mild lower lumbar tenderness, no infection or clot. Labs: creatinine 2.1 mg/dL. MRI pelvis ordered. Medications: Metformin 500 mg BID, Finasteride 5 mg daily, Valsartan 160 mg nightly, Hydrochlorothiazide 25 mg daily, Amlodipine 5 mg daily, Hydrocodone 4 mg PRN. Antihypertensive regimen continued; add third agent if BP &gt;140/90. Continue Metformin; monitor blood glucose, renal function, PSA/DRE at 6‑month intervals. Follow‑up in 4 weeks; MRI results review in 1 month.</li><li>Visit 8 on 2025-01-15: Reassessment of metastatic prostate adenocarcinoma progression. Patient presented with severe back and pelvic pain, wheelchair dependence, fatigue, and dysphagia to liquids. Labs: PSA 12.7 ng/mL, creatinine 2.3 mg/dL, HbA1c 8.7%. MRI pelvis showed extracapsular extension into neurovascular bundles; bone scan revealed increased uptake at L3‑L5 and left femoral neck. Blood pressure 170/99 mmHg on triple antihypertensive therapy. Continue finasteride, valsartan, HCTZ, amlodipine; plan to add carvedilol after nephrology review. Maintain Metformin and hydrocodone PRN. Enrolled in palliative oncology program and speech‑language pathology evaluation. Home health physical therapy continued. Follow‑up nephrology in 2 weeks, repeat PSA/DRE in 6 months, serial creatinine every 4 weeks.</li><li>Visit 9 on 2025-04-01: Patient admitted with high fever, confusion, right hip pain; sepsis secondary to E. coli urinary tract infection with bacteremia, acute kidney injury stage 4, and acute right femoral neck fracture. Treated with IV ceftriaxone 2 g q24h, IV fluids, norepinephrine infusion, held metformin and hydrochlorothiazide, continued finasteride, valsartan, amlodipine, and hydrocodone PRN. Urinary catheter placed; pain managed with hydrocodone and scheduled oxycodone. Monitoring of vitals, urine output, CBC, BMP, renal function, and cultures; plans for dialysis assessment and palliative care follow‑up.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 919637eb</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 919637eb</h1><div class="subtitle">COVID-19 (SARS‑CoV‑2) Infection | Male, 50</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Hypertension, Obesity, Type 2 Diabetes Mellitus, Mild Asthma</div><div class="meta-line">Risk Factors: Male Sex, Smoking, High BMI, Hypertension, Type 2 Diabetes Mellitus, Chronic Respiratory Disease</div></div>
+<details><summary>Narrative <span class="preview-text">When John Doe first noticed a sore throat and a dry cough on a Tuesday afternoon, he dismissed the symptoms as a lingeri...</span></summary><div class="section-body"><p>When John Doe first noticed a sore throat and a dry cough on a Tuesday afternoon, he dismissed the symptoms as a lingering mild upper‑airway infection. John is a 50‑year‑old man who works as a warehouse supervisor, has a body mass index of 32.1 kg/m², smokes a pack‑a‑day for 25 years, and is in regular contact with a large work cohort. He has had hypertension treated with lisinopril, well‑controlled type 2 diabetes on metformin, and a history of mild persistent asthma that is usually managed with albuterol as needed. His baseline pulmonary status is not severely compromised; his daily activities are generally unimpeded, aside from a tendency toward shortness of breath during prolonged stair climbs.</p><p>**Day 0 – Onset of Symptoms**</p><p>That afternoon, the familiar discomfort in John’s chest began to deepen. He reported a low‑grade fever (100.2 °F), a dry cough that started as a whisper and became more persistent by evening, mild fatigue, and a slight metallic taste in his mouth. The cough was not productive, and he had no sputum changes. He noted a diffuse, achy body that did not improve with his usual over‑the‑counter cold medications. He did not experience chest pain, palpitations, or visible wheeze on self‑monitored breathing.</p><p>John’s first clinical contact was over the phone with the campus urgent‑care clinic. The nurse confirmed his risk factors—age over 50 years, male sex, smoking history, obesity, hypertension, diabetes, and chronic respiratory disease— and ordered an RT‑PCR SARS‑CoV‑2 test. She advised him to isolate at home pending results and to monitor his temperature, breathing, and oxygen saturation with a nasal pulse oximeter, which he had already begun using in light of his asthma.</p><p>**Day 1 – Self‑Isolation and Worsening**</p><p>At 6 pm on the same evening, John’s temperature spiked to 101.3 °F and his body‑temperature reading read 101.8 °F. His cough became more irritating; he reported wheeze and shortness of breath on exertion, especially on the stairs. Using his pulse oximeter, he noted an oxygen saturation of 93 % on room air. He began to feel more fatigued and noticed that his usual evening workouts were no longer possible. His wife encouraged him to call the urgent‑care clinic again, as his blood pressure had dipped to 128/78 mm Hg on the first of the day, his heart rate rose to 96 bpm, and his reported sense of well‑being declined.</p><p>The clinician on call recommended a telehealth assessment. While John&#x27;s speech was clear, he had an increased respiratory rate of 20–22 breaths/min. The clinician observed mild nasal flaring and a slightly narrowed vocal tract. Based on his high‑risk profile and the objective drop in oxygen saturation, they advised immediate in‑person evaluation and recommended an urgent COVID‑19 nasal swab if not previously performed.</p><p>**Day 2 – Emergency Department Arrival**</p><p>John arrived at the local emergency department (ED) with his wife at 9 am. He had taken an oral dose of 400 mg acetaminophen and an albuterol puff 15 minutes prior to arrival. Upon triage, his vital signs were: temperature 101.6 °F, heart rate 102 bpm, blood pressure 138/85 mm Hg, respiratory rate 24 breaths/min, and oxygen saturation 88 % on room air. The ED staff immediately placed him on a 2 L/min nasal cannula, which raised his saturation to 92 %. Physical examination revealed a mildly distressed appearance, bilateral wheezes on auscultation with scattered crackles at the lung bases, and a dry, erythematous throat.</p><p>The ED nurse noted John’s medical history—hypertension, T2DM, mild asthma, obesity, and recent smoke exposure—and his medications: lisinopril 20 mg daily and metformin 1000 mg twice daily. The ED team consulted the pulmonology‑infectious disease service. They began a protocol for COVID‑19 pneumonia in a high‑risk patient: a single dose of 8 mg dexamethasone IV, prophylactic subcutaneous enoxaparin 40 mg (adjusted for creatinine), and supplemental oxygen to maintain saturation above 94 %. They also ordered laboratory testing: CBC, CMP, CRP, ferritin, D‑dimer, LDH, PT/INR, and a repeat PCR for SARS‑CoV‑2 (sent via ED) and CRP. A chest x‑ray was performed, which showed bilateral peripheral sub‑pleural opacities suggestive of mild interstitial infiltrates.</p><p>**Day 3 – Confirmation and Transfer to Medical Floor**</p><p>The PCR result returned positive for SARS‑CoV‑2 with a cycle threshold consistent with high viral load. The patient was admitted to a single‑occupancy COVID room on the medical floor. John&#x27;s oxygen requirement increased to 5 L/min, with his saturation holding steady at 94 %. His inflammatory markers were markedly elevated: CRP 78 mg/L, D‑dimer 780 ng/mL, ferritin 980 ng/mL, and LDH 280 U/L. Enoxaparin was continued on weight‑based therapeutic dosing (1 mg/kg/d) given the D‑dimer elevation and his obesity. His antihypertensive regimen was held pending close blood pressure monitoring. Metformin was paused because of concern for lactic acidosis in the setting of potential acute kidney injury.</p><p>The inpatient team decided to start remdesivir 200 mg IV on day 1 of admission, followed by 100 mg IV daily for five days, given John’s high risk for disease progression. They also prescribed inhaled budesonide 200 µg via dry‑powder inhaler twice daily for asthma exacerbation control. A repeat pulse oximeter was checked every four hours; his saturation was 93–94 % on 6–8 L/min nasal cannula.</p><p>**Day 4 – Clinical Improvement**</p><p>John’s fever subsided, and his subjective fatigue decreased. He complained of “a better depth of breathing.” Blood pressure stabilized at 125/80 mm Hg when he resumed lisinopril. His oxygen requirement fell to 4 L/min by the end of day 4. He was able to spend the morning walking his dogs for 10 minutes without overt dyspnea. His laboratory values trended downward: CRP fell to 45 mg/L, ferritin to 650 ng/mL, and D‑dimer to 520 ng/mL. The pulmonology team noted clearing of wheezing and a noticeable reduction in crackles. A repeat chest x‑ray showed partial resolution of the peripheral opacities.</p><p>Given these improvements, the team continued the current regimen but considered de‑escalation of the remdesivir course at day 5 due to the lack of further clinical benefit and the need to free up pharmacy resources.</p><p>**Day 5 – Step‑down Transfer**</p><p>After a second day of stable oxygen saturations &gt;94 % on 4 L/min, the clinical team decided to transfer John from the inpatient COVID ward to the medical step‑down unit for closer monitoring of his comorbid conditions and to reduce inpatient stress. He was provided a comprehensive discharge plan, including instructions on tapering dexamethasone, discontinuation of remdesivir, and a scheduled follow‑up with his primary care provider (PCP) in five days. The PCP was notified of ongoing oxygen supplementation and that John would be self‑monitoring his pulse oximeter at home until he reached 94 % on room air for 48 hours.</p><p>**Day 6 – Stabilization in Step‑down**</p><p>John continued to improve. He no longer needed supplemental oxygen for more than 30 minutes per day when exerting. He regained a normal resting oxygen saturation of 97 % on room air. His appetite had returned, and his sleep quality improved. The step‑down team reassessed his blood pressure and glucose control. Lisinopril was resumed at 10 mg daily, and metformin was re‑introduced at 500 mg twice daily, with his blood glucose remaining within acceptable ranges (fasting 110–135 mg/dL).</p><p>**Day 8 – Discharge**</p><p>John was discharged home on day 8 of admission with the following plan:</p><p>- **Respiratory**: Continue high‑flow nasal cannula at 2 L/min at night if needed; goal: 94 % on room air for 48 h.
+- **Medications**: Discontinue dexamethasone; taper inhaled budesonide to 200 µg twice daily for 5 days; continue metformin, lisinopril, and add a low‑dose aspirin 81 mg daily for extended thromboprophylaxis (per hospital COVID protocol).
+- **Monitoring**: Home pulse oximeter, daily temperature, and symptom diary (cough, dyspnea, fatigue). If oxygen saturation drops below 94 % or symptoms worsen, call ED immediately.
+- **Follow‑up**: PCP visit in 5 days, telehealth check in 10 days, and a pulmonary follow‑up visit in 2 weeks to assess residual lung changes.</p><p>John’s wife was instructed on how to use the nasal cannula and how to interpret pulse oximeter readings. She was also educated on the importance of smoking cessation, as it would accelerate recovery and reduce future respiratory risk.</p><p>**Day 12 – Outpatient Follow‑up**</p><p>John’s PCP visit at day 12 was uneventful. His oxygen saturation had remained at 97 % on room air. The PCP noted a mild decrease in wheezing, an improvement compared to the ED examination, and no residual fever. His blood pressure was 132/82 mm Hg, and his fasting glucose remained 115 mg/dL. The PCP advised John to taper the inhaled budesonide to 200 µg once daily for an additional week, to wean off the nasal cannula, and to quit smoking immediately. A chest radiograph ordered at the visit was negative for any pulmonary infiltrates. At discharge from the PCP visit, John’s pulse oximeter readings were consistently above 95 % at rest, and his functional status had nearly returned to baseline.</p><p>**Day 21 – Final Recovery**</p><p>At the two‑week post‑discharge telehealth visit, John reported feeling “normal” again, with a return of his usual energy levels. His cough had resolved entirely, and he expressed increased confidence in his breathing. He had successfully stopped smoking and was exercising, although he still felt occasionally out of breath when climbing stairs. He had no new or ongoing symptoms and had not required any additional medical care for SARS‑CoV‑2.</p><p>In summary, John’s SARS‑CoV‑2 infection unfolded over a course of 21 days from initial symptom onset to full clinical recovery. Despite significant risk factors—hypertension, obesity, diabetes, chronic mild asthma, and smoking—the patient avoided ICU admission. His disease trajectory was largely managed through early ED evaluation, prompt testing, timely initiation of steroids, antiviral therapy, and anticoagulation, followed by a careful inpatient step‑down and comprehensive outpatient follow‑up with close monitoring of comorbid conditions. John&#x27;s improvement underscores the importance of early intervention and coordinated care in high‑risk patients with COVID‑19.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-13</h3><div class="visit-meta">Urgent Care Nurse | Reason: Sore throat, dry cough, low‑grade fever</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Sore throat, dry cough, low‑grade fever.
+
+Patient is a 50‑year‑old male presenting via telephone. He reports a sore throat, dry cough, mild fatigue, metallic taste, and a low‑grade fever (~100.2°F). He is a chronic smoker (PDA 25 yrs), obese, and has comorbidities: hypertension, type 2 diabetes mellitus, and mild asthma. He is currently not on chronic medications and has no known drug allergies.
+
+Assessment: 1) High‑risk patient for COVID‑19 complications based on age &gt;50, male sex, smoking history, obesity, hypertension, diabetes, and asthma. 2) Clinical presentation is consistent with a mild viral upper respiratory infection, most likely SARS‑CoV‑2. 3) Given lack of on‑site vitals, risk of undetected hypoxia or progression cannot be fully evaluated.
+
+Plan:
+- Ordered RT‑PCR SARS‑CoV‑2 test. Patient will receive results by phone.
+- Advise strict home isolation until test results and resolution of symptoms.
+- Instruct patient to monitor temperature twice daily, observe dyspnea, cough severity, and perform pulse oximetry at home (if he has a device). If SpO₂ falls below 94% or if symptoms worsen (shortness of breath, chest pain, worsening cough, persistent fever &gt;101°F), he should call the clinic or seek emergent care.
+- Encourage adequate hydration, rest, and OTC antipyretic (acetaminophen) as needed for fever and discomfort.
+- Advise smoking cessation support resources.
+- Provide educational hand‑out on COVID‑19 warning signs and contact information.
+- Follow‑up: No return visit necessary unless abnormal test results or clinical deterioration occurs. If test positive, initiate outpatient COVID‑19 management protocols.
+
+The patient agreed to the plan, understands isolation instructions, and will call back immediately if any alarming changes.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sore throat</span><span class="pill">dry cough</span><span class="pill">low‑grade fever (100.2°F)</span><span class="pill">fatigue</span><span class="pill">metallic taste</span></div></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>RT‑PCR SARS‑CoV‑2</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John agrees to isolate and begin using his pulse oximeter. He is instructed to call back if his oxygen falls below 94 % or if symptoms worsen.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension, T2DM, mild asthma, obesity, smoker (PDA 25 yrs)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John calls the campus urgent‑care clinic after noticing a sore throat and dry cough. The nurse records his symptoms, notes his high‑risk profile (age &gt;50, male, smoker, obese, hypertensive, diabetic, asthmatic), and orders an RT‑PCR SARS‑CoV‑2 test. She advises home isolation, self‑monitoring of temperature, breathing, and pulse oximetry, and provides a plan if his oxygen falls below 94 %. No examination or vitals are recorded at this telephonic encounter.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation consistent with upper respiratory infection. High‑risk factors identified; SARS‑CoV‑2 testing queued.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-14</h3><div class="visit-meta">Primary Care Telehealth | Reason: Worsening cough, fever, shortness of breath</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Worsening cough, fever, shortness of breath.
+
+Subjective: 50‑year‑old male (John) reports a rapid increase in temperature to 101.8 °F, persistent dry cough, new wheeze, and exertional dyspnea. He also reports fatigue. He denies chest pain, palpitations, nasal congestion, or recent travel. He has known hypertension, type 2 diabetes mellitus, mild asthma, and obesity. No changes to antihypertensive medication; no new medications. He has no smoking history now.
+
+Objective (telehealth):
+- Temp: 101.8 °F
+- HR: 96 bpm
+- BP: 128/78 mm Hg
+- RR: 22 breaths/min
+- SpO₂: 93 % on room air (pulse oximeter)
+- Height: 5&#x27;10&quot;
+- Weight: 220 lb (BMI ≈ 33.5)
+
+Assessment: High‑risk patient (age 50, diabetes, hypertension, obesity, asthma) with acute respiratory infection and hypoxia (SpO₂ 93 %) indicating potential viral pneumonia, COVID‑19 infection, or asthma exacerbation. Differential:
+1. COVID‑19 (most likely given current epidemiology and hypoxia)
+2. Acute bacterial or viral pneumonia
+3. Exacerbation of underlying mild asthma
+4. Influenza (possible during season)
+5. Other viral respiratory pathogens
+
+Plan:
+1. Immediate in‑person evaluation at the ED. Bring home pulse oximeter.
+2. Urgent SARS‑CoV‑2 RT‑PCR nasal swab (if not already performed).
+3. Once evaluated: CBC with differential, CMP, chest X‑ray, and influenza rapid antigen test.
+4. Initiate symptomatic treatment: acetaminophen 650 mg PO q6h PRN for fever; use short‑acting albuterol inhaler as needed for wheeze.
+5. Encourage high‑flow fluids, adequate rest, and strict monitoring of SpO₂ (continue pulse oximetry; if SpO₂ &lt;90 % or worsening cough, seek emergent care).
+6. Maintain current antihypertensive (lisinopril) and diabetes regimen (metformin). Reassess glycemic control once stable.
+7. Counseling: avoidance of crowds, hand hygiene, mask usage while symptomatic.
+8. Follow‑up: Return to telehealth or in‑person PCP visit within 48 h if symptoms persist or worsen after ED evaluation, or sooner if new symptoms develop. If test results are positive for COVID‑19, follow isolation guidelines.
+
+Disposition: Patient agreed to proceed to the emergency department tomorrow with pulse oximeter. Advised to monitor temperature and oxygen saturation hourly and to contact provider if SpO₂ drops below 90 % or if shortness of breath increases.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">high‑grade fever 101.8°F</span><span class="pill">persistent dry cough</span><span class="pill">wheeze</span><span class="pill">shortness of breath on exertion</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>101.8°F</td></tr><tr><td>Heart_Rate</td><td>96 bpm</td></tr><tr><td>Blood_Pressure</td><td>128/78 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>22 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>93 % RA (pulse oximeter)</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John remains cooperative and follows the recommendation to head to the ED.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>No changes in antihypertensive therapy</li><li>No new medications</li><li>History of mild asthma</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a telehealth consult, John reports a spike in temperature to 101.8°F and worsening cough with new wheeze and exertional dyspnea. The clinician notes his oxygen saturation at 93 % and increased respiratory rate. Given John&#x27;s high‑risk status and hypoxia, the clinician recommends an urgent in‑person evaluation and an immediate COVID nasal swab if not already performed. John agrees and is instructed to bring his pulse oximeter to the ER next day.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Symptoms progressing: fever, cough, dyspnea; hypoxia now evident. Prepare for ED assessment.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-15</h3><div class="visit-meta">Emergency Medicine | Reason: Acute dyspnea, hypoxia, suspected COVID pneumonia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute dyspnea and hypoxia.
+
+Subjective: 50‑year‑old male presents to the ED with worsening shortness of breath, a dry cough, and mild fatigue. He reports a fever of 101.6°F and has been using his short‑acting albuterol inhaler with only temporary relief. Past medical history significant for hypertension, type 2 diabetes mellitus, mild asthma, and obesity (BMI ~31). Current medications: lisinopril 20 mg daily, metformin 1000 mg BID, acetaminophen PRN 650 mg q6h, and albuterol PRN.
+
+Objective: Vitals obtained on arrival: Temp 101.6 °F, HR 102 bpm, BP 138/85 mm Hg, RR 24 breaths/min, SpO₂ 88% on room air (92% with 2 L nasal cannula). Height 5′10″, weight 220 lb. Examination: mild distress, bilateral wheezes, scattered basal crackles, dry erythematous throat. Cardiac exam unremarkable. No peripheral edema.
+
+Diagnostics: Chest X‑ray demonstrates bilateral peripheral sub‑pleural opacities suggestive of mild interstitial infiltrates. Labs ordered: CBC, CMP, CRP, ferritin, D‑dimer, LDH, PT/INR, and repeat RT‑PCR SARS‑CoV‑2.
+
+Assessment: Suspected COVID‑19 pneumonia with mild interstitial infiltrates. Differential includes: bacterial pneumonia, acute asthma exacerbation, heart failure, and pulmonary embolism.
+
+Plan:
+1. Oxygen: Continue 2 L nasal cannula, titrate to maintain SpO₂ &gt; 94%.
+2. Medications:
+   - Dexamethasone 8 mg IV q24h for 5 days.
+   - Enoxaparin 40 mg SC daily (therapeutic anticoagulation pending D‑dimer and clinical picture).
+   - Continue lisinopril 20 mg PO daily; monitor renal function.
+   - Continue metformin 1000 mg BID; hold if AKI suspected.
+   - Albuterol 90 mcg MDI PRN;
+   - Acetaminophen 650 mg PO q6h PRN for fever.
+3. Monitoring: Repeat vitals, SpO₂ every 2–4 hrs; daily CBC, CMP, CRP; monitor for clinical deterioration.
+4. Consider starting empiric broad‑spectrum antibiotics if clinical or laboratory signs of bacterial superinfection develop.
+5. Imaging: If hypoxia worsens or pleuritic chest pain, obtain CT pulmonary angiography to rule out PE.
+6. Disposition: Admit to medical floor for close observation, oxygen titration, and serial labs.
+
+Education: Patient educated on the importance of oxygen therapy, medication adherence, monitoring for worsening symptoms (new chest pain, persistent fever, altered mental status), and the need to keep appointments.
+
+Follow‑up Recommendations: Daily assessment in hospital; once SpO₂ &gt; 94% on room air for at least 48 hrs and stable vitals, consider discharge with schedule for primary care follow‑up in 5–7 days and repeat SARS‑CoV‑2 PCR if not yet negative. Instruct patient to return to ED if SpO₂ drops &lt; 90% on room air, develops new symptoms, or if he experiences chest pain or shortness of breath that worsens.
+
+Prepared by: Dr. ___, Emergency Medicine.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever 101.6°F</span><span class="pill">shortness of breath</span><span class="pill">dry cough</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>101.6°F</td></tr><tr><td>Heart_Rate</td><td>102 bpm</td></tr><tr><td>Blood_Pressure</td><td>138/85 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>24 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>88 % RA (2 L nasal cannula 92 % after O2)</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild distress</li><li>Bilateral wheezes</li><li>Scattered basal crackles</li><li>Dry erythematous throat</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>CRP</li><li>Ferritin</li><li>D‑dimer</li><li>LDH</li><li>PT/INR</li><li>Repeat RT‑PCR SARS‑CoV‑2</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: bilateral peripheral sub‑pleural opacities</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Dexamethasone 8 mg IV</li><li>Enoxaparin 40 mg SQ</li><li>2 L/min nasal cannula</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports feeling better with supplemental oxygen and is reassured about the treatment plan.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of HTN, T2DM, mild asthma</li><li>Recent use of albuterol</li><li>Lisinopril 20 mg daily</li><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presents to the ED with worsening hypoxia and an oxygen saturation of 88 % on room air. The triage nurse starts him on 2 L/min nasal cannula, raising SpO₂ to 92 %. The attending physician performs a focused exam, noting mild distress, bilateral wheezes, scattered crackles at lung bases, and a dry erythematous throat. The ED team initiates a COVID‑19 pneumonia protocol: dexamethasone 8 mg IV, enoxaparin 40 mg subcutaneously (dose adjusted for creatinine), and supplemental oxygen to maintain saturation &gt;94 %. Labs (CBC, CMP, CRP, ferritin, D‑dimer, LDH, PT/INR) and a chest X‑ray are ordered. A repeat RT‑PCR SARS‑CoV‑2 swab is requested. A chest X‑ray shows bilateral peripheral sub‑pleural opacities suggestive of mild interstitial infiltrates.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute hypoxic COVID‑19 pneumonia confirmed by imaging. Initiated standard of care: steroids, anticoagulation, oxygen.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-16</h3><div class="visit-meta">Pulmonology/Internal Medicine | Reason: COVID‑19 inpatient management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Inpatient respiratory management for confirmed COVID‑19 infection.
+
+**S** (Subjective):
+- 50‑year‑old male with known hypertension, type 2 diabetes, mild asthma, and obesity (BMI≈31.6). 
+- Symptoms of persistent cough, dyspnea, low‑grade fever, and fatigue.  Reports slight improvement in cough and dyspnea since initiating remdesivir and inhaled budesonide.
+- No chest pain, orthopnea, or syncope. Denies hemoptysis.  No recent travel or sick contacts noted.
+
+**O** (Objective):
+- **Vitals**: T 100.2 °F; HR 88 bpm; BP 135/82 mm Hg; RR 20 breaths/min; SpO₂ 94 % on 5 L nasal cannula (6–8 L during intervals). Height 5&#x27;10</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span><span class="pill">dyspnea</span><span class="pill">fever</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>100.2°F</td></tr><tr><td>Heart_Rate</td><td>88 bpm</td></tr><tr><td>Blood_Pressure</td><td>135/82 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>20 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>94 % on 5 L nasal cannula</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Regular rhythm, mild tachycardia</li><li>Clear lung sounds with decreased breath sounds at bases</li><li>Non‑productive cough</li><li>No cyanosis</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>CRP</li><li>Ferritin</li><li>D‑dimer</li><li>LDH</li><li>PT/INR</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: leukocytosis 12.5 ×10⁹/L</li><li>CMP: elevated LFTs</li><li>CRP: 78 mg/L</li><li>Ferritin: 980 ng/mL</li><li>D‑dimer: 780 ng/mL</li><li>LDH: 280 U/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Remdesivir 200 mg IV loading</li><li>Remdesivir 100 mg IV maintenance</li><li>Inhaled budesonide 200 µg BID</li><li>Therapeutic enoxaparin 1 mg/kg/d</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerates treatments, reports slight improvement in cough and dyspnea.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Dexamethasone 20 mg daily (IV)</li><li>Enoxaparin 40 mg SQ</li><li>Remdesivir 200 mg IV (dose initiation)</li><li>Metformin paused</li><li>Lisinopril withheld</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Positive SARS‑CoV‑2 PCR</li><li>Baseline chronic conditions</li><li>Current medications: dexamethasone, enoxaparin, remdesivir pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John is admitted to the medical floor in a single‑occupancy COVID room. The admitting service confirms the RT‑PCR positivity (high viral load). His inflammatory markers (CRP 78 mg/L, D‑dimer 780 ng/mL, ferritin 980 ng/mL, LDH 280 U/L) are markedly elevated. Therapeutic enoxaparin (1 mg/kg/d) is started, considering his obesity and D‑dimer elevation. Metformin is paused due to risk of lactic acidosis; lisinopril is held pending blood pressure monitoring. Remdesivir is initiated on day 1 of admission (200 mg IV loading, 100 mg IV daily for 5 days). Inhaled budesonide 200 µg administered via dry‑powder inhaler twice daily is started for asthma control. Pulse oximeter readings every 4 h show saturation 93–94 % on 6–8 L nasal cannula.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Inflammatory response high; anticoagulation initiated; antiviral therapy started. Monitoring for renal function, oxygenation, and BP.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-03-17</h3><div class="visit-meta">Pulmonology/Internal Medicine | Reason: Clinical improvement</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 50‑year‑old male admitted with COVID‑19 pneumonia, currently on day 5 of treatment. He reports marked improvement: fever has resolved, fatigue has lessened, and he can walk a few minutes without significant dyspnea. Vitals are stable (T 98.6°F, HR 86 bpm, BP 125/80, RR 18, SpO₂ 93–94% on 6–8 L NC). Basilar crackles are diminishing; clear lung fields on exam. Repeat chest X‑ray shows partial resolution of peripheral opacities; inflammatory markers are trending downward (CRP 45 mg/L, ferritin 650 ng/mL, D‑dimer 520 ng/mL).
+
+Assessment: Improvement in clinical status, laboratory markers, and imaging is consistent with resolving COVID‑19 pneumonia. No new symptoms or signs suggestive of bacterial superinfection, pulmonary embolism, or other acute issues.
+
+Differential Diagnosis: 1) Resolving viral pneumonia due to SARS‑CoV‑2. 2) Superimposed bacterial pneumonia. 3) Pulmonary embolism. 4) Post‑viral interstitial lung disease.
+
+Plan: 1) Continue Remdesivir 100 mg IV daily for one more dose (total 5 days). 2) Continue dexamethasone taper per protocol. 3) Continue Enoxaparin 1 mg/kg/day. 4) Resume Lisinopril 10 mg daily. 5) Continue inhaled Budesonide 200 µg BID. 6) Gradually wean oxygen to 4 L/min as tolerated and monitor SpO₂. 7) Repeat CBC/CMP and chest X‑ray tomorrow. 8) If SpO₂ remains &gt;94% on room air for ≥48 h, prepare for discharge. 9) Advise patient to continue Metformin, maintain blood pressure control, and follow smoking cessation resources.
+
+Follow‑up: Outpatient pulmonary follow‑up in 1 week; phone call in 24 h if symptoms worsen or new SOB, fever, or chest pain develops.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever resolved</span><span class="pill">reduced fatigue</span><span class="pill">improved breathing</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Heart_Rate</td><td>86 bpm</td></tr><tr><td>Blood_Pressure</td><td>125/80 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>18 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>93–94 % on 6–8 L nasal cannula</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Basilar crackles diminishing</li><li>Clear lung fields on exam</li><li>Patient reports improved dyspnea</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat CBC/CMP</li><li>Repeat chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Repeat chest X‑ray: partial resolution of opacities</li><li>CBC: normalizing counts</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Tapered dexamethasone</li><li>Resumed lisinopril 10 mg</li><li>Continued remdesivir 100 mg IV daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels better; reports walking short distances without significant shortness of breath.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Dexamethasone tapered</li><li>Enoxaparin 1 mg/kg/d</li><li>Remdesivir 100 mg IV daily</li><li>Inhaled budesonide 200 µg BID</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive improvement, stable labs</li><li>Continuation of remdesivir and anticoagulation</li><li>Resumption of lisinopril</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On day 4 of admission, the inpatient team notes a marked improvement: fever is resolved, oxygen requirement has decreased to 4 L/min by day 5, and patient can walk a few minutes without dyspnea. Blood pressure stabilizes, allowing reconnection of lisinopril at 10 mg. Inflammatory markers trend downward (CRP 45 mg/L, ferritin 650 ng/mL, D‑dimer 520 ng/mL). A repeat chest X‑ray shows partial resolution of peripheral opacities. The team considers de‑escalating remdesivir and continues to monitor. No new complaints reported.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Clinical trajectory improving; inflammatory markers down; consider shortening antiviral course.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-03-18</h3><div class="visit-meta">Infectious Disease | Reason: Step‑down transfer &amp; discharge planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: Patient reports feeling stable overall with only mild residual cough. Expressed concern about needing to continue oxygen at home. No fever, chest pain, or dyspnea reported.
+
+Objective: Vital signs: Temperature 98.6°F; HR 84 bpm; BP 123/78 mmHg; RR 18/min; SpO₂ 94% on 4 L nasal cannula. Height 5&#x27;10&quot;, weight 220 lb (BMI 34.6). Examination: Clear lung fields, no wheeze or crackles; heart exam normal; no peripheral edema. O₂ titrated to 4 L to maintain SpO₂ &gt;94%. Repeat labs: fasting glucose 115 mg/dL; all other labs within normal limits. Chest X‑ray shows partial resolution of peripheral opacities.
+
+Assessment: 1) COVID‑19 infection – patient in recovery phase, persistent mild cough and need for supplemental oxygen. 2) Residual mild interstitial pneumonia. 3) Asthma control adequate with inhaled budesonide. 4) Hyperglycemia controlled on metformin. 5) No evidence of bacterial superinfection.
+
+Plan:
+• Discontinue dexamethasone.
+• Taper inhaled budesonide to 200 µg BID for 5 days.
+• Continue metformin 500 mg BID and lisinopril 10 mg daily.
+• Start low‑dose aspirin 81 mg daily for extended thromboprophylaxis.
+• Continue enoxaparin 1 mg/kg daily until completion of 5‑day course per protocol.
+• Maintain nighttime nasal cannula at 2 L if needed; patient to monitor SpO₂ at home and seek assistance if &lt;94% for &gt;2 h or if symptoms worsen.
+• Repeat CBC/CMP and chest X‑ray tomorrow to document improvement.
+• Transition to outpatient care when SpO₂ ≥94% on room air for 48 h.
+• Schedule follow‑up with pulmonology in 1 week and with primary care for diabetes/hypertension management.
+• Advise smoking cessation counseling if not already received.
+
+Disposition: Transfer to medical step‑down unit with monitoring for 24 h before discharge.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">stable</span><span class="pill">mild residual cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Heart_Rate</td><td>84 bpm</td></tr><tr><td>Blood_Pressure</td><td>123/78 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>18 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>94 % on 4 L nasal cannula</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lung fields</li><li>No chest pain</li><li>Respiratory rate normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat blood glucose</li><li>Follow‑up labs</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Blood glucose: fasting 115 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discontinued dexamethasone</li><li>Discontinued remdesivir</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient is relieved to leave the inpatient setting but expresses concern about continuing oxygen.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Dexamethasone taper complete</li><li>Enoxaparin 1 mg/kg/d</li><li>Remdesivir course complete (5 days)</li><li>Inhaled budesonide 200 µg BID</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Oxygen saturation &gt;94 % on 4 L</li><li>Stable labs</li><li>Resumed antihypertensives</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Given stable oxygenation (&gt;94 % on 4 L) and improving clinical status, the team transfers John to the medical step‑down unit for closer outpatient‑ready monitoring. A discharge plan is formulated: discontinue dexamethasone, taper budesonide to 200 µg twice daily for 5 days, continue metformin and lisinopril, start low‑dose aspirin 81 mg daily for extended thromboprophylaxis, maintain nighttime nasal cannula at 2 L if needed. The patient will monitor pulse oximetry and symptoms at home, aiming for 94 % on room air for 48 h before discontinuing oxygen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable clinical condition, preparing for home discharge. Anticoagulation therapy maintained; respiratory support reduced.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-03-21</h3><div class="visit-meta">Primary Care Physician | Reason: Discharge discharge &amp; follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after discharge from COVID‑19 hospitalization.
+
+S: John is a 50‑year‑old male presenting for his first outpatient follow‑up after discharge. He reports a resolved cough, normal breathing, and no fever. He continues to monitor home pulse oximetry and reports all readings above 94% on room air. He has been tapering inhaled budesonide and has had no nighttime oxygen requirement since discharge.
+
+O: Vitals: T 98.6°F, HR 82 bpm, BP 130/80 mm Hg, RR 18 breaths/min, SpO₂ 97% RA, Height 5&#x27;10&quot;, Weight 220 lb (BMI 32). Physical exam: lungs clear without wheeze, heart regular rhythm, no murmurs. No pedal edema. 
+
+Assessment:
+1. Post‑COVID‑19 recovery – improved resolution of pulmonary infiltrates on discharge CXR, normal current CXR.
+2. Stable mild asthma, currently on budesonide taper.
+3. Controlled hypertension, type 2 diabetes mellitus, obesity.
+4. Smoking cessation – patient expresses motivation to quit.
+
+Plan:
+- Continue inhaled budesonide 200 µg once daily for one additional week, then taper off.
+- Maintain current home medications: Metformin 500 mg BID, Lisinopril 10 mg daily, Aspirin 81 mg daily.
+- Advise to keep pulse oximetry and call clinic if SpO₂ falls below 94% or if symptoms (cough, dyspnea, fever) recur.
+- Encourage smoking cessation; discuss nicotine replacement therapy and counseling resources.
+- Encourage weight‑loss measures: dietitian referral, structured exercise program.
+- Follow‑up pulmonology in 1 week for asthma assessment; PCP follow‑up in 2 weeks to review BP, glucose, and overall recovery.
+- Educate on monitoring blood pressure and glucose at home.
+- Provide educational handout on COVID‑19 recovery and symptom red flags.
+
+P: Patient is instructed to continue the budesonide taper, maintain home monitoring, and adhere to all outpatient appointments.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">resolved cough</span><span class="pill">normal breathing</span><span class="pill">no fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Heart_Rate</td><td>82 bpm</td></tr><tr><td>Blood_Pressure</td><td>130/80 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>18 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>97 % room air</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal lungs, no wheeze</li><li>Heart regular</li><li>BP within target</li><li>BMI 32</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: normal, no infiltrates</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels well, grateful for discharge, and intends to quit smoking.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Budesonide 200 µg BID (for 5 more days)</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Day 8 home discharge</li><li>Nighttime O₂ 2 L if needed</li><li>Budesonide tapering</li><li>Low‑dose aspirin</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presents for his first outpatient follow‑up after discharge. He reports normal oxygen saturation on room air, resolved cough, and no fever. He continues to monitor pulse oximetric readings at home. The physician reviews home medication list, recommends tapering budesonide to 200 µg once daily for an additional week, and encourages smoking cessation. A chest X‑ray performed at discharge shows no residual infiltrates. The patient is advised to call the clinic if oxygen saturation drops below 94 % or if symptoms worsen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient has recovered from acute COVID‑19. Post‑discharge monitoring continues; respiratory function returning to baseline.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-04-03</h3><div class="visit-meta">Telehealth Primary Care | Reason: 2‑week post‑discharge follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 50‑year‑old male with HTN, T2DM, mild asthma, obesity. 2‑week post‑discharge telehealth visit.  Patient reports feeling fully recovered; denies cough, no fever, only mild exertional dyspnea when climbing stairs. Home pulse oximetry last recorded 97 % on room air. Maintained stable blood pressure and glucose control.  
+
+Vitals: Temp 98.4 °F, HR 80 bpm, BP 128/78 mmHg, RR 17 breaths/min, SpO₂ 97 % RA, Height 5&#x27;10</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">normal activity level</span><span class="pill">no cough</span><span class="pill">minimal exertional dyspnea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Heart_Rate</td><td>80 bpm</td></tr><tr><td>Blood_Pressure</td><td>128/78 mm Hg</td></tr><tr><td>Respiratory_Rate</td><td>17 breaths/min</td></tr><tr><td>Oxygen_Saturation</td><td>97 % room air</td></tr><tr><td>Height</td><td>5&#x27;10&quot;</td></tr><tr><td>Weight</td><td>220 lb</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Regular breathing</li><li>No wheezing</li><li>HR normal</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient is satisfied, reports no residual health concerns, and is planning to resume normal exercise routine.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Quit smoking 2 weeks ago</li><li>Completed budesonide taper</li><li>Stopped nighttime O₂</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a 15‑minute telehealth call, John reports feeling fully recovered. He has no cough, minimal shortness of breath when climbing stairs, and no other symptoms. His last home pulse oximetry reading was 97 % on room air. He has maintained stable blood pressures and glucose control. The clinician reassures that COVID‑19 sequelae are unlikely, but advises continued monitoring of oxygen saturation and prompt reporting if new symptoms occur. The PCP encourages continued physical activity and smoking‑cessation support. No further interventions are ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Full recovery achieved. No post‑viral complications noted.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 50</span><span class="pill">Sex: Male</span><span class="pill">Height: 5 ft 10 in</span><span class="pill">Weight: 220 lb</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Mild Asthma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Aspirin 81 mg daily</li><li>Budesonide 200 µg once daily</li><li>Short‑acting albuterol inhaler PRN for wheeze</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with sore throat, dry cough, low‑grade fever (100.2°F) and metallic taste; chronic smoker, obese, with hypertension, type 2 diabetes, mild asthma. No vitals taken. Ordered RT‑PCR SARS‑CoV‑2 test. Advised home isolation, temperature monitoring, pulse oximetry; instructed use of acetaminophen PRN and smoking cessation resources. No return visit unless test positive or symptoms worsen.</li><li>Patient presented with worsening cough, fever, shortness of breath, SpO₂ 93% RA, new wheeze, and exertional dyspnea. Advised urgent ED evaluation, SARS‑CoV‑2 RT‑PCR nasal swab, CBC with differential, CMP, chest X‑ray, and influenza rapid antigen test. Prescribed acetaminophen 650 mg PO q6h PRN for fever and short‑acting albuterol inhaler PRN for wheeze. Advised to maintain lisinopril and metformin, monitor SpO₂ hourly, stay hydrated and rest. Follow‑up planned within 48 hours if symptoms persist or worsen.</li><li>Patient admitted on 2026‑03‑15 for acute dyspnea and hypoxia. Vitals: T 101.6°F, HR 102 bpm, BP 138/85 mmHg, RR 24 breaths/min, SpO₂ 88% RA, 92% on 2 L nasal cannula. Exam revealed bilateral wheezes, basal crackles, erythematous throat, unremarkable cardiac exam. Chest X‑ray showed bilateral peripheral sub‑pleural opacities suggestive of mild interstitial infiltrates. Labs ordered: CBC, CMP, CRP, ferritin, D‑dimer, LDH, PT/INR, repeat RT‑PCR SARS‑CoV‑2. Patient was admitted to the medical floor, started on dexamethasone 8 mg IV q24h for 5 days, enoxaparin 40 mg SC daily, continued lisinopril and metformin, and given albuterol 90 mcg MDI PRN. Oxygen titrated to maintain SpO₂&gt;94% on 2 L nasal cannula. Monitoring included repeat vitals every 2–4 hrs, daily CBC/CMP/CRP, and clinical assessment for deterioration. Broad‑spectrum antibiotics considered if bacterial superinfection suspected. Disposition: close observation with plan for discharge once SpO₂&gt;94% on room air for ≥48 hrs and stable vitals.</li><li>Patient evaluated on 2026‑03‑16 for inpatient COVID‑19 management. Persistent cough, dyspnea, low‑grade fever, and fatigue were reported. Slight improvement in cough and dyspnea noted since initiation of remdesivir and inhaled budesonide. Vitals: Temp 100.2 °F, HR 88 bpm, BP 135/82 mm Hg, RR 20 breaths/min, SpO₂ 94 % on 5 L nasal cannula (varied 6–8 L intervals). Oxygen provided as needed. No new tests ordered. Medication regimen continued with remdesivir and inhaled budesonide added.</li><li>Patient evaluated on 2026‑03‑17 for ongoing COVID‑19 management; evident clinical improvement with resolved fever, decreased fatigue, and better breathing tolerance; vitals stable (T 98.6°F, HR 86 bpm, BP 125/80, RR 18, SpO₂ 93–94% on 6–8 L NC); repeat chest X‑ray shows partial resolution of peripheral opacities; inflammatory markers decreasing (CRP 45 mg/L, ferritin 650 ng/mL, D‑dimer 520 ng/mL); continued remdesivir, dexamethasone taper, enoxaparin, lisinopril, inhaled budesonide; plan to gradually wean oxygen to 4 L/min, repeat CBC/CMP and chest X‑ray tomorrow, proceed to discharge once SpO₂ &gt;94% on room air for ≥48 h; outpatient pulmonary follow‑up in 1 week.</li><li>Visit 6: On 2026‑03‑18, patient transferred to step‑down unit. Vital signs stable on 4 L nasal cannula (SpO₂ 94%). Dexamethasone discontinued, budesonide tapered to 200 µg BID for 5 days, aspirin 81 mg started, enoxaparin continued at weight‑based dose. Plan to discharge once SpO₂ ≥94% on room air for 48 h, with follow‑up by pulmonology and PCP.</li><li>Patient presented for post‑discharge follow‑up after COVID‑19 hospitalization. Reported resolved cough, normal breathing, no fever. Vitals: T 98.6°F, HR 82 bpm, BP 130/80 mm Hg, RR 18 breaths/min, SpO₂ 97% RA. Physical exam: lungs clear, heart regular, no pedal edema. Plan: continue inhaled budesonide 200 µg once daily for one week, maintain Metformin 500 mg BID, Lisinopril 10 mg daily, Aspirin 81 mg daily. Advise monitoring SpO₂ and contact if falls below 94% or symptoms recur. Encourage smoking cessation and weight‑loss measures. Arrange pulmonology and PCP follow‑ups in 1 and 2 weeks respectively.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

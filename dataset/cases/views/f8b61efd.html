@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case f8b61efd</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: f8b61efd</h1><div class="subtitle">Metastatic Malignant Melanoma to the Liver (Stage IV) | Male, 58</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Diabetes mellitus, Hypertension, Obesity, Chronic liver disease (cirrhosis), Chronic obstructive pulmonary disease</div><div class="meta-line">Risk Factors: Ultraviolet radiation exposure, Fair skin phenotype (Type I/II), Family history of melanoma, Age &gt; 50 years, Immunosuppression (e.g., HIV or organ transplant)</div></div>
+<details><summary>Narrative <span class="preview-text">**The Rapid Descent of Mr. James H. – A Journey through Stage IV Melanoma and Chronic Illness**  ---  #### A Rough Begin...</span></summary><div class="section-body"><p>**The Rapid Descent of Mr. James H. – A Journey through Stage IV Melanoma and Chronic Illness**</p><p>---</p><p>#### A Rough Beginning (Week 0–1)</p><p>James “Jim” H., a 58‑year‑old office coordinator with fair, freckled skin, walked into his primary‑care office with a dull, persistent ache in the upper right side of his abdomen. “It’s been there for about a month,” he said, holding his belly. “I’ve been feeling tired all the time, and I’ve lost about 10 pounds, even though I’m eating as usual.” Jim also complained of a low‑grade fever and a vague sense of fatigue that was keeping him from his morning walk despite a short inhaler rescue. His medical history was long and complicated: type 2 diabetes poorly controlled on metformin and glargine, hypertension on lisinopril, obesity (BMI 33), chronic liver disease (cirrhosis secondary to chronic alcohol use), and chronic obstructive pulmonary disease (COPD) from a 40‑pack‑year smoking history. In 2015, he received a kidney transplant following end‑stage renal disease; he is maintained on tacrolimus and mycophenolate.</p><p>Jim’s family had a history of melanoma in his maternal aunt, who had died at 62 after a delayed diagnosis. The family had never performed a comprehensive skin check, and Jim himself had never had a dermatologist’s exam. He recalled a dark, evolving mole on the upper back that had grown gradually over the past fifteen years.</p><p>During the visit, Jim’s blood pressure was 148/84 mm Hg, heart rate 92 bpm, and oxygen saturation 95 % on room air. Lab work showed:</p><p>- ALT 112 U/L, AST 98 U/L, ALP 210 U/L, total bilirubin 3.2 mg/dL
+- INR 1.5, serum albumin 2.8 g/dL
+- Glucose 178 mg/dL, HbA1c 8.2 %
+- Normal CBC, mild leukocytosis 13,000/mm³</p><p>Given the abnormal liver panel and the presence of an abdominal mass sign on exam, the PCP ordered an abdominal ultrasound. The ultrasound showed multiple hypoechoic lesions in the liver, ranging from 2 cm to 4 cm. The radiologist also noted mild ascites. Jim was referred urgently to hepatology.</p><p>---</p><p>#### The Diagnosis (Week 2–3)</p><p>In a hepatology clinic two days later, Chris T, a hepatologist, reviewed the ultrasound. “We’re looking at a picture that fits metastatic disease,” he said, pointing to the nodular shapes on the screen. An abdominal CT scan confirmed numerous hepatic lesions, some with centrally necrotic cores. No significant portal hypertension was observed, but the cirrhotic background made the liver appear nodular. The CT was then sent to pathology for biopsy.</p><p>A week later, a laparoscopic liver biopsy was performed. Histology revealed malignant melanoma cells with characteristic dendritic dendrons. Immunohistochemistry was positive for S100, HMB‑45, and SOX10. A genetic panel identified a BRAF V600E mutation.</p><p>In the same week, Jim was referred to dermatology. A skin examination uncovered a 1.8 cm, black, irregularly bordered nodule on the right upper back, with satellite lesions and ulceration. A punch biopsy of the back lesion revealed classic nodular melanoma, Clark level IV, Breslow depth 3.2 mm, high mitotic index, and ulceration. The pathology report confirmed that the liver lesions were metastases from this primary melanoma.</p><p>By the end of the third week, Jim had been formally staged: T3b N0 M1c (liver metastases only). In a multidisciplinary tumor board, oncologists, a melanoma surgical specialist, and the transplant nephrologist convened to decide a course of action. With his active immunosuppression and cirrhosis, the discussion hinged on balancing therapeutic potency against hepatic toxicity and the risk of transplant rejection.</p><p>---</p><p>#### A Cautious Beginning (Month 1–2)</p><p>On the first day of oncology care, Dr. Patel explained, “Given the BRAF mutation, we can use a combination of dabrafenib and trametinib, but we must watch for hepatic failure. Also, because you’re on tacrolimus, we cannot give a checkpoint inhibitor like nivolumab; that could trigger rejection of your kidney.” The nephrologist confirmed that tacrolimus trough levels must stay below 7 ng/mL to avoid nephrotoxicity and that the patient is at high risk for rejection if immunotherapy is started.</p><p>Jim’s therapy was initiated at a dose ½ the standard for patients with normal liver function: dabrafenib 50 mg BID and trametinib 0.5 mg QD. The transplant team had to adjust tacrolimus from 5 mg BID to 2.5 mg BID and schedule extra trough monitors.</p><p>During the first two weeks of treatment, Jim tolerated the regimen with mild fatigue, a transient fever, and a low‑grade maculopapular rash that resolved with topical steroids. His liver enzymes rose modestly: ALT 170 U/L, AST 140 U/L, but remained under 3× the upper limit. His nephrologist noted a slight rise in creatinine to 1.4 mg/dL. The transplant team held tacrolimus for 48 h and then resumed a lower dose, keeping troughs at 4–5 ng/mL.</p><p>In week 7 of therapy, Jim presented to the emergency department with worsening abdominal pain, confusion, and a tremor of the upper right hand. He was diaphoretic, with a blood pressure of 112/68 mm Hg. Labs revealed:</p><p>- ALT 310 U/L, AST 250 U/L, total bilirubin 5.5 mg/dL, INR 2.3
+- Serum albumin 2.4 g/dL
+- Creatinine 1.5 mg/dL
+- No leukocytosis</p><p>The picture was one of acute-on-chronic liver failure: increased transaminases, rising bilirubin, and coagulopathy. Jim was admitted to the hepatology service and started on lactulose for encephalopathy and spironolactone 100 mg/amiloride 50 mg for ascites. Meanwhile, the oncology team paused dabrafenib and trametinib to allow liver recovery.</p><p>---</p><p>#### The Tipping Point (Month 3–4)</p><p>After a week of supportive care, Jim’s liver function began to stabilize. ALT and AST decreased to 210 U/L, but bilirubin remained 4.8 mg/dL. His encephalopathy improved with lactulose titration. At the end of the first month on holding therapy, the oncology team re‑initiated dabrafenib, now at 37.5 mg BID, and trametinib at 0.375 mg QD. The nephrologist carefully increased tacrolimus back to 3 mg BID, with trough targets of 4–5 ng/mL.</p><p>Three weeks after resumption, a follow‑up CT scan of the abdomen revealed that one of the larger liver lesions had enlarged from 4.2 cm to 5.1 cm, while the others were relatively stable in size. A skin exam this week found no new lesions. There were no new bone or brain metastases. The response was indeterminate: partial at best but clearly not a sustained clinical benefit.</p><p>Jim’s diabetes remained hard to control, with fasting glucose fluctuations to 220 mg/dL and post‑prandial spikes above 300 mg/dL. He was given a higher dose of insulin glargine and added basal‑bolus therapy. Unfortunately, his COPD flare at that time forced a re‑introduction of oral steroids (prednisone 30 mg daily) for two weeks, which further complicated glycemic control and raised his blood pressure to 160/95 mm Hg.</p><p>The transplant nephrologist was concerned about tacrolimus levels spiking to 9 ng/mL during the steroid flare; they reduced the dose to 1.5 mg BID to avoid rejection.</p><p>In late month 4, Jim was admitted once more for a new episode of confusion and vomiting. Labs indicated worsening liver function (ALT 420 U/L, AST 350 U/L, bilirubin 6.7 mg/dL, INR 3.2), rising creatinine 2.0 mg/dL, and mild hyponatremia. He was treated in the ICU with continuous lactulose infusion, diuretics for refractory ascites, and empiric antibiotics for suspected spontaneous bacterial peritonitis (ascitic fluid cultures negative but WBC high). The nephrology team switched tacrolimus to cyclosporine 150 mg BID for the short term, hoping to reduce its hepatic metabolism burden.</p><p>---</p><p>#### The Last Weeks (Month 5–6)</p><p>After four days of ICU care, Jim was transferred to a step‑down unit where outpatient oncologic therapy was re‑established. The oncology team decided to switch to a single‑agent immunotherapy—pembrolizumab—despite the transplant risk, as the patient’s prognosis had become dire and the potential for systemic benefit outweighed the risk of rejection. The transplant nephrologist placed a high dose of steroids (prednisone 60 mg daily) to mitigate rejection risk concurrently. In the meantime, a full-dose cyclosporine was maintained.</p><p>The first infusion of pembrolizumab was well tolerated; however, within a week, blood counts showed a drop in platelets to 75,000, and ALT climbed to 580 U/L. The immunotherapy was held, and the patient was put on a low‑dose steroid taper. Unfortunately, the liver enzymes kept climbing despite repeated interventions; at the end of month 6, his total bilirubin had reached 10.2 mg/dL, INR 4.1, sodium 130 mmol/L, creatinine 3.0 mg/dL. He developed generalized edema, refractory ascites, and grade 3 hepatic encephalopathy.</p><p>Given the terminal trajectory, Jim’s family met with the oncology, hepatology, and transplant teams to discuss hospice care. The palliative care service took over, and pain control was maintained with a fentanyl patch and oral oxycodone. Jim spent the last weeks of life at home, resting on a couch while his wife and son sat nearby. He passed peacefully at 02:12 AM after a brief period of confusion and a final, brief breath, with the hospice nurse standing beside him and his family holding his hand.</p><p>---</p><p>#### Retrospective Summary</p><p>When the trajectory of Mr. James’s disease is traced chronologically, the interplay of comorbidities, risk factors, and therapeutic constraints becomes stark. The combination of immunosuppression for transplant, underlying cirrhosis, COPD exacerbations, and poorly controlled diabetes each compounded the aggressiveness and treatment toxicity of metastatic melanoma. The early decision to use targeted therapy mitigated the risk of transplant rejection but was limited by hepatic metabolism, while the eventual switch to immunotherapy—though potentially more effective against melanoma—triggered significant hepatotoxicity and kidney strain.</p><p>At every clinical decision point, the multidisciplinary team weighed the benefits of systemic therapy against the imminent risk of organ failure. The chronic nature of Jim’s cirrhosis and COPD, coupled with his immunosuppression, prevented the use of the most effective melanoma treatments (checkpoint inhibitors) until the disease was refractory to all other options, at which point the treatment plan was altered in a last‑minute attempt to achieve a clinical response. Unfortunately, the cumulative burden of disease and therapy led to rapid hepatic decompensation and, ultimately, a terminal decline that could not be reversed.</p><p>What remained, however, was a patient’s determination to endure each week, a family’s steadfast support, and a team’s compassionate care that honored Jim’s dignity even as his body failed in a predictable, inexorable decline. The timeline and clinical decisions recorded here can serve as a guide for physicians navigating the complex balance between aggressive treatment of metastatic melanoma and the realities imposed by comorbid chronic illnesses.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-05</h3><div class="visit-meta">Primary Care | Reason: Right upper quadrant abdominal pain and weight loss</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+58‑year‑old male presents with a 4‑week history of dull right upper quadrant (RUQ) abdominal pain, associated fatigue, low‑grade fever, and an unintentional 10‑lb weight loss.
+
+History of Present Illness:
+Mr. H reports the pain as constant, non‑radiating, and dull, with occasional sharp exacerbations. He denies nausea, vomiting, jaundice, or changes in stool color. He reports feeling more tired lately and has unintentionally lost weight. He has a 40 pack‑year smoking history and a past history of alcohol‑related cirrhosis. No current alcohol intake reported.
+
+Past Medical History:
+- Type 2 diabetes mellitus, poorly controlled (HbA1c 8.2%)
+- Hypertension
+- Obesity (BMI 33)
+- Chronic liver disease (cirrhosis secondary to alcohol)
+- Chronic obstructive pulmonary disease
+- Post‑kidney transplant on tacrolimus and mycophenolate
+
+Medications:
+- Metformin 2000 mg BID (current)
+- Lisinopril 10 mg daily (current)
+
+Allergies: None.
+
+Social History:
+- 40 pack‑year smoking history
+- No alcohol use reported
+- Non‑smoker currently
+
+Physical Examination:
+- Vital signs: BP 148/84, HR 92, O₂ sat 95% RA, Temp 37.2 °C.
+- General: Mild distress due to pain.
+- HEENT: No icterus.
+- Cardiovascular: Normal heart sounds, no murmurs.
+- Respiratory: Clear lung fields, no wheezes or crackles.
+- Abdomen: Mild RUQ tenderness, palpable hepatic edge 3 cm below costal margin, mild ascites, no peritoneal signs.
+- Extremities: No edema.
+- Skin: No rashes or lesions.
+
+Assessment:
+Current laboratory data indicate significant hepatic decompensation: elevated transaminases (ALT 112 U/L, AST 98 U/L), cholestatic pattern (ALP 210 U/L), hyperbilirubinemia (3.2 mg/dL), prolonged INR (1.5), hypoalbuminemia (2.8 g/dL), and leukocytosis (13,000 /mm³). These findings are consistent with alcoholic cirrhosis with active inflammatory/infectious component. Differential diagnoses include:
+1. Alcoholic cirrhosis with acute flare and possible superimposed bacterial peritonitis.
+2. Hepatocellular carcinoma (HCC) – a common malignancy in cirrhotic patients.
+3. Biliary tract disease (gallstones or cholangitis) – causing RUQ pain and cholestasis.
+4. Uncontrolled diabetes with hepatic steatosis exacerbation.
+
+Plan:
+1. Imaging:
+   - Abdominal ultrasound performed today to evaluate for space‑occupying lesions, biliary dilatation, and ascites characterization.
+2. Hepatology referral within 2 weeks to discuss imaging results, initiate cancer surveillance protocol, and manage decompensation.
+3. Ascites management:
+   - Monitor for spontaneous bacterial peritonitis (SBP) if fluid culture indicated; consider empirical antibiotics if clinical suspicion rises.
+4. Diabetes management:
+   - Initiate basal insulin glargine 10 units at bedtime while continuing metformin; re‑assess glucose logs and HbA1c.
+5. Blood pressure: Continue lisinopril 10 mg daily; monitor BP at each visit.
+6. Lifestyle:
+   - Counsel on weight‑loss strategy, low‑sodium diet, and alcohol cessation.
+7. Lab monitoring:
+   - Repeat CBC, CMP, INR, and LFTs at 6‑week intervals or sooner if clinically indicated.
+   - Monitor tacrolimus levels as per transplant protocol.
+8. Follow‑up:
+   - Return to PCP in 4 weeks or sooner if symptoms worsen (e.g., increased pain, jaundice, abdominal distention, fever). 
+   - Communicate all new findings to transplant team and hepatology.
+
+Disposition: Patient advised on home monitoring of weight, blood glucose, and any new symptoms. Provided educational pamphlet on cirrhosis complications; scheduled next appointment.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dull RUQ abdominal pain</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>148/84</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>O2_sat</td><td>95%</td></tr><tr><td>Temp</td><td>37.2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild RUQ tenderness</li><li>Hepatomegaly with edge 3 cm below costal margin</li><li>Mild abdominal ascites</li><li>Clear lung fields</li><li>Pulsatile heart sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Abdominal ultrasound</li><li>Complete blood count</li><li>Comprehensive metabolic panel (CMP)</li><li>Serum glucose and HbA1c</li><li>Liver function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ALT 112 U/L</li><li>AST 98 U/L</li><li>ALP 210 U/L</li><li>Total bilirubin 3.2 mg/dL</li><li>INR 1.5</li><li>Serum albumin 2.8 g/dL</li><li>Glucose 178 mg/dL</li><li>HbA1c 8.2%</li><li>WBC 13,000/mm³</li><li>CBC normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to hepatology clinic</li><li>Counseling on weight loss and diet</li><li>Metformin dose review (maintained 2000 mg daily)</li><li>Instructions to monitor blood pressure</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>None yet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span><span class="pill">Family history of melanoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 20 U nightly</li><li>Lisinopril 20 mg daily</li><li>Tacrolimus 5 mg BID</li><li>Mycophenolate 1500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Type 2 diabetes mellitus poorly controlled on metformin and glargine</li><li>Hypertension on lisinopril</li><li>Obesity BMI 33</li><li>Chronic liver disease (cirrhosis) secondary to alcohol</li><li>COPD (40 pack‑year smoking history)</li><li>Kidney transplant on tacrolimus and mycophenolate</li><li>Family history of melanoma</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. James H. presents with a month‑long dull pain in the right upper quadrant of the abdomen, fatigue, low‑grade fever, and a 10‑lb weight loss. Physical exam reveals a mildly tender RUQ with a palpable hepatic edge 3 cm below the costal margin, mild ascites, and normal cardiac and pulmonary findings. He is advised to undergo an abdominal ultrasound to evaluate the abdominal pain. Basic labs are sent to rule out hepatic injury and infection.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-12</h3><div class="visit-meta">Hepatology | Reason: Review hepatic ultrasound findings and decide on further imaging</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Review hepatic ultrasound findings and determine further imaging.
+
+**History of Present Illness:**
+58‑year‑old male with a background of compensated cirrhosis, type 2 diabetes mellitus, hypertension, obesity, COPD, and a functioning kidney transplant on tacrolimus 5 mg BID and mycophenolate 1500 mg BID. The patient reports continued right upper quadrant (RUQ) abdominal pain and fatigue for the past 4 weeks. He notes the pain is dull, worsening after meals, and not relieved by over‑the‑counter analgesics. No nausea, vomiting, fever, or weight loss beyond the 10‑lb loss noted during the prior visit.
+
+Ultrasound performed today demonstrated multiple hypoechoic hepatic lesions of variable size (largest ~2.5 cm) and mild ascites. No focal biliary dilatation was noted.
+
+**Physical Examination:**
+- Vital signs: BP 145/80 mmHg, HR 90 bpm, O₂ sat 96 % RA, Temp 37.3 °C.
+- General: Alert, oriented, in no acute distress.
+- HEENT: No icterus.
+- Abdomen: Mild RUQ tenderness, palpable liver edge extending ~3 cm below the costal margin, mild ascites.
+- Skin: No rashes noted.
+- Extremities: No peripheral edema.
+
+**Labs (from prior visit, not repeated at this encounter):**
+- ALT 112 U/L, AST 98 U/L, ALP 210 U/L, total bilirubin 3.2 mg/dL, INR 1.5, albumin 2.8 g/dL, WBC 13,000 /µL.
+
+**Assessment:**
+- Cirrhosis with portal hypertension; ongoing hypoalbuminemia and coagulopathy.
+- Multiple hypoechoic hepatic lesions raising concern for malignant etiology (secondary metastases vs hepatocellular carcinoma vs cholangiocarcinoma).
+- Mild ascites likely due to portal hypertension.
+- Fatigue secondary to chronic liver disease and anemia of chronic disease.
+
+**Differential Diagnosis:**
+1. Hepatic metastases (probable primary melanoma given back mole).
+2. Hepatocellular carcinoma.
+3. Cholangiocarcinoma or combined hepatocellular-cholangiocarcinoma.
+4. Focal abscess or granuloma.
+5. Benign cystic lesions (unlikely given hypoechoic nature).
+
+**Plan:**
+1. Order contrast‑enhanced CT abdomen with pancreatic protocol to better characterize lesion vascularity, size, number, and possible primary source.
+2. Arrange percutaneous liver biopsy of the predominant lesion under image guidance; discuss risks and benefits with patient.
+3. Continue current medication regimen:
+   - Metformin 2000 mg daily.
+   - Insulin glargine 20 U nightly.
+   - Lisinopril 20 mg daily.
+   - Tacrolimus 5 mg BID (monitor trough level; target 6‑10 ng/mL).
+   - Mycophenolate 1500 mg BID.
+4. Monitor tacrolimus trough level weekly until CT/biopsy results available, then every 2 weeks.
+5. Continue routine labs: CBC, CMP, LFTs, INR, tacrolimus level. Repeat in 2 weeks.
+6. Counsel patient on signs of decompensation: increased abdominal girth, jaundice, confusion, new orthostatic hypotension. Advise immediate medical attention if these occur.
+7. Dermatology referral already scheduled for evaluation of longstanding back mole; may consider biopsy of mole if suspicious.
+8. Oncology consultation will be scheduled pending pathology results.
+9. Reinforce weight management, fluid restriction (&lt;1.5 L/day if ascites significant), and insulin dose adjustments as needed.
+10. Follow-up in clinic in 4 weeks or sooner if imaging or biopsy results prompt earlier action.
+
+**Signature:**
+Dr. [Name], MD
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">RUQ abdominal pain</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/80</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>O2_sat</td><td>96%</td></tr><tr><td>Temp</td><td>37.3</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RUQ tenderness</li><li>Palpable liver edge</li><li>Mild abdominal distension</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast‑enhanced CT abdomen</li><li>Percutaneous liver biopsy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>None yet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span><span class="pill">Suspected hepatic metastases</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 20 U nightly</li><li>Lisinopril 20 mg daily</li><li>Tacrolimus 5 mg BID</li><li>Mycophenolate 1500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Liver ultrasound with multiple hypoechoic lesions</li><li>Ongoing immunosuppression with tacrolimus and mycophenolate</li><li>Chronic liver disease with cirrhosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The hepatologist reviewed the ultrasound showing multiple hypoechoic hepatic lesions and mild ascites. He ordered a contrast‑enhanced CT scan of the abdomen to better characterize the lesions and assessed portal hypertension. A liver biopsy was arranged. Additionally, the patient was referred to dermatology for evaluation of a longstanding back mole that may be the primary tumor.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-01-19</h3><div class="visit-meta">Dermatology | Reason: Skin lesion evaluation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient presents for evaluation of a known primary melanoma on the right upper back. 
+History: 58‑year‑old M with longstanding DM2, HTN, obesity, chronic liver disease (cirrhosis) with suspected hepatic metastases, COPD, post‑kidney transplant on tacrolimus and mycophenolate. No new skin symptoms reported; lesion previously documented as a growing back mole over 15 years. 
+Chief Complaint: Skin lesion evaluation. 
+Exam: 1.8 cm irregular, dark pigmented nodule on the right upper back with ulceration and satellite lesions. No erythema or warmth noted. 
+Vitals: BP 142/78, HR 88, O₂ sat 97%, Temp 36.9°C. 
+Investigations: Punch biopsy performed; histology shows malignant lesion with high mitotic index. 
+Assessment: The morphology and histologic features are most consistent with malignant melanoma (primary lesion with local satellite spread). Differential includes squamous cell carcinoma, basal cell carcinoma, and cutaneous metastasis from other primaries; however, clinical context and prior diagnosis favor melanoma. 
+Plan:
+1. Immediate referral to oncology for staging work‑up (CT chest/abdomen/pelvis ± PET scan) and discussion of definitive management.
+2. Consider surgical excision with wide margins and sentinel lymph node biopsy as per melanoma guidelines.
+3. Discuss potential systemic therapy (immune checkpoint inhibitors or targeted therapy) with oncology, given metastatic risk.
+4. Continue current immunosuppressive regimen (tacrolimus 5 mg BID, mycophenolate 1500 mg BID) with close monitoring of trough levels to balance graft function and cancer control.
+5. Monitor liver function tests and renal function at oncology visits.
+6. No new medications ordered today.
+7. Patient education on sun protection, self‑skin exam, and to alert provider of any new lesions or changes.
+Follow‑up: Coordinate oncology referral; schedule imaging; continue regular primary care follow‑up with focus on transplant status and metabolic control.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No active symptoms from skin lesion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>142/78</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>O2_sat</td><td>97%</td></tr><tr><td>Temp</td><td>36.9</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>1.8 cm irregular pigmented nodule at right upper back</li><li>Ulceration with satellite lesions</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Punch biopsy of back lesion</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Histology: nodular melanoma, Clark IV, Breslow depth 3.2 mm, ulcerated, high mitotic index</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>None yet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span><span class="pill">Suspected hepatic metastases</span><span class="pill">Primary melanoma on right upper back</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 20 U nightly</li><li>Lisinopril 20 mg daily</li><li>Tacrolimus 5 mg BID</li><li>Mycophenolate 1500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Fair, freckled skin</li><li>History of a growing back mole over 15 years</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A full skin exam identified a 1.8 cm dark irregular nodule on the right upper back with satellite lesions and ulceration. A punch biopsy was performed, and histopathology confirmed nodular melanoma (Clark IV, Breslow 3.2 mm, ulcerated, high mitotic rate). The dermatologist discussed the diagnosis with the patient and recommended formal referral to oncology for systemic therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-02-01</h3><div class="visit-meta">Oncology | Reason: Initiate targeted therapy for metastatic melanoma</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiate targeted therapy for patient with BRAF mutation.
+
+History of Present Illness: 58‑year‑old male with known metastatic melanoma harboring a BRAF V600E mutation presents for initiation of dabrafenib/trametinib therapy. He reports ongoing RUQ discomfort and fatigue that have persisted despite prior symptomatic management. Past medical history notable for diabetes mellitus, hypertension, obesity, cirrhosis (Child‑Pugh B), COPD, and chronic immunosuppression with tacrolimus and mycophenolate following organ transplant. He has been on dabrafenib 50 mg BID and trametinib 0.5 mg QD as a hold‑and‑wait approach, but no definitive systemic therapy was given prior due to cirrhosis-related dose constraints.
+
+Physical Examination: BP 138/79 mmHg, HR 92 bpm, O2 sat 95% RA, Temp 37.1 °C. Mild RUQ tenderness to palpation, no jaundice, clear lungs, normal heart sounds.
+
+Labs: Tacrolimus trough 5 ng/mL, ALT 170 U/L, AST 140 U/L, total bilirubin 3.8 mg/dL, INR 1.6, albumin 2.9 g/dL, WBC 13,200/mm³.
+
+Assessment:
+1. Metastatic melanoma with BRAF V600E mutation – systemic disease active.
+2. Elevated liver enzymes likely multifactorial: underlying cirrhosis, tacrolimus toxicity (trough 5 ng/mL within target but close to upper limit for hepatic impairment), and potential early drug‑induced hepatotoxicity from dabrafenib/trametinib.
+3. Persistent RUQ discomfort secondary to tumor burden and hepatic dysfunction.
+
+Plan:
+• Initiate dabrafenib 50 mg BID and trametinib 0.5 mg QD with reduced starting dose per cirrhosis protocol.
+• Reduce tacrolimus to 2.5 mg BID to prevent further hepatic injury; monitor trough weekly.
+• Continue metformin 2000 mg daily, insulin glargine 20 U nightly, lisinopril 20 mg daily, mycophenolate 1500 mg BID.
+• Prescribe topical hydrocortisone 1% cream for mild pruritus.
+• Education: adherence to dosing schedule, avoid hepatotoxic OTC meds, recognize rash, hepatotoxicity signs, and when to seek care.
+• Labs: CMP, LFTs, CBC, tacrolimus trough – repeat weekly until stable, then biweekly.
+• Monitor for signs of bleeding, ascites, encephalopathy.
+• Coordinate with hepatology for ongoing liver disease management and assess candidacy for dose escalation.
+• In 2 weeks return for labs and clinical reassessment; if transaminases &gt;5× ULN or bilirubin &gt;2× baseline, hold dabrafenib/trametinib.
+
+Patient verbalized understanding and consent.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent RUQ discomfort</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/79</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>O2_sat</td><td>95%</td></tr><tr><td>Temp</td><td>37.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RUQ mild tenderness</li><li>No jaundice</li><li>Normal lung exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Tacrolimus trough level</li><li>CMP</li><li>LFT panel</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Tacrolimus trough 5 ng/mL</li><li>ALT 170 U/L</li><li>AST 140 U/L</li><li>Total bilirubin 3.8 mg/dL</li><li>INR 1.6</li><li>Albumin 2.9 g/dL</li><li>WBC 13,200/mm³</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Start dabrafenib 50 mg BID</li><li>Start trametinib 0.5 mg QD</li><li>Reduce tacrolimus to 2.5 mg BID</li><li>Topical steroid for mild itching</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>None yet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV melanoma with hepatic metastases</span><span class="pill">BRAF V600E mutation</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 20 U nightly</li><li>Lisinopril 20 mg daily</li><li>Tacrolimus 2.5 mg BID (down from 5 mg for hepatic safety)</li><li>Mycophenolate 1500 mg BID</li><li>Dabrafenib 50 mg BID (half‑dose for liver function)</li><li>Trametinib 0.5 mg QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BRAF V600E mutation positive</li><li>Immunosuppression with tacrolimus</li><li>Cirrhotic liver disease</li><li>Recent ultrasound and CT confirming multiple hepatic metastases</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist explained the role of BRAF/MEK inhibition, the reduced starting dose due to liver impairment, and the need for close tacrolimus monitoring. Dabrafenib and trametinib were initiated at 50 mg BID and 0.5 mg daily. Tacrolimus dose was reduced to 2.5 mg BID with a goal trough of 4–5 ng/mL. The patient was advised on medication adherence, potential rash, and signs of hepatic toxicity.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Begin BRAF/MEK inhibition with careful monitoring of hepatic function and tacrolimus levels.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-02-15</h3><div class="visit-meta">Oncology | Reason: Evaluate early therapy tolerance and adjust medications</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 58‑year‑old male evaluated for early therapy tolerance of dabrafenib/trametinib and adjustment of medications.
+
+History: Patient notes mild fatigue, low‑grade fever, and a maculopapular rash over the trunk. Two weeks into BRAF/MEK inhibition with dabrafenib 50 mg BID and trametinib 0.5 mg QD. Co‑morbidities include DM, HTN, obesity, cirrhosis, COPD, post‑renal transplant (tacrolimus 2.5 mg BID, mycophenolate 1500 mg BID), and metastatic melanoma (BRAF V600E). Recent labs show rising transaminitis (ALT 190 U/L, AST 155 U/L), hyperbilirubinemia (4.2 mg/dL), INR 1.7, and mild leukocytosis (13,500 /mm³). Tacrolimus trough was 4.5 ng/mL within therapeutic range.
+
+Physical Exam: BP 140/75 mmHg, HR 90 bpm, SpO₂ 95% RA, Temp 36.8 °C. Mild RUQ tenderness, mild peripheral edema, maculopapular rash over trunk. No acute distress.
+
+Assessment: 1) Likely drug‑induced hepatotoxicity from dabrafenib/trametinib combination superimposed on cirrhosis. Lab trends show &gt;3× ULN rise in ALT/AST, warranting close monitoring and possible hold of BRAF/MEK therapy if &gt;3× ULN persists. 2) Hypersensitivity or inflammatory rash related to BRAF/MEK inhibitors, responsive to topical corticosteroids. 3) Hyperglycemia secondary to increased insulin requirement; adjustment made.
+
+Plan:
+• Continue dabrafenib 50 mg BID and trametinib 0.5 mg QD for now.
+• Hold tacrolimus for 48 h only if ALT/AST &gt;3× ULN; otherwise continue 2.5 mg BID.
+• Start topical betamethasone dipropionate twice daily for rash; continue hydrocortisone 1% cream PRN.
+• Increase insulin glargine by 10 units nightly.
+• Repeat CMP with LFTs, CBC, and tacrolimus trough next weekly.
+• Monitor for worsening rash, fever, or abdominal pain; immediate re‑evaluation if new symptoms.
+• Continue lisinopril and metformin as tolerated.
+• Discuss potential adjustment of BRAF/MEK dosing if hepatic enzymes exceed thresholds.
+
+Follow‑up: Return in 2 weeks for repeat labs and clinical assessment. Immediate office visit or telehealth call is advised if jaundice, increasing abdominal girth, or persistent fever develops.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild fatigue</span><span class="pill">Low‑grade fever</span><span class="pill">Maculopapular rash over trunk</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/75</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>O2_sat</td><td>95%</td></tr><tr><td>Temp</td><td>36.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Maculopapular rash over trunk</li><li>MUQ RUQ tenderness</li><li>Mild peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CMP with LFTs</li><li>CBC</li><li>Tacrolimus trough level</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ALT 190 U/L</li><li>AST 155 U/L</li><li>Total bilirubin 4.2 mg/dL</li><li>INR 1.7</li><li>Tacrolimus trough 4.5 ng/mL</li><li>WBC 13,500/mm³</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue dabrafenib 50 mg BID</li><li>Continue trametinib 0.5 mg QD</li><li>Topical betamethasone dipropionate</li><li>Increase insulin glargine by 10 U/day</li><li>Hold tacrolimus for 48 h if ALT/AST &gt;3× ULN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reports mild improvement of rash on topical steroids; fatigue remains, but overall tolerating therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV melanoma – hepatic metastases</span><span class="pill">BRAF V600E mutation</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 20 U nightly</li><li>Lisinopril 20 mg daily</li><li>Tacrolimus 2.5 mg BID</li><li>Mycophenolate 1500 mg BID</li><li>Dabrafenib 50 mg BID</li><li>Trametinib 0.5 mg QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Two weeks of dabrafenib/trametinib</li><li>Tacrolimus dose 2.5 mg BID with goal trough 4–5 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist examined the patient’s mild maculopapular rash, low‑grade fever, and mild fatigue. LFTs were rechecked and trended upward. The tacrolimus trough remained within range. The plan was to continue the current BRAF/MEK dosing, hold tacrolimus for 48 h only if liver enzymes exceed 3× ULN, and start topical corticosteroids for the rash. The patient’s insulin dosage was increased 10 U/day to help control rising glucose levels.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early therapy is tolerated but liver function is rising; continue close monitoring.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-03-20</h3><div class="visit-meta">Emergency Medicine | Reason: Acute hepatic decompensation and encephalopathy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">MR H. presented to the ED with acute confusion, diaphoresis, abdominal distension and a right‑hand tremor. He was diaphoretic, disoriented to time and place, with grade II hepatic encephalopathy as per West Haven criteria. He had a 1‑day history of worsening abdominal pain and nausea with vomiting. He had been on dabrafenib/trametinib for metastatic melanoma and had held tacrolimus 48 h prior to presentation. He denied recent alcohol intake.\n\n**Vital Signs**\nBP 112/68 mmHg, HR 98 bpm, SpO₂ 96% RA, Temp 36.6°C.\n\n**Physical Examination**\n- General: alert, confused, mild restlessness.\n- HEENT: scleral icterus.\n- Abdomen: marked distension, shifting dullness, tense ascites, mild tenderness RUQ.\n- Extremities: no JVD, mild peripheral edema.\n- Neurologic: tremor of right hand, no focal deficits.\n- Skin: no rashes noted.\n\n**Labs** (all within 12 h of arrival)\n- ALT 310 U/L, AST 250 U/L, total bilirubin 5.5 mg/dL, INR 2.3, albumin 2.4 g/dL\n- Serum creatinine 1.5 mg/dL (baseline 0.8–1.0), Na 136 mmol/L. WBC 11,000/mm³, BMP normal aside from creatinine.\n- Lactate 1.9 mmol/L.\n\n**Imaging**\n- CT head negative for hemorrhage.\n- Abdominal US: ascites, no hepatic vein thrombosis.\n\n**Assessment**\n1. Acute‑on‑chronic liver failure secondary to drug‑induced hepatotoxicity (dabrafenib/trametinib) in the context of underlying cirrhosis.\n2. Hepatic encephalopathy grade II.\n3. Likely spontaneous bacterial peritonitis (SBP) given new ascites, leukocytosis, and elevated CRP in setting of decompensation.\n4. Early acute kidney injury, possibly hepatorenal syndrome type 1.\n5. Contributing factors: withdrawal of tacrolimus, mild hyponatremia, recent steroid use for COPD exacerbation.\n\n**Plan**\n- Continue lactulose 20 g PO q8h (increase to continuous infusion after day 2 to maintain ammonia &lt;50 µg/dL).\n- Initiate high‑dose IV albumin 1.5 g/kg on day 1, repeat 1.5 g/kg on day 3, then 20 g daily if stable.\n- Start ceftriaxone 1 g IV q12h for presumed SBP; repeat paracentesis with cell count after 48 h to assess response.\n- Hold dabrafenib/trametinib and tacrolimus until liver enzymes normalize; tacrolimus re‑introduced only when AST/ALT &lt; 3× ULN and INR &lt;1.5.\n- Continue spironolactone 100 mg PO q24h with amiloride 50 mg PO q24h for ascites management.\n- Maintain NPO; resume clear liquids once encephalopathy resolves.\n- Daily neurologic assessment; check ammonia levels every 12 h.\n- Monitor CBC, CMP, and lactate twice daily; adjust antibiotics if cultures grow.\n- Nephrology to monitor creatinine, manage fluid balance, and reassess tacrolimus dose.\n- Transplant team involved for evaluation given progressive liver failure.\n- Oncology to be consulted once hepatic function improves for potential red‑start of targeted therapy.\n- Educate patient and family on signs of worsening encephalopathy (irritability, agitation) and ascites (pain, swelling).\n- Discharge planning: once encephalopathy resolved, INR&lt;1.4, creatinine &lt;1.3, and stable albumin, consider transfer to inpatient rehab or home care with close hepatology follow‑up.\n\nThe patient was observed for 6 hours in the ED; confusion improves with lactulose and IV fluids, abdominal pain decreases. He was transferred to the hepatology floor for continued management.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Abdominal pain</span><span class="pill">Confusion</span><span class="pill">Vomiting</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>112/68</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>O2_sat</td><td>96%</td></tr><tr><td>Temp</td><td>36.6</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Abdominal distension with shifting dullness</li><li>Tremor of the right hand</li><li>Confusion (grade II)</li><li>Mild jaundice</li><li>Ascites</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>LFT panel</li><li>INR</li><li>Serum creatinine</li><li>BMP</li><li>Lactate</li><li>CT head</li><li>Abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ALT 310 U/L</li><li>AST 250 U/L</li><li>Total bilirubin 5.5 mg/dL</li><li>INR 2.3</li><li>Albumin 2.4 g/dL</li><li>Serum creatinine 1.5 mg/dL</li><li>Na 136 mmol/L</li><li>WBC 11,000/mm³</li><li>Abdominal ultrasound: ascites, no hepatic vein thrombosis</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lactulose 20 g TID orally</li><li>Spironolactone 100 mg / Amiloride 50 mg daily</li><li>Hold dabrafenib &amp; trametinib</li><li>Hold tacrolimus</li><li>IV albumin 20 g</li><li>IV fluids to maintain euvolemia</li><li>Antibiotics (ceftriaxone 1 g IV Q12h) for presumptive spontaneous bacterial peritonitis</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Confusion improved slightly with lactulose; abdominal pain decreased; overall hepatic function remained deteriorating.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV melanoma – hepatic metastases</span><span class="pill">BRAF V600E mutation</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 30 U nightly</li><li>Lisinopril 20 mg daily</li><li>Tacrolimus 0 mg BID (held)</li><li>Mycophenolate 1500 mg BID</li><li>Dabrafenib 50 mg BID (held)</li><li>Trametinib 0.5 mg QD (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing dabrafenib/trametinib therapy</li><li>Tacrolimus held 48 h prior to presentation</li><li>Recent mild hyponatremia (Sodium 136 mmol/L)</li><li>COPD exacerbation on oral steroids previously</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. H. arrived confused and diaphoretic with abdominal distention and a tremor of the right hand. An urgent CT head was negative for bleed; abdominal exam showed pronounced ascites. Labs revealed marked elevation of liver enzymes and worsening coagulopathy, confirming acute‑on‑chronic liver failure. He was admitted to the hepatology service, initiated lactulose 20 g orally TID to treat encephalopathy, spironolactone 100 mg/amiloride 50 mg for ascites, and held all systemic anticancer agents. Tacrolimus was withheld. Continuous lactulose was started after the second day of admission to maintain a low ammonia level. The patient was kept NPO and started on IV fluids and albumin infusion. The nephrology team was consulted to monitor rising creatinine and adjust tacrolimus later.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute-on-chronic liver failure precipitated by targeted therapy; systemic therapy temporarily withheld to allow hepatic recovery.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-04-10</h3><div class="visit-meta">Oncology | Reason: Resumption of therapy after hepatic recovery</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Resumption of systemic therapy following hepatic recovery.
+
+History of Present Illness:
+The patient is a 58‑year‑old male with metastatic melanoma harboring a BRAF V600E mutation, currently on dabrafenib 37.5 mg BID and trametinib 0.375 mg QD after a 4‑week interruption due to hepatic failure. A routine CT abdomen performed today shows progression of the dominant hepatic lesion from 4.2 cm to 5.1 cm while other lesions remain stable. The patient reports persistent fatigue and mild right‑upper‑quadrant (RUQ) discomfort. He also notes a recent rise in fasting glucose to 220 mg/dL and post‑prandial glucose to 310 mg/dL. He had a recent 2‑week course of oral prednisone 30 mg for a COPD flare, which likely contributed to hyperglycemia.
+
+Past Medical History: Type 2 diabetes mellitus, hypertension, obesity, chronic liver disease, COPD, kidney transplant, chronic immunosuppression with tacrolimus 5 mg BID and mycophenolate 1500 mg BID, amiodarone 150 mg daily, long‑term topical steroids.
+
+Medications (current): Dabrafenib 37.5 mg BID, Trametinib 0.375 mg QD, Tacrolimus 3 mg BID (titrated to maintain trough 4–5 ng/mL), Insulin glargine 35 U nightly, Biphasic insulin 4 U SC pre‑breakfast, Amlodipine 5 mg daily, Lisinopril 20 mg daily, Metformin 2000 mg daily, Amiodarone 150 mg daily, Mycophenolate 1500 mg BID, Spironolactone 100 mg daily, Amiloride 50 mg daily, Lactulose 20 g PO q8h, topical hydrocortisone 1% cream QD PRN, topical betamethasone dipropionate BID PRN.
+
+Physical Examination:
+BP 132/80 mmHg, HR 88/min, O₂ sat 96% RA at rest, Temp 36.7°C. Mild RUQ tenderness to palpation; no hepatomegaly, ascites, or jaundice noted.
+
+Laboratory/Imaging:
+CBC: WBC 3.8 k/µL, Hgb 12.3 g/dL, Hct 36%. CMP: ALT 210 U/L, AST 190 U/L, Bilirubin 4.8 mg/dL, INR 1.8, Albumin 2.9 g/dL. Tacrolimus trough 5.2 ng/mL. HbA1c 8.8%. Fast glucose 220 mg/dL, post‑prandial 310 mg/dL.
+CT abdomen: liver lesion 5.1 cm, others stable.
+
+Assessment:
+1. Progressive hepatic metastasis (BRAF V600E) – active disease despite therapy.
+2. Drug‑induced hepatotoxicity: Dabrafenib/trametinib and tacrolimus overlapping, both known to elevate LFTs. Current LFTs slightly elevated but within 3× ULN.
+3. Poorly controlled diabetes mellitus – exacerbated by prednisone course and insulin adjustments.
+4. Chronic liver disease with portal hypertension – no ascites or encephalopathy today.
+5. Hypertension – partially controlled with lisinopril and newly added amlodipine.
+
+Plan:
+- Continue current dabrafenib 37.5 mg BID and trametinib 0.375 mg QD as liver tolerance permits.
+- Maintain tacrolimus at 3 mg BID; goal trough 4–5 ng/mL.
+- Tight glucose control: Increase basal insulin glargine to 40 U nightly; uptitrate biphasic insulin as needed; consider adding a GLP‑1 RA if renal function allows.
+- Add low‑dose amlodipine 5 mg daily to help control BP noted at 132/80.
+- Repeat CMP, CBC, tacrolimus trough, and fasting glucose in 2 weeks; if LFTs &gt;3× ULN or INR &gt;2.0, suspend dabrafenib/trametinib.
+- Schedule follow‑up with hepatology in 2 weeks to reassess hepatic function and consider alternative systemic therapy (checkpoint inhibitor only when hepatic function improves).
+- Continue lactulose and diuretics (spironolactone/amiloride) for ascites prophylaxis; monitor sodium and creatinine.
+- Educate patient on dietary carbohydrate moderation and glucometer logging; advise against high‑dose OTC glucocorticoids.
+- Discuss potential dose reduction of dabrafenib/trametinib or switch to monotherapy if hepatic toxicity worsens.
+
+Follow‑up: Oncology appointment in 2 weeks; labs to be drawn prior to visit. Hepatology consult within same timeframe if indicated.
+
+Signature: ____________________
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue</span><span class="pill">Mild RUQ discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/80</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>O2_sat</td><td>96%</td></tr><tr><td>Temp</td><td>36.7</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RUQ mild tenderness</li><li>No ascites</li><li>No jaundice</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen</li><li>CMP</li><li>CBC</li><li>Tacrolimus trough level</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: lesion 5.1 cm, others stable</li><li>ALT 210 U/L</li><li>AST 190 U/L</li><li>Bilirubin 4.8 mg/dL</li><li>INR 1.8</li><li>Albumin 2.9 g/dL</li><li>WBC 3.8k/mm³</li><li>Tacrolimus trough 5.2 ng/mL</li><li>HbA1c 8.8%</li><li>Fasting glucose 220 mg/dL</li><li>Postprandial glucose 310 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Dabrafenib 37.5 mg BID</li><li>Trametinib 0.375 mg QD</li><li>Tacrolimus 3 mg BID</li><li>Insulin glargine 35 U nightly</li><li>Biphasic insulin 4 U SC pre‑breakfast</li><li>Amlodipine 5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in energy, but persistent daytime fatigue and rising blood glucose.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV melanoma – hepatic metastases</span><span class="pill">BRAF V600E mutation</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily</li><li>Insulin glargine 30 U nightly</li><li>Lisinopril 20 mg daily</li><li>Amiodarone 150 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recovery from acute hepatic failure; LFTs improved</li><li>Resumed dabrafenib/trametinib at reduced doses</li><li>Recent COPD flare treated with oral steroids 30 mg prednisone for 2 weeks</li><li>Hypertension poorly controlled on lisinopril alone</li><li>Elevated glucose levels post-steroid</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncology team reviewed a follow‑up CT abdomen showing one lesion enlarged from 4.2 cm to 5.1 cm while others remained stable. The patient reported intermittent fatigue and a recent rise in fasting glucose to 220 mg/dL. Dabrafenib was re‑initiated at 37.5 mg BID, and trametinib at 0.375 mg QD. Tacrolimus was resumed at 3 mg BID, aiming for trough 4–5 ng/mL. The patient was advised on tight glucose control; basal‑bolus insulin was adjusted, and a low‑dose amlodipine 5 mg daily was added for blood pressure. The team discussed the potential benefit versus risk of a checkpoint inhibitor but decided to postpone until hepatic function improved further.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Partial response on CT but slight tumor progression; systemic therapy continued at lower dose to minimize hepatic toxicity.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-05-01</h3><div class="visit-meta">ICU/Hepatology | Reason: Recurrent encephalopathy and acute kidney injury</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Recurrent encephalopathy and acute kidney injury.
+
+History of Present Illness: Mr. H. was admitted to the ICU today with Grade III hepatic encephalopathy, refractory ascites, and rising creatinine. He reports confusion, episodic vomiting, and peripheral edema. He had a recent ICU stay for hepatic derangement and was on a high‑dose prednisone taper for a COPD flare 2 weeks ago. Tacrolimus was held earlier this month and cyclosporine 150 mg BID was initiated. Despite lactulose therapy and diuretic escalation, mental status has only modestly improved.
+
+Past Medical History: Stage IV melanoma with hepatic metastases (BRAF V600E), type 2 diabetes mellitus, hypertension, obesity, chronic liver disease (cirrhosis), COPD, kidney transplant with chronic immunosuppression (prednisone, cyclosporine), suspected acute rejection.
+
+Medications: Lactulose continuous infusion, spironolactone 100 mg/amiloride 50 mg daily, ceftriaxone 2 g IV q12h, high‑dose prednisone 60 mg daily, cyclosporine 150 mg BID, insulin glargine 35 U nightly, IV albumin 20 g q12h.
+
+Allergies: NKDA.
+
+Physical Examination: Alert but disoriented, grade III hepatic encephalopathy, severe ascites with shifting dullness, peripheral pitting edema, fine tremor in both upper extremities. Cardiac exam normal. Lungs clear.
+
+Labs: ALT 420 U/L, AST 350 U/L, total bilirubin 6.7 mg/dL, INR 3.2, albumin 2.5 g/dL, creatinine 2.0 mg/dL, Na 134 mmol/L, platelets 70k, WBC 2.8k. Ascitic fluid analysis: WBC 150/µL, cultures negative. Blood cultures negative.
+
+Assessment: Acute on chronic liver failure with recurrent hepatic encephalopathy, refractory ascites, and acute kidney injury likely multifactorial (hepatorenal syndrome, nephrotoxic immunosuppression, high-dose steroids). Suspicion of secondary bacterial peritonitis remains low given negative cultures; empiric ceftriaxone continues. Ongoing high-dose steroids to mitigate rejection risk from recent tacrolimus hold. Liver function markedly impaired (INR 3.2, high transaminases). Consideration for palliative transition given poor prognosis.
+
+Plan:
+1. Continue lactulose infusion; titrate to achieve 2–3 soft stools/day.
+2. Maintain spironolactone/amiloride; add furosemide 40 mg q12h if safe.
+3. Continue ceftriaxone 2 g IV q12h; repeat cultures in 48 hrs.
+4. Maintain high‑dose prednisone 60 mg daily; re‑evaluate taper when stability achieved.
+5. Continue cyclosporine 150 mg BID; monitor trough levels daily.
+6. Continue IV albumin 20 g q12h for 2 days; adjust per response.
+7. Monitor INR daily; consider vitamin K 10 mg IV if trending higher.
+8. Daily labs: CBC, CMP, LFT panel, INR; creatinine trending.
+9. Urine output monitoring; consider renal support if oliguria.
+10. Discuss hospice/palliative care consult today; patient/family decision regarding transition.
+11. Continue anti‑diabetic management with insulin glargine; monitor glucose.
+12. Re‑evaluate BRAF/MEK therapy status; hold until hepatic recovery.
+
+Follow‑up Recommendations: Daily ICU rounds; if mental status improves to grade I-II, consider transfer to hepatology step‑down unit. palliative care consult within 24 hours. Repeat abdominal ultrasound in 48 hrs to assess ascites. Continue high‑dose steroids for up to 7 days pending transplant or rejection assessment. If creatinine worsens or diuretic response poor, consider peritoneal dialysis.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Confusion</span><span class="pill">Vomiting</span><span class="pill">Edema</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/70</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>O2_sat</td><td>97%</td></tr><tr><td>Temp</td><td>36.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Grade III hepatic encephalopathy</li><li>Severe abdominal ascites with shifting dullness</li><li>Peripheral edema</li><li>Tremor in both upper extremities</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>LFT panel</li><li>INR</li><li>Serum creatinine</li><li>Serum sodium</li><li>CBC</li><li>Abdominal ultrasound</li><li>Ascitic fluid analysis</li><li>Blood cultures</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ALT 420 U/L</li><li>AST 350 U/L</li><li>Total bilirubin 6.7 mg/dL</li><li>INR 3.2</li><li>Albumin 2.5 g/dL</li><li>Serum creatinine 2.0 mg/dL</li><li>Sodium 134 mmol/L</li><li>CBC: platelets 70k, WBC 2.8k</li><li>Ascitic fluid: WBC 150/µL, cultures negative</li><li>Negative blood cultures</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lactulose 20 g q4h enteral (now continuous infusion)</li><li>Spironolactone 100 mg/Amiloride 50 mg daily</li><li>Ceftriaxone 2 g IV q12h</li><li>High‑dose prednisone 60 mg daily</li><li>Cyclosporine 150 mg BID</li><li>Insulin glargine 35 U nightly</li><li>IV albumin 20 g q12h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Consciousness improved modestly after lactulose; liver enzymes remain high.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV melanoma – hepatic metastases</span><span class="pill">BRAF V600E mutation</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 2000 mg daily (discontinued due to renal decline)</li><li>Insulin glargine 35 U nightly</li><li>Lisinopril 20 mg daily</li><li>Cyclosporine 150 mg BID</li><li>Prednisone taper 15 mg daily</li><li>Spironolactone 100 mg / Amiloride 50 mg</li><li>Dabrafenib &amp; trametinib held</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Acute hepatic derangement with prior ICU stay</li><li>Recent high-dosage prednisone for COPD flare (60 mg daily, tapered 2 weeks ago)</li><li>Tacrolimus holding and recent switch to cyclosporine 150 mg BID</li><li>Persistent CKD with rising creatinine</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. H. was admitted to the ICU with Grade 3 hepatic encephalopathy, increasing ascites, and rising creatinine. A continuous lactulose infusion was started, and diuretics were escalated to manage refractory ascites. Empiric ceftriaxone 2 g IV q12h was administered for possible spontaneous bacterial peritonitis. The nephrology team initiated high‑dose prednisone 60 mg daily to reduce rejection risk after a recent tacrolimus hold. Hepatology continued to monitor bilirubin, INR, and liver enzymes daily. The oncology team paused systemic agents and scheduled an oncologic review for possible palliative transition.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Recurrent hepatic decompensation with oliguria; systemic therapy held; high-dose steroids in place to protect graft.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2023-06-12</h3><div class="visit-meta">Palliative Care | Reason: Transition to hospice and comfort care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transition to hospice and comfort care.
+
+History of Present Illness:
+Mr. H is a 58‑year‑old male with a complex history of end‑stage chronic liver disease post‑kidney transplant, malignant melanoma, and COPD. He has progressed to irreversible multi‑organ failure. In the last visit he was noted in a state of encephalopathy and refractory ascites. He reports fatigue, mild back pain, and mild breathlessness. He is currently receiving a 50 mcg/h fentanyl patch and Oxycodone 20 mg PRN for breakthrough pain. Antiemetics and lactulose are continued for encephalopathy. No new acute symptoms are present.
+
+Past Medical History:
+• Diabetes mellitus (insulin glargine 30 U nightly, basal‑bolus PRN)
+• Hypertension (lisinopril 20 mg daily)
+• Obesity
+• Chronic liver disease: cirrhosis, acute liver failure, hepatic encephalopathy, spontaneous bacterial peritonitis, acute kidney injury, hepatorenal syndrome
+• Chronic kidney disease (creatinine 3.0 mg/dL)
+• Chronic obstructive pulmonary disease
+• Primary malignant melanoma
+
+Medications:
+- Insulin glargine 30 U nightly
+- Insulin basal‑bolus PRN
+- Lisinopril 20 mg daily
+- Fentanyl patch 50 mcg/h
+- Oxycodone 20 mg PRN
+- Ondansetron 4 mg PO bid
+- Spironolactone 100 mg / Amiloride 50 mg as needed
+- Lactulose 20 g TID
+
+Physical Exam:
+General: Appears uncomfortable but alert and oriented.
+Vital Signs: BP 100/60 mmHg, HR 78 bpm, O₂ sat 94 % RA, Temp 36.4 °C.
+HEENT: Pale conjunctiva.
+Neck: No jugular venous distension.
+Chest: Softer breath sounds in lower lobes; minimal crackles; no wheezes.
+Heart: Regular rate and rhythm; normal S1 S2.
+Abdomen: Mild distension from ascites; soft, non‑tender; no organomegaly.
+Extremities: No peripheral edema noted.
+Neurologic: Tremor of hands; mild confusion consistent with hepatic encephalopathy.
+
+Assessment:
+1. End‑stage liver disease with refractory ascites and hepatic encephalopathy.
+2. Hepatorenal syndrome with stage 3 acute kidney injury.
+3. Pain from possible skeletal metastases/back pain, controlled with fentanyl/oxycodone.
+4. COPD with mild chronic breathlessness.
+
+Plan:
+- Continue comfort‑focused care with current medication regimen.
+- Maintain fentanyl patch 50 mcg/h; add Oxycodone 20 mg PRN for breakthrough pain.
+- Keep lactulose 20 g TID for encephalopathy.
+- Continue ondansetron 4 mg PO bid.
+- Continue insulin glargine and basal‑bolus as per current glucose logs.
+- Continue spironolactone/amiloride as needed for ascites.
+- Ensure adequate oral hydration; avoid nephrotoxic agents.
+- Home nursing to provide daily DVT prophylaxis and assist with feeding.
+- Weekly hospice visits to reassess comfort status and adjust medications.
+- Family counseling regarding end‑of‑life decisions; reinforce goals of care.
+
+Follow‑up Recommendations:
+- Monitor pain control; adjust opioid dosing if breakthrough pain &gt;2 times per day.
+- Monitor mental status; if altered seizures, consider increasing lactulose.
+- Continue blood glucose checks and adjust insulin in the next visit.
+- Continue routine labs only if clinical status changes; otherwise no diagnostic tests.
+- Family to contact hospice team immediately if sudden worsening of breathlessness, severe abdominal pain, or signs of bleeding.
+- Encourage participation in comfort measures and spiritual support services.
+
+Signature: ______________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue</span><span class="pill">Back pain</span><span class="pill">Mild breathlessness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>100/60</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>O2_sat</td><td>94%</td></tr><tr><td>Temp</td><td>36.4</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild abdominal distension from ascites</li><li>Tremor of hands</li><li>Pale conjunctiva</li><li>Softer breath sounds in lower lobes</li><li>Soft, non‑tender abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 9 g/dL, WBC 3.2k, Platelets 60k</li><li>CMP: ALT 380 U/L, AST 320 U/L, Total bilirubin 10.2 mg/dL, INR 4.1, Albumin 2.3 g/dL</li><li>Serum creatinine 3.0 mg/dL</li><li>Sodium 130 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Fentanyl patch 50 mcg/h</li><li>Oxycodone 20 mg PRN</li><li>Ondansetron 4 mg PO bid</li><li>Lactulose 20 g TID</li><li>Spironolactone 100 mg / Amiloride 50 mg as needed</li><li>Insulin changes per BG monitoring</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports mild relief of pain and remains sedated, with increased comfort.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV melanoma – hepatic metastases</span><span class="pill">BRAF V600E mutation</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease – cirrhosis</span><span class="pill">COPD</span><span class="pill">Kidney transplant</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 30 U nightly</li><li>Insulin basal‑bolus PRN</li><li>Lisinopril 20 mg daily</li><li>Fentanyl patch 50 mcg/h</li><li>Oxycodone 20 mg PRN</li><li>Ondansetron 4 mg PO bid</li><li>Spironolactone 100 mg / Amiloride 50 mg (as needed)</li><li>Lactulose 20 g TID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Terminal hepatic failure, multiple organ dysfunction</li><li>Discontinued systemic anticancer agents</li><li>High-dose prednisone tapered</li><li>Cyclosporine stopped after 10 days</li><li>Chronic kidney disease with creatinine 3.0 mg/dL</li><li>Ongoing insulin regimen for diabetes</li><li>History of COPD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The hospice team visited Mr. H. at home with his wife and son. Comfort measures were prioritized; a fentanyl patch was applied and oxycodone PRN for breakthrough pain. Antiemetics and lactulose were continued for encephalopathy. The team coordinated with home nursing for DVT prophylaxis and assisted with feeding. Family counseling was provided regarding end‑of‑life decisions. No further diagnostic testing was ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>End-stage hepatic failure, terminal phase; hospice care ongoing.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 58</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Chronic liver disease (cirrhosis)</span><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Primary malignant melanoma</span><span class="pill">Acute liver failure</span><span class="pill">Hepatic encephalopathy</span><span class="pill">Spontaneous bacterial peritonitis</span><span class="pill">Acute kidney injury</span><span class="pill">Hepatorenal syndrome</span><span class="pill">Kidney transplant</span><span class="pill">Chronic kidney disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 30 U nightly</li><li>Insulin basal‑bolus PRN</li><li>Lisinopril 20 mg daily</li><li>Fentanyl patch 50 mcg/h</li><li>Oxycodone 20 mg PRN</li><li>Ondansetron 4 mg PO bid</li><li>Spironolactone 100 mg / Amiloride 50 mg as needed</li><li>Lactulose 20 g TID</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>58‑year‑old male with 4‑week history of dull RUQ pain, fatigue, low‑grade fever, and 10‑lb weight loss. Physical exam noted mild RUQ tenderness, palpable hepatic edge, mild ascites. Labs revealed transaminitis (ALT 112, AST 98), cholestasis (ALP 210), hyperbilirubinemia (3.2 mg/dL), prolonged INR (1.5), hypoalbuminemia (2.8 g/dL), leukocytosis (13,000/mm³). Abdominal ultrasound performed today. Basal insulin glargine 10 units at bedtime added; metformin and lisinopril continued. Hepatology referral scheduled within 2 weeks. Follow‑up PCP in 4 weeks; labs to repeat every 6 weeks. Monitor ascites, weight, glucose logs.</li><li>Visit 2 (2023‑01‑12, Hepatology): Reviewed hepatic ultrasound showing multiple hypoechoic hepatic lesions up to 2.5 cm and mild ascites. RUQ pain and fatigue continued. Labs unchanged from prior visit. Ordered contrast‑enhanced CT abdomen/pancreasus and percutaneous liver biopsy of predominant lesion. Adjusted insulin glargine to 20 U nightly, lisinopril to 20 mg daily; continued Metformin 2000 mg daily, Tacrolimus 5 mg BID and Mycophenolate 1500 mg BID. Tacrolimus trough levels to be monitored weekly, labs repeated in 2 weeks. Follow‑up in 4 weeks.</li><li>Visit 3 (2023‑01‑19, Dermatology): Evaluation of a 1.8 cm irregular dark pigmented nodule on the right upper back with ulceration and satellite lesions. Punch biopsy performed showing malignant melanoma with high mitotic index. No new medications prescribed. Referred to oncology for staging imaging and treatment planning; surgical excision and sentinel node biopsy considered; systemic therapy options discussed. Tacrolimus and mycophenolate continued with monitoring of trough levels; liver and kidney function monitoring planned. Patient educated on sun protection and self‑skin exam.</li><li>Visit 4 (2023‑02‑01, Oncology): Initiated dabrafenib 50 mg BID and trametinib 0.5 mg QD for metastatic melanoma with BRAF V600E mutation. RUQ discomfort persisted; labs showed elevated ALT 170, AST 140, total bilirubin 3.8, INR 1.6, albumin 2.9, WBC 13,200. Tacrolimus reduced to 2.5 mg BID to mitigate hepatic injury; metformin, insulin glargine, lisinopril, mycophenolate continued. Topical hydrocortisone 1% cream prescribed for pruritus. Weekly tacrolimus trough and liver function monitoring; return in 2 weeks for reassessment.</li><li>Visit 5 (2023‑02‑15, Oncology): Patient reported mild fatigue, low‑grade fever, and a maculopapular rash over the trunk. Physical exam noted mild RUQ tenderness, peripheral edema, and rash. Labs showed rising transaminitis (ALT 190, AST 155), hyperbilirubinemia 4.2 mg/dL, INR 1.7, mild leukocytosis 13,500. Tacrolimus trough 4.5 ng/mL. Continued dabrafenib 50 mg BID and trametinib 0.5 mg QD; tacrolimus withheld only if ALT/AST &gt;3× ULN for &gt;48 h. Started topical betamethasone dipropionate BID for rash; increased insulin glargine by 10 units nightly. Repeat CMP, CBC, tacrolimus trough weekly and follow‑up in 2 weeks.</li><li>Visit 6 (2023‑03‑20, Emergency Medicine): Patient presented with acute confusion, diaphoresis, abdominal distension, right‑hand tremor; diagnosed with grade II hepatic encephalopathy, ascites, elevated LFTs, INR 2.3, creatinine 1.5. Initiated lactulose PO q8h, started IV albumin 1.5 g/kg day 1 and day 3, initiated ceftriaxone 1 g IV q12h, withheld dabrafenib/trametinib and tacrolimus, started spironolactone 100 mg q24h and amiloride 50 mg q24h; transferred to hepatology floor.</li><li>Visit 7 (2023‑04‑10, Oncology): Patient resumed dabrafenib 37.5 mg BID and trametinib 0.375 mg QD after hepatic recovery. Imaging showed progression of liver metastasis to 5.1 cm. Labs revealed ALT 210, AST 190, bilirubin 4.8 mg/dL, INR 1.8. Hyperglycemia noted (fasting 220, post‑prandial 310). Adjusted therapy: increased insulin glargine to 40 U nightly, added biphasic insulin, amlodipine 5 mg daily. Continuing tacrolimus 3 mg BID, amiodarone, mycophenolate, diuretics, lactulose, topical steroids. Repeat labs in 2 weeks; hepatology consult scheduled.</li><li>Visit 8 (2023‑05‑01, ICU/Hepatology): Recurrent grade III hepatic encephalopathy, refractory ascites, and rising creatinine. Physical exam noted severe ascites with shifting dullness, peripheral edema, fine tremor. Labs: ALT 420 U/L, AST 350 U/L, total bilirubin 6.7 mg/dL, INR 3.2, albumin 2.5 g/dL, creatinine 2.0 mg/dL, Na 134 mmol/L, platelets 70k, WBC 2.8k; ascitic fluid WBC 150/µL, cultures negative. Therapy: Lactulose infusion, spironolactone 100 mg/amiloride 50 mg daily, ceftriaxone 2 g IV q12h, high‑dose prednisone 60 mg daily, cyclosporine 150 mg BID, insulin glargine 35 U nightly, IV albumin 20 g q12h. Plan: ICU monitoring with daily labs, consider hospice/palliative care, hold BRAF/MEK therapy until hepatic recovery.</li><li>Visit 9 (2023‑06‑12, Palliative Care): 58‑year‑old male with end‑stage liver disease, refractory ascites, hepatic encephalopathy, and renal dysfunction. Pain managed with fentanyl patch 50 mcg/h and oxycodone PRN. Ondansetron 4 mg PO bid for nausea. Lactulose 20 g TID continued for encephalopathy. Insulin glargine 30 U nightly and basal‑bolus PRN to control diabetes. Lisinopril 20 mg daily for hypertension. Spironolactone/amiloride as needed for ascites. No new acute symptoms. Comfort‑focused hospice care initiated with weekly visits; routine labs deferred unless clinical status changes.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

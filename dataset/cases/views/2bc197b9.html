@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 2bc197b9</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 2bc197b9</h1><div class="subtitle">Stage IV Left Lower Outer Quadrant Breast Cancer with Regional Axillary and Abdominal Lymph Node Metastasis | Female, 55</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: BRCA1 mutation, Prior chest radiation exposure, Obesity, Hypertension, Type 2 Diabetes</div><div class="meta-line">Risk Factors: Postmenopausal status, Family history of breast or ovarian cancer, Late first pregnancy or nulliparity, Hormone replacement therapy, Alcohol consumption, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">When Marjorie first noticed the lump, it was a small, hard nodule in the lower outer quadrant of her left breast, about ...</span></summary><div class="section-body"><p>When Marjorie first noticed the lump, it was a small, hard nodule in the lower outer quadrant of her left breast, about the size of a pea. It had been there for weeks but had grown noticeably over the last month, giving her a sense of unease that settled into a quiet dread each morning as she stared at the mirror. The mass was painless, but she did feel a lingering fullness when she slept on her left side. She also noticed occasional dull, throbbing tenderness in the same area, which she attributed to her menopause‑related changes.</p><p>**Weeks 0‑6 – Initial Presentation and Evaluation**</p><p>Marjorie went to her primary‑care physician, who performed a focused breast examination. The firm, mobile nodule was noted; her mammogram was immediately ordered. A week later, the mammogram revealed a 3‑cm irregular hypoechoic mass with spiculated margins in the left lower outer quadrant, consistent with a suspicious lesion (BI-RADS 5). She was referred to an oncologic breast surgeon for diagnostic surgery.</p><p>Before the biopsy, pre‑operative blood tests were drawn. Her complete blood count was normal, but her fasting glucose was 190 mg/dL (HbA1c 8.3 %), and serum albumin was mildly low, reflecting her chronic obesity (BMI 32.6) and type 2 diabetes. Her blood pressure, measured on both arms, was 145/96 mm Hg. The oncologist noted her prior chest irradiation for Hodgkin’s lymphoma at age 23, which had left her with a high risk for cardiotoxicity from future anthracycline therapy.</p><p>A core‑needle biopsy was performed under local anesthesia. Pathology reported invasive ductal carcinoma, triple‑negative, with high proliferation index (Ki‑67 35 %). Her germline panel had already revealed a deleterious BRCA1 mutation, a fact that would shape treatment choices.</p><p>**Month 4 – Staging Work‑up**</p><p>Having confirmed malignancy, the multidisciplinary team scheduled an MRI of her breasts and a PET/CT scan for staging. Imaging showed an enlarged left axillary node measuring 3 cm with increased FDG uptake and, unexpectedly, several hypermetabolic nodes along the left abdominal wall near the left iliac lymphatics; no distant bone disease was noted. A needle biopsy of one of the abdominal nodes confirmed metastatic carcinoma.</p><p>The tumor was staged as T3 N3 M1 (Stage IV) with regional axillary and abdominal nodal metastasis. Her triple‑negative status and BRCA1 mutation made her a candidate for a platinum–based regimen, but the oncologist also consulted a medical oncologist who advocated for a combination of carboplatin plus paclitaxel, supplemented by a PARP inhibitor (olaparib) as maintenance once disease burden was reduced. Because of her prior chest radiation, the team decided to avoid any further anthracycline use to minimize cardiotoxic risk.</p><p>**Month 5 – First Cycle of Chemotherapy**</p><p>Marjorie began her first cycle of carboplatin (AUC 4) and weekly paclitaxel (80 mg/m²). The infusion clinic was a whirlwind of IV pumps and glucose checks. She reported nausea despite prophylactic ondansetron and mild neuropathic tingling in her feet, a known side effect of paclitaxel. Her blood pressure rose to 160/100 mm Hg during the infusion; her antihypertensive medications were adjusted to add a low‑dose lisinopril. Diabetes control remained a constant challenge; after the first dose, her blood glucose spiked to 280 mg/dL, prompting an oral insulin regimen.</p><p>Six weeks later, after completing six cycles, a restaging PET/CT showed partial remission: the primary breast mass was reduced to 1.8 cm, and the axillary node decreased to 1.5 cm. The abdominal nodes, however, had only modest shrinkage to 2.4 cm, and new faint uptake appeared in the right supraclavicular node. Her performance status had dipped from 0 to 1, with noticeable fatigue and occasional dyspnea after minimal exertion, likely exacerbated by her hypertension and obesity. The oncologist noted that the disease had not responded optimally to the initial regimen, and the pattern of progression suggested an aggressive biology consistent with BRCA‑associated triple‑negative disease.</p><p>**Month 8 – Transition to Maintenance and PARP Inhibition**</p><p>The team switched Marjorie to a maintenance regimen of olaparib 300 mg orally twice daily. She tolerated the drug well, with only mild nausea and transient fatigue. Her blood work remained stable; her albumin did not fall further, and her creatinine stayed within normal limits, an important safeguard in a patient with prior radiation exposure and diabetes.</p><p>However, her diabetes management remained suboptimal. After the last chemotherapy cycle, an HbA1c was recorded at 9.1 %. She was referred to a dietitian who, with the support of a diabetes educator, intensified her dietary coaching, focusing on low‑glycemic index foods and weight‑loss strategies. Yet, the demands of a rigorous medication schedule and the lingering side effects of chemotherapy made adherence difficult.</p><p>**Month 12 – Disease Worsening**</p><p>Despite olaparib, follow‑up imaging disclosed new areas of FDG uptake within the left lung base, representing pulmonary metastases, and a new hypermetabolic focus in the pelvic bones, signifying skeletal involvement. On her appointment, Marjorie complained of sharp chest pains, shortness of breath, and a persistent cough—symptoms that could have been dismissed as post‑chemotherapy sequelae or cardiovascular complications given her hypertension and prior chest radiation, but which were clearly due to metastatic spread.</p><p>The oncology team held a tumor board meeting. Options discussed included adding a platinum agent again (carboplatin‑based second line) and consideration for a clinical trial involving a combination of immune checkpoint inhibitors, though her triple‑negative status and high tumor mutational burden favored potential benefit. However, her comorbidities—particularly uncontrolled diabetes, hypertension, and prior thoracic radiation—raised concerns about cumulative toxicity.</p><p>The decision was made to proceed with a salvage carboplatin–paclitaxel regimen combined with an immunotherapy agent (pembrolizumab) as a test of synergy. Simultaneously, a cardiology consult re‑evaluated her blood pressure and started her on a combination of amlodipine and valsartan. For her diabetes, the endocrinology team introduced a GLP‑1 receptor agonist to help with both glycemic control and weight loss.</p><p>**Month 15 – Clinical Deterioration**</p><p>Three months into the salvage regimen, Marjorie reported worsening cough, new bone pain in her left hip, and increasing dyspnea on exertion. Her left lower extremity had developed a mild edema, raising concerns for possible vascular compromise. Imaging revealed progressive lymphadenopathy in the supraclavicular area and new osteolytic lesions in the sacrum and left femoral head. Her performance status had fallen to 2; she required a wheelchair for mobility.</p><p>Her side effect profile had worsened: neuropathic pain had intensified, leading to intermittent use of opioid analgesics; nausea, though manageable, interfered with her appetite; and the combination of cis‑platin–taxane and immunotherapy had induced a subclinical pneumonitis detected on chest imaging, now clinically manifesting as cough and dyspnea.</p><p>Cardiology noted a new sinus bradycardia and a left ventricular ejection fraction of 45 % (baseline 55 % before any cancer therapy). The cardiologist, given her prior radiation, had increased her beta‑blocker dose. Endocrinology observed worsening glycemic control, with HbA1c spiking to 11 %; the GLP‑1 agonist dosing was adjusted, and metformin was reintroduced.</p><p>The oncologist faced with an aggressive disease that had now spread to the lungs and bones, considered the diminishing return of the current systemic therapy. The patient and her family discussed goals of care, and a decision was made to shift to a palliative care approach, focusing on symptom control and quality of life.</p><p>**Month 18 – Palliative Care and Final Weeks**</p><p>Marjorie entered hospice care six weeks before her passing. The palliative team prioritized her comfort: low‑dose opioid analgesics balanced to manage pain without excessive sedation; anti‑emetic therapy for nausea; and psychological support, acknowledging the emotional toll that her disease trajectory and multiple comorbidities had taken. Her daughter remembered Marjorie laughing over a glass of her favorite wine during a visit—an echo of a life that had been marked by resilience in the face of a relentless disease course.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-01-01</h3><div class="visit-meta">Primary Care Physician | Reason: Breast lump assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Small hard, painless breast lump.
+
+History of Present Illness: A 55‑year‑old woman with known BRCA1 mutation, prior chest radiation (Hodgkin’s lymphoma at age 23), obesity (BMI 32.6), hypertension, and type 2 diabetes presents with a new 1.5 cm hard, mobile nodule in the left lower outer quadrant of the breast. She reports sensation of fullness when lying on the left side and occasional dull, throbbing tenderness attributed to menopausal changes. No prior breast disease noted.
+
+Past Medical History: BRCA1 mutation carrier; prior chest radiation; obesity; hypertension; type 2 diabetes; postmenopausal; former smoker; alcohol use.
+
+Medications: None.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for breast lump, fullness, and intermittent dull pain. Denies fever, night sweats, weight loss.
+
+Vital Signs: BP 138/88 mm Hg, HR 78 bpm, Temp 98.6 °F.
+
+Physical Exam:
+• Breast: Left lower outer quadrant: 1.5 cm firm, mobile, non‑tender nodule. No skin changes.
+• Axillae: No palpable lymphadenopathy.
+• General: Overweight, BMI 32.6, vitals stable.
+
+Assessment:
+Patient is at high risk for breast cancer due to BRCA1 mutation and prior chest radiation. The physical findings (firm, mobile nodule) are concerning but not diagnostic. Differential includes:
+1. Invasive breast carcinoma (especially radiation‑associated), 2. Atypical ductal hyperplasia, 3. Benign fibroadenoma, 4. Radiation‑induced sarcoma, 5. Breast cyst.
+
+Plan:
+1. Order diagnostic mammogram of the left breast (done).
+2. Await imaging results; if suspicious/indeterminate, proceed with breast ultrasound and possible core needle biopsy.
+3. Refer for oncology consultation upon completion of imaging.
+4. Educate patient on breast self‑inspection, diet, and exercise to reduce risk.
+5. Continue management of hypertension and diabetes; reinforce lifestyle modifications.
+6. No medications initiated at this visit.
+
+Follow‑up:
+• Review mammogram results in 3–4 weeks or sooner if new symptoms develop.
+• Schedule oncology assessment after imaging.
+• Routine return visit in 6 months for breast cancer screening per high‑risk guideline.
+ • Patient instructed to call clinic if pain worsens, new lumps, or other concerning symptoms.
+
+Signed: ______________________
+Date: 2025-01-01</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">small hard lump in left lower outer breast</span><span class="pill">felt fullness when lying on left side</span><span class="pill">occasionally dull, throbbing tenderness in left breast</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>138/88</td></tr><tr><td>Heart rate</td><td>78 bpm</td></tr><tr><td>Temperature</td><td>98.6 °F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: firm, mobile nodule, 1.5 cm in left lower outer quadrant</li><li>Axillae: no palpable lymphadenopathy</li><li>General: overweight, BMI 32.6</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Mammogram of the left breast</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>obesity (BMI 32.6)</li><li>type 2 diabetes</li><li>hypertension</li><li>prior chest radiation for Hodgkin’s lymphoma at age 23</li><li>BRCA1 mutation status known</li><li>postmenopausal</li><li>history of smoking and alcohol use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient presents with a small, hard, painless nodule in the left lower outer quadrant. She reports fullness when lying on that side and occasional dull tenderness, attributing it to menopausal changes. After a brief focused breast exam, a firm, mobile nodule is noted. The clinician orders a diagnostic mammogram. Patient is advised on follow‑up and referred to the oncology service for further evaluation once imaging results are available.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of a suspicious breast nodule; no prior diagnosis of cancer.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-01-07</h3><div class="visit-meta">Breast Surgeon | Reason: Diagnostic core‑needle biopsy of breast mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Diagnostic core‑needle biopsy of left breast mass.
+
+**History of Present Illness:** 55‑year‑old female with BRCA1 mutation and a history of chest radiation presents for core‑needle biopsy of a firm, mobile 1.5‑cm nodule in the left lower outer quadrant, noted to be painless on self‑palpation. She reports occasional fullness when lying on her left side. No prior treatments have been initiated for this mass.
+
+**Past Medical History:** BRCA1 germline mutation; prior chest irradiation for thoracic malignancy (date unknown) → increased risk of secondary breast cancer; obesity (BMI &gt;30); hypertension; type 2 diabetes mellitus (poorly controlled with fasting glucose 190 mg/dL and HbA1c 8.3%).
+
+**Medications:** None at time of visit.
+
+**Allergies:** NKDA.
+
+**Vitals:** BP 145/96 mmHg, HR 82 bpm, Temp 98.7°F.
+
+**Review of Systems:** Positive for breast lump; negative for skin irritation, nipple discharge, axillary swelling, systemic symptoms.
+
+**Physical Examination:**
+- Breast: Firm, mobile 1.5 cm nodule in the left lower outer quadrant, no overlying skin changes, no erythema or peau d’orange.
+- Axillae: No palpable lymphadenopathy bilaterally.
+
+**Procedures Performed:** Local anesthetic infiltration (lidocaine 1%) and ultrasound‑guided core‑needle biopsy of the nodular lesion. Multiple (4–6) core samples obtained and sent for histopathology; specimen labeling confirmed.
+
+**Laboratory Results:**
+- CBC: within normal limits.
+- CMP: serum albumin low at 3.5 g/dL.
+- Fasting glucose: 190 mg/dL.
+- HbA1c: 8.3%.
+
+**Assessment:** Suspicious breast mass in high‑risk patient with BRCA1 mutation and prior chest irradiation. Differential diagnosis includes: 1. Invasive ductal carcinoma; 2. Ductal carcinoma in situ; 3. Radiation‑induced malignancy; 4. Benign fibroadenoma or fat necrosis; 5. Phyllodes tumor.
+
+**Plan:**
+1. Await pathology reports; will be communicated to oncology team immediately.
+2. Schedule a multidisciplinary tumor board meeting to discuss definitive management, including consideration of mastectomy versus breast‑conserving therapy.
+3. Coordinate with primary care/Endocrinology for aggressive diabetes management: review diet, lifestyle, and initiate or adjust anti‑diabetic therapy.
+4. Refer hypertension management to primary care if blood pressure remains uncontrolled.
+5. Educate patient on breast self‑inspection and lifestyle modifications.
+6. Post‑procedure wound assessment next visit.
+7. Encourage patient to report any new breast changes, pain, or systemic symptoms immediately.
+
+**Disposition:** Patient tolerated procedure well, discharged with clear wound care instructions, and an appointment scheduled for pathology review in 5–7 days.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">previously noted breast lump</span><span class="pill">occasional fullness when lying on left side</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>145/96</td></tr><tr><td>Heart rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>98.7 °F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: firm, mobile nodule, palpated in same location</li><li>Axillae: no palpable lymphadenopathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Fasting glucose</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>CMP: serum albumin low at 3.5 g/dL</li><li>Fasting glucose: 190 mg/dL</li><li>HbA1c: 8.3%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Local anesthesia</li><li>Core‑needle biopsy</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>obesity</li><li>type 2 diabetes</li><li>hypertension</li><li>prior chest radiation</li><li>BRCA1 mutation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient returns to the surgery clinic for a core‑needle biopsy under local anesthesia. Blood work is drawn pre‑operatively (CBC, CMP, fasting glucose). The biopsy returns invasive ductal carcinoma, triple‑negative, Ki‑67 35%. The pathology suggests high proliferation. The surgeon documents the surgical procedure, instructs the patient to return for follow‑up, and communicates results to the oncology team.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosis of stage III/IV triple‑negative breast cancer confirmed. Patient remains at risk for systemic spread given BRCA1 mutation and prior radiation exposure.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-02-15</h3><div class="visit-meta">Medical Oncology | Reason: Staging imaging work‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Staging imaging work‑up for known breast carcinoma.
+
+History of Present Illness:
+- 55‑year‑old woman with BRCA1 mutation and history of left breast carcinoma diagnosed 1.5 months ago.  Prior chest RT completed 5 years ago.  She has been followed by primary care for HTN, T2DM, obesity, and low serum albumin.
+- She has no new symptoms.  She reports no pain, numbness, or constitutional complaints.
+
+Physical Examination (Feb 15, 2025):
+- Breast: residual 1.5‑cm palpable, firm mass in left lower outer quadrant; skin and nipple normal.
+- Axilla: single 3‑cm enlarged left axillary node palpable.
+- Abdomen: soft, non‑tender, no organomegaly.
+
+Imaging &amp; Pathology:
+- Breast MRI: irregular 3.0 × 2.5 cm mass.
+- Whole‑body PET/CT: hypermetabolic left axillary node (3 cm) and hypermetabolic abdominal nodes along left iliac chain (3 cm).  No other lesions.
+- Core needle biopsy of axillary node: atypical malignant cells consistent with metastatic invasive ductal carcinoma (HR‑negative, HER2‑positive status pending).
+
+Assessment:
+1. Stage IV breast carcinoma with visceral nodal metastases (cT2N1M1).  BRCA1 mutation positive.
+2. Comorbidities: obesity, T2DM (HbA1c 8.3%), HTN, low serum albumin (3.5 g/dL).  Prior chest radiation limits anthracycline use.
+
+Plan:
+- Initiate first‑line platinum‑based therapy: Carboplatin 200 mg/m2 IV q3 weeks + weekly Paclitaxel 80 mg/m2 IV.  Premedication with dexamethasone, ondansetron, and antihistamine for Taxol.
+- Due to BRCA1 mutation, plan maintenance Olaparib 300 mg PO BID after 4–6 cycles of chemo if disease stabilizes.
+- Supportive care:
+  * Monitor CBC, CMP, renal function prior to each cycle.
+  * Adjust carboplatin dosing for GFR &lt;60 mL/min.
+  * Control hyperglycemia with diet/exercise; consider adding metformin if tolerated.
+  * Nutritional counseling to address hypoalbuminemia.
+- Follow‑up:
+  * Next oncology visit in 2 weeks for cycle 1 initiation.
+  * Repeat CBC, CMP before each chemotherapy cycle.
+  * Interim imaging (CT chest/abdomen/pelvis) after 3 cycles to evaluate response.
+  * Discuss referral to a dietitian and diabetes educator.
+
+Disposition: Patient understanding and verbal consent obtained for therapy plan.
+
+Signature: Dr. X
+
+
+Symptomatology and vital status are stable. Imaging confirms metastatic disease and justifies platinum‑based regimen.  Maintenance Olaparib is appropriate given BRCA1 status.  Patient’s comorbidities and prior RT have guided chemo selection.
+</div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>142/94</td></tr><tr><td>Heart rate</td><td>80 bpm</td></tr><tr><td>Temperature</td><td>98.6 °F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: residual 1.5 cm left lower outer mass</li><li>Axillae: single enlarged left node palpable</li><li>Abdomen: soft, non‑tender</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Breast MRI</li><li>PET/CT scan</li><li>Node core needle biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Breast MRI: 3×2.5 cm irregular mass</li><li>PET/CT: left axillary 3 cm node, abdominal nodes 3 cm along left iliac chain</li><li>Node biopsy: metastatic breast carcinoma</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Invasive ductal carcinoma (triple‑negative)</span><span class="pill">BRCA1 mutation</span><span class="pill">obesity</span><span class="pill">type 2 diabetes</span><span class="pill">hypertension</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>breast cancer diagnosis confirmed</li><li>prior chest radiation</li><li>obesity</li><li>type 2 diabetes</li><li>hypertension</li><li>BRCA1 mutation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient undergoes breast MRI and whole‑body PET/CT to stage disease. Imaging reveals a 3‑cm left axillary node and hypermetabolic abdominal nodes along the left iliac chain. Biopsy of one abdominal node confirms metastatic carcinoma. The oncologist and multidisciplinary team confirm Stage IV T3 N3 M1 disease. Because of prior chest radiation, anthracyclines are deferred. A platinum‑based regimen with carboplatin and weekly paclitaxel is recommended as first‑line therapy, with planned maintenance olaparib.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed metastatic spread to axillary and abdominal nodes. Patient qualifies for carboplatin–paclitaxel with olaparib maintenance.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-03-10</h3><div class="visit-meta">Infusion Oncology | Reason: First cycle of carboplatin–paclitaxel chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: First cycle of carboplatin–paclitaxel chemotherapy; review of infusion response and supportive care.
+
+History: 55‑year‑old female with known HER2‑negative breast carcinoma (BRCA1 mutation), prior chest radiation, obesity (BMI 32), T2DM, hypertension, low serum albumin (3.5 g/dL). Receiving first cycle carboplatin (200 mg/m², AUC 4) IV and paclitaxel (80 mg/m²) weekly.
+
+Current medications: insulin glargine 15 units nightly (upgraded to 20 units after this cycle), lisinopril 10 mg PO daily for BP, ondansetron 8 mg IV prophylaxis.
+
+During infusion: BP spiked to 160/100; HR 88 bpm; temp 98.4 °F. Post‑infusion: patient reports nausea &amp; mild vomiting despite ondansetron, mild peripheral tingling of feet. No allergic or life‑threatening events.
+
+Assessment: Acute hyperglycemia during chemotherapy; manageable with insulin dose adjustment. Mild chemotherapy‑associated nausea; ondansetron not fully controlling. Peripheral neuropathy – likely early paclitaxel neurotoxicity. BP elevation – may be stress or fluid changes; lisinopril added.
+
+Plan:
+1) Continue carboplatin‑paclitaxel cycle per protocol.
+2) Increase insulin glargine to 20 units nightly; monitor capillary BG 4–6 times/day; consider basal‑bolus adjustments.
+3) Add metformin 500 mg bid if glycemic goals not met (check renal function).
+4) For nausea, add dexamethasone 8 mg IV q24h with chemo or ondansetron 4 mg PO q8h as rescue.
+5) Monitor neuropathy – repeat exam in 2 weeks; consider dose modification if grade 2+ neuropathy.
+6) Continue lisinopril 10 mg PO daily; recheck BP pre‑infusion next visit.
+7) Educate patient on glucose monitoring, medication timing, hydration.
+8) Repeat CBC, CMP, and fasting glucose 1 week post‑dose.
+
+Follow‑up: Return for next chemotherapy infusion in 2 weeks; contact nurse if extreme hyperglycemia, persistent nausea/vomiting, or worsening neuropathy. Continue routine oncology visits per schedule.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">nausea with vomiting despite ondansetron</span><span class="pill">mild tingling in feet</span><span class="pill">blood pressure spiking during infusion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>160/100</td></tr><tr><td>Heart rate</td><td>88 bpm</td></tr><tr><td>Temperature</td><td>98.4 °F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: palpable 1.5 cm mass</li><li>Axillae: single enlarged node</li><li>General: no edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC before infusion</li><li>CMP before infusion</li><li>Blood glucose before infusion</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>CMP: normal</li><li>Blood glucose: 280 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Carboplatin AUC 4 IV</li><li>Paclitaxel 80 mg/m² IV</li><li>Ondansetron 8 mg IV pre‑infusion</li><li>Lisinopril 10 mg PO</li><li>Insulin glargine 15 units nightly (upgraded to 20 units post‑infusion)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV breast cancer (T3 N3 M1)</span><span class="pill">prior chest radiation</span><span class="pill">obesity</span><span class="pill">type 2 diabetes</span><span class="pill">hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 15 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>prior chest radiation</li><li>obesity</li><li>type 2 diabetes</li><li>hypertension</li><li>BRCA1 mutation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient receives her first cycle of carboplatin AUC 4 and weekly paclitaxel 80 mg/m². Pre‑infusion monitoring includes BP, HR, and glucose checks. A low‑dose lisinopril (10 mg orally) is added for elevated BP. Ondansetron is given prophylactically. Blood glucose spikes to 280 mg/dL during infusion and insulin dose is increased to 20 units nightly thereafter. Post‑infusion, the patient reports nausea and mild neuropathic tingling. No serious adverse events occur.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First cycle tolerated; hypertension addressed; diabetes control remains subclinical.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-06-01</h3><div class="visit-meta">Medical Oncology | Reason: Restaging after six cycles of chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Restaging evaluation after six cycles of carboplatin‑paclitaxel.
+
+History of Present Illness: The patient is a 55‑year‑old woman with known Stage IV triple‑negative breast carcinoma with metastatic disease to axillary, abdominal, and newly identified right supraclavicular nodes. She has completed six cycles of carboplatin 200 mg/m² IV q3 weeks and paclitaxel 80 mg/m² IV weekly. She presents for routine restaging. She reports persistent fatigue, exertional dyspnea, and a performance status of 1.
+
+Review of Systems:
+• General: fatigue, no fever.
+• Respiratory: exertional dyspnea, no orthopnea.
+• Cardiovascular: mild hypertension, controlled on lisinopril.
+• Endocrine: uncontrolled diabetes (HbA1c 9.1%).
+
+Physical Examination:
+• Vitals: BP 150/90 mmHg, HR 85 bpm, Temp 98.5 °F.
+• Breast: residual 1.8 cm left breast mass, no skin changes.
+• Axillae: palpable 1.5 cm left axillary node.
+• Neck: palpable right supraclavicular node (size not measured, but new focal uptake on imaging).
+• Abdomen: mild fullness, no hepatosplenomegaly.
+
+Past Medical History:
+• Stage IV triple‑negative breast carcinoma, metastatic disease.
+• Prior chest radiation.
+• BRCA1 mutation.
+• Obesity, hypertension, type 2 diabetes.
+• Low serum albumin.
+
+Medications:
+• Lisinopril 10 mg PO daily.
+• Insulin glargine 20 units nightly.
+
+Allergies: NKDA.
+
+Investigations:
+• PET/CT restaging: partial remission – primary mass 1.8 cm, axillary node 1.5 cm, abdominal nodes 2.4 cm; new right supraclavicular node with focal uptake.
+• CBC: normal.
+• CMP: normal.
+• HbA1c: 9.1%.
+
+Assessment:
+1. Residual metastatic breast cancer with partial response to current chemotherapy but suboptimal reduction in abdominal nodes and new right supraclavicular node uptake.
+2. Uncontrolled diabetes (HbA1c 9.1%), likely contributing to fatigue.
+3. Stable hypertension under current regimen.
+
+Plan:
+• Continue carboplatin‑paclitaxel for remaining 2 cycles (cycles 7–8) with pre‑infusion CBC and CMP.
+• Re‑evaluate disease burden 2 weeks post‑last chemotherapy dose; consider initiating Olaparib 300 mg PO BID as maintenance once tumor burden is sufficiently reduced and toxicity profile acceptable.
+• Initiate metformin 500 mg PO BID to improve glycemic control; monitor fasting glucose and adjust insulin dosing accordingly.
+• Refer to endocrinology for comprehensive diabetes management.
+• Continue lisinopril 10 mg PO daily; monitor BP closely prior to each infusion.
+• Schedule repeat PET/CT in 3 months to assess for progression, especially of abdominal and supraclavicular nodes.
+• Advise patient to report new or worsening fatigue, dyspnea, or any signs of infection.
+• Follow up in oncology clinic in 2 weeks for next infusion and review of labs.
+
+Disposition: Patient educated on medication changes, dietary advice for diabetes, and importance of adherence to follow‑up visits.
+
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">exertional dyspnea</span><span class="pill">performance status 1</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>150/90</td></tr><tr><td>Heart rate</td><td>85 bpm</td></tr><tr><td>Temperature</td><td>98.5 °F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: reduced 1.8 cm mass</li><li>Axillae: palpable 1.5 cm node</li><li>Abdomen: mild fullness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PET/CT restaging</li><li>CBC</li><li>CMP</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PET/CT: partial remission as above</li><li>HbA1c: 9.1%</li><li>CBC: normal</li><li>CMP: normal</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV triple‑negative breast cancer</span><span class="pill">prior chest radiation</span><span class="pill">obesity</span><span class="pill">type 2 diabetes</span><span class="pill">hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Insulin glargine 20 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>six completed cycles of carboplatin–paclitaxel</li><li>persistent hypertension</li><li>ongoing diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient undergoes a restaging PET/CT scan. Results show partial remission: primary breast mass down to 1.8 cm, axillary node to 1.5 cm, abdominal nodes to 2.4 cm. A new focal uptake in the right supraclavicular node is seen. Lab work shows stable counts but HbA1c at 9.1%. The oncologist discusses the suboptimal response in the abdominal nodes and the possibility of adjusting the regimen to incorporate a PARP inhibitor for maintenance once disease burden is reduced. Hypertension remains controlled with lisinopril.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Partial remission achieved but resistance apparent in abdominal nodes; consideration for maintenance therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-08-15</h3><div class="visit-meta">Medical Oncology | Reason: Initiation of olaparib maintenance and diabetes management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Medical Oncology – Visit 6 – 2025-08-15\n\nChief Complaint: Initiation of olaparib maintenance and diabetes management.\n\nHistory of Present Illness: 55‑year‑old female with metastatic breast cancer (BRCA1 mutation) currently receiving carboplatin 200 mg/m2 IV every 3 weeks and paclitaxel 80 mg/m2 IV weekly. She was started on olaparib 300 mg PO BID on 2025-08-15. She reports only mild nausea and transient fatigue since initiation. A dietitian reviewed her meal plan and a diabetes educator discussed carbohydrate intake. Current labs show HbA1c 9.1 %, serum albumin 4.0 g/dL, creatinine 0.9 mg/dL. Insulin glargine remains at 15 units nightly and metformin 1000 mg BID.\n\nPhysical Examination: BP 140/85 mmHg, HR 82 bpm, Temp 98.4 °F. Breast exam reveals a 1.8 cm mass in the left breast; axillary node 1.5 cm. Weight 240 lb.\n\nAssessment: Ongoing metastatic breast cancer under platinum‑taxane regimen with planned maintenance olaparib. Mild olaparib‑related nausea and fatigue. Poor glycemic control (HbA1c 9.1 %) despite dual anti‑diabetic therapy. No acute organ dysfunction noted.\n\nPlan: Continue carboplatin and paclitaxel per protocol, olaparib 300 mg PO BID, insulin glargine 15 units nightly, metformin 1000 mg BID, lisinopril 10 mg PO daily, ondansetron 8 mg IV pre‑infusion, dexamethasone 8 mg IV q24 h. Order and monitor CBC, CMP, HbA1c, LFTs at each cycle. Encourage dietitian follow‑up for glycemic control and manage nausea with PRN ondansetron. Adjust insulin dose if fasting glucose &gt;200 mg/dL or HbA1c &gt;9 % at next visit. Schedule periodic imaging (PET/CT) to assess response per oncology protocol. Follow‑up in oncology clinic in 2 weeks for next cycle, and in 3‑4 weeks for labs and insulin adjustment.\n\nSignature:\n[Provider Name], MD\nMedical Oncology</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild nausea</span><span class="pill">transient fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>140/85</td></tr><tr><td>Heart rate</td><td>82 bpm</td></tr><tr><td>Temperature</td><td>98.4 °F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: 1.8 cm mass</li><li>Axillae: 1.5 cm node</li><li>General: weight 240 lb</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>HbA1c</li><li>Liver function tests</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>CMP: normal</li><li>HbA1c: 9.1%</li><li>LFTs: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Olaparib 300 mg BID oral</li><li>Dietitian consultation</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV triple‑negative breast cancer</span><span class="pill">BRCA1 mutation</span><span class="pill">prior chest radiation</span><span class="pill">obesity</span><span class="pill">type 2 diabetes</span><span class="pill">hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Insulin glargine 15 units nightly</li><li>Metformin 1000 mg BID</li><li>Olaparib 300 mg BID oral</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>ongoing partial remission</li><li>BRCA1 mutation</li><li>persistent hyperglycemia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Olaparib therapy is started at 300 mg BID. The patient reports only mild nausea and transient fatigue. A dietitian reviews her meal plan and a diabetes educator discusses carb intake. Current labs show HbA1c 9.1%, serum albumin normal at 4.0 g/dL, creatinine 0.9 mg/dL. The oncology team plans periodic imaging to monitor disease response. Insulin glargine dosage remains 15 units nightly, metformin is continued at 1000 mg BID.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable disease with partial remission; ongoing surveillance planned.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-12-01</h3><div class="visit-meta">Medical Oncology | Reason: New lung and bone metastases – plan salvage therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Newly diagnosed bilateral pulmonary nodules and bone metastases. 
+
+History of Present Illness: 55‑year‑old female with metastatic breast carcinoma (HR‑negative, HER2‑positive, BRCA1 mutation) presents with sharp chest pain, shortness of breath, and persistent cough. She reports worsening dyspnea over the past week despite stable performance status (WHO 1). She has known prior chest radiation, hypertension, type 2 diabetes, obesity, and ongoing olaparib therapy. 
+
+Review of Systems: Positive for chest pain, dyspnea, cough; negative for fever, chills, weight loss, night sweats. 
+
+Physical Exam: Normal vitals except BP 140/90. Mild crackles at both lung bases. Left breast: 1.8 cm mass. Left axilla: 1.5 cm node. Mild left hip pain. Cardiac: S1/S2 normal, no murmurs. 
+
+Assessment: 1) Metastatic breast carcinoma with new bilateral pulmonary metastases and pelvic bone lesions. 2) LVEF 45% likely due to cumulative cardiotoxicity from prior chest radiation and platinum‑taxane exposure. 3) Uncontrolled diabetes (HbA1c 10.2 %); suboptimal glycemic control on metformin 1000 mg BID and insulin glargine 15 units nightly. 4) Hypertension on lisinopril 10 mg, amlodipine 5 mg, and valsartan 80 mg. 5) Potential immune‑related pneumonitis pending pembrolizumab initiation. 
+
+Plan: 
+1. Initiate second‑line salvage therapy: Carboplatin AUC4 IV q3 weeks, Paclitaxel 80 mg/m² IV weekly, plus Pembrolizumab 200 mg IV every 3 weeks (total 3 cycles before re‑evaluation). 
+2. Continue Olaparib 300 mg PO BID (maintenance). 
+3. Intensify diabetes management: add GLP‑1 agonist semaglutide 0.25 mg SC BID (already prescribed), maintain metformin 1000 mg BID, adjust insulin glargine to 20 units nightly on a sliding scale; counsel on dietary changes. 
+4. Optimize antihypertensives: Continue lisinopril 10 mg, amlodipine 5 mg, and valsartan 80 mg; monitor BP after each infusion. 
+5. Cardiac monitoring: Repeat echocardiogram in 4 weeks; consider cardiology consult if LVEF &lt;40 % or symptoms develop. 
+6. Prophylaxis for nausea/neuropathy: Dexamethasone 8 mg IV q24h prior to each carboplatin cycle, ondansetron 8 mg IV q12h if needed. 
+7. Educate patient on immune‑related adverse events: signs of pneumonitis (dyspnea, cough, fever), colitis, thyroiditis, hepatitis. Advise prompt reporting of worsening respiratory symptoms. 
+8. Labs: CBC, CMP, creatinine clearance before each cycle; HbA1c every 3 months; CRP/ESR monthly. 
+9. Follow‑up: On‑site oncology visit in 2 weeks for infusion; phone triage if new symptoms. Repeat chest CT and skeletal survey in 3 months to assess response. 
+10. Refer to nutrition counseling and diabetes education; schedule cardiology follow‑up in 1 month.
+
+Disposition: Patient tolerated first cycle well; provided written plan and contact information for urgent concerns.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sharp chest pain</span><span class="pill">shortness of breath</span><span class="pill">persistent cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>140/90</td></tr><tr><td>Heart rate</td><td>95 bpm</td></tr><tr><td>Temperature</td><td>98.6 °F</td></tr><tr><td>Respiratory rate</td><td>20/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: 1.8 cm mass</li><li>Axillae: 1.5 cm node</li><li>Pulmonary exam: mild crackles at base</li><li>Musculoskeletal: mild left hip pain</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT</li><li>Skeletal survey</li><li>CBC</li><li>CMP</li><li>HbA1c</li><li>Echocardiogram</li><li>CRP/ESR</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest CT: new 1 cm bilateral nodules at lung base</li><li>Skeletal survey: hypermetabolic lesions in pelvis</li><li>CBC: normal</li><li>CMP: normal</li><li>HbA1c: 10.2%</li><li>Echocardiogram: LVEF 45%</li><li>CRP: 4 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Carboplatin AUC 4 IV</li><li>Paclitaxel 80 mg/m² IV</li><li>Pembrolizumab 200 mg IV</li><li>Amlodipine 5 mg daily</li><li>Valsartan 80 mg daily</li><li>Semaglutide 0.25 mg SC BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV triple‑negative breast cancer with newly documented pulmonary and osseous metastases</span><span class="pill">BRCA1 mutation</span><span class="pill">obesity</span><span class="pill">type 2 diabetes</span><span class="pill">hypertension</span><span class="pill">prior chest radiation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Amlodipine 5 mg daily</li><li>Valsartan 80 mg daily</li><li>Metformin 1000 mg BID</li><li>Olaparib 300 mg BID oral</li><li>Semaglutide 0.25 mg SC BID (GLP‑1 agonist)</li><li>Insulin glargine 15 units nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>prior chest radiation</li><li>hypertension</li><li>type 2 diabetes</li><li>obesity</li><li>ongoing olaparib therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>CT chest shows new bilateral pulmonary nodules consistent with metastases at the lung base. A skeletal survey identifies hypermetabolic foci in pelvic bones. The oncology team recommends salvage carboplatin–paclitaxel plus pembrolizumab for a second‑line regimen, given the patient&#x27;s high tumor mutational burden. Cardiologist re‑optimizes antihypertensive therapy with addition of amlodipine and valsartan. A full endocrine panel is run; diabetes management is intensified with a GLP‑1 agonist and metformin continuation. The patient is educated about potential immunotherapy side effects and the plan for close monitoring.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Resistant disease with lung and bone involvement; second‑line therapy initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-03-01</h3><div class="visit-meta">Palliative Care | Reason: Transition to hospice care</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 55‑year‑old female presents for transition to hospice care.
+
+History of Present Illness: The patient has stage IV triple‑negative breast cancer with diffuse pulmonary and osseous metastases, BRCA1 mutation, and a history of cumulative cardiotoxic therapy (carboplatin, paclitaxel, pembrolizumab). She reports progressive chest pain, worsening shortness of breath, a productive cough, left lower extremity edema, severe left hip bone pain, and neuropathic discomfort in her feet. She feels increasingly fatigued and reports difficulty sleeping. Imaging (CT chest) confirms extensive bilateral pulmonary infiltrates consistent with pulmonary toxicity and widespread skeletal lesions. Echocardiogram shows a reduced LVEF of 45%, indicating cardiomyopathy likely related to prior chest radiation and chemotherapy. The oncology team has determined that curative-intent therapy is no longer viable and has recommended hospice care for comfort.
+
+Past Medical History: Metastatic breast cancer, type 2 diabetes, hypertension, obesity, prior chest radiation, cardiac dysfunction, neuropathy.
+
+Medications: Metformin 1000 mg BID, Semaglutide 0.25 mg SC BID, Insulin glargine 10 units nightly, Lisinopril 10 mg daily, Amlodipine 5 mg daily, Valsartan 80 mg daily, Spironolactone 25 mg daily, Morphine sulfate 15 mg PO PRN, Ondansetron 4 mg PRN.
+
+Allergies: NKDA.
+
+Physical Exam:
+- Vitals: BP 130/80 mmHg, HR 100 bpm, Temp 98.3 °F, RR 22/min, SpO₂ 92% on 2 L NC.
+- Chest: mild basal crackles (left), wheeze.
+- Abdomen: soft, non-tender.
+- Musculoskeletal: tender left hip, left lower extremity edema.
+- Neurologic: distal paresthesias of feet.
+
+Laboratory/Imaging Results:
+- CT chest: extensive bilateral pulmonary infiltrates.
+- Skeletal survey: multiple osteolytic lesions.
+- Echocardiogram: LVEF 45%.
+- CBC: mild anemia.
+- CMP: mild hyperglycemia.
+- HbA1c: 11.0%.
+
+Assessment:
+1. Progressive metastatic breast cancer with visceral crisis and uncontrolled pain/edema.
+2. Chemotherapy‑ and radiation‑induced pulmonary toxicity (pneumonitis).
+3. Chemotherapy‑induced cardiomyopathy with reduced ejection fraction.
+4. Hyperglycemic crisis related to diabetes management in the setting of palliative care.
+5. Peripheral neuropathy from prior taxane therapy.
+
+Plan:
+- Transition patient and family to hospice care with emphasis on comfort measures.
+- Pain management: continue Morphine sulfate 15 mg PO PRN; consider low‑dose continuous subcutaneous infusion (5 mg/h) if breakthrough pain occurs.
+- Antiemetic: continue Ondansetron 4 mg PRN for nausea/vomiting.
+- Edema: continue Spironolactone 25 mg daily; add low‑dose furosemide if edema persists.
+- Oxygen: maintain 2 L nasal cannula to keep SpO₂ &gt; 92%.
+- Diabetes: hold current insulin glargine; consult endocrinology for possible temporary insulin adjustment; continue metformin 500 mg BID as tolerated.
+- Hydration: monitor for fluid status; give IV crystalloids only if clinically necessary.
+- Nutrition: refer to dietitian for high‑protein, high‑calorie support; consider enteral supplementation.
+- Psychological/social: refer to palliative psychiatry/social work for coping strategies.
+- Hospice services: arrange home hospice visits twice weekly; daily telephonic check‑in for pain and symptom assessment.
+- Follow‑up labs: CBC, CMP, HbA1c every 2 weeks (hospice laboratory). 
+- No further oncology therapy; discontinue chemotherapy and pembrolizumab.
+- Family meetings: schedule weekly multidisciplinary discussion to reassess goals and comfort needs.
+
+The patient and family have consented to the hospice plan. Hospice coordinator will be contacted to initiate home care.
+
+Signature: _____________________
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">worsening cough</span><span class="pill">bone pain in left hip</span><span class="pill">increasing dyspnea on exertion</span><span class="pill">left lower extremity edema</span><span class="pill">neuropathic pain</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood pressure</td><td>130/80</td></tr><tr><td>Heart rate</td><td>100 bpm</td></tr><tr><td>Temperature</td><td>98.3 °F</td></tr><tr><td>Respiratory rate</td><td>22/min</td></tr><tr><td>Oxygen saturation</td><td>92% on 2L NC</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast: 1.8 cm mass</li><li>Axillae: 1.5 cm node</li><li>Pulmonary: diminished breath sounds at left base, wheeze</li><li>Musculoskeletal: tender left hip, left leg edema</li><li>Neurologic: distal paresthesias in feet</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest for disease confirmation</li><li>Skeletal survey</li><li>Echocardiogram</li><li>CBC</li><li>CMP</li><li>HbA1c</li><li>Pulmonary function tests</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT chest: extensive bilateral pulmonary nodules</li><li>Skeletal survey: multiple lytic lesions</li><li>Echocardiogram: LVEF 45%</li><li>CBC: mild anemia</li><li>CMP: mild hyperglycemia</li><li>HbA1c: 11.0%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine sulfate PRN 15 mg PO</li><li>Ondansetron 4 mg PRN</li><li>Spironolactone 25 mg daily for edema</li><li>Home hospice services</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV triple‑negative breast cancer with diffuse pulmonary and osseous metastases</span><span class="pill">BRCA1 mutation</span><span class="pill">obesity</span><span class="pill">type 2 diabetes</span><span class="pill">hypertension</span><span class="pill">prior radiation</span><span class="pill">cardiac dysfunction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Semaglutide 0.25 mg SC BID</li><li>Insulin glargine 10 units nightly</li><li>Lisinopril 10 mg daily</li><li>Amlodipine 5 mg daily</li><li>Valsartan 80 mg daily</li><li>Spironolactone 25 mg daily (edema control)</li><li>Morphine sulfate 15 mg PO PRN for pain</li><li>Ondansetron 4 mg PRN for nausea</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>poly‑therapy with carboplatin, paclitaxel, pembrolizumab</li><li>pre‑existing hypertension, type 2 diabetes, and prior chest radiation</li><li>new pulmonary toxicity (pneumonitis)</li><li>recent decline in cardiac function (LVEF 45%)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presents with significant systemic decline: chest pain, shortness of breath, cough, left leg edema, bone pain, and neuropathic discomfort. Imaging confirms extensive pulmonary metastases and widespread skeletal disease. Echocardiogram shows LVEF 45% confirming cardiotoxicity. Given the cumulative toxicity of platinum, taxane, and immune checkpoint therapy, the oncology team, in collaboration with palliative specialists, recommends hospice care focusing on comfort. The patient and family discuss goals of care and opt for comfort‑oriented management: low‑dose opioid analgesia, anti‑emetics, supportive nutrition, and psychological support. The palliative team begins hospice referral, schedules home visits, and coordinates with home‑care nurses for medication administration and symptom control.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Refractory metastatic disease with significant cardiotoxicity and uncontrolled diabetes; transition to palliative care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">BRCA1 mutation</span><span class="pill">Prior chest radiation exposure</span><span class="pill">Obesity</span><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes</span><span class="pill">Low serum albumin</span><span class="pill">Breast carcinoma</span><span class="pill">Metastatic breast carcinoma</span><span class="pill">Pulmonary metastases</span><span class="pill">Bone metastases</span><span class="pill">Reduced ejection fraction (cardiotoxicity)</span><span class="pill">Pulmonary toxicity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Semaglutide 0.25 mg SC BID</li><li>Metformin 500 mg BID</li><li>Lisinopril 10 mg daily</li><li>Amlodipine 5 mg daily</li><li>Valsartan 80 mg daily</li><li>Spironolactone 25 mg daily</li><li>Morphine sulfate 15 mg PO PRN</li><li>Ondansetron 4 mg PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2025-01-01 with primary care: patient presented with a small hard painless breast lump; examination identified a 1.5‑cm firm mobile nodule in the left lower outer quadrant; no skin changes or axillary lymphadenopathy; vital signs stable. Diagnostic mammogram of the left breast performed; plan to review results in 3‑4 weeks, with potential ultrasound/biopsy and oncology referral as indicated; education on self‑inspection, diet, exercise, and continued management of hypertension and diabetes; no new medications prescribed.</li><li>Visit on 2025-01-07: Breast surgeon performed ultrasound‑guided core‑needle biopsy of a 1.5 cm mobile left breast nodule. Ultrasound and core samples were obtained and sent for histopathology. Labs: CBC normal, CMP showed low albumin 3.5 g/dL, fasting glucose 190 mg/dL, HbA1c 8.3%. BP 145/96. No medications were prescribed; plan to review pathology results in 5‑7 days and coordinate diabetes and hypertension management.</li><li>Visit on 2025-02-15 (Medical Oncology): Diagnostic imaging (MRI, PET/CT) and core needle biopsy of left axillary node demonstrated metastatic invasive ductal carcinoma (HR‑negative, HER2‑positive pending). Clinical exam noted residual left breast mass 1.5 cm, single enlarged left axillary node 3 cm, and abdominal nodes 3 cm. Initiated first‑line platinum‑based chemotherapy with Carboplatin 200 mg/m2 IV every 3 weeks and Paclitaxel 80 mg/m2 IV weekly. Planned maintenance Olaparib 300 mg PO BID after 4–6 cycles. Supportive measures: CBC/CMP monitoring, renal function assessment, glycemic control, nutritional counseling. Next oncology visit scheduled in 2 weeks.</li><li>Visit on 2025-03-10 (Infusion Oncology): First carboplatin–paclitaxel cycle administered. Patient experienced blood pressure elevation to 160/100, nausea with vomiting despite ondansetron, and mild peripheral tingling. Management included increasing insulin glargine to 20 units nightly, adding lisinopril 10 mg daily, prescribing dexamethasone 8 mg IV q24h for nausea, and planning metformin 500 mg bid if glycemic goals are not met. CBC, CMP, and blood glucose were ordered prior to infusion. Continue chemotherapy per protocol and monitor BP, glucose, and neuropathy.</li><li>Visit on 2025-06-01 with medical oncology: restaging evaluation after six cycles of carboplatin‑paclitaxel; PET/CT showed partial remission with residual 1.8‑cm left breast mass, 1.5‑cm left axillary node, 2.4‑cm abdominal nodes, and new right supraclavicular node uptake; patient reports fatigue, exertional dyspnea, performance status 1; vitals BP 150/90 mmHg; continued carboplatin‑paclitaxel for 2 more cycles; initiated metformin 500 mg PO BID and referred to endocrinology; plan to start olaparib 300 mg PO BID after further imaging; schedule repeat PET/CT in 3 months; follow up in oncology clinic in 2 weeks.</li><li>Visit on 2025-08-15 (Medical Oncology): Patient initiated olaparib maintenance 300 mg PO BID; continued carboplatin 200 mg/m2 IV every 3 weeks and paclitaxel 80 mg/m2 IV weekly; insulin glargine reduced to 15 units nightly and metformin increased to 1000 mg BID; lisinopril 10 mg daily, ondansetron 8 mg IV pre‑infusion, and dexamethasone 8 mg IV q24h continued. Mild nausea and transient fatigue noted. Labs ordered: CBC, CMP, HbA1c, LFTs. Schedule PET/CT in 3 months; continue dietitian follow‑up for diabetes and monitor blood glucose and BP.</li><li>Visit on 2025-12-01 (Medical Oncology): Patient presented with sharp chest pain, dyspnea, cough, and new bilateral pulmonary nodules with pelvic bone lesions. Physical exam: BP 140/90, mild crackles, left breast 1.8 cm, left axilla 1.5 cm, mild hip pain. Initiated salvage chemoradiotherapy with carboplatin, paclitaxel, and pembrolizumab; continued olaparib; added semaglutide and increased insulin glargine to 20 units nightly; continued lisinopril, added amlodipine and valsartan. Cardiac monitoring planned with repeat echocardiogram in 4 weeks; labs ordered (CBC, CMP, HbA1c, CRP/ESR, chest CT, skeletal survey). Follow‑up scheduled in 2 weeks for infusion and 3 months for imaging.</li><li>Visit on 2026-03-01 with Palliative Care: Transition to hospice care; patient reports progressive chest pain, dyspnea, productive cough, left lower extremity edema, severe left hip pain, neuropathic foot discomfort, fatigue, insomnia; CT chest reveals extensive bilateral pulmonary infiltrates; echo shows LVEF 45%; labs show mild anemia, mild hyperglycemia, HbA1c 11.0%; physical exam: BP 130/80, HR 100, RR 22, SpO₂ 92% on 2 L NC; chest crackles and wheeze; left hip tenderness; left lower extremity edema; distal paresthesias. Hospice plan includes morphine sulfate 15 mg PO PRN, ondansetron 4 mg PRN, spironolactone 25 mg daily, low‑dose furosemide if needed, SpO₂ &gt;92% on 2 L NC, discontinuation of all oncology therapy, and regular hospice visits; labs to be repeated every 2 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 308dbc3c</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 308dbc3c</h1><div class="subtitle">Influenza | Male, 34</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Risk Factors: Obesity, Lack of influenza vaccination</div></div>
+<details><summary>Narrative <span class="preview-text">When the last of January’s cold front pushed across the Midwest, Dan, a 34‑year‑old software engineer who’d earned his m...</span></summary><div class="section-body"><p>When the last of January’s cold front pushed across the Midwest, Dan, a 34‑year‑old software engineer who’d earned his moniker “High‑BMI Dan” on his office roster, woke up with the kind of discomfort that feels like a slow, mechanical tightening in his chest. He’d forgotten he’d received the flu vaccine last November; his office had a wellness program, but he’d always shrugged that off. A few minutes after he got out of bed, his temperature spiked to 102.3 °F (39.1 °C), and a dull headache settled behind his eyes.</p><p>**Day 1 – Rising Alarm**</p><p>Dan tried to power through his morning routines—making coffee, scrolling through his email, and answering an urgent client call—while the fever persisted. His throat felt raw and dry, and a steady, low‑grade cough began to develop at the back of his throat. By evening, his stomach lurched with a mild nausea that made him think he might need to vomit, but he dismissed it as “being overworked.” He drank fluids and took an over‑the‑counter acetaminophen, hoping the body would fight the virus unaided.</p><p>**Day 2 – Symptoms Intensify**</p><p>The next morning, Dan’s fever hovered around 101.5 °F (38.6 °C). He woke with a pronounced muscle ache that traveled from his neck through his calves, a classic “body‑sore” symptom of influenza that kept him from sleeping well. His nasal passages were congested, and he felt compelled to hold a wet handkerchief to his nose every couple of minutes. The cough became louder, occasionally leading to a wet, tickly sound that rattled his chest. He started noticing a clear, watery sputum when he coughed, which surprised him, as he preferred to think of “mucus” as thick and brown.</p><p>Recognizing that his influenza‑like illness was worsening, Dan called the outpatient clinic’s nurse hotline two nights later to confirm that his symptoms matched the flu, and to ask if he should schedule an in‑person visit. The nurse suggested an appointment with Dr. Patel, who was known for thorough viral management.</p><p>**Day 3 – First Clinic Visit**</p><p>At 9 a.m., Dan arrived, still feverish at 101.2 °F, with a throaty dryness that made it feel hard to swallow. A quick physical exam by Dr. Patel revealed a mildly enlarged erythematous tonsil area, slight cervical lymphadenopathy, and crackles only in the lower zone of the left lung—no signs of pneumonia. His BMI was calculated at 32.4 (obese, class I), a noteworthy risk factor for a more complicated course, though Dan had no other comorbidities. The nurse recorded his vitals: heart rate 87 bpm, respiratory rate 18 cpm, oxygen saturation 97 % on room air.</p><p>Given the classic presentation, Dr. Patel ordered a rapid influenza A/B test (flu swab) and advised the patient to start oseltamivir 75 mg orally twice daily for five days. Dan received a prescription, a dosage explanation, and was advised to rest at home, maintain hydration, consume a low‑salt, low‑fat diet to support immune function, and use acetaminophen as needed for fever or pain. The nurse added that he should monitor his blood sugar level, even though he wasn’t diabetic, because flu can cause glucose fluctuations.</p><p>Dr. Patel also cautioned Dan about the side effects of oseltamivir—nausea, vomiting, and sometimes mild abdominal pain—and instructed him to take the medication with food to mitigate gastrointestinal upset. Dan left feeling more hopeful. His next appointment was set for discharge, and he was told to call the clinic if he experienced severe shortness of breath or if his fever exceeded 104 °F (40 °C) or was unrelenting.</p><p>**Day 4 – The Day of the Prescription**</p><p>Dan took his first dose of oseltamivir alongside a generous bowl of oatmeal and a glass of water. He experienced mild nausea after a few minutes, but once the medication was moving into his stomach, it subside—confirming the nurse’s advice. Temperature dropped to 100.5 °F (38.1 °C) by the evening. He was feeling less stiff and noted that his cough was decreasing to a more dry, less productive character. He could eat a peanut butter sandwich and sip iced tea without choking on the saliva that had become a problem earlier.</p><p>**Day 5 – Home‑Care and Progression**</p><p>By day five, the fever had subsided entirely, though a residual low-grade fever of 99.8 °F (37.7 °C) lingered overnight. Dan’s muscle aches had lessened, and the throat irritation had lessened to the point where he could swallow a piece of an apple without pain. His nasal congestion was gone, and the dry cough was almost non‑existent. The oseltamivir course was completed. He appreciated that the illness had not spilled over into complications, particularly because his obesity and lack of vaccination could have predisposed him to a longer or more severe course.</p><p>**Day 6 – Quick Check‑In**</p><p>On his self‑appointed “check‑in” with Dr. Patel’s office, Dan reported that he was feeling normal at home. The nurse’s follow‑up call was routine, offering a quick check on his hydration and sleep patterns. The only lingering symptom was mild fatigue—an expected consequence of the immune response and the influenza virus’s toll on the body.</p><p>**Day 7 – Final Resolution**</p><p>By the seventh day, Dan’s fatigue had eased substantially. He still noticed a slight chill from time to time, but nothing beyond routine. He was back to his normal work schedule, with a slightly slower paced morning routine but able to resume coding tasks. The nurse called to confirm that no post‑viral symptoms—such as secondary bacterial pneumonia or lingering cough—were present. The final assessment revealed that all acute symptoms had resolved, leaving Dan with mild, residual soreness that faded after a few more days.</p><p>**Day 15 – Reflection**</p><p>Dan returned to his office for a routine wellness check, having gotten a flu shot from the pharmacy two days later. He described the illness as a “short, unpleasant detour” and credited the timely clinic visit and oseltamivir therapy for the quick recovery. Dr. Patel advised him to avoid the high risk of a second influenza infection by getting vaccinated yearly, especially as his BMI could make future illness more severe.</p><p>**Outcome**</p><p>Through adherence to an office‑ordered antiviral regimen, supportive home care, and early intervention guided by a standard influenza presentation, Dan experienced a textbook, uncomplicated recovery. No complications emerged, and he returned to his healthy habits. The case remains a clear example of how early recognition, proper pharmacologic support, and routine preventive measures—such as vaccination—can prevent a potentially prolonged or complicated flu course in a young adult with obesity.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-17</h3><div class="visit-meta">General Practice | Reason: Fever, sore throat, cough – possible influenza</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 34‑year‑old male presents with 3‑day history of fever, sore throat, dry cough. Temperature 101.2°F, mild nausea, fatigue, BMI 32.4. No prior vaccinations or chronic illnesses.
+
+Objective: Vitals: Temp 101.2°F, HR 87 bpm, RR 18 cpm, SpO₂ 97%. 
+Physical exam: Erythematous tonsils with mild enlargement, slight cervical lymphadenopathy, isolated crackles in the left lower lung zone; no consolidation. 
+Rapid viral antigen test performed and returned positive for influenza A.
+
+Assessment: Acute influenza A infection causing upper and mild lower respiratory tract symptoms. Differential includes viral pharyngitis, bronchitis, and viral pneumonia, but exam and antigen result favor influenza.
+
+Plan:
+- Prescribe oseltamivir 75 mg PO BID for 5 days.
+- Advise rest, fluid hydration, acetaminophen PRN for fever.
+- Counsel on potential gastrointestinal side effects of oseltamivir.
+- No antibiotics indicated at this time.
+
+Follow‑up: 
+- Call clinic if development of severe shortness of breath or fever &gt;104 °F.
+- Phone check in 3 days if symptoms persist or worsen.
+- Ensure completion of the full oseltamivir course.
+- No imaging or additional labs required currently.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever (101.2 °F), sore throat, dry cough, mild nausea, mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>101.2 °F</td></tr><tr><td>heart_rate</td><td>87 bpm</td></tr><tr><td>respiratory_rate</td><td>18 cpm</td></tr><tr><td>oxygen_saturation</td><td>97 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Erythematous tonsils, mild tonsillar enlargement, slight cervical lymphadenopathy, crackles in lower left lung zone, BMI 32.4</li><li>No signs of pneumonia or decompensation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Rapid influenza A/B antigen test</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Rapid influenza A/B positive – influenza A</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed oseltamivir 75 mg PO BID for 5 days</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Day 1 symptoms began with fever, sore throat, night cough</li><li>Obesity BMI 32.4, no prior flu vaccination</li><li>No chronic diseases or medications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dan arrived for an in‑person evaluation after his flu‑like symptoms had worsened. He reported a high temperature, sore throat, and a dry cough. Dr. Patel performed a thorough physical exam: throat erythema with mild tonsillar enlargement, slight cervical lymphadenopathy, and isolated crackles in the lower left lung zone (no consolidation). Vital signs confirmed a mild tachycardia and a well‑oxygenated status. Dr. Patel ordered a rapid influenza A/B test and, given the classic presentation, prescribed oral oseltamivir 75 mg twice daily for five days. He was counseled on the need for rest, hydration, acetaminophen for fever, and cautioned about potential gastrointestinal side effects of oseltamivir. Dan was advised to call the clinic if he developed severe shortness of breath or persistent fever &gt;104 °F.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute influenza A infection confirmed. Patient compliant with antiviral prescription. No complications at this stage.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-01-20</h3><div class="visit-meta">General Practice | Reason: Follow‑up after antiviral therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 34‑year‑old male presenting for a follow‑up visit after completing a 5‑day course of oseltamivir for influenza A. He reports full resolution of fever and cough, with only low‑grade residual fever (99.8 °F) and mild fatigue. No new symptoms are noted.
+
+Objective:
+Vital signs: T 99.8 °F, HR 81 bpm, RR 16 cpm, SpO₂ 98 %.
+Physical exam: lungs clear bilaterally, soft neck, clear throat, no cervical lymphadenopathy, no tenderness. No crackles or wheezes.
+
+Assessment:
+1. Influenza A – post‑treatment recovery.
+2. Mild residual fatigue, likely post‑viral.
+
+Plan:
+- No additional pharmacologic therapy required.
+- Encourage rest, adequate hydration, and gradual resumption of normal activities.
+- Continue using acetaminophen PRN for fever if it recurs.
+- Discuss annual influenza vaccination and recommend scheduling for next year.
+- Educate about red‑flag symptoms warranting earlier contact (fever &gt;100.4 °F, new cough, worsening shortness of breath, chest pain, confusion).
+- Follow‑up in clinic if symptoms recur or persist beyond 2 weeks.
+
+Patient is advised to call the clinic if he develops fever &gt;100.4 °F or other concerning symptoms. He is to keep the current medication list unchanged and is scheduled for routine annual flu shot. Follow‑up is recommended in 2 weeks or sooner if indicated.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">low‑grade residual fever (99.8 °F), mild fatigue, resolved cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>99.8 °F</td></tr><tr><td>heart_rate</td><td>81 bpm</td></tr><tr><td>respiratory_rate</td><td>16 cpm</td></tr><tr><td>oxygen_saturation</td><td>98 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lung fields, soft neck, clear throat, no tenderness</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feeling normal, only mild fatigue; improved since last visit</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Influenza A – recovered</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Started oseltamivir two days prior, completed 5‑day course</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dan returned for a quick check‑in after completing his oseltamivir course. He reported complete resolution of fever and cough, with only mild lingering fatigue. Vital signs were stable, and physical exam revealed no abnormal lung sounds, soft neck, and a clear throat. No new symptoms were noted. The nurse provided reassurance and advised continued rest until full recovery. Dan was encouraged to plan annual influenza vaccination. No additional treatments were necessary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Influenza infection resolving; patient adhering to antiviral therapy. No progression to secondary bacterial infection. Ready for discharge of acute care.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-01-21</h3><div class="visit-meta">General Practice | Reason: Routine post‑influenza follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #3 – 2024-01-21
+
+Chief Complaint: Routine post-viral acute illness follow-up.
+
+History of Present Illness: Dan presents for a 3‑week follow‑up after an uncomplicated viral upper respiratory illness diagnosed earlier this month. He reports near‑normal activity levels with only occasional mild fatigue that has been improving. No new or worsening symptoms (fever, cough, sore throat, dyspnea, chest pain, abdominal pain, lymphadenopathy) are reported.
+
+Past Medical History: No chronic medical conditions; currently on no chronic prescriptions.
+
+Medications: Completed 5‑day course of oseltamivir 75 mg PO BID; acetaminophen PRN for fever or discomfort.
+
+Allergies: NKDA.
+
+Review of Systems: Negative except for mild persistent fatigue.
+
+Physical Examination:
+- Vitals: T 98.6 °F, HR 80 bpm, RR 15 cpm, SpO₂ 99 %.
+- General: Alert, oriented, no acute distress.
+- HEENT: Normal mucous membranes, no cervical lymphadenopathy.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Pulmonary: Clear to auscultation bilaterally, no crackles or wheezes.
+- Abdomen: Soft, non‑tender, normal organomegaly.
+- Extremities: No edema, full range of motion.
+- Neurologic: Normal mental status, no focal deficits.
+
+Assessment: Post‑viral fatigue syndrome – residual fatigue secondary to recent influenza‑like illness. Physical exam is reassuring; no evidence of lingering infection or organ dysfunction.
+
+Differential Diagnosis: 
+- Post‑viral fatigue
+- Deconditioning
+- Mild anxiety or depression secondary to illness
+- Mild occult infection (unlikely given exam)
+
+Plan:
+1. Reassure patient of expected convalescent course; continue normal activity as tolerated.
+2. Acetaminophen PRN for temperature or discomfort if it recurs.
+3. Counsel on healthy BMI maintenance and vaccination: annual influenza vaccine recommended.
+4. Monitor fatigue; if it persists beyond 4 weeks or worsens, or new symptoms develop, return for reevaluation.
+5. No additional tests are indicated at this time.
+
+Follow‑up: No scheduled appointment; patient instructed to call or return sooner if symptoms worsen or new concerning signs develop.
+
+Signed: Dr. Patel</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild lingering fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.6 °F</td></tr><tr><td>heart_rate</td><td>80 bpm</td></tr><tr><td>respiratory_rate</td><td>15 cpm</td></tr><tr><td>oxygen_saturation</td><td>99 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Full‑spectrum normal exam: clear lungs, soft abdomen, regular heart sounds, soft neck, no jugular venous distension</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feeling almost fully recovered; fatigue improving</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Influenza A – resolved</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed antiviral therapy, no further respiratory complaints</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At this visit, Dan reported he was back to near‑normal activity levels with only occasional mild fatigue. Dr. Patel performed a standard exam that was entirely normal – clear lungs, no tenderness, soft abdomen, no lymphadenopathy. No new or ongoing concerns were present. Dr. Patel thanked Dan for his compliance and reinforced the importance of yearly vaccination, especially given his BMI. The patient was advised to resume normal work routine and monitor for any late sequelae, which were unlikely.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute illness resolved. No evidence of post‑viral complications such as pneumonia or prolonged cough. Patient ready to return to normal activities.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-01-29</h3><div class="visit-meta">General Practice | Reason: Annual wellness check and influenza vaccination</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Annual wellness check and vaccination.
+
+History of Present Illness: Dan is a 34‑year‑old male who presents for the routine annual wellness visit. He reports no new or worsening symptoms. He has a history of post‑viral fatigue syndrome following a recent influenza A infection which resolved with antiviral therapy and symptomatic care. He reports satisfaction with his recovery trajectory and no residual complaints.
+
+Past Medical History: Post‑viral fatigue syndrome; no other chronic illnesses.
+
+Medications: Acetaminophen 325 mg, PO, PRN for fever or pain.
+
+Allergies: NKDA.
+
+Recent Illness Course: Completed oseltamivir therapy 5 days ago, achieved full resolution of fever and cough, residual mild fatigue only. No new signs of infection.
+
+Review of Systems: General: No fever, chills, weight change; Musculoskeletal: No pain; Cardiovascular: No chest pain or palpitations; Respiratory: No dyspnea or cough; GI: No nausea or upset stomach; Neurologic: No headaches or dizziness; Skin: No rashes.
+
+Vitals: Temperature 98.7°F; Heart rate 78 bpm; Respiratory rate 16 cpm; Blood pressure 118/72 mmHg; BMI: Healthy (body mass index within normal range).
+
+Physical Examination: 
+- General: Alert, well‑appearing, BMI normal.
+- HEENT: Oropharynx clear, no erythema or exudate.
+- Cardiovascular: Regular rhythm, S1/S2 normal, no murmurs.
+- Respiratory: Lungs clear bilaterally, no wheezes, rales, or rhonchi.
+- Abdomen: Soft, non‑tender, normal bowel sounds.
+- Extremities: No clubbing, cyanosis or edema.
+- Neurologic: Alert, oriented, no focal deficits.
+- Skin: Warm, dry, no lesions.
+
+Assessment: 1. Post‑viral fatigue syndrome—stable, no new exacerbation.
+2. Appropriate for annual influenza vaccination.
+
+Plan: 
+- Administer influenza vaccine intra‑muscular injection this visit.
+- Reinforce lifestyle modifications to maintain healthy BMI, balanced diet, regular aerobic activity, and adequate sleep.
+- Continue acetaminophen PRN as needed for any future discomfort.
+- Instruct patient to monitor for rebound flu‑like symptoms and to call clinic if new symptoms appear.
+- Schedule next annual wellness check in 12 months, or sooner if any acute concerns arise.
+
+Patient education: Discussed importance of annual vaccination and adherence to health maintenance appointments. Patient verbalized understanding and satisfaction.
+</div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.7 °F</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>respiratory_rate</td><td>16 cpm</td></tr><tr><td>blood_pressure</td><td>118/72 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Full‑spectrum normal exam; healthy BMI, no acute findings</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Administered influenza vaccine</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Satisfied, encouraged to continue healthy habits</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Influenza A – resolved</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed previous influenza infection, received influenza vaccine at pharmacy two days prior</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dan presented for a routine wellness visit. His vitals were normal and his physical exam was unremarkable. Dr. Patel reviewed his recent flu illness, praised his early intervention and compliance with antiviral therapy, and discussed preventive strategies including annual vaccination. Dan received an influenza vaccine shot in the clinic, and Dr. Patel reinforced lifestyle modifications to maintain healthy BMI. No acute concerns were noted. The visit ended with a recommendation to schedule the next annual wellness check in one year.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>No current disease activity. Patient has received influenza immunization; future risk of severe influenza reduced. Wellness check concluded.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 34</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Post‑viral fatigue syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen PRN for fever or pain</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>34‑year‑old male presented with a 3‑day history of fever, sore throat, dry cough, mild nausea, and fatigue. Examination revealed erythematous tonsils with mild enlargement, slight cervical lymphadenopathy, and isolated crackles in the left lower lung zone. Rapid viral antigen testing was positive for influenza A. Oseltamivir 75 mg PO BID was prescribed for 5 days, and acetaminophen PRN was advised for fever control. Patient was instructed to rest, maintain hydration, monitor for worsening symptoms, and complete the antiviral course.</li><li>Follow‑up visit 2024-01-20: patient reports full resolution of influenza symptoms except low‑grade residual fever (99.8 °F) and mild fatigue. Vital signs within normal limits (T 99.8 °F, HR 81 bpm, RR 16 cpm, SpO₂ 98 %). Physical exam shows clear lungs, soft neck, no lymphadenopathy. No new symptoms or crackles. No additional medication prescribed. Patient advised to rest, hydrate, resume normal activities gradually, use acetaminophen PRN if fever recurs, and schedule annual influenza vaccination. Red‑flag symptoms and earlier contact encouraged. Follow‑up scheduled in 2 weeks if symptoms persist.</li><li>2024-01-21 – Follow‑up after influenza. Patient reports mild lingering fatigue, otherwise asymptomatic. Vitals: T 98.6 °F, HR 80 bpm, RR 15 cpm, SpO₂ 99 %. Physical exam normal, lungs clear, no lymphadenopathy. No new symptoms noted. No additional tests ordered. Reassured; acetaminophen PRN available; advised to resume normal activity, monitor fatigue, and schedule annual influenza vaccination.</li><li>2024-01-29: Annual wellness visit with influenza vaccination. No new symptoms reported. Physical examination normal (HEENT, cardiovascular, respiratory, abdominal, extremities, neurologic, skin). Vitals: T 98.7°F, HR 78 bpm, RR 16 cpm, BP 118/72 mmHg. Vaccine administered. Patient advised to maintain healthy BMI, balanced diet, aerobic activity, adequate sleep, monitor for flu‑like symptoms, and call clinic if concerns arise. Next annual wellness visit scheduled in 12 months.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+{
+  "case_id": "210ea5ed",
+  "clinical_variables": {
+    "primary_condition": "Urinary Tract Infection (Acute Uncomplicated Cystitis)",
+    "comorbidities": [],
+    "age": 35,
+    "sex": "F",
+    "risk_factors": [
+      "Recent sexual activity",
+      "Use of spermicidal agents",
+      "Urinary catheterization"
+    ]
+  },
+  "difficulty": "easy",
+  "case_type": "acute",
+  "intended_outcome": "resolved",
+  "narrative": "By the end of a hectic Tuesday, Maya Patel was already nursing a new discomfort that she almost chalked up to a stomach bug. Maya\u201435, a dental hygienist in a bustling practice in Portland\u2014had finished a long day of appointments and slipped into a low\u2011light lounge at a local coffee shop, where she felt an odd pressure in her lower abdomen, a twinge of burning as she went to the restroom. She chalked it to what a seasoned hygienist would label \u201cthe usual post\u2011workday cramps\u201d and didn\u2019t think much of it until the next morning.\n\n**Day\u202f1 (the morning after)**  \nMaya\u2019s bladder\u2011burning had escalated\u2014each urination left a stinging bite that lingered for a minute or two. She also had a mild annoyance: a sense of pressure just above the pubic bone that seemed to worsen whenever she stood for more than a few minutes. She had had a minor urinary catheter inserted after a routine cystoscopy that she\u2019d undergone the previous week for an unusual bladder irritation. Though the catheter was removed three days ago, a residual irritation might be lingering. She remembered that she\u2019d slept with a spermicidal diaphragm inserted earlier that evening\u2014an item she used infrequently but habitually with her most recent partner. Adding her recent sexual activity and spermicidal use\u2014both well\u2011documented risks for UTIs\u2014Maya quietly noted her symptoms and wondered if a day of rest would set them off.\n\n**Day\u202f2 (mid\u2011morning)**  \nThe burning was now sharp enough that Maya avoided going back to the office for a bit, and a mild fever had crept in, barely 99.6\u202f\u00b0F. \u201cIt feels like a dull ache in the lower abdomen,\u201d she told her mother on a brief phone call, but it was her own voice that finally sounded like \u201cI can\u2019t ignore this.\u201d The next step, as she\u2019d been advised after her last catheter event, was to seek professional care.\n\n**Day\u202f3 (early afternoon)**  \nMaya walked into her primary\u2011care office. The nurse immediately recorded her vital signs: Blood pressure 118/70\u202fmm\u202fHg, pulse 84\u202fbpm, temperature 99.4\u202f\u00b0F. A quick digital rectal exam was declined because Maya had no rectal discomfort, and the provider noted mild suprapubic tenderness on pelvic palpation. A urinalysis dipstick in the exam room revealed positive nitrites and leukocyte esterase\u2014classic hallmarks of a bacterial urinary tract infection. The nurse handed Maya a clean\u2011catch midstream urine specimen, which the lab later reported with a culture growth of *Escherichia coli* at 10^4\u202fCFU/mL.\n\n**Clinical Decision Point 1 \u2013 Diagnosis**  \nGiven the absence of systemic symptoms (no chills, no flank pain, no gastrointestinal distress) and no comorbidities, the office physician deemed this an uncomplicated cystitis. \u201cWe\u2019ll start you on a short course of antibiotics and you\u2019ll be back in a week,\u201d she said reassuringly.\n\n**Day\u202f3 (same afternoon)**  \nThe physician prescribed a 7\u2011day course of TMP\u2011SMX (trimethoprim 80\u202fmg/ sulfamethoxazole 400\u202fmg) orally, once daily, emphasizing that her urinary catheter had already been removed and that the infection was likely bacterial. She cautioned Maya on potential side effects\u2014rash, nausea, and a need for her to finish the full course even if symptoms improved. She also delivered advice about hydration: \u201cAt least 64 ounces of water a day will help flush the bacteria out.\u201d Finally, she advised Maya to pause using spermicidal agents for the next few weeks, explaining how spermicides disrupt normal bacterial flora and predispose to infection.\n\n**Day\u202f5 (morning)**  \nMaya woke the next morning and, for the first time since the symptoms started, the burning was minimal\u2014one painful stream in the middle of her urination that lasted only a short time. She noted a marked improvement in the suprapubic pressure and felt \u201clighter.\u201d However, she still had a mild burning on the first few minutes after she had to use the bathroom. She took her first pill of TMP\u2011SMX and kept a diary of her symptoms and medication adherence.\n\n**Day\u202f7 (the last day of antibiotics)**  \nBy the end of a 7\u2011day course, the burning had resolved completely, and Maya\u2019s urination felt normal again. She reported no dizziness or rash\u2014her only residual memory was of the \u201csharp sting\u201d that had begun to fade after several days. At the end of her antibiotic course, her physician instructed her to schedule a one\u2011week follow\u2011up, just to confirm complete resolution, and advised her to avoid spermicidal agents for at least a month and to increase fluid intake.\n\n**Day\u202f10 (follow\u2011up visit)**  \nMaya returned to her office. She was clear of all symptoms, and her pelvic exam was normal. The office physician ordered a repeat urine dipstick as a courtesy, which was negative for nitrites and leukocyte esterase. A repeat urine culture was not performed, per routine guidelines for uncomplicated, resolved cystitis. Maya left the office with a prescription for a non\u2011prescription analgesic in case of future dysuria and a reminder to report back immediately should symptoms recur.\n\n**Day\u202f15 (home)**  \nMaya had fully resumed her normal routine. She had noticed a few nights after her catheter removal that she felt a small, sharp burning when she first tried urinating during the day of the cystoscopy, but the pain dissipated quickly within a minute and never returned. She avoided using spermicidal products for the next three weeks, and afterward continued her standard hygiene practices. She made no further visits to the office regarding urinary symptoms, indicating a completely resolved episode.\n\n**Key Clinical Take\u2011aways**  \n\n- **Risk Factor Recognition**: Recent sexual activity, spermicidal agent use, and transient catheterization were appropriately noted, and the provider addressed these both diagnostically and therapeutically.  \n- **Diagnosis and Management**: Classic dipstick positivity, culture confirmation, and a short course of TMP\u2011SMX\u2014aligning with guidelines for uncomplicated cystitis.  \n- **Follow\u2011up**: A brief visit to ensure resolution and to reinforce preventive measures, confirming the intended outcome of disease resolution.  \n\nThrough a straightforward timeline, Maya\u2019s uncomplicated cystitis course was effectively managed, with rapid symptom relief and no lasting sequelae.",
+  "timeline": [
+    {
+      "visit_number": 1,
+      "visit_date": "2023-05-01",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Burning urination, suprapubic discomfort, mild fever",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Burning urination, suprapubic discomfort, mild fever.\n\nHistory of Present Illness: 35\u2011year\u2011old female presents with a 2\u2011day history of dysuria and suprapubic pressure. She reports a recent episode of sexual activity with a spermicidal diaphragm, and a transient urinary catheter was placed and removed 3 days ago. She denies fever >100.4\u00b0F, vomiting, or flank pain.\n\nPast Medical History: None known.\n\nMedications: None.\n\nAllergies: NKDA.\n\nReview of Systems: Positive for dysuria, suprapubic discomfort, low\u2011grade fever (99.4\u00b0F). Negative for flank pain, vaginal discharge, dyspareunia, or urinary frequency.\n\nPhysical Examination:\n- Vital Signs: T 99.4\u00b0F; BP 118/70 mmHg; HR 84 bpm.\n- General: Alert, oriented, no acute distress.\n- Abdominal: Mild suprapubic tenderness on palpation. No costovertebral angle tenderness.\n- Pelvic/Genital: No vaginal discharge, no cervical motion tenderness, no visible inflammation.\n\nAssessment:\n- Acute uncomplicated cystitis (most likely E.\u00a0coli UTI). Recent catheterization and spermicidal use are risk factors.\n\nPlan:\n- Urine dipstick + nitrites, + LE (positive). Urine culture ordered (pending), expected to confirm E.\u00a0coli.\n- Start empiric antibiotic therapy: TMP\u2011SMX 80/400 mg PO once daily for 7 days.\n- Counsel patient to complete full course regardless of symptom resolution.\n- Advise increased fluid intake, avoid spermicidal agents, and practice good perineal hygiene.\n- If symptoms persist beyond 48\u201372 hours or worsen, return to clinic.\n- Follow\u2011up: 7\u2011day review for symptom resolution and review of culture results. If culture yields resistant organism, adjust antibiotics accordingly.\n\nEducation: Discussed signs of possible complications (fever >100.4\u00b0F, flank pain). Advised to seek emergent care if these develop.\n",
+      "patient_age": 35,
+      "patient_sex": "F",
+      "symptoms": [
+        "Burning during urination",
+        "Suprapubic pressure",
+        "Mild fever (99.4\u00b0F)",
+        "Lower abdominal discomfort"
+      ],
+      "vitals": {
+        "temperature": "99.4\u00b0F",
+        "blood_pressure": "118/70 mmHg",
+        "heart_rate": "84 bpm"
+      },
+      "relevant_history": [
+        "Recent sexual activity",
+        "Use of spermicidal diaphragm",
+        "Recent transient urinary catheterization (removed 3 days prior)",
+        "History of cystoscopy for bladder irritation"
+      ],
+      "known_conditions": [],
+      "current_medications": [],
+      "allergies": [],
+      "visit_scenario": "Maya arrived at the office complaining of burning urination and mild fever. The nurse documented vital signs and a brief history, noting recent sexual activity, spermicidal use, and a recent catheter. The provider performed a pelvic exam, noting mild suprapubic tenderness. A clean\u2011catch midstream urine sample was collected and a dipstick test performed in the exam room, showing positive nitrites and leukocyte esterase. The nurse sent the sample to the lab; the clinician noted this was classic for a bacterial UTI. Pending culture results, the provider diagnosed uncomplicated cystitis and discussed antibiotic therapy, hydration, and avoidance of spermicidal agents. Maya was given a 7\u2011day oral TMP\u2011SMX prescription (trimethoprim 80\u202fmg/sulfamethoxazole 400\u202fmg, once daily) and advised to finish the course even if symptoms improve.",
+      "examination_findings": [
+        "Mild suprapubic tenderness on palpation",
+        "No costovertebral angle tenderness",
+        "No vaginal discharge or cervical motion tenderness"
+      ],
+      "tests_ordered": [
+        "Urine dipstick",
+        "Urine culture"
+      ],
+      "test_results": [
+        "Urine dipstick: +Nitrites, +Leukocyte esterase",
+        "Urine culture: Escherichia coli 10^4 CFU/mL (pending full report)"
+      ],
+      "treatments_administered": [
+        "Prescribed TMP\u2011SMX 80/400 mg PO once daily for 7 days"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Acute uncomplicated cystitis diagnosed based on clinical presentation and laboratory findings. Initiated appropriate 7\u2011day antibiotic course."
+    },
+    {
+      "visit_number": 2,
+      "visit_date": "2023-05-07",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Completion of antibiotic course, review symptoms",
+      "is_related_to_main_illness": true,
+      "note": "Visit #2 \u2013 2023-05-07\n\nChief Complaint:\nMaya presents to review completion of her TMP\u2011SMX course and evaluate symptoms.\n\nHistory of Present Illness:\nThe patient is a 35\u2011year\u2011old female with a history of acute uncomplicated cystitis treated with TMP\u2011SMX 80/400 mg PO daily for 7\u00a0days (last dose yesterday). She reports slight burning during the first few minutes of urination, but notes overall improvement since starting therapy. No fever, suprapubic pain, nausea, or flank pain. She has kept a symptom diary and adheres to the prescribed medication schedule.\n\nPast Medical History:\n\u2022 Acute uncomplicated cystitis, resolved with TMP\u2011SMX\n\nMedications:\n\u2022 TMP\u2011SMX 80/400\u00a0mg PO daily (completed)\n\nAllergies:\nNone\n\nVitals:\n\u2022 Temperature: 98.7\u00b0F\n\u2022 Blood pressure: 116/68\u00a0mmHg\n\u2022 Heart rate: 78\u00a0bpm\n\nReview of Systems:\n\u2022 Genitourinary: Burning at initiation of micturition, otherwise normal.\n\u2022 Constitutional: Afebrile, no chills.\n\nPhysical Examination:\n\u2022 General: Mild suprapubic tenderness absent.\n\u2022 Pelvic: Normal pelvic exam, no vaginal discharge.\n\u2022 Abdomen: Soft, non\u2011tender, no costovertebral angle tenderness.\n\nAssessment & Plan:\nAssessment:\n1. Acute uncomplicated cystitis \u2013 likely resolved; patient is on the last day of therapy with minimal residual dysuria.\n2. No evidence of persistence or recurrence.\n\nPlan:\n- Continue to finish the last dose of TMP\u2011SMX if time allows. She has already taken the final dose yesterday.\n- Encourage adequate hydration (\u22652.5\u202fL fluids/day).\n- Advise postponement of spermicidal diaphragms for at least 4\u00a0weeks to reduce recurrence risk.\n- No additional medication is indicated at this time.\n- Schedule a brief follow\u2011up visit in one week (Day\u00a010) to confirm complete resolution of symptoms; if symptoms persist or worsen prior to that, the patient should return sooner.\n- Re\u2011order urine culture only if symptoms recur or fail to improve.\n\nEducation:\nThe patient was counseled on the expected course of mild dysuria post\u2011therapy, importance of hydration, and avoidance of spermicidal agents during the recovery period.\n\nDisposition:\nMaya was instructed to contact the practice if any new fever, flank pain, or worsening urinary symptoms occur before the scheduled follow\u2011up.\n",
+      "patient_age": 35,
+      "patient_sex": "F",
+      "symptoms": [
+        "Slight burning during early urination",
+        "No fever",
+        "No suprapubic pain"
+      ],
+      "vitals": {
+        "temperature": "98.7\u00b0F",
+        "blood_pressure": "116/68 mmHg",
+        "heart_rate": "78 bpm"
+      },
+      "relevant_history": [
+        "Started TMP\u2011SMX 6 days ago",
+        "Has been keeping a symptom diary"
+      ],
+      "known_conditions": [
+        "Acute uncomplicated cystitis"
+      ],
+      "current_medications": [
+        "TMP\u2011SMX 80/400 mg PO daily (last dose taken yesterday)"
+      ],
+      "allergies": [],
+      "visit_scenario": "Maya arrived for a quick office visit to discuss finishing her antibiotic course. She noted minimal burning in the first few minutes of urination but reported overall improvement. The provider reviewed her symptom diary, confirmed adherence to therapy, and answered questions about potential side effects. Maya was reminded to continue adequate hydration and to postpone use of spermicidal diaphragms for at least 4 weeks. No additional medication was prescribed. The clinician advised a brief follow\u2011up visit in one week (Day\u202f10) to confirm complete resolution.",
+      "examination_findings": [
+        "Mild suprapubic tenderness absent",
+        "Pelvic exam normal, no discharge"
+      ],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [],
+      "patient_response": "",
+      "disease_progression_notes": "Symptom resolution noted; patient remains on final dose of TMP\u2011SMX. Plan for one\u2011week follow\u2011up to assess complete clearance."
+    },
+    {
+      "visit_number": 3,
+      "visit_date": "2023-05-10",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Follow\u2011up after antibiotic completion",
+      "is_related_to_main_illness": true,
+      "note": "Visit #3 \u2013 2023-05-10\nChief Complaint: Follow\u2011up after antibiotic completion for uncomplicated cystitis.\n\nHistory of Present Illness: Maya returned for a scheduled follow\u2011up after completing a 7\u2011day course of TMP\u2011SMX for an uncomplicated cystitis diagnosed during Visit #1. She reports no urinary symptoms, fever, or discomfort. She denies dysuria, frequency, suprapubic pain or hematuria.\n\nPast Medical History: Previous uncomplicated cystitis. No other significant history.\n\nMedications: None. Allergies: NKDA.\n\nPhysical Examination:\n\u2022 Vital Signs: T 98.6\u00b0F, BP 117/69 mmHg, HR 76 bpm.\n\u2022 General: A well\u2011appearing, healthy\u2011appearing woman.\n\u2022 Genitourinary: External genitalia normal; no discharge. Pelvic examination unremarkable. No suprapubic tenderness.\n\nDiagnostic Studies:\n\u2022 Urine dipstick: Negative for nitrites and leukocyte esterase.\n\nAssessment:\nMaya has clinically and urine\u2011dipstick\u2013documented resolution of a previously uncomplicated cystitis. No evidence of persistent infection is present. She is at low risk for recurrence.\n\nPlan:\n1. No further antibacterial therapy or urine culture is required as per current guidelines for resolved uncomplicated UTI.\n2. OTC analgesic provided: Ibuprofen 400 mg PO TID PRN for future dysuria.\n3. Prevention education reiterated: adequate hydration, avoidance of spermicidal diaphragms for at least one month, prompt reporting of any recurrent urinary symptoms.\n4. Encourage routine self\u2011monitoring of urinary comfort and hydration status.\n5. Schedule follow\u2011up only if symptoms recur or for routine health maintenance.\n\nDisposition: Patient discharged with instructions above.\n",
+      "patient_age": 35,
+      "patient_sex": "F",
+      "symptoms": [
+        "None"
+      ],
+      "vitals": {
+        "temperature": "98.6\u00b0F",
+        "blood_pressure": "117/69 mmHg",
+        "heart_rate": "76 bpm"
+      },
+      "relevant_history": [
+        "Completed 7\u2011day TMP\u2011SMX course",
+        "No recurrence of urinary symptoms"
+      ],
+      "known_conditions": [
+        "Resolved acute uncomplicated cystitis"
+      ],
+      "current_medications": [],
+      "allergies": [],
+      "visit_scenario": "Maya returned for her scheduled follow\u2011up. She reported no urinary symptoms, fever, or discomfort. The provider performed a pelvic exam and noted a normal external genitalia, no discharge, and no suprapubic tenderness. A repeat urine dipstick was performed and was negative for nitrites and leukocyte esterase. No urine culture was ordered, consistent with guidelines for uncomplicated, resolved cystitis. The clinician provided a non\u2011prescription analgesic for potential future dysuria and reiterated prevention strategies: adequate hydration, avoidance of spermicidal diaphragms for at least one month, and prompt reporting of any recurrence.",
+      "examination_findings": [
+        "Normal external genitalia",
+        "No suprapubic tenderness",
+        "Pelvic examination unremarkable"
+      ],
+      "tests_ordered": [
+        "Urine dipstick"
+      ],
+      "test_results": [
+        "Urine dipstick: Negative for nitrites and leukocyte esterase"
+      ],
+      "treatments_administered": [
+        "Provided OTC analgesic prescription (e.g., ibuprofen 400 mg) for future dysuria"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "UTI resolved; patient symptom-free and meets criteria for complete eradication."
+    }
+  ],
+  "notes": [
+    {
+      "visit_number": 1,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2023-05-01",
+      "content": "Chief Complaint: Burning urination, suprapubic discomfort, mild fever.\n\nHistory of Present Illness: 35\u2011year\u2011old female presents with a 2\u2011day history of dysuria and suprapubic pressure. She reports a recent episode of sexual activity with a spermicidal diaphragm, and a transient urinary catheter was placed and removed 3 days ago. She denies fever >100.4\u00b0F, vomiting, or flank pain.\n\nPast Medical History: None known.\n\nMedications: None.\n\nAllergies: NKDA.\n\nReview of Systems: Positive for dysuria, suprapubic discomfort, low\u2011grade fever (99.4\u00b0F). Negative for flank pain, vaginal discharge, dyspareunia, or urinary frequency.\n\nPhysical Examination:\n- Vital Signs: T 99.4\u00b0F; BP 118/70 mmHg; HR 84 bpm.\n- General: Alert, oriented, no acute distress.\n- Abdominal: Mild suprapubic tenderness on palpation. No costovertebral angle tenderness.\n- Pelvic/Genital: No vaginal discharge, no cervical motion tenderness, no visible inflammation.\n\nAssessment:\n- Acute uncomplicated cystitis (most likely E.\u00a0coli UTI). Recent catheterization and spermicidal use are risk factors.\n\nPlan:\n- Urine dipstick + nitrites, + LE (positive). Urine culture ordered (pending), expected to confirm E.\u00a0coli.\n- Start empiric antibiotic therapy: TMP\u2011SMX 80/400 mg PO once daily for 7 days.\n- Counsel patient to complete full course regardless of symptom resolution.\n- Advise increased fluid intake, avoid spermicidal agents, and practice good perineal hygiene.\n- If symptoms persist beyond 48\u201372 hours or worsen, return to clinic.\n- Follow\u2011up: 7\u2011day review for symptom resolution and review of culture results. If culture yields resistant organism, adjust antibiotics accordingly.\n\nEducation: Discussed signs of possible complications (fever >100.4\u00b0F, flank pain). Advised to seek emergent care if these develop.\n",
+      "symptoms_reported": [
+        "Burning during urination",
+        "Suprapubic pressure",
+        "Mild fever (99.4\u00b0F)",
+        "Lower abdominal discomfort"
+      ],
+      "vitals": {
+        "temperature": "99.4\u00b0F",
+        "blood_pressure": "118/70 mmHg",
+        "heart_rate": "84 bpm"
+      },
+      "tests_ordered": [
+        "Urine dipstick",
+        "Urine culture"
+      ],
+      "diagnoses_considered": [
+        "Acute uncomplicated cystitis",
+        "UTI secondary to recent catheterization",
+        "Possible impact of spermicidal diaphragm use"
+      ],
+      "medications": [
+        "TMP\u2011SMX 80/400 mg PO once daily for 7 days"
+      ],
+      "follow_up_recommendations": [
+        "Return in 7 days for symptom resolution and review of culture results",
+        "Re\u2011evaluate sooner if symptoms persist beyond 48\u201372 hours or worsen",
+        "Educated on red\u2011flag symptoms and when to seek urgent care"
+      ]
+    },
+    {
+      "visit_number": 2,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2023-05-07",
+      "content": "Visit #2 \u2013 2023-05-07\n\nChief Complaint:\nMaya presents to review completion of her TMP\u2011SMX course and evaluate symptoms.\n\nHistory of Present Illness:\nThe patient is a 35\u2011year\u2011old female with a history of acute uncomplicated cystitis treated with TMP\u2011SMX 80/400 mg PO daily for 7\u00a0days (last dose yesterday). She reports slight burning during the first few minutes of urination, but notes overall improvement since starting therapy. No fever, suprapubic pain, nausea, or flank pain. She has kept a symptom diary and adheres to the prescribed medication schedule.\n\nPast Medical History:\n\u2022 Acute uncomplicated cystitis, resolved with TMP\u2011SMX\n\nMedications:\n\u2022 TMP\u2011SMX 80/400\u00a0mg PO daily (completed)\n\nAllergies:\nNone\n\nVitals:\n\u2022 Temperature: 98.7\u00b0F\n\u2022 Blood pressure: 116/68\u00a0mmHg\n\u2022 Heart rate: 78\u00a0bpm\n\nReview of Systems:\n\u2022 Genitourinary: Burning at initiation of micturition, otherwise normal.\n\u2022 Constitutional: Afebrile, no chills.\n\nPhysical Examination:\n\u2022 General: Mild suprapubic tenderness absent.\n\u2022 Pelvic: Normal pelvic exam, no vaginal discharge.\n\u2022 Abdomen: Soft, non\u2011tender, no costovertebral angle tenderness.\n\nAssessment & Plan:\nAssessment:\n1. Acute uncomplicated cystitis \u2013 likely resolved; patient is on the last day of therapy with minimal residual dysuria.\n2. No evidence of persistence or recurrence.\n\nPlan:\n- Continue to finish the last dose of TMP\u2011SMX if time allows. She has already taken the final dose yesterday.\n- Encourage adequate hydration (\u22652.5\u202fL fluids/day).\n- Advise postponement of spermicidal diaphragms for at least 4\u00a0weeks to reduce recurrence risk.\n- No additional medication is indicated at this time.\n- Schedule a brief follow\u2011up visit in one week (Day\u00a010) to confirm complete resolution of symptoms; if symptoms persist or worsen prior to that, the patient should return sooner.\n- Re\u2011order urine culture only if symptoms recur or fail to improve.\n\nEducation:\nThe patient was counseled on the expected course of mild dysuria post\u2011therapy, importance of hydration, and avoidance of spermicidal agents during the recovery period.\n\nDisposition:\nMaya was instructed to contact the practice if any new fever, flank pain, or worsening urinary symptoms occur before the scheduled follow\u2011up.\n",
+      "symptoms_reported": [
+        "Slight burning at the beginning of urination",
+        "No fever",
+        "No suprapubic pain"
+      ],
+      "vitals": {
+        "temperature": "98.7\u00b0F",
+        "blood_pressure": "116/68 mmHg",
+        "heart_rate": "78 bpm"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Acute uncomplicated cystitis (resolved)",
+        "Urinary tract infection - recurrence",
+        "Post\u2011antibiotic dysuria",
+        "Non\u2011infectious urethral irritation"
+      ],
+      "medications": [
+        "None"
+      ],
+      "follow_up_recommendations": [
+        "Brief telehealth or in\u2011office follow\u2011up in one week (Day 10) to confirm full resolution of symptoms.",
+        "Maintain adequate hydration and avoid spermicidal diaphragms for at least 4 weeks.",
+        "Return to clinic sooner if fever, flank pain, or worsening dysuria develop."
+      ]
+    },
+    {
+      "visit_number": 3,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2023-05-10",
+      "content": "Visit #3 \u2013 2023-05-10\nChief Complaint: Follow\u2011up after antibiotic completion for uncomplicated cystitis.\n\nHistory of Present Illness: Maya returned for a scheduled follow\u2011up after completing a 7\u2011day course of TMP\u2011SMX for an uncomplicated cystitis diagnosed during Visit #1. She reports no urinary symptoms, fever, or discomfort. She denies dysuria, frequency, suprapubic pain or hematuria.\n\nPast Medical History: Previous uncomplicated cystitis. No other significant history.\n\nMedications: None. Allergies: NKDA.\n\nPhysical Examination:\n\u2022 Vital Signs: T 98.6\u00b0F, BP 117/69 mmHg, HR 76 bpm.\n\u2022 General: A well\u2011appearing, healthy\u2011appearing woman.\n\u2022 Genitourinary: External genitalia normal; no discharge. Pelvic examination unremarkable. No suprapubic tenderness.\n\nDiagnostic Studies:\n\u2022 Urine dipstick: Negative for nitrites and leukocyte esterase.\n\nAssessment:\nMaya has clinically and urine\u2011dipstick\u2013documented resolution of a previously uncomplicated cystitis. No evidence of persistent infection is present. She is at low risk for recurrence.\n\nPlan:\n1. No further antibacterial therapy or urine culture is required as per current guidelines for resolved uncomplicated UTI.\n2. OTC analgesic provided: Ibuprofen 400 mg PO TID PRN for future dysuria.\n3. Prevention education reiterated: adequate hydration, avoidance of spermicidal diaphragms for at least one month, prompt reporting of any recurrent urinary symptoms.\n4. Encourage routine self\u2011monitoring of urinary comfort and hydration status.\n5. Schedule follow\u2011up only if symptoms recur or for routine health maintenance.\n\nDisposition: Patient discharged with instructions above.\n",
+      "symptoms_reported": [],
+      "vitals": {
+        "temperature": "98.6\u00b0F",
+        "blood_pressure": "117/69 mmHg",
+        "heart_rate": "76 bpm"
+      },
+      "tests_ordered": [
+        "Urine dipstick"
+      ],
+      "diagnoses_considered": [
+        "Resolved uncomplicated cystitis",
+        "No active infection"
+      ],
+      "medications": [
+        "Ibuprofen 400 mg PO TID PRN"
+      ],
+      "follow_up_recommendations": [
+        "Return promptly if dysuria, frequency, or fever recur.",
+        "Ensure adequate fluid intake.",
+        "Avoid spermicidal diaphragms for at least one month."
+      ]
+    }
+  ],
+  "final_medical_history": {
+    "demographics": {
+      "age": 35,
+      "sex": "F",
+      "height": null,
+      "weight": null
+    },
+    "known_conditions": [
+      "Urinary tract infection (cystitis)"
+    ],
+    "current_medications": [
+      "Ibuprofen 400 mg PO TID PRN"
+    ],
+    "prior_visit_summaries": [
+      "Presented with 2\u2011day history of burning urination, suprapubic discomfort, mild fever (99.4\u00b0F). Recent transient catheterization and spermicidal diaphragm use. Physical exam revealed mild suprapubic tenderness, no costovertebral angle tenderness, and no vaginal discharge. Urine dipstick was positive for nitrites and leukocyte esterase; urine culture was ordered. Initiated empiric therapy with TMP\u2011SMX 80/400 mg PO once daily for 7 days. Patient advised increased fluid intake, avoidance of spermicidal agents, and return for follow\u2011up in 7 days or sooner if symptoms persist or worsen.",
+      "Visit #2 \u2013 2023-05-07: Patient reviewed completion of TMP\u2011SMX course. Minimal residual burning at urination, afebrile, no suprapubic tenderness. Physical exam revealed normal pelvic exam, no vaginal discharge. No additional medication prescribed. Advised adequate hydration, avoidance of spermicidal diaphragms for 4 weeks. Follow\u2011up scheduled in one week to confirm symptom resolution. No tests ordered.",
+      "Visit #3 \u2013 2023-05-10: Patient presented for follow\u2011up after completing a 7\u2011day TMP\u2011SMX course for uncomplicated cystitis. Reported no urinary symptoms, fever, or discomfort. Physical exam normal; no suprapubic tenderness; urine dipstick negative for nitrites/LU. Ibuprofen 400 mg PO TID PRN prescribed for future dysuria; patient advised hydration, avoidance of spermicidal diaphragms for one month, and to return if symptoms recur."
+    ],
+    "allergies": []
+  }
+}

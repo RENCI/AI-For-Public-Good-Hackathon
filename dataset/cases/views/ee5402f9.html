@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case ee5402f9</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: ee5402f9</h1><div class="subtitle">Metastatic carcinoma of the lower outer quadrant of the breast | Female, 55</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Obesity, Diabetes mellitus</div><div class="meta-line">Risk Factors: Family history of breast cancer, Early menarche, Late menopause, Nulliparity, High BMI, Prior chest irradiation</div></div>
+<details><summary>Narrative <span class="preview-text">Mrs. Ellen Park was a 55‑year‑old woman who had lived in a small coastal town all her life. Her medical record spoke of ...</span></summary><div class="section-body"><p>Mrs. Ellen Park was a 55‑year‑old woman who had lived in a small coastal town all her life. Her medical record spoke of the things that had shaped her risk: an early menarche at 11, a late menopause at 54, never having carried a child, a family history of breast cancer on her mother’s side, a body mass index of 34, and type 2 diabetes mellitus that she managed with metformin and oral sulfonylureas. She also carried a scar of radiotherapy on her left chest wall—a 30‑gray field that had been delivered in 1978 following a left‑sided thymic carcinoma when she was 27. The scar was a reminder of a past battle but also a shadow of a future vulnerability.</p><p>---</p><p>## The first warning</p><p>In late March, while trimming the rosebushes behind her home, Ellen felt an odd, firm nodule in the lower outer quadrant of her left breast. It was painless, but the skin over it had taken on a faint, puckered contour. She brushed it off as a benign cyst until, on the morning of March 30, a new, dull discomfort settled into a persistent ache that no amount of tea or over‑the‑counter ibuprofen could soothe. “It feels like there’s a stone under my skin,” she told her mother after coffee, her voice tinged with worry.</p><p>Ellen drove two hours to see her primary‑care physician on April 3. The family‑practice doctor, a gentle woman in a bright cardigan, listened attentively and performed a breast exam. “I feel a firm, non‑mobile lump, 2 cm from the nipple margin, and it’s tethered to the skin,” she noted, noting the skin retraction. She asked Ellen to come back next week for an ultrasound and mammogram, explaining that she would also refer her to an oncologist if lesions were suspicious.</p><p>---</p><p>## The diagnostic whirlwind</p><p>April 10: An appointment at the regional imaging center. The mammogram revealed a 2.3 × 1.9 cm spiculated mass with indistinct margins. Ultrasound showed a hypoechoic, irregular lesion with acoustic shadowing. The radiologist’s recommendation was a core‑needle biopsy. Ellen’s mother accompanied her to the procedure, holding her hand as the local anesthetic was injected and the biopsy needle pulled out with a satisfied, “we’re almost there.”</p><p>The pathology report, returned at the end of April, was not a relief. “Invasive ductal carcinoma, histologic grade III, ER‑positive (80 % nuclei staining), PR‑positive (70 % nuclei), HER2‑negative, p53 over‑expressed,” the report read in sharp print. The pathologist added a note: “The margins are unclear. Metastatic spread cannot be ruled out.”</p><p>The news was a knock on Ellen’s world. On May 1, she met with a breast surgeon at the county hospital. They discussed her options carefully. The surgeon explained that the tumor was large and felt the skin tightly, suggesting a mastectomy would be required to remove all tissue. But Ellen’s obesity, measured at a BMI of 34, meant a higher risk of wound complications, while her diabetes raised the possibility of delayed healing and infection. The surgeon proposed a two‑stage plan: a neoadjuvant endocrine therapy to shrink the tumor while she optimized her glucose control, and then a bilateral mastectomy with axillary dissection if imaging still showed active disease. In a final twist, they also recommended a whole‑body staging scan, because “given your history of chest irradiation and your family history of breast cancer, we want to make sure we’re not overlooking anything.”</p><p>---</p><p>## The staging surprise</p><p>May 12: Ellen underwent a positron emission tomography-computed tomography (PET‑CT) scan. Her breath caught as the images revealed a 1.8 × 1.5 cm hypermetabolic lesion in the left lower lobe of the lung and several bone‑marrying uptakes along the lumbar vertebrae. The radiologist’s voice was calm but her eyes flicked to the scan results. “Metastatic disease is present,” she said. She also noticed faint tracer uptake in a small spot of the left liver, a hint of systemic spread. The cancer was stage IV.</p><p>Ellen sat at the front row of the waiting room, feeling the world tilt. When the oncologist, Dr. López, came in, he offered her a hand. “You’re facing metastatic breast cancer,” he said, “but we have treatments that can keep it under control for years, or at least reduce the burden and improve quality of life.” He explained the importance of a holistic approach: controlling her diabetes, managing her weight, ensuring her cardiovascular health, and addressing the new metastatic sites.</p><p>---</p><p>## First line: endocrine and bone protection</p><p>Dr. López suggested endocrine therapy with an aromatase inhibitor, letrozole, because the cancer was ER and PR positive. He rationalized that tamoxifen&#x27;s partial estrogenic effects would be less desirable on Ellen’s high estrogen levels and that aromatase inhibitors had fewer cardiovascular side effects than tamoxifen. The treatment plan also incorporated bisphosphonate therapy (zoledronic acid) to protect her bones from aggressive metastatic bone disease and to reduce skeletal‑related events.</p><p>May 24: Ellen began letrozole and received her first dose of zoledronic acid, administered intravenously through her central line. The next week, she noted a mild increase in hot flashes, but her blood glucose remained within a tolerable range (fasting 130 mg/dL). She logged her meals, noting small improvements in her diet, spurred by her diabetes management team who suggested a plant‑based regimen.</p><p>---</p><p>## The first signs of defeat</p><p>June 15: Ellen’s breast pain intensified and her mobility was compromised due to growing back pain. She called the oncology office and reported a deep ache that made it difficult to lift her arm. Her physician scheduled an early follow‑up; Dr. López arranged a CT scan of the chest and abdomen.</p><p>The CT images were sobering. The left lung metastasis had doubled in size to 3.4 × 3.1 cm, new ground‑glass opacities appeared in the right upper lobe, and an osteolytic lesion in the T9 vertebral body measured 2.2 × 2.0 cm with compression of the spinal canal. The liver lesion expanded to 1.3 × 1.2 cm. The disease had progressed despite endocrine therapy.</p><p>After discussing the options, Dr. López introduced systemic chemotherapy. However, due to Ellen’s prior chest irradiation and her baseline left ventricular ejection fraction (LVEF) of 54 %, anthracyclines were to be avoided. Instead, a taxane‑based regimen—weekly paclitaxel at 80 mg/m²—was chosen. Ellen was also given granulocyte‑stimulating factor prophylaxis to reduce the risk of febrile neutropenia.</p><p>---</p><p>## Chemotherapy, complications, and the compounding of comorbidities</p><p>July 4: The first cycle of paclitaxel commenced. Within a week, Ellen developed mild neuropathy—sharp, tingling in the feet during walking—but felt relief from her back pain. The scheduled follow‑up blood work revealed an absolute neutrophil count of 1,100/mm³; the oncology team pre‑emptively gave her filgrastim.</p><p>August 1: A second cycle was scheduled, but Ellen arrived with a fever of 38.8°C and an elevated white blood cell count of 16,500/μL, neutrophil 73 %. She was admitted to the hospital for a presumed septic episode. Blood cultures grew Enterococcus faecalis from a urinary source; she was treated with ceftriaxone and vancomycin for a 10‑day course. Her diabetes flared as she required steroids for the septic shock, pushing her glucose into the 220–260 mg/dL range. Endocrinology was consulted; insulin adjustments were made, and her basal‑bolus regimen was revised.</p><p>The hospital stay lasted a week, and Ellen returned to the oncology office on September 1, her LVEF now 46 %. Dr. López reassured her, saying “Your heart is holding well, but we’ll be cautious.” They escalated her paclitaxel to 90 mg/m² and added a supportive dose of dexamethasone. She also received a second zoledronic acid infusion.</p><p>Despite these adjustments, subsequent CT imaging (October 15) showed further progression. The left lung lesion had enlarged to 4.2 × 3.8 cm, a new rib metastasis appeared, and the liver lesion had grown to 2.0 × 1.8 cm. Her back pain had worsened, limiting her ability to do her daily chores.</p><p>---</p><p>## Turning the tide: targeted therapy</p><p>Dr. López suggested a switch to a trastuzumab‑based therapy; but the tumor’s HER2 status had been negative at diagnosis and remains negative, so that option was ruled out. However, after an immunohistochemistry on the PET‑CT‑identified bone lesion, they found low‑level expression of the progesterone receptor; an anti‑progesterone agent, mifepristone, had shown benefit in a small series for ER‑positive disease with low PR. Dr. López, after a thorough risk–benefit analysis, recommended a short trial.</p><p>On November 10, Ellen began mifepristone 125 mg daily. She reported a slight reduction in hot flashes and a modest decrease in bone pain at the next assessment, but still had nightly coughing due to pulmonary tumors.</p><p>---</p><p>## Palliative shift</p><p>Despite the array of therapies, the disease continued an inexorable climb. By early December, the left lung metastasis had occupied most of the lower left lobe, and a massive pleural effusion was noted. Ellen’s oxygen saturation dipped to 88 % on room air; she developed an acute exacerbation of chronic obstructive pulmonary disease.</p><p>Ellen’s medical team convened a multidisciplinary palliative care discussion. Dr. López explained that curative intent was no longer viable, but they could focus on symptom control and preserve her quality of life. She agreed to palliative radiation therapy to the left chest wall and a pleural window procedure to drain the effusion. She also started long‑acting oxycodone for pain and low‑dose methylprednisolone for dyspnea.</p><p>Throughout December, she remained in the hospital for several sessions of radiation and for supportive therapy. Her family organized a photo album of her life to give her emotional nourishment. Mrs. Park’s diabetes remained under tighter control with insulin analogues, and her endocrinology team adjusted her insulin dosage as needed. The obesity that had once contributed to her risk posed a new challenge: her weight management regimen was less strict during her decline, but the medical team kept monitoring her nutritional status.</p><p>---</p><p>## The final chapter</p><p>January 28, 2026, Ellen was admitted once more. The CT showed a new, centrally located lung lesion in the right upper lobe, causing near-total collapse of the right lung. A CT scan of the brain the next day revealed a 1.2 × 1.0 cm enhancing lesion in the left occipital lobe—suggesting cerebral metastasis. Her neurologic exam revealed mild right‑sided weakness; she was unable to sit up without assistance. The oncology team, in concert with neurology and palliative care, decided against aggressive craniotomy or systemic chemotherapy, given her deteriorated performance status and the extent of systemic disease.</p><p>Ellen’s family gathered in the hospital room. Dr. López stood beside her, holding her hand, and said, “We’ve done everything we can to help her feel comfortable. Now it’s time to let her rest.” The medical team administered a final dose of opioids, a dose of palliative steroids, and a comprehensive plan for symptom control. Ellen was moved into a hospice ward, where she spent her last days in a calm, supportive environment.</p><p>She passed peacefully on February 6, 2026, at the age of 55, surrounded by her children and loved ones, having lived a full life but ultimately succumbing to a disease that had outpaced the medical interventions laid before her. The timeline of her journey—from the quiet nodule in a garden to the rapid systemic spread—remains a testament to the relentless progression of metastatic breast cancer and the complex interplay of comorbidities that can accelerate its course.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button><button class="">Visit 13</button><button class="">Visit 14</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-04-03</h3><div class="visit-meta">Primary Care | Reason: Breast lump and new breast discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: New firm, painless lump in the left breast with mild dull ache.
+
+**History of Present Illness**: Mrs. Ellen Park, 55‑year‑old female, presents with a 2‑cm firm mass located in the lower outer quadrant of the left breast. She reports that the lump has been noted for a few days and is associated with a dull, aching discomfort in the same area. No erythema, warmth, nipple discharge, or changes in skin appearance noted. She denies systemic symptoms such as fever, chills, or night sweats.
+
+**Past Medical History**: • Obesity, BMI 34
+• Type 2 diabetes mellitus
+• Prior chest irradiation (1978)
+
+**Past Surgical History**: None relevant.
+
+**Medications**: Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily.
+
+**Allergies**: NKDA.
+
+**Family History**: Family history of breast cancer.
+
+**Social History**: Nulliparous, early menarche at age 11, late menopause at age 54. No tobacco or alcohol use disclosed.
+
+**Review of Systems**: Positive for breast lump and dull ache. Negative for systemic or neurologic symptoms.
+
+**Vital Signs**: BP 140/90 mmHg, HR 78 bpm, Temp 37.0°C, BMI 34.
+
+**Physical Examination**:
+- General: Alert, oriented, no acute distress.
+- Breast: 2‑cm firm, mobile‑to‑tethered mass in the lower outer quadrant of the left breast, tethered to skin, associated with mild nipple retraction. No overlying skin erythema or ulceration.
+- Axilla: No palpable cervical or axillary lymphadenopathy.
+- Skin: No scleroderma or rash.
+
+**Assessment**:
+1. Suspicious breast mass with skin tethering and nipple retraction – high suspicion for invasive malignancy, especially given history of prior chest radiation.
+2. Differential includes radiation‑associated breast carcinoma, invasive ductal carcinoma, benign fibroadenoma (unlikely given tethering), or inflammatory process.
+
+**Plan**:
+- **Imaging**: Order mammography of the left breast (digital) with supplementary breast ultrasound to characterize the mass and assess for regional lymphadenopathy.
+- **Referrals**: Discuss possibility of referral to a board‑certified surgical oncologist after imaging results are available.
+- **Medication**: Continue current antihyperglycemic and antihypertensive regimen. No changes at this time.
+- **Patient Education**: Explained the significance of skin tethering and nipple retraction as concerning features. Reviewed self‑breast exam technique and signs that warrant immediate return.
+- **Follow‑up**: Schedule appointment in one week to review imaging findings and discuss next steps.
+
+**Disposition**: Patient was reassured and provided educational handout regarding breast cancer warning signs and the importance of timely imaging. She verbally consented to imaging and follow‑up.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Painless breast lump in lower outer quadrant</span><span class="pill">Mild dull aching in left breast</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>37.0°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm 2 cm mass tethered to skin</li><li>Mild nipple retraction</li><li>No cervical lymphadenopathy</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Obesity (BMI 34)</li><li>Type 2 diabetes mellitus</li><li>Prior chest irradiation in 1978</li><li>Family history of breast cancer</li><li>Early menarche at 11</li><li>Late menopause at 54</li><li>Nulliparity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mrs. Ellen Park presented to the family practice with a new firm, painless lump in the lower outer quadrant of the left breast, accompanied by a dull ache. The physician performed a breast exam, noting a 2 cm firm mass tethered to the skin with mild nipple retraction. She was reassured but advised to return for imaging and to discuss possible referral to an oncologist. A follow‑up was scheduled for a week later.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial detection of breast lump; no imaging performed yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-04-10</h3><div class="visit-meta">Radiology | Reason: Diagnostic imaging for breast lump</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Diagnostic imaging for breast lump.
+
+**History of Present Illness**: Mrs. Park, a 55‑year‑old female, presented with a firm breast lump in the left lower outer quadrant reported on 2025‑04‑03. Over the past week she notes pain localized to the mass. She has no nipple discharge or skin changes apart from the known mass.
+
+**Past Medical History**: Obesity (BMI 34), Type 2 diabetes mellitus, prior chest irradiation in 1978.
+
+**Medications**: Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily.
+
+**Allergies**: NKDA.
+
+**Physical Examination**: On 2025‑04‑10, vital signs were BP 142/88 mmHg, HR 80 bpm, T 36.8°C, BMI 34. Breast exam reveals a single firm mass 2.3 cm in the lower outer quadrant with intact overlying skin; no additional masses or axillary lymphadenopathy.
+
+**Imaging Findings**:
+- **Mammography** – Spiculated mass 2.3 × 1.9 cm in the lower outer quadrant.
+- **Ultrasound** – Hypoechoic, irregular lesion with acoustic shadowing.
+
+Both modalities raise high suspicion for malignancy.
+
+**Assessment**: Suspicious breast lesion likely malignant given spiculated morphology and ultrasound characteristics. Differential includes invasive ductal carcinoma, radiation‑induced breast carcinoma, fibroadenosis, and less likely benign entities such as fibroadenoma.
+
+**Plan**:
+1. Perform core‑needle biopsy of the lesion under ultrasound guidance.
+2. Continue current antihyperglycemic and antihypertensive regimen.
+3. Coordinate pathology reporting; upon confirmation of malignancy discuss surgical options with surgical oncology.
+4. Consider MRI of the breast if pathology is suspicious for multifocal disease.
+5. Schedule a follow‑up appointment in 4 weeks to discuss biopsy results and next steps.
+
+**Patient Education**: Reviewed the importance of timely tissue diagnosis, potential need for surgical management, and the role of her chronic conditions in influencing surgical risk.
+
+**Disposition**: The patient was reassured and given a biopsy referral. She has no immediate contraindications to the procedure.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Breast pain</span><span class="pill">Firm breast lump</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>142/88</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No additional masses on clinical exam</li><li>Skin appeared intact aside from the mass</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Core‑needle biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Mammography: Spiculated mass 2.3 × 1.9 cm</li><li>Ultrasound: Hypoechoic irregular lesion</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation in 1978</li><li>Family history of breast cancer</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mrs. Park underwent diagnostic mammography and ultrasound. The mammogram revealed a spiculated mass measuring 2.3 × 1.9 cm in the lower outer quadrant, while the ultrasound showed a hypoechoic, irregular lesion with acoustic shadowing. The radiologist recommended a core‑needle biopsy to determine malignancy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Imaging reveals suspicious spiculated mass; core‑needle biopsy recommended.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-05-01</h3><div class="visit-meta">Breast Surgery | Reason: Surgical consultation after biopsy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Surgical consultation after malignant core‑needle breast biopsy.
+
+History of Present Illness: 55‑year‑old female presents for postoperative surgical evaluation following a diagnostic core‑needle biopsy confirming an invasive breast malignancy. The lesion is described as a 2‑cm firm mass tethered to the skin with associated skin retraction, suggestive of skin involvement. The patient reports a persistent breast lump and mild breast ache. No pain exacerbation or systemic symptoms reported.
+
+Past Medical History: Obesity (BMI 34), Type 2 Diabetes Mellitus, Prior chest radiation, Family history of breast cancer.
+
+Medications: Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily.
+
+Allergies: NKDA.
+
+Physical Examination: Vital signs: BP 140/85 mmHg, HR 78 bpm, Temp 36.9°C, BMI 34. Breast exam reveals a firm 2‑cm mass in the left lower outer quadrant, tethered to overlying skin with mild retraction. No palpable axillary lymphadenopathy. No erythema, edema, or peau d’orange noted.
+
+Assessment: The core‑needle pathology confirms invasive ductal carcinoma. The skin tethering and retraction indicate probable skin involvement (T4b). No clinical lymph node metastasis present. Differential diagnoses include inflammatory breast carcinoma (unlikely given lack of erythema), metastatic disease, and benign lesion with skin tether (excluded by pathology).
+
+Plan:
+1. Order a comprehensive PET‑CT whole‑body scan to stage disease and identify distant metastases.
+2. Discuss neoadjuvant endocrine therapy (starting letrozole 2.5 mg daily) to reduce tumor burden pending imaging results.
+3. Continue current antihyperglycemic and antihypertensive therapy; provide diabetes education and consider dietitian referral for weight management.
+4. If staging demonstrates no metastatic disease, proceed to prospective bilateral mastectomy with axillary lymph node dissection.
+5. Schedule a multidisciplinary tumor board review to finalize surgical and oncologic plan.
+6. Follow up in 2 weeks after PET‑CT for discussion of results and next steps.
+
+Patient education provided regarding the importance of glycemic control, potential side effects of endocrine therapy, and the need for close monitoring of surgical sites.
+
+Signature:
+
+[Physician Name], M.D.
+
+Specialty: Breast Surgery</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent breast lump</span><span class="pill">Mild breast ache</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/85</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.9°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm 2 cm mass tethered to skin</li><li>Skin retraction</li><li>No palpable lymph nodes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PET‑CT whole-body scan</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Family history of breast cancer</li><li>Obesity</li><li>Type 2 diabetes mellitus</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The breast surgeon reviewed the core‑needle pathology results indicating invasive ductal carcinoma, grade III, ER‑positive (80 %), PR‑positive (70 %), HER2‑negative, p53 over‑expressed. The tumor was large and involved the skin, suggesting mastectomy. The surgeon discussed neoadjuvant endocrine therapy to shrink the tumor, optimization of glucose control, and a prospective bilateral mastectomy with axillary dissection if imaging remained positive. A whole‑body staging scan was recommended to rule out distant disease.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Large primary lesion with skin involvement; surgery likely needed after endocrine therapy. Staging scan planned.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-05-12</h3><div class="visit-meta">Medical Oncology | Reason: Staging after surgery consult</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Staging after surgery consult.
+
+History of Present Illness:
+Mrs. Park, 55‑year‑old female with a history of left breast infiltrating ductal carcinoma (resected, post‑operative) presents today for staging after a PET‑CT scan performed 2 days ago. She reports no new symptoms. Her prior chest irradiation (1978) and family history of breast cancer are noted.
+
+Past Medical History: Obesity (BMI 34), Type 2 Diabetes Mellitus, Hypertension, Prior chest radiation.
+
+Medications: Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily, Letrozole 2.5 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: No new complaints.
+
+Physical Examination:
+- General: Well‑appearing, no acute distress.
+- Breast: Normal breast exam; no palpable nodes.
+- Lymphatic: No axillary or supraclavicular lymphadenopathy.
+- Musculoskeletal: No focal pain; normal ROM.
+- Cardiovascular: HR 76 bpm, BP 138/84 mmHg.
+- Respiratory: RR 12/min, lungs clear to auscultation.
+- Abdomen: Nontender, no organomegaly.
+- Skin: No rash.
+
+Vital Signs:
+- BP: 138/84 mmHg (non‑febrile). HR 76 bpm. Temperature 36.7°C. BMI 34.
+
+Diagnostic Findings:
+- PET‑CT: 1.8 × 1.5 cm hypermetabolic focus in the left lower lobe of lung, osteolytic lesions along the lumbar vertebrae, faint hepatic uptake.
+- No new breast lesions.
+
+Assessment:
+
+1. Metastatic breast cancer with potential pulmonary involvement (likely metastatic disease vs primary lung cancer). The PET‑CT findings are highly suggestive of oligometastatic spread.
+2. Bone metastases in the lumbar spine — consistent with Stage IV disease.
+3. Possible hepatic metastasis – low uptake; further evaluation required.
+4. No new lymphadenopathy or primary disease recurrence.
+
+Differential diagnosis:
+- Pulmonary metastasis from breast carcinoma.
+- Primary lung carcinoma (squamous cell, adenocarcinoma) – less likely given breast history.
+- Lymphoma – unlikely but considered.
+- Osteogenic sarcoma or bone‑changing events secondary to prior chest radiation.
+- Hepatic metastasis vs benign hepatic lesion.
+
+Plan:
+1. Initiate or continue systemic endocrine therapy: Letrozole 2.5 mg daily (already started). Monitor endocrine side‑effects.
+2. Begin bone‑protective therapy: Zoledronic acid 4 mg IV q12 weeks (or Denosumab 120 mg SC q4 weeks) after baseline labs. Reinforce calcium 1200 mg daily and vitamin D 800 IU daily.
+3. Order baseline laboratory panel before starting bisphosphonate: CBC, CMP, serum calcium, phosphate, alkaline phosphatase, 25‑OH vitamin D, uric acid.
+4. Schedule repeat PET‑CT in 3 months to assess treatment response.
+5. Continue tight glycemic control: monitor random glucose, consider endocrinology referral if HBA1c &gt;7.5%.
+6. Patient education on signs of bone pain, fractures, hypercalcemia, and need to report new symptoms.
+7. Encourage weight‑bearing exercise within tolerance and nutritional counseling.
+8. Discuss palliative radiation therapy for symptomatic spinal lesions if pain develops.
+
+Disposition: Patient remains under oncology care. Follow‑up scheduled for 4 weeks to review lab results and discuss bone‑protective agent initiation.
+
+Prepared by: Dr. X, Medical Oncology.
+
+[Signature]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None new</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal breast exam</li><li>No new lymphadenopathy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PET‑CT: Lung lesion 1.8 × 1.5 cm, bone metastases in lumbar spine, hepatic uptake</li><li>Stage: IV</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation in 1978</li><li>Family breast cancer history</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mrs. Park underwent a PET‑CT scan, which identified a 1.8 × 1.5 cm hypermetabolic focus in the left lower lobe of the lung, osteolytic lesions along the lumbar vertebrae, and a faint hepatic spot. Imaging confirmed metastatic breast cancer, stage IV. The oncologist discussed systemic endocrine therapy and bone‑protective agents, and explained the need for close monitoring of diabetic control.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Metastatic disease confirmed; stage IV. Initiation of systemic therapy planned.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-05-24</h3><div class="visit-meta">Medical Oncology | Reason: Start of systemic therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Initiation of systemic therapy for metastatic breast cancer. 
+
+**HPI:** 55‑year‑old female presents for initiation of letrozole and first zoledronic acid infusion. She notes mild hot flashes, which are new since starting endocrine therapy. Her fasting glucose remains well controlled (~130 mg/dL). She has a history of obesity (BMI 34), type 2 diabetes, prior chest radiation, and metastatic breast cancer (Stage IV) with bone and pulmonary lesions. No changes in medication adherence or symptoms of bone pain. 
+
+**Review of Systems:** Positive for mild hot flashes; otherwise unremarkable. No new pain, weight changes, or constitutional symptoms. 
+
+**Vitals:** BP 136/82 mmHg, HR 78 bpm, Temp 36.8 °C, BMI 34. 
+
+**Physical Examination:** 
+- Breast: tender to light palpation, no new nodules, no enlarged axillary nodes. 
+- Lymph nodes: no palpable axillary or supraclavicular lymphadenopathy. 
+- Cardiovascular, respiratory, abdominal: normal. 
+- No signs of hypercalcemia (no confusion, thirst, or polyuria). 
+
+**Assessment:** 
+1. Metastatic breast cancer (Stage IV) – currently on endocrine therapy (letrozole). 
+2. Bone metastases – received first zoledronic acid infusion for bone protection. 
+3. Mild hot flashes – likely due to aromatase inhibitor therapy. 
+4. Type 2 diabetes mellitus – well controlled. 
+5. Prior chest irradiation – monitored for late sequelae but no acute issues noted. 
+
+**Plan:** 
+- Initiate letrozole 2.5 mg PO nightly (continue). 
+- Administer zoledronic acid 4 mg IV over 15 minutes (first infusion given today). 
+- Counsel on monitoring serum calcium and phosphate levels; maintain calcium 1200 mg daily and vitamin D 800 IU daily. 
+- Advise managing hot flashes: cool‑down techniques, possible low‑dose gabapentin if bothersome, or adjust aromatase inhibitor per endocrine guidelines. 
+- Continue metformin 1000 mg BID, glipizide 5 mg daily, lisinopril 10 mg daily. 
+- Schedule next zoledronic acid infusion in 4 weeks. 
+- Plan CBC, CMP, calcium, phosphate, alkaline phosphatase, 25‑OH vitamin D, uric acid before each bisphosphonate dose (baseline labs pending but will review in next visit). 
+- Schedule follow‑up in 4 weeks to review lab results, discuss hot flash control, and plan subsequent systemic therapy. 
+
+---
+**Follow‑up notes:** Patient to return in 4 weeks for laboratory review and clinical assessment.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild hot flashes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Breast tender to light palpation, no new nodules</li><li>No lymphadenopathy</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>First zoledronic acid infusion (IV)</li><li>Letrozole 2.5 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Mild hot flashes; glucose remains well controlled.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid (4 mg IV q4w)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. López initiated letrozole for endocrine suppression and ordered the first zoledronic acid infusion for bone protection. The patient reported mild hot flashes and excellent glycemic control with fasting glucose around 130 mg/dL. She was advised to monitor calcium levels and to continue her diabetes regimen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Endocrine therapy and bisphosphonate started; patient tolerated initial regimen.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-06-15</h3><div class="visit-meta">Medical Oncology | Reason: Assessment of disease progression and chemotherapy initiation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Review of imaging findings and treatment planning.
+
+**History of Present Illness:** 55‑year‑old female with known metastatic breast cancer (stage IV) to lung, liver, and bone, now presenting for review of new imaging. She reports worsening breast pain, back pain, and fatigue over the past week. No fevers or new neurological symptoms reported.
+
+**Past Medical History:** • Metastatic breast carcinoma, prior left breast mastectomy 2 years ago.
+• Prior chest irradiation (30 Gy) for local control.
+• Type 2 diabetes mellitus, obesity (BMI 34).
+• Hypertension.
+
+**Medications (current):** Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily, Letrozole 2.5 mg nightly, Zoledronic acid 4 mg IV q4w, Calcium 1200 mg daily, Vitamin D 800 IU daily.
+
+**Allergies:** NKDA.
+
+**Vital Signs:** BP 142/88 mmHg, HR 80 bpm, Temp 36.9 °C, BMI 34.
+
+**Review of Systems (selected):** Positive for back pain, breast pain, fatigue. Negative for fever, chills, new neurological deficits.
+
+**Physical Exam:**
+- *General:* Alert, oriented, no acute distress.
+- *Breast:* Tenderness in left breast, no new skin changes.
+- *Back:* Limited mobilization secondary to pain; no focal neurological deficits.
+- *Lymphatics:* No palpable axillary or supraclavicular nodes.
+
+**Diagnostic Imaging:*** Chest and abdomen CT demonstrates progression: largest lung metastasis 3.4×3.1 cm, new lytic T9 vertebral lesion 2.2×2.0 cm with canal narrowing, liver lesion 1.3×1.2 cm, and new ground‑glass opacities in the right upper lobe.
+
+**Assessment:**
+1. Metastatic breast cancer progression with pulmonary, hepatic, and osseous involvement.
+2. Risk for spinal cord compression – T9 vertebral lesion with canal narrowing.
+3. New ground‑glass opacities – differential includes infectious pneumonia (bacterial/viral), pulmonary metastasis, or post‑irradiation changes.
+4. Diabetes mellitus with well‑controlled glycemia, obesity, and hypertension—requires monitoring during chemotherapy.
+
+**Plan:**
+- *Systemic therapy:* Initiate weekly paclitaxel 80 mg/m² IV with prophylactic filgrastim 5 mg SC weekly.
+- *Hormone therapy:* Continue letrozole 2.5 mg nightly.
+- *Bone health:* Continue zoledronic acid 4 mg IV q4w; monitor serum calcium, phosphate, and alkaline phosphatase prior to each infusion.
+- *Supportive:* Calcium 1200 mg daily, Vitamin D 800 IU daily; continue diabetes and hypertension regimens.
+- *Monitoring:* CBC, CMP, calcium/phosphate, alkaline phosphatase, and 25‑OH vitamin D prior to each chemo cycle.
+- *Spine:* Educate patient on red‑flag symptoms of spinal cord compression (new or worsening back pain, neurological deficits) and instruct to seek immediate care if they occur.
+- *Infection:* Consider COVID‑19 PCR and bacterial/viral respiratory panel if clinical suspicion increases; monitor for fevers or respiratory distress.
+- *Follow‑up:* Repeat chest/abdomen CT in 12 weeks to assess treatment response; next chemotherapy infusion scheduled one week from today.
+- *Patient education:* Discuss potential neuropathy, alopecia, and fatigue; reinforce adherence to medication schedule and reporting of any new symptoms.
+
+---
+**Follow‑up:**
+- Next chemo dose: 2025‑06‑22.
+- Labs: CBC/CMP/calcium panel within 48 hrs of next dose.
+- Imaging: Chest/abdomen CT at 3 months.
+- Clinic visit: 2025‑07‑06 to review labs, imaging, and symptom progression.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Breast pain</span><span class="pill">Back pain</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>142/88</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.9°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness in left breast</li><li>Limited mobilization due to back pain</li><li>No new palpable lymph nodes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest/abdomen CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: Lung 3.4 × 3.1 cm, T9 vertebral lesion 2.2 × 2.0 cm, liver 1.3 × 1.2 cm, new GGOs right upper lobe</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Paclitaxel 80 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li><li>Continue letrozole 2.5 mg nightly</li><li>Zoledronic acid IV every 4 weeks</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>CT of chest and abdomen showed progression: lung metastasis increased to 3.4 × 3.1 cm, a new lytic T9 vertebral lesion 2.2 × 2.0 cm with canal narrowing, liver lesion 1.3 × 1.2 cm, and new ground‑glass opacities in the right upper lobe. The oncologist discussed the need to switch to systemic chemotherapy, avoiding anthracyclines due to previous chest irradiation, and chose weekly paclitaxel 80 mg/m² with granulocyte‑stimulating factor prophylaxis. The patient consented, and the first dose was administered in clinic.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progression noted on imaging; chemo initiated with paclitaxel and granulocyte support.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-07-04</h3><div class="visit-meta">Medical Oncology | Reason: First chemotherapy cycle and side‑effect monitoring</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: First cycle of chemotherapy and side‑effect monitoring.
+
+**Subjective**
+- Patient reports mild tingling in the feet that began during the infusion and resolved shortly after dexamethasone premedication. Tingling persisted post‑infusion but was tolerable. Back pain has improved from a VAS of 7/10 to 4/10.
+- No new constitutional symptoms, but patient acknowledges slight fatigue.
+- No changes to dietary or activity level noted.
+
+**Objective**
+- **Vitals**: BP 138/85 mmHg, HR 78 bpm, Temp 36.7°C, BMI 34.
+- **Physical Exam**: No new palpable masses; mild pedal tingling noted. Back pain localized to lumbar spine, improved compared to prior visit.
+- **Labs/Imaging**: None ordered during this encounter.
+
+**Assessment**
+1. **Paclitaxel‑induced peripheral neuropathy (grade 1)** – mild, transient tingling during infusion; likely dose‑related. 
+2. **Diabetic neuropathy** – contributory baseline; monitor for cumulative toxicity.
+3. **Metastatic breast cancer (Stage IV)** – stable disease as previous imaging showed progression; currently on hormone therapy and bisphosphonate.
+4. **Back pain** – likely due to osseous metastases; pain control appears satisfactory at this dose.
+
+**Plan**
+- Increase paclitaxel dose to 90 mg/m² for the next cycle (2025‑07‑21), continue weekly filgrastim support.
+- Continue dexamethasone 8 mg IV premedication as tolerated.
+- Monitor neuropathy closely; if tenderness or pain escalates to grade 2, consider dose hold or switch to alternate taxane or neuropathic pain agent (e.g., duloxetine 30 mg PO daily titrated).
+- Maintain current endocrine therapy (letrozole 2.5 mg nightly) and bone‑protective therapy (zoledronic acid q4 wks with calcium 1200 mg and vitamin D 800 IU daily).
+- Order CBC, CMP, calcium, phosphate, alkaline phosphatase, and 25‑OH vitamin D 1‑month prior to next infusion to monitor marrow reserve and bone health.
+- Schedule next infusion on 2025‑07‑21; repeat imaging in 12 weeks for disease assessment.
+- Encourage patient to continue blood glucose monitoring and strict dietary measures for diabetes control.
+- Educate patient on signs of worsening neuropathy and advise to report new weakness or numbness.
+
+**Disposition** – Patient tolerated infusion well. Next visit scheduled for chemo and labs.
+
+**Signature**: Dr. [Name], MD
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild neuropathic tingling in feet</span><span class="pill">Improved back pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No new palpable masses</li><li>Slight pedal tingling</li><li>Back pain improved</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Paclitaxel 80 mg/m² IV</li><li>Dexamethasone 8 mg IV premedication</li><li>Filgrastim 5 mg SC prophylaxis</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Back pain improved; mild neuropathy persists.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Paclitaxel 80 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the first infusion, the patient experienced mild neuropathic tingling that resolved after administration of dexamethasone premedication 8 mg IV. Back pain decreased from VAS 7/10 to 4/10. The oncologist planned to increase the paclitaxel dose to 90 mg/m² in the next cycle, continuing filgrastim support. The patient reported an improvement in pain but acknowledged persistent tingling in feet.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First cycle of paclitaxel tolerable with neuropathic side effect; dose escalation planned.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-08-01</h3><div class="visit-meta">Hospital Medicine | Reason: Fever and septic episode</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Hospital Medicine Note – 2025-08-01
+
+Patient: Mrs. J. Park, 55‑year‑old female
+Chief Complaint: Fever with chills and suprapubic discomfort
+
+Subjective:
+Mrs. Park was admitted with a documented fever 38.8°C, chills, and lower abdominal discomfort. She reports persistent suprapubic pain, mild urinary frequency, and nausea. No dysuria or hematuria reported. Denies recent travel or exposure to sick contacts. Past medical history significant for obesity (BMI 34), type 2 diabetes mellitus, prior chest radiation, metastatic breast cancer (stage IV), and peripheral neuropathy from chemotherapy. No alcohol or tobacco use. Current meds: Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily, Letrozole 2.5 mg nightly, Zoledronic acid 4 mg IV q4w, Calcium 1200 mg daily, Vitamin D 800 IU daily, weekly Paclitaxel 80 mg/m2 IV (now increased to 90 mg/m2), Filgrastim 5 mg SC weekly, Dexamethasone 8 mg IV pre‑medication. No known drug allergies.
+
+Objective:
+- Vitals: BP 120/70 mmHg, HR 95 bpm, Temp 38.8°C, BMI 34.
+- General: Alert, mild distress from fever.
+- Abdomen: Mild suprapubic tenderness, no guarding or rebound, no masses.
+- Skin: No new lesions, previously noted metastases stable.
+- Neurologic: Tingling in feet consistent with peripheral neuropathy, no acute change.
+- Labs: Blood cultures positive for Enterococcus faecalis; urinalysis shows pyuria; CBC: leukocytosis 13.5 K/µL with neutrophil predominance; CMP pending.
+- Imaging: None ordered during this admission beyond baseline.
+
+Assessment:
+1. Sepsis secondary to urinary tract infection – Enterococcus faecalis bacteremia; currently treated with broad‑spectrum therapy (ceftriaxone + vancomycin).
+2. Hyperglycemic state secondary to corticosteroid therapy for septic shock; managed with transition to basal‑bolus insulin.
+3. Stable metastatic breast cancer under current oncology regimen; paclitaxel dose increased to 90 mg/m2 with filgrastim support.
+4. Ongoing peripheral neuropathy; no acute exacerbation.
+
+Plan:
+- Continue ceftriaxone 1 g IV q24h and vancomycin 1 g IV q12h for a total of 7 days, total 14 days to ensure adequate coverage. Monitor troughs for vancomycin.
+- Complete 7‑day antibiotic course; hold vancomycin once cultures cleared and urine culture negative.
+- Basal‑bolus insulin regimen for glycemic control; glucose checks q4h; target BG 140–180 mg/dL. Adjust insulin based on pre‑meals and bedtime.
+- Continue filgrastim 5 mg SC weekly and paclitaxel 90 mg/m2 IV weekly; schedule next infusion 2025‑09‑01.
+- Maintain letrozole, zoledronic acid, calcium, vitamin D supplementation.
+- Discharge with completion of antibiotic therapy, basal‑bolus insulin, and oncologic follow‑up. Provide instructions for recognizing signs of infection recurrence.
+- Arrange outpatient follow‑up: Hospital medicine clinic 48 hrs post‑discharge; endocrine consult within 1 week; oncology clinic 1 week for next chemo cycle.
+- Labs: CBC, CMP, calcium, phosphate, alkaline phosphatase, 25‑OH vitamin D one week after discharge. Repeat urinalysis prior to discharge if culture remains positive.
+- Patient education on medication adherence, signs of infection, and glucose monitoring.
+- Document: Sepsis resolved; temperature normalized; glucose stabilized; neuropathic tingling unchanged.
+
+Follow‑up recommendations:
+   • Discharge home with completion of antibiotics; 48 hrs outpatient follow‑up with hospital medicine.
+   • Endocrinology visit within 1 week to review basal‑bolus regimen.
+   • Oncologist appointment in 2 weeks (next paclitaxel 90 mg/m2 infusion).
+   • Repeat CBC, CMP, and other metabolic panels one week post‑discharge.
+   • Monitor calcium and phosphate before each zoledronic acid infusion.
+   • Educate patient on sepsis signs and glycemic control.
+
+Signatures:
+Hospitalist, Dr. A. Smith</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fever 38.8°C</span><span class="pill">Chills</span><span class="pill">Suprapubic pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/70</td></tr><tr><td>HR</td><td>95</td></tr><tr><td>Temp</td><td>38.8°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slight suprapubic tenderness</li><li>No new masses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Blood cultures</li><li>Urinalysis</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Blood cultures: Enterococcus faecalis</li><li>Urinalysis: pyuria</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ceftriaxone 1 g IV q24h</li><li>Vancomycin 1 g IV q12h</li><li>IV fluids</li><li>Glucose‑controlled basal‑bolus insulin</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Fever resolved; glucose improved with insulin adjustment; neuropathic tingling persisted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Paclitaxel 80 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent chemotherapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mrs. Park was admitted with a fever of 38.8°C, chills and lower abdominal discomfort. Urinalysis suggested a urinary source; blood cultures grew Enterococcus faecalis. She was started on ceftriaxone and vancomycin, received intravenous fluids, and her insulin regimen was adjusted because steroids were added for septic shock. Glucose levels spiked to 220–260 mg/dL, requiring a transition to basal-bolus insulin. She remained hemodynamically stable and was discharged after a 7‑day course of antibiotics with close endocrine follow‑up. The oncology team adjusted her paclitaxel dose to 90 mg/m² and continued filgrastim. Her diabetes management was reinforced by endocrinology.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Septic episode managed; chemotherapy dose increased; diabetes flared due to steroids.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2025-09-01</h3><div class="visit-meta">Medical Oncology | Reason: Post‑sepsis follow‑up and chemotherapy adjustment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**S:**
+Mrs. Park, a 55‑year‑old female with stage IV metastatic breast cancer, is presenting for an oncology follow‑up after a 7‑day hospitalization for sepsis due to Enterococcus faecalis. She reports that her back pain has worsened (VAS 6/10, especially with movement) and she feels mild bilateral lower‑extremity weakness. She denies new fever, chills, bowel or bladder symptoms, and notes that her neuropathic tingling is unchanged.
+
+**O:**
+Vitals: BP 138/80 mmHg, HR 80 bpm, Temp 36.8 °C, BMI 34.
+Physical exam: Diffuse tenderness over the thoracic and lumbar spine. Lower extremity exam reveals mild hyperreflexia of patellar and Achilles reflexes, 4/5 strength in hip flexors, normal sensation, and gait is unremarkable. No focal deficits, no new masses palpable.
+Labs (repeat from day prior): CBC – ANC 1,700 mm³ (adequate but low for 90 mg/m² paclitaxel), CMP – creatinine 1.1 mg/dL, fasting blood glucose trend 140–160 mg/dL.
+
+**A:**
+1) Chemotherapy‑related peripheral neuropathy with worsening back pain and mild lower‑extremity weakness—possible extradural compression from a known lytic lumbar vertebral lesion.
+2) Ongoing metastatic disease activity (lung, liver, bone). 3) Post‑sepsis recovery with stable glycemic control.
+
+**P:**
+1. **Chemotherapy and supportive therapy** – Continue paclitaxel 90 mg/m² IV weekly with dexamethasone 8 mg IV pre‑medication; maintain filgrastim 5 mg SC weekly; continue zoledronic acid 4 mg IV q12 weeks.
+2. **Pain management** – Initiate oxycodone 5 mg PO q4–6 h PRN. Titrate upward as needed; monitor for constipation, respiratory depression, and opioid side‑effects. Consider adding duloxetine 30 mg daily for neuropathic pain.
+3. **Neurologic work‑up** – Order urgent MRI lumbar spine with contrast to evaluate for cord compression. If compression is identified, arrange neurosurgical/orthopedic consultation.
+4. **Monitoring** – Repeat CBC, CMP, and electrolytes 48 h prior to next chemotherapy infusion. Continue letrozole 2.5 mg nightly, calcium 1200 mg daily, vitamin D 800 IU daily.
+5. **Endocrine management** – Continue basal‑bolus insulin per endocrinology; review insulin dosing at next visit.
+6. **Follow‑up** – Schedule oncology visit in 4 weeks for pain assessment, neuro exam, imaging review, and to discuss potential chemotherapy dose adjustment. Patient should return sooner if she experiences worsening weakness, numbness, bowel or bladder changes, or new severe pain.
+
+*This plan balances aggressive disease control with symptom palliation while ensuring close monitoring for potential complications of chemotherapy and spinal metastases.*</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Back pain worsening</span><span class="pill">Mild weakness in lower extremities</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/80</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diffuse back tenderness</li><li>Hyperreflexia of lower extremities</li><li>No new masses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Blood glucose trend</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: ANC 1,700/mm³</li><li>CMP: Creatinine 1.1 mg/dL</li><li>Blood glucose: 140–160 mg/dL fasting</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Paclitaxel 90 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li><li>Zoledronic acid 4 mg IV q4w</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Back pain worsening; neuropathic tingling unchanged; glucose well controlled with insulin.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Paclitaxel 90 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li><li>Basal‑bolus insulin (glargine 10 U daily, lispro 8 U pre‑meal)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent septic episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After a 7‑day hospitalization for sepsis, Mrs. Park returned for oncology follow‑up. She reported back pain intensifying, especially with movement, and mild weakness in her legs. The oncologist continued the escalated paclitaxel dose to 90 mg/m², maintained filgrastim, and reaffirmed bone‑sparing with zoledronic acid. The endocrinology team reviewed her insulin plan, which remained stable. Neuro‑vascular exam noted mild hyperreflexia in the lower limbs. The plan was to monitor pain with a titrated oxycodone regimen and reassess in 4 weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continued disease progression; dose escalation of paclitaxel and supportive care.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2025-10-15</h3><div class="visit-meta">Medical Oncology | Reason: CT of disease progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** CT scan shows disease progression.
+
+**History of Present Illness:** 55‑year‑old female with stage IV HR+/HER2‑negative metastatic breast cancer presents for oncology follow‑up. She reports severe back pain (VAS 6/10) and shortness of breath. Recent CT chest/abdomen demonstrates enlarging primary lung lesion (4.2×3.8 cm), new rib metastasis, enlarging liver lesion (2.0×1.8 cm), and a T9 vertebral lesion compressing the canal &gt;50%. The patient is concerned about impending spinal cord compression and low response rates to second‑line therapy.
+
+**Past Medical History:** Obesity (BMI 34), type 2 diabetes mellitus, prior chest radiation, peripheral neuropathy from chemotherapy.
+
+**Current Medications:** Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily, Letrozole 2.5 mg nightly, Zoledronic acid 4 mg IV q12w, Calcium 1200 mg daily, Vitamin D 800 IU daily, Paclitaxel 90 mg/m² IV weekly, Filgrastim 5 mg SC weekly, Dexamethasone 8 mg IV pre‑medication, Ceftriaxone 1 g IV q24h, Vancomycin 1 g IV q12h, Basal‑bolus insulin, Oxycodone 5 mg PO q4–6 h PRN. New: Duloxetine 30 mg daily.
+
+**Allergies:** NKDA.
+
+**Review of Systems:** Positive for back pain, dyspnea. Negative for chest pain or fever.
+
+**Physical Exam:** Vitals stable: BP 140/85 mmHg, HR 82 bpm, Temp 36.7 °C, BMI 34. Spinal exam shows diffuse thoracic tenderness, limited range of motion, no focal neurologic deficits yet.
+
+**Assessment:**
+1. Progressive metastatic breast cancer involving lungs, ribs, liver, and bone.
+2. Probable impending spinal cord compression at T9 – urgent evaluation needed.
+3. Ongoing chemotherapy‑related peripheral neuropathy.
+4. Pain secondary to bone metastases.
+5. Diabetes and hypertension well‑controlled but require vigilance with steroids.
+
+**Plan:**
+- **Imaging:** MRI T6‑L1 spine within 2 weeks to evaluate canal compromise.
+- **Palliative Radiotherapy:** Refer thoracic radiology for definitive palliative RT to thoracic spine and rib metastasis.
+- **Surgical Consultation:** Consider spine surgery for decompression if MRI confirms significant cord compromise.
+- **Oncology Treatment:** Continue paclitaxel 90 mg/m² weekly with filgrastim support. Discuss initiating capecitabine as second‑line option if disease progresses or intolerable toxicities arise.
+- **Pain Management:** Titrate oxycodone, add Duloxetine 30 mg daily for neuropathic component, consider nerve block if inadequate.
+- **Glucocorticoids:** High‑dose dexamethasone 8 mg IV q6 h for possible cord compression; taper once stable.
+- **Laboratory Monitoring:** CBC, CMP, calcium/phosphate before each chemo cycle.
+- **Palliative Care:** Initiate referral to palliative care team for symptom management and advance care planning.
+- **Follow‑Up:** Oncology visit in 4 weeks to review imaging, labs, pain control, and adjustment of therapy.
+
+**Disposition:** Patient was counseled regarding low response rates to second‑line options, but emphasized importance of multidisciplinary management to maintain quality of life. She will pursue palliative RT and surgical evaluation pending MRI results.
+
+**Signature:** Dr. [Name], Medical Oncology
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe back pain</span><span class="pill">Shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/85</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diffuse vertebral tenderness</li><li>Limited spinal range of motion</li><li>No new palpable masses</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest/abdomen</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: Lung 4.2 × 3.8 cm, new rib metastasis, liver 2.0 × 1.8 cm, T9 canal narrowing 50 %</li><li>Bone scan: multiple active lesions in lumbar spine</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Consideration for second‑line chemotherapy (capecitabine)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain worsened; neuropathic tingling persistent; concern about spinal cord compression.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Paclitaxel 90 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li><li>Basal‑bolus insulin (glargine 10 U daily, lispro 8 U pre‑meal)</li><li>Oxycodone 10 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent septic episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A repeat CT scan showed the primary lung lesion had grown to 4.2 × 3.8 cm, a new rib metastasis, and an enlarging liver lesion (2.0 × 1.8 cm). The T9 vertebral lesion was now more than 50 % of the canal diameter, raising concern for impending cord compression. The oncologist considered second‑line therapy options such as capecitabine or a taxane‑based regimen, but counselled the patient that response rates were low. She advised pain management, potential spinal surgery, and a referral to thoracic radiology for definitive palliative radiation. The plan was to begin discussion of palliative care integration.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Rapid progression of metastatic burden; spinal canal compromise risk.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2025-11-10</h3><div class="visit-meta">Medical Oncology | Reason: Initiation of anti‑progesterone therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of anti‑progesterone therapy to address progressive metastatic breast cancer with symptomatic bone pain and hot flashes.
+
+History of Present Illness: Mrs. Park is a 55‑year‑old female with a history of estrogen receptor‑positive metastatic breast cancer currently progressing on letrozole with multiple bone lesions and pulmonary metastases. She reports a modest reduction in bone pain (VAS 4/10 from 6/10) and hot flashes after three weeks on mifepristone 125 mg daily, yet her overall disease burden remains progressive. She continues weekly paclitaxel 90 mg/m², filgrastim support, zoledronic acid 4 mg q4 w, and basal‑bolus insulin with good glycemic control. Past significant events include a septic episode treated two months ago and prior chest irradiation. She is compliant with all medications.
+
+Review of Systems: Positive for ongoing back pain, mild lower‑extremity weakness, hot flashes, and constipation. Denies fever, chills, new neurological deficits, or gastrointestinal bleeding.
+
+Physical Examination:
+- General: Alert, oriented, in non‑acute distress.
+- Vitals: BP 138/80 mmHg, HR 80 bpm, Temp 36.6 °C, BMI 34.
+- Musculoskeletal: Diffuse tenderness over lumbar spine (L2‑L5) and bilateral lower extremities; strength 4/5 in hip flexors and knee extensors.
+- Neurologic: Mild hyperreflexia of lower limbs, no clear sensory loss.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Respiratory: Breath sounds clear bilaterally.
+- Abdomen: Soft, non‑tender, no hepatosplenomegaly.
+- Skin: No ulceration or necrosis.
+
+Assessment:
+1. Metastatic ER‑positive breast cancer with progressive bone and pulmonary disease.
+2. Symptomatic bone pain and hot flashes – partially responsive to mifepristone.
+3. Potential endocrine resistance – initiation of mifepristone as palliative anti‑progesterone.
+4. Risk for spinal cord compression secondary to new T9 lytic lesion noted on prior CT.
+5. Type 2 diabetes mellitus controlled with basal‑bolus insulin; monitor for hyperglycemia related to mifepristone.
+6. Peripheral neuropathy secondary to prior chemotherapy.
+
+Differential Diagnosis:
+- Progressive visceral and osseous metastatic disease.
+- New spinal cord compression from T9 lesion.
+- Hypercalcemia of malignancy.
+- Treatment‑related bone marrow suppression.
+- Mifepristone‑induced hyperglycemia.
+
+Plan:
+- Continue current anti‑estrogen (letrozole 2.5 mg nightly) and chemotherapy (paclitaxel 90 mg/m² weekly, filgrastim 5 mg SC). 
+- Add mifepristone 125 mg PO daily, counsel on potential hyperglycemia, fluid retention, and blood pressure changes.
+- Continue zoledronic acid 4 mg IV q4 w, calcium 1200 mg PO daily, vitamin D 800 IU PO daily. Monitor serum calcium, phosphate, alkaline phosphatase, and 25‑OH vitamin D prior to each infusion.
+- Initiate daily acetaminophen 500 mg q6 h PRN and maintain oxycodone 5 mg PO q4‑6 h PRN; consider adding low‑dose gabapentin (150 mg PO q8 h) for neuropathic pain.
+- Order CBC, CMP, fasting glucose, HbA1c, serum calcium, phosphate, alkaline phosphatase, 25‑OH vitamin D, and fasting lipids.
+- Repeat CT chest/abdomen in 6 weeks to assess radiologic progression.
+- Refer to radiation oncology for evaluation of palliative radiotherapy to T9 vertebral body and adjacent ribs; consider urgent consult if neurological symptoms worsen.
+- Educate patient on signs of spinal cord compression (new weakness, bladder/bowel dysfunction) and to seek immediate care if noted.
+- Continue monitoring blood pressure, weight, and HbA1c monthly.
+- Discuss palliative care services for symptom management and psychosocial support.
+
+Follow‑up:
+- Next oncology visit in 4 weeks; early appointment if pain escalates or neurological deficits emerge.
+- Routine labs (CBC, CMP, calcium panel) before each chemotherapy cycle.
+- MRI lumbar spine if new or worsening neurological symptoms.
+- Adjust analgesic regimen and endocrine therapy based on response and tolerance.
+
+All treatments and monitoring are aligned with current evidence for hormone‑refractory metastatic breast cancer and the patient&#x27;s comorbidities.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Worsening bone pain</span><span class="pill">Persistent hot flashes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/80</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.6°C</td></tr><tr><td>BMI</td><td>34</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diffuse tenderness over lumbar spine</li><li>Weakness of lower limbs graded 4/5</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest/abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: Liver 2.0 × 1.8 cm, unchanged; lung 4.2 × 3.8 cm</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Mifepristone 125 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight reduction in bone pain; mild improvement in hot flashes.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Paclitaxel 90 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li><li>Basal‑bolus insulin (glargine 10 U daily, lispro 8 U pre‑meal)</li><li>Oxycodone 10 mg PO PRN</li><li>Mifepristone 125 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent septic episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist started mifepristone 125 mg daily after discussion of limited benefit and potential side effects. Mrs. Park reported a modest decrease in bone pain and hot flashes after three weeks, though her overall disease burden continued to rise. She remained compliant with insulin and maintained good glycemic control. Follow‑up plans included repeat imaging in 6 weeks and evaluation for palliative radiation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anti‑progesterone therapy initiated; no significant change in metastatic burden.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2025-12-12</h3><div class="visit-meta">Palliative Care / Radiation Oncology | Reason: Palliative radiation and pleural effusion drainage</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Palliative care consultation for worsening dyspnea and large right pleural effusion.
+
+History of Present Illness: Mrs. Park, 55-year-old female with stage IV metastatic breast cancer, presents to the oncology palliative clinic with worsening dyspnea and chest discomfort. She reports progressive shortness of breath over the past 3 days, associated with mild pleuritic chest pain on the right side and an increased sense of fatigue. On exam, the patient was sitting upright with accessory muscle use, SpO2 88% on room air. A chest radiograph showed a massive right pleural effusion with mediastinal shift. Diagnostic thoracentesis revealed exudative fluid consistent with malignant effusion. A pleural window procedure was performed successfully, decompressing the effusion and relieving pressure. In addition, she began a 20‑day course of palliative radiation to the left chest wall and right lung field during this visit. Pain was managed with an up‑titrated oral oxycodone regimen (10 mg PO PRN) and low‑dose methylprednisolone (4 mg PO daily) was added to reduce dyspnea. Her diabetes remains controlled on her basal‑bolus insulin regimen; her lipid profile and blood pressure are stable on current medication list.
+
+Physical Examination: 
+- Vitals: BP 130/80 mmHg, HR 78 bpm, Temp 36.7 C, SpO2 88% RA, BMI 34.
+- Respiratory: Decreased breath sounds over right lower lung field, reduced chest expansion on the right, palpable tenderness over the pleural window site.
+- Neurologic: Mild weakness of lower limbs (4/5), hyperreflexia, no sensory deficits noted.
+
+Assessment: 
+1. Massive right pleural effusion, likely malignant secondary to metastatic breast cancer – effectively drained with pleural window.
+2. Exertional dyspnea secondary to loculated pleural effusion and large tumor burden in right lung; improved with drainage and steroids.
+3. Continued metastatic disease burden: lung (4.2 x 3.8 cm), hepatic (2 x 1.8 cm), multiple bone metastases.
+4. Pain control: adequate with oxycodone 10 mg PRN, consider addition of neuropathic adjunct if pain remains &gt;4/10.
+
+Plan: 
+- Continue current medication regimen: letrozole 2.5 mg nightly, zoledronic acid 4 mg IV q4 w, paclitaxel 90 mg/m² IV weekly, filgrastim 5 mg SC weekly, basal‑bolus insulin, metformin, glipizide, lisinopril, methylprednisolone 4 mg PO daily, oxycodone 10 mg PO PRN.
+- Monitor blood glucose levels closely given steroid therapy; adjust insulin as needed.
+- Hospitalize for 2–3 days for close monitoring of respiratory status, post‑procedural pain control, and observation for potential pleural re‑accumulation.
+- Repeat chest radiograph on hospital day 2 to assess for recurrent effusion.
+- Schedule a repeat CT chest/abdomen–pelvis in 4 weeks to evaluate treatment response.
+- Discuss and arrange hospice care transition at home following discharge.
+- Educate patient and caregiver on signs of pleural re‑accumulation, infection, and medication side effects.
+- Follow‑up in palliative clinic in 1 week, or sooner if respiratory status worsens.
+
+Medications to continue and any adjustments have been documented in the medication list. No new allergies identified.
+
+The patient and family were informed and consented to the plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Shortness of breath</span><span class="pill">Chest pain</span><span class="pill">Difficulty breathing</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>BMI</td><td>34</td></tr><tr><td>O2Sat</td><td>88%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased breath sounds on right lower lung field</li><li>Reduced chest expansion on right side</li><li>Tenderness over right pleural window site</li><li>Weakness of lower limbs 4/5</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Pleural fluid analysis</li><li>CT chest/abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: Large right pleural effusion with mediastinal shift</li><li>Pleural fluid: exudate, malignant cells</li><li>CT: Lung 4.2 × 3.8 cm, liver 2.0 × 1.8 cm, bone mets</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Palliative radiation to chest wall and right lung</li><li>Pleural window drainage</li><li>Oxycodone 10 mg PO PRN</li><li>Methylprednisolone 4 mg PO daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Dyspnea improved, chest pain relieved, but fatigue and weakness persisted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span><span class="pill">Large pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Paclitaxel 90 mg/m² IV weekly</li><li>Filgrastim 5 mg SC weekly</li><li>Basal‑bolus insulin (glargine 10 U daily, lispro 8 U pre‑meal)</li><li>Oxycodone 10 mg PO PRN</li><li>Mifepristone 125 mg daily</li><li>Methylprednisolone 4 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent septic episode</li><li>Endocrine therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mrs. Park presented to the oncology palliative clinic with worsening dyspnea and a large right pleural effusion. A chest radiograph confirmed a massive effusion. She received a diagnostic pleural tap that confirmed exudative fluid containing metastatic cells. A pleural window procedure was performed to drain the effusion and relieve pressure. She also received a 20‑day course of palliative radiation to the left chest wall and right lung field to control local disease. Her pain was managed with oral opioids, and she was started on low‑dose methylprednisolone to reduce dyspnea. Diabetes remained controlled by her insulin regimen; her lipid profile and blood pressure were stable. She was advised to stay in the hospital for a few days for monitoring and then return to home hospice care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pulmonary involvement severe; palliative procedures performed.</p></div></details></div><div class="visit-panel"><h3>Visit 13 &mdash; 2026-01-28</h3><div class="visit-meta">Palliative Care | Reason: Hospice transition and neurologic progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Palliative Care Note – Visit #13**
+
+**Patient**: 55‑year‑old female, previously diagnosed with Stage IV ER+ breast cancer, metastatic to bone, liver, lung, and brain.
+
+**Chief Complaint**: Transition to hospice and neurologic progression with new right‑sided weakness, shortness of breath, and altered mental status.
+
+**History of Present Illness**: On 2026‑01‑28 a brain CT for right‑sided weakness revealed a 1.2 × 1.0 cm enhancing occipital lobe lesion. A subsequent chest CT identified a new centrally‑located right lung mass causing near‑total collapse of the right lung. Given the extensive disease burden, poor performance status, and lack of curative options, the patient and family opted to discontinue further systemic therapy and pursue hospice care. The inpatient team increased analgesia, initiated a low‑dose steroid taper, and placed the patient on hospice.
+
+**Physical Examination**: BP 130/80, HR 78, Temp 36.5°C, SpO₂ 85% on room air. Neurologic: right upper extremity 3/5 strength, limited speech, right hemianopia, right leg 4/5 strength. Respiratory: decreased breath sounds on the right, signs of pleural effusion.
+
+**Medications at Visit**:
+- Methylprednisolone 40 mg IV BID (tapered to 4 mg PO daily)
+- Oxycodone 20 mg PO PRN (for breakthrough pain)
+- Letrozole 2.5 mg nightly (continued)
+- Zoledronic acid 4 mg IV q4 weeks (continued)
+- Mifepristone 125 mg daily (continued)
+- Baseline antihyperglycemics, insulin as required
+- Additional supportive care (calcium 1200 mg, vitamin D 800 IU, home oxygen as needed)
+
+**Assessment**:
+1. Progressive metastatic breast cancer with new brain and lung lesions.
+2. Neurologic deficits likely due to intracranial metastasis.
+3. Respiratory compromise from large pleural effusion and right lung collapse.
+4. Transition to hospice care appropriate given disease trajectory and patient/family wishes.
+
+**Plan**:
+- Continue hospice services with daily visits by hospice medicine.
+- Maintain current steroid taper: 40 mg IV BID for 7 days, reduce by 10 mg every 3 days until 4 mg PO daily.
+- Pain control: Oxycodone titration as needed; consider adding gabapentin or acetaminophen for neuropathic pain.
+- Oxygen therapy titrated to maintain SpO₂ &gt; 92%.
+- Monitor vitals weekly, especially SpO₂, blood glucose, and weight.
+- Provide emotional and psychosocial support to patient and family; involve chaplain if desired.
+- Encourage family to use the hospice support line 24/7.
+- Reevaluate goals of care if severe symptoms arise.
+
+**Follow‑up**: Hospice care team to perform home visits every other day initially, then weekly based on symptom control. Patient/family to contact hospice care if new neurological deficits, increasing dyspnea, or significant pain. No further oncologic therapy will be pursued.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Right‑sided weakness</span><span class="pill">Shortness of breath</span><span class="pill">Altered mental status</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.5°C</td></tr><tr><td>O2Sat</td><td>85%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right upper extremity strength 3/5</li><li>Limited speech</li><li>Right hemianopia</li><li>Weakness in lower limbs 4/5</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Brain CT</li><li>Chest CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Brain CT: 1.2 × 1.0 cm enhancing occipital lesion</li><li>Chest CT: New right lung mass causing collapse</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>High‑dose IV methylprednisolone 40 mg BID tapered</li><li>Oxycodone 20 mg PO PRN</li><li>Initiation of hospice care</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Comfortable, but alertness decreased; pain managed.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span><span class="pill">Large pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Glargine 10 U daily</li><li>Lispro 8 U pre‑meal</li><li>Oxycodone 20 mg PO PRN</li><li>Methylprednisolone 4 mg PO daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Mifepristone 125 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent septic episode</li><li>Ongoing endocrine therapy</li><li>Radiation to chest wall</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On the morning of Jan 28, a brain CT performed for new right‑sided weakness revealed a 1.2 × 1.0 cm enhancing occipital lobe lesion. A subsequent chest CT found a new centrally‑located right lung mass causing near‑total collapse of the right lung. The oncologist, neurology, and palliative teams convened to discuss the likelihood of aggressive intervention versus comfort care. Given the widespread disease, poor performance status, and lack of curative options, the patient and family opted for hospice, discontinuing further systemic therapy. The team increased analgesia, added a low‑dose steroid taper, and initiated hospice care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Neurologic metastasis; terminal stage reached.</p></div></details></div><div class="visit-panel"><h3>Visit 14 &mdash; 2026-02-06</h3><div class="visit-meta">Hospice | Reason: End of life</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #14 – Hospice Care – 2026-02-06
+
+Chief Complaint: End-of-life care
+
+Patient: Mrs. Park, 55‑year‑old female with metastatic ER‑positive breast cancer (Stage IV) and a complex oncologic course as detailed in prior visits.  She has a history of obesity (BMI 34), type 2 diabetes mellitus, peripheral neuropathy from chemotherapy, and a large pleural effusion.  Her current medication list includes glargine 10 U daily, lispro 8 U pre‑meal, oxycodone 20 mg PO PRN, methylprednisolone 2 mg PO daily, and no known drug allergies.
+
+Presentation/Encounter: Mrs. Park was admitted to the hospice ward on 6 Feb 2026.  The patient was unresponsive and not willing for further diagnostic or therapeutic interventions.  At 10:15 am the hospice team confirmed death.  In the preceding days she had been surrounded by family, receiving comfort measures, and experiencing a peaceful decline.  No new symptoms or acute concerns were reported.
+
+Assessment:
+- End‑stage metastatic breast cancer with brain, lung, and bone involvement.
+- Progressive large pleural effusion with respiratory compromise (SpO₂ 80% on room air).  Palliative measures had maintained SpO₂ &gt;92% with supplemental oxygen.
+- No new infectious, metabolic, or cardiac events noted.
+- The patient achieved comfort and dignity; care goals remained at symptom management and support of family.
+
+Plan:
+1. Continue comfort‑directed care: maintain current opioid regimen (oxycodone 20 mg PO PRN) and low‑dose methylprednisolone 2 mg PO daily for dyspnea/pain control.
+2. Maintain supplemental oxygen to keep SpO₂ &gt;92% as tolerated.
+3. Monitor vitals twice daily; if SpO₂ falls below 90% or the patient becomes increasingly dyspneic, adjust oxygen flow or consider short‑term ventilation support.
+4. Provide family counseling and bereavement resources.  Social work to arrange funeral planning and grief support.
+5. No further oncologic therapies, radiotherapy, or invasive procedures will be pursued.
+6. Document death in electronic medical record and notify attending oncology and home‑care teams.
+
+Outcome: Patient died peacefully at 10:15 am on 6 Feb 2026.
+
+Disposition: No further interventions.  Family received hospice discharge paperwork and grief support referrals.
+
+Sign‑off: 
+Dr. [Name], Hospice Consultant
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>O2Sat</td><td>80%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive, vital signs not measured</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Oxycodone 20 mg PO PRN</li><li>Methylprednisolone 2 mg PO daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>N/A</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity (BMI 34)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Prior chest radiation</span><span class="pill">Metastatic breast cancer (Stage IV)</span><span class="pill">Peripheral neuropathy from chemotherapy</span><span class="pill">Large pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Glargine 10 U daily</li><li>Lispro 8 U pre‑meal</li><li>Oxycodone 20 mg PO PRN</li><li>Methylprednisolone 2 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior chest irradiation</li><li>Type 2 diabetes mellitus</li><li>Recent septic episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mrs. Park was admitted to the hospice ward on Feb 6. She spent her final days surrounded by family, receiving comfort measures, and experiencing a peaceful decline. No further interventions were pursued. The hospice team confirmed death at 10:15 a.m. on Feb 6, 2026.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient expired from metastatic breast cancer.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Obesity</span><span class="pill">Diabetes mellitus</span><span class="pill">Prior chest irradiation</span><span class="pill">Breast cancer</span><span class="pill">Metastatic breast cancer</span><span class="pill">Sepsis</span><span class="pill">Urinary tract infection</span><span class="pill">Peripheral neuropathy</span><span class="pill">Endocrine-resistant metastatic breast cancer</span><span class="pill">End‑stage metastatic breast cancer with brain, lung, and bone involvement</span><span class="pill">Large malignant pleural effusion</span><span class="pill">Type 2 diabetes mellitus (controlled)</span><span class="pill">Peripheral neuropathy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Glipizide 5 mg daily</li><li>Lisinopril 10 mg daily</li><li>Letrozole 2.5 mg nightly</li><li>Zoledronic acid 4 mg IV q4w</li><li>Mifepristone 125 mg daily</li><li>Calcium 1200 mg daily</li><li>Vitamin D 800 IU daily</li><li>Basal‑bolus insulin (glargine 10 U daily, lispro 8 U pre‑meal)</li><li>Oxycodone 20 mg PO PRN</li><li>Duloxetine 30 mg daily</li><li>Acetaminophen 500 mg q6h PRN</li><li>Methylprednisolone 2 mg PO daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visited on 2025-04-03. Presented with a 2‑cm firm, mobile‑to‑tethered left breast mass with mild nipple retraction; no lymphadenopathy. Vitals: BP 140/90 mmHg, HR 78 bpm, BMI 34. Imaging ordered: left breast mammography and ultrasound. Continued antihyperglycemic therapy (Metformin 1000 mg BID, Glipizide 5 mg daily) and antihypertensive Lisinopril 10 mg daily. Follow‑up scheduled in one week to review imaging.</li><li>Visited on 2025-04-10 for diagnostic imaging of breast lump. Physical exam noted a firm 2.3 cm mass in the left lower outer quadrant with intact skin; no lymphadenopathy. Mammography revealed a spiculated mass 2.3 × 1.9 cm and ultrasound showed a hypoechoic irregular lesion with acoustic shadowing, indicating high suspicion for malignancy. Orders: core‑needle biopsy under ultrasound guidance. Medications continued: Metformin 1000 mg BID, Glipizide 5 mg daily, Lisinopril 10 mg daily. Follow‑up scheduled in 4 weeks to discuss biopsy results and next steps.</li><li>Visited on 2025-05-01 for postoperative surgical evaluation following core‑needle biopsy confirming invasive ductal carcinoma. Physical exam revealed a 2‑cm firm mass tethered to overlying skin with mild retraction. No axillary lymphadenopathy. PET‑CT whole‑body scan ordered for staging. Initiation of letrozole 2.5 mg daily planned. Current medications (Metformin, Glipizide, Lisinopril) continued. Follow‑up scheduled in 2 weeks to review PET‑CT results and finalize treatment plan.</li><li>Visited on 2025-05-12. PET‑CT revealed a 1.8 × 1.5 cm hypermetabolic focus in the left lower lobe of lung, osteolytic lesions along lumbar vertebrae, faint hepatic uptake; no new breast lesions or lymphadenopathy. Initiated bone‑protective therapy with zoledronic acid 4 mg IV q12 weeks (baseline labs pending) and started calcium 1200 mg daily plus vitamin D 800 IU daily. Ordered baseline CBC, CMP, calcium, phosphate, alkaline phosphatase, 25‑OH vitamin D, uric acid. Planned repeat PET‑CT in 3 months and follow‑up in 4 weeks to review labs and discuss bone‑protective agent.</li><li>Visited on 2025-05-24. Initiated first zoledronic acid infusion and continued letrozole for metastatic breast cancer. Mild hot flashes noted; plan to monitor serum calcium and phosphate levels before each bisphosphonate dose. No new pain or constitutional symptoms. All medications continued unchanged. Follow‑up scheduled in 4 weeks.</li><li>Visited on 2025-06-15. Reviewed recent chest/abdomen CT showing increased size of lung metastasis and new T9 lytic lesion with canal narrowing; noted additional liver and ground‑glass lung findings. Patient reported worsening breast pain, back pain, and fatigue. Initiated weekly paclitaxel 80 mg/m² IV with prophylactic filgrastim 5 mg SC; continued letrozole and zoledronic acid. Ordered CBC, CMP, calcium/phosphate, alkaline phosphatase, 25‑OH vitamin D. Scheduled next chemo infusion 2025-06-22 and repeat imaging in 12 weeks.</li><li>Visited on 2025-07-04. Administered first weekly dose of paclitaxel 80 mg/m² IV while continuing filgrastim support. Mild peripheral tingling noted and resolved with dexamethasone 8 mg IV premedication. Back pain improved to VAS 4/10. Dexa 8 mg IV premedication prescribed; plan to increase paclitaxel to 90 mg/m² next cycle (2025-07-21). Labs (CBC, CMP, calcium panel, 25‑OH vitamin D) ordered one month prior to next infusion. Continue letrozole, zoledronic acid, calcium, vitamin D. Repeat imaging in 12 weeks.</li><li>Visited on 2025-08-01. Admitted for fever, chills, and suprapubic discomfort. Blood cultures grew Enterococcus faecalis; treated with ceftriaxone 1 g IV q24h and vancomycin 1 g IV q12h for 7 days. Basal‑bolus insulin initiated due to steroid‑induced hyperglycemia. Paclitaxel dose increased to 90 mg/m² weekly and filgrastim support continued. Discharged home with completion of antibiotics and insulin therapy. Follow‑up appointments arranged with hospital medicine, endocrinology, and oncology.</li><li>Visited on 2025-09-01 for oncology follow‑up after recent sepsis admission. Back pain worsened to VAS 6/10, mild bilateral lower‑extremity weakness. Labs: CBC ANC 1,700 mm³, CMP creatinine 1.1 mg/dL, glucose 140–160 mg/dL. Physical exam: diffuse thoracic/lumbar tenderness, mild hyperreflexia, 4/5 hip flexor strength. Ongoing chemotherapy with paclitaxel 90 mg/m² weekly, filgrastim, zoledronic acid, letrozole, basal‑bolus insulin. Pain managed with oxycodone 5 mg PO q4‑6h PRN; duloxetine 30 mg daily considered. MRI lumbar spine ordered to evaluate for cord compression.</li><li>Visited on 2025-10-15. Severe back pain (VAS 6/10) and shortness of breath noted. CT chest/abdomen showed enlarging lung, rib, liver lesions and T9 vertebral lesion compressing the canal &gt;50%. MRI T6‑L1 spine ordered, referral for palliative radiotherapy to thoracic spine and rib metastasis, and surgical consult for potential decompression if indicated. Continued weekly paclitaxel and filgrastim; added duloxetine 30 mg daily for neuropathic pain; high‑dose dexamethasone 8 mg IV q6h prescribed for possible cord compression. Labs CBC, CMP, calcium/phosphate ordered before next chemo cycle; repeat bone scan scheduled. Palliative care referral initiated. Next oncology visit planned in 4 weeks.</li><li>Visited on 2025-11-10. Initiated mifepristone 125 mg daily as anti‑progesterone therapy for progressive metastatic ER‑positive breast cancer with bone pain and hot flashes. Continued letrozole, weekly paclitaxel 90 mg/m², filgrastim, zoledronic acid 4 mg IV q4w, basal‑bolus insulin, and pain regimen of oxycodone 10 mg PO PRN and acetaminophen 500 mg q6h PRN. Orders: CBC, CMP, fasting glucose, HbA1c, fasting lipids, serum calcium, phosphate, alkaline phosphatase, 25‑OH vitamin D, CT chest/abdomen in 6 weeks, and referral to radiation oncology for palliative radiotherapy to T9 and adjacent ribs. Follow‑up oncology visit in 4 weeks.</li><li>Visited on 2025-12-12. Palliative care and radiation oncology consultation. Patient had worsening dyspnea and a massive right pleural effusion. SpO2 88% on room air; chest X‑ray showed a massive right pleural effusion with mediastinal shift. Diagnostic thoracentesis yielded exudative malignant fluid and a pleural window procedure was performed to decompress the effusion. Initiated a 20‑day course of palliative radiation to the left chest wall and right lung field. Patient now on methylprednisolone 4 mg PO daily; insulin monitored closely due to steroid therapy. Hospitalization planned for 2–3 days for close monitoring of respiratory status and post‑procedural pain control. Repeat chest X‑ray on hospital day 2 and repeat CT chest/abdomen‑pelvis in 4 weeks were ordered. Hospice care transition discussed with patient and family. Follow‑up in the palliative clinic scheduled in 1 week or sooner if respiratory status worsens.</li><li>Visited on 2026-01-28. Transitioned to hospice care after progression of metastatic breast cancer with new brain and lung lesions. Initiated steroid taper starting with methylprednisolone 40 mg IV BID for 7 days, tapering to 4 mg PO daily. Oxycodone dose increased to 20 mg PO PRN for breakthrough pain. Continued letrozole, zoledronic acid, mifepristone, calcium, vitamin D, and basal‑bolus insulin. Oxygen therapy titrated to maintain SpO2 &gt;92%. Vitals monitored weekly; glucose and weight monitored. Hospice care team scheduled home visits every other day initially, then weekly. No further oncologic therapy pursued.</li><li>Visited on 2026-02-06. Patient admitted to hospice ward. Unresponsive; further diagnostic or therapeutic interventions denied. At 10:15 am, death confirmed. No new symptoms or acute concerns reported. SpO2 80% on room air; supplemental oxygen maintained to keep SpO2 &gt;92% prior to death. Current opioid regimen: oxycodone 20 mg PO PRN; steroid regimen: methylprednisolone 2 mg PO daily. Supplemental oxygen continued. No additional interventions pursued.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

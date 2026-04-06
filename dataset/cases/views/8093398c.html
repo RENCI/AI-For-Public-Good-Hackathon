@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 8093398c</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 8093398c</h1><div class="subtitle">Second-degree burn (partial thickness) | Male, 35</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Diabetes mellitus</div><div class="meta-line">Risk Factors: High thermal energy exposure, Insufficient protective clothing</div></div>
+<details><summary>Narrative <span class="preview-text">**Burn, Diabetes, and the Quiet Battle for Healing**  ---  ### **Monday: The Incident**  At 8:15 a.m., Marco Rossi—35, a...</span></summary><div class="section-body"><p>**Burn, Diabetes, and the Quiet Battle for Healing**</p><p>---</p><p>### **Monday: The Incident**</p><p>At 8:15 a.m., Marco Rossi—35, a 4‑year veteran of a local forging shop—was in the back‑facing metal‑working area, tightening a heavy a‑board that had been heated to 700 °F for casting. He had been wearing his work jacket and a set of standard safety gloves that had long ago begun to fray at the seams. The a‑board’s edge, still hot enough to melt a fingertip in seconds, slipped from his hand. Marco swore a curse, reached for the nearest piece of metal to shield his arm, and the heat touched the dorsal aspect of his right upper arm directly.</p><p>Within the first seconds, the skin began to blanch and then redden, a mottled, wet‑looking area spreading to about 12.5 cm × 7.5 cm. He felt intense pain—an all‑consuming, “burning” sensation that startled him out of his own consciousness. The thermal injury, delivered by a very high energy source and with no protective barrier, produced a partial‑thickness (second‑degree) burn with blister formation and a wet, red base.</p><p>Marco’s coworkers rushed him to the shop’s first‑aid station. He was still breathing but shaking. An ER nurse called 911. He was transported in an ambulance to the hospital’s emergency department (ED) with a priority of “Burn” under the Advanced Trauma Life Support (ATLS) protocol.</p><p>---</p><p>### **Day 1 – 10 a.m. ( ED Arrival )**</p><p>**Initial Vitals and Assessment**</p><p>- Temp: 36.7 °C
+- BP: 137/84 mmHg
+- Pulse: 94 bpm
+- Respirations: 18/min
+- O₂ Saturation: 98 % on room air
+- Glucose: 280 mg/dL</p><p>The burn, located on Marco’s right arm, measured 12 × 7.5 cm, with blister roofs covering ~45 % of the surface and a moist, erythematous base. The surrounding skin was warm with a surrounding 2 cm zone of hyperemia.</p><p>Marco reported pain as 9/10 on the Numeric Rating Scale. Because he was diabetic, the team noted the elevated glucose as a potential risk factor for delayed healing and infection.</p><p>**Decision Point – Immediate Care**</p><p>The team decided to:</p><p>1. **Administer Analgesia**: Intravenous acetaminophen 1 g and a low dose of morphine 2 mg.
+2. **Fluid Resuscitation**: 1 L Lactated Ringer’s over 30 min for potential third‑spacing.
+3. **Wound Cleaning**: Rinse with sterile saline, remove any debris, and gently wipe the blistered area to prevent rupture.  
+4. **Topical Protection**: Apply a thin layer of silver sulfadiazine cream (0.5 % silver sulfadiazine) to the entire blistered surface, including the base—this choice was specifically made because Marco’s diabetes could predispose to staphylococcal infections.</p><p>He was notified of the need to regulate his blood glucose and was instructed to check herglucose at bedside.</p><p>After initial stabilization, the burn team called in on ED physician Dr. Chen, who recommended admitting Marco to the hospital’s acute burn unit for close monitoring given his diabetes and the size of his wound.</p><p>---</p><p>### **Day 1 – 3 p.m. ( Burn Unit Admission )**</p><p>The burn team entered a standard policy that all second‑degree burns &gt;5 cm² in diabetic patients should be initially managed in the burn unit rather than on a routine floor ward. They explained the plan: serial wound assessments every 6 hours and daily dressing changes until the blister roofs had either matured or the base was ready for grafting.</p><p>Because of Marco’s elevated glucose, the endocrinologist was called in. In an initial bedside consult, Dr. Liu discussed insulin adjustments. Marco, who had struggled with type 2 diabetes for 8 years, had poor A1C (7.9 %) on his last clinic visit. Dr. Liu intensified insulin therapy, adding a basal‑bolus regimen that would help maintain his glucose below 250 mg/dL and ideally between 140–180 mg/dL during the wound healing phase. The patient was also given a dietitian, who emphasized a high‑protein diet to support tissue repair.</p><p>**Symptom Evolution**</p><p>- Pain: 8/10, managed with scheduled acetaminophen every 6 hours and a titrated morphine infusion (10 mg over 8 hours, adjusted as needed).
+- Edema: Minimal. The area remained warm, but there was no significant swelling that would compromise neurovascular status.
+- Vital Signs: Stable; glucose remained between 190 and 260 mg/dL with insulin dosing and diet.</p><p>Marco’s main worry: “Will my arm heal fast enough? My dad had diabetes and his burns never looked like they got better.”</p><p>---</p><p>### **Day 2 – 8 a.m. ( 24‑hour Check‑In )**</p><p>The first full wound assessment revealed the blister roofs still intact but with a slight erythematous border, suggesting sub‑dull formation of a new superficial layer. The base remained pink‑red and moist, but there was no sign of purulent drainage.</p><p>The burn nurse noted a faint sheen of serum on the dressing, a mild sign of serum exudate. The wound was still classified as healthy, with no signs of infection (no fever, no foul odor, skin not warm to touch beyond the normal hyperemic zone). Dr. Chen ordered a skin culture to rule out colonization at 18 h, and to preemptively adjust antibiotics if culture results were positive.</p><p>---</p><p>### **Day 3 – 4 p.m. ( Surgical Debridement &amp; Dressing Protocol )**</p><p>At 3:30 p.m., the wound was ready for a minor operative clean‑up under local anesthesia. The surgical team performed **debridement of any non‑viable tissue**, and the area was gently suction‑blunted. The new wound bed revealed a healthy pink glistening surface.</p><p>The decision point:  
+- **Wound Coverage**: The team elected to apply a silicone film dressing (e.g., Mepitel®) over the area to promote moist healing, reduce pain from dressing changes, and prevent mechanical blister rupture. The dressing was secured with elastic bandage, applied in layers that would reduce bulk and allow easy removal.</p><p>Dr. Liu reaffirmed the insulin plan – a basal‑bolus schedule with basal units of 10 U at night and a rapid‑acting insulin before meals. Marco was educated on checking inter‑meal glucose and adjusting doses accordingly.</p><p>**Symptom Evolution**</p><p>- Pain: Dropped to 5/10 with standard pharmacologic regimen.  
+- Edema: Slightly increased, 1 cm more in circumference at two‑hour intervals, manageable with elevation.  
+- Glucose: Now between 160‑200 mg/dL, improving trend.</p><p>A mild, superficial redness had spread slightly beyond the original blister edges, but this was considered expected in the healing process.</p><p>---</p><p>### **Day 4 – 9 a.m. ( Follow‑Up Cultures &amp; Lab Results )**</p><p>Culture at 24 h before surgery grew only **Staphylococcus epidermidis**—a low‑virulence skin commensal. Dr. Chen withheld antibiotic therapy but recommended continued vigilance. Marco was instructed to report any new signs: increasing redness, swelling, fever, odor, or fluid drainage.</p><p>Daily wound checks at 8 a.m. showed:</p><p>- The silicone film dressing maintained good apposition.  
+- The base showed more extensive granulation tissue: a fine, pink matrix with small visible blood vessels.  
+- No new blister formation.</p><p>Marco’s pain score declined to 3/10, and he reported that he could move his right shoulder without significant discomfort.</p><p>At this point, the burn team considered a **planned removal** of silicone dressing in the next 24 hours, to check the wound bed and decide whether a graft would be needed. In the meantime, they set the goal of allowing the wound to close by secondary intention—a reasonable approach for a partial‑thickness burn on the arm when the patient’s glucose is well‑controlled.</p><p>---</p><p>### **Day 5 – 7 p.m. ( Silicones Removed, Wound Re‑Covered )**</p><p>The silicone film dressing was gently removed. The wound surface was clean, pink, and showed robust granulation. No ulcerations, no necrotic tissue, no infection. The wound had now extended a hair‑depth in all directions. The team applied a new layer of silver sulfadiazine to the base, followed by a new silicone film dressing. Marco expressed a mixture of relief and anxiety: “If I can get my arm working again, it will mean a lot.”</p><p>---</p><p>### **Day 7 – 10 p.m. ( Daily Progress )**</p><p>Marco’s wound had not yet closed but was trending toward secondary closure. Granulation tissue covering ~90 % of the former blister surface. Pain at 2/10; he was able to do gentle range‑of‑motion exercises for his right shoulder and wrist as advised by the physical therapist.</p><p>He had one episode of mild hyperglycemia (260 mg/dL) after lunch, which was managed quickly with an additional regular insulin dose. The endocrinology team continued to adjust insulin dosing based on his glucose log.</p><p>Marco’s comorbid diabetes contributed to a delayed healing process—secondary closure typically takes 14–21 days for a second‑degree burn of this size—yet the infection risk had not materialized, a testament to his proactive glycemic control.</p><p>---</p><p>### **Day 10 – 2 a.m. ( Burn Unit Discharge Planning )**</p><p>The burn team reviewed the wound’s status. A **decision point**: the wound had developed a thick, smooth, pink granulation layer and was predicted to heal by secondary intention within the next week. They cleared Marco for discharge to home care, with the following instructions:</p><p>1. **Dressing Changes**: Every 3 days at home with Mepitel®.
+2. **Oral Analgesia**: Acetaminophen 1 g every 6 hours as needed; no opioids needed at home.
+3. **Glucose Monitoring**: Twice daily glucose checks, with insulin adjustments per the algorithm on the handout.
+4. **Physical Therapy**: Gentle motions at the kitchen table; the PT schedule was forwarded to the home health agency for continuity.
+5. **Signs of Infection**: If new redness, swelling, foul odor, or fever &gt;38.0 °C appeared, call the burn unit immediately.</p><p>Marco was also given a short course of oral doxycycline to cover staph if needed—an added safety net.</p><p>He felt hopeful. “I’ve been staring at this burn for a week and it’s already looking less raw.” The burn nurse smiled, “That’s because we’ve given your body the tools it needs.”</p><p>---</p><p>### **Day 15 – 12 p.m. ( Final Touches )**</p><p>A follow‑up call from the burn unit: the wound had fully integrated a smooth scab layer; redness had faded. The skin’s color had lightened slightly—indicative of normal healing. Marco’s pain was now 1/10. He was free to resume light work; the orthopedic assessment cleared the non‑healing area before he could lift loads.</p><p>He expressed relief at having avoided a skin graft, which can be stressful for patients already dealing with diabetes. The key, the burn team explained, was early mobilization, meticulous glycemic control, and the right dressings—components that combined to produce an improving course.</p><p>---</p><p>### **In Summary**</p><p>- **Initial Event**: High‑energy thermal exposure on an unprotected arm resulted in a partial‑thickness second‑degree burn.  
+- **Risk Factors**: Diabetes mellitus (poor glucose control), high thermal energy, inadequate protective clothing.  
+- **Early Care**: Prompt analgesia, silver sulfadiazine, fluid resuscitation, and a basal‑bolus insulin regimen tailored to bring glucose below 250 mg/dL.  
+- **Mid‑Course**: Debridement and silicone film dressings helped keep a moist environment, while antibiotics were withheld once cultures revealed low‑virulence flora.  
+- **Progression**: The wound exhibited healthy granulation tissue, no infection, and pain declining steadily.  
+- **Outcome**: After 15 days, secondary closure had occurred, pain was minimal, and glycemic control was within target; the patient was discharged with a clear home‑care plan and an improving prognosis.</p><p>Marco’s story illustrates the interplay between a traumatic burn injury and a chronic metabolic disease, showing how attentive, coordinated care can convert a potentially complicated picture into a steadily improving outcome.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-10-02</h3><div class="visit-meta">Emergency Medicine | Reason: Acute second‑degree burn on right arm</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute burn on right dorsal arm.
+
+History: 35‑year‑old male, type 2 diabetes (HbA1c 7.9%), no known drug allergies, no prior burn injuries.
+
+Presenting Complaint: Severe burning pain, red wet blister, pain 9/10.
+
+Vitals: T 36.7°C, BP 137/84 mmHg, HR 94 bpm, RR 18/min, SpO2 98% RA, glucose 280 mg/dL.
+
+Physical Exam: 12.5×7.5 cm wet, blistered area with blister roofs covering ~45% of the wound, moist erythematous base, 2 cm hyperemia surrounding. No neurovascular compromise.
+
+Assessment: Second‑degree partial thickness burn on the dorsal right arm. Diabetes mellitus type 2 presents a risk for delayed wound healing and infection. Stress‑related hyperglycemia noted.
+
+Plan:
+- Admit to burn unit for close monitoring.
+- Continue analgesia: IV acetaminophen 1 g q6h PRN, IV morphine 2 mg q4h PRN.
+- Initiate insulin sliding‑scale protocol to maintain glucose &lt;180 mg/dL; monitor glucose every 1–2 h.
+- Wound care: silver sulfadiazine 0.5 % cream applied topically once daily; monitor for signs of infection.
+- Serial monitoring: glucose, pain score, vitals; CBC and culture results pending.
+- Consider antibiotics if wound culture yields organism or clinical infection develops.
+- Educate patient on glucose monitoring and signs/worsening of burn.
+- Follow‑up with burn care team for dressing changes and debridement as indicated.
+
+The patient tolerated analgesia; pain improved. Glucose remains elevated but trending down. Patient will be transferred to burn unit for ongoing care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe burning pain</span><span class="pill">Red, wet blister</span><span class="pill">Intense pain 9/10</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>BP</td><td>137/84 mmHg</td></tr><tr><td>Pulse</td><td>94 bpm</td></tr><tr><td>Resp</td><td>18/min</td></tr><tr><td>O2 Sat</td><td>98% on RA</td></tr><tr><td>Glucose</td><td>280 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>12.5 × 7.5 cm wet, blistered area with blister roofs covering ~45 %</li><li>Moist erythematous base, surrounding 2 cm hyperemia</li><li>No neurovascular compromise</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serial blood glucose monitoring</li><li>Wound culture sample</li><li>Complete blood count</li><li>HbA1c (from chart)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Blood glucose 280 mg/dL</li><li>CBC normal, WBC 7.2 K/µL</li><li>HbA1c 7.9%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV acetaminophen 1 g</li><li>Morphine 2 mg IV</li><li>1 L Lactated Ringer’s over 30 min</li><li>Silver sulfadiazine cream 0.5% applied</li><li>Glucose monitoring instructions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Rapid pain relief after morphine; glucose remains high but starts to stabilize.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Diabetes mellitus type 2</li><li>No known drug allergies</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marco Rossi arrives in the ED with a 12.5 × 7.5 cm partial‑thickness burn on the dorsal right arm. The team administers IV acetaminophen 1 g and morphine 2 mg, initiates 1 L Lactated Ringer’s over 30 min, cleans the wound with sterile saline, and applies a thin layer of silver sulfadiazine (0.5 %). A bedside glucose monitor is set up and the patient is advised to check glucose. A wound culture sample is taken for bacterial screening, and CBC and HbA1c are ordered. Dr. Chen arranges admission to the burn unit for close monitoring given the patient&#x27;s diabetes and the burn size.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial stabilization achieved. Wound 12 × 7.5 cm, partial thickness. Diabetes is a risk factor. Patient admitted to burn unit; insulin regimen pending.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-10-02</h3><div class="visit-meta">Burn Unit | Reason: Admission to Burn Unit</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 35‑year‑old male with a 12.5×7.5 cm second‑degree partial‑thickness burn on the right dorsal arm, currently admitted to the burn unit.\n\n**Chief Complaint**: Admission to Burn Unit.\n\n**History**: Diabetes mellitus type 2 poorly controlled (last A1C 7.9%).\n\n**Subjective**: Patient reports pain 8/10, blister roofs remain intact, minimal edema. No signs of infection, neurovascular status intact.\n\n**Objective**:\n- Vitals: T 36.8°C, BP 135/79, Pulse 92, Resp 17, O2 sat 99%, Glucose 260 mg/dL.\n- Wound: Blister roofs intact; base pink‑red moist; minimal edema; neurovascular status intact.\n- Labs: Blood glucose 190‑260 mg/dL (range), CBC stable.\n\n**Assessment**:\n1. Partial‑thickness second‑degree burn of the right dorsal arm – healing without current infection.\n2. Stress‑induced hyperglycemia; insulin plan now optimized to basal‑bolus regimen.\n3. Pain control adequate with scheduled acetaminophen and morphine infusion.\n4. Diabetes management: moderate control; requires ongoing monitoring and dietary support.\n\n**Plan**:\n- Continue scheduled acetaminophen 1 g every 6 h PRN for pain.\n- Maintain morphine infusion at 10 mg/8 h, titrate as needed.\n- Insulin: basal 10 U nightly, rapid‑acting pre‑meal doses per current protocol; continue hourly glucose checks and adjust per sliding scale.\n- Diet: adhere to high‑protein diet per dietitian recommendation.\n- Wound care: daily dressing changes with silver sulfadiazine 0.5 % applied once daily; next dressing change in 6 h.\n- Monitoring: repeat blood glucose every 4 h, daily CBC, serial wound cultures if suspected infection.\n- Follow‑up: 6‑hour wound assessment, 24‑hour re‑evaluation for pain and glucose control, and ongoing wound progress review.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 8/10</span><span class="pill">Blister still intact</span><span class="pill">Edema minimal</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>BP</td><td>135/79</td></tr><tr><td>Pulse</td><td>92</td></tr><tr><td>Resp</td><td>17</td></tr><tr><td>O2 Sat</td><td>99%</td></tr><tr><td>Glucose</td><td>260 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Blister roofs intact, base pink‑red moist, minimal edema</li><li>Neurovascular status intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat blood glucose every 4h</li><li>Daily CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Glucose 190‑260 mg/dL range</li><li>CBC stable</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Scheduled acetaminophen 1 g q6h</li><li>Morphine infusion 10 mg over 8h</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin pre‑meals</li><li>Dietitian assessment</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain reduced to 8/10; glucose within target after insulin adjustment; no signs of infection.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin before meals</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Diabetes poorly controlled</li><li>Last A1C 7.9%</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Burn team performs 6‑hourly wound assessments. Endocrinology initiates a basal‑bolus insulin plan (10 U nightly basal + pre‑meal rapid insulin). Dietitian consult recommends high‑protein diet to support healing. Pain is managed with scheduled acetaminophen q6h and a morphine infusion titrated to a 10 mg/8h regime.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Wound stable; insulin regimen established; planned serial assessments; no infection yet.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-10-03</h3><div class="visit-meta">Burn Unit | Reason: 24‑hour wound check</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 24‑hour wound check.  
+**History of Present Illness:** 35‑year‑old male with a known partial‑thickness burn on the right dorsal arm (12.5×7.5 cm).  He has type 2 diabetes with sub‑optimal glycemic control (BG 240 mg/dL).  Pain remains at 7/10; minimal serous exudate and slight erythema observed.  Dressing shows a faint serum sheen.  No new symptoms or signs of systemic infection.  
+**Physical Examination:**  
+- Roof intact, base pink‑red, mild erythema at edges.  
+- Minimal edema.  
+- Neurovascular status intact.  
+- No drainage beyond minimal serous exudate.  
+- Vital signs: T 36.6 °C, BP 134/78 mm Hg, pulse 90/min, RR 16/min, SpO₂ 99 %.  
+**Assessment:** 1) Partial‑thickness (superficial) burn continued healing.  2) Possible early colonization of wound; wound culture ordered.  3) Hyperglycemia (BG 240 mg/dL); insulin regimen needs tightening.  4) Moderate pain (7/10); current titration of opioid and acetaminophen adequate.  
+**Differential Diagnosis:**  • Superficial partial‑thickness burn healing.  • Wound colonization/infection (e.g., Staphylococcus, Pseudomonas).  • Delayed wound healing due to chronic hyperglycemia.  • Pain due to neuropathic or nociceptive source.  
+**Plan:**  1) Continue silver sulfadiazine 0.5 % cream once daily and maintain dressings.  2) Perform wound culture, CBC, and keep serial blood glucose monitoring; request HbA1c if not recently obtained.  3) Continue basal insulin 10 U nightly and rapid‑acting insulin pre‑meal; adjust sliding‑scale insulin as per glucose trend.  4) Pain control: morphine infusion 10 mg/8h, acetaminophen 1 g q6h PRN.  5) Monitor for signs of infection (increased erythema, swelling, purulent drainage, fever).  6) Consider starting empiric antibiotics if culture grows an organism or if clinical infection suspected.  7) Educate patient on glycemic control and pain reporting.  
+**Follow‑Up:**  • Daily wound assessment and dressing change.  • Review wound culture and CBC results urgently; adjust antibiotics as indicated.  • Reassess glucose control; collaborate with endocrinology.  • Re‑evaluate pain level and medication effectiveness at each dressing change.  • Plan next scheduled visit or discharge planning once wound shows sustained improvement and stable glucose control.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 7/10</span><span class="pill">Minimal exudate</span><span class="pill">Slight erythema</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.6</td></tr><tr><td>BP</td><td>134/78</td></tr><tr><td>Pulse</td><td>90</td></tr><tr><td>Resp</td><td>16</td></tr><tr><td>O2 Sat</td><td>99%</td></tr><tr><td>Glucose</td><td>240 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Blister roofs intact, base pink‑red, slight erythema around edges</li><li>Minimal edema, neurovascular intact</li><li>Dressing shows serum sheen</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Wound culture</li><li>Blood glucose monitoring</li><li>HbA1c from prior</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>No prior results available yet</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Same regimen of analgesia and insulin</li><li>No new treatments</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stated pain 7/10; no new symptoms.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin before meals</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>None</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Burn nurse performs wound assessment; notes faint serum sheen and slight erythema. Orders wound culture to assess colonization. Continues insulin and pain control. Endocrinologist notes glucose trending but still slightly above target.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Still stable; no infection; plan to repeat culture and consider debridement if necessary.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-10-04</h3><div class="visit-meta">Burn Surgery | Reason: Minor operative debridement and silicone dressing</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective**
+
+Patient is a 35‑year‑old male with a history of type 2 diabetes who presents for a scheduled follow‑up on the right dorsal arm burn. He reports pain rated 5/10 after the recent operative debridement. He notes mild swelling but denies fever or drainage. He continues with his prescribed insulin regimen and reports good adherence to glucose monitoring.
+
+**Objective**
+
+- **Vitals**: T 36.7°C, BP 133/80 mmHg, pulse 88/min, RR 15/min, SpO₂ 99 %. Glucose 190 mg/dL.
+- **Wound**: Clean pink granulation bed, no necrotic tissue, silicone film dressing (Mepitel®) applied and secured. Slight arm edema, still non‑compromised.
+- **Other**: No new signs of infection or systemic illness.
+
+**Assessment**
+
+1.  Partial‑thickness burn, right dorsal arm, currently healing with granulation. Operative debridement was successful with removal of all non‑viable tissue. Silicone film dressing is appropriate for pain mitigation and moisture maintenance.
+2.  Diabetes mellitus type 2 – glucose level slightly elevated (190 mg/dL) but within the target range for the peri‑operative period.
+3.  No clinical evidence of wound infection at present; wound culture pending.
+
+**Plan**
+
+- Continue local debridement site care with silicone film dressing; change dressing in 24 h or sooner if soiled.
+- Await 24‑hour wound culture results; begin empiric antibiotics (e.g., empiric coverage with clindamycin 600 mg IV q6 h) pending culture if signs of infection develop.
+- Monitor blood glucose every 4‑hour; adjust sliding‑scale insulin as needed; maintain basal/rapid‑acting regimen.
+- Pain control: Acetaminophen 1 g q6 h PRN, morphine 2 mg PRN for breakthrough pain; monitor tolerance.
+- Continue high‑protein diet per dietitian.
+- Educate patient on signs of infection (increased erythema, purulent drainage, fever) and the importance of glycemic control.
+- Follow‑up in 48 h for dressing change and review of culture results; sooner if infection suspected.
+
+**Disposition**: Patient remains in stable condition and is discharged home with instructions for wound care and glucose monitoring. The next visit is scheduled for 2023‑10‑06.
+
+**Encounters and Treatments Summary**
+- Operative debridement under local anesthesia with removal of non‑viable tissue.
+- Silicone film dressing applied.
+- Local and systemic pain management as above.
+
+---
+
+*Signed:* Dr. Liu, Burn Surgery Specialist
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 5/10</span><span class="pill">Slight swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.7</td></tr><tr><td>BP</td><td>133/80</td></tr><tr><td>Pulse</td><td>88</td></tr><tr><td>Resp</td><td>15</td></tr><tr><td>O2 Sat</td><td>99%</td></tr><tr><td>Glucose</td><td>190 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Wound bed pink, glistening, healthy granulation</li><li>No necrosis</li><li>Silicone dressing secured</li><li>Arm slightly more edematous, still non‑compromised</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Wait for 24h culture results</li><li>Blood glucose every 4h</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Culture pending</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Local anesthesia</li><li>Debridement</li><li>Silicone film dressing (Mepitel)</li><li>Acetaminophen 1 g q6h</li><li>Morphine 2 mg PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain reduced to 5/10; feels hopeful; glucose controlled.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span><span class="pill">Potential wound infection pending culture</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin before meals</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Wound culture pending</li><li>No fever</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Debridement performed under local anesthesia; all non‑viable tissue removed. Clean pink granulation wall revealed. Silicone film dressing (Mepitel®) applied to maintain moist environment and reduce pain from dressing changes. Dr. Liu confirms insulin schedule. Patient education on glucose monitoring continues. Morphine PRN for pain relief.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Wound bed healthy; silicone dressing chosen to promote moist healing and reduce pain. Basal‑bolus insulin regimen effective.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-10-05</h3><div class="visit-meta">Burn Unit | Reason: Culture results review &amp; wound assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of culture results and wound assessment.
+
+HPI: 35‑year‑old male with a second‑degree partial‑thickness burn on the right dorsal arm presents for routine wound assessment and review of culture results.  He reports current pain level of 4/10.  No new pain, itching, or redness noted.  The wound shows robust granulation tissue covering &gt;90% of the wound bed.  He is satisfied with the healing progress.
+
+Past Medical History: Diabetes mellitus type 2 (HbA1c 7.8%).  No known drug allergies.
+
+Medications: Metformin 500 mg PO BID, basal insulin 10 U nightly, rapid‑acting insulin pre‑meal, acetaminophen 1 g q6h PRN, morphine 2 mg PRN, silver sulfadiazine 0.5% cream once daily, silicone film dressing.
+
+Physical Examination:
+- General: Alert, oriented, pain 4/10.
+- Vitals: Temp 36.5°C, BP 132/77 mmHg, Pulse 86 bpm, RR 15/min, SpO₂ 99% on room air, glucose 170 mg/dL.
+- Wound: Silicone film dressing intact; base pink; granulation tissue &gt;90% coverage; no exudate; borderline erythema limited to baseline; no signs of infection or neuropathy.
+
+Labs: Repeat CBC – WBC 7.4 K/µL (normal).  Culture: Staphylococcus epidermidis, sensitive to doxycycline.
+
+Assessment:
+1. Burn wound healing by secondary intention with robust granulation tissue; no clinical evidence of infection.
+2. Low‑virulence Staphylococcus epidermidis colonization—prophylactic oral doxycycline appropriate given culture sensitivity.
+3. Pain adequately controlled at 4/10 with acetaminophen.  No opioid requirement.
+4. Diabetes mellitus type 2 well‑controlled at the moment; glucose 170 mg/dL remains acceptable.
+
+Plan:
+- Start oral doxycycline 100 mg PO BID for 7 days for wound prophylaxis.
+- Continue silicone film dressing; perform daily dressing changes.
+- Maintain current wound care regimen: silver sulfadiazine 0.5% once daily.; continue basal and prandial insulin; monitor glucose every 4 h.
+- Acetaminophen 1 g q6h PRN for pain; morphine PRN if pain escalates to &gt;5/10.
+- Educate patient on importance of glycemic control and signs of infection (fever, increased pain, purulent exudate).  Instruct to call unit if such signs appear.
+- Follow‑up: Return to burn unit in 7 days for wound reassessment, CBC repeat if clinically indicated, and HbA1c review.  Continue daily dressing changes and glucose monitoring.
+
+Signature: ________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 4/10</span><span class="pill">Granulation tissue visible</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.5</td></tr><tr><td>BP</td><td>132/77</td></tr><tr><td>Pulse</td><td>86</td></tr><tr><td>Resp</td><td>15</td></tr><tr><td>O2 Sat</td><td>99%</td></tr><tr><td>Glucose</td><td>170 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Silicone dressing intact, base pink, granulation tissue 90% coverage</li><li>No exudate</li><li>No redness beyond baseline</li><li>No neuropathic signs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal, WBC 7.4 K/µL</li><li>Culture: Staph epidermidis sensitive to doxycycline</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Oral doxycycline 100 mg BID for 7 days</li><li>Silicone dressing maintenance</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain 4/10; satisfied with progress; glucose comfortable.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin before meals</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Staphylococcus epidermidis culture growth</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Culture grows low‑virulence Staph epidermidis; no antibiotics started. Wound shows robust granulation; plan remains secondary intention. Oral doxycycline 100 mg BID for 7 days prescribed as prophylaxis. Silicone dressing maintained. Pain 4/10.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Granulation progressing; infection minimal; silicone dressing effective.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-10-06</h3><div class="visit-meta">Burn Unit | Reason: Silicone removal &amp; re‑cover</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Silicone film dressing removal and wound re‑coverage. 35‑year‑old male presents for routine wound care after removal of silicone film dressing.
+
+**History of Present Illness**: Patient had an acute burn on the right dorsal arm (12.5×7.5 cm) presented 4 days ago. Initially admitted for pain control, glucose management, and daily dressing changes. At visit #5, a wound culture grew *Staphylococcus epidermidis*; doxycycline was added and discontinued on day 6. Today, silicone film dressing was removed, wound inspected, and a new silicone dressing applied over fresh silver sulfadiazine. Pain is 3/10; patient reports slight reduction in swelling.
+
+**Review of Systems**: Patient denies fever, chills, new pain, redness, drainage, or signs of systemic infection.
+
+**Physical Examination**:
+- **Vital Signs**: Temp 36.4 °C, BP 131/76 mmHg, HR 84 bpm, RR 15 /min, SpO₂ 99% on room air, capillary glucose 180 mg/dL.
+- **Skin/Wound**: Right dorsal arm, 12.5×7.5 cm area. Wound bed pink with 92 % granulation, no ulceration or erythema. Silicone dressing secured with new layer of silver sulfadiazine applied.
+- **Pain**: 3/10, well controlled with scheduled acetaminophen.
+
+**Assessment**:
+1. Wound healing post‑burn; adequate granulation tissue, no signs of infection.
+2. Diabetes mellitus type 2 – controlled moderately (capillary glucose 180 mg/dL). Risk of delayed healing but currently stable.
+3. No current evidence of cellulitis or systemic infection.
+
+**Plan**:
+- Apply silver sulfadiazine 0.5 % cream to wound edge and underlying tissue. Place silicone film dressing (Silcane®). 
+- Instruct patient to remove dressing at home every 3 days, cleanse wound, reapply silver sulfadiazine and a fresh silicone dressing.
+- Continue acetaminophen 1 g orally every 6 hours as needed for pain.
+- Continue basal insulin 10 U nightly and rapid‑acting pre‑meal insulin. Monitor capillary glucose every 4 hours and adjust sliding‑scale as needed.
+- Reinforce wound care education: keep dressing dry, observe for erythema, swelling, drainage, or odor.
+- Schedule wound reassessment in 3 days (or sooner if pain escalates or erythema develops).
+- If signs of infection appear, consider oral antibiotics per culture sensitivity or transition to IV therapy if needed.
+
+**Disposition**: Stable for discharge.
+
+**Follow‑up**: Home wound care for next 3 days with scheduled follow‑up visit. Patient encouraged to seek immediate care if fever, increased pain, or wound changes.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 3/10</span><span class="pill">Slight swelling reduction</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.4</td></tr><tr><td>BP</td><td>131/76</td></tr><tr><td>Pulse</td><td>84</td></tr><tr><td>Resp</td><td>15</td></tr><tr><td>O2 Sat</td><td>99%</td></tr><tr><td>Glucose</td><td>180 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Wound bed pink, granulation 92% coverage</li><li>No erythema</li><li>Silicone bandage secured</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Silver sulfadiazine 0.5% cream</li><li>Silicone dressing</li><li>Acetaminophen 1 g q6h if needed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feels confident about home care; pain tolerable.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin before meals</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Silicone removed; silver sulfadiazine reapplied</li><li>Patient stable</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Silicone removed, wound inspected—clean pink granulation, no ulceration. Silver sulfadiazine applied over base then new silicone dressing placed. Patient educated on dressing removal at home (every 3 days). Pain 3/10, no new concerns.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Wound remains healthy; granulation trending toward epithelialization; plan to continue dressing changes at home.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-10-07</h3><div class="visit-meta">Burn Unit / Discharge Planning | Reason: Discharge and home care plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Discharge Note – 2023-10-07
+
+Patient: 35‑year‑old male, type 2 diabetes mellitus, admitted for 12.5×7.5 cm partial‑thickness burn on the right dorsal arm. Current presentation: complete epithelialization, no tenderness, mild hypopigmentation. Pain 1/10. No signs of infection.
+
+Assessment:
+- Burn wound injury – fully healed, good scar tissue.
+- Diabetes mellitus type 2 – HbA1c 7.8% (current, good control)
+- Postoperative wound management – no complications.
+
+Plan:
+1. Discharge home with wound care instructions:
+   • Use silicone film dressing; change every 3 days.
+   • Apply silver sulfadiazine 0.5 % daily for first 7 days if any breakthrough lesions.
+   • Monitor glucose twice daily; adjust basal/rapid insulin per sliding‑scale algorithm.
+   • Perform gentle range‑of‑motion exercises 5 min daily, no pain.
+   • Watch for signs of infection: redness, swelling, purulent drainage, fever &gt;38 °C.
+2. Medications: Continue metformin 500 mg PO BID, basal insulin 10 U nightly, rapid‑acting insulin pre‑meal, acetaminophen 1 g q6h PRN, morphine 2 mg PRN. Doxycycline course completed. Continue high‑protein diet.
+3. Referrals: Home health nurse for wound care visits every 3 days; orthopedic clearance for light work.
+4. Follow‑up: Return to burn unit in 3 days for wound reassessment or sooner if infection signs. Continue diabetes follow‑up per PCP.
+
+Patient expressed optimistic and was appreciative of the care team.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 1/10</span><span class="pill">All wounds well healed</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temp</td><td>36.3</td></tr><tr><td>BP</td><td>130/75</td></tr><tr><td>Pulse</td><td>82</td></tr><tr><td>Resp</td><td>15</td></tr><tr><td>O2 Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Entire former burn area closed, mild hypopigmentation, no tenderness</li><li>Range of motion good, neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Final HbA1c 7.8%</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 7.8%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discharge instructions</li><li>Home health referral for wound care</li><li>Orthopedic referral for work clearance</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Optimistic, pain minimal. Thanked the team.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus type 2</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin before meals</li><li>Acetaminophen 1 g q6h PRN</li><li>Doxycycline 100 mg BID for 7 days (completed)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Wound fully closed, epiferalization complete</li><li>No infections</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Final burn unit review confirms complete closure of the burn area. Discharge instructions provided: silicone dressing changes every 3 days, glucose monitoring twice daily with insulin adjustments per algorithm, gentle ROM exercises, and infection surveillance. Home health referral for wound care and orthopedic clearance for light work. Patient expresses optimism and thanks the team.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Burn healed by secondary intention; glycemic control improved to 140–190 mg/dL. No complications. Discharge plan ensures ongoing diabetes management and wound surveillance.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus</span><span class="pill">Type 2 diabetes mellitus</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 1 g q6h PRN</li><li>Morphine 2 mg PRN</li><li>Metformin 500 mg PO BID</li><li>Basal insulin 10 U nightly</li><li>Rapid‑acting insulin pre‑meal</li><li>Silver sulfadiazine 0.5% cream once daily</li><li>High‑protein diet</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-10-02: 35‑year‑old male presented with acute second‑degree partial‑thickness burn on right dorsal arm (12.5×7.5 cm). Vitals normal except hyperglycemia 280 mg/dL. Treated with IV acetaminophen 1 g q6h PRN, IV morphine 2 mg q4h PRN, and initiated insulin sliding‑scale protocol. Topical silver sulfadiazine 0.5% applied once daily. Admitted to burn unit. Ordered serial glucose monitoring, wound culture, CBC, and HbA1c. Planned for daily dressing changes and serial glucose checks. Pain improved.</li><li>2023-10-02: Admitted to burn unit for second‑degree burn. Pain 8/10; blister roofs intact; minimal edema; glucose 260 mg/dL. Continued acetaminophen 1 g q6h PRN, morphine infusion 10 mg/8h, basal insulin 10 U nightly with rapid‑acting pre‑meal doses; high‑protein diet. Daily dressing with silver sulfadiazine; glucose monitored every 4 h; daily CBC. Wound assessment at 6 h and 24 h; pain and glucose re‑evaluation.</li><li>2023-10-03: 35‑year‑old male had 24‑hour wound check. Pain 7/10, minimal serous exudate and slight erythema. Dressing intact. Vitals: T 36.6°C, BP 134/78 mmHg, pulse 90/min, RR 16/min, SpO₂ 99%, glucose 240 mg/dL. Continued silver sulfidiazine 0.5% once daily, basal insulin 10 U nightly, rapid‑acting pre‑meal insulin, morphine infusion 10 mg/8h, acetaminophen 1 g q6h PRN. Ordered wound culture, CBC, HbA1c, and serial blood glucose monitoring. Sliding‑scale insulin to be adjusted per trend; empiric antibiotics will be considered pending culture results. Continues high‑protein diet.</li><li>2023-10-04: 35‑year‑old male underwent minor operative debridement for partial‑thickness right dorsal arm burn; silicone film dressing applied; pain 5/10; glucose 190 mg/dL; wound showed clean granulation, no infection; continuing basal insulin 10 U nightly, rapid‑acting pre‑meal insulin, Metformin 500 mg PO BID, Acetaminophen 1 g q6h PRN, Morphine 2 mg PRN as needed; wound culture pending; plan to monitor blood glucose every 4h and consider empiric antibiotics if infection develops; discharged home.</li><li>2023-10-05: Routine wound assessment and review of culture results; culture positive for Staphylococcus epidermidis; initiated doxycycline 100 mg PO BID for 7 days as wound prophylaxis; continued standard wound care with silicone film dressing and silver sulfadiazine; pain 4/10, glucose 170 mg/dL; vitals stable; no signs of infection.</li><li>2023-10-06: 35‑year‑old male returned for silicone film dressing removal and re‑coverage. Wound shows 92% granulation, no erythema or infection. Applied silver sulfadiazine and new silicone dressing. Pain 3/10 controlled with acetaminophen 1 g q6h PRN. Continuing basal and rapid insulin; glucose 180 mg/dL. Home dressing changes every 3 days advised. Follow‑up in 3 days or sooner if infection. No new medications prescribed.</li><li>2023-10-07: Discharged home. Wound fully epithelialized, mild hypopigmentation; pain 1/10; no infection signs; vitals stable. HbA1c 7.8%. Instructions: silicone dressing q3d, silver sulfadiazine 0.5% once daily for first 7 days if needed, glucose monitoring twice daily, adjust insulin, gentle ROM 5 min, watch for infection. Meds continued: Metformin 500 mg BID, basal insulin 10 U nightly, rapid‑acting pre‑meal, acetaminophen 1 g q6h PRN, morphine 2 mg PRN, silver sulfadiazine 0.5% cream once daily, high‑protein diet. Home health wound visits q3d, orthopedic clearance pending, return to burn unit in 3 days if complications. Follow‑up with PCP for diabetes.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

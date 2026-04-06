@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 5c1b726e</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 5c1b726e</h1><div class="subtitle">Colorectal Adenocarcinoma of the Cecum (Stage II) | Male, 70</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic inflammatory bowel disease (Ulcerative colitis), Type 2 Diabetes mellitus, Hypertension, Obesity</div><div class="meta-line">Risk Factors: Age &gt;50, Family history of colorectal cancer, Chronic inflammatory bowel disease, High-fat, low-fiber diet, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">When 70‑year‑old Martin K. first told his daughter that he’d been “feeling a bit off” it sounded like a minor flare of h...</span></summary><div class="section-body"><p>When 70‑year‑old Martin K. first told his daughter that he’d been “feeling a bit off” it sounded like a minor flare of his long‑standing ulcerative colitis. He’s had pancolitis since his early 40s and has worked as a book‑keeper, but for the past six months he had been noticing subtle changes: his stools were darker than usual, sometimes tinged with a faint reddish hue, and he lost about 10 pounds without trying. He also described a gnawing pressure in the lower right abdomen and a fatigue that made his usual brisk walks feel like running uphill. He didn’t view these complaints as anything beyond the “age‑related aches” that come with obesity and hypertension.</p><p>The first visit (Day 0) was with his primary care physician (PCP). Routine labs revealed a mild normocytic anemia (Hgb 11.4 g/dL), borderline hyperglycemia (HbA1c 7.2 %), and an elevated fecal calprotectin at 300 µg/g, a known marker of active colonic inflammation. His PCP suspected a UC flare and prescribed a short course of prednisone and a tapering plan for mesalamine. He was also advised to schedule a colonoscopy, citing the new-onset GI bleeding, which had never occurred before.</p><p>Colonoscopic evaluation (Day 28) was technically straightforward given his prior endoscopies. The scope revealed a 4 cm polypoid lesion in the medial aspect of the cecum, partially covered in inflammatory pseudopolyps. The surface eroded slightly, and it raised a suspicion of neoplasia. Five biopsies were obtained, and the pathologist later reported a moderate‑grade tubular adenocarcinoma, T2 (invading the muscularis propria) with negative margins in the superficial biopsies. At this point, Martin understood that he was dealing with a colorectal cancer, not just UC flare. The diagnosis spurred a rapid cascade of investigations.</p><p>An abdominal computed tomography (CT) scan with contrast (Day 35) confirmed the endoscopic findings: a localized mass in the cecum, with no regional lymphadenopathy and no distant metastatic lesions. The gastroenterologist determined that Martin’s tumor was appropriately a Stage II (pT2N0M0) cancer. He was referred to a surgical oncologist, and a multidisciplinary tumor board reviewed his case. Given his comorbidities—type 2 diabetes with peripheral neuropathy, well‑controlled hypertension (BP 135/80 under lisinopril), obesity (BMI 33.5), and a 30‑pack‑year smoking history—there was concern about operative risk, especially in the setting of uncontrolled inflammation from UC. The board decided on a planned elective right hemicolectomy, but only after a short period of preoperative optimization of his diabetes and a smoking cessation counseling session.</p><p>Preoperative optimization (Days 36–46) included adjustment of his metformin dose and initiation of a low‑dose basal insulin. He was prescribed a high‑protein, low‑fat diet to combat his weight loss. His family history—his father succumbed to colorectal cancer at 68—also made the team uneasy; they felt urgent intervention was warranted.</p><p>The right hemicolectomy (Day 48) was performed laparoscopically, with the surgical team employing a protective ileostomy due to Martin’s high intraoperative risk profile. Postoperatively, Martin’s recovery was protracted. On Post‑Op day 3, he developed a superficial surgical site infection (SSI) that required percutaneous drainage on day 5 and a brief course of vancomycin. The ileostomy output was large, and his metabolic demands increased, leading to hyperglycemia that peaked at 250 mg/dL on day 7. He also reported a worsening of abdominal pain, localized to the right lower quadrant, which the surgical team thought was typical ileitis; anti‑inflammatory therapy was increased. By day 10, Martin was still febrile (38.4°C) and had a leukocytosis of 12.5 × 10⁹/L. A repeat ultrasound ruled out abscess, and an infectious disease consult determined that the SSI had likely seeded into the peritoneal cavity—though the peritoneal cultures grew no organism. This warranted a longer course of intravenous antibiotics.</p><p>His ICU stay lasted 4 days, during which he was weaned off ventilatory support. By postoperative day 14, he was ambulating, but his appetite remained poor. The oncology team reviewed his pathology: 4 mm tumor budding, low differentiation, microsatellite-stable tumor, and a tumor lysis syndrome‑like picture on labs. They concluded that adjuvant chemotherapy was not indicated for Stage II if there were no adverse features. However, because of his high risk factors (age, obesity, UC), the team opted for a 4‑cycle adjuvant capecitabine to be initiated when he could tolerate oral intake.</p><p>Martin left the hospital on day 18 with wound care instructions and an appointment in 2 weeks with his surgeon and oncology nurse for follow‑up. The ileostomy was planned to be reversed within 8 weeks post‑surgery, contingent upon wound healing and metabolic stabilization.</p><p>The next clinical milestone (Day 35 after discharge, approx. Day 53 from initial symptoms) marked Martin’s first post‑discharge visit. His wound was healing, but his stoma output remained excessive. At the oncology visit, he reported increasing fatigue, new-onset diarrhea, and a sensation of “tightness” in his abdomen. On physical exam, there was a palpable firm, indurated mass in the right lower quadrant that moved with defecation. His labs were now deranged: hemoglobin had dropped to 9.7 g/dL, and his CRP was 18 mg/L. A CT scan showed a recurrence of the cecal lesion that had now invaded the adjacent terminal ileum, with an enlarged, suspicious para‑mesenteric node. There was no distant metastasis at that point.</p><p>On an urgent tumor board meeting (Day 64), the consensus was that Martin’s cancer had progressed to Stage III (pT3N1M0). Because of his frailty, comorbidities, and postoperative complications, a full adjuvant chemotherapy regimen (FOLFOX) was deemed intolerable. The surgical team recommended a palliative right hemicolectomy with resection of the involved terminal ileum and an end‑to‑end anastomosis, but this carried a high peritoneal seeding risk. Instead, they suggested a definitive chemoradiation, albeit with the knowledge that the benefit in colorectal cancer is limited without nodal involvement.</p><p>Martin and his daughter debated the options. He declined aggressive surgery, citing his recent complications and poor physical resilience. Instead, the oncology team initiated a modest palliative chemotherapy with capecitabine and bevacizumab, combined with supportive care for pain and nutrition. His appetite remained poor, and he experienced intermittent severe crampy abdominal pains. Over the next two months (Days 65–115), his condition steadily deteriorated. His hemoglobin fell to 8.3 g/dL, requiring two packed RBC transfusions. He developed worsening dyspnea and intermittent lower‑extremity edema, attributed to the progression of local disease and his chronic heart disease.</p><p>On the 120th day after the initial presentation, Martin’s condition had worsened to a point where the oncologist felt it appropriate to shift the focus from disease‑directed therapy to comfort measures. Hospice care was initiated. He returned to his home, with his daughter by his side, as the disease progressed. He passed away a few weeks later (Day 150 from initial symptoms), unable to cope with the cumulative burden of colorectal recurrence, uncontrolled diabetes, lingering hyperinflammatory UC flare, and the lingering scarring of his previous surgical sites.</p><p>Throughout this trajectory, Martin’s family history, lifestyle factors, and the dual pressures of chronic inflammatory bowel disease and metabolic derangements contributed to a course of colorectal cancer that went from a local Stage II tumor to an aggressive recurrence that overwhelmed his ability to tolerate aggressive therapy. The narrative underscores how a seemingly “curable” early colorectal cancer can still follow a grim arc when comorbidities, advanced age, and a pro‑inflammatory backdrop coexist.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-01-01</h3><div class="visit-meta">Primary Care | Reason: Feeling off, lower abdominal pressure, stool changes</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 70‑year‑old male presents with vague fatigue, lower right abdominal pressure, and darker stools over the past six months, accompanied by a 10‑lb unintentional weight loss. 
+History of Present Illness: Mr. Martin reports feeling generally fatigued and experiencing a pressure sensation in the right lower quadrant. He notes darker stools with occasional faint red tint but denies frank rectal bleeding. He has a 12‑year history of type 2 diabetes, well‑controlled on metformin, hypertension on lisinopril, and obesity (BMI 33.5). He has a 30‑pack‑year smoking history and a family history of colorectal cancer (father, age 68). He has ulcerative colitis (pancolitis) diagnosed at age 36 and denies recent medication adherence. 
+Past Medical History: Ulcerative colitis, type 2 diabetes mellitus, hypertension, obesity. 
+Medications: Metformin 500 mg BID, lisinopril 10 mg daily. 
+Allergies: None. 
+Review of Systems: Positive for fatigue, weight loss, and altered stool color. No abdominal pain beyond mild pressure, no nausea/vomiting, no fever, or rectal bleeding. 
+Physical Examination: Vitals: BP 138/82, HR 88, Temp 98.4 °F, RR 16, SpO₂ 98% on room air. General: warm, alert, no acute distress. Abdomen: mild tenderness in the right lower quadrant; no rebound or guarding, no masses. No stigmata of malnutrition. 
+Labs: CBC shows mild normocytic anemia (Hb 11.4 g/dL, Hct 34%); CMP is within normal limits. HbA1c 7.2% indicates borderline hyperglycemia. Fecal calprotectin is elevated at 300 µg/g, supporting active colonic inflammation. 
+Assessment: 1) Ulcerative colitis flare – clinical presentation and fecal calprotectin suggest active pancolitis. 2) Possible occult GI bleeding or colonic lesion given dark stools and family history of colorectal cancer; colonoscopy is indicated to rule out malignancy or severe mucosal disease. 3) Mild anemia likely anemia of chronic disease or chronic GI blood loss. 4) Moderately controlled diabetes – HbA1c 7.2% needs monitoring. 
+Plan: 
+- Initiate prednisone 40 mg PO daily, taper over 2 weeks to minimize steroid exposure. 
+- Start mesalamine 4 g PO BID to control colonic inflammation. 
+- Counsel patient on adherence, steroid side‑effect monitoring, and importance of early reporting of worsening abdominal pain, bleeding, or fever. 
+- Schedule colonoscopy within 4–6 weeks to evaluate mucosal inflammation, rule out neoplasia, and assess bleeding source. 
+- Repeat CBC and CMP in 2 weeks to monitor anemia and renal function, and repeat fecal calprotectin in 6 weeks to gauge response. 
+- Follow‑up clinic visit in 2 weeks to assess symptom improvement and medication tolerance. 
+- Discuss lifestyle modifications; advise smoking cessation support, dietician referral for weight management, and diabetes education. 
+- Educate about signs of complications: severe abdominal pain, persistent bleeding, high fever, or signs of steroid toxicity. 
+Disposition: Discharged home with prescriptions, follow‑up appointments, and instructions for urgent care if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Lower abdominal pressure (right lower quadrant), dark stools with occasional faint red tint, 10‑lb weight loss, fatigue</span><span class="pill">No overt rectal bleeding</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138/82</td></tr><tr><td>Heart Rate</td><td>88</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild tender abdomen RLQ</li><li>No guarding or rebound</li><li>No palpable masses</li><li>No stigmata of malnutrition</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>HbA1c</li><li>Fecal calprotectin</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 11.4 g/dL, Hct 34%, WBC 5.8 K/µL</li><li>CMP: Sodium 138, Potassium 3.9, Chloride 100, BUN 12, Creatinine 1.0</li><li>HbA1c 7.2%</li><li>Fecal calprotectin 300 µg/g</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 40 mg daily (2‑week taper)</li><li>Mesalamine 4 g BID</li><li>Counseling on colonoscopy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He agreed to the medications and understood that the colonoscopy would clarify the source of dark stools. He was discharged home with follow‑up arranged.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pansclerotic ulcerative colitis since age 36</li><li>Type 2 diabetes mellitus diagnosed 12 years ago, currently on metformin</li><li>Hypertension, well‑controlled on lisinopril</li><li>Obesity BMI 33.5</li><li>30‑pack‑year smoking history</li><li>Family history of colorectal cancer (father at 68)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Martin presented with vague complaints of fatigue and a pressure in his lower right abdomen. He reported darker stools and a 10‑lb weight loss over the past six months but dismissed the symptoms as aging. On examination, he was warm, alert, and in no acute distress. Abdominal exam revealed mild tenderness in the right lower quadrant, but no rebound or guarding. The clinician noted his history of ulcerative colitis and suspected an exacerbation. Routine labs were ordered, including CBC, CMP, HbA1c, and fecal calprotectin. The results returned with a mild normocytic anemia (Hb 11.4 g/dL), borderline hyperglycemia (HbA1c 7.2%), and a fecal calprotectin of 300 µg/g, supporting active colonic inflammation. The PCP started a short course of prednisone 40 mg daily tapered over 2 weeks and added mesalamine 4 g BID to control the ulcerative colitis. The clinician advised scheduling a colonoscopy to evaluate the source of GI bleeding and discussed the possibility of a malignancy given new symptoms.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of UC flare; possible underlying colorectal neoplasia suspected based on stool occult bleeding and weight loss. No definitive diagnosis yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-01-29</h3><div class="visit-meta">Gastroenterology | Reason: Colonoscopy for evaluation of dark stools and abdominal pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Right lower quadrant pressure, dark stools, 10‑lb weight loss, fatigue. 
+Reason for visit: follow‑up after colonoscopy for active ulcerative colitis.
+
+History of Present Illness:
+70‑year‑old male with known pancolitis on mesalamine 4 g BID and prednisone 40 mg daily (taper underway). He reports persistent right lower quadrant pressure, intermittent dark tarry stools, 10‑lb weight loss over the last 6 months, and persistent fatigue. The colonoscopy performed on 2025‑01‑25 revealed diffuse erythema, erosions, and a 4 cm polypoid lesion in the cecum partially covered by inflammatory pseudopolyps. Five biopsy specimens were taken. Patient is anxious awaiting pathology.
+
+Past Medical History: Ulcerative colitis (pan‑colitis), Type 2 diabetes mellitus, hypertension, obesity.
+
+Medications: Metformin 1000 mg BID, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Prednisone 40 mg daily (taper underway), Mesalamine 4 g BID.
+
+Allergies: NKDA.
+
+Review of Systems:
+Positive for abdominal pain (right lower quadrant pressure), anemia (black stools), weight loss, fatigue. Negative for fever, chills, or rectal bleeding other than melena. No recent medication changes.
+
+Physical Examination:
+Vitals stable (BP 136/80 mmHg, HR 84 bpm, T 98.5 °F, RR 16 /min, SpO2 98 %). Abdominal exam: soft, non‑tender, no distension. No new abdominal tenderness since colonoscopy. Bowel sounds normal. No external signs of infection.
+
+Assessment:
+1) Active ulcerative colitis flare.
+2) Cecal polypoid lesion – likely inflammatory pseudopolyp with areas of mucosal erosion; differential includes low‑grade dysplasia or adenoma.
+Awaiting histology.
+
+Plan:
+1) Continue mesalamine 4 g BID.
+2) Continue prednisone taper as per schedule; goal to complete taper by 2025‑02‑28.
+3) Re‑evaluate in 2 weeks after pathology results.
+4) Monitor CBC, CMP, and liver function for steroid and mesalamine effects at each visit.
+5) Educate patient on increased bleeding risk with oral steroids; advise to report any sudden increase in melena or hematochezia.
+6) If pathology reveals dysplasia or adenoma, discuss endoscopic polypectomy or surgical consultation.
+7) Encourage diet rich in fiber and adequate fluid intake.
+8) Schedule routine follow‑up in 3 months for UC activity if asymptomatic.
+
+Disposition:
+Patient will return to the GI clinic once pathology results are available.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Right lower quadrant pressure, dark stools, 10‑lb weight loss, fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>136/80</td></tr><tr><td>Heart Rate</td><td>84</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No abdominal tenderness on exam post‑procedure</li><li>Vibration of the bowel mucosa consistent with active UC</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Biopsy specimens (5), sent for histology</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>— (results pending)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>N/A</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He was relieved to have the colonoscopy done but anxious about the biopsy findings. He expressed willingness to see oncology if cancer was confirmed.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone 40 mg daily (taper underway)</li><li>Mesalamine 4 g BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Colonoscopy scheduled as per PCP order</li><li>No recent medication changes</li><li>Continued symptoms as above</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Martin attended his colonoscopy with the gastroenterologist. The procedure was uncomplicated. The endoscopist noted erythema and erosions throughout the colon consistent with active ulcerative colitis. In the cecum, a 4 cm polypoid lesion was identified, partially covered by inflammatory pseudopolyps. The surface had faint erythematous patches suggesting mucosal erosion. Five biopsy specimens were taken from the lesion and sent for histopathology. The gastroenterologist explained the significance: a provisional diagnosis of neoplasia could not be ruled out. The patient was notified that a definitive diagnosis would await pathology results and that further oncology referral was required if cancer was confirmed. Martin was advised to continue mesalamine and follow the current steroid taper.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Colonoscopy identified 4 cm cecal lesion; biopsy pending. Inflammation active; UC flare controlled by prednisone and mesalamine.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-02-05</h3><div class="visit-meta">Gastroenterology | Reason: Post‑colonoscopy staging and oncology referral</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑colonoscopy staging and oncology referral.
+
+History of Present Illness: 70‑year‑old male presents for discussion of colonoscopy biopsy results and staging CT. He reports persistent right lower quadrant (RLQ) pain, dark stools, 10‑lb weight loss, and fatigue over the past 6 months. He has been on prednisone 40 mg daily (taper ongoing) and mesalamine 4 g BID for active ulcerative colitis. He is concerned about the 4‑cm mass identified on imaging.
+
+Past Medical History: Ulcerative colitis (pancolitis), Type 2 diabetes mellitus, hypertension, obesity, former smoker.
+
+Medications: Metformin 1000 mg BID, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Prednisone 40 mg daily (taper ongoing), Mesalamine 4 g BID.
+
+Allergies: None.
+
+Physical Examination: Vitals stable – BP 134/78, HR 82, T 98.6 °F, RR 17, SpO₂ 97%. Abdomen soft, non‑distended, RLQ tenderness 3/10, no rebound or guarding. No palpable masses.
+
+Imaging: Contrast CT abdomen/pelvis – 4 cm localized mass in right colon, no regional lymphadenopathy or distant metastasis.
+
+Assessment:
+1. Possible adenocarcinoma of the cecum/ascending colon. 2. Active ulcerative colitis with possible inflammatory mass.
+3. No evidence of regional lymph node disease or metastatic spread.
+
+Plan:
+- Elective laparoscopic right hemicolectomy after pre‑operative optimization.
+- Continue current ulcerative colitis regimen; plan for prednisone taper and mesalamine maintenance.
+- Initiate pre‑operative diabetes optimization: discuss insulin initiation or adjustment of metformin to avoid peri‑operative hyper/hypoglycemia.
+- Schedule pre‑operative surgical oncology consult for 2025-02-12.
+- Order baseline labs (CBC, CMP, LFTs, HbA1c) before surgery.
+- Educate patient on signs of infection, GI bleeding, and when to seek urgent care.
+- Continue antihyperlipidemic and antihypertensive therapy unchanged.
+- Arrange follow‑up in clinic 2 weeks prior to surgery to review labs and optimize nutrition.
+
+The patient was informed of the findings, risks, and benefits of surgery. He understood the urgency, expressed willingness to proceed, and agreed to the optimization plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Right lower quadrant pain, dark stools, weight loss, fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>134/78</td></tr><tr><td>Heart Rate</td><td>82</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>17</td></tr><tr><td>Oxygen Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right lower quadrant tenderness, 3/10</li><li>No significant abdominal distention</li><li>Stable vitals</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast CT abdomen with pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 4 cm cecal lesion, no regional lymphadenopathy, no distant mets</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to surgical oncology</li><li>Initiation of pre‑operative diabetes optimization plan</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He was overwhelmed but understood the urgency and accepted the recommended plan. He agreed to further optimization before surgery.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone 40 mg daily (taper ongoing)</li><li>Mesalamine 4 g BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Biopsy from cecal lesion pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pathologist had reported a moderate‑grade tubular adenocarcinoma, T2, with negative margins in superficial biopsies. The gastroenterologist confirmed a Stage II (pT2N0M0) colorectal adenocarcinoma localized to the cecum. A contrast‑enhanced CT abdomen was ordered to assess for regional lymphadenopathy and distant metastasis. The CT performed on day 35 (2025-02-12) confirmed a localized 4‑cm cecal mass, no regional nodes, and no distant metastases. The oncologic multidisciplinary team reviewed the case: given Martin’s age, type 2 diabetes with neuropathy, ongoing UC inflammation, hypertension, obesity, and smoking history, the team expressed concern about operative risks. Nevertheless, consensus was to proceed with elective laparoscopic right hemicolectomy after a short period of pre‑operative diabetes optimization and smoking cessation counseling.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed Stage II colorectal adenocarcinoma arising in setting of ulcerative colitis. No metastatic spread. Operative plan established pending optimization.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-02-15</h3><div class="visit-meta">Endocrinology | Reason: Pre‑operative diabetes optimization</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">---
+**Chief Complaint:** Pre‑operative diabetes optimization
+
+**History of Present Illness:**
+Mr. Martin, 70‑year‑old male with type 2 diabetes mellitus, hypertension, obesity, and pancolitis, presents for pre‑operative endocrine optimization prior to scheduled right hemicolectomy on 2025‑02‑18. He reports ongoing fatigue, increased thirst, and polyuria, but denies new gastrointestinal complaints. He has been on insulin glargine 20 units daily plus metformin 1000 mg BID. Recent labs reveal HbA1c 7.2% and fasting glucose 148 mg/dL.
+
+**Review of Systems:**
+- Constitutional: fatigue
+- Genitourinary: polyuria, increased thirst
+- GI: no new symptoms
+- Cardiovascular: no chest pain, stable BP
+- Respiratory: no SOB
+
+**Past Medical History:**
+- Type 2 diabetes mellitus
+- Hypertension
+- Obesity (BMI 33.5)
+- Ulcerative colitis, pancolitis, on prednisone taper (40 mg daily, taper pending)
+- Active colitis flare; recent colonoscopy with 4‑cm right colon mass
+
+**Past Surgical History:**
+- None prior to planned hemicolectomy
+
+**Medications:**
+- Metformin 1000 mg BID (prior), now 500 mg BID
+- Insulin glargine 20 units daily (prior), now 10 units nightly
+- Lisinopril 20 mg daily
+- Atorvastatin 40 mg nightly
+- Mesalamine 4 g BID
+- Prednisone 40 mg daily (taper pending)
+- Cefazolin 1 g IV (pre‑op prophylaxis)
+- Nicotine patch 1 patch/day (prescribed for smoking cessation)
+
+**Allergies:** None known.
+
+**Social History:**
+- Former smoker, 40 pack‑year history; currently using nicotine patch.
+- No alcohol or illicit drug use.
+
+**Vitals:**
+- BP: 132/74 mmHg
+- HR: 80 bpm
+- Temp: 98.6 °F
+- RR: 15/min
+- SpO₂: 98% on room air
+- BMI: 33.5
+
+**Physical Exam:**
+- General: alert, in no acute distress
+- HEENT: normal
+- Cardiovascular: regular rate/rhythm, no murmurs
+- Respiratory: clear to auscultation
+- Abdominal: soft, nondistended, no tenderness
+- Extremities: no pedal edema, peripheral pulses palpable
+- Neurologic: grossly intact
+
+**Assessment:**
+1. Type 2 diabetes mellitus – currently suboptimally controlled (HbA1c 7.2%, fasting glucose 148 mg/dL). Peri‑operative hyperglycemia risk is elevated due to ongoing prednisone therapy and surgical stress.
+2. Hypertension – well controlled on lisinopril.
+3. Obesity – BMI 33.5 contributes to insulin resistance.
+4. Ulcerative colitis – active flare on prednisone taper; risk of infection with peri‑operative antibiotics.
+5. Smoking – high peri‑operative risk; nicotine patch prescribed.
+
+**Plan:**
+- **Diabetes management:**
+  - Reduce metformin to 500 mg BID (to minimize GI side effects and renal safety pre‑op). 
+  - Initiate basal insulin glargine 10 units nightly (titrated from 20 units daily) to improve insulin sensitivity and achieve peri‑operative glucose targets of 80–180 mg/dL.
+  - Provide patient education on carbohydrate counting, insulin timing, and hypoglycemia awareness.
+  - Arrange dietitian consult to increase protein intake and reduce simple sugars.
+- **Blood pressure:** Continue lisinopril 20 mg; monitor BP during pre‑op period.
+- **Prednisone taper:** Continue 40 mg daily until 3 days pre‑op, then taper to 20 mg for 2 days with goal of &lt;20 mg by surgery day.
+- **Smoking cessation:** Prescribe nicotine patch; reinforce counseling.
+- **Pre‑operative labs:** Repeat fasting glucose and HbA1c one week pre‑op; obtain CMP to confirm normal renal function.
+- **Surgical coordination:** Confirm timing of right hemicolectomy (2025‑02‑18) and ensure antibiotic prophylaxis (cefazolin 1 g IV) per surgical protocol.
+- **Education:** Discuss expected peri‑operative glucose fluctuations, insulin adjustments, and monitoring.
+
+**Follow‑up recommendations:**
+- Return for diabetes follow‑up 1 week prior to surgery (2025‑02‑11) to re‑measure fasting glucose and adjust insulin dose as needed.
+- Continue dietary modifications and nicotine patch until at least surgery day.
+- Post‑operative endocrine follow‑up within 48 hrs after surgery to adjust insulin and review glucose logs.
+- Coordinate with surgical oncology for operative day medication schedule.
+- If HbA1c or fasting glucose are markedly elevated (&gt;200 mg/dL), delay surgery and repeat labs.
+
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fatigue, polyuria, increased thirst, no new GI symptoms</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>132/74</td></tr><tr><td>Heart Rate</td><td>80</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>15</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 33.5</li><li>No peripheral edema</li><li>Peripheral pulses palpable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fast glucose, HbA1c</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fast glucose 148 mg/dL</li><li>HbA1c 7.2%</li><li>CMP: within normal limits</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Basal insulin glargine 10 units nightly</li><li>Smoking cessation counseling</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He felt relieved to have a concrete plan and committed to dietary changes. Concerns about insulin side effects were discussed and addressed.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone 40 mg daily (taper pending)</li><li>Mesalamine 4 g BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Upcoming right hemicolectomy on 2025-02-18</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the pre‑operative assessment, the endocrinologist reviewed Martin’s glycemic control: HbA1c 7.2%, fasting glucose ~155 mg/dL. To improve insulin sensitivity and reduce perioperative risk, the clinician reduced metformin to 500 mg BID and added basal insulin glargine 10 units nightly. The patient was instructed on carbohydrate counting and medication timing, and a dietary consult was arranged to increase protein intake and reduce simple sugars. Blood pressure was stable on lisinopril. Smoking cessation counseling was reiterated, and a nicotine patch was prescribed. The plan was to re‑assess glycemic control 1 week pre‑op.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Prepared for surgery by optimizing glycemic control: metformin dose reduced, basal insulin added. No change in tumor status.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-02-18</h3><div class="visit-meta">Surgical Oncology | Reason: Elective laparoscopic right hemicolectomy with protective ileostomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Elective laparoscopic right hemicolectomy with protective loop ileostomy.
+
+**History of Present Illness:**
+A 70‑year‑old male with a long history of pancolitis, T2DM, HTN, obesity, and well‑controlled medications underwent elective laparoscopic right hemicolectomy with creation of a protective loop ileostomy on 2025‑02‑18. Resection margins were clear. Post‑operative course was complicated by a superficial surgical site infection (SSI) noted on POD 3 with erythema and drainage. Percutaneous drainage of the incision was performed on POD 5 and empiric vancomycin 1 g IV BID was started for 5 days. Ileostomy output remained high, contributing to hyperglycemia with a peak glucose of 250 mg/dL on POD 7. Insulin and metformin doses were adjusted accordingly. The patient developed a flare of ulcerative colitis (low‑grade fever 38.4 °C, leukocytosis 12.5×10⁹/L) on POD 10; mesalamine was increased and a small‑dose prednisone taper was initiated. A repeat abdominal ultrasound on POD 10 excluded an abscess. Infectious disease (ID) consulted and recommended a longer course of IV antibiotics due to concern for seeding of the peritoneal cavity. The patient spent 4 days in ICU and was transferred to the surgical ward once stabilized. By POD 14 the patient ambulated with support and was discharged home with wound care and nutrition instructions.
+
+**Past Medical History:** Ulcerative colitis (pancolitis), Type 2 diabetes mellitus, hypertension, obesity.
+
+**Medications (pre‑discharge):**
+- Metformin 500 mg BID
+- Insulin glargine 10 units nightly
+- Lisinopril 20 mg daily
+- Atorvastatin 40 mg nightly
+- Prednisone 40 mg daily (taper ongoing: 40 mg day 1‑3, 30 mg day 4‑7, 20 mg day 8‑10, 10 mg day 11‑14)
+- Mesalamine 4 g BID (increased to 4 g TID for flare)
+- Cefazolin 1 g IV pre‑op
+- Vancomycin 1 g IV BID (currently 5 days)
+- Nicotine patch
+
+**Allergies:** NKDA
+
+**Vitals (Day 14):** BP 140/80, HR 96, T 37.8 °C, RR 18, SpO₂ 97 %
+
+**Physical Examination:**
+- Incision: tibial, erythematous, drainage present.
+- Ileostomy: high output, no abdominal guarding or peritonitis.
+- Right lower quadrant: mild tenderness without rebound.
+
+**Labs and Tests:**
+- CBC: WBC 12.5×10⁹/L
+- BMP: within normal limits
+- CRP: 20 mg/L
+- Blood cultures: negative
+- Peritoneal fluid culture: negative
+- Ultrasound: no abscess
+
+**Assessment and Plan:**
+1. **Post‑operative superficial SSI with potential peritoneal seeding.**
+   - Continue IV antibiotic coverage: Vancomycin 1 g IV BID (extend to 14 days total) plus Ceftriaxone 2 g IV daily for broad coverage.
+   - Re‑evaluate wound drainage daily; repeat ultrasound if clinical deterioration.
+2. **Diabetes mellitus exacerbated by ileostomy output.**
+   - Increase insulin glargine to 15 units nightly; add NPH 10 units BID if glucose &gt;200 mg/dL.
+   - Counsel on carbohydrate counting, monitor capillary glucose TID.
+3. **Ulcerative colitis flare.**
+   - Continue mesalamine 4 g TID.
+   - Continue prednisone taper; coordinate with rheumatology for steroid‑sparing agent if flare recurs.
+4. **High ileostomy output.**
+   - High‑protein, low‑fat diet; consider octreotide 50 µg SC BID if output &gt;3 L/day.
+5. **Post‑op anemia and nutritional status.**
+   - Repeat CBC in one week; consider iron supplementation if ferritin &lt;40 ng/mL.
+6. **Infection monitoring.**
+   - Daily temperature, wound inspection; CRP and WBC trend.
+
+**Follow‑up Recommendations:**
+- Infectious Disease consult in 7 days or earlier if fever or leukocytosis worsens.
+- Surgical Oncology follow‑up in 2 weeks for stoma care and wound status.
+- Endocrinology review in 4 weeks to reassess insulin regimen.
+- Primary care visit in 6 weeks for overall status.
+- Patient education: wound care, signs of peritonitis, hyperglycemia warnings, medication adherence.
+
+The patient expressed anxiety about his infection and postoperative pain; addressed with reassurance, pain control (acetaminophen 1 g PRN) and wound care education.
+
+**Signature:**
+Dr. [Name], MD
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Flank pain (post‑op days), low‑grade fever on day 3</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/80</td></tr><tr><td>Heart Rate</td><td>96</td></tr><tr><td>Temperature</td><td>37.8°C</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Oxygen Saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tibially incised wound with erythema, drainage</li><li>Ileostomy output high but no peritonitis signs</li><li>Right lower quadrant mild tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>CRP</li><li>Blood cultures</li><li>Peritoneal fluid culture</li><li>Infectious disease consultation</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 12.5×10⁹/L</li><li>CRP 20 mg/L</li><li>Blood cultures negative</li><li>Peritoneal fluid culture negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Vancomycin 1 g BID IV (5 days)</li><li>Percutaneous wound drainage</li><li>High‑protein, low‑fat diet</li><li>Adjusted insulin regimen</li><li>Prednisone taper</li><li>Mesalamine increase</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He reported mild abdominal discomfort, high output from stoma, and felt increasingly fatigued. He appreciated the wound care advice but expressed anxiety about the infection and postoperative pain.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Basal insulin glargine 10 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone 40 mg daily (taper ongoing)</li><li>Mesalamine 4 g BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Right hemicolectomy on 2025-02-18, ileostomy created</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>An elective laparoscopic right hemicolectomy was performed with a protective loop ileostomy due to Martin’s high operative risk profile. The resection margins were clear of tumor. Post‑operative course was complicated by a superficial surgical site infection (SSI) noted on post‑op day 3. Percutaneous drainage of the wound was performed on day 5, and empiric vancomycin was started for 5 days. Ileostomy output remained high, leading to hyperglycemia with a peak glucose of 250 mg/dL on day 7. The surgical team increased mesalamine and initiated a small‑dose prednisone taper to manage inflammatory flare. The patient remained febrile (38.4°C) with leukocytosis 12.5×10⁹/L on day 10. A repeat ultrasound excluded abscess. An infectious disease consult concluded that the SSI may have seeded the peritoneal cavity; a longer course of intravenous antibiotics was recommended. The ICU stay lasted 4 days, transitioning to the surgical ward once stabilized. On post‑op day 14, Martin ambulated with support and was discharged with instructions for wound care and nutrition.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage II tumor resected with clear margins. Post‑op complications: SSI, suspected intra‑abdominal seeding, hyperglycemia. No evidence of metastatic disease at this point.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-03-05</h3><div class="visit-meta">Oncology | Reason: Post‑discharge follow‑up and discovery of recurrence</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">
+Chief Complaint: Post‑discharge follow‑up and evaluation of new symptoms.
+
+S: 70‑year‑old male with ulcerative colitis, type 2 diabetes, hypertension, obesity, and an ileostomy reports increased fatigue, new‑onset watery diarrhea, abdominal tightness, and high ileostomy output (≈500–700 mL/24 h). He also notes slow wound healing.
+
+O: 
+• Vitals: BP 126/68 mmHg, HR 88 bpm, Temp 98.7 °F, RR 16 /min, SpO₂ 98 % on room air.
+• General: mild conjunctival pallor.
+• Abdomen: firm mass in the right lower quadrant, mobile with defecation; no rebound or guarding.
+• Stool: watery, no visible blood.
+• Ileostomy: high output, 500–700 mL/24 h.
+Lab Results:
+• CBC: Hb 9.7 g/dL, platelets 250 k/µL, WBC 6.4 k/µL.
+• CMP: (pending).
+• CRP: 18 mg/L (elevated).
+• CT abdomen/pelvis with contrast (2025‑02‑27): 4.5 cm infiltrative focus in the cecum extending into adjacent terminal ileum, enlarged para‑mesenteric lymph node 1.2 cm; no distant disease.
+
+Assessment:
+1. Possible colorectal carcinoma involving cecum and ileum – imaging suggests malignant‑appearing mass; endoscopic evaluation pending.
+2. Active ulcerative colitis flare – clinical history, elevated CRP, and high‑output ileostomy output support ongoing inflammation.
+3. Iron deficiency anemia secondary to chronic disease / GI blood loss.
+4. High‑output ileostomy causing dehydration, electrolyte disturbance, hyperglycemia.
+
+Plan:
+1. Initiate adjuvant chemotherapy: capecitabine 650 mg/m² PO BID (two days on/one day off) and bevacizumab 7.5 mg/kg IV q14 days.
+2. Supportive measures:
+   • Oral iron 325 mg PO daily.
+   • Diuretics (furosemide 20 mg PO daily) for edema.
+   • Continue prednisone 30 mg daily with taper plan; monitor for side effects.
+   • Continue mesalamine 4 g BID.
+   • Continue Metformin 500 mg BID, basal insulin glargine 10 units nightly adjusted for high output.
+   • Lisinopril 20 mg QD, Atorvastatin 40 mg QHS.
+3. Hydration: encourage 2–3 L fluids; consider oral rehydration salts for high‑output.
+4. Monitor electrolytes, renal function, and glucose daily.
+5. Referral for flexible sigmoidoscopy/colonoscopy to obtain biopsy of mass before starting chemotherapy. Schedule as soon as clinically feasible.
+6. Wound care: continue dressing changes, monitor for SSI recurrence.
+7. Dietitian consult to address high‑output ileostomy nutrition.
+8. Follow‑up visit in 2 weeks to review labs, assess tolerance to chemo, and adjust steroids.
+
+Follow‑Up: 02/18/2025 – Oncology re‑assessment, labs (CBC, CMP, LFTs), CRP, HbA1c, wound status. 02/24/2025 – Endoscopy/biopsy. Initiate chemotherapy 03/12/2025.  Monitor for mucositis, hypertension, proteinuria, and GI toxicity.
+
+Signature: Dr. Oncology
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increased fatigue, new‑onset watery diarrhea, abdominal tightness</span><span class="pill">Wound healing slow, ileostomy output excessive</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>126/68</td></tr><tr><td>Heart Rate</td><td>88</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm mass RLQ, movable with defecation</li><li>Large ileostomy output (~500–700 mL/24h)</li><li>Mild pallor of conjunctiva</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>CRP</li><li>CT abdomen/pelvis with contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 9.7 g/dL</li><li>Platelets 250 K/µL</li><li>CRP 18 mg/L</li><li>CT: 4.5 cm lesion cecum invading ileum, enlarged para‑mesenteric node 1.2 cm</li><li>No distant metastasis</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Plan for palliative capecitabine 650 mg/m² BID + bevacizumab 7.5 mg/kg IV q14d</li><li>Supportive: oral iron, diuretics for edema</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He felt hopeful about a manageable regimen but concerned about side effects. He agreed to start chemo next week.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Post‑surgical ileostomy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Basal insulin glargine 10 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone 30 mg daily (taper ongoing)</li><li>Mesalamine 4 g BID</li><li>Vancomycin C/D for SSI</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hospital discharge 18 days ago, ongoing ileostomy</li><li>Adjuvant capecitabine not yet started</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the oncology visit, Martin’s fatigue intensified, and he reported watery diarrhea and a sensation of abdominal tightness. Physical examination revealed a firm, indurated mass in the right lower quadrant that moved with defecation, consistent with the former cecal area. CBC showed a drop in hemoglobin to 9.7 g/dL. CRP elevated at 18 mg/L suggesting active inflammation. A CT abdomen with contrast (performed on 2025-02-27) showed recurrence of the cecal lesion now invading the adjacent terminal ileum, with an enlarged para‑mesenteric lymph node. No distant metastasis was found. Tumor board reconvened urgently (planned for 2025-02-27) to decide management. The oncology team concluded that the cancer had progressed to Stage III (pT3N1M0). Adjuvant chemotherapy with capecitabine alone (four 2‑week cycles) would not be tolerated given recent complications. Given the rapid progression and high operative risk, the team recommended a palliative approach. It was discussed that Martin preferred a less aggressive plan, and he declined further radical surgery. The plan was to initiate modest palliative chemotherapy with capecitabine and bevacizumab, plus supportive measures for pain and nutrition.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cancer progressed to Stage III with local invasion and nodal involvement. Post‑operative complications preclude intensive chemotherapy. Decision made for palliative chemotherapy with bevacizumab.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-02-27</h3><div class="visit-meta">Tumor Board | Reason: Multidisciplinary discussion of recurrence and treatment options</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Multidisciplinary discussion of recurrent colorectal carcinoma and evaluation of palliative treatment options.
+
+Patient: 70‑year‑old male with a history of ulcerative colitis (pancolitis), type 2 diabetes mellitus, hypertension, obesity, and a post‑operative ileostomy.
+
+Presenting Status: No acute symptoms reported during this board meeting. The patient remained clinically stable following recent postoperative complications (superficial surgical site infection, ileostomy‑related hyperglycemia, and ulcerative colitis flare). Current vitals were not documented during the board discussion.
+
+Recent Findings:
+- CT abdomen/pelvis: New cecal mass consistent with recurrence, stage III with nodal involvement.
+- Post‑operative course: Superficial wound infection (treated with vancomycin), high‑output ileostomy, hyperglycemia requiring adjustment of insulin and metformin, ulcerative colitis flare controlled with mesalamine and prednisone taper.
+
+Multidisciplinary Consensus:
+- Full adjuvant FOLFOX regimen deemed intolerable given age, frailty, surgical complications, and risk of cumulative toxicity.
+- Repeat surgical re‑section poses high risk of peritoneal seeding and offers limited benefit over systemic therapy.
+- Limited benefit anticipated from additional radiotherapy in stage III nodal disease.
+- Recommended initiation of modest palliative chemotherapy with capecitabine + bevacizumab, with close monitoring of chemotherapy‑related toxicities and wound status.
+- Emphasized aggressive nutritional support and monitoring of stoma output.
+- No further surgical intervention will be pursued unless a clear clinical benefit emerges.
+
+Assessment &amp; Plan:
+1. **Recurrent stage III colorectal carcinoma (nodal involvement)** – initiate palliative chemotherapy.
+   - Capecitabine 2000 mg/m2 PO BID for 14 days, then 7‑day rest (cycle 1). Subsequent cycles to be considered based on tolerance.
+   - Bevacizumab 7.5 mg/kg IV Q21d.
+2. Continue baseline medications: metformin 500 mg BID, basal insulin glargine 10 units nightly, lisinopril 20 mg daily, atorvastatin 40 mg nightly, prednisone taper per schedule, mesalamine 4 g BID, and vancomycin C/D as ordered.
+3. Monitor peripheral CBC, CMP, LFTs, and lipid panel prior to each chemotherapy cycle.
+4. Watch for capecitabine toxicity (hand‑foot syndrome, mucositis) and bevacizumab complications (hypertension, bleeding, thromboembolism). Adjust doses per toxicity.
+5. Nutritional assessment: high‑protein, high‑calorie diet; referral to dietitian for ileostomy‑specific nutrition; monitor weight objectively.
+6. Stoma output: schedule weekly assessment; educate patient on fluid and electrolyte management; consider antidiarrheal agents if output remains high.
+7. Wound surveillance: weekly wound checks; prompt reporting of redness, drainage, or pain.
+8. Endocrinology re‑involvement to adjust insulin regimen in light of capecitabine‑induced hyperglycemia.
+9. Tumor board re‑evaluation at 3 months or sooner if clinical status changes.
+10. Patient education: signs of infection, DVT/PE, severe mucositis, and steroid side effects; ensure adherence to follow‑up and reporting.
+
+Overall, this plan balances potential for symptomatic palliation against the patient’s frailty and comorbidities, providing a realistic, patient‑centered approach to recurrent disease management.
+</div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Post‑surgical ileostomy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Basal insulin glargine 10 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone taper</li><li>Mesalamine 4 g BID</li><li>Vancomycin C/D</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT evidence of cecal recurrence, Stage III</li><li>Recent postoperative complications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A multidisciplinary tumor board (oncology, colorectal surgery, gastroenterology, radiology, oncology nursing, palliative care) convened to evaluate the recurrent cancer. Consensus: the tumor had progressed to Stage III, and given Martin’s age, frailty, and recent surgical complications, a full adjuvant FOLFOX regimen was intolerable. Surgical re‑section posed high peritoneal seeding risk, and the benefit of additional radiation in a stage III with nodal involvement is limited. The board recommended initiating modest palliative chemotherapy with capecitabine + bevacizumab, with close monitoring for toxicity. The board also emphasized intensive nutritional support and close follow‑up for wound status and stoma output. No further surgical intervention would be pursued unless clear clinical benefit emerged.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multidisciplinary consensus reached: proceed with palliative capecitabine + bevacizumab; no surgery.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-04-30</h3><div class="visit-meta">Palliative Care | Reason: Transition to comfort‑focused care and hospice planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+The patient is a 70‑year‑old male with a history of ulcerative colitis (pancolitis), metastatic colorectal carcinoma, type 2 diabetes, hypertension, obesity, and chronic heart disease, who now presents for a discussion about transition to comfort‑focused care. 
+
+He reports worsening abdominal pain (RLQ, moderate to severe), shortness of breath on minimal exertion, significant peripheral edema, and a marked decrease in appetite. He has persistent high ileostomy output (&gt;2 liters/day). The patient states, “I just want to be at ease.” The family has expressed a desire for a goal‑oriented approach emphasizing comfort and has declined further aggressive oncologic interventions.
+
+**Objective:**
+- Vitals: BP 118/70, HR 92, RR 18, SpO₂ 96% RA, Temp 98.2 °F.
+- General: Pale, mild pallor, dry mucous membranes.
+- Abdomen: Soft, mild RLQ tenderness, no rebound or guarding. High ileostomy output noted.
+- Extremities: Bilateral pitting edema to mid‑shins.
+- Respiratory: Clear to auscultation, no wheezes; dyspnea on minimal activity.
+
+**Assessment:**
+The patient is in a trajectory of declining functional status with multiple organ involvement. Labs demonstrate ongoing anemia (Hb 8.2 g/dL), significant inflammation (CRP 15 mg/L), and hypoalbuminemia, consistent with chronic disease and malnutrition. The high ileostomy output likely contributes to fluid loss, electrolyte disturbances, and hyperglycemia. 
+
+Key clinical considerations:
+1. Progressive metastatic colorectal carcinoma – not amenable to curative or cytotoxic therapy at this time.
+2. Ulcerative colitis flare – ongoing colonic inflammation contributing to anemia and abdominal pain.
+3. Anemia of chronic disease/potential blood loss.
+4. Congestive heart failure exacerbation – peripheral edema, dyspnea.
+5. Capecitabine &amp; bevacizumab toxicity (diarrhea, mucositis, bleeding potential).
+6. Palliative care goals – emphasis on symptom control, dignity, and family comfort.
+
+**Plan:**
+- **Chemotherapy:** Discontinue capecitabine and bevacizumab immediately.
+- **Pain Management:** Initiate morphine 10 mg PO q4h PRN; titrate to effect. Consider hydromorphone 2 mg PO q4h PRN if inadequate.
+- **Nausea/Vomiting:** Ondansetron 8 mg PO q8h PRN.
+- **Appetite:** Megestrol acetate 500 mg PO daily.
+- **Edema / Fluid Balance:** Continue loop diuretic 20 mg PO daily; monitor intake/output, daily weights.
+- **Anemia:** Consider erythropoiesis‑stimulating agent (epoetin β 40 µg SC weekly) if symptomatic and stable; otherwise, transfuse PRBCs as needed.
+- **Ileostomy Care:** Home stoma nurse visit scheduled; educate family on output monitoring and compression therapy.
+- **Symptom Monitoring:** Daily phone call first week, then twice weekly home visits by hospice nurse.
+- **Hospice Enrollment:** Formal hospice admission prior to discharge. Coordinate with hospice home‑care team for pain, dyspnea, and wound care.
+- **Family Support:** Social work and spiritual care referrals.
+- **Follow‑up:** Contact the palliative care clinic within 24 h of any escalation of pain (&gt;5/10) or new respiratory distress. Next in‑clinic visit: 2 weeks after enrollment if clinically indicated.
+
+The goals are to maximize comfort, preserve dignity, and support the patient-family unit during the final phase of life.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Exacerbated abdominal pain, dyspnea, peripheral edema, anemia</span><span class="pill">Poor appetite</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>118/70</td></tr><tr><td>Heart Rate</td><td>92</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Oxygen Saturation</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General pallor, mild abdominal tenderness RLQ, high ileostomy output</li><li>Peripheral edema</li><li>Dyspnea on minimal exertion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>CRP</li><li>Imaging as needed</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 8.2 g/dL</li><li>CRP 15 mg/L</li><li>CMP: mild hypoalbuminemia</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Opioid titration for pain, antiemetics, diuretics, appetite stimulants</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>He appeared relieved to shift focus to comfort, stating, “I just want to be at ease.”</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Ulcerative colitis (pancolitis)</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Stage III recurrent colorectal cancer</span><span class="pill">Palliative chemotherapy (capecitabine + bevacizumab)</span><span class="pill">Chronic heart disease</span><span class="pill">Ileostomy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Basal insulin glargine 10 units nightly</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Mesalamine 4 g BID</li><li>Capecitabine 3.4 g/m²/day (divided)</li><li>Bevacizumab 10 mg/kg IV q14d</li><li>Iron sulfate 325 mg daily</li><li>Loop diuretic 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Palliative chemo started 2025-03-05, ongoing capecitabine + bevacizumab, continued anemia, worsening dyspnea and edema</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The palliative care provider reviewed Martin’s declining trajectory: persistent abdominal pain, dyspnea, peripheral edema, severe anemia (Hb 8.2 g/dL), ongoing ileostomy output, and multiple hospitalizations for infection and electrolyte disturbances. The family expressed a desire for comfort and support over aggressive treatment. The provider outlined hospice care, explaining goals of care, symptom control, and support for the daughter. Martin and his daughter consented to initiate hospice upon discharge. Hospice home care will manage pain (opioids), nausea, appetite, and stoma care. The patient’s condition had reached a point where disease‑directed therapy was overtaken by the cumulative burden of disease, metabolic dysregulation, and surgical sequelae.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to hospice: ongoing Stage III colorectal cancer with significant systemic decline; palliative chemotherapy discontinued, focus on symptom control.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 70</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic inflammatory bowel disease (Ulcerative colitis)</span><span class="pill">Type 2 Diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Colorectal carcinoma</span><span class="pill">Iron deficiency anemia</span><span class="pill">Recurrent colorectal carcinoma (stage III with nodal involvement)</span><span class="pill">Metastatic colorectal carcinoma</span><span class="pill">Congestive heart failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Prednisone taper</li><li>Mesalamine 4 g BID</li><li>Insulin glargine 10 units nightly</li><li>Vancomycin C/D</li><li>Nicotine patch</li><li>Furosemide 20 mg PO daily</li><li>Morphine sulfate 10 mg PO q4h PRN</li><li>Ondansetron 8 mg PO q8h PRN</li><li>Megestrol acetate 500 mg PO daily</li><li>Erythropoiesis‑stimulating agent (epoetinβ) 40 µg SC weekly</li><li>Hydromorphone 2 mg PO q4h PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient, 70‑year‑old male, reported fatigue, right lower quadrant pressure, dark stools, and 10‑lb weight loss over 6 months. Examination revealed mild RLQ tenderness; vitals were stable. Labs showed mild normocytic anemia, HbA1c 7.2%, and fecal calprotectin 300 µg/g. Prednisone 40 mg daily was started with a two‑week taper and mesalamine 4 g BID was initiated. Colonoscopy was scheduled for 4–6 weeks, and the patient was instructed on steroid side‑effect monitoring and a follow‑up visit in two weeks.</li><li>Follow‑up visit on 2025‑01‑29 after colonoscopy revealed diffuse erythema, erosions, and a 4 cm ceacal polypoid lesion. Active ulcerative colitis flare ongoing. Prednisone taper continued; mesalamine continued. Atorvastatin 40 mg nightly initiated. Scheduled 2‑week re‑evaluation after pathology; CBC/CMP/LFT monitoring. No new abdominal tenderness.</li><li>Patient, 70‑year‑old male, presents for post‑colonoscopy staging. Contrast CT abdomen/pelvis shows a 4‑cm localized right colon mass with no lymphadenopathy or metastasis. He continues prednisone 40 mg daily on taper and mesalamine 4 g BID; insulin glargine 20 units daily initiated for pre‑operative glucose control. Pre‑operative antibiotic prophylaxis cefazolin 1 g IV ordered. Surgical oncology consult scheduled for 2025‑02‑12; laparoscopic right hemicolectomy planned after optimization. Labs (CBC, CMP, LFTs, HbA1c) to be obtained before surgery.</li><li>2025‑02‑15 Endocrinology visit for pre‑operative diabetes optimization. Patient reported fatigue, polyuria, and increased thirst. Vital signs stable (BP 132/74 mmHg, HR 80 bpm, BMI 33.5). Medications adjusted: Metformin reduced to 500 mg BID, insulin glargine changed to 10 units nightly, nicotine patch started. Prednisone taper continued. Basal insulin glargine initiated to improve peri‑operative glucose control. Pre‑operative labs ordered: fasting glucose, HbA1c, CMP. No new abdominal findings.</li><li>Elective laparoscopic right hemicolectomy with protective loop ileostomy performed. Resection margins clear. Post‑operative course complicated by a superficial surgical site infection on POD3, treated with vancomycin and percutaneous drainage on POD5. Ileostomy high output contributed to hyperglycemia; insulin and metformin adjusted. Ulcerative colitis flare on POD10, managed with increased mesalamine and prednisone taper. Repeat abdominal ultrasound excluded abscess. 4 days ICU stay, discharged home on POD14 with wound care and nutrition instructions.</li><li>Tumor board meeting 2025‑02‑27; discussion of recurrent stage III colorectal carcinoma with nodal involvement; initiation of modest palliative chemotherapy with capecitabine 2000 mg/m² BID 14 days on/7 days off and bevacizumab 7.5 mg/kg IV every 21 days; continuation of metformin, insulin glargine, lisinopril, atorvastatin, prednisone taper, mesalamine, and vancomycin C/D; monitoring CBC/CMP/LFTs, wound status, stoma output, diabetes control; no surgical intervention planned; multidisciplinary follow‑up at 3 months.</li><li>2025‑04‑30 Palliative Care visit: patient reports worsening abdominal pain, dyspnea, peripheral edema, and high ileostomy output; vitals stable, Hb 8.2 g/dL, CRP 15 mg/L, hypoalbuminemia; started morphine 10 mg PO q4h PRN, ondansetron 8 mg PO q8h PRN, megestrol acetate 500 mg PO daily, epoetinβ 40 µg SC weekly if indicated; discontinued capecitabine and bevacizumab; plan hospice enrollment, home stoma nurse visit, daily phone check‑in, and supportive care.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 95fc7768</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 95fc7768</h1><div class="subtitle">Vascular Erectile Dysfunction | Male, 55</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Diabetes mellitus, Hypertension, Hyperlipidemia, Coronary artery disease, Peripheral arterial disease, Chronic kidney disease, Depression, Obesity, Sleep apnea, Chronic prostatitis/benign prostatic hyperplasia</div><div class="meta-line">Risk Factors: Smoking, Alcohol excess, Unhealthy diet, Sedentary lifestyle, Family history of cardiovascular disease, Age over 45, Type 2 diabetes, Hypertension, Use of beta‑blockers or antihypertensives, Antidepressant use, Chronic kidney disease, Poor sleep quality, Stress and anxiety, Chronic disease history</div></div>
+<details><summary>Narrative <span class="preview-text">**A Life In Two Phases: The Silent Progression of a 55‑Year‑Old Man’s Health**  **Early Beginnings – 48–49 Years Old**  ...</span></summary><div class="section-body"><p>**A Life In Two Phases: The Silent Progression of a 55‑Year‑Old Man’s Health**</p><p>**Early Beginnings – 48–49 Years Old**</p><p>John began noticing a problem one late Thursday afternoon while he was at work. After a quick bathroom break, he felt the usual spark of arousal, then a sudden, almost imperceptible loosening—his erection did not firm as it had used to. The episode was brief; he returned to his desk and carried on. He chalked it up to a fleeting bout of fatigue, a side‑effect of his “high‑pressure” office job. His wife, however, noticed the change and gently urged him to pay more attention. John shrugged it off, thinking it would resolve itself.</p><p>Two weeks later, during a spontaneous evening out, the trouble persisted. He found himself relying on foreplay and more patience, but a firm erection remained elusive. His mind was full of work deadlines, so he booked a routine check–up with his primary‑care physician (PCP) in late August, hoping for a quick fix.</p><p>---</p><p>**A Routine Check‑Up – 49 Years, 1 Month**</p><p>The PCP, recognizing John’s long‑standing history of type 2 diabetes (diagnosed in 2008) and hypertension (diagnosed in 2012), measured his weight—he had been a 245‑lb man on a 240‑lb scale for a decade—and noted a BMI of 34.2. Blood work revealed an A1c of 7.8%, a lipid panel with an LDL of 128 mg/dL, and a fasting glucose of 158 mg/dL. The doctor acknowledged John’s elevated risk and urged dietary changes and increased activity.</p><p>When John slipped in the sentence about his “difficulties with getting an erection,” the PCP listened without judgment. He suggested John might have a “vascular issue” or that medications were playing a role; however, he did not order any formal erectile dysfunction (ED) evaluation. Instead, he urged John to improve glycemic control, stop smoking (he&#x27;d been an 18‑year smoker), and to quit binge‑drinking (five‑and‑a‑half–bottle weekends every month). John left the office feeling reassured: “Let’s focus on the big things first,” the PCP said, nodding toward blood sugar and blood pressure.</p><p>---</p><p>**A Warning in the Heart – 50 Years**</p><p>Two months later, John felt a mild pressure behind his sternum after climbing the stairs to his office. He brushed it off as a “strawberry” after a stressful day. Yet just a week later, a sudden sharp chest discomfort landed him at the emergency department. He was given aspirin, clopidogrel, and a diagnostic work‑up that revealed coronary artery disease (CAD) with two vessels showing 60–70 % stenosis.</p><p>At cardiology follow‑up the next week, John was started on atorvastatin 40 mg daily, and the cardiologist casually mentioned that men with vascular disease often experience erectile problems. John shrugged, thinking ED was something separate. He was given a prescription for metoprolol 25 mg BID (a beta‑blocker) to manage blood pressure post‑PCI. At the appointment, his doctor emphasized controlling the “endothelium” and said, “When blood vessels are stiff, so might your arousal.”</p><p>---</p><p>**Urinary Symptoms and New Medications – 51 Years**</p><p>Half a year after the cardiac event, John’s night‑time awakenings to get up for a bathroom visit grew more frequent, accompanied by a sensation of a “stuck” feeling. He visited a urologist who diagnosed him with benign prostatic hyperplasia (BPH) and an enlarged prostate measuring 35 g on transrectal ultrasound. Finasteride 5 mg daily and tamsulosin 0.4 mg nightly were prescribed. The urologist also mentioned that ED can be multifactorial—prostate medications, erectile function, and systemic illness all play a part.</p><p>John asked about his ED again. The urologist explained that finasteride also could influence libido and that his erectile discomfort might be part of a bigger, vascular system. “You’re not alone. Many men in your condition struggle,” the doctor reassured. But John was not offered any formal ED testing at that time.</p><p>---</p><p>**Mood Swings and Antidepressant Therapy – 52 Years**</p><p>After a particularly hard summer, John’s mood dipped. He began experiencing low energy, tearfulness, and a constant feeling that “nothing mattered.” He was started on sertraline 50 mg daily under the care of a psychiatrist. That same week, he reported to the psychiatrist that the medication seemed to further dampen his libido. The psychiatrist acknowledged sertraline’s reputation for affecting erectile performance but suggested a slow titration or an alternative (e.g., bupropion) could help, pending further assessment.</p><p>John, however, was reluctant to reduce or change his antidepressant because he had feared depression returning. He also did not want to add another medication to what he considered a long list.</p><p>---</p><p>**Walking Short Distances – 53 Years**</p><p>Three weeks after the last visit, John started complaining of aching, burning in his calves during a short walk to the mailbox. He could only walk 200 m before the pain compelled him to rest. A vascular clinic visit confirmed intermittent claudication due to peripheral arterial disease (PAD). Cilostazol was added to improve walking distance. The vascular specialist reminded him that both PAD and CAD are markers of systemic atherosclerosis that could affect the penile blood vessels as well.</p><p>During another routine appointment, his nephrologist reviewed a recent eGFR of 45 mL/min/1.73 m² (CKD stage 3). “Your kidneys are working, but your blood pressure and sugar need fine‑tuning,” the nephrologist cautioned. He suggested adding a DPP‑4 inhibitor, but John’s medications were already congested. He was told to keep a close eye on kidney function because it would later rule out certain erectile medications.</p><p>---</p><p>**The Silent Night – 54 Years**</p><p>Sleep had become a battle. A family doctor referred John to a sleep clinic after he complained about daytime drowsiness and “feeling like he never slept.” The overnight polysomnogram revealed moderate obstructive sleep apnea (OAP) with an apnea‑hypopnea index of 28. A CPAP machine was prescribed. “If you can sleep well, your heart and blood vessels will do a better job,” the sleep doctor said, and John began the CPAP nightly.</p><p>Despite improved sleep, John’s erectile problems persisted. He visited his PCP with a new concern—“It’s getting worse. I’ve tried to push through, but I can’t keep an erection.” The PCP gave a sympathetic nod: “We’ve been trying to keep your health in balance. ED can happen because of many things—vascular, medication, or psychological,” he reminded. He urged John to stick to his weight‑loss plan and to consider a brief follow‑up with the urologist.</p><p>---</p><p>**A Routine Check‑Up – 55 Years**</p><p>A routine visit to the cardiology office marked John’s 55th birthday. He reported his weight had fallen slightly to 234 lb. He filled his prescriptions: metoprolol, atorvastatin, finasteride, tamsulosin, sertraline, metformin, and now a new addition, cilostazol. His BP, measured in the clinic, was 138/85 mmHg. His A1c had improved to 7.2%. However, the ED remained unassessed—no IIEF questionnaire, no Doppler ultrasound, no prescription of a PDE‑5 inhibitor because of concerns about hypotension (from beta‑blocker) and kidney function.</p><p>The cardiologist remarked gently, “Men with vascular disease often start noticing problems with erections. It can be an early sign that everything isn’t flowing smooth.” John felt the weight of those words but was unsure how to translate them into a concrete plan. He left the office with a brief recommendation to see the urologist again and to keep a diary of sexual activity and sleep cycles.</p><p>---</p><p>**The Present Dilemma**</p><p>John sits on his couch, feeling the persistent ache of the night before, the weight of a body under constant pressure from high glucose, a stiffer heart, and a sleeping mask over his nose. He tells his wife that he wants to “do better.” They decide to schedule a joint appointment with a urologist who specializes in sexual medicine. But as the calendar fills up, John’s anxiety spikes; he fears a new medication or another diagnosis that “adds to the list.” He wonders, could his ED be a side effect of the drugs that keep his heart and kidneys alive, or is it a silent, unspoken sentinel of his atherosclerotic world?</p><p>Thus we end on a note of uncertainty: John’s vascular erectile dysfunction has never been formally diagnosed or adequately treated. Instead, it has drifted through the corridors of his medical chart, labeled as “medication side effect,” “common in men with BPH,” or “a symptom of the very disease we are trying to keep in check.” In the end, he is living with a cluster of chronic illnesses while the core issue of vascular ED remains unspoken, and no single intervention has yet been mounted to fully address the underlying endothelial dysfunction.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-08-15</h3><div class="visit-meta">Primary Care Physician | Reason: Routine check-up with complaints of erectile dysfunction and fatigue</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+Routine annual visit; complains of erectile dysfunction (ED) and fatigue.
+
+History:
+John is a 55‑year‑old male with a long history of type 2 diabetes (diagnosed 2008), hypertension (2012), hyperlipidemia, coronary artery disease, peripheral arterial disease, chronic kidney disease, depression, obesity, sleep apnea, chronic prostatitis/BPH. He reports brief episodes of erectile difficulty that started a few months ago, with normal urinary habits. He feels unusually tired after work.
+
+Medications: None (currently not taking antihyperglycemics, antihypertensives, lipid‑lowering agents, or ED meds). NKDA.
+
+Social: Former smoker (quit 5 years ago), drinks alcohol moderately (reduced). Smokes no cigarettes.
+
+Physical Examination:
+Vitals: BP 140/90, HR 88, weight 245 lb, BMI 34.2.
+General: Obese male, alert, oriented, appears well. Cardiac: regular rhythm, no murmurs. Pulmonary: clear to auscultation. Abdomen: soft, non‑tender. Extremities: 2+ pedal pulses bilaterally, no edema. Genital exam: normal, no prostate enlargement noted.
+
+Assessments:
+• Uncontrolled diabetes – HbA1c 7.8 % and fasting glucose 158 mg/dl.
+• Hyperlipidemia – LDL 128 mg/dl.
+• Obesity and sedentary lifestyle.
+• Erectile dysfunction – likely multifactorial (diabetic vascular disease, depression, sleep apnea, medication avoidance).
+• Fatigue – likely related to suboptimal glycemic control, obesity, sleep apnea.
+
+Plan:
+1. Begin Metformin 1000 mg PO BID (start with 500 mg to assess tolerance), titrate as tolerated.
+2. Lifestyle counseling: balanced diet (&lt;2000 kcal/day, reduce refined carbs, increase fiber), 150 min moderate‑intensity exercise per week (walking, swimming), weight‑loss goal 5–10 % in 3–6 months.
+3. Smoking cessation reinforcement, alcohol intake remain &lt;2 drinks/day.
+4. Continue sleep apnea therapy (CPAP adherence), consider formal assessment of sleep quality if fatigue persists.
+5. ED evaluation: schedule Urology referral for full male sexual health assessment including testosterone, PSA, and possible Doppler ultrasound; consider a trial of PDE5 inhibitor after glycemic and BP control are improved.
+6. Labs: Repeat HbA1c, fasting glucose, LDL, creatinine, eGFR in 90 days. Consider full lipid panel and basic metabolic panel.
+7. Monitor for medication side effects, especially GI intolerance and potential renal impairment (caution metformin in CKD).
+8. Address depression: consider SSRI if mood worsens; monitor mood via PHQ‑9.
+9. Encourage compliance with all recommendations and follow-up in 3 months or sooner if symptoms worsen.
+
+Prognosis: With improved glycemic control, BP management, weight loss, and targeted ED therapy, significant improvement is expected.
+
+Disposition: Patient left understanding plan; no acute concerns. Follow‑up in outpatient clinic in 3 months.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">difficulty achieving erection during recent episodes</span><span class="pill">mild fatigue after work</span><span class="pill">normal urinary habits</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Weight</td><td>245 lb</td></tr><tr><td>BMI</td><td>34.2</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal cardiovascular exam, 2+ pedal pulses</li><li>Regular heart rhythm, no murmurs</li><li>Abdominal exam unremarkable</li><li>Genital exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>Fasting glucose</li><li>LDL cholesterol</li><li>Serum creatinine</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c: 7.8%</li><li>Fasting glucose: 158 mg/dL</li><li>LDL cholesterol: 128 mg/dL</li><li>Serum creatinine: 1.2 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on diet, exercise, smoking and alcohol cessation</li><li>Prescribed Metformin 1000 mg BID</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John agreed to start Metformin and reported he has been reducing his alcohol intake and has begun a 30‑minute walk twice a week.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Type 2 diabetes mellitus diagnosed 2008</li><li>Hypertension diagnosed 2012</li><li>Non‑specific fatigue</li><li>Family history of cardiovascular disease</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presented to the clinic for a routine annual visit. He reported brief episodes of erectile difficulty that began a few months earlier and described feeling unusually tired after work. The physician performed a focused history, noting the patient’s long‑standing diabetes and hypertension. After discussing lifestyle modifications, the physician ordered a basic metabolic panel, lipid panel, and HbA1c. No formal male sexual health assessment was performed. The clinician advised smoking cessation, reduced alcohol intake, and increased physical activity. John was counseled on the importance of glycemic control and was given a prescription for metformin. He left the office feeling reassured but still concerned about erectile function.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial evaluation reveals poorly controlled diabetes and hypertension; erectile dysfunction not formally assessed but acknowledged as potential vascular side effect.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-06-20</h3><div class="visit-meta">Cardiologist | Reason: Follow‑up after acute coronary syndrome</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after acute coronary syndrome.
+
+History of Present Illness: John is a 55‑year‑old male with known coronary artery disease, DM type 2, HTN, hyperlipidemia, CKD stage 3, PAD, depression, obesity, sleep apnea, and BPH. He presents today for a routine cardiology follow‑up 2 months after an acute coronary syndrome (ACS) event. He reports continued chest tightness after mild exertion (climbing stairs) and mild shortness of breath on exertion. He denies diaphoresis, nausea, or dizziness. He previously reported erectile dysfunction but has not yet had urologic evaluation.
+
+Past Medical History: ACS 2 months ago with percutaneous coronary intervention: stents in LAD and LCX. Beta‑blocker therapy initiated. Current medications: Metformin 1000 mg BID, Metoprolol 25 mg BID, Atorvastatin 40 mg QD, Amlodipine 5 mg QD.
+
+Review of Systems: Positive for exertional chest discomfort, dyspnea; negative for palpitations, syncope, orthopnea, edema.
+
+Physical Examination: Vitals: BP 135/88 mmHg, HR 76 bpm, RR 14, O2 sat 98% RA, weight 244 lb, BMI 34.1. General: Alert, no distress. Cardiac: Regular rate and rhythm, no murmurs, gallops, or rubs; no LVEF abnormality noted. Pulmonary: Clear to auscultation bilaterally. Extremities: 2+ pedal pulses bilaterally, no peripheral edema. Abdomen: Soft, non-tender. Genital exam: Normal; no tenderness or masses.
+
+Assessment:
+1. Recurrent ischemia / Unstable angina (or NSTEMI) – evidenced by exertional chest pain, ST‑segment elevation in anterior leads on ECG, elevated troponin I (0.2 ng/mL) and CK‑MB (120 U/L), and persistent 60–70% stenosis in LAD &amp; LCX on recent angiography.
+2. Coronary artery disease – stable but high risk.
+3. Uncontrolled cardiovascular risk factors – obesity, hypertension, diabetes, dyslipidemia, CKD, sleep apnea, depression.
+4. Erectile dysfunction – secondary to vascular disease, medication side effects, or psychological origin.
+
+Plan:
+- Increase metoprolol dose to 50 mg BID as tolerated to maintain BP &lt;140/90 and reduce ischemic symptoms.
+- Initiate low‑dose aspirin 81 mg daily and clopidogrel 75 mg daily for dual antiplatelet therapy per guideline post‑PCI.
+- Add lisinopril 10 mg QD to target BP 130/80, provide renal protection, and reduce cardiovascular events.
+- Continue atorvastatin 40 mg QD; reassess LDL in 3 months.
+- Reinforce lifestyle modifications: weight reduction, low‑sodium diet, exercise (supervised cardiac rehab), CPAP for OSA, smoking cessation counseling.
+- Referral to urology for evaluation of erectile dysfunction.
+- Monitor renal function (creatinine, eGFR) at next visit.
+- Labs: Repeat cardiac enzymes and CBC/chem panel next week.
+- Follow‑up: Cardiology in 4 weeks or sooner if chest pain worsens, shortness of breath increases, or new symptoms develop.
+
+Disposition: Patient educated on warning signs of worsening ischemia; instructed to seek emergency care if chest pain is severe, lasts &gt;10 min, or accompanied by diaphoresis, nausea, or syncope.
+
+Signature: Dr. Cardio Specialist, MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Chest discomfort after climbing stairs</span><span class="pill">Shortness of breath after exertion</span><span class="pill">Reported erectile dysfunction during prior encounter</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/88</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Weight</td><td>244 lb</td></tr><tr><td>BMI</td><td>34.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Regular heart rate with no arrhythmias</li><li>2+ pedal pulses</li><li>No cardiac murmurs</li><li>No peripheral edema</li><li>Normal genital exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Troponin I</li><li>CK-MB</li><li>Electrocardiogram</li><li>Coronary angiography report</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Troponin I: 0.2 ng/mL</li><li>CK-MB: 120 U/L</li><li>ECG: ST‑segment elevation anterior leads</li><li>Angiography: 60–70% stenosis in LAD and LCX</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Increased beta‑blocker to maintain BP below 140/90</li><li>Reinforced statin therapy</li><li>Counseling on ED and cardiovascular risk</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John noted that chest pains are less frequent but still experienced mild discomfort after climbing stairs. He agreed to monitor his erectile function and to follow up with urology.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease (60–70% stenosis in LAD and LCX)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Acute coronary syndrome 2 months ago</li><li>Stent placement in LAD and LCX</li><li>Beta‑blocker therapy started</li><li>Recent ED complaints</li><li>Previously on Metformin</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the cardiology visit, John reported continued chest tightness after mild exertion and the persistence of erectile difficulties. The cardiologist reviewed the recent coronary angiography, noting significant stenoses in the LAD and LCX. The physician discussed the vascular nature of erectile dysfunction and reinforced the importance of controlling endothelial function. Blood pressure was measured at 135/88; the patient was found to have adequate BP control on current therapy. The cardiologist adjusted metoprolol dosage to 25 mg BID and emphasized that his beta‑blocker might contribute to ED but was necessary for cardioprotection. The patient was encouraged to continue lifestyle modifications and to seek a urologic evaluation for erectile dysfunction.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CAD confirmed; vascular ED considered a likely contributor. Medications initiated for cardiac protection; ongoing risk factor modification.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-01-10</h3><div class="visit-meta">Urologist | Reason: Nocturnal urinary frequency and erectile dysfunction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**S**: 51‑year‑old male presents with nocturnal urinary frequency (&gt;4 times per night) and intermittent erectile dysfunction (ED). Patient reports a stiff or “stuck” sensation during micturition. No gross hematuria or dysuria reported. No recent changes in fluid intake or activity. History of BPH for 6 months, CAD with prior ACS, type 2 diabetes, hypertension. Current meds include metformin, metoprolol, atorvastatin, amlodipine, lisinopril, finasteride, tamsulosin, aspirin and clopidogrel. He expresses concern that finasteride may be contributing to ED, but is willing to accept it for urinary relief.
+
+**O**: Vitals: BP 128/82 mmHg, HR 70 bpm, weight 240 lb, BMI 33.8 kg/m². DRE: prostate 35 g, firm, without nodularity, normal dorsum. No suprapubic tenderness. Genitals exam normal. Digital rectal exam consistent with BPH. Urinary flow studies not performed in office.
+
+**A**: 1. Benign prostatic hyperplasia (BPH) – likely cause of nocturia and weak stream, consistent with prostate volume 35 g and PSA 2.5 ng/mL.
+2. Erectile dysfunction – multifactorial: vascular disease (CAD, diabetes), beta‑blocker therapy, statins, and potential finasteride effect.
+3. No acute urinary retention or malignancy.
+
+**P**:
+- Continue finasteride 5 mg PO daily for BPH.
+- Continue tamsulosin 0.4 mg nightly for symptom relief.
+- Counsel patient on finasteride’s potential impact on libido; monitor ED.
+- Consider starting a low‑dose PDE5 inhibitor (e.g., tadalafil 5 mg PO daily) if ED persists, after cardiac evaluation clearance.
+- Order transrectal ultrasound (completed) and PSA (2.5 ng/mL) – repeat PSA and prostate volume at 6 months.
+- Encourage lifestyle modifications: weight loss, sleep hygiene, reduced evening fluid intake.
+- Instruct to monitor for worsening urinary retention (difficulty starting stream, straining, incomplete voiding) and to seek urgent care if such symptoms arise.
+- Refer for sexual medicine evaluation if ED remains refractory after medication adjustment.
+- Follow‑up in urology in 3 months or sooner if symptoms worsen.
+- Continue current antihypertensives, statins, and antiplatelet therapy as per cardiology.
+
+**Plan**:
+- Continue daily finasteride and nightly tamsulosin.
+- If ED does not improve after 4–6 weeks, discuss PDE5 inhibitor initiation.
+- Reassess PSA and prostate volume at 6 months to gauge progression.
+- Patient education: possible side effects of finasteride, symptom diary for nocturia.
+- Schedule follow‑up visit in 3 months.
+
+**Disposition**: Reassured the patient, agreed to follow plan, and instructed to contact office if urinary or cardiac symptoms worsen.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Frequent nighttime urination (&gt;4 times overnight)</span><span class="pill">Stiff or stuck feeling during urination</span><span class="pill">Difficulty maintaining erections</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/82</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Weight</td><td>240 lb</td></tr><tr><td>BMI</td><td>33.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Prostate enlarged, firm, 35 g</li><li>2+ dorsal pulse</li><li>No suprapubic tenderness</li><li>Normal genital exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Transrectal ultrasound</li><li>PSA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Prostate volume: 35 g</li><li>PSA: 2.5 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started Finasteride 5 mg daily</li><li>Prescribed Tamsulosin 0.4 mg nightly</li><li>Informed about potential ED side effects</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John reported he would continue finasteride as prescribed and monitor urinary frequency. He expressed concern about erectile dysfunction but was willing to seek further evaluation if needed.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Benign prostatic hyperplasia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>BPH symptoms developed 6 months ago</li><li>Continued erectile dysfunction after cardiac event</li><li>Metoprolol and statin therapy</li><li>Recent erectile difficulties noted</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John reported multiple nightly awakenings to urinate and occasional difficulty reaching a hard erection. The urologist performed a digital rectal exam, noted a prostate weighing 35 g, and ordered a transrectal ultrasound. The prostate size and PSA (2.5 ng/mL) confirmed benign prostatic hyperplasia. The urologist explained that finasteride could affect libido and that erectile dysfunction may be multifactorial, including vascular disease and medication side effects. The physician suggested monitoring erectile function and offered the possibility of a sexual medicine referral if symptoms worsen. The patient left the office reassured and agreed to continue current medications and to follow up if symptoms progressed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>BPH confirmed with prostate enlargement; ED remains a concern but unresolved. Medications begun for urinary symptoms. Possible overlap of meds contributing to ED.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-08-05</h3><div class="visit-meta">Psychiatrist | Reason: Depression and sexual side effects</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+---
+Chief Complaint: Patient reports worsening depressive mood, increased fatigue, and diminished sexual desire accompanied by erectile difficulties.
+History of Present Illness: 52‑year‑old man with a history of major depressive disorder since 2019, currently on sertraline 50 mg daily. He notes persistent low energy, sadness, and worthlessness. Sexual dysfunction has progressively worsened, with reduced libido and erectile difficulties. No new medications or changes. Denies chest pain, palpitations, recent illness, or significant sleep disturbances.
+Past Psychiatric History: Major depressive disorder treated intermittently with SSRIs. No history of bipolar or psychotic illness.
+Past Medical History: Diabetes mellitus type 2, hypertension, hyperlipidemia, coronary artery disease post‑ACS, peripheral arterial disease, chronic kidney disease stage 3, sleep apnea, benign prostatic hyperplasia, erectile dysfunction, chronic prostatitis.
+Social: Works full‑time, married. No tobacco or illicit drug use. Occasional alcohol.
+Review of Systems: Positive for fatigue, depressed mood, reduced libido, erectile dysfunction. Negative for chest pain, dyspnea, headaches, vision changes, or weight loss.
+
+Objective:
+---
+Vital Signs: BP 124/80 mmHg, HR 68 bpm, Weight 238 lb, BMI 33.5 kg/m². No orthostatic changes.
+Physical Examination: Normal cardiovascular exam (regular rate and rhythm, no murmurs). Lungs clear bilaterally. Abdomen soft, nondistended. Digital rectal exam: prostate 35 g, firm, consistent with prior assessment. No focal neurological deficits.
+Labs: Prolactin 12 ng/mL (normal), Total testosterone 550 ng/dL (normal). HbA1c 7.4%.
+
+Assessment:
+---
+1. Major Depressive Episode, current, likely exacerbated by medication side effects.
+2. Sertraline‑induced sexual dysfunction (decreased libido, erectile dysfunction). Sexual dysfunction is multifactorial but serotonin‑based therapy is a major contributor.
+3. Vascular erectile dysfunction secondary to coronary artery disease and diabetes—under control but contributory.
+4. No endocrine cause of ED (normal prolactin and testosterone).
+
+Differential Diagnoses:
+- SSRI‑induced sexual dysfunction.
+- Primary depressive disorder.
+- Vascular erectile dysfunction.
+- Hypogonadism (ruled out).
+- Medication interaction (none identified).
+
+Plan:
+---
+Medication:
+- Continue sertraline 50 mg daily for now; do **not** abruptly taper to avoid withdrawal.
+- Discuss gradual transition to bupropion (starting 150 mg PO daily) – lower sexual side‑effect profile; begin with 150 mg once daily and titrate up if tolerated.
+- Pending cardiology clearance, consider initiating PDE5 inhibitor (tadalafil 5 mg daily) for erectile dysfunction.
+- Continue all current medical therapy: Metformin 1000 mg BID, Metoprolol 50 mg BID, Amlodipine 5 mg daily, Lisinopril 10 mg daily, Atorvastatin 40 mg daily, Aspirin 81 mg daily, Clopidogrel 75 mg daily, Finasteride 5 mg daily, Tamsulosin 0.4 mg nightly.
+
+Education:
+- Advised patient on potential withdrawal symptoms if sertraline altered; advised to monitor mood and libido closely.
+- Discussed benefit of bupropion for mood and sexual side‑effects.
+- Reviewed signs of worsening depression (increased suicidality, hopelessness) and advised immediate contact.
+
+Referral:
+- Urology referral for sexual medicine evaluation; patient to provide current labs and medication list.
+
+Follow‑up:
+- Psychiatry follow‑up in 4 weeks to reassess mood, depression severity, and sexual function; evaluate for transition to bupropion if appropriate.
+- Repeat labs (HbA1c, lipid panel) in 3 months and blood pressure monitoring at each visit.
+- Encourage adherence to CPAP for sleep apnea, lifestyle modifications, and regular exercise.
+
+Signed: Dr. ___ Psychiatrist</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Low energy</span><span class="pill">Persistent sadness</span><span class="pill">Feeling of worthlessness</span><span class="pill">Reduced libido and erectile difficulty</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>124/80</td></tr><tr><td>HR</td><td>68</td></tr><tr><td>Weight</td><td>238 lb</td></tr><tr><td>BMI</td><td>33.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal heart rate and rhythm</li><li>No tachycardia</li><li>BMI 33.5</li><li>Glycemic control acceptable (HbA1c 7.4%)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum prolactin</li><li>Baseline testosterone</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Prolactin: 12 ng/mL (normal)</li><li>Total testosterone: 550 ng/dL (normal)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discussed potential switch from sertraline to bupropion</li><li>Advised monitoring for erectile function</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John expressed willingness to consider medication adjustment but was concerned about withdrawal symptoms. He agreed to continue sertraline for now and planned a urology follow‑up.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li><li>Sertraline 50 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Current sertraline therapy 50 mg daily</li><li>History of depression since 2019</li><li>Recent erectile dysfunction and sexual arousal problems</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presented with a worsening depressive mood, increased fatigue, and a notable decline in sexual desire coupled with erectile difficulty. The psychiatrist reviewed the side effect profile of sertraline, noting significant sexual dysfunction and reduced libido. The clinician discussed options, including a slow titration of sertraline, switching to an antidepressant with a lower sexual side‑effect profile (such as bupropion), or augmenting therapy with a phosphodiesterase‑5 inhibitor pending cardiovascular assessment. The patient was told to avoid increasing sertraline abruptly and was advised to report any worsening pain or erectile fatigue. The appointment concluded with a follow‑up plan and referral to urology for a sexual medicine evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Depression treated with sertraline; sexual side effects significant. Medications considered for adjustment pending urologic evaluation. Erectile dysfunction continues unresolved.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-02-15</h3><div class="visit-meta">Vascular Specialist | Reason: Intermittent claudication of lower extremities</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 53‑year‑old male with known type 2 diabetes mellitus, hypertension, coronary artery disease, benign prostatic hyperplasia, depression, peripheral arterial disease (PAD) and chronic kidney disease stage 3 (eGFR 45 mL/min/1.73 m²) presents for routine PAD follow‑up.
+
+Chief complaint:  Intermittent claudication of lower extremities.  Patient reports worsening calf cramping after walking only ~200 m; pain relieved by rest within 30 seconds.  No dizziness, swelling, or neuro‑vascular deficits.
+
+History:  Patient notes progressive limitation of daily activity over the past 3 months despite current cilostazol therapy (100 mg BID) started 6 weeks ago.  He reports good adherence to medication and no side effects noted.
+
+Vitals:  BP 122/78 mmHg, HR 72 bpm, weight 235 lb, BMI 33.3 kg/m².
+
+Physical exam:  Bilateral diminished dorsalis pedis and posterior tibial pulses.  Lower extremity strength is symmetric, no swelling or varicosities.  Genital exam normal.
+
+Objective testing:  Ankle–brachial index (ABI) performed: left 0.65, right 0.60 – consistent with moderate to severe arterial insufficiency.
+
+Assessment:  - Peripheral arterial disease with claudication (Buerger’s stage II‑A/B).  - Chronic kidney disease stage 3 (stable).  - Coronary artery disease (well‑controlled on medical therapy).  - Diabetes mellitus and hypertension (controlled).
+
+Plan:  1. Continue cilostazol 100 mg BID for claudication.  2. Recommend low‑intensity supervised walking exercise program (45 min walking, 3 days/week) with progressive mileage, monitored by vascular clinic or home-based logs.  3. Counsel on dietary sodium restriction, weight reduction, and foot care.  4. Monitor renal function: repeat eGFR in 6 weeks; discontinue cilostazol if eGFR &lt; 30 mL/min/1.73 m².  5. Re‑evaluate ABI in 6 months to assess response.  6. Continue baseline vascular meds: Metformin 1000 mg BID, Metoprolol 25 mg BID, Atorvastatin 40 mg daily, Amlodipine 5 mg daily, Finasteride 5 mg daily, Tamsulosin 0.4 mg nightly, Sertraline 50 mg daily.
+
+Patient is educated on signs of worsening ischemia, bleeding, or renal deterioration and instructed to call clinic if symptoms intensify.
+
+Follow‑up:  Schedule next Vascular clinic visit in 6 weeks for symptom review and eGFR monitoring.  Consider referral to cardiac rehabilitation if patient remains eligible.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Cramping pain in calves after walking 200 m</span><span class="pill">Pain relieved by rest within 30 seconds</span><span class="pill">No dizziness or leg swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/78</td></tr><tr><td>HR</td><td>72</td></tr><tr><td>Weight</td><td>235 lb</td></tr><tr><td>BMI</td><td>33.3</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diminished dorsalis pedis and posterior tibial pulses</li><li>Symmetric lower extremity strength</li><li>No swelling or varicosities</li><li>Normal genital exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Ankle‑brachial index</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Left ABI: 0.65</li><li>Right ABI: 0.60</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed cilostazol 100 mg BID for claudication</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John reported some improvement in walking distance after starting cilostazol and expressed understanding of the vascular link to erectile function.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Depression</span><span class="pill">Peripheral arterial disease</span><span class="pill">Chronic kidney disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li><li>Sertraline 50 mg daily</li><li>Cilostazol 100 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Peripheral arterial disease known 2 years ago</li><li>Chronic kidney disease stage 3 (eGFR 45) identified 6 months ago</li><li>Progressive calf pain limiting daily activity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported increasing calf discomfort after walking short distances, consistent with peripheral arterial disease. A physical exam showed diminished pedal pulses bilaterally. The vascular specialist ordered an ankle‑brachial index (ABI) test, confirming significant arterial insufficiency (left ABI 0.65, right ABI 0.60). The clinician explained the importance of exercise therapy and continued cilostazol for improvement of claudication. The patient was educated on the relationship between PAD and erectile dysfunction, emphasizing the need for vascular health optimization. The visit concluded with a recommendation for low‑intensity supervised exercise program and close monitoring of renal function due to cilostazol use.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>PAD confirmed; cilostazol added. Ongoing CKD stage 3 requires monitoring before initiating certain ED therapies. Erectile dysfunction remains unresolved.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-07-05</h3><div class="visit-meta">Sleep Specialist | Reason: Daytime sleepiness and snoring</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 54‑year‑old male presents with persistent daytime sleepiness and snoring.
+
+Subjective: Patient reports difficulty staying awake during meetings, frequent snoring, and nighttime awakenings to urinate. He has a known history of moderate OSA diagnosed five months ago with ongoing snoring and nocturia. The patient has no new chest pain or dyspnea at rest.
+
+Past Medical History: Type 2 diabetes mellitus, hypertension, coronary artery disease, benign prostatic hyperplasia, depression, peripheral arterial disease, chronic kidney disease, obstructive sleep apnea.
+
+Medications: Metformin 1000 mg BID, Metoprolol 25 mg BID, Atorvastatin 40 mg daily, Amlodipine 5 mg daily, Finasteride 5 mg daily, Tamsulosin 0.4 mg nightly, Sertraline 50 mg daily, Cilostazol 100 mg BID, CPAP 8 cm H2O (newly prescribed).
+
+Allergies: NKDA.
+
+Vitals: BP 118/76 mmHg, HR 70 bpm, weight 233 lb, BMI 33.0.
+
+Physical Exam: BMI 33.0, oropharyngeal exam normal, head and neck unremarkable. No evidence of upper airway obstruction on exam.
+
+Assessment: Polysomnography demonstrates moderate obstructive sleep apnea (AHI 28 events/hr) with significant oxygen desaturation (lowest SpO2 78%) and nocturnal hypoxemia. Current symptoms attributable to untreated or undertreated OSA, likely exacerbated by obesity and comorbid conditions. Continued daytime sleepiness and snoring are consistent with residual disease. No acute cardiac symptoms noted.
+
+Plan:
+1. Initiate CPAP therapy at 8 cm H₂O. Educate on mask fitting, side‑sleep sleeping position, and consistent bedtime routine.
+2. Encourage adherence: record hours of use, report residual symptoms, and ensure device maintenance.
+3. Continue current antihypertensives and diabetic regimen; monitor blood pressure and glycemic control.
+4. Refer to primary care for routine labs (HbA1c, lipid panel, eGFR) in 90 days.
+5. Discuss weight management and sleep hygiene with patient.
+6. Evaluate for CPAP side effects (mask discomfort, nasal congestion) and provide nasal humidification if needed.
+7. Emphasize impact of OSA on cardiovascular risk; reinforce importance of adherence to improve outcomes.
+
+Follow‑up: Outpatient sleep clinic in 4 weeks to review CPAP adherence data and symptomatic improvement. Contact office sooner if worsening daytime sleepiness, apnea events, or mask-related discomfort.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Difficulty staying awake during meetings</span><span class="pill">Frequent snoring at night</span><span class="pill">Nighttime awakenings to urinate</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/76</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Weight</td><td>233 lb</td></tr><tr><td>BMI</td><td>33.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal BMI 33.0</li><li>Oropharyngeal exam shows no obstruction</li><li>Head and neck exam unremarkable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Polysomnography</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AHI: 28</li><li>Lowest O2 saturation: 78%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed CPAP therapy (8 cm H2O)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John reported difficulty with mask comfort but expressed commitment to continue CPAP. He noted feeling less sleepy after a few nights of use.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Depression</span><span class="pill">Peripheral arterial disease</span><span class="pill">Chronic kidney disease</span><span class="pill">Obstructive sleep apnea</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li><li>Sertraline 50 mg daily</li><li>Cilostazol 100 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Moderate obstructive sleep apnea diagnosed 5 months ago</li><li>Continued snoring</li><li>Frequent nocturia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John reported excessive daytime sleepiness and snoring. The sleep specialist reviewed the patient’s medical history and performed a polysomnography (sleep study). The study revealed moderate OSA with an apnea‑hypopnea index (AHI) of 28, significant oxygen desaturation, and nocturnal hypoxemia. The clinician prescribed a CPAP machine set at 8 cm H2O and instructed proper mask fitting. He was advised to sleep on his side and maintain a consistent bedtime routine. The patient tolerated the device and was encouraged to report adherence and any residual symptoms. The visit emphasized the impact of OSA on cardiovascular health and erectile function.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>OSA managed with CPAP; potential improvement in erectile function via better oxygenation and cardiovascular health.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2027-03-15</h3><div class="visit-meta">Cardiologist | Reason: Annual cardiology review and erectile dysfunction discussion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Annual cardiology review.
+
+Subjective: John is a 55‑year‑old male with a longstanding history of type 2 diabetes, hypertension, coronary artery disease, benign prostatic hyperplasia, depression, peripheral arterial disease (PAD), chronic kidney disease (CKD) stage 3, and obstructive sleep apnea. He presents for his annual cardiology follow‑up and reports persistent sexual performance difficulties for the past 8 months. He notes an unintentional weight loss of 11 lb over 12 months but denies chest pain, dyspnea, palpitations, or lower extremity claudication. He is frustrated that sexual dysfunction remains unresolved. Mood is stable, and he denies worsening depression. He continues adherence to CPAP therapy and cilostazol for PAD. Current medications are listed in the medication list below.
+
+Past Medical History: 
+• Type 2 DM, HbA1c 7.2% (stable)
+• Hypertension, BP 138/85
+• Coronary artery disease, no recent events, on optimal medical therapy
+• BPH, finasteride 5 mg PO daily, tamsulosin 0.4 mg nightly
+• Depression, sertraline 50 mg daily
+• PAD, 2+ dorsalis pedis, no claudication
+• CKD stage 3, eGFR 45 mL/min/1.73 m²
+• OSA, CPAP compliant
+
+Physical Exam:
+• General: 234 lb, BMI 32.9
+• HEENT: No carotid bruits
+• Cardiovascular: Regular rhythm, rate 70 bpm, BP 138/85, no murmurs or gallops
+• Pulmonary: Clear to auscultation bilaterally
+• Extremities: 2+ dorsalis pedis pulses bilaterally, no edema, no calf tenderness
+• Neurologic: Intact reflexes, no focal deficits
+
+Assessment:
+1. Erectile dysfunction (ED) – likely vascular secondary to atherosclerosis, comorbidities, and beta‑blocker therapy. Baseline IIEF score 12/50 confirms moderate severity.
+2. Weight loss – possibly related to diabetes control or depression; no acute cause identified.
+3. BP, DM, CKD, PAD and sleep apnea are all controlled within targets.
+
+Plan:
+1. Initiate specialty referral: Schedule urology visit with a sexual medicine specialist for formal assessment, including repeat IIEF, hormonal profile (TSH, free T4, testosterone), and penile Doppler ultrasound; consider medication review for potential adjustment of metoprolol if ED persists.
+2. Continue current cardiovascular regimen per guidelines:
+   • Metformin 1000 mg PO BID
+   • Metoprolol 25 mg PO BID
+   • Amlodipine 5 mg PO daily
+   • Atorvastatin 40 mg PO daily
+   • Cilostazol 100 mg PO BID
+   • Finasteride 5 mg PO daily
+   • Tamsulosin 0.4 mg PO nightly
+   • Sertraline 50 mg PO daily
+3. Counsel on lifestyle modifications: weight loss, diet (low‑sodium, Mediterranean pattern), supervised walking program, and adherence to CPAP.
+4. Monitor renal function: Repeat serum creatinine/eGFR in 3 months or sooner if symptoms.
+5. Monitor lipid profile: repeat LDL in 6 months.
+6. Continue to assess mood and consider bupropion if depressive symptoms worsen; hold tadalafil until cardiology clearance.
+
+Follow‑up: Repeat labs in 3 months, urology visit within 4‑6 weeks. Continue annual cardiology review.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent erectile dysfunction for 8 months</span><span class="pill">Weight loss 11 lb over 12 months</span><span class="pill">No chest pain or shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Weight</td><td>234 lb</td></tr><tr><td>BMI</td><td>32.9</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal heart sounds, no murmur</li><li>2+ dorsalis pedis pulse, no claudication on exam</li><li>Normal BMI 32.9</li><li>General physical exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>Serum creatinine</li><li>LDL cholesterol</li><li>IIEF questionnaire (baseline)</li><li>Penile Doppler ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c: 7.2%</li><li>Serum creatinine: 1.5 mg/dL</li><li>eGFR: 45 mL/min/1.73 m²</li><li>LDL cholesterol: 110 mg/dL</li><li>IIEF score: 12/50</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Recommended referral to urologist for sexual medicine evaluation</li><li>Advised continuation of all current medications</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John said he was willing to see a urologist and to try potential ED therapy in the future. He appreciated the comprehensive review.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Depression</span><span class="pill">Peripheral arterial disease</span><span class="pill">Chronic kidney disease</span><span class="pill">Obstructive sleep apnea</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li><li>Sertraline 50 mg daily</li><li>Cilostazol 100 mg BID</li><li>CPAP therapy</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing erectile dysfunction since age 48</li><li>Multiple cardiovascular and metabolic comorbidities</li><li>Adherence to CPAP therapy for OSA</li><li>Consistent use of cilostazol for PAD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the annual review, John expressed frustration over unresolved erectile dysfunction. The cardiologist reaffirmed the vascular basis for ED and emphasized continued risk factor control (BP at 138/85, A1c 7.2%, eGFR 45 mL/min/1.73 m²). The patient’s sleep apnea remained well‑controlled on CPAP, and PAD was stable on cilostazol. The cardiologist recommended a specialty referral to a urologist with expertise in sexual medicine for formal ED assessment, including IIEF questionnaire and penile Doppler ultrasound. He also explained that potential PDE‑5 therapy could be considered after a thorough evaluation, taking into account his beta‑blocker and CKD stage 3. John agreed to schedule the referral and to continue current regimens.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continuing vascular risk factors managed; ED persists but patient is ready for targeted evaluation. CKD stage 3 stable; readiness for PDE‑5 therapy pending further assessment.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2027-04-05</h3><div class="visit-meta">Urologist (Sexual Medicine Specialist) | Reason: Comprehensive evaluation and management of erectile dysfunction</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 55‑year‑old male presents for detailed sexual function evaluation. He reports difficulty achieving and maintaining erections sufficient for intercourse for eight years, a subjective lack of sexual interest, and concern about medication side effects. He denies recent chest pain, dyspnea, or claudication. He is compliant with CPAP therapy for OSA and has no new depression symptoms. 
+
+Objective: Vitals: BP 136/82 mmHg, HR 70 bpm, Weight 233 lb, BMI 32.6. Physical exam unremarkable: normal cardiovascular auscultation, 2+ dorsalis pedis pulses, palpable but non‑tender prostate, normal penile sensitivity. 2‑point IIEF questionnaire administered - baseline score 12/50. Penile duplex Doppler ultrasound shows peak systolic velocity 30 cm/s and resistance index 0.8, consistent with arterial insufficiency. Labs pending: HbA1c, eGFR, lipid panel. 
+
+Assessment: 1. Erectile dysfunction (ED) due to mixed etiology: atherosclerotic arterial insufficiency (evidence from Doppler), diabetes mellitus, hypertension, and depression-associated hypogonadism. 2. Benign prostatic hyperplasia (BPH) under control with finasteride 5 mg daily and tamsulosin 0.4 mg nightly. 3. Chronic kidney disease stage 3 – PDE‑5 inhibition considered safe but requires monitoring. 4. OSA well‑controlled with CPAP. 
+
+Plan: Initiate tadalafil 5 mg daily, instruct patient on timing relative to meals and potential hypotension. Counsel on side effect monitoring and to report headache, flushing, or hypotension. Continue current cardiovascular regimen (metformin 1000 mg BID, metoprolol 25 mg BID, atorvastatin 40 mg daily, amlodipine 5 mg daily, lisinopril 10 mg daily, aspirin 81 mg daily, clopidogrel 75 mg daily). Continue depression management with sertraline 50 mg daily; discuss potential switch to bupropion if libido continues to worsen. Reassess erectile function and IIEF in 3 months; repeat Doppler and labs (eGFR, HbA1c) at that visit. Encourage continued CPAP adherence, supervised walking program, weight management, and sleep hygiene. Provide patient with written instructions and contact information for rapid side‑effect concerns.
+
+Follow‑up: 3‑month urology visit to evaluate tadalafil efficacy, repeat IIEF, Doppler ultrasound, and labs. Continue quarterly monitoring of BP, HbA1c, and eGFR per cardiology recommendations. Telephonic check‑in 2 weeks to verify tolerability of tadalafil.
+
+Signature: ____________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Difficulty achieving and maintaining erection sufficient for intercourse</span><span class="pill">Subjective lack of sexual interest</span><span class="pill">Concern about medication side effects</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/82</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Weight</td><td>233 lb</td></tr><tr><td>BMI</td><td>32.6</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal cardiovascular ausculation</li><li>2+ dorsalis pedis pulses</li><li>No palpable prostate tenderness</li><li>Normal penile sensitivity</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>IIEF questionnaire</li><li>Penile Doppler ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>IIEF baseline: 12/50</li><li>Doppler: Peak systolic velocity 30 cm/s, Resistance index 0.8</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started tadalafil 5 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling reassured about the tailored therapy and agreed to a follow‑up in 3 months to assess erectile function improvement. He did not report any dizziness or other adverse events at this time.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Depression</span><span class="pill">Peripheral arterial disease</span><span class="pill">Chronic kidney disease</span><span class="pill">Obstructive sleep apnea</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li><li>Sertraline 50 mg daily</li><li>Cilostazol 100 mg BID</li><li>CPAP therapy</li><li>Tadalafil 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Comprehensive ED history for 8+ years</li><li>Current medications include beta‑blocker, statin, CKD stage 3</li><li>CPAP therapy for moderate OSA</li><li>Depression on sertraline</li><li>Finasteride for BPH</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient arrived for a detailed erectile dysfunction evaluation. After reviewing his medical history and medication list, the urologist administered the IIEF questionnaire (baseline score 12/50) and performed a penile duplex Doppler ultrasound. The study demonstrated a peak systolic velocity of 30 cm/s and a resistance index of 0.8, consistent with arterial insufficiency. Given the vascular etiology, the clinician discussed the safety of PDE-5 inhibition in the context of beta-blocker therapy and CKD stage 3. They initiated tadalafil 5 mg daily, providing education on proper timing relative to meals and potential hypotension. The patient was instructed to monitor any side effects and to report any changes. An annual follow‑up was scheduled to assess efficacy. The patient expressed relief and clarity that a specific treatment plan was in place.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Vascular erectile dysfunction confirmed via duplex Doppler. Initiated PDE‑5 therapy (tadalafil) with ongoing monitoring of blood pressure and renal function. ED symptoms beginning to respond; patient is engaged in comprehensive management plan.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Hyperlipidemia</span><span class="pill">Coronary artery disease</span><span class="pill">Peripheral arterial disease</span><span class="pill">Chronic kidney disease</span><span class="pill">Depression</span><span class="pill">Obesity</span><span class="pill">Sleep apnea</span><span class="pill">Chronic prostatitis/benign prostatic hyperplasia</span><span class="pill">Erectile dysfunction</span><span class="pill">Major depressive disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Metoprolol 25 mg BID</li><li>Atorvastatin 40 mg daily</li><li>Amlodipine 5 mg daily</li><li>Aspirin 81 mg daily</li><li>Clopidogrel 75 mg daily</li><li>Lisinopril 10 mg daily</li><li>Finasteride 5 mg daily</li><li>Tamsulosin 0.4 mg nightly</li><li>Sertraline 50 mg daily</li><li>Cilostazol 100 mg BID</li><li>CPAP 8 cm H2O</li><li>Tadalafil 5 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Routine annual visit on 2023-08-15. Patient reported erectile dysfunction and fatigue. Vitals: BP 140/90 mmHg, HR 88 bpm, weight 245 lb, BMI 34.2. Lab results: HbA1c 7.8%, fasting glucose 158 mg/dL, LDL 128 mg/dL. Started Metformin 500 mg PO BID with plan to titrate to 1000 mg PO BID. Advised lifestyle modifications, continued CPAP therapy, and scheduled urology referral. Labs to be repeated in 90 days. Follow‑up scheduled in 3 months.</li><li>Cardiology follow‑up 2024-06-20 post‑ACS. Vitals: BP 135/88, HR 76, weight 244 lb, BMI 34.1. Patient reported exertional chest discomfort, dyspnea after mild exertion, and erectile dysfunction. Physical exam unremarkable except for normal cardiac rhythm and clear lungs. ECG showed ST‑segment elevation in anterior leads; troponin I 0.2 ng/mL, CK‑MB 120 U/L. Persistent 60–70% stenosis in LAD &amp; LCX on recent angiography. Medications increased: metoprolol to 50 mg BID; added aspirin 81 mg daily, clopidogrel 75 mg daily, lisinopril 10 mg daily. Atorvastatin 40 mg daily continued. Patient referred to urology, advised cardiac rehab, labs next week, follow‑up in 4 weeks.</li><li>Urology visit on 2025-01-10 for nocturnal urinary frequency and erectile dysfunction. Vitals: BP 128/82 mmHg, HR 70 bpm, weight 240 lb, BMI 33.8. DRE prostate 35 g firm. PSA 2.5 ng/mL. Prescribed finasteride 5 mg daily and tamsulosin 0.4 mg nightly. Advised lifestyle modifications, repeat PSA and prostate volume at 6 months, consider PDE5 inhibitor if ED persists. Follow‑up in urology in 3 months.</li><li>Psychiatrist visit on 2025-08-05. Patient reports worsening depressive mood, increased fatigue, reduced sexual desire, and erectile difficulties. Normal vitals: BP 124/80 mmHg, HR 68 bpm, weight 238 lb. Lab results: HbA1c 7.4%, prolactin 12 ng/mL, total testosterone 550 ng/dL. Continues sertraline 50 mg daily; discussed initiation of bupropion 150 mg daily and pending cardiology clearance for tadalafil 5 mg daily. All other cardiovascular and urologic medications continued. Referrals: urology for sexual medicine. Follow‑up psychiatry in 4 weeks.</li><li>Routine PAD follow‑up on 2026-02-15. Patient reports intermittent calf cramping after walking 200 m, relieved by rest within 30 s. Vitals: BP 122/78 mmHg, HR 72 bpm, weight 235 lb, BMI 33.3 kg/m2. ABI left 0.65, right 0.60. Bilateral diminished dorsalis pedis and posterior tibial pulses. Started cilostazol 100 mg BID 6 weeks prior, continuing. Advised supervised walking program 45 min 3×/week, dietary sodium restriction, weight reduction, and foot care. Plan to repeat eGFR in 6 weeks and ABI in 6 months. Current medications updated to include Metformin 1000 mg BID, Metoprolol 25 mg BID, Atorvastatin 40 mg daily, Amlodipine 5 mg daily, Finasteride 5 mg daily, Tamsulosin 0.4 mg nightly, Sertraline 50 mg daily, and Cilostazol 100 mg BID.</li><li>Sleep specialist visit on 2026-07-05. Patient presented with persistent daytime sleepiness and snoring. Vitals: BP 118/76 mmHg, HR 70 bpm, weight 233 lb, BMI 33.0. Polysomnography revealed moderate obstructive sleep apnea (AHI 28/hour, lowest SpO2 78%). Initiated CPAP therapy at 8 cm H2O with education on mask fitting and adherence. Advised weight management and sleep hygiene. Follow‑up in 4 weeks for CPAP adherence review; labs scheduled in 90 days.</li><li>2027-03-15 cardiology review: 55‑year‑old male with longstanding DM, HTN, CAD, BPH, depression, PAD, CKD stage 3, OSA. Reported persistent erectile dysfunction for 8 months and unintentional weight loss of 11 lb over 12 months; denied chest pain, dyspnea, palpitations, or claudication. Vitals: BP 138/85, HR 70, weight 234 lb, BMI 32.9. Physical exam unremarkable. Labs ordered: HbA1c, serum creatinine/eGFR, LDL cholesterol, IIEF questionnaire, Penile Doppler ultrasound. Plan: continue current cardiovascular regimen, schedule urology visit for sexual medicine assessment, repeat labs in 3–6 months, maintain CPAP adherence, supervised walking program, monitor mood and consider antidepressant adjustment if needed.</li><li>Urology visit on 2027-04-05 for comprehensive erectile dysfunction evaluation. Vitals: BP 136/82 mmHg, HR 70 bpm, weight 233 lb, BMI 32.6. Subjective difficulty achieving/maintaining erections for 8 years, decreased libido, concerns about medication side effects; denies chest pain, dyspnea, claudication. Physical exam normal, IIEF baseline 12/50, penile duplex Doppler showed arterial insufficiency. Initiated tadalafil 5 mg daily; continued existing cardiovascular, BPH, depression, and CPAP therapy. Labs pending. Telephonic check‑in in 2 weeks; scheduled follow‑up in 3 months for IIEF, Doppler, labs.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

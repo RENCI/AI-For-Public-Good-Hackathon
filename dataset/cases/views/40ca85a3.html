@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 40ca85a3</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 40ca85a3</h1><div class="subtitle">Acute Pancreatitis | Male, 55</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Alcohol use disorder, Gallstone disease, Hypertriglyceridemia, Chronic kidney disease, Diabetes mellitus, Obesity, Smoking, Autoimmune pancreatitis</div><div class="meta-line">Risk Factors: Heavy alcohol consumption, Gallstones, Hypertriglyceridemia &gt; 1000 mg/dL, Smoking, Obesity, Azathioprine use, Steroid use</div></div>
+<details><summary>Narrative <span class="preview-text">**A 55‑Year‑Old Man in a Spiralling Spiral of Disease**  On a rainy Thursday morning, Thomas—55, a mechanic, and a longt...</span></summary><div class="section-body"><p>**A 55‑Year‑Old Man in a Spiralling Spiral of Disease**</p><p>On a rainy Thursday morning, Thomas—55, a mechanic, and a longtime heavy drinker—rushed into the emergency department clutching his belly, his stomach a tight, aching knot that seemed to have been tightening for the previous three days. He’d had a rough week at work, a bout of cold, and, as always, a bottle of cheap whiskey waiting at home. He told the triage nurse that the pain had started as a dull, vague gnawing in the middle of his belly, then turned into a sharp, burning agony that sent waves radiating to his back. He could barely lie flat in bed, and the discomfort worsened with every breath.</p><p>Thomas had a habit of masking his problems. He denied recent binge drinking, said the beer at his workplace was “just a little,&quot; and tried to dismiss the pain as heartburn or indigestion—classic red herrings for someone of his age and risk profile.</p><p>### Day 0 – ED Presentation</p><p>The first nurse, a seasoned worker who’d seen her share of gallstone crises and alcoholism, let the clinical team know that Thomas had a history of type‑2 diabetes managed with metformin and intermittent insulin, obesity (BMI 33), a chronic kidney disease of stage 3, a prior cholecystectomy that had failed to resolve his gallstone problems, and a stubborn hypertriglyceridemia that hovered around 400 mg/dL in routine lab work. Most concerningly, Thomas had been on long‑term azathioprine and prednisone for “autoimmune pancreatitis” that the gastroenterologist had diagnosed a year ago based on a single elevated IgG4 and a pancreas biopsy showing lymphocytic infiltration. He had been taking prednisone 15 mg daily and azathioprine 150 mg daily, both of which had been tapered but not stopped.</p><p>In the ED, the fast‑track doctor drew blood. The lipase was only mildly elevated at 260 U/L (normal &lt;160), but the glucose was a high 280 mg/dL, and potassium was 3.0 mEq/L. His blood urea nitrogen (BUN) was 32 mg/dL and creatinine 1.8 mg/dL, reflecting his CKD. He was afebrile, and his blood pressure was a modest 110/65. The physical exam was revealing: epigastric tenderness, but no guarding or rebound; the abdomen was soft to deep palpation, and his stools were unchanged. An initial abdominal ultrasound showed gallbladder sludge and a dilated common bile duct (8 mm). There were no obvious stones in the ducts; the pancreas was not conspicuously enlarged, and no peripancreatic fluid was seen.</p><p>The attending, a gastroenterologist with a keen eye for atypical presentations, decided the best course was conservative management in a medical ward: aggressive IV fluids (0.9% normal saline, 3 L in first 24 h), electrolyte correction, insulin drip to manage the hyperglycemia, and antiemetics. Prednisone was held for the time being because of the elevated infection risk; azathioprine was also paused pending the full workup.</p><p>### Day 1 – The “Mild Episode” Misleading</p><p>The night after admission, the clinical team did a CT scan of the abdomen with contrast as a routine confirmatory test. It showed a slightly swollen pancreas with peripancreatic fat stranding—a textbook grade Ⅲ acute pancreatitis per revised Atlanta classification—but the pancreas did not appear necrotic, and there was no evidence of ductal obstruction beyond the mild dilation of the CBD. The radiologist noted no pseudocysts. The CT was interpreted as an uncomplicated, mild bout.</p><p>Thomas’s pain, which had initially seemed “worse than usual,” actually began to improve. His serum amylase was 190 U/L. He tolerated a clear liquid diet and his insulin requirements dropped modestly. He fell asleep; the nurse woke him at 8 a.m. to find him sleeping soundly. The team had started him on a low‑carbohydrate diet, in line with his diabetes, and monitored his electrolytes. No antibiotics were given because the infection risk was low. The plan was to observe: if the pain recurred or worsened, to consider ERCP for stone removal.</p><p>### Day 2 – The First Clinical Decision Point</p><p>On the second morning, Thomas’s pain returned—not the dull ache of the previous day but a sharp, tearing pain that seemed to cut into his abdomen with each breath. His vital signs shifted: heart rate 110 bpm, mild fever of 100.6°F, blood pressure 95/60 dropping. His BUN rose to 38 mg/dL, creatinine 2.0 mg/dL. Labs showed new, dramatic elevation in lipase to 1,260 U/L and mild transaminitis (AST 78 U/L, ALT 112 U/L). His triglyceride levels, measured after an overnight fast, were a startling 1,020 mg/dL.</p><p>At this juncture, his care team convened. The decision was made to:</p><p>- **Transfer to the ICU** because of unstable vitals and escalating pain.
+- **Initiate an aggressive fluid resuscitation** with lactated Ringer&#x27;s at 150 mL/h, adjusted as per central venous pressure readings.
+- **Start broad‑spectrum antibiotics** (piperacillin‑tazobactam) given the suspicion of a septic source and the immunosuppressed state from steroids and azathioprine.
+- **Hold all immunosuppressive medication** and reintroduce prednisone at a low dose (5 mg) only if clear evidence ruled out infection.
+- **Order a repeat CT** after 24 h to assess for necrosis.</p><p>The team also considered the gallstone disease. With imaging showing a dilated CBD, though no stone visible, there was a strong possibility of a transient stone that had passed or a microlith. In the absence of visible stones, the plan was to proceed with an ERCP in 36 h, assuming the patient&#x27;s condition stabilized.</p><p>### Day 3 – An Unexpected Twist</p><p>While in the ICU, Thomas’s condition deteriorated further. His pain spiked to a maximum pain score of 10/10. He became hypotensive, requiring dopamine infusion to maintain MAP &gt;65 mmHg. Laboratory panels revealed leukocytosis (WBC 18,000), elevated C‑reactive protein (CRP 130 mg/L), and rising lactate (3.2 mmol/L). The repeat CT scan, performed emergently, painted a new picture: the pancreas was markedly enlarged, with extensive areas of hypodensity consistent with necrosis in both the head and body. A sizeable peripancreatic fluid collection measured 5 × 4 cm near the tail. There were no bile duct stones; the ducts remained dilated, but the bile duct was obstructed at the ampulla by a large “impaction” of sludge that could not be seen on CT but was suspected due to the degree of dilation.</p><p>The gastroenterology team now faced a triad of challenges:</p><p>1. **Necrotizing pancreatitis with evolving infected necrosis.**
+2. **Severe hypertriglyceridemia contributing to ongoing pancreatic inflammation.**
+3. **Biliary obstruction from sludge in the ampulla.**</p><p>The decision was: *perform urgent ERCP with sphincterotomy and common bile duct stent placement*. Meanwhile, *initiate insulin therapy to aggressively lower triglycerides* (target &lt;500 mg/dL). The medical team considered plasmapheresis but decided that insulin‑fructose‑glycine therapy would be sufficient initially, given the patient’s renal insufficiency (plasmapheresis may cause volume shifts and worsen renal function).</p><p>### Day 4 – Interventional Success? A Setback</p><p>The ERCP was technically successful. A 10 Fr plastic stent was placed in the common bile duct, and the ampulla was gently dilated; no stone was retrieved, but sludge was aspirated, and contrast filled the ducts completely, relieving the obstruction noted previously. Post‑procedure, Thomas’s abdominal pain decreased modestly. His bilirubin fell from 2.5 mg/dL to 1.2 mg/dL. However, his renal function worsened rapidly: creatinine spiked to 2.6 mg/dL, BUN climbed to 48 mg/dL. The renal consult noted that his fluid status was precarious—over‑resuscitation had led to interstitial edema, but a high vasopressor requirement had limited kidney perfusion.</p><p>Meanwhile, the infectious workup grew culture positivity: *Enterococcus faecium* isolated from a percutaneous catheter aspiration of the fluid collection. The antibiotics were switched to vancomycin, with a plan for percutaneous drainage after the septic source was controlled.</p><p>### Day 5 – The First Organ Failure</p><p>Within the next 24 h, Thomas developed early acute respiratory distress syndrome (ARDS). His oxygen saturations dropped from 96% on 3 L/min to 84% on 10 L/min. A chest X‑ray revealed bilateral alveolar infiltrates. The ICU team started a lung‑protective ventilation strategy (tidal volume 6 mL/kg predicted body weight, plateau pressure &lt;30 cm H₂O). They also placed a central venous catheter to administer albumin for oncotic pressure management and began prone positioning after several hours of desaturation. His blood cultures again grew *Enterococcus*, suggesting bacteremia from the abdominal infection.</p><p>His diabetes became a nightmare. Glucose spikes pushed above 350 mg/dL despite an insulin infusion of 4 U/h, with intermittent fluctuations to 180 mg/dL. The Endocrinology Team decided to increase insulin infusion to 8 U/h, titrate based on glucose every hour, and give insulin glargine at night. However, his insulin pumps were problematic due to his chronic kidney disease, which interfered with drug clearance.</p><p>### Day 6 – Recurrent Hemodynamic Instability</p><p>Despite continuous pressor support, Thomas&#x27;s blood pressure remained shaky, dipping to 85/45 even on norepinephrine 0.15 µg/kg/min. His lactate spiked to 5.8 mmol/L, indicating septic shock. The surgical team performed an urgent percutaneous drainage of the peripancreatic collection under image guidance, placing two 14 Fr pigtail drains. The drain output was thick, foul‑smelling, and a few hours later, a repeat culture again grew *Enterococcus*.</p><p>The interventional radiology note explained that the necrotic tissue and infected fluid were preventing the patient’s immune system from clearing the infection effectively. The drains improved local circulation but did not prevent the persistent systemic inflammatory response.</p><p>### Day 7 – A Tipping Point</p><p>By day 7, Thomas was in a deepening multiorgan failure syndrome. The kidneys were failing: creatinine plateaued at 3.2 mg/dL, and the patient was anuric. The team had to decide on renal replacement therapy. Because his hemodynamics were unstable, continuous venovenous hemofiltration (CVVH) was chosen. Meanwhile, the infection continued to linger; the blood cultures remained positive for *Enterococcus* on days 7 and 8. The infection control team recommended adding daptomycin in conjunction with vancomycin, hoping to achieve synergy.</p><p>The decision also involved whether to continue or restart steroids for the autoimmune pancreatitis. The endocrinologist, in consultation with the rheumatology team that had been supervising his azathioprine, argued that withholding steroids would reduce his risk of further immunosuppression and help fight the infection. Azathioprine was permanently discontinued.</p><p>The patient’s oxygenation remained marginal: in the ICU, the ventilator settings were adjusted to 10 cm H₂O plateau pressures, with FiO₂ at 0.6 and PEEP at 12 cm H₂O. The oxygenation index remained poor; the decision to ventilate with a lung‑protective strategy was reinforced.</p><p>### Day 8 – Reversible? Not Yet</p><p>In the early morning, a rapid CT with contrast was done again to evaluate the necrotic collection for possible transition into an infected walled‑off necrosis. The imaging showed no evidence of a new fluid accumulation, but the necrotic tissue remained as a hazy area in the pancreatic tail. The interventional radiology team decided to avoid a second drainage procedure due to the complexity and the risk of bleeding in the context of heparin used for CVVH.</p><p>Blood work revealed worsening transaminases: AST 540 U/L, ALT 620 U/L. The liver was suffering an ischemic insult from the sepsis‑induced hypotension, compounded by the high doses of antibiotics. They had to stop piperacillin‑tazobactam and switch to meropenem to cover for possible resistant organisms.</p><p>His bilirubin had trended down to 0.9 mg/dL, indicating that the biliary obstruction had been successfully relieved. However, the pancreatic head necrosis had not resolved.</p><p>### Day 9 – A Delicate Balance</p><p>The nephrology team adjusted the dialysis prescription, adding a bicarbonate buffer to correct metabolic acidosis. Thomas’s acid–base status improved, but the urea nitrogen remained elevated. The endocrine team noted that the insulin requirement had plateaued at 10 U/h, but the glucose range remained 250–310 mg/dL.</p><p>The ICU nurse noted that Thomas&#x27;s skin was becoming mottled; mottling score was 3/4—classic sign of impaired perfusion. They initiated an early goal‑directed therapy for sepsis with a goal of lactate clearance to &lt;2.0 mmol/L within 6 h. After 12 h, lactate fell to 3.2 mmol/L, but not below 2.0 mmol/L. His blood pressure remained dependent on norepinephrine 0.25 µg/kg/min.</p><p>The decision was now, after an interdisciplinary round, to consider the possibility of multi‑organ failure that might become irreversible. They had to weigh the risk of continuing aggressive support versus palliative care. Thomas&#x27;s wife called in, her face tight with worry, and the team arranged a family meeting with the attending, the critical care nurse, the palliative care specialist, and the cardiology team. The family decided to continue life support for now, hoping that the drainage would eventually control the infection.</p><p>### Day 10 – Final Slide</p><p>At the beginning of the 10th day, the patient’s condition took a dramatic turn. His oxygenation fell precipitously; his PaO₂ dropped from 68 mmHg on FiO₂ 0.6 to 45 mmHg, despite increased PEEP to 16 cm H₂O. His arterial blood gas revealed a pH 7.25, PaCO₂ 52 mmHg, lactate 6.5 mmol/L, and a metabolic acidosis with a base deficit of 10. The CVVH therapy was switched to predialysis, and the patient developed a sudden drop in blood pressure to 70/40 despite maximum vasopressor support (norepinephrine 0.35 µg/kg/min, vasopressin 0.03 U/min).</p><p>The bedside team realized that the diffuse alveolar damage had progressed to a severe form of ARDS. The lung-protective strategy was further intensified, but the oxygenation index stayed above 200. A rapid assessment revealed that the patient&#x27;s immune response had collapsed, and, combined with the persistent infected necrosis and a failing kidney, the cascade of organ failure was unstoppable.</p><p>Within 24 h, there was no significant change in vital signs, and the family, after a stern discussion, opted for transition to comfort care. The ICU team switched to palliative sedation, the ventilator was weaned, and life‑sustaining treatments were withdrawn. Thomas’s heart rate decreased, his pupils became fixed and dilated, his breathing deepened and uneven, and within hours, his pulse stopped. He was pronounced deceased at 08:30 h.</p><p>### Reflection</p><p>Thomas’s journey illustrates how the overlap of alcohol use disorder, gallstone disease, severe hypertriglyceridemia, chronic kidney disease, diabetes, obesity, smoking, and autoimmune pancreatitis—coupled with long‑term immunosuppression by azathioprine and steroids—can produce a deceptively subtle onset of acute pancreatitis. The initial mild presentation confounded the team, as the classical signs of severe disease were muted by immunosuppression and co‑existing conditions. By the time radiographic evidence of necrosis emerged, septic shock, ARDS, and renal failure had already been set in motion. Aggressive supportive care, interventional drainage, and broad antibiotic coverage could not arrest the relentless escalation of multiorgan failure, and the patient ultimately succumbed. This narrative underscores the importance of early recognition and high index of suspicion in patients with multiple overlapping risk factors for acute pancreatitis.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-24</h3><div class="visit-meta">Emergency Medicine | Reason: Acute epigastric pain radiating to back</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 55‑year‑old male presents with acute epigastric pain radiating to the back; associated nausea and vomiting.
+
+History of Present Illness: Thomas reports sudden onset of severe epigastric pain that began 2 hours ago, radiating to the back, accompanied by two episodes of vomiting. He denies prior similar episodes. He has a history of heavy alcohol use, type 2 diabetes mellitus, chronic kidney disease stage 3, obesity (BMI 33), hypertriglyceridemia, and previous cholecystectomy. He reports no recent travel, no new medications, and no constipation.
+
+Past Medical History: Diabetes mellitus type 2, chronic kidney disease stage 3, obesity, hypertriglyceridemia, chronic alcohol use disorder, prior cholecystectomy.
+
+Medications: None currently.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for epigastric pain, nausea, vomiting. Negative for fever, chills, jaundice, chest pain, shortness of breath.
+
+Physical Examination: Vitals: BP 110/65 mmHg, HR 90 bpm, RR 18/min, Temp 36.8°C, SpO₂ 98% on room air. General: Alert, in distress due to pain. Abdomen: Epigastric tenderness with no guarding or rebound; soft, bowel sounds normoactive. No hepatosplenomegaly. Extremities: No edema.
+
+Laboratory Results: WBC 7,200/µL; Hb 13.0 g/dL; Hct 38%; Platelets 250,000/µL. BMP: Na 139 mEq/L; K 3.0 mEq/L; Cl 100 mEq/L; HCO₃ 22 mEq/L; BUN 32 mg/dL; Creatinine 1.8 mg/dL; Glucose 280 mg/dL. Lipase 260 U/L (normal &lt; 100). Amylase not performed. Lipid panel: Triglycerides 350 mg/dL (mild elevation). Ultrasound abdomen: Gallbladder absent/ectomy noted; sludge-like material in remnant ducts; common bile duct dilated to 8 mm. No gallstones visualized. Liver enzymes normal (not provided).
+
+Assessment: Acute epigastric pain with elevated lipase and dilated common bile duct raise strong suspicion for acute pancreatitis, likely precipitated by biliary obstruction (choledocholithiasis) and/or alcohol use. Differential also includes alcoholic hepatitis, cholangitis, and less likely mesenteric ischemia.
+
+Plan:
+1. Admit for inpatient observation and management of acute pancreatitis.
+2. Continue aggressive IV hydration: normal saline 0.9% 3 L over 24 h.
+3. Initiate insulin drip 0.1 units/kg/hr to control hyperglycemia; titrate to achieve glucose 140‑180 mg/dL.
+4. Continue anti‑emetic therapy: ondansetron 4 mg IV q8h as needed.
+5. Hold prednisone and azathioprine until infectious or inflammatory workup complete.
+6. Obtain abdominal CT with contrast to evaluate pancreatic inflammation and confirm CBD stones.
+7. Consult gastroenterology; if obstruction confirmed, consider ERCP with stone extraction.
+8. Monitor renal function, electrolytes (especially potassium), and pancreatic enzymes q6h.
+9. Initiate NPO status, then transition to clear liquids as tolerated.
+10. Provide counseling on alcohol cessation and arrange outpatient addiction services.
+11. Schedule follow‑up in 48‑72 h or sooner if clinical status changes.
+
+Disposition: Patient admitted to medical ward for observation. No immediate life‑threatening abnormalities identified.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">epigastric pain radiating to back</span><span class="pill">nausea</span><span class="pill">vomiting</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/65</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness</li><li>no guarding</li><li>soft abdomen</li><li>normal bowel sounds</li><li>no rebound</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>Lipid panel</li><li>Lipase/amylase</li><li>Blood glucose</li><li>Ultrasound abdomen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>lipase 260 U/L</li><li>glucose 280 mg/dL</li><li>potassium 3.0 mEq/L</li><li>BUN 32 mg/dL</li><li>creatinine 1.8 mg/dL</li><li>ultrasound: gallbladder sludge, dilated CBD 8 mm</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV normal saline 0.9% 3 L over 24 h</li><li>IV insulin drip 0.1 units/kg/h</li><li>ondansetron</li><li>hold prednisone and azathioprine</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain remained severe; patient remained alert and agreed to inpatient monitoring.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day</li><li>azathioprine 150 mg/day</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas presented to the ED with severe epigastric pain radiating to his back, nausea, and vomiting. Triage noted his heavy alcohol use, diabetes, CKD, and a history of autoimmune pancreatitis on prednisone and azathioprine. Labs were drawn revealing mild hyperlipidemia, lipase 260 U/L, glucose 280 mg/dL, BUN 32, creatinine 1.8, and an ultrasound showing gallbladder sludge with a dilated CBD (8 mm). The ED team initiated aggressive IV fluids (3 L NS 0.9% over 24 h), started an insulin drip for hyperglycemia, and held prednisone and azathioprine pending further workup. Anti‑emetics were given and the patient was admitted to the medical ward for observation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of acute pancreatitis with mild laboratory elevation and conservative management initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-25</h3><div class="visit-meta">Gastroenterology | Reason: Follow-up after CT and initial management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Patient:** 55‑year‑old male with known type 2 diabetes, obesity (BMI 33), CKD stage 3, autoimmune pancreatitis, hypertriglyceridemia, alcohol use disorder, and smoking.\n\n**Chief Complaint:** Follow‑up after CT and initial management of acute pancreatitis.\n\n**History of Present Illness:** The patient reports mild epigastric pain and improved nausea. He tolerates clear liquids and has not had vomiting or diarrhea. Pain has modestly improved compared to admission.\n\n**Physical Examination:**\n- Vitals: BP 115/70, HR 85, RR 16, Temp 36.9°C, SpO₂ 99%.\n- Abdomen: soft, mild epigastric tenderness, normal bowel sounds, no guarding or rebound.\n\n**Diagnostic Studies:**\n- CT abdomen with contrast: slightly swollen pancreas with peripancreatic fat stranding, no fluid collection, mild dilation of the common bile duct.\n- Labs (trend from admission): lipase 180 U/L (↓ from 260 U/L), triglycerides 275 mg/dL (↓ from 350 mg/dL), BUN 28 mg/dL, creatinine 1.7 mg/dL, glucose 260 mg/dL. Electrolytes within target ranges.\n\n**Assessment:**\n- Acute pancreatitis, most consistent with autoimmune pancreatitis given the clinical course and imaging features; alcohol‑related and hypertriglyceridemia remain in the differential but appear less likely.\n- Mild peripancreatic inflammation with no pseudocyst or necrosis.\n- Mild CBD dilation likely secondary to peri‑pancreatic edema; no evidence of choledocholithiasis.\n- Patient is on a low‑carbohydrate diet and insulin infusion, showing clinical improvement.\n\n**Plan:**\n1. Continue current management:\n   - IV normal saline 3 L/24 h.\n   - Insulin infusion at 0.1 U/kg/h (titrate to maintain glucose 140–180 mg/dL).\n   - Low‑carbohydrate diet; progress to clear liquids as tolerated.\n   - Continue prednisone 15 mg daily; plan a gradual taper over 4 weeks.\n   - Continue azathioprine 150 mg/day; monitor for infection.\n   - Ondansetron 4 mg IV q8h as needed.\n2. Laboratory follow‑up: repeat serum lipase, triglycerides, CMP, CRP, ESR in 24 hours.\n3. Imaging: if the CBD remains dilated &gt;10 mm or cholestatic liver enzymes develop, arrange MRCP or ERCP.\n4. Monitoring: Observe for signs of necrosis (fever, worsening abdominal pain, persistent vomiting) and manage promptly.\n5. Anticipated discharge: once pain is controlled, lipase &lt;100 U/L, triglycerides &lt;200 mg/dL, and stable electrolytes.\n\n**Follow‑up Recommendations:**\n- Outpatient gastroenterology visit in 7 days or sooner if pain worsens, fever, or new symptoms.\n- Continue diabetes management with metformin (if tolerated) and insulin; adjust as per glucose trends.\n- Maintain low‑carb diet for 2–3 weeks then transition to a well‑balanced diet.\n- Discuss smoking cessation and alcohol abstinence; refer to addiction counseling.\n- Monitor renal function and electrolytes weekly until stable.\n- Contact clinic immediately if severe abdominal pain returns, vomiting persists, or new jaundice develops.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">epigastric pain mild</span><span class="pill">improved nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>115/70</td></tr><tr><td>HR</td><td>85</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>SpO2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness mild</li><li>soft abdomen</li><li>normal bowel sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen with contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT shows slightly swollen pancreas, peripancreatic fat stranding, no fluid collection</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>low carbohydrate diet</li><li>continue insulin infusion 2 U/h</li><li>monitor electrolytes</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improving, tolerating clear liquids.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day</li><li>azathioprine 150 mg/day</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>CT abdomen with contrast was performed a day after admission. It demonstrated a slightly swollen pancreas with peripancreatic fat stranding, no fluid collection, and a mild dilated CBD. His pain improved modestly; he tolerated clear liquids. The team continued a low‑carbohydrate diet, maintained insulin infusion, and monitored electrolytes. The patient was observed for worsening.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Grade II pancreatitis, mild, monitoring continued, no organ failure.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-26</h3><div class="visit-meta">Intensive Care Medicine | Reason: Acute deterioration, worsening pain and vitals</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Acute deterioration with worsening epigastric pain, fever, and hypotension.
+
+**History &amp; Physical:** 55‑year‑old male with type 2 DM, obesity (BMI 33), CKD stage 3, prior cholecystectomy, hypertriglyceridemia, autoimmune pancreatitis, alcohol use disorder, and smoking presented to ICU with intense sharp epigastric pain, 38.2 °C fever, and BP 95/60 mm Hg. Exam shows severe epigastric tenderness with rigid abdominal wall but no rebound or guarding.
+
+**Labs:** lipase 1,260 U/L, triglycerides 1,020 mg/dL, AST 78, ALT 112 U/L, WBC 18,000/µL, CRP 130 mg/L. BUN/Cr trending up (BUN 32→28, Cr 1.8→1.7 mg/dL). Blood cultures pending.
+
+**Impression:** Acute pancreatitis precipitated by severe hypertriglyceridemia, with secondary septic physiology likely due to bacterial translocation. Also consider alcohol‑related and autoimmune flare. Elevated triglycerides strongly contributory.
+
+**Plan:**
+1. Aggressive ICU care: continue IV lactated Ringer’s 150 mL/h, maintain insulin infusion 0.1 U/kg/hr, monitor glucose.
+2. Broad‑spectrum antibiotics: piperacillin‑tazobactam 4.5 g IV q6h.
+3. Hold prednisone 15 mg/day and azathioprine 150 mg/day pending infection assessment.
+4. Prepare for ERCP once hemodynamically stable to relieve any biliary obstruction.
+5. Consider plasmapheresis if triglycerides remain &gt;1,000 mg/dL or worsen.
+6. Daily labs: CBC, CMP, lipase, triglycerides, CRP, cultures.
+7. Consult GI for ERCP and possible endoscopic sphincterotomy, nephrology for CKD monitoring.
+8. Continuous central venous pressure monitoring; vasopressors if SBP &lt;90 despite fluids.
+9. Pain: administer opioids titrated to effect; ondansetron 4 mg IV q8h for nausea.
+10. Monitor renal function; adjust IV fluids if oliguria.
+
+**Disposition:** Admit to ICU until stable; step down to medical floor when vital signs steady, lipase &lt;300 U/L, and triglycerides &lt;500 mg/dL.
+
+**Follow‑up:** Daily interdisciplinary rounds, repeat imaging if biliary obstruction persists, outpatient GI follow‑up in 7 days post‑discharge, nephrology review within 48 h.
+
+**Risk assessment:** Monitor for worsening renal function and electrolyte disturbances. | **Date:** 2026‑03‑26</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sharp epigastric pain</span><span class="pill">fever 100.6F</span><span class="pill">hypotension</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>95/60</td></tr><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>38.2</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness severe</li><li>rigid abdominal wall</li><li>no guarding</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>lipase</li><li>triglycerides</li><li>AST/ALT</li><li>blood cultures</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>lipase 1260 U/L</li><li>triglycerides 1020 mg/dL</li><li>AST 78 U/L</li><li>ALT 112 U/L</li><li>WBC 18,000/mm³</li><li>CRP 130 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV lactated Ringer&#x27;s 150 mL/h</li><li>piperacillin‑tazobactam 4.5 g q6h</li><li>hold prednisone and azathioprine</li><li>plan ERCP</li><li>monitor central venous pressure</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Vital signs stabilized with fluids; pain persisted but was better controlled.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day</li><li>azathioprine 150 mg/day</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On day 2, Thomas’s epigastric pain intensified and he developed fever and hypotension. ICU transfer was initiated. Labs revealed lipase 1,260 U/L, triglycerides 1,020 mg/dL, AST 78, ALT 112, WBC 18,000, and CRP 130 mg/L. He received lactated Ringer&#x27;s 150 mL/h, piperacillin‑tazobactam 4.5 g q6h, and was placed on central venous monitoring. Prednisone and azathioprine were held pending infection assessment. An ERCP was planned after stabilization.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Necrotizing pancreatitis suspected, severe hypertriglyceridemia complicating condition; ICU care initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-27</h3><div class="visit-meta">Radiology | Reason: Repeat abdominal CT to assess necrosis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Radiology Service Note – Visit #4
+Date: 2026-03-27
+
+Chief complaint: Repeat contrast abdominal CT to assess necrosis.
+
+History &amp; Examination:
+55‑year‑old male with known type 2 DM, obesity (BMI 33), CKD stage 3, autoimmune pancreatitis, hypertriglyceridemia, alcohol use disorder and smoking. Presents to ICU with escalating epigastric pain and hemodynamic instability.
+
+Vitals: BP 90/55, HR 115, RR 24, Temp 38.5 °C, SpO₂ 96 %.
+
+Physical exam: Severe epigastric tenderness, no guarding. No distension.
+
+Imaging:
+Contrast CT abdomen shows marked pancreatic enlargement with hypo‑dense necrotic areas in the head and body. 5 × 4 cm peripancreatic fluid collection near the tail. Dilated CBD 8 mm, no stones but suspected sludge at the ampulla.
+
+Assessment:
+- Acute necrotizing pancreatitis secondary to hypertriglyceridemia/alcohol.
+- Complicated by biliary obstruction (sludge) contributing to cholestasis and potential sepsis.
+- Hemodynamic instability likely due to pancreatic inflammatory response and possible systemic inflammatory response syndrome (SIRS).
+
+Plan:
+1. Continue insulin infusion at 8 U/h, adjust based on glucose labs.
+2. Continue lactated Ringer&#x27;s 150 mL/h; consider increasing rate if lactate rises or urine output falls.
+3. Broad‑spectrum antibiotics: piperacillin‑tazobactam 4.5 g IV q6h, continue through ICU stay.
+4. Urgent ERCP scheduled once patient is hemodynamically stable; goal to relieve suspected sludge obstruction.
+5. Daily labs: CBC, CMP, lipase, triglycerides, CRP, cultures.
+6. Monitor renal function; nephrology consult for CKD stage 3, adjust IV fluid rate accordingly.
+7. Continue NPO, plan for enteral feeding once pain improves.
+8. Discuss with GI for potential steroid taper; hold prednisone and azathioprine until infection risk is controlled.
+9. Discontinue anticoagulation if present, per surgical consult.
+
+Disposition:
+Patient remains in ICU; transfer to radiology suite for repeat CT per radiology department protocol.
+
+Follow‑up:
+- Re‑evaluate after ERCP and postoperative imaging.
+- Continue multidisciplinary ICU care; reassess pain control, insulin dosing, fluid status.
+- Plan for step‑down care or discharge once stabilized.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe epigastric pain</span><span class="pill">lethargy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>90/55</td></tr><tr><td>HR</td><td>115</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>Temp</td><td>38.5</td></tr><tr><td>SpO2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness severe</li><li>abdominal guarding absent</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen with contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>pancreas enlarged with hypo‑dense necrosis head and body</li><li>peripancreatic fluid 5×4 cm near tail</li><li>dilated CBD 8 mm</li><li>no stones identified</li><li>sludge suspected at ampulla</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>insulin infusion 8 U/h</li><li>continue lactated Ringer&#x27;s</li><li>continue piperacillin‑tazobactam</li><li>plan urgent ERCP</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain remained high; patient tolerated sedation.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A repeat contrast CT was performed due to escalating pain and hemodynamic instability. The scan revealed marked pancreatic enlargement with hypo‑dense necrotic areas in the head and body, a 5 × 4 cm peripancreatic fluid collection near the tail, dilated CBD (8 mm) without visible stones, and suspected sludge impaction at the ampulla. The team intensified insulin infusion to 8 U/h, reinforced fluid resuscitation, and maintained broad‑spectrum antibiotics. ERCP was scheduled urgently.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed necrotizing pancreatitis with early infected necrosis; hypertriglyceridemia persists; biliary obstruction suspected.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-03-28</h3><div class="visit-meta">Gastroenterology | Reason: Post‑ERCP assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 55‑year‑old male admitted to ICU for post‑ERCP assessment. Reports moderate epigastric discomfort, no vomiting. Vital signs are BP 80/45, HR 110, RR 28, Temp 37.9°C, SpO₂ 95%. Known comorbidities include type 2 diabetes mellitus, obesity (BMI 33), CKD stage 3, prior cholecystectomy, hypertriglyceridemia, autoimmune pancreatitis, alcohol use disorder, and smoking.\n\nObjective: Physical exam shows mild epigastric tenderness; abdomen soft, non‑distended, no rebound. Post‑procedure labs: creatinine 2.6 mg/dL, BUN 48 mg/dL, bilirubin 1.2 mg/dL. Blood cultures from percutaneous catheter grew Enterococcus faecium.\n\nAssessment: The patient is in septic shock secondary to Enterococcus faecium bacteremia originating from the biliary tree post‑ERCP with sphincterotomy and stent placement. Acute kidney injury (CKD stage 3) is now worsening (creatinine 2.6) likely due to contrast nephropathy, sepsis‑induced ATN, and nephrotoxic antibiotics. Mild elevation in bilirubin may reflect residual biliary obstruction or cholangitis. The patient’s moderate epigastric pain and pancreatic imaging suggest ongoing pancreatitis with adjacent fluid collection.\n\nDifferential Diagnoses:\n1. Post‑ERCP cholangitis with bacteremia\n2. Sepsis‑induced shock (Enterococcus faecium)\n3. Acute pancreatitis exacerbation (autoimmune or alcohol‑related)\n4. Contrast‑induced acute kidney injury/ATN\n5. Vancomycin‑related nephrotoxicity\n\nPlan:\n- Continue vancomycin 1 g IV q12h with trough monitoring (target 15–20 mg/L) to cover Enterococcus; adjust dose per renal function.\n- Maintain insulin infusion at 10 U/h; titrate to maintain glucose 140–180 mg/dL; consider transition to subcutaneous basal‑bolus once hemodynamic stability achieved.\n- Continue Lactated Ringer’s 150 mL/h and albumin 20 g IV bolus to maintain oncotic pressure; target urine output &gt;0.5 mL/kg/h.\n- Daily labs: CBC, CMP (including BUN/Cr), CRP, lipase, coagulation panel, vancomycin trough.\n- Repeat abdominal CT or MRI in 48–72 h to assess pancreatic necrosis and fluid collections; consider percutaneous drainage if enlarging.\n- Monitor bilirubin trend; if persistent &gt;2 mg/dL or clinical cholangitis signs, consider repeat ERCP or endoscopic ultrasound‑guided drainage.\n- Hold prednisone 15 mg daily and azathioprine 150 mg daily until infection resolves; re‑evaluate immunosuppression once cultures clear.\n- Consult nephrology for potential initiation of renal replacement therapy if oliguria or rising creatinine persists.\n- Maintain NPO until gastrointestinal function improves; advance diet as tolerated.\n- Consider re‑introducing prophylactic antibiotics only if clinically indicated; discontinue piperacillin‑tazobactam after culture sensitivity confirms vancomycin monotherapy is adequate.\n- Educate patient and family on signs of worsening infection (fever spike, worsening pain, decreased urine output) and when to call the team.\n\nDisposition: Continue ICU monitoring with aggressive sepsis management, renal support, and infection control. Once stable, plan for outpatient follow‑up in 7‑10 days, and arrange for repeat imaging and lab assessment prior to stent removal.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">moderate epigastric discomfort</span><span class="pill">no vomiting</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>80/45</td></tr><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>28</td></tr><tr><td>Temp</td><td>37.9</td></tr><tr><td>SpO2</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness mild</li><li>abdomen soft</li><li>no rebound</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>blood cultures</li><li>serum creatinine</li><li>BUN</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>creatinine 2.6 mg/dL</li><li>BUN 48 mg/dL</li><li>blood culture Enterococcus faecium</li><li>bilirubin 1.2 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>ERCP with sphincterotomy and 10 Fr stent</li><li>vancomycin 1 g q12h</li><li>insulin infusion 10 U/h</li><li>albumin 20 g</li><li>continue fluid resuscitation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved, but patient remained drowsy with low urine output.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>ERCP with sphincterotomy and placement of a 10 Fr plastic stent relieved bile duct obstruction; sludge was aspirated but no stones removed. Post‑procedure labs showed worsening renal function: creatinine 2.6 mg/dL, BUN 48 mg/dL, bilirubin 1.2 mg/dL. Blood cultures from the percutaneous catheter grew Enterococcus faecium. Antibiotics were switched to vancomycin, and insulin infusion was increased to 10 U/h. Albumin was administered to address oncotic deficits.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑ERCP complications: acute kidney injury, bacteremia with Enterococcus, ongoing necrosis.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-03-29</h3><div class="visit-meta">Intensive Care Medicine | Reason: Respiratory deterioration, ARDS onset</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Respiratory deterioration with ARDS onset
+
+**History of Present Illness:**
+The patient is a 55‑year‑old male with a history of type 2 diabetes mellitus, obesity (BMI 33), CKD stage 3, autoimmune pancreatitis, alcohol use disorder, and smoking dependence. On ICU day 3 the patient developed sudden worsening dyspnea, requiring 10 L/min O₂ to maintain SpO₂ ≈ 84%. A chest X‑ray revealed new, bilateral alveolar infiltrates and arterial blood gas (PaO₂ 45 mmHg on FiO₂ 0.6) confirmed acute hypoxemia, meeting Berlin criteria for moderate ARDS. He was intubated and placed on a lung‑protective ventilation strategy (tidal volume 6 mL/kg predicted body weight, plateau pressure &lt;30 cm H₂O). Prone positioning was initiated, and albumin 25 g was given. Broad‑spectrum antibiotics were escalated to vancomycin plus daptomycin 6 mg/kg for coverage of Enterococcus faecium bacteremia identified on a recent blood culture, and an insulin infusion was up‑titrated to 12 U/h to control hyperglycemia (glucose 180‑250 mg/dL).
+
+**Review of Systems:**
+- **Respiratory:** dyspnea, increased O₂ requirement, hypoxia
+- **GI:** mild epigastric pain, NPO
+- **Constitutional:** Fever (38.0 °C), tachycardia, hypotension
+- **General:** No new rash or neurologic deficits noted
+
+**Vitals (Day 3):**
+- BP: 85/50 mmHg
+- HR: 120 bpm
+- RR: 30 breaths/min
+- Temp: 38.0 °C
+- SpO₂: 84% on 10 L/min oxygen
+
+**Physical Examination:**
+- **Airway:** Intubated, cuff pressure 30 cm H₂O
+- **Breathing:** Bilateral crackles, tachypnea, use of accessory muscles
+- **Circulation:** Tachycardic, weak radial pulses
+- **Extremities:** No peripheral edema
+- **Skin:** Warm, mottled, no rashes
+
+**Lab Findings (Day 3):**
+- PaO₂ 45 mmHg on FiO₂ 0.6
+- Bilateral alveolar infiltrates on chest X‑ray
+- Lactate 5.8 mmol/L
+- WBC 20 000/mm³
+- Creatinine 2.6 mg/dL, BUN 48 mg/dL
+- Positive Enterococcus faecium bacteremia
+
+**Assessment:**
+1. **Severe Acute Respiratory Distress Syndrome (ARDS)** secondary to septic shock from Enterococcus faecium bacteremia likely stemming from post‑ERCP site
+2. **Septic shock** – persistent hypotension requiring vasopressor support (not described but implied by BP)
+3. **Acute kidney injury** (Stage 3 CKD with acute rise in creatinine)
+4. **Hyperglycemia** secondary to stress and steroid holding
+5. Background **autoimmune pancreatitis** – possible source of septic complications, though current imaging shows resolving necrosis and peripancreatic fluid
+
+**Plan:**
+- Continue lung‑protective ventilation (tidal volume 6 mL/kg, PEEP titrated via FiO₂ curve); monitor plateau and driving pressures
+- Maintain prone positioning sessions 16 h/day until weaned or ARDS resolution
+- Keep insulin infusion at 12 U/h; obtain daily glucose checks; aim CGM 140‑180 mg/dL
+- Continue vancomycin and daptomycin as per infectious disease consult; adjust daptomycin dose to 6 mg/kg q24h (renal dosing)
+- Daily CBC, CMP, lactate; obtain cultures (blood, sputum, any wound if applicable) every 24 h
+- Evaluate renal function; consider continuous renal replacement therapy if oliguria &lt;400 mL/day or refractory metabolic acidosis
+- Continue albumin 25 g/day; hold prednisone and azathioprine until infection resolves
+- Vasopressor titration to maintain MAP ≥65 mmHg
+- Daily assessment for extubation readiness (muscle strength, oxygenation, hemodynamic stability)
+- Re‑evaluate abdominal imaging if pancreatitis complications recur; coordinate with GI for potential ERCP if obstructive cholestasis persists
+- Initiate early enteral nutrition when hemodynamics permit; consult dietitian
+- Provide alcohol cessation counseling and arrange addiction support
+- Family updates and goals of care discussion given multi‑organ involvement
+
+**Follow‑Up Recommendations:**
+- Continue ICU monitoring with frequent reassessment; anticipate possible escalation to mechanical ventilation challenges or ECMO if refractory hypoxemia
+- Nephrology consult for dialysis planning if creatinine &gt;4 mg/dL or fluid overload
+- Infectious disease follow‑up for antibiotic stewardship and duration monitoring
+- GI follow‑up for pancreatitis management; monitor lipase, triglycerides, and imaging
+- Psychiatric and social work referral for alcohol use disorder
+- Discharge planning once stable with step‑down to general ward and functional recovery
+
+---
+**Physician Signature:**
+[ICU MD]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dyspnea</span><span class="pill">increased oxygen requirement</span><span class="pill">hypoxia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>85/50</td></tr><tr><td>HR</td><td>120</td></tr><tr><td>RR</td><td>30</td></tr><tr><td>Temp</td><td>38.0</td></tr><tr><td>SpO2</td><td>84% on 10L/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>bilateral crackles</li><li>tachypnea</li><li>respiratory distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ABG</li><li>Chest X‑ray</li><li>Lactate</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PaO₂ 45 mmHg on FiO₂ 0.6</li><li>bilateral alveolar infiltrates</li><li>lactate 5.8 mmol/L</li><li>WBC 20,000/mm³</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>intubation, lung protective ventilation</li><li>prone positioning</li><li>albumin 25 g</li><li>vancomycin</li><li>daptomycin 6 mg/kg</li><li>insulin infusion 12 U/h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Respiratory status stabilized with plateau pressures &lt;30, but remained hypoxic; glucose ranged 180‑250 mg/dL.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On day 3, Thomas developed sudden respiratory distress with bilateral infiltrates on chest X‑ray and a PaO₂ of 45 mmHg on FiO₂ 0.6, fulfilling ARDS criteria. He was intubated and placed on a lung‑protective strategy (tidal volume 6 mL/kg PBW, plateau pressure &lt; 30 cm H₂O). Prone positioning and albumin 25 g were initiated. Antibiotics were broadened to include vancomycin and daptomycin 6 mg/kg. Insulin infusion was increased to 12 U/h to manage hyperglycemia.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Septic shock progressing to ARDS; multiorgan failure; insulin requirement escalating; Enterococcus infection persistent.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-03-30</h3><div class="visit-meta">Interventional Radiology | Reason: Percutaneous drainage of infected necrotic collection</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+The patient is a 55‑year‑old male with known type 2 diabetes mellitus, obesity, CKD stage 3, autoimmune pancreatitis, alcohol use disorder, and smoking history. On this visit the patient reported persistent abdominal pain in the epigastric region and a continuous fever. He denied new chest pain, dyspnea, or vomiting.
+
+**Objective:**
+Vital signs: BP 90/58 mmHg, HR 120 bpm, RR 28/min, Temp 38.2°C, SpO₂ 88% on 4 L nasal cannula. Physical exam: moderate epigastric tenderness, abdomen soft, no guarding or rebound. Abdomen otherwise non‑distended. Cardiac exam normal S1/S2, no murmurs. Respiratory exam shows basal crackles bilaterally.
+
+Labs (last CBC): WBC 22,000/mm³ with left shift, Hb 9.0 g/dL, Hct 27%, platelets 140,000/mm³. Electrolytes: K 5.2 mmol/L, Na 130 mmol/L. BUN 50 mg/dL, Creatinine 2.8 mg/dL. Albumin 2.8 g/dL. CRP 140 mg/L (↑). Lipase 1,300 U/L. Blood cultures pending.
+
+**Intervention:**
+Under CT‑guided image guidance, two 14 Fr bilateral percutaneous pigtail drains were inserted into the peripancreatic necrotic collection. Drain output: foul‑smelling purulent fluid, 800 mL/day initially, gradually decreasing. Drain output cultures grew Enterococcus faecium, sensitive to vancomycin and daptomycin. The patient remained critically ill; he is on mechanical ventilation with lung‑protective strategy, prone positioning, vasopressor support (norepinephrine titrated to maintain MAP ≥65 mmHg), and continuous renal replacement therapy (CRRT) via CVVH. Insulin infusion at 12 U/h to maintain glucose 140–180 mg/dL. Ongoing anti‑infectives: vancomycin 1 g IV q12h, daptomycin 6 mg/kg IV q24h.
+
+**Assessment:**
+1. Infected pancreatic necrosis with bilaterally draining peripancreatic abscesses; current cultures remain Enterococcus faecium.
+2. Persistent septic shock secondary to intra‑abdominal source; fever, tachycardia, hypotension, leukocytosis.
+3. Acute kidney injury on CKD 3, likely due to sepsis and fluid shifts; ongoing CRRT.
+4. Diabetes mellitus with hyperglycemia requiring insulin.
+5. Respiratory failure/ARDS secondary to septic shock; currently ventilated.
+
+**Plan:**
+1. Continue percutaneous drainage and monitor output volume and character; consider upsizing or repositioning if output &lt;200 mL/day for 48 h.
+2. Maintain broad‑spectrum coverage with vancomycin + daptomycin; add levofloxacin 750 mg IV q24h for additional gram‑negative coverage while awaiting full susceptibility.
+3. Daily CBC, CMP, CRP, lactate; monitor blood cultures every 48 h until clearance.
+4. Continue CRRT; adjust bicarbonate and electrolytes; consider dialysis escalation if oliguria &lt;300 mL/day or refractory acidosis.
+5. Maintain vasopressor titration to MAP ≥65 mmHg; evaluate for early removal when MAP stable &gt;65 mmHg for &gt;24 h.
+6. Continue insulin infusion, titrate to 140–180 mg/dL glucose goal.
+7. Initiate early enteral nutrition via nasoenteric tube when hemodynamics permit; target 20 kcal/kg.
+8. Re‑evaluate for surgical debridement if no clinical or radiographic improvement within 7 days.
+9. Consult infectious disease for antibiotic stewardship review; nephrology for dialysis management; pulmonary critical care for ARDS management; gastroenterology for ongoing pancreatitis follow‑up.
+10. Reinstate prednisone 15 mg PO and azathioprine 150 mg PO only after repeat negative cultures and stable sepsis control.
+11. Continue alcohol cessation counseling and addiction support.
+12. Discontinue antibiotics after 4–6 weeks per ID recommendation if cultures remain sterile.
+
+**Follow‑up Recommendations:**
+- Repeat contrast abdominal CT in 48–72 h to assess collection size and drain position.
+- Daily multidisciplinary ICU rounds.
+- Plan step‑down to general medical floor when hemodynamics stable, infection controlled, and weaned from vasopressors.
+- Outpatient follow‑up with GI 4 weeks post‑discharge; nephrology 2 weeks post‑discharge.
+- Reassess immunosuppressive therapy schedule after infection resolution.
+- Provide continued psycho‑social support for alcohol use disorder.
+
+---
+**Signature:**
+Dr. X, Interventional Radiology
+2026‑03‑30
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">abdominal pain persists</span><span class="pill">fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>90/58</td></tr><tr><td>HR</td><td>120</td></tr><tr><td>RR</td><td>28</td></tr><tr><td>Temp</td><td>38.2</td></tr><tr><td>SpO2</td><td>88%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness moderate</li><li>abdomen soft</li><li>no guarding</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>culture of drain output</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>drain culture Enterococcus faecium</li><li>WBC 22,000/mm³</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>percutaneous drainage 14 Fr bilateral</li><li>vancomycin</li><li>daptomycin 6 mg/kg</li><li>insulin infusion 12 U/h</li><li>continue CVVH</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain decreased, drainage output improved, but persistent fever and leukocytosis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under image guidance two 14 Fr pigtail drains were inserted into the peripancreatic collection. The output was foul‑smelling purulent fluid; cultures again grew Enterococcus faecium. Antibiotics remained vancomycin plus daptomycin. Insulin infusion was maintained at 12 U/h; CRRT was continued. The patient noted decreased abdominal discomfort after drainage, but remained febrile.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Infected necrosis draining, but bloodstream infection persists; fluid status being monitored.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-03-31</h3><div class="visit-meta">Nephrology | Reason: Initiate continuous venovenous hemofiltration due to AKI/anuria</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of continuous venovenous hemofiltration (CVVH) for acute kidney injury with anuria.
+
+History of Present Illness:
+55‑year‑old male with multiple comorbidities (type 2 diabetes, obesity BMI 33, CKD stage 3, autoimmune pancreatitis, alcohol use disorder, smoking) presents with worsening renal function. Over the past 48 h, serum creatinine rose to 3.2 mg/dL, BUN 60 mg/dL, and the patient has remained anuric for &gt;12 h. He is in septic shock secondary to Enterococcus faecium bacteremia and post‑ERCP cholangitis, has been on vasopressor support (norepinephrine) and broad‑spectrum antibiotics. Fluid overload is evident with lower‑extremity edema. Given the persistent anuria, rising BUN/creatinine, metabolic acidosis (bicarbonate low, lactate 4 mmol/L) and hemodynamic instability, the decision was made to initiate CVVH.
+
+Physical Exam:
+BP 80/55 mmHg, HR 100 bpm, RR 24 /min, Temp 37.8 °C, SpO₂ 95 % on FiO₂ 0.4. Bilateral lower‑extremity pitting edema. Abdomen soft, mild crepitus. No gross hematuria.
+
+Impression and Differential:
+1. Acute tubular necrosis (ATN) secondary to septic shock and nephrotoxic medications (vancomycin, daptomycin, contrast). 2. Pre‑renal azotemia from volume depletion/vasopressor use. 3. Post‑contrast acute interstitial nephritis. 4. Oliguric acute kidney injury from pancreatitis‑associated splanchnic vasoconstriction. 5. Possible drug‑induced nephrotoxicity from high‐dose antibiotics.
+
+Plan:
+— CVVH started continuous 2 h/day with bicarbonate buffer to correct acidosis.
+— Antibiotic dosing modified: vancomycin 1 g IV q12h (dose‑reduced for Crcl), daptomycin 6 mg/kg IV q24h, meropenem 1 g IV q8h added.
+— Insulin infusion maintained at 12 U/h; glucose monitoring q1 h.
+— Albumin 20 g IV bolus to maintain oncotic pressure.
+— Continued vasopressor (norepinephrine) to maintain MAP ≥65 mmHg.
+— Daily labs: serum creatinine, BUN, electrolytes, CBC, lactate; urine output.
+— Monitor dialysis filter performance (change as per protocol or if clotting occurs).
+— Evaluate renal function every 24 h; if creatinine &gt;4.5 mg/dL or oliguria &lt;200 mL/24 h, continue CRRT. If improvement, wean gradually.
+— Infection control: obtain repeat cultures of drain output and blood; adjust antibiotics per susceptibility.
+— Nutrition: early enteral feeding when tolerated.
+— Consult ICU for continued monitoring of ARDS, vasopressor weaning.
+— Schedule repeat abdominal CT in 48–72 h to assess necrosis, drain output.
+
+Disposition: Patient remains in ICU on CRRT, vasopressors, broad‑spectrum antibiotics. Nephrology team will re‑evaluate on day 2 for dialysis adjustment and consider step‑down of renal replacement as indicated.
+
+Follow‑up: Daily labs, hemodynamic monitoring, dialysis adequacy, infection status, nutritional assessment. Transition to outpatient nephrology follow‑up when discharged.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">anuria</span><span class="pill">fluid overload</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>80/55</td></tr><tr><td>HR</td><td>100</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>Temp</td><td>37.8</td></tr><tr><td>SpO2</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>edema lower limbs</li><li>crepitus mild</li><li>abdomen soft</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>serum creatinine</li><li>BUN</li><li>lactate</li><li>urine output</li><li>dialysis filter change</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>creatinine 3.2 mg/dL</li><li>BUN 60 mg/dL</li><li>lactate 4.0 mmol/L</li><li>urine output 0 ml/24h</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CVVH continuous 2 h/day</li><li>meropenem 1 g q8h</li><li>vancomycin adjustment</li><li>daptomycin 6 mg/kg</li><li>insulin infusion 12 U/h</li><li>albumin 20 g</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable hemodynamics on vasopressors; urine output remained zero.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>With creatinine rising to 3.2 mg/dL, BUN 60 mg/dL, and anuria for &gt;12 h, continuous venovenous hemofiltration (CVVH) was started. Dialysis settings were adjusted to deliver bicarbonate buffer for metabolic acidosis. Vancomycin and daptomycin doses were reduced for renal clearance; meropenem 1 g q8h was administered. Insulin infusion remained at 12 U/h, and albumin 20 g was given to support oncotic pressure.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progressive renal failure requiring CVVH; ongoing infection; metabolic acidosis persistent.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2026-04-01</h3><div class="visit-meta">Radiology | Reason: Reassessment and evaluation of pancreas necrosis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Date: 2026‑04‑01
+
+Chief Complaint: Reassessment of imaging findings in a 55‑year‑old male with persistent necrotizing pancreatitis and septic shock.
+
+History of Present Illness: The patient has had a prolonged ICU course for severe acute pancreatitis complicated by septic shock from Enterococcus faecium, AKI stage 4 on continuous venovenous hemofiltration, and drug‑induced immunosuppression (prednisone/azathioprine held). He remains NPO, on broad‑spectrum antibiotics, vasoactive support, insulin infusion, and albumin. He reports persistent epigastric pain despite analgesia, and his transaminases have risen markedly (AST 540 U/L, ALT 620 U/L, bilirubin 0.9 mg/dL). A repeat contrast CT was performed on 2026‑03‑30, showing persistent pancreatic necrosis with no new fluid collections.
+
+Past Medical History: Type 2 diabetes mellitus, obesity BMI 33, CKD stage 3, hypertriglyceridemia, autoimmune pancreatitis, alcohol use disorder, current smoker, prior cholecystectomy.
+
+Medications: Metformin, intermittent insulin, prednisone 15 mg/day (held), azathioprine 150 mg/day (held). Current ICU meds: Meropenem 1 g q6h, vancomycin (dose adjusted per troughs), daptomycin 6 mg/kg q24h, insulin infusion 12 U/h, albumin 20 g IV, continuous venovenous hemofiltration, norepinephrine to maintain MAP ≥65 mmHg.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for persistent epigastric pain, negative for new fever.
+
+Physical Examination: Vitals—BP 85/60 mmHg, HR 102 bpm, RR 22/min, Temp 37.9 °C, SpO₂ 95 % on 1 L O₂. Abdomen soft, mild epigastric tenderness, no guarding or rebound. Skin warm, no rash. Respiratory: No wheezes, mild bibasilar crackles. Cardiovascular: Tachycardic, normal S1–S2, no murmurs.
+
+Imaging Findings: Contrast CT (2026‑03‑30): Persistent necrotic pancreatic mass (~6 cm) with minimal peripancreatic fluid, no new collections. No biliary obstruction.
+
+Assessment:
+1. Persistent necrotizing pancreatitis with probable infected necrosis.
+2. Acute liver injury (transaminitis) likely multifactorial—sepsis‑induced hypoperfusion, drug toxicity, alcohol contribution.
+3. Persistent septic shock secondary to Enterococcus faecium.
+4. Acute kidney injury stage 4 on CRRT.
+5. Ongoing abdominal pain; unclear source—pancreatic vs. hepatic vs. drug‑related.
+
+Plan:
+1. Continue meropenem 1 g q6h, vancomycin (dose adjusted by troughs), daptomycin 6 mg/kg q24h.
+2. Monitor LFTs daily; consider hepatology consult if AST/ALT &gt;2× baseline or bilirubin trends upward.
+3. Repeat CT abdomen with contrast in 48–72 h to assess necrosis evolution and fluid status.
+4. If imaging shows enlarging collection or persistent infection with clinical deterioration, arrange IR‑guided percutaneous drainage or surgical necrosectomy.
+5. Continue CRRT; wean as renal function improves. Maintain urine output monitoring, electrolytes, and fluid balance.
+6. Maintain insulin infusion 12 U/h; titrate based on glucose targets.
+7. Continue albumin 20 g IV; re‑dose if serum albumin &lt;3.0 g/dL.
+8. Maintain vasoactive support to sustain MAP ≥65 mmHg.
+9. NPO; initiate early enteral nutrition when hemodynamically stable.
+10. Adequate analgesia with IV opioids as needed.
+11. Alcohol cessation counseling and addiction consult.
+12. Multidisciplinary ICU rounds; daily labs (CBC, CMP, lipase, triglycerides, cultures).
+
+Follow‑Up Recommendations: Continue ICU monitoring; repeat imaging as outlined; consult interventional radiology for drainage if indicated; surgical review for debridement if IR drainage fails; hepatology consult for worsening liver enzymes; schedule outpatient follow‑up with GI, nephrology, and psychiatry once stabilized.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent abdominal pain</span><span class="pill">no new fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>85/60</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>37.9</td></tr><tr><td>SpO2</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>epigastric tenderness mild</li><li>abdomen soft</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen with contrast</li><li>Liver function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AST 540 U/L</li><li>ALT 620 U/L</li><li>bilirubin 0.9 mg/dL</li><li>CT: necrosis persisted</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>switch to meropenem 1 g q6h</li><li>adjust vancomycin</li><li>continue daptomycin</li><li>continue CVVH</li><li>insulin infusion 12 U/h</li><li>albumin 20 g</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No pain improvement; stable hemodynamics; worsening transaminases.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Contrast CT showed persistent necrosis and no new fluid collections. Liver enzymes were markedly elevated: AST 540 U/L, ALT 620 U/L, bilirubin 0.9 mg/dL. Antibiotics were switched to meropenem 1 g q6h. Vancomycin dosing was adjusted, daptomycin continued, and CVVH ongoing. Insulin infusion was held at 12 U/h to avoid further hypoglycemia.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pancreatic necrosis persistent; hepatic injury from sepsis; infection still uncontrolled.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2026-04-02</h3><div class="visit-meta">Palliative Care | Reason: Discussion of goals of care, family meeting</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Clinical Note
+
+Visit #: 10
+Date: 2026-04-02
+Specialty: Palliative Care
+
+Chief Complaint: Family meeting to review goals of care and disease trajectory.
+
+History of Present Illness:
+The patient is a 55‑year‑old male with a complex medical history including type 2 diabetes mellitus, CKD stage 3, obesity (BMI 33), hypertriglyceridemia, autoimmune pancreatitis, alcohol use disorder, and a history of smoking. He remained in the ICU with persistent multiorgan failure secondary to severe pancreatitis complicated by septic shock from Enterococcus faecium. The current ICU course includes mechanical ventilation, continuous venovenous hemofiltration, vasopressor support (norepinephrine), insulin infusion, broad‑spectrum antibiotics, and percutaneous drainage of a necrotic pancreatic collection.
+
+A family and interdisciplinary meeting was held with the ICU team, nephrology, cardiology, and palliative care consultants. The consensus decision was to retain full life‑support measures and re‑evaluate daily, but to prepare for an eventual transition to comfort‑only care should the patient’s condition continue to deteriorate.
+
+Review of Systems: No new symptoms reported; patient is calm but weak.
+
+Physical Examination: Vital signs stable within ICU parameters: BP 78/55, HR 95, RR 24, Temp 37.8 °C, SpO₂ 94 %. No new deficits noted.
+
+Assessment:
+1. Persistent severe pancreatitis with necrosis and fluid collection causing septic shock.
+2. Multiorgan failure (renal, hepatic, respiratory) secondary to sepsis and ongoing inflammation.
+3. Complicated by Enterococcus faecium bacteremia and broad‑spectrum antibiotic therapy.
+4. Current goals of care remain to maintain life support with a contingency plan for comfort care.
+
+Plan:
+- Continue ICU support: vasopressors (norepinephrine titrated to MAP ≥ 65 mmHg), mechanical ventilation, and continuous venovenous hemofiltration; monitor urine output and laboratory trends.
+- Maintain insulin infusion; titrate to maintain euglycemia.
+- Continue current antibiotic regimen: vancomycin, daptomycin, meropenem, levofloxacin, piperacillin‑tazobactam.
+- Hold immunosuppressive agents (prednisone, azathioprine) permanently due to infection risk.
+- Daily review of goals of care with family; update DNR/DNI status as appropriate.
+- Prepare for comfort‑only care: initiate opioid for pain control, anti‑emetics, and consider non‑invasive ventilation or oxygen as needed.
+- Continue percutaneous drainage monitoring; adjust based on output and culture results.
+- Document all interventions and family discussions in the chart.
+
+Follow‑up Recommendations:
+1. Daily multidisciplinary ICU rounds to reassess patient status and goals of care.
+2. Prompt communication with family every shift; provide updates on organ function and prognosis.
+3. If further organ failure ensues or patient becomes refractory to support, transition to comfort care per advance directives.
+4. Palliative care to manage pain, dyspnea, and psychosocial needs daily.
+5. Post‑ICU plan: If clinically stable, anticipate transfer to step‑down unit with ongoing supportive care.
+
+Signed: ____________________
+
+Attending Palliative Care Specialist</div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>78/55</td></tr><tr><td>HR</td><td>95</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>Temp</td><td>37.8</td></tr><tr><td>SpO2</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>stable</li><li>no new deficits</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>continue ICU support</li><li>maintain vasopressors</li><li>continue antibiotics</li><li>continue dialysis</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Family supportive, patient calm but weak.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A family meeting was held to discuss prognosis and goals of care. The ICU team, palliative care specialist, nephrologist, and cardiology consultant reviewed the patient’s trajectory. The decision was to continue life-support measures and re‑evaluate daily, but to prepare for potential transition to comfort care if conditions continued to worsen.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multiorgan failure ongoing; decision to maintain life support pending potential recovery; but high likelihood of death.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2026-04-03</h3><div class="visit-meta">Intensive Care Medicine | Reason: Declaration of death following refractory organ failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">ICU Clinical Note – Patient 55‑year‑old male with complex multi‑organ failure.
+
+Chief Complaint/Reason for Current Visit: Declaration of death following refractory organ failure;
+
+Encounter Summary: On the morning of 2026‑04‑03, after a prolonged ICU course marked by refractory multi‑organ failure, the patient’s family elected to transition to comfort‑only care. Institutional guidelines for end‑of‑life care were followed: palliative sedation was instituted, all invasive mechanical ventilation and continuous venovenous hemofiltration were withdrawn, and the patient expired at 08:30 h. The death declaration was formalized by the ICU attending.
+
+Past Relevant History (briefed):
+- Alcohol use disorder, chronic liver disease
+- Gallstone disease with cholangitis
+- Hypertriglyceridemia, severe triglyceride‑mediated pancreatitis
+- Chronic kidney disease stage 3–4
+- Diabetes mellitus type 2 (on metformin and intermittent insulin)
+- Obesity, smoking
+- Acute kidney injury (AKI), acute tubular necrosis (ATN)
+- Septic shock secondary to Enterococcus faecium bacteremia
+- Post‑ERCP cholangitis
+- Acute respiratory distress syndrome (ARDS)
+- Acute liver injury, transaminitis
+
+Prior ICU Course (summarized from visits 4‑10):
+- Severe pancreatitis with necrotizing pancreatitis and large peripancreatic fluid collections.
+- Recurrent septic shock with multi‑organ dysfunction: renal failure requiring CRRT, respiratory failure requiring mechanical ventilation and prone positioning, hepatic dysfunction.
+- Broad‑ spectrum antimicrobial therapy (meropenem, vancomycin, daptomycin, levofloxacin, piperacillin‑tazobactam) guided by cultures.
+- Immunosuppressives (prednisone, azathioprine) permanently withheld.
+- Interventional procedures: ERCP, percutaneous drainage of necrotic collections.
+
+Current Physical Assessment (at time of death):
+- Fixed dilated pupils
+- Flat pulse
+- Absence of respirations
+
+Vital Signs: Not recorded at time of death.
+
+Investigations Ordered: None (patient expired).
+
+Past Labs at death: AST 540 U/L, ALT 620 U/L; creatinine 2.6 mg/dL; BUN 48 mg/dL; bilirubin 1.2 mg/dL.
+
+Assessment: The patient suffered irreversible multi‑organ failure secondary to severe pancreatitis complicated by necrotizing infection, septic shock from Enterococcus faecium bacteremia, and multi‑system organ injury (renal, hepatic, respiratory). The decision to transition to comfort care was made after extensive family discussion, review of prognosis, and acknowledgment that ongoing life‑sustaining interventions would not alter the ultimate outcome.
+
+Plan: None – patient expired. The family was offered bereavement support and the hospital’s palliative care team was notified for bereavement follow‑up.
+
+Disposition: Patient deceased, death documentation completed.
+
+Documentation was performed in accordance with ICU protocol and hospital policy regarding end‑of‑life care.
+
+Prepared by: [ICU Attending Name], Intensive Care Medicine.
+
+</div></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>fixed dilated pupils</li><li>flat pulse</li><li>absence of breathing</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>palliative sedation</li><li>discontinuation of all active treatments</li><li>withdrawal of invasive support</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>N/A</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">type 2 diabetes mellitus</span><span class="pill">obesity BMI 33</span><span class="pill">CKD stage 3</span><span class="pill">previous cholecystectomy</span><span class="pill">hypertriglyceridemia</span><span class="pill">autoimmune pancreatitis</span><span class="pill">alcohol use disorder</span><span class="pill">smoking</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>intermittent insulin</li><li>prednisone 15 mg/day (held)</li><li>azathioprine 150 mg/day (held)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>type 2 diabetes mellitus</li><li>obesity BMI 33</li><li>CKD stage 3</li><li>previous cholecystectomy</li><li>hypertriglyceridemia</li><li>autoimmune pancreatitis</li><li>alcohol use disorder</li><li>smoking</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On the morning of April 3rd, after refractory organ failure and no improvement over several days, the family elected to transition to comfort care. Palliative sedation was instituted, all invasive mechanical ventilation and dialysis support were withdrawn, and the patient passed away at 08:30 h. The death declaration was formalized by the ICU attending.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Death declared. No further active treatment. Case closed.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Alcohol use disorder</span><span class="pill">Gallstone disease</span><span class="pill">Hypertriglyceridemia</span><span class="pill">Chronic kidney disease</span><span class="pill">Diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">Smoking</span><span class="pill">Autoimmune pancreatitis</span><span class="pill">Acute kidney injury</span><span class="pill">Septic shock</span><span class="pill">Enterococcus faecium bacteremia</span><span class="pill">Post-ERCP cholangitis</span><span class="pill">Acute pancreatitis exacerbation</span><span class="pill">Acute respiratory distress syndrome</span><span class="pill">Infected pancreatic necrosis</span><span class="pill">Pancreatic abscess</span><span class="pill">Acute tubular necrosis</span><span class="pill">Acute liver injury</span><span class="pill">Chronic liver disease</span></div></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>55yo male with acute epigastric pain radiating to back, nausea and vomiting. Vitals BP 110/65, HR 90, RR 18, Temp 36.8. Physical exam: epigastric tenderness. Labs: lipase 260 U/L, triglycerides 350 mg/dL, BUN 32 mg/dL, creatinine 1.8 mg/dL, glucose 280 mg/dL. Ultrasound: post‑cholecystectomy, sludge in ducts, dilated common bile duct 8 mm. Admitted for acute pancreatitis; started IV normal saline 3L/24h, insulin infusion 0.1 U/kg/hr, ondansetron 4 mg IV q8h, NPO status, pending CT abdomen and possible ERCP.</li><li>Follow‑up after 48–72 h inpatient observation.</li><li>Follow‑up gastroenterology visit on 2026‑03‑25: mild epigastric pain and improved nausea; CT abdomen with contrast shows slightly swollen pancreas, mild peripancreatic fat stranding, mild common bile duct dilation. Labs trending downward: lipase 180 U/L, triglycerides 275 mg/dL, BUN 28 mg/dL, creatinine 1.7 mg/dL, glucose 260 mg/dL. Continuing IV fluids, insulin infusion, prednisone 15 mg daily, azathioprine 150 mg daily, low‑carbohydrate diet and clear liquids as tolerated, ondansetron PRN. Plan for repeat laboratory tests (lipase, triglycerides, CMP, CRP, ESR) and possible imaging if CBD remains dilated. Outpatient gastroenterology follow‑up in 7 days.</li><li>2026‑03‑26 ICU admission for acute deterioration with severe epigastric pain, fever, hypotension. Labs: lipase 1,260 U/L, triglycerides 1,020 mg/dL, WBC 18,000/µL, CRP 130 mg/L. Initiated IV lactated Ringer&#x27;s 150 mL/h, insulin infusion 0.1 U/kg/hr, piperacillin‑tazobactam 4.5 g IV q6h. Prednisone and azathioprine held. Continuous monitoring with daily labs (CBC, CMP, lipase, triglycerides, CRP, cultures). Plan for ERCP once hemodynamically stable, with nephrology consult for CKD monitoring.</li><li>Repeat contrast CT showed marked pancreatic enlargement with hypodense necrotic areas in the head and body, a 5x4 cm peripancreatic fluid collection near the tail, and a dilated CBD 8 mm with suspected sludge. Patient remained in ICU with severe epigastric pain and hemodynamic instability; management included continued insulin infusion, lactated Ringer&#x27;s, broad‑scope antibiotics, planned urgent ERCP when stable, daily labs, renal monitoring, NPO status, and suspension of prednisone and azathioprine.</li><li>2026‑03‑28: Post‑ERCP ICU assessment. Patient in septic shock with Enterococcus faecium bacteremia. Labs: creatinine 2.6, BUN 48, bilirubin 1.2. Initiated vancomycin 1 g IV q12h, insulin infusion 10 U/h, albumin 20 g IV bolus, continued lactated Ringer’s 150 mL/h. Hold prednisone/azathioprine; continue monitoring labs, consider dialysis if oliguria. Repeat imaging in 48–72 h. NPO maintained until GI function improves.</li><li>2026‑03‑29: Intubated for moderate ARDS secondary to septic shock from Enterococcus faecium bacteremia; intubated with lung‑protective ventilation and prone positioning. Started vasopressor support to maintain MAP ≥65 mmHg. Insulin infusion titrated to 12 U/h. Added daptomycin 6 mg/kg IV q24h. Administered albumin 25 g IV daily. Ongoing vancomycin and broad‑scope antibiotics. Daily labs and cultures obtained; renal function monitored; continuous renal replacement therapy considered if oliguria &lt;400 mL/day or refractory acidosis. Early enteral nutrition to be initiated when hemodynamics permit. Alcohol cessation counseling and addiction support arranged. Follow‑up with ICU monitoring, nephrology, infectious disease, GI, and psychiatry.</li><li>2026‑03‑30: Interventional radiology percutaneous drainage of peripancreatic necrotic collection; ongoing vasopressor support with norepinephrine; continued CRRT and insulin infusion; broad‑scope antibiotics vancomycin, daptomycin; levofloxacin added; culture of drain output grew Enterococcus faecium; plan to monitor drainage output, adjust antibiotics, maintain support, repeat CT in 48–72 h.</li><li>2026‑03‑31: Nephrology visit – initiated continuous venovenous hemofiltration for anuric acute kidney injury secondary to septic shock. Continued broad‑scope antibiotics including vancomycin, daptomycin, meropenem, levofloxacin, piperacillin‑tazobactam. Insulin infusion maintained at 12 U/h; albumin 20 g IV bolus given. Vasoactive support with norepinephrine to maintain MAP ≥65 mmHg. Daily labs (serum creatinine, BUN, electrolytes, CBC, lactate) and urine output monitoring. Plan to wean CRRT as renal function improves and follow‑up with outpatient nephrology.</li><li>2026‑04‑01: Radiology reassessment of persistent necrotizing pancreatitis with septic shock. Patient remained NPO, on broad‑scope antibiotics (meropenem, vancomycin, daptomycin), insulin infusion, albumin, norepinephrine, and CRRT. Labs showed marked transaminitis (AST 540, ALT 620). Repeat contrast CT on 2026‑03‑30 showed persistent pancreatic necrosis, no new fluid collections. Plan continued antimicrobial therapy, daily LFT monitoring, repeat CT in 48–72h, possible percutaneous drainage if imaging worsens, continued CRRT, weaning of vasopressors when stable, early enteral nutrition, opioid analgesia, alcohol cessation counseling.</li><li>2026‑04‑02 Palliative Care visit: Family meeting reviewed goals of care. Patient remained in ICU on mechanical ventilation, continuous venovenous hemofiltration, norepinephrine, insulin infusion, and broad‑spectrum antibiotics (vancomycin, daptomycin, meropenem, levofloxacin, piperacillin‑tazobactam) with percutaneous drainage of necrotic pancreatic collection. Immunosuppressants prednisone and azathioprine permanently withheld. Daily ICU rounds planned with ongoing monitoring of organ function; preparation for comfort‑only care if further deterioration, including initiation of opioids and anti‑emetics.</li><li>2026‑04‑03: Patient died after transition to comfort‑only care; mechanical ventilation, continuous venovenous hemofiltration, vasopressors, antibiotics, and other life‑sustaining therapies were withdrawn.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

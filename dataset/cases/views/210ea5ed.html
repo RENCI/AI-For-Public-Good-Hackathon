@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 210ea5ed</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 210ea5ed</h1><div class="subtitle">Urinary Tract Infection (Acute Uncomplicated Cystitis) | Female, 35</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Risk Factors: Recent sexual activity, Use of spermicidal agents, Urinary catheterization</div></div>
+<details><summary>Narrative <span class="preview-text">By the end of a hectic Tuesday, Maya Patel was already nursing a new discomfort that she almost chalked up to a stomach ...</span></summary><div class="section-body"><p>By the end of a hectic Tuesday, Maya Patel was already nursing a new discomfort that she almost chalked up to a stomach bug. Maya—35, a dental hygienist in a bustling practice in Portland—had finished a long day of appointments and slipped into a low‑light lounge at a local coffee shop, where she felt an odd pressure in her lower abdomen, a twinge of burning as she went to the restroom. She chalked it to what a seasoned hygienist would label “the usual post‑workday cramps” and didn’t think much of it until the next morning.</p><p>**Day 1 (the morning after)**  
+Maya’s bladder‑burning had escalated—each urination left a stinging bite that lingered for a minute or two. She also had a mild annoyance: a sense of pressure just above the pubic bone that seemed to worsen whenever she stood for more than a few minutes. She had had a minor urinary catheter inserted after a routine cystoscopy that she’d undergone the previous week for an unusual bladder irritation. Though the catheter was removed three days ago, a residual irritation might be lingering. She remembered that she’d slept with a spermicidal diaphragm inserted earlier that evening—an item she used infrequently but habitually with her most recent partner. Adding her recent sexual activity and spermicidal use—both well‑documented risks for UTIs—Maya quietly noted her symptoms and wondered if a day of rest would set them off.</p><p>**Day 2 (mid‑morning)**  
+The burning was now sharp enough that Maya avoided going back to the office for a bit, and a mild fever had crept in, barely 99.6 °F. “It feels like a dull ache in the lower abdomen,” she told her mother on a brief phone call, but it was her own voice that finally sounded like “I can’t ignore this.” The next step, as she’d been advised after her last catheter event, was to seek professional care.</p><p>**Day 3 (early afternoon)**  
+Maya walked into her primary‑care office. The nurse immediately recorded her vital signs: Blood pressure 118/70 mm Hg, pulse 84 bpm, temperature 99.4 °F. A quick digital rectal exam was declined because Maya had no rectal discomfort, and the provider noted mild suprapubic tenderness on pelvic palpation. A urinalysis dipstick in the exam room revealed positive nitrites and leukocyte esterase—classic hallmarks of a bacterial urinary tract infection. The nurse handed Maya a clean‑catch midstream urine specimen, which the lab later reported with a culture growth of *Escherichia coli* at 10^4 CFU/mL.</p><p>**Clinical Decision Point 1 – Diagnosis**  
+Given the absence of systemic symptoms (no chills, no flank pain, no gastrointestinal distress) and no comorbidities, the office physician deemed this an uncomplicated cystitis. “We’ll start you on a short course of antibiotics and you’ll be back in a week,” she said reassuringly.</p><p>**Day 3 (same afternoon)**  
+The physician prescribed a 7‑day course of TMP‑SMX (trimethoprim 80 mg/ sulfamethoxazole 400 mg) orally, once daily, emphasizing that her urinary catheter had already been removed and that the infection was likely bacterial. She cautioned Maya on potential side effects—rash, nausea, and a need for her to finish the full course even if symptoms improved. She also delivered advice about hydration: “At least 64 ounces of water a day will help flush the bacteria out.” Finally, she advised Maya to pause using spermicidal agents for the next few weeks, explaining how spermicides disrupt normal bacterial flora and predispose to infection.</p><p>**Day 5 (morning)**  
+Maya woke the next morning and, for the first time since the symptoms started, the burning was minimal—one painful stream in the middle of her urination that lasted only a short time. She noted a marked improvement in the suprapubic pressure and felt “lighter.” However, she still had a mild burning on the first few minutes after she had to use the bathroom. She took her first pill of TMP‑SMX and kept a diary of her symptoms and medication adherence.</p><p>**Day 7 (the last day of antibiotics)**  
+By the end of a 7‑day course, the burning had resolved completely, and Maya’s urination felt normal again. She reported no dizziness or rash—her only residual memory was of the “sharp sting” that had begun to fade after several days. At the end of her antibiotic course, her physician instructed her to schedule a one‑week follow‑up, just to confirm complete resolution, and advised her to avoid spermicidal agents for at least a month and to increase fluid intake.</p><p>**Day 10 (follow‑up visit)**  
+Maya returned to her office. She was clear of all symptoms, and her pelvic exam was normal. The office physician ordered a repeat urine dipstick as a courtesy, which was negative for nitrites and leukocyte esterase. A repeat urine culture was not performed, per routine guidelines for uncomplicated, resolved cystitis. Maya left the office with a prescription for a non‑prescription analgesic in case of future dysuria and a reminder to report back immediately should symptoms recur.</p><p>**Day 15 (home)**  
+Maya had fully resumed her normal routine. She had noticed a few nights after her catheter removal that she felt a small, sharp burning when she first tried urinating during the day of the cystoscopy, but the pain dissipated quickly within a minute and never returned. She avoided using spermicidal products for the next three weeks, and afterward continued her standard hygiene practices. She made no further visits to the office regarding urinary symptoms, indicating a completely resolved episode.</p><p>**Key Clinical Take‑aways**</p><p>- **Risk Factor Recognition**: Recent sexual activity, spermicidal agent use, and transient catheterization were appropriately noted, and the provider addressed these both diagnostically and therapeutically.  
+- **Diagnosis and Management**: Classic dipstick positivity, culture confirmation, and a short course of TMP‑SMX—aligning with guidelines for uncomplicated cystitis.  
+- **Follow‑up**: A brief visit to ensure resolution and to reinforce preventive measures, confirming the intended outcome of disease resolution.</p><p>Through a straightforward timeline, Maya’s uncomplicated cystitis course was effectively managed, with rapid symptom relief and no lasting sequelae.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-05-01</h3><div class="visit-meta">Primary Care | Reason: Burning urination, suprapubic discomfort, mild fever</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Burning urination, suprapubic discomfort, mild fever.
+
+History of Present Illness: 35‑year‑old female presents with a 2‑day history of dysuria and suprapubic pressure. She reports a recent episode of sexual activity with a spermicidal diaphragm, and a transient urinary catheter was placed and removed 3 days ago. She denies fever &gt;100.4°F, vomiting, or flank pain.
+
+Past Medical History: None known.
+
+Medications: None.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for dysuria, suprapubic discomfort, low‑grade fever (99.4°F). Negative for flank pain, vaginal discharge, dyspareunia, or urinary frequency.
+
+Physical Examination:
+- Vital Signs: T 99.4°F; BP 118/70 mmHg; HR 84 bpm.
+- General: Alert, oriented, no acute distress.
+- Abdominal: Mild suprapubic tenderness on palpation. No costovertebral angle tenderness.
+- Pelvic/Genital: No vaginal discharge, no cervical motion tenderness, no visible inflammation.
+
+Assessment:
+- Acute uncomplicated cystitis (most likely E. coli UTI). Recent catheterization and spermicidal use are risk factors.
+
+Plan:
+- Urine dipstick + nitrites, + LE (positive). Urine culture ordered (pending), expected to confirm E. coli.
+- Start empiric antibiotic therapy: TMP‑SMX 80/400 mg PO once daily for 7 days.
+- Counsel patient to complete full course regardless of symptom resolution.
+- Advise increased fluid intake, avoid spermicidal agents, and practice good perineal hygiene.
+- If symptoms persist beyond 48–72 hours or worsen, return to clinic.
+- Follow‑up: 7‑day review for symptom resolution and review of culture results. If culture yields resistant organism, adjust antibiotics accordingly.
+
+Education: Discussed signs of possible complications (fever &gt;100.4°F, flank pain). Advised to seek emergent care if these develop.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Burning during urination</span><span class="pill">Suprapubic pressure</span><span class="pill">Mild fever (99.4°F)</span><span class="pill">Lower abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>99.4°F</td></tr><tr><td>blood_pressure</td><td>118/70 mmHg</td></tr><tr><td>heart_rate</td><td>84 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild suprapubic tenderness on palpation</li><li>No costovertebral angle tenderness</li><li>No vaginal discharge or cervical motion tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urine dipstick</li><li>Urine culture</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Urine dipstick: +Nitrites, +Leukocyte esterase</li><li>Urine culture: Escherichia coli 10^4 CFU/mL (pending full report)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed TMP‑SMX 80/400 mg PO once daily for 7 days</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent sexual activity</li><li>Use of spermicidal diaphragm</li><li>Recent transient urinary catheterization (removed 3 days prior)</li><li>History of cystoscopy for bladder irritation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived at the office complaining of burning urination and mild fever. The nurse documented vital signs and a brief history, noting recent sexual activity, spermicidal use, and a recent catheter. The provider performed a pelvic exam, noting mild suprapubic tenderness. A clean‑catch midstream urine sample was collected and a dipstick test performed in the exam room, showing positive nitrites and leukocyte esterase. The nurse sent the sample to the lab; the clinician noted this was classic for a bacterial UTI. Pending culture results, the provider diagnosed uncomplicated cystitis and discussed antibiotic therapy, hydration, and avoidance of spermicidal agents. Maya was given a 7‑day oral TMP‑SMX prescription (trimethoprim 80 mg/sulfamethoxazole 400 mg, once daily) and advised to finish the course even if symptoms improve.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute uncomplicated cystitis diagnosed based on clinical presentation and laboratory findings. Initiated appropriate 7‑day antibiotic course.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-05-07</h3><div class="visit-meta">Primary Care | Reason: Completion of antibiotic course, review symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #2 – 2023-05-07
+
+Chief Complaint:
+Maya presents to review completion of her TMP‑SMX course and evaluate symptoms.
+
+History of Present Illness:
+The patient is a 35‑year‑old female with a history of acute uncomplicated cystitis treated with TMP‑SMX 80/400 mg PO daily for 7 days (last dose yesterday). She reports slight burning during the first few minutes of urination, but notes overall improvement since starting therapy. No fever, suprapubic pain, nausea, or flank pain. She has kept a symptom diary and adheres to the prescribed medication schedule.
+
+Past Medical History:
+• Acute uncomplicated cystitis, resolved with TMP‑SMX
+
+Medications:
+• TMP‑SMX 80/400 mg PO daily (completed)
+
+Allergies:
+None
+
+Vitals:
+• Temperature: 98.7°F
+• Blood pressure: 116/68 mmHg
+• Heart rate: 78 bpm
+
+Review of Systems:
+• Genitourinary: Burning at initiation of micturition, otherwise normal.
+• Constitutional: Afebrile, no chills.
+
+Physical Examination:
+• General: Mild suprapubic tenderness absent.
+• Pelvic: Normal pelvic exam, no vaginal discharge.
+• Abdomen: Soft, non‑tender, no costovertebral angle tenderness.
+
+Assessment &amp; Plan:
+Assessment:
+1. Acute uncomplicated cystitis – likely resolved; patient is on the last day of therapy with minimal residual dysuria.
+2. No evidence of persistence or recurrence.
+
+Plan:
+- Continue to finish the last dose of TMP‑SMX if time allows. She has already taken the final dose yesterday.
+- Encourage adequate hydration (≥2.5 L fluids/day).
+- Advise postponement of spermicidal diaphragms for at least 4 weeks to reduce recurrence risk.
+- No additional medication is indicated at this time.
+- Schedule a brief follow‑up visit in one week (Day 10) to confirm complete resolution of symptoms; if symptoms persist or worsen prior to that, the patient should return sooner.
+- Re‑order urine culture only if symptoms recur or fail to improve.
+
+Education:
+The patient was counseled on the expected course of mild dysuria post‑therapy, importance of hydration, and avoidance of spermicidal agents during the recovery period.
+
+Disposition:
+Maya was instructed to contact the practice if any new fever, flank pain, or worsening urinary symptoms occur before the scheduled follow‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight burning during early urination</span><span class="pill">No fever</span><span class="pill">No suprapubic pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.7°F</td></tr><tr><td>blood_pressure</td><td>116/68 mmHg</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild suprapubic tenderness absent</li><li>Pelvic exam normal, no discharge</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acute uncomplicated cystitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>TMP‑SMX 80/400 mg PO daily (last dose taken yesterday)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Started TMP‑SMX 6 days ago</li><li>Has been keeping a symptom diary</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived for a quick office visit to discuss finishing her antibiotic course. She noted minimal burning in the first few minutes of urination but reported overall improvement. The provider reviewed her symptom diary, confirmed adherence to therapy, and answered questions about potential side effects. Maya was reminded to continue adequate hydration and to postpone use of spermicidal diaphragms for at least 4 weeks. No additional medication was prescribed. The clinician advised a brief follow‑up visit in one week (Day 10) to confirm complete resolution.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Symptom resolution noted; patient remains on final dose of TMP‑SMX. Plan for one‑week follow‑up to assess complete clearance.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-05-10</h3><div class="visit-meta">Primary Care | Reason: Follow‑up after antibiotic completion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #3 – 2023-05-10
+Chief Complaint: Follow‑up after antibiotic completion for uncomplicated cystitis.
+
+History of Present Illness: Maya returned for a scheduled follow‑up after completing a 7‑day course of TMP‑SMX for an uncomplicated cystitis diagnosed during Visit #1. She reports no urinary symptoms, fever, or discomfort. She denies dysuria, frequency, suprapubic pain or hematuria.
+
+Past Medical History: Previous uncomplicated cystitis. No other significant history.
+
+Medications: None. Allergies: NKDA.
+
+Physical Examination:
+• Vital Signs: T 98.6°F, BP 117/69 mmHg, HR 76 bpm.
+• General: A well‑appearing, healthy‑appearing woman.
+• Genitourinary: External genitalia normal; no discharge. Pelvic examination unremarkable. No suprapubic tenderness.
+
+Diagnostic Studies:
+• Urine dipstick: Negative for nitrites and leukocyte esterase.
+
+Assessment:
+Maya has clinically and urine‑dipstick–documented resolution of a previously uncomplicated cystitis. No evidence of persistent infection is present. She is at low risk for recurrence.
+
+Plan:
+1. No further antibacterial therapy or urine culture is required as per current guidelines for resolved uncomplicated UTI.
+2. OTC analgesic provided: Ibuprofen 400 mg PO TID PRN for future dysuria.
+3. Prevention education reiterated: adequate hydration, avoidance of spermicidal diaphragms for at least one month, prompt reporting of any recurrent urinary symptoms.
+4. Encourage routine self‑monitoring of urinary comfort and hydration status.
+5. Schedule follow‑up only if symptoms recur or for routine health maintenance.
+
+Disposition: Patient discharged with instructions above.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">None</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.6°F</td></tr><tr><td>blood_pressure</td><td>117/69 mmHg</td></tr><tr><td>heart_rate</td><td>76 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal external genitalia</li><li>No suprapubic tenderness</li><li>Pelvic examination unremarkable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urine dipstick</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Urine dipstick: Negative for nitrites and leukocyte esterase</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Provided OTC analgesic prescription (e.g., ibuprofen 400 mg) for future dysuria</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Resolved acute uncomplicated cystitis</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 7‑day TMP‑SMX course</li><li>No recurrence of urinary symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya returned for her scheduled follow‑up. She reported no urinary symptoms, fever, or discomfort. The provider performed a pelvic exam and noted a normal external genitalia, no discharge, and no suprapubic tenderness. A repeat urine dipstick was performed and was negative for nitrites and leukocyte esterase. No urine culture was ordered, consistent with guidelines for uncomplicated, resolved cystitis. The clinician provided a non‑prescription analgesic for potential future dysuria and reiterated prevention strategies: adequate hydration, avoidance of spermicidal diaphragms for at least one month, and prompt reporting of any recurrence.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>UTI resolved; patient symptom-free and meets criteria for complete eradication.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Urinary tract infection (cystitis)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen 400 mg PO TID PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Presented with 2‑day history of burning urination, suprapubic discomfort, mild fever (99.4°F). Recent transient catheterization and spermicidal diaphragm use. Physical exam revealed mild suprapubic tenderness, no costovertebral angle tenderness, and no vaginal discharge. Urine dipstick was positive for nitrites and leukocyte esterase; urine culture was ordered. Initiated empiric therapy with TMP‑SMX 80/400 mg PO once daily for 7 days. Patient advised increased fluid intake, avoidance of spermicidal agents, and return for follow‑up in 7 days or sooner if symptoms persist or worsen.</li><li>Visit #2 – 2023-05-07: Patient reviewed completion of TMP‑SMX course. Minimal residual burning at urination, afebrile, no suprapubic tenderness. Physical exam revealed normal pelvic exam, no vaginal discharge. No additional medication prescribed. Advised adequate hydration, avoidance of spermicidal diaphragms for 4 weeks. Follow‑up scheduled in one week to confirm symptom resolution. No tests ordered.</li><li>Visit #3 – 2023-05-10: Patient presented for follow‑up after completing a 7‑day TMP‑SMX course for uncomplicated cystitis. Reported no urinary symptoms, fever, or discomfort. Physical exam normal; no suprapubic tenderness; urine dipstick negative for nitrites/LU. Ibuprofen 400 mg PO TID PRN prescribed for future dysuria; patient advised hydration, avoidance of spermicidal diaphragms for one month, and to return if symptoms recur.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

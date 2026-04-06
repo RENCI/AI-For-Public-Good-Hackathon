@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 1486b957</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 1486b957</h1><div class="subtitle">Malignant neoplasm of the prostate (bilateral, poorly differentiated) | Male, 70</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia, Cardiovascular disease, Diabetes mellitus, Obesity, Renal insufficiency</div><div class="meta-line">Risk Factors: Age &gt; 50, African‑American or Mediterranean ethnicity, Family history of prostate cancer, High dietary fat, Sedentary lifestyle</div></div>
+<details><summary>Narrative <span class="preview-text">Elias Johnson, a 70‑year‑old retired high‑school coach, had always been proud of his long, active life. He slept in shif...</span></summary><div class="section-body"><p>Elias Johnson, a 70‑year‑old retired high‑school coach, had always been proud of his long, active life. He slept in shifts, lifted light weights in his garage, ate a meat‑heavy diet rich in red meats and fried foods, and kept his daily routine circadian: wake at five, finish a brief workout, head to the office, drive home, and unwind with a beer before bed. The only “black cloud” on his otherwise healthy plateau was a family history of prostate cancer, and while he was careful about his blood pressure and glucose, he had always taken his doctor’s advice at face value—check-ups were routine, lifestyle changes were incremental, and a good morning coffee was a non‑negotiable ritual.</p><p>**Month 1 – the first whisper.**  
+Elias began to notice that every time he went to the bathroom it was in a hurry. “I can’t get the water out fast enough,” he told his wife, Linda, as she was setting up dinner. He would often find himself rushing through the small hallway in front of their house to avoid embarrassment. The visits grew frequent; two or three times a day, mostly during the night. The urgency was compounded by a faint tingling in his legs that persisted in the mornings. “Maybe it’s just age,” he shrugged, but his wife knew the look in his eyes.</p><p>**Month 2 – the discomfort deepens.**  
+He began to complain of a weak, split stream, sometimes trailing a little watery spray—an early sign of a bladder outlet obstruction. At a routine physical, the geriatrician in his regular monthly check‑up noted the increased frequency and nocturia. Linda mentioned that Elias had also started feeling fatigued after walking a block. His cardiologist noted a slight uptick in resting heart rate, but everything else on the Holter monitor was within acceptable limits.</p><p>The doctor ordered a urinary sediment exam and a basic prostate‑specific antigen (PSA) test. The PSA came back high at 8.5 ng/mL, far above the normal for someone of that age. “We should send it in for a closer look,” the doctor said, and arranged a referral to urology.</p><p>**Month 3 – the first urologist visit.**  
+At the urology office, a dim‐lit room filled with charts, the specialist performed a digital rectal exam. His fingers met a firm, uneven texture under the prostate, suggestive of growths rather than the smooth bulking typical of benign prostatic hyperplasia (BPH). He measured Elias’s PSA again – now 10.2 ng/mL. A trans‑abdominal ultrasound revealed a prostate enlarged from the normal 45 cc to 65 cc, with multiple hypoechoic spots. A CT urography was considered, but with Elias’s chronic kidney disease (estimated GFR 45 mL/min), the team decided to avoid contrast, citing a risk of further renal injury.</p><p>The urologist recommended a TRUS (transrectal ultrasound–guided) core biopsy. Elias, aware that a cancer diagnosis would be life‑altering, accepted.</p><p>**Month 4 – biopsy and diagnosis.**  
+The biopsy needles returned tissue slides. The pathologist’s report was blunt: bilateral, poorly differentiated adenocarcinoma of the prostate, Gleason 4+5=9. The lesion occupied almost every quadrant of the gland, with no clear boundaries separating cancer from normal tissue. “It’s an aggressive cancer,” the urologist explained. “We’ve got cancer that spreads quickly, and with the way your kidneys and heart are doing, our options are limited.”</p><p>Elias sat in a small room, and the weight of the words settled in his stomach. “What do we do?” he asked. &quot;Do we cut it out?&quot;</p><p>The surgeon shook his head. “We usually consider radical prostatectomy first when the disease is localized, but your cardiovascular disease and the risk of stroke on the low-dose beta‑blocker would be too great. Radiation could be another option, but we’d need a contrast agent. And then there’s the fact your kidneys aren’t where they used to be. The safest initial line is hormonal therapy—let’s call it androgen deprivation therapy (ADT).&quot;</p><p>Linda clutched his hand. “If this is going to hurt, let’s try it first.”</p><p>**Month 5 – starting life‑altering therapy.**  
+He was started on leuprolide acetate, a GnRH agonist, in a two‑month depot injection. The doctor added an anti‑androgen, bicalutamide, for the first 12 months. In the first week, he felt a little hot‑flush, had a mild headache, and his vision swam a little, which his ophthalmologist assessed as a reversible effect of dropping testosterone. His glucose, however, spiked; his A1C had climbed from 6.8 % to 7.4 % in a month, forcing the endocrinologist to tweak his metformin dose.</p><p>The urologist scheduled a PSA test six weeks later. It had dropped to 2.5 ng/mL, a reassuring signal. Yet, the bone scan ordered concurrently revealed lytic lesions in the lumbar vertebrae, not a common feature in localized disease. Elias’s chest radiograph was unremarkable, but the MRI of the spine showed early compression in the L4 vertebra.</p><p>**Month 6 – a sudden turn.**  
+One rainy evening, Elias woke up in a panic because the cat had knocked something into his kitchen and an alarm clock rang with “ALARM! MALIGN!” The alarm was a reminder: “Urinate!” He was unable to get his bladder to empty; his usual method of holding it in for a minute was futile. He tried to manually express, but felt a sudden sharp pain in his flank. His wife, panicked, drove him straight to the emergency department.</p><p>At the ED, a bedside ultrasound revealed bilateral hydronephrosis with a collapsed bladder — he had developed acute urinary retention. A Foley catheter was inserted, and he was started on a urinary cath. Lab work: creatinine swelled from 1.5 mg/dL (baseline) to 2.1 mg/dL, the kidneys under further strain. His blood pressure spiked to 190/105, and his ECG showed new right‑bundle branch block, raising concern for cardiac strain.</p><p>On the floor, the oncologist, who had started him on denosumab (a bisphosphonate) two months before to address bone lesions, advised that his disease had become metastatic. The nephrologist cautioned that the catheter might worsen his renal function, and the cardiologist suggested a temporary hold on the beta‑blocker until he stabilized.</p><p>**Month 7 – the cascade.**  
+A few days later, Elias had a “bone‑pain crisis.” He could barely stand, the left hip throbbing. The physician admitted him to the hospital for inpatient pain management. A pain consult was done, and he was given a high dose of opioids, with a taper plan but the pain remained stubborn. He slipped on a step in the hallway, fracturing the left distal femur, an event the orthopedic team explained was linked to cancer‑related bone weakening.</p><p>During a multidisciplinary conference, the team weighed options. Surgery was high risk, given the severe cardiovascular disease and the patient’s fragile kidneys. Radiation was considered only for localized bone lesions to alleviate pain. Palliative androgen therapy was continued, but the medical oncology group suggested adding an androgen receptor blocker, enzalutamide, which might control progression despite the earlier poor response. The palliative care team was also invited – it was a reality check that Elias’s disease had now clearly moved from manageable to aggressive.</p><p>**Month 8 – decline, the final act.**  
+Elias’s urinary catheter caused a repeated urinary tract infection, this time with *E. coli* resistant to many antibiotics. He was treated with meropenem, but his kidneys were not forgiving. Every night, his breathing was shorter, and after a short walk to the bathroom, he was left winded. His pain scores were at the high end, his appetite dwindled, and his weight had declined from 250 lb to 225 lb in a month. The cardiology team added low‑dose aspirin, considering the risk of thrombosis from bone metastases, though his blood pressure was still labile.</p><p>On a gray Tuesday in early October, Elias’s wife took him to his home hospice unit. He was no longer fully functional; a portable walker helped him move across the apartment. The hospice nursing staff maintained his comfort: opioids, laxatives, and vitamin support. He could still converse, though his words were sometimes muffled by fatigue. At 9 a.m., he held Linda’s hand and said, “We’ve gotten so far… that’s good.” She squeezed back, feeling the weight of mortality.</p><p>The team documented that his PSA spiked to 22 ng/mL in the hospice period. Imaging had shown new skeletal lesions in the pelvis and ribs. He declined to pursue further aggressive treatments, preferring instead to be surrounded by his family. The last day he lived with the warmth of the sun, a gentle breeze and a silence that belonged only to the end of a long, arduous journey.</p><p>**Timeline recap**  
+- **Month 1:** Urinary frequency, urgency.  
+- **Month 2:** Weak stream, mild leg tingling.  
+- **Month 3:** Urology referral, high PSA, initial imaging.  
+- **Month 4:** Biopsy – poorly differentiated carcinoma.  
+- **Month 5:** Commencement of ADT, initial PSA drop.  
+- **Month 6:** PSA rising, bone scan shows metastasis.  
+- **Month 7:** Urinary retention, renal dysfunction, cardiac event.  
+- **Month 8:** Bone pain crisis, infection, decision for palliative care.  
+- **End of Month 8:** Hospice care, end of life.</p><p>Elias’s journey underscores how a seemingly ordinary patient with common comorbidities can experience a precipitous decline once a high‑grade prostate cancer is involved. His disease progressed from a potentially manageable state to a metastatic cascade, compounded by cardiovascular, metabolic, and renal fragility, culminating in an acute, multifaceted decline that ultimately resolved into a dignified palliative phase.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-03-05</h3><div class="visit-meta">Geriatrics | Reason: Increased urinary frequency, urgency, and nocturia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 70‑year‑old male presents with new onset increased urinary frequency, urgency, nocturia, and mild tingling in the lower extremities. 
+
+History of Present Illness: Patient reports 3–4 urinary episodes per hour during the day and 2–3 at night for the past 2 weeks. He describes a constant urge to void and a sensation of incomplete emptying after micturition. There is no dysuria, hematuria, or flank pain. He notes a mild, intermittent tingling and numbness in both legs without pain or motor weakness. No recent weight loss or urinary retention episodes. He denies fever or chills.
+
+Past Medical History: Benign prostatic hyperplasia (BPH), hypertension, type 2 diabetes mellitus, chronic kidney disease stage 3 (eGFR 45 mL/min/1.73m²), obesity (BMI 34).
+
+Medications: Lisinopril 10 mg daily, Metformin 1000 mg BID, Simvastatin 20 mg nightly, Aspirin 81 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for urinary frequency, urgency, nocturia, mild tingling; negative for dysuria, hematuria, pain.
+
+Physical Examination: 
+- General: Alert, oriented, in no acute distress.
+- Vitals: BP 138/82 mmHg, HR 78 bpm, Temp 98.6°F, RR 16/min.
+- Cardiovascular: Regular rate and rhythm, normal heart sounds.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Soft, non‑tender, no CVA tenderness.
+- Genitourinary: No suprapubic tenderness. Prostate not palpated separately (history of BPH noted).
+- Extremities: Mild tingling reported; neuro exam otherwise unremarkable.
+
+Assessment:
+1. Likely progression of benign prostatic hyperplasia leading to lower urinary tract symptoms (LUTS).
+2. Possible urinary tract infection pending urinalysis.
+3. Consider prostatitis or other prostate pathology.
+4. Differential includes overactive bladder, bladder outlet obstruction, diabetic neuropathy contributing to tingling.
+
+Plan:
+- Await results of urinalysis and serum PSA.
+- Educate patient on maintaining a bladder diary to quantify frequency, volume, and nighttime voids.
+- Lifestyle modifications: limit caffeine/alcohol intake, especially in the evening; schedule fluid intake earlier in the day; weight management.
+- Consider starting tamsulosin 0.4 mg nightly if LUTS persist after labs and bladder diary review.
+- Monitor renal function; avoid nephrotoxic drugs.
+- Follow-up in 4 weeks or sooner if symptoms worsen or new symptoms develop.
+- Recheck PSA and UA results and adjust therapy accordingly.
+
+Patient was advised to contact clinic if he develops fever, flank pain, hematuria, or worsening tingling/incontinence.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Urinary frequency</span><span class="pill">Nocturia</span><span class="pill">Urgency</span><span class="pill">Mild tingling in legs</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.6</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen</li><li>Normal heart sounds</li><li>No costovertebral angle tenderness</li><li>Palpable prostate not noted</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urinalysis</li><li>Serum PSA</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1000 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Benign prostatic hyperplasia</li><li>Hypertension</li><li>Type 2 diabetes mellitus</li><li>Chronic kidney disease (eGFR 45)</li><li>Obesity (BMI 34)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Elias presented to his primary geriatrician with new onset of urinary frequency, nocturia, and a feeling of urgency. Physical examination showed a normal heart rate and blood pressure, soft abdomen, no costovertebral angle tenderness. The physician noted the patient’s longstanding BPH and potential for progression. A urinalysis and a serum PSA test were ordered to evaluate for urinary tract infection or prostate pathology. The patient was advised to maintain hydration and to record a bladder diary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline evaluation of urinary symptoms within the context of BPH; PSA not yet measured.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-04-02</h3><div class="visit-meta">Primary Care | Reason: Weak urinary stream and fatigue after walking</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 70‑year‑old male presents with weak, split urinary stream and fatigue after walking a block.
+History: He reports progressive lower urinary tract symptoms over the past month, including a weaker, split stream with occasional watery spray, and a sensation of flushing. He also notes mild leg tingling and generalized fatigue after walking an entire block. No dysuria, hematuria, urgency or fever.
+Past medical history: Benign prostatic hyperplasia (BPH), hypertension, type 2 diabetes mellitus, chronic kidney disease stage 3 (eGFR 45 mL/min/1.73 m²), obesity.
+Medications: Lisinopril 10 mg daily; Metformin 1000 mg BID; Simvastatin 20 mg nightly; Aspirin 81 mg daily.
+Allergies: NKDA.
+Vitals: BP 145/88 mmHg, HR 82 bpm, Temp 98.7°F, RR 17 breaths/min.
+Physical Examination: Cardiac exam reveals normal heart sounds; pulmonary exam normal with clear lung fields; no peripheral edema; prostate not palpated distinctly due to obesity.
+Labs: Serum PSA 8.5 ng/mL (elevated); urine sediment pending review.
+Assessment:
+1. Progressive lower urinary tract symptoms due to BPH with obstructive component. The split and weak stream, combined with a PSA level &gt;4.5 ng/mL, raises concern for possible prostatic neoplasm.
+2. Mild lower extremity tingling likely related to diabetic peripheral neuropathy.
+3. Fatigue after ambulation may stem from volume depletion or early anemia; however, BP remains stable.
+Plan:
+- Refer to urology for digital rectal exam, uroflow study, and consideration of prostate biopsy given PSA elevation.
+- Initiate tamsulosin 0.4 mg nightly to relieve obstructive symptoms while awaiting urology evaluation.
+- Continue current antihypertensive, antidiabetic, lipid‑lowering, and antiplatelet therapy; monitor renal function closely (eGFR) so metformin dosing can be adjusted if needed.
+- Counsel patient on adequate hydration, gradual positional changes, and safe ambulation practices to reduce fatigue.
+- Repeat PSA in 6 months and consider DRE at that time.
+Follow‑up:
+- Return to clinic in 4 weeks or sooner if urinary retention or worsening symptoms occur.
+- Follow urology recommendations promptly.
+- Monitor renal function and metabolic control at next routine visits.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weak, split urinary stream</span><span class="pill">Occasional flatus during voiding</span><span class="pill">Fatigue after walking a block</span><span class="pill">Mild leg tingling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/88</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temp</td><td>98.7</td></tr><tr><td>RR</td><td>17</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal heart sounds</li><li>Normal lung fields</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum PSA</li><li>Urine sediment</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Serum PSA 8.5 ng/mL</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1000 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Benign prostatic hyperplasia</li><li>Hypertension</li><li>Type 2 diabetes mellitus</li><li>Chronic kidney disease (eGFR 45)</li><li>Obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During routine care, the patient described a weaker, split stream with occasional watery spray. An auscultatory exam revealed normal cardiovascular and pulmonary findings. A repeat PSA was ordered, along with a urinary sediment review. The physician noted that these findings were suspicious for a more advanced prostatic process and arranged for a urology referral.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Elevated PSA suggests possible prostatic neoplasm; patient referred to urology.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-05-01</h3><div class="visit-meta">Urology | Reason: Evaluation of abnormal PSA and urinary symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation of abnormal PSA and urinary symptoms.
+
+History of Present Illness: 70‑year‑old male with a known history of benign prostatic hyperplasia, hypertension, type 2 diabetes mellitus, chronic kidney disease stage 3, and obesity. He presents for a routine urologic evaluation after a previous elevated PSA (8.5 ng/mL) and new findings on digital rectal exam (DRE). He reports a weak urinary stream, frequent nocturnal voiding, and urgency. No dysuria, hematuria, or lower‑extremity pain.
+
+Physical Examination: Vitals: BP 150/90 mmHg, HR 80 bpm, Temp 98.8 °F, RR 16 /min. DRE revealed a firm, uneven prostate, with no palpable lymphadenopathy. Digital exam is otherwise unremarkable.
+
+Investigations: PSA re‑checked today = 10.2 ng/mL. Trans‑abdominal prostate ultrasound demonstrates an enlarged prostate (65 cc) with multiple hypoechoic foci suggestive of malignancy. Due to CKD stage 3, contrast CT urography was declined. Discussed and obtained consent for a trans‑rectal ultrasound‑guided core biopsy.
+
+Assessment &amp; Plan:
+1. Suspected prostate adenocarcinoma – definitive diagnosis pending TRUS‑guided core biopsy.
+2. Progressive benign prostatic hyperplasia causing lower urinary tract symptoms.
+3. Stable hypertension (BP 150/90) – continue lisinopril 10 mg PO daily.
+4. Diabetes remains controlled on metformin 1000 mg PO BID.
+5. Chronic kidney disease – monitor eGFR; avoid nephrotoxic agents.
+
+Actions Taken: No medications administered this visit.
+
+Medications: Lisinopril 10 mg PO daily, Metformin 1000 mg PO BID, Simvastatin 20 mg PO nightly, Aspirin 81 mg PO daily, Tamsulosin 0.4 mg PO nightly.
+
+Follow‑up: 
+• Arrange TRUS‑guided core biopsy on 2024‑05‑15.
+• Repeat PSA in 1 month post‑biopsy.
+• Monitor renal function (serum creatinine, eGFR) quarterly.
+• Review pathology results in 4‑6 weeks and adjust treatment as indicated.
+• Continue current antihypertensive, antidiabetic, dyslipidemia, and antiplatelet therapy unless contraindicated.
+
+Disposition: Patient educated regarding biopsy procedure, risks, and benefits. He is scheduled for biopsy and follow‑up as noted.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Weak urinary stream</span><span class="pill">Frequent nocturnal voids</span><span class="pill">Urgency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/90</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>98.8</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Firm, uneven prostate on DRE</li><li>No palpable lymphadenopathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Trans‑abdominal prostate ultrasound</li><li>TRUS‑guided core biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA 10.2 ng/mL</li><li>Prostate volume 65 cc</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1000 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Serum PSA 8.5 ng/mL</li><li>Benign prostatic hyperplasia</li><li>Hypertension</li><li>Type 2 diabetes mellitus</li><li>CKD stage 3 (eGFR 45)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urologist performed a digital rectal exam revealing a firm, uneven prostate inconsistent with pure BPH. PSA was rechecked at 10.2 ng/mL. A trans‑abdominal ultrasound showed an enlarged prostate (65 cc) with multiple hypoechoic foci, suggestive of malignancy. Due to renal dysfunction, a contrast CT urography was declined. Discussed the option of a trans‑rectal ultrasound‑guided core biopsy and obtained patient consent.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Imaging and lab suggest possible prostate cancer; planning for biopsy.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-05-15</h3><div class="visit-meta">Urology | Reason: Discussion of biopsy results and treatment options</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for discussion of prostate biopsy pathology and treatment options following TRUS-guided biopsy performed on 2024‑05‑01.
+
+History of Present Illness: 70‑year‑old male with known benign prostatic hyperplasia (BPH), malignant prostate adenocarcinoma (Gleason 9), hypertension, type 2 diabetes, CKD stage 3, obesity, and current PSA 10.2 ng/mL. Post‑biopsy mild discomfort is reported; no pain or urinary symptoms worsening.
+
+Medications: Lisinopril 10 mg qd, Metformin 1000 mg BID, Simvastatin 20 mg hs, Aspirin 81 mg qd, Tamsulosin 0.4 mg hs. No prior endocrine therapy.
+
+Allergies: NKDA.
+
+Physical Examination: Vital signs: BP 140/85, HR 76, Temp 98.5 °F, RR 16. Abdomen soft, non‑tender. No other significant findings.
+
+Assessment:
+1. High‑grade prostate adenocarcinoma Gleason 4+5=9 – locally advanced, high risk.
+2. BPH with moderate LUTS managed with tamsulosin.
+3. CKD stage 3; contrast exposure contraindicated.
+4. Cardiovascular risk moderate due to hypertension, CAD risk factors.
+
+Plan:
+- Initiate androgen deprivation therapy (ADT): Leuprolide acetate 22.5 mg IM monthly (first dose administered today). Counsel patient on side effects (hot flashes, decreased libido, bone density loss, metabolic changes). Provide bisphosphonate or calcium/vit D monitoring at baseline.
+- Continue current antihypertensive, antidiabetic, statin, aspirin, and tamsulosin.
+- PSA, testosterone, CMP, and HbA1c to be obtained at 4‑week visit or sooner if symptomatic.
+- Monitor for ADT‑related adverse events: weight gain, fatigue, bone pain. Discuss lifestyle: weight‑bearing exercise, calcium/vit D supplementation, smoking cessation.
+- Discuss long‑term management: radiotherapy (outside contrast) or chemoradiation in future, but defer until review of kidney function and cardiovascular status.
+- Education: patient understands risks of surgery and radiation, consent obtained for ADT.
+- Follow‑up in 4 weeks for PSA, CMP, review side effects. If PSA remains &gt;5 ng/mL after 6 months of ADT, consider escalation to combination therapy.
+
+Patient was fully informed, questions answered, and is scheduled for the next visit on 2024‑06‑12.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild post‑biopsy discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/85</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>98.5</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen</li><li>No tenderness</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Biopsy: Bilateral poorly differentiated adenocarcinoma, Gleason 9</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span><span class="pill">Malignant prostate adenocarcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1000 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>TRUS core biopsy performed on 2024‑05‑01</li><li>PSA 10.2 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Pathology revealed bilateral, poorly differentiated adenocarcinoma, Gleason 4+5=9. The urologist explained that radical prostatectomy would carry excessive cardiovascular risk and that radiation required contrast, which would jeopardize kidney function. A decision was made to initiate androgen deprivation therapy (ADT) as the primary treatment. The patient consented, understanding the life‑altering nature of therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>High‑grade, locally advanced prostate cancer confirmed.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-06-01</h3><div class="visit-meta">Urology / Oncologist | Reason: Initiation of androgen deprivation therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of ADT
+History of Present Illness:
+• On 2024‑05‑15, biopsy confirmed high‑grade prostate adenocarcinoma (Gleason 9). Discussed definitive treatment and began ADT with leuprolide acetate 3.75 mg IM monthly. Patient received first depot injection today (visit #5). Started bicalutamide 50 mg PO daily. Reports typical ADT‑related hot flashes, mild headache, transient visual blurring, and mild fatigue. No pain or visual loss requiring further workup. He has no other neurological complaints.
+
+Past Medical History:
+• Benign prostatic hyperplasia, hypertension (well‑controlled), type 2 DM (A1C 7.4% after last test), CKD stage 3, obesity (BMI 32).
+
+Current Medications:
+• Leuprolide acetate 3.75 mg IM monthly
+• Bicalutamide 50 mg PO daily
+• Lisinopril 10 mg PO daily
+• Metformin 1 000 mg PO bid (dose increased by endocrinology)
+• Simvastatin 20 mg PO nightly
+• Aspirin 81 mg PO daily
+• Tamsulosin 0.4 mg PO nightly
+
+Allergies: NKDA
+
+Review of Systems:
+• HEENT: Hot flashes, mild visual blurring, headache.
+• CV: No chest pain or palpitations.
+• Resp: No shortness of breath.
+• GI: No abdominal pain.
+• GU: No urinary retention or dysuria.
+• Neuro: No new deficits.
+
+Physical Exam:
+• General: Alert, oriented, mild fatigue.
+• Vitals: BP 138/80, HR 76, Temp 98.5 °F, RR 16.
+• HEENT: Normal.
+• Cardiovascular: No murmurs, regular rhythm.
+• Respiratory: Clear to auscultation bilaterally.
+• Abdominal: Soft, non‑tender, no masses.
+• Genitourinary: No suprapubic tenderness, normal external genitalia.
+• Extremities: No edema, pulses 2+/2.
+
+Labs/Tests:
+• A1C: 7.4% (increased from baseline). Endocrinology increased metformin dose (now 2 000 mg BID pending repeat).
+• PSA ordered for next visit (6 weeks). CMP, testosterone levels scheduled.
+
+Assessment:
+1. Newly diagnosed high‑grade prostate adenocarcinoma – ongoing ADT.
+2. ADT side effects (hot flashes, mild headache, transient visual blurring, fatigue) consistent with testosterone suppression.
+3. Hyperglycemia (A1C 7.4%) secondary to androgen deprivation – managed with metformin uptitration.
+4. CKD stage 3 – monitor renal function with each visit.
+
+Plan:
+• Continue leuprolide acetate 3.75 mg IM monthly; confirm schedule.
+• Continue bicalutamide 50 mg PO daily.
+• Continue metformin 2 000 mg BID; educate on hypoglycemia signs.
+• Monitor BP, glycemic control, weight; adjust antihypertensive as needed.
+• Counsel on hot flash management – consider low‑dose paroxetine or gabapentin if bothersome.
+• Encourage exercise, weight loss, and calcium/vitamin D supplementation for bone health.
+• Schedule PSA, CMP, fasting glucose, lipid panel, and testosterone at next visit (2024‑06‑12) – approximately 6 weeks.
+• Order baseline DEXA scan in 6 months; consider bisphosphonate if T‑score ≤ –2.5.
+• Advise patient to report any worsening visual changes, severe headaches, or new neurological symptoms immediately.
+
+Follow‑Up:
+ • 2024‑06‑12: PSA, CMP, testosterone, glucose, lipid panel; discussion of PSA trend.
+ • 2024‑08‑01: DEXA scan; review bone health.
+ • Continue routine clinic visits every 3 months or sooner if symptomatic.
+
+Education:
+ • ADT side effect profile, importance of medication adherence.
+ • Lifestyle modifications to mitigate metabolic effects.
+ • Emergency instructions for visual changes, severe headaches, chest pain, or signs of adrenal crisis.
+
+Signature: _________________________
+Date: 2024‑06‑01</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Hot flashes</span><span class="pill">Mild headache</span><span class="pill">Vision blurring</span><span class="pill">Mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/80</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>98.5</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No abnormal chest findings</li><li>Normal abdominal exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA (next visit)</li><li>A1C (repeat)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>A1C 7.4%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Leuprolide acetate IM</li><li>Bicalutamide 50 mg PO</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span><span class="pill">Malignant prostate adenocarcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1000 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide acetate 3.75 mg IM monthly</li><li>Bicalutamide 50 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>ADT initiation</li><li>Gleason 9 prostate cancer</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient received his first leuprolide depot injection; a bicalutamide prescription was started. He reported typical ADT side effects, including hot flashes, headache, and transient visual changes. His A1C had risen to 7.4%; the endocrinology team increased metformin dosage. A PSA test was scheduled for 6 weeks thereafter.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiated systemic hormonal suppression; PSA expected to fall.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-07-01</h3><div class="visit-meta">Oncology | Reason: Follow‑up on PSA decline and new bone lesions</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up on PSA decline and new bone lesions.
+
+History of Present Illness: 70‑year‑old male with a history of high‑grade prostate adenocarcinoma (Gleason 9) metastatic to bone presents for routine oncology follow‑up. He reports mild, intermittent low back pain over the last week, localized to the lumbar region. No new radiation, numbness, weakness, or bladder/bowel changes. He has completed his third cycle of ADT (leuprolide 3.75 mg IM monthly) and is continuously taking bicalutamide 50 mg PO daily. Denosumab 120 mg SC monthly was administered as scheduled (this is the second dose). His most recent PSA is 2.5 ng/mL, down from 10.2 ng/mL pre‑ADT. Bone scan performed this visit demonstrates multiple lytic lesions in the lumbar spine. MRI of the spine confirmed an early L4 compression fracture with mild canal narrowing but no overt cord compression signs. Vitals are: BP 152/90, HR 80, Temp 98.5°F, RR 18. Physical exam reveals lumbar tenderness on palpation, no neurologic deficits.
+
+Past Medical History: Benign prostatic hyperplasia, hypertension, type 2 diabetes mellitus, chronic kidney disease stage 3, obesity, malignancy: prostate adenocarcinoma with bone metastases.
+
+Medications: Lisinopril 10 mg PO daily, Metformin 1200 mg PO BID (titrated from 2000 mg BID in the previous visit), Simvastatin 20 mg PO nightly, Aspirin 81 mg PO daily, Leuprolide acetate 3.75 mg IM monthly, Bicalutamide 50 mg PO daily, Denosumab 120 mg SC monthly.
+
+Allergies: NKDA.
+
+Assessment:
+1. Prostate cancer: PSA remains suppressed (&lt;2.5 ng/mL), but imaging shows progression of bone metastases with early L4 compression.
+2. Spinal bone metastasis with early compression – at risk for pathological fracture or neurologic compromise.
+3. Possible transition to castration‑resistant prostate cancer (CRPC) after 6 months of ADT.
+
+Plan:
+- Continue LHRH agonist (leuprolide) and anti‑androgen (bicalutamide) monthly and daily respectively.
+- Initiate docetaxel 75 mg/m² IV q3 weeks as first‑line systemic therapy for metastatic CRPC, or consider abiraterone acetate 1000 mg PO daily plus prednisone 5 mg PO BID if patient prefers oral regimen. Discuss risks/benefits and obtain baseline labs (CBC, CMP, bilirubin, liver enzymes).
+- Continue denosumab 120 mg SC monthly and consider adding zoledronic acid 0.5 mg IV q12 weeks if evidence of worsening bone pain or new fractures.
+- Referral to radiation oncology for palliative spinal RT to L4 (20 Gy in 5 fractions) to provide pain control and prevent further cord compromise.
+- Schedule orthopedic consultation for potential vertebral stabilization or prophylactic fixation.
+- Perform repeat PSA, CMP, CBC, testosterone, and bone turnover markers in 6 weeks; MRI of the spine in 3 months or sooner if neurological symptoms develop.
+- Educate patient on red‑flag symptoms: new weakness, numbness, bowel/bladder dysfunction, worsening pain, or inability to ambulate; advise prompt presentation.
+- Continue management of comorbidities: monitor BP (target &lt;140/90), HbA1c (target &lt;7.5), avoid nephrotoxic agents due to CKD stage 3.
+- Encourage adequate calcium and vitamin D intake; continue aspirin, statin, and antihypertensive therapy.
+
+Follow‑up: Return to clinic in 6 weeks prior to initiation of systemic therapy. Patient to contact office immediately if new neurological symptoms or significant back pain occurs.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild low back pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>152/90</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>98.5</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Palpable tenderness over lumbar spine</li><li>No neuro deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bone scan</li><li>MRI of spine</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Bone scan: lytic lesions in lumbar spine</li><li>MRI: early L4 compression</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Denosumab 120 mg SC</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span><span class="pill">Malignant prostate adenocarcinoma</span><span class="pill">Bone metastases</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1200 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide acetate 3.75 mg IM monthly</li><li>Bicalutamide 50 mg daily</li><li>Denosumab 120 mg SC monthly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PSA 2.5 ng/mL</li><li>Denosumab 120 mg monthly (second dose)</li><li>Recent back pain</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The PSA in the previous month had dropped to 2.5 ng/mL. However, a bone scan now revealed lytic lesions in the lumbar spine, and MRI identified early compression of L4. The patient was already on denosumab to protect bone integrity. The oncology team explained that the disease had metastasized and recommended continuation of ADT while adding enzalutamide. The patient expressed desire to try an additional medicine before considering more invasive options.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Metastatic spread to bone established; plan for enzalutamide addition.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-07-15</h3><div class="visit-meta">Emergency Medicine | Reason: Acute urinary retention and flank pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute urinary retention and flank pain.
+
+History of Present Illness:
+A 70‑year‑old male with a history of metastatic prostate adenocarcinoma on ADT (leuprolide &amp; bicalutamide) presents to the ED with sudden inability to void, flank pain, chest pressure, and a high blood pressure spike. He denies fever, dysuria, or hematuria but reports a feeling of pressure in his chest with recent blood pressure readings over 190/100 in the office.
+
+Past Medical History: Benign prostatic hyperplasia, hypertension, type 2 diabetes mellitus, CKD stage 3, obesity, malignant prostate adenocarcinoma with bone metastases, cardiac conduction abnormalities (previous right‑bundle branch block).
+
+Medications: Lisinopril 10 mg PO daily, Metformin 1200 mg BID, Simvastatin 20 mg PO nightly, Aspirin 81 mg PO daily, Leuprolide acetate 3.75 mg IM monthly, Bicalutamide 50 mg PO daily, Denosumab 120 mg SC monthly, Enzalutamide 160 mg PO daily. No known drug allergies.
+
+Physical Examination:
+- Vitals: BP 190/105 mmHg, HR 92 bpm, T 98.5 °F, RR 20/min.
+- General: Alert, in mild distress due to flank pain.
+- Cardiovascular: Tachycardia, regular rhythm, new right‑bundle branch block on ECG.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Non‑distended, palpable flank swelling bilaterally, no rebound or guarding.
+- Genitourinary: No visible discharge, palpable prostate on DRE (firm, uneven). No abdominal bladder distention.
+- Extremities: No peripheral edema.
+
+Assessment:
+1. Acute urinary retention secondary to bladder outlet obstruction (likely progression of BPH/prostate cancer) causing bilateral hydronephrosis and acute kidney injury (creatinine 2.1 mg/dL). Evidence: bedside US shows collapsed bladder, bilateral hydronephrosis.
+2. New right‑bundle branch block—monitor cardiac rhythm; hold beta‑blocker.
+3. Hypertensive emergency—BP 190/105.
+
+Plan:
+- Foley catheter placement performed; urine output 2.5 L over 4 h.
+- Initiate IV normal saline 0.9 % at 75 mL/hr; titrate to maintain urine output &gt;30 mL/hr.
+- Hold beta‑blocker as advised by cardiology.
+- Continue aspirin, lisinopril, metformin, simvastatin, leuprolide, bicalutamide, denosumab, enzalutamide.
+- Pain control: Hydromorphone 0.5 mg IV q4h PRN; adjust for renal function.
+- Urology consult: Evaluate for possible endoscopic decompression (TURP) or bladder neck incision; consider percutaneous nephrostomy if obstruction persists.
+- Nephrology follow‑up: monitor creatinine and urine output; adjust fluid therapy; counsel on nephrotoxic avoidance.
+- Oncology: Discuss palliative options for progression; continue ADT; evaluate for systemic therapy (docetaxel/abiraterone) once renal function stable.
+- Cardiology: Monitor ECG for persistent bundle branch block; consider telemetry.
+- Discharge when urine output &gt;30 mL/hr for 24 h, creatinine stable, and BP controlled &lt;140/90 on oral meds; otherwise keep inpatient.
+- Patient education: maintain fluid intake, report fever, chills, decreased urine output, or worsening pain; keep catheter care instructions.
+
+Follow‑up:
+- Urology: within 24 h for procedural planning.
+- Nephrology: daily labs and vitals; repeat creatinine in 24 h.
+- Cardiology: telemetry monitoring; review ECG after 48 h.
+- Oncology: oncology clinic 3 days post‑admission for discussion of systemic therapy.
+
+Disposition: Observation unit admission; continue monitoring and multidisciplinary care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Inability to void</span><span class="pill">Flank pain</span><span class="pill">Chest pressure</span><span class="pill">BP spike</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>190/105</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>98.5</td></tr><tr><td>RR</td><td>20</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Non‑distended abdomen</li><li>Visible swelling in flank</li><li>No lower extremity edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urine bedside ultrasound</li><li>Blood chemistry (creatinine)</li><li>ECG</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Ultrasound: bilateral hydronephrosis, collapsed bladder</li><li>Creatinine 2.1 mg/dL</li><li>ECG: right‑bundle branch block</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Foley catheter placement</li><li>IV fluids (normal saline)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span><span class="pill">Malignant prostate adenocarcinoma</span><span class="pill">Bone metastases</span><span class="pill">Cardiac conduction abnormalities</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1200 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide acetate 3.75 mg IM monthly</li><li>Bicalutamide 50 mg daily</li><li>Denosumab 120 mg SC monthly</li><li>Enzalutamide 160 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metastatic prostate cancer</li><li>Recent ADT</li><li>CKD stage 3</li><li>Bilateral hydronephrosis</li><li>Right-bundle branch block on ECG</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient arrived with sudden inability to urinate and flank pain. Bedside ultrasound revealed bilateral hydronephrosis with a collapsed bladder. A Foley catheter was inserted, and intravenous fluids were started. Labs showed elevated creatinine 2.1 mg/dL. An ECG showed a new right‑bundle branch block leading to a temporary hold on the beta‑blocker by cardiology. Nephrology noted the risk of ongoing obstruction worsening renal function. Oncology confirmed the diagnosis of metastatic disease and discussed palliative options.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute urinary retention due to tumor obstruction; rapid renal function decline; cardio‑renal stress.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-08-01</h3><div class="visit-meta">Hospital Medicine | Reason: Bone pain crisis and urinary tract infection</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 70‑year‑old male with malignant prostate adenocarcinoma, bone metastases, CKD stage 3, BPH, hypertension, type 2 diabetes mellitus, and obesity who was admitted with severe left hip pain, low grade fever, and mild confusion. He was found febrile at 99.2 °F, BP 140/88 mmHg, HR 86/min, RR 22/min, SpO₂ 96% on room air. Physical exam reveals marked tenderness over the left distal femur with no focal neurovascular deficit. Mental status otherwise alert with mild confusion likely related to urosepsis and acute kidney injury. Labs: CBC shows mild leukopenia (WBC 3.8 ×10⁹/L), CMP reveals creatinine 2.3 mg/dL (baseline 1.8 mg/dL) and BUN 42 mg/dL, CRP elevated at 11 mg/dL, ESR 70 mm/hr. Blood cultures grew multi‑drug resistant Escherichia coli susceptible only to meropenem. Urine culture also positive for MDR E. coli. Imaging of the left proximal femur by CT shows an osteolytic lesion consistent with metastatic disease but no peri‑articular abscess; no evidence of acute fracture dislocation.
+
+Assessment:
+1. Septicemia due to MDR E. coli from bladder/urinary tract; likely secondary to urinary retention and hydronephrosis.
+2. Osteolytic bone metastasis of the left distal femur causing severe pain, possibly superimposed septic osteomyelitis (low‑grade sepsis with localized inflammatory markers). The imaging is equivocal; high clinical suspicion warrants treatment.
+3. Acute on chronic kidney injury (CKD 3) secondary to sepsis, volume depletion, and nephrotoxic analgesics.
+4. Opioid‑related mild confusion; may be multifactorial.
+5. Contributing baseline pain from metastatic bone disease.
+
+Plan:
+• Antibiotics: Continue meropenem 1 g IV q8h (adjusted for CrCl 25 mL/min) for total 14 days. Repeat blood cultures at 48 h and day 7; if persistent bacteremia, consider switch to a carbapenem‑plus‑β‑lactam based on susceptibility.
+• Pain: Continue morphine 10 mg PO q4h PRN; initiate acetaminophen 500 mg q6h PRN (max 3 g/day). Monitor for opioid toxicity; consider dose adjustment if delirium worsens.
+• Renal protection: Hold hydrochlorothiazide temporarily; maintain adequate hydration with isotonic saline 75 mL/h; reassess urine output; daily BMP and creatinine.
+• Orthopedics: Continue non‑operative management of the distal femur fracture; plan for palliative radiation to the painful site after stabilization of infection.
+• Oncology: Continue ADT (leuprolide 3.75 mg IM monthly, bicalutamide 50 mg daily) and enzalutamide 160 mg daily; denosumab 120 mg SC monthly. Discuss upcoming palliative radiation for bone pain.
+• Neurology/Nephrology: Daily monitoring of electrolytes and renal function; involve nephrology for optimal dosing of medications.
+• Hospice/Advance care: Continue discussions regarding goals of care; expedite hospice referral as appropriate given progressive decline.
+• Follow‑up: Daily bedside reviews; repeat CBC, BMP, CRP, and ESR q48 h; repeat urinalysis daily; consult infectious disease for de‑escalation when cultures are negative.
+• Patient education: Educated on signs of worsening infection, importance of hydration, pain control measures, and the need for regular follow‑up with oncology and nephrology.
+
+Disposition: Patient remains in the hospital for continued IV antibiotic therapy and close monitoring; no surgical intervention was performed for the femur fracture due to high operative risk. Hospice team has been involved for advance care planning.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe left hip pain</span><span class="pill">Fever</span><span class="pill">Confusion</span><span class="pill">Weakness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>86</td></tr><tr><td>Temp</td><td>99.2</td></tr><tr><td>RR</td><td>22</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tender left distal femur</li><li>Afebrile pulse 86</li><li>Normal mental status except mild confusion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Blood cultures</li><li>CBC</li><li>BMP</li><li>Creatinine and BUN</li><li>Urinalysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Culture: E. coli resistant to multiple agents</li><li>BMP: creatinine 2.3 mg/dL, BUN 42 mg/dL</li><li>CBC: mild leukopenia</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Meropenem 1 g IV q8h</li><li>Morphine 10 mg PO q4h PRN</li><li>Enzalutamide 160 mg daily</li><li>Denosumab 120 mg SC (third dose)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Obesity</span><span class="pill">Malignant prostate adenocarcinoma</span><span class="pill">Bone metastases</span><span class="pill">Cardiac conduction abnormalities</span><span class="pill">Ongoing urinary retention</span><span class="pill">Recent kidney function decline</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Metformin 1200 mg BID</li><li>Simvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Leuprolide acetate 3.75 mg IM monthly</li><li>Bicalutamide 50 mg daily</li><li>Denosumab 120 mg SC monthly</li><li>Enzalutamide 160 mg daily</li><li>Morphine 10 mg PO q4h PRN</li><li>Hydrochlorothiazide 25 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Left distal femur fracture</li><li>E. coli UTI (multi‑drug resistant)</li><li>Bone metastases (pelvis and ribs)</li><li>Recent enzalutamide added</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was admitted with severe hip pain, fever, and confusion. Blood cultures grew multi‑drug resistant E. coli. Initiated meropenem, adjusted nephrology dosing. Pain consult increased opioid dosing; interventional radiology offered nerve block but patient declined. Orthopedics managed the distal femur fracture non‑operatively due to high surgical risk. Oncology continued ADT and enzalutamide, with plans for palliative radiation to painful sites. The care team noted progressive decline and discussed hospice transition.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease advanced with bone and urinary complications; transition to palliative care domain.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 70</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Cardiovascular disease</span><span class="pill">Diabetes mellitus</span><span class="pill">Obesity</span><span class="pill">Renal insufficiency</span><span class="pill">Malignant prostate adenocarcinoma</span><span class="pill">Bone metastases</span><span class="pill">Septicemia due to MDR Escherichia coli</span><span class="pill">Acute kidney injury</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Leuprolide acetate 3.75 mg IM monthly</li><li>Enzalutamide 160 mg PO daily</li><li>Bicalutamide 50 mg PO daily</li><li>Tamsulosin 0.4 mg PO nightly</li><li>Denosumab 120 mg SC monthly</li><li>Metformin 1200 mg PO BID</li><li>Lisinopril 10 mg PO daily</li><li>Simvastatin 20 mg PO nightly</li><li>Aspirin 81 mg PO daily</li><li>Meropenem 1 g IV q8h</li><li>Morphine 10 mg PO q4h PRN</li><li>Acetaminophen 500 mg q6h PRN (max 3 g/day)</li><li>Hydrochlorothiazide 25 mg daily (held pending renal assessment)</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2024-03-05: 70‑year‑old male with increased urinary frequency, urgency, nocturia, and mild lower extremity tingling. No dysuria, hematuria, or pain. Physical exam unremarkable except mild tingling. Labs ordered: urinalysis and serum PSA. Plan included bladder diary, lifestyle modifications, monitoring renal function, and potential initiation of tamsulosin 0.4 mg nightly if LUTS persist. Current medications continued.</li><li>Visit on 2024-04-02: 70‑year‑old male presented with weak, split urinary stream, fatigue after walking a block, and mild leg tingling. Physical exam unremarkable. PSA 8.5 ng/mL. Initiated tamsulosin 0.4 mg nightly. Referred to urology for digital rectal exam, uroflow study, and consideration of prostate biopsy. Current antihypertensive, antidiabetic, lipid‑lowering, and antiplatelet therapies continued. Follow‑up scheduled in 4 weeks.</li><li>Visit on 2024-05-01: 70‑year‑old male evaluated for abnormal PSA (10.2 ng/mL) and persistent LUTS with weak stream, urgency, and nocturia. DRE revealed firm, uneven prostate; trans‑abdominal ultrasound showed enlarged 65 cc prostate with hypoechoic foci suggestive of malignancy. CKD stage 3 noted; contrast CT declined. Scheduled TRUS‑guided core biopsy 2024‑05‑15. PSA repeat in 1 month; renal function monitored quarterly. Medications unchanged.</li><li>Visit on 2024-05-15: 70‑year‑old male with newly diagnosed high‑grade prostate adenocarcinoma (Gleason 9) underwent discussion of biopsy pathology. Initiated androgen deprivation therapy with leuprolide acetate 22.5 mg IM monthly. Minor post‑biopsy discomfort reported, no worsening urinary symptoms. Current medications including lisinopril, metformin, simvastatin, aspirin, and tamsulosin were continued. Follow‑up scheduled 2024‑06‑12 for PSA, CMP, testosterone, and side‑effect monitoring.</li><li>Visit on 2024-06-01: 70‑year‑old male initiated ADT with leuprolide 3.75 mg IM monthly and bicalutamide 50 mg PO daily. Reports hot flashes, mild headache, visual blurring, and mild fatigue. Vitals: BP 138/80, HR 76, T 98.5°F. Metformin increased to 2000 mg BID; other chronic meds unchanged. Labs for PSA, CMP, testosterone, glucose, lipid panel ordered. Follow‑up scheduled 2024‑06‑12.</li><li>Visit on 2024-07-01: 70‑year‑old male with metastatic prostate adenocarcinoma and early L4 compression fracture reviewed PSA decline to 2.5 ng/mL and imaging confirming progression of bone metastases. Continued leuprolide, bicalutamide and denosumab; Metformin reduced to 1200 mg BID. Baseline labs for planned docetaxel or abiraterone pending; scheduled radiation oncology referral for spinal RT, orthopedic consult, repeat labs in 6 weeks, MRI in 3 months.</li><li>Visit on 2024-07-15: 70‑year‑old male presented to ED with acute urinary retention, flank pain, chest pressure, and hypertensive emergency (BP 190/105). Bedside ultrasound revealed collapsed bladder with bilateral hydronephrosis; serum creatinine 2.1 mg/dL. Foley catheter inserted, urine output 2.5 L over 4 h. Initiated IV normal saline 0.9% at 75 mL/h, titrated to maintain urine output &gt;30 mL/h. Hydromorphone 0.5 mg IV q4h PRN for pain. Continued chronic medications including lisinopril, metformin, simvastatin, aspirin, leuprolide, bicalutamide, denosumab, and enzalutamide. Follow‑up planned with urology within 24 h for procedural planning, nephrology daily for renal function monitoring, cardiology telemetry, and oncology clinic in 3 days to discuss systemic therapy.</li><li>Visit on 2024-08-01: 70‑year‑old male admitted for severe left hip pain, low‑grade fever, and mild confusion. Physical exam revealed marked tenderness over left distal femur with no focal neurovascular deficit. Labs showed leukopenia (WBC 3.8 × 10⁹/L), creatinine 2.3 mg/dL (baseline 1.8 mg/dL), BUN 42 mg/dL, CRP 11 mg/dL, ESR 70 mm/hr. Blood cultures grew MDR Escherichia coli susceptible only to meropenem; urine culture same. CT of left femur demonstrated an osteolytic metastatic lesion. Initiated meropenem 1 g IV q8h (for 14 days) with renal dose adjustment; pain managed with morphine 10 mg PO q4h PRN and acetaminophen 500 mg q6h PRN (max 3 g/day). Hydrochlorothiazide held pending renal assessment. Hydration maintained with isotonic saline 75 mL/h. Daily BMP, CBC, and urinalysis monitored; infectious disease consult for antibiotic de‑escalation. Hospice advance care planning continued.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

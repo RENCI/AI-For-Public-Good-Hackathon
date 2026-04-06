@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case c9a05975</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: c9a05975</h1><div class="subtitle">Hepatocellular Carcinoma of the Liver | Male, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic hepatitis B infection, Chronic hepatitis C infection, Cirrhosis of the liver, Metabolic syndrome, Obesity</div><div class="meta-line">Risk Factors: Chronic alcohol consumption, Aflatoxin B1 ingestion, Obesity, Type 2 diabetes, Chronic iron overload, Genetic predisposition (HFE mutation)</div></div>
+<details><summary>Narrative <span class="preview-text">**The beginning of the storm**  When Mr. Aidan Lewis first came to the outpatient clinic on a gray Tuesday, he was alrea...</span></summary><div class="section-body"><p>**The beginning of the storm**</p><p>When Mr. Aidan Lewis first came to the outpatient clinic on a gray Tuesday, he was already feeling more tired than usual. He is a 65‑year‑old retired electrical engineer who has lived in the rural Midwest for most of his life. The only thing he could pin his discomfort on was a vague ache in his right upper quadrant that didn’t respond to over‑the‑counter painkillers. “I’ve been feeling a little drained, and I’ve noticed my skin looks a bit yellow,” he told the nurse, noting that he had lost about 10 lb in the past three months because his appetite had dwindled. His wife had observed him getting progressively bloated and having difficulty speaking clearly, but he had considered it part of “getting older.”</p><p>He was a lifelong smoker, had a 40‑pack‑year history, and drank about two to three standard alcoholic beverages a day for the last 20 years, often as a way to settle after work. He grew up on a farm that occasionally stored grains, and his parents had reported sporadic consumption of improperly dried corn, a known source of aflatoxin B1. He was also obese (BMI 32) with a history of type 2 diabetes mellitus, hypertension, and hyperlipidemia, managed on metformin, lisinopril, and atorvastatin. His primary doctor had told him a decade ago that he was “at risk” for liver disease, but he had never followed up on the screening.</p><p>When Aidan was seen, the physical exam was notable for scleral icterus, mild ascites on abdominal palpation, and a soft, non‑tender liver edge that was just barely palpable 1 cm below the right costal margin. There were no signs of chronic heart failure, but his blood pressure was 155/88 mmHg. A quick point‑of‑care INR came back 1.4. The lab panel ordered included a complete blood count, comprehensive metabolic panel, hepatitis serology panel, ferritin, transferrin saturation, and alpha‑fetoprotein (AFP). His hepatitis B surface antigen was positive and hepatitis C antibody was positive as well. Both HBsAg and HCV‑RNA were detectable, indicating chronic infection. Serum ferritin was 480 ng/mL (normal 20–200 ng/mL for men) and transferrin saturation was 60 % (normal 15–45 %)—congruent with iron overload from an HFE gene mutation, something he had recently learned about from a genetic testing initiative at his local health system.</p><p>The key lab from that first visit was an AFP of 45 ng/mL (normal &lt;10). That figure, combined with the imaging that would follow, began the arc of his disease.</p><p>---</p><p>### **Week 2 – “Let’s look at the liver”**</p><p>Two weeks later the primary physician had a low‑threshold for imaging. A portal‑phase abdominal ultrasound was ordered with the request: “Rule out a focal hepatic lesion.” The scan revealed a 3.5 cm hypoechoic lesion in segment 6 of the liver, with a surrounding zone of heterogeneity that was suspicious for early cirrhosis. No gallbladder stones or obvious portal hypertension signs, though there was moderate hepatic steatosis.</p><p>Given the lesion’s size, the ultrasound technician suggested a contrast‑enhanced CT to better characterize the lesion. The patient was referred to the tertiary hospital’s radiology department. He was seen by hepatology the following week; he described more pronounced lightheadedness, episodes of brief, vague black stools, and a sense that his voice had become hoarse.</p><p>On evaluation the hepatologist—Dr. Khan—confirmed cirrhosis clinically and with transient elastography showing an elastography value of 23 kPa. His Child‑Pugh score was B (3 points for bilirubin 1.8 mg/dL, 3 points for albumin 2.9 g/dL, and 3 points for INR 1.4) classifying him as a moderate‑to‑high risk for hepatic decompensation.</p><p>A percutaneous liver biopsy was performed to confirm the suspicion of HCC. The histology showed malignant hepatocytes in a trabecular pattern with fibrous septa, confirming hepatocellular carcinoma. A liver‑stiffening score of 23 kPa and the biopsy findings satisfied the 2018 AASLD guidelines for treating HCC in the setting of cirrhosis.</p><p>AFP rose to 190 ng/mL at the time of biopsy—an ominous trend but still under the 400 ng/mL threshold that sometimes prompts a more aggressive approach.</p><p>---</p><p>### **Month 1 – Treatment deliberation**</p><p>Dr. Khan convened a multidisciplinary tumor board. The patient’s comorbidities—alcoholic liver disease, chronic hepatitis B and C, metabolic syndrome, obesity, type 2 diabetes, and iron overload—placed him at high surgical risk. The board decided that a minimally invasive approach, transarterial chemoembolization (TACE), was the preferred first‑line intervention. Liver transplantation was ruled out because of his active hepatitis B and C infections and the fact he had not been on antiviral therapy for any significant period.</p><p>A plan was drafted: TACE using doxorubicin and emulsion, followed by a reassessment in six weeks for residual tumor burden. In addition, Aidan was enrolled in a low‑dose sorafenib pilot to address microvascular invasion risk, though the hepatologist cautioned that sorafenib’s hepatotoxicity and side‑effects might be intolerable here.</p><p>A dietitian was added to the team; the goal was a 10 % weight reduction, a carbohydrate‑controlled meal plan, and vitamin supplementation to address hepatic encephalopathy and liver failure risk.</p><p>---</p><p>### **Month 3 – First TACE and fallout**</p><p>The first TACE was technically successful. Post‑procedure CT showed selective embolization of the tumor’s feeding artery. Aidan reported a fleeting sense of warmth in his abdomen and a mild post‑embolization syndrome—fever, pain, nausea—but by day 4 he was back to his baseline.</p><p>However, in the ensuing weeks the patient’s ascites worsened. A repeat ultrasound showed a new moderate‑to‑large ascitic fluid collection. A diuretic regime of spironolactone 100 mg daily plus furosemide 20 mg daily was started. At the 6‑week reassessment he complained of worsening fatigue, difficulty speaking, and a “cloudy” mental state. He had a transient episode of confusion at home that required urgent evaluation for hepatic encephalopathy.</p><p>The AFP had climbed to 460 ng/mL, and the re‑imaging showed a residual 2.8 cm lesion—larger than expected, indicating tumor progression in spite of embolization. Dr. Khan convened a second tumor board: TACE only had not succeeded; systemic therapy was the next step.</p><p>Aidan was started on sorafenib 400 mg BID. Within a month he developed hand‑foot skin reactions and a mild increase in transaminases (AST 85 U/L, ALT 70 U/L). Sorafenib dose was titrated down but the liver enzymes rose to AST 120 U/L and ALT 105 U/L. The hepatologist debated holding sorafenib until a stable trough level was achieved but Aidan’s performance status was already declining. He was also placed on a low‑dose prednisone taper to blunt the inflammatory response to sorafenib, but this again complicated his diabetes control.</p><p>---</p><p>### **Month 6 – Escalation, variceal bleed, and a grim turn**</p><p>At six months, his Child‑Pugh class worsened to C (4 points for bilirubin 2.5 mg/dL, 4 points for albumin 2.5 g/dL, 5 points for INR 1.7). Portal hypertension was frank: hepatic venous pressure gradient (HVPG) measured at 18 mmHg, confirming grade 3 portal hypertension. Upper‑endoscopy uncovered large esophageal varices with red‑sign stigmata. Endoscopic variceal ligation was performed with four bands placed, but he had persistent portal hypertension, evidenced by recurrent ascites and new‐onset hepatorenal syndrome (serum creatinine rose from 0.8 to 1.5 mg/dL over three weeks).</p><p>The patient reported that he had become increasingly frustrated with his “sudden” body changes. He refused to take any more chemotherapy because it made him nauseated, and after a family discussion Dr. Khan brought in a palliative care consult. Aidan’s advance directive was consulted, and the team confirmed he was open to discussions about goals of care.</p><p>Sorafenib was discontinued. A more aggressive diuretic (adding torsemide 20 mg BID) was attempted but could not control the ascites. A peritoneovenous shunt was considered but deemed inappropriate because of his cirrhosis and poor liver synthetic function; a percutaneous paracentesis (large‑volume) relieved abdominal distension temporarily, but this repeated procedure was unsustainable.</p><p>A diagnosis of refractory portal hypertension and HCC progression set the final trajectory: a diminishing hepatic reserve, increasing tumor burden, and systemic complications from the underlying metabolic derangements and iron overload.</p><p>---</p><p>### **Month 9 – Final days and the inevitable**</p><p>Nine months after the first clinic visit, Aidan’s condition had deteriorated dramatically. His liver enzymes were now AST 210 U/L, ALT 180 U/L; bilirubin 4.3 mg/dL; albumin had fallen to 1.8 g/dL. His ascites became tense, and on a routine visit he fell and had a mild head injury. His INR had climbed to 2.5, indicating severe coagulopathy. He complained of constant abdominal pain, extreme fatigue, and a “yellow‑tinged” dreamlike state. An urgent CT scan revealed an 4.2 cm HCC with evidence of vascular invasion into the portal vein branch.</p><p>His wife and daughter were in tears as he, still lucid enough to speak, requested a calm and dignified end. The palliative team arranged hospice. The final week was spent in the home: Aidan was given only a small palliative dose of morphine for pain control and no longer tolerated oral intake. He survived just over a month from the first sign of trouble, his course reflecting a rapid escalation from subclinical hepatic dysfunction to frank hepatic decompensation, tumor progression, and multi‑system failure.</p><p>Through the six‑month arc of care, Mr. Lewis faced a complex interplay of chronic hepatitis B and C, cirrhosis, metabolic syndrome, and iron overload—all of which compounded each other and accelerated hepatocarcinogenesis. Each clinical decision, from imaging to TACE, to sorafenib, to palliative care, reflected a balance between attempting oncologic control and managing the liver’s mounting fragility. The narrative of his disease course underscores the brutal synergy of chronic liver injury, metabolic derangements, and oncogenic exposures that can push a patient toward an inexorable decline.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-02</h3><div class="visit-meta">Primary Care Physician | Reason: Fatigue and right upper quadrant discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+Mr. Lewis, a 65‑year‑old male, presents with a 2‑week history of increasing fatigue, vague right upper quadrant (RUQ) discomfort, decreased appetite, and an unintentional 10 lb weight loss over the past three months. He reports yellowing of the skin and progressive abdominal bloating.
+
+History of Present Illness:
+The patient reports progressively worsening fatigue and RUQ ache. No radiation, no precipitating factors noted. He denies fevers, chills, nausea, vomiting, or changes in bowel habits. He reports drinking 2–3 alcoholic beverages per day over many years and has a 40‑pack‑year smoking history. The patient has noted worsening jaundice over the past week.
+
+Past Medical History:
+• Chronic hepatitis B (HBsAg positive)
+• Chronic hepatitis C (HCV antibody positive, HCV RNA 2.1 × 10^6 IU/mL)
+• Cirrhosis of the liver (diagnosed 5 years ago)
+• Metabolic syndrome, obesity (BMI 32)
+• Type 2 diabetes mellitus
+• Hypertension
+• Hyperlipidemia
+
+Past Surgical History:
+None.
+
+Medications:
+None at present.
+
+Allergies:
+No known drug allergies.
+
+Social History:
+• 65‑year‑old male, retired farmer.
+• Current alcohol use: 2–3 drinks per day.
+• Former smoker, 40 pack‑years, quit 5 years ago.
+• No illicit drug use.
+
+Review of Systems:
+Constitutional: Fatigue, weight loss, decreased appetite.
+HEENT: Jaundice noted.
+Cardiovascular: Denies chest pain, palpitations.
+Respiratory: Denies shortness of breath.
+Gastrointestinal: RUQ discomfort, abdominal bloating, no nausea or vomiting.
+Genitourinary: No dysuria.
+Musculoskeletal: No recent injuries.
+Skin: Scleral icterus, no rash.
+Neurologic: No focal deficits.
+
+Physical Examination:
+General: 65‑year‑old male, appears chronically ill, in no acute distress.
+Vital Signs:
+• BP: 155/88 mmHg
+• HR: 90 bpm
+• Temp: 98.2 °F
+• RR: 16/min
+• SpO2: 98% RA
+• Weight: 190 lb
+• BMI: 32
+
+HEENT:
+Scleral icterus present.
+
+Cardiovascular:
+Regular rhythm, no murmurs.
+
+Pulmonary:
+Clear to auscultation bilaterally.
+
+Abdomen:
+Mild ascites noted on palpation. Soft, non‑tender liver edge a centimeter below the costal margin. No shifting dullness. No organomegaly beyond mild hepatomegaly.
+
+Extremities:
+No edema.
+
+Labs (POC and inpatient order set):
+• CBC: Hgb 12.5 g/dL (anemic), normal WBC and platelets.
+• CMP: Bilirubin 1.8 mg/dL, AST 70 U/L, ALT 55 U/L, Albumin 2.9 g/dL.
+• Hepatitis serology: HBsAg +, HCV Ab +, HCV RNA 2.1 × 10^6 IU/mL.
+• Ferritin 480 ng/mL.
+• Transferrin saturation 60%.
+• Alpha‑fetoprotein: 45 ng/mL.
+• POC INR: 1.4.
+
+Assessment:
+1. Decompensated cirrhosis secondary to chronic HBV/HCV infection. Liver synthetic function impaired (low albumin, elevated INR). Clinical signs: jaundice, ascites, mild encephalopathy (fatigue).
+2. Suspected hepatocellular carcinoma (HCC) – AFP mildly elevated at 45 ng/mL and weight loss. Needs prompt imaging.
+3. Possible iron overload (high ferritin and transferrin saturation) secondary to chronic liver disease.
+4. Metabolic syndrome with associated obesity, diabetes, hypertension – contributors to hepatic decompensation.
+
+Differential Diagnosis:
+- Hepatic decompensation (ascites, jaundice, encephalopathy)
+- HCC
+- Alcoholic hepatitis flare
+- Iron overload/hemochromatosis
+- Bacterial peritonitis (ruled out by lack of fever, tachycardia)
+- Post‑hepatic biliary obstruction (unlikely given labs)
+
+Plan:
+1. Immediate imaging: Contrast‑enhanced abdominal CT scan or hepatic MRI within 1–2 weeks to evaluate for focal lesions consistent with HCC.
+2. Initiate antiviral therapy for HBV (consider tenofovir alafenamide or tenofovir disoproxil fumarate). Discuss initiation of direct‑acting antiviral (DAA) regimen for HCV (e.g., sofosbuvir/velpatasvir) after imaging.
+3. Monitor coagulation: Repeat INR in 1 week; begin vitamin K 10 mg PO if INR worsens.
+4. Manage ascites: Low‑salt diet (&lt;2 g sodium/day), start spironolactone 40 mg PO daily with furosemide 20 mg PO daily; titrate over 1–2 weeks to reduce ascites.
+5. Hepatic encephalopathy: Enforce strict sodium restriction, consider lactulose 25 mL PO Q6h if neuro signs worsen.
+6. Counsel on alcohol cessation using the ABCD approach, offer referral to Alcohol Use Disorder treatment program.
+7. Diabetes: Continue current regimen; review with endocrinology for adjustment due to hepatic impairment.
+8. Weight management: Referral to dietitian, discuss gradual caloric deficit, physical activity plan tailored for cirrhosis.
+9. Smoking: Continue encouragement to remain smoke‑free; offer nicotine replacement if desired.
+10. Vaccinations: update hepatitis A vaccine if not immune; consider pneumococcal and influenza vaccines.
+
+Medications (current and started):
+• None currently prescribed.
+
+Follow‑up Recommendations:
+• Return in 2 weeks for imaging review and repeat labs (CBC, CMP, INR).
+• Urgent referral to gastroenterology/hepatology for ultrasound/CT evaluation and possible biopsy.
+• If ascites worsening despite diuretics, consider peritoneal tap for evaluation of spontaneous bacterial peritonitis.
+• Schedule a multidisciplinary visit with dietitian and endocrinology within 4 weeks.
+• Reassess alcohol cessation status and provide resources in subsequent visit.
+• Monitor for signs of variceal bleeding (hematemesis, melena) and counsel patient to seek emergent care if occurs.
+
+The patient was educated on the seriousness of the findings, the importance of antiviral therapy adherence, and the need for close follow‑up. He verbalized understanding and expressed motivation to quit alcohol and improve lifestyle factors.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">right upper quadrant ache</span><span class="pill">decreased appetite</span><span class="pill">weight loss (10 lb in 3 months)</span><span class="pill">yellowing of skin</span><span class="pill">progressive abdominal bloating</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>155/88</td></tr><tr><td>heart_rate</td><td>90</td></tr><tr><td>temperature</td><td>98.2</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scleral icterus</li><li>Mild ascites on abdominal palpation</li><li>Soft, non‑tender liver edge 1 cm below costal margin</li><li>Normal cardiac and lung fields</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete blood count</li><li>Comprehensive metabolic panel</li><li>Hepatitis serology panel</li><li>Ferritin</li><li>Transferrin saturation</li><li>Alpha‑fetoprotein (AFP)</li><li>Point of care INR</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Anemia, Hgb 12.5 g/dL</li><li>CMP: Bilirubin 1.8 mg/dL, AST 70 U/L, ALT 55 U/L, Albumin 2.9 g/dL</li><li>HBsAg positive; HCV antibody positive</li><li>HCV RNA 2.1 million IU/mL</li><li>Ferritin 480 ng/mL</li><li>Transferrin saturation 60%</li><li>AFP 45 ng/mL</li><li>POC INR 1.4</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on alcohol cessation</li><li>Discussion of metabolic syndrome management</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic hepatitis B</li><li>Chronic hepatitis C</li><li>Long‑term alcohol use (2–3 drinks/day)</li><li>Smoking history (40 pack‑years)</li><li>Type 2 diabetes mellitus</li><li>Hypertension</li><li>Hyperlipidemia</li><li>Obesity</li><li>History of aflatoxin exposure on farm</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Lewis presented with a 2‑week history of increasing fatigue and a vague right upper quadrant discomfort. His clinic exam showed scleral icterus and mild ascites. He had mild hypertension. A POC INR was 1.4. The primary clinician ordered CBC, CMP, hepatitis serologies, ferritin, transferrin saturation, and alpha‑fetoprotein. He was advised to return for follow‑up imaging after results. He also received counseling on alcohol cessation and weight management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline visit: elevated AFP (45 ng/mL) and imaging pending; cirrhosis clinically suspected but not yet confirmed.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-01-16</h3><div class="visit-meta">Radiology | Reason: Evaluation of liver lesion on ultrasound</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation of liver lesion identified on prior ultrasound.
+
+History of Present Illness: Mr. Lewis, a 65‑year‑old male with a history of chronic hepatitis B and C, compensated cirrhosis, metabolic syndrome, obesity, type 2 diabetes, hypertension, and hyperlipidemia, presents for a follow‑up ultrasound performed to evaluate a newly noted focal hepatic lesion.  He reports a slight worsening of right upper quadrant (RUQ) discomfort over the past week and mild dizziness.  He denies any new jaundice, weight loss, fever, or significant changes in stool/color.  His viral hepatitis is controlled on tenofovir alafenamide and sofosbuvir/velpatasvir.  An AFP level drawn recently has risen to 45 ng/mL.
+
+Physical Examination: (No formal exam noted during this encounter.  Vital signs recorded as described.)
+
+Vital Signs: BP 150/84 mmHg; HR 88 bpm; Temp 98.4 °F; RR 16 breaths/min; weight 190 lb; BMI 32; SpO2 98% on room air.
+
+Diagnostic Imaging: Contrast‑enhanced abdominal ultrasound revealed a 3.5 cm hypoechoic lesion in segment 6 surrounded by heterogeneous parenchyma suggestive of early cirrhosis.  Moderate hepatic steatosis was noted, with no obvious portal hypertension or ascites.
+
+Assessment &amp; Differential Diagnosis:
+1. Hepatocellular carcinoma (HCC) – most likely given underlying cirrhosis, chronic hepatitis B/C, elevated AFP, and focal hypoechoic lesion.
+2. Benign hepatic neoplasm (e.g., focal nodular hyperplasia, hepatic adenoma) – less likely but considered.
+3. Metastatic disease – possible given the patient&#x27;s comorbidities.
+4. Hepatic cyst or abscess – unlikely based on imaging characteristics.
+5. Hemangioma – typically hypervascular, not fitting the hypoechoic appearance.
+
+Plan:
+- Refer patient to tertiary center for contrast‑enhanced multidetector CT of the abdomen with liver protocol to better characterize the lesion’s vascularity and borders.
+- Order liver function tests (ALT, AST, bilirubin, albumin, INR) and complete metabolic panel in the next 1‑2 weeks to monitor liver synthetic function and metabolic status.
+- Continue current antiviral therapy (tenofovir alafenamide, sofosbuvir/velpatasvir) and diuretic regimen (spironolactone 40 mg PO daily, furosemide 20 mg PO daily).
+- Reinforce dietary modification (low‑salt, low‑fat, weight‑loss plan) and exercise as tolerated.
+- Counsel on alcohol avoidance and review vaccination status (hep A/B, influenza).
+- If CT findings are suspicious for malignancy, discuss possible percutaneous core‑needle biopsy and/or referral to hepatobiliary surgery.
+- Schedule a follow‑up appointment in 4 weeks after CT results are returned to review imaging and adjust management.
+
+The patient was informed of the plan and verbalized understanding.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight worsening right upper quadrant discomfort</span><span class="pill">Mild dizziness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>150/84</td></tr><tr><td>heart_rate</td><td>88</td></tr><tr><td>temperature</td><td>98.4</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast‑enhanced abdominal CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>US: 3.5 cm hypoechoic lesion, moderate hepatic steatosis, no obvious portal hypertension signs</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span><span class="pill">Suspected cirrhosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent AFP rise to 45 ng/mL</li><li>Positive hepatitis B &amp; C status</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A contrast‑enhanced abdominal ultrasound was performed to rule out a focal hepatic lesion. The image revealed a 3.5 cm hypoechoic lesion in segment 6, surrounded by heterogenous liver parenchyma suggesting early cirrhosis. The technologist recommended a contrast‑enhanced CT for better lesion characterization. Mr. Lewis agreed, and a referral was sent to the tertiary center for CT.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Suspicion of HCC confirmed by imaging but definitive diagnosis pending biopsy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-01-23</h3><div class="visit-meta">Hepatology | Reason: Evaluation after imaging – biopsy and portal hypertension assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation after imaging – biopsy and portal hypertension assessment.
+
+History of Present Illness:
+65‑year‑old male with chronic HBV and HCV infection, cirrhosis, metabolic syndrome, obesity, type 2 diabetes, hypertension, and hyperlipidemia. Recent contrast‑enhanced CT abdomen showed a 3.5‑cm hepatic lesion in segment 6 with arterial phase hyperenhancement and portal washout, highly suggestive of hepatocellular carcinoma (HCC). Transient elastography 23 kPa. Percutaneous liver biopsy performed during visit; histology demonstrated malignant hepatocytes in trabecular patterns with fibrous septa. AFP rose to 190 ng/mL post‑biopsy. Symptoms include lightheadedness, occasional vague melena, and hoarseness. Physical exam revealed scleral icterus, mild ascites, and tenderness over RUQ liver edge. Patient continues antiviral therapy (tenofovir alafenamide, sofosbuvir/velpatasvir) and diuretic regimen (spironolactone 40 mg PO daily, furosemide 20 mg PO daily).
+
+Vital Signs:
+BP 158/90, HR 92, Temp 98.6 °F, RR 16, Weight 190 lb, BMI 32, SpO₂ 98%.
+
+Assessment:
+1. Probable HCC (3.5‑cm, arterial enhancement, washout) in a cirrhotic liver.
+2. Moderate portal hypertension per elastography.
+3. Possible GI bleeding source (melena) and variceal risk.
+
+Plan:
+- Discuss therapeutic options with patient: transarterial chemoembolization (TACE) or radiofrequency ablation (RFA) as initial locoregional therapy; consider liver transplantation if within Milan criteria and candidacy after multidisciplinary evaluation.
+- Continue antiviral therapy and portal hypertension management.
+- Repeat AFP and liver function tests in 2 weeks to assess post‑biopsy fluctuation and therapeutic response.
+- Schedule multidisciplinary tumor board review within 1 week.
+- Counsel patient on signs of decompensation and immediate reporting of worsening ascites, melena, or dizziness.
+
+Medications: 
+- Tenofovir alafenamide
+- Sofosbuvir/velpatasvir
+- Spironolactone 40 mg PO daily
+- Furosemide 20 mg PO daily
+- Metformin 850 mg BID
+- Lisinopril 20 mg daily
+- Atorvastatin 40 mg nightly
+
+Follow‑up Recommendations:
+- Return to hepatology clinic in 2 weeks for repeat labs and clinical assessment.
+- Arrange for endoscopy to evaluate varices if indicated.
+- Contact clinic at any sign of severe GI bleeding, jaundice, or sudden decompensation.
+- Consider early transplant referral if within eligibility.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Lightheadedness</span><span class="pill">Occasional vague melena</span><span class="pill">Hoarseness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>158/90</td></tr><tr><td>heart_rate</td><td>92</td></tr><tr><td>temperature</td><td>98.6</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scleral icterus</li><li>Mild ascites</li><li>Tenderness over RUQ liver edge</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast‑enhanced CT (performed prior)</li><li>Percutaneous liver biopsy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 3.5 cm lesion, arterial enhancement, portal washout</li><li>Elastography: 23 kPa</li><li>Biopsy: HCC, trabecular pattern, fibrous septa</li><li>AFP: 190 ng/mL</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span><span class="pill">Suspected cirrhosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>AFP now 190 ng/mL noted in prior labs</li><li>CT imaging ordered</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After reviewing the CT, the hepatologist confirmed a 3.5‑cm lesion with typical arterial enhancement and washout on portal phase. Transient elastography showed 23 kPa, indicating cirrhosis. A percutaneous liver biopsy was performed the same day. Histology revealed malignant hepatocytes in a trabecular pattern with fibrous septa—diagnostic of HCC. The AFP rose to 190 ng/mL post‑biopsy. The patient was counseled about treatment options and the high risk of decompensation with major surgery.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Definitive diagnosis of HCC with underlying cirrhosis; Child‑Pugh class B.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-02-15</h3><div class="visit-meta">Multidisciplinary Tumor Board | Reason: Treatment planning – first‐line therapy discussion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">2024-02-15 – Tumor Board Discussion – Treatment Planning for Hepatic Lesion
+
+Patient: 65‑year‑old male with chronic hepatitis B and C, cirrhosis (Child‑Pugh B), portal hypertension, metabolic syndrome, obesity, type 2 DM, HTN, HLD.  Current medications: Tenofovir alafenamide, Sofosbuvir/Velpatasvir, Spironolactone 40 mg PO daily, Furosemide 20 mg PO daily, Metformin 850 mg BID, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly.
+
+Chief Complaint / Reason for Visit
+
+- Multidisciplinary tumor board convened to formulate first‑line treatment plan for a 3.5‑cm hypoechoic hepatic lesion (segment 6) identified on prior contrast‑US.  Patient has ongoing fatigue and mild abdominal discomfort.
+
+History &amp; Physical
+
+- AFP 190 ng/mL, INR 1.4, albumin low, mild ascites, scleral icterus present, no worsening jaundice.  Weight 190 lb, BMI 32.
+- BP 160/88, HR 90, RR 16, Temp 98.3 °F, SpO₂ 98%.
+- Physical exam: mild ascites, RUQ tenderness, scleral icterus.  No hepatic encephalopathy noted.
+
+Assessment
+
+1. Suspected hepatocellular carcinoma (HCC) – most likely given hepatic mass, rising AFP, cirrhosis, and risk factors.
+2. Child‑Pugh B cirrhosis – dictates cautious use of cytotoxic agents and limits resection options.
+3. Low‑dose kinase inhibitor (e.g., sorafenib or lenvatinib) as adjunct therapy considered to improve survival if interventional or surgical treatment not feasible.
+4. Metabolic syndrome and obesity – contributors to hepatic steatosis and progression of liver disease; weight reduction may improve liver function.
+
+Plan
+
+- Order CT angiography of the liver in 3 days to characterize lesion vascularity, size, and relationship to major vessels.
+- Schedule percutaneous ablation/ transarterial chemoembolization (TACE) within 2 weeks of CT result, contingent on adequate hepatic reserve (Child‑Pugh B).
+- Initiate low‑dose sorafenib 50 mg PO twice daily as supplemental therapy, to be started after confirming no contraindication on imaging and labs.
+- Continue current diuretic regimen for ascites.  Monitor electrolytes, renal function, and urine output.
+- Referral to dietitian to tailor a calorie‑restricted diet (≈1200–1500 kcal/day) with adequate protein and micronutrients; recommend vitamin K and B12 supplementation to minimize encephalopathy risk.
+- Maintain antiviral therapy for HBV and HCV; review LFTs and antiviral drug levels in 2 weeks.
+- Counsel about avoiding alcohol, hepatotoxins, and ensuring vaccination for hepatitis A.
+- Advise patient to report any new neurological symptoms, encephalopathy signs (confusion, drowsiness, altered gait), or worsening ascites.
+
+Follow‑up
+
+- Return visit in 2 weeks for procedure scheduling and review of CT angiography results.
+- Repeat AFP, CBC, CMP, INR, and platelet count at next visit.
+- Interventional radiology to confirm suitability for ablation; proceed as per tumor board recommendation.
+- Continue multidisciplinary coordination (oncology, gastroenterology, radiology, palliative care, dietitian, and primary care).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Ongoing fatigue</span><span class="pill">Slight abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>160/88</td></tr><tr><td>heart_rate</td><td>90</td></tr><tr><td>temperature</td><td>98.3</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scleral icterus</li><li>Mild ascites</li><li>No jaundice worsening</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT angiography of liver for TACE planning</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Hepatocellular carcinoma</span><span class="pill">Metabolic syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Sildenafil (not listed, excluded)</li><li>Spironolactone 50 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>AFP 190 ng/mL</li><li>Child‑Pugh B</li><li>High surgical risk due to hepatitis B, C, cirrhosis, and metabolic syndrome</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The tumor board convened with gastroenterology, oncology, interventional radiology, and palliative care. Given the size of the lesion, the lack of extrahepatic spread, and Mr. Lewis’s poor surgical candidacy, the consensus was to proceed with transarterial chemoembolization (TACE) using doxorubicin emulsion. Sorafenib was discussed as a potential adjunct; the board opted for a low‑dose pilot given his hepatic reserve. A dietitian was also added to tailor a weight‑reduction diet and vitamin supplementation to reduce encephalopathy risk. The patient was scheduled for TACE in two weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Treatment plan: TACE first‑line with potential low‑dose sorafenib; no surgical options due to active viral hepatitis and cirrhosis.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-04-15</h3><div class="visit-meta">Interventional Radiology | Reason: First TACE procedure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: First TACE procedure for hepatocellular carcinoma (HCC) in liver segment 6.
+
+History of Present Illness: 65‑year‑old male with a complex hepatobiliary history (HBV, HCV, cirrhosis, metabolic syndrome, obesity, DM2, HTN, hyperlipidemia, portal hypertension, and HCC) underwent his first transarterial chemoembolization (TACE) on 2024-04-01. Under fluoroscopic guidance, a doxorubicin‑loaded emulsion and calibrated embolic microspheres were delivered into the segment 6 feeding artery. Post‑embolization CT demonstrated successful selective occlusion with no extrahepatic spread. The patient developed classic post‑TACE syndrome, presenting with low‑grade fever (100.2 °F), mild diffuse abdominal discomfort, and nausea. Symptom control was achieved with acetaminophen and ondansetron; advised adequate hydration, light meals, and monitoring for fever spikes.
+
+Past Medical History: Chronic hepatitis B &amp; C, cirrhosis, HCC (segment 6), portal hypertension, moderate ascites, diabetes, hypertension, hyperlipidemia, obesity.
+
+Medications: Tenofovir alafenamide, sofosbuvir/velpatasvir, sorafenib 50 mg PO BID, spironolactone 40 mg PO daily, furosemide 20 mg PO daily, metformin 850 mg BID, lisinopril 20 mg daily, atorvastatin 40 mg nightly. No known drug allergies.
+
+Review of Systems: Positive for mild right‑upper‑quadrant tenderness, post‑procedure nausea; otherwise unremarkable.
+
+Physical Examination: Vitals: BP 140/78 mm Hg, HR 94 bpm, Temp 100.2 °F, RR 18 /min, O₂ sat 99 % on room air, weight 190 lb, BMI 32. HEENT: scleral icterus present. Abdomen: mild ascites, tender RUQ, no hepatomegaly. No jaundice or edema noted.
+
+Imaging: Post‑procedure contrast‑enhanced CT – selective embolization of the segment 6 HCC with no evidence of extrahepatic spread or biliary injury.
+
+Laboratory: AFP 460 ng/mL (up from 190 ng/mL six weeks ago). LFTs stable compared to baseline; INR 1.4, albumin 3.2 g/dL.
+
+Assessment: 1. HCC – segment 6, treated with TACE, currently showing post‑procedure changes. 2. Elevated AFP trend, may reflect disease activity or early treatment response. 3. Post‑TACE syndrome – resolving. 4. Moderate ascites secondary to portal hypertension, controlled with diuretics. 5. Cirrhosis with compensated liver function.
+
+Plan:
+- Continue current medication regimen (including antiviral and sorafenib). No dose adjustment of sorafenib currently warranted.
+- Maintain spironolactone and furosemide for ascites; monitor weight, sodium, and electrolytes.
+- Advise patient to maintain adequate oral hydration, avoid heavy meals, and report fever &gt;101 °F, abdominal pain &gt; pain medication manageable, or signs of infection.
+- Repeat AFP, CBC, CMP, INR, and LFTs in 4 weeks; repeat abdominal CT with contrast and possible liver‑artery angiography in 8 weeks or sooner if clinical decline.
+- Schedule multidisciplinary tumor board review at next clinic visit to discuss potential repeat TACE, radiofrequency ablation, or transition to advanced systemic therapy if AFP trend suggests progression.
+- Educate regarding signs of hepatic decompensation (increasing abdominal distention, confusion, altered consciousness, bruising) – patient to call 24/7 if noted.
+
+Disposition: Patient discharged home with prescription refills and scheduled return visit in 4 weeks.
+
+Follow‑up Recommendations: See section in Plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild abdominal discomfort</span><span class="pill">Post‑procedure fever</span><span class="pill">Nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>140/78</td></tr><tr><td>heart_rate</td><td>94</td></tr><tr><td>temperature</td><td>100.2</td></tr><tr><td>respiratory_rate</td><td>18</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scleral icterus</li><li>Mild ascites</li><li>Tender right upper quadrant</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Post‑procedure liver CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: Selective embolization of segment 6 lesion, no extrahepatic extension</li><li>AFP: 460 ng/mL (after 6 weeks)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Doxorubicin emulsion + embolic microspheres</li><li>Acetaminophen</li><li>Ondansetron</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient noted transient abdominal warmth, fever, and mild nausea, resolved in 4 days. Ascites remained moderate.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Hepatocellular carcinoma</span><span class="pill">Metabolic syndrome</span><span class="pill">Iron overload</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Spironolactone 100 mg daily</li><li>Furosemide 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>TACE scheduled two weeks earlier</li><li>Baseline AFP 190 ng/mL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under fluoroscopic guidance, TACE was performed using doxorubicin emulsion and embolic microspheres. Post‑embolization CT confirmed selective arterial occlusion of the tumor feeding artery and decreased lesion arterialization. Mr. Lewis experienced typical post‑TACE syndrome with a low‑grade fever, mild abdominal pain, and nausea, controlled with acetaminophen and ondansetron. He was advised to stay hydrated and avoid heavy meals. The procedure did not alter his baseline labs dramatically.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Residual tumor seen on imaging; AFP rising to 460 ng/mL reflects tumor progression despite TACE.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-07-15</h3><div class="visit-meta">Gastroenterology | Reason: Recurrent ascites and portal hypertension complications</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 65‑year‑old male presents with worsening abdominal distention, lower‑extremity edema, speech difficulty, and episodic confusion consistent with hepatic encephalopathy.
+
+History of Present Illness: The patient has a long history of chronic hepatitis B and C with cirrhosis, portal hypertension, and hepatocellular carcinoma (AFP 460 ng/mL) that has progressed despite multiple TACE procedures. He began sorafenib 6 weeks ago at 400 mg BID; however, AST/ALT rose to 120/105 IU/L, and the patient reported significant nausea, prompting discontinuation of sorafenib. He reports refractory ascites despite 20 mg furosemide and 100 mg spironolactone daily, now with additional torsemide 20 mg BID. Laboratory evaluation shows serum creatinine 1.5 mg/dL, rising to 1.5 mg/dL diurnally from a baseline of 0.8–1.0 mg/dL, bilirubin 4.3 mg/dL, albumin 1.8 g/dL, INR 2.5, and mild hepatitis flare (AST 120, ALT 105).
+
+Physical Examination: Scleral icterus; marked ascites (tender, shifting dullness); lower‑extremity pitting edema; mild hepatic encephalopathy (speech slowed, confusion). Vital signs: BP 170/90 mm Hg, HR 98 bpm, Temp 98.4 °F, RR 16/min, O₂ sat 98 %, weight 190 lb, BMI 32.
+
+Procedures: Upper GI endoscopy revealed large esophageal varices with red‑sign stigmata; four bands were placed. Bedside ultrasound confirmed large ascitic fluid collection.
+
+Assessment: 1. Refractory ascites secondary to advanced cirrhosis with portal hypertension. 2. Hepatocellular carcinoma with rising AFP and recent TACE. 3. Mild hepatic encephalopathy. 4. Hepatorenal syndrome type 1 (serum creatinine rise, low albumin, hyperdynamic circulation). 5. Sorafenib‑related hepatocellular injury causing transaminase elevation.
+
+Plan:
+1. Continue current diuretics: torsemide 20 mg BID and furosemide 20 mg daily; titrate every 48–72 h based on weight and fluid balance. 2. Maintain spironolactone 100 mg daily and prednisone taper (low dose). 3. Hold sorafenib permanently due to toxicity. 4. Continue surveillance for HCC progression with AFP and imaging (contrast‑enhanced CT in 8 weeks or sooner if clinical changes). 5. Consider TIPS placement if ascites remains refractory and synthetic function improves; however, current synthetic indices (INR 2.5, albumin 1.8 g/dL) make this a high‑risk option. 6. Refuse peritoneovenous shunt due to poor synthetic reserve. 7. Intensify anti‑bleeding prophylaxis: continue proton pump inhibitor (if not already) and repeat endoscopy in 6 weeks. 8. Refer for transplant evaluation. 9. Palliative care continued to address goals of care. 10. Monitor renal function: daily urine output and serum creatinine, adjust diuretics accordingly.
+
+Follow‑Up Recommendations: • Repeat LFTs, INR, CMP, bilirubin, and creatinine weekly. • Repeat abdominal ultrasound (or CT) in 4 weeks or earlier if worsening fluid overload. • Schedule transplant clinic visit within 2 weeks. • Follow‑up with palliative care next week to discuss symptom control and advance directives. • Continue low‑dose prednisone; repeat daily hepatic panel to ensure no rebound transaminase surge. • Encourage protein‑restricted diet (1.0–1.2 g/kg body weight) with sodium restriction (&lt;2 g/day). • Review variceal bleeding risk with repeat EGD in 6 weeks.
+
+Medications: Metformin 850 mg BID, Lisinopril 20 mg daily, Atorvastatin 40 mg nightly, Spironolactone 100 mg daily, Furosemide 20 mg daily, Torsemide 20 mg BID, Prednisone taper (low dose).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Worsening abdominal distention</span><span class="pill">Lower‑extremity edema</span><span class="pill">Difficulty speaking clearly</span><span class="pill">Confusion episodes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>170/90</td></tr><tr><td>heart_rate</td><td>98</td></tr><tr><td>temperature</td><td>98.4</td></tr><tr><td>respiratory_rate</td><td>16</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scleral icterus</li><li>Marked ascites (tender, shifting dullness)</li><li>Lower‑extremity pitting edema</li><li>Mild encephalopathy (speech slowed, confusion)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Upper‑endoscopy with variceal band ligation</li><li>Repeat CMP and liver panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Upper GI: Large esophageal varices, red‑sign, 4 bands placed</li><li>CMP: Bilirubin 4.3 mg/dL, Albumin 1.8 g/dL, INR 2.5, Creatinine 1.5 mg/dL, AST 120, ALT 105</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Elimination of sorafenib</li><li>Added torsemide 20 mg BID</li><li>Variceal band ligation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Despite increased diuretics, ascites did not resolve; patient declined further chemotherapy due to nausea. Reflected frustration about disease progression.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Hepatocellular carcinoma</span><span class="pill">Metabolic syndrome</span><span class="pill">Iron overload</span><span class="pill">Serious ascites</span><span class="pill">Portal hypertension</span><span class="pill">Hepatorenal syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Spironolactone 100 mg daily</li><li>Furosemide 20 mg daily</li><li>Sorafenib 400 mg BID</li><li>Prednisone taper (low dose) started</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>AFP 460 ng/mL</li><li>TACE previous</li><li>Sorafenib started 6 weeks earlier, dose 400 mg BID</li><li>Diurnal rise in creatinine to 1.5 mg/dL (baseline 0.8–1.0)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with escalating ascites and episodes of hepatic encephalopathy. A bedside ultrasound confirmed large ascitic fluid collection. An upper‑endoscopy was performed: large esophageal varices with red‑sign stigmata identified; four bands were placed. A repeat laboratory panel showed serum creatinine 1.5 mg/dL and mild rises in liver enzymes (AST 120, ALT 105). The patient was also initiated on a higher diuretic regimen: torsemide 20 mg BID added. Despite aggressive diuresis, ascites remained refractory. The team reviewed the possibility of a peritoneovenous shunt and concluded the poor synthetic function made it a poor indication. The palliative care team was consulted to discuss goals of care. Sorafenib was held due to rising transaminases and the patient expressed nausea, so therapy was discontinued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Child‑Pugh class C, severe portal hypertension, variceal bleed managed, refractory ascites, HCC progression.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-10-15</h3><div class="visit-meta">Palliative Care | Reason: End‑of‑life care and hospice referral</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: End‑of‑life care and hospice referral. 
+
+History of Present Illness: Mr. Lewis, 65‑year‑old male with advanced cirrhosis from chronic hepatitis B and C, presents after admission by hospice for worsening abdominal distention and a mild head injury sustained in a fall. CT abdomen with contrast showed a 4.2‑cm hepatic lesion invading a branch of the portal vein; no extrahepatic metastasis was seen. Laboratory studies indicate severe coagulopathy (INR 2.5), profound hypoalbuminemia (1.8 g/dL), and rising bilirubin. He can no longer tolerate oral intake. The palliative team activated a low‑dose IV morphine infusion for pain and discussed goals of care with his family. The consensus was to discontinue all active oncologic therapy and transition to hospice care at home. Home hospice personnel have been contacted and a short‑term pain plan and family counseling have been arranged.
+
+Past Medical History: Chronic hepatitis B &amp; C, cirrhosis, metabolic syndrome, iron overload, severe ascites, portal hypertension, hepatorenal syndrome, severe hepatic encephalopathy. Prior interventions: TACE, sorafenib (held), variceal ligation, refractory ascites, multiple diuretic adjustments.
+
+Physical Examination: Scleral icterus present. Abdomen tense with significant ascites; soft but tender to palpation. Speech weak, patient confused. Low‑grade fever 99 °F. Respiratory rate 20/min. Oxygen sat 97 % on room air.
+
+Assessment:
+1. Decompensated cirrhosis with HCC stage IV (portal vein invasion). 2. Severe hepatic encephalopathy. 3. Diuretic‑resistant ascites. 4. Coagulopathy and hypoalbuminemia. 5. Patient wishes to pursue comfort care.
+
+Plan:
+• Continue low‑dose IV morphine infusion (target 0.1 mg/h with titration to effect).  • Maintain current diuretic regimen: spironolactone 100 mg PO daily, furosemide 20 mg PO daily.  • Continue lisinopril 20 mg PO daily for chronic hypertension.  • Discontinue all oncologic therapy (sorafenib, TACE) and discontinue prednisone.  • Continue routine labs: CBC (already obtained), CMP, LFTs, INR, albumin; repeat every 4–6 weeks or sooner if clinical change.  • Monitor for signs of worsening hepatic encephalopathy, renal function, and ascites.  • Provide family education on hospice care, symptom management, and comfort measures.  • Arrange for home hospice team visits: initial rapid assessment, then weekly follow‑ups or sooner as needed.
+
+Prognosis: Due to advanced liver disease with portal vein tumor thrombus and multi‑system decompensation, life expectancy is limited. Comfort care focus will continue.
+
+Disposition: Transition to home hospice care with symptom‑oriented management and ongoing support for patient and family.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Extreme fatigue</span><span class="pill">Severe abdominal pain</span><span class="pill">Shortness of breath</span><span class="pill">Yellow‑tinged confusion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>140/80</td></tr><tr><td>heart_rate</td><td>102</td></tr><tr><td>temperature</td><td>97.9</td></tr><tr><td>respiratory_rate</td><td>20</td></tr><tr><td>weight</td><td>190 lb</td></tr><tr><td>BMI</td><td>32</td></tr><tr><td>oxygen_saturation</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scleral icterus</li><li>Significant ascites, tense abdomen</li><li>Soft abdomen but tender to palpation</li><li>Weak speech, confusion</li><li>Low-grade fever (99°F)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT abdomen with contrast (already performed)</li><li>Complete blood count</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT: 4.2 cm HCC with portal vein branch invasion; no extrahepatic metastasis</li><li>CBC: Hemoglobin 9.0 g/dL, WBC 4.5 k/µL, Platelets 80 k/µL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 2.5 mg q4h PRN</li><li>Home hospice arrangement</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient remained lucid and expressed a desire for a peaceful end. He accepted hospice care and declined further interventions.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B</span><span class="pill">Chronic hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Hepatocellular carcinoma with portal invasion</span><span class="pill">Metabolic syndrome</span><span class="pill">Iron overload</span><span class="pill">Severe ascites</span><span class="pill">Portal hypertension</span><span class="pill">Hepatorenal syndrome</span><span class="pill">Severe hepatic encephalopathy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Mild dose morphine 2.5 mg every 4 hrs PRN</li><li>Lisinopril 20 mg daily</li><li>Spironolactone 100 mg daily</li><li>Furosemide 20 mg daily</li><li>Prednisone taper stopped</li><li>Prednisone withheld after holding</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>AFP 4.2 cm lesion with portal vein invasion on CT</li><li>Previous TACE, sorafenib held, variceal ligation, refractory ascites</li><li>High INR (2.5), hypoalbuminemia (1.8 g/dL)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Lewis was admitted by hospice with worsening abdominal distention and a mild head injury from a fall. Imaging revealed a 4.2 cm HCC invading a portal vein branch. His labs indicated severe coagulopathy (INR 2.5), profound hypoalbuminemia, and rising bilirubin. He could no longer tolerate oral intake. The palliative team initiated a low‑dose morphine infusion for pain and discussed goals of care with his family. The decision was made to discontinue all active oncologic therapy and transition to hospice care at home. Home hospice personnel were contacted, and the patient was provided with a short‑term pain plan and counseling for his family.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Final stage of disease: aggressive HCC with vascular invasion, refractory hepatic failure, portal hypertension complications, and multi‑system organ failure. Death within a month of this encounter.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic hepatitis B infection</span><span class="pill">Chronic hepatitis C infection</span><span class="pill">Cirrhosis of the liver</span><span class="pill">Metabolic syndrome</span><span class="pill">Obesity</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Hyperlipidemia</span><span class="pill">Hepatocellular carcinoma</span><span class="pill">Portal hypertension</span><span class="pill">iron overload</span><span class="pill">hepatorenal syndrome</span><span class="pill">hepatic encephalopathy</span><span class="pill">ascites</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Tenofovir alafenamide (HBV antiviral)</li><li>Sofosbuvir/velpatasvir (HCV antiviral)</li><li>Metformin 850 mg BID</li><li>Lisinopril 20 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Spironolactone 100 mg daily</li><li>Furosemide 20 mg daily</li><li>Morphine low‑dose IV infusion</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with fatigue, right upper quadrant discomfort, weight loss, jaundice, and abdominal bloating. Labs revealed anemia, elevated bilirubin, AST/ALT, low albumin, INR 1.4, elevated AFP (45 ng/mL), high ferritin (480 ng/mL), and transferrin saturation (60%). Imaging pending. Initiated diuretic therapy (spironolactone 40 mg PO daily and furosemide 20 mg PO daily). Plan to start antiviral therapy for HBV (tenofovir) and HCV (sofosbuvir/velpatasvir) after imaging. Counseling on alcohol cessation, diet, and weight management.</li><li>Visit on 2024-01-16: Ultrasound with contrast showed a 3.5‑cm hypoechoic lesion in liver segment 6, moderate steatosis, no ascites or portal hypertension. Patient reports mild worsening right upper quadrant discomfort and dizziness. Vital signs: BP 150/84, HR 88, weight 190 lb, BMI 32. AFP remains 45 ng/mL. Continued tenofovir alafenamide, sofosbuvir/velpatasvir, spironolactone, and furosemide. Ordered contrast‑enhanced abdominal CT and liver function tests to evaluate lesion.</li><li>Visit on 2024-01-23: Percutaneous liver biopsy confirmed hepatocellular carcinoma; AFP increased to 190 ng/mL; patient now on metformin, lisinopril, atorvastatin in addition to ongoing antivirals and diuretics; moderate portal hypertension noted; mild ascites and RUQ tenderness present; plans include repeat AFP/LFTs, tumor board review, and potential referral for liver transplantation.</li><li>Visit on 2024-02-15: Multidisciplinary tumor board discussion. Reviewed imaging and labs: AFP 190 ng/mL, INR 1.4, mild ascites, mild right upper quadrant tenderness. Ordered CT angiography of liver, plan percutaneous ablation or TACE contingent on imaging, initiated low‑dose sorafenib 50 mg PO BID pending imaging, continued diuretic therapy, referred to dietitian for calorie‑restricted diet, and planned follow‑up in 2 weeks.</li><li>Visit on 2024-04-15 (Interventional Radiology): First transarterial chemoembolization (TACE) performed for hepatocellular carcinoma in liver segment 6. Post‑procedure CT showed successful selective embolization with no extrahepatic spread. Patient developed low‑grade fever (100.2°F), mild abdominal discomfort, and nausea; managed with acetaminophen and ondansetron. Vital signs: BP 140/78, HR 94, temp 100.2°F, weight 190 lb, BMI 32. Labs: AFP 460 ng/mL (up from 190 ng/mL), INR 1.4, albumin 3.2 g/dL. Diuretics (spironolactone 40 mg PO daily, furosemide 20 mg PO daily) continued for moderate ascites. Plan includes repeat AFP, CBC, CMP, INR, and LFTs in 4 weeks, repeat abdominal CT with contrast in 8 weeks or sooner if clinical decline, and multidisciplinary tumor board review to discuss further therapy options.</li><li>Patient presented with worsening abdominal distention, lower‑extremity edema, speech difficulty, and episodic confusion consistent with hepatic encephalopathy. Labs: creatinine 1.5 mg/dL, bilirubin 4.3 mg/dL, albumin 1.8 g/dL, INR 2.5, AST 120, ALT 105. Upper GI endoscopy revealed large esophageal varices with red‑sign stigmata; four bands placed. Bedside ultrasound confirmed large ascitic fluid collection. Diuretic regimen updated to torsemide 20 mg BID, furosemide 20 mg daily and spironolactone 100 mg daily; sorafenib permanently discontinued. Low‑dose prednisone taper started. Planned surveillance with AFP and contrast‑enhanced CT in 8 weeks. Consideration of TIPS noted contingent on synthetic function.</li><li>Visit 7 (2024-10-15) – Palliative care assessment. Chief complaints of extreme fatigue, severe abdominal pain, shortness of breath, and yellow‑tinged confusion. Findings: tense abdomen with significant ascites, scleral icterus, speech weakness, confusion, low‑grade fever 99°F, BP 140/80, HR 102, RR 20, oxygen 97% on room air. Labs: severe coagulopathy INR 2.5, hypoalbuminemia 1.8 g/dL, rising bilirubin, creatinine 1.5 mg/dL, AST 120, ALT 105, albumin 1.8 g/dL. Imaging: CT abdomen with contrast showed 4.2 cm hepatic lesion invading a portal vein branch; no extrahepatic metastasis. Interventions: low‑dose IV morphine infusion started, diuretic regimen maintained (spironolactone 100 mg daily, furosemide 20 mg daily), lisinopril continued, prednisone and oncologic therapy discontinued. Plan: transition to home hospice, routine labs every 4–6 weeks, monitoring for encephalopathy, renal function, ascites. Follow‑up: contact hospice team, monitor pain, assess worsening encephalopathy and renal function, provide caregiver support.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

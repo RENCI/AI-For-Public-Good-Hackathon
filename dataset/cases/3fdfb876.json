@@ -1,0 +1,939 @@
+{
+  "case_id": "3fdfb876",
+  "clinical_variables": {
+    "primary_condition": "Type 2 Diabetes Mellitus",
+    "comorbidities": [
+      "Hypertension",
+      "Dyslipidemia",
+      "Obesity",
+      "Chronic Kidney Disease",
+      "Sleep Apnea"
+    ],
+    "age": 55,
+    "sex": "M",
+    "risk_factors": [
+      "Obesity",
+      "Sedentary lifestyle",
+      "Unhealthy diet",
+      "Family history of diabetes",
+      "Age >45"
+    ]
+  },
+  "difficulty": "medium",
+  "case_type": "chronic",
+  "intended_outcome": "undiagnosed",
+  "narrative": "When the first threads of change began to weave themselves into his everyday life, John did so without the dramatic heralds that most people remember in textbook accounts of diabetes. He was a 55\u2011year\u2011old accountant, 6'1\" and 240 pounds, with a body mass index that had hovered around 33 for the better part of a decade. His work was a maze of desk\u2011bound hours and the occasional client dinner that usually concluded with a hearty plate of pasta, a few extra bites of potato chips, and a glass of wine. After a workday that ended around six forty, he would return to a house where the only source of exercise was a small backyard lawn that he rolled over to get a quick jog or stretch\u2014a far cry from the brisk walks he had once taken around the neighborhood in his twenties.\n\n---\n\n### The Early Whisper\n\nThe first time John noticed anything odd was in late 2023, during a routine visit to his primary care physician, Dr. Patel, for a blood pressure check after the morning conference. John\u2019s blood pressure had hovered between 140/90 and 158/95 for the past several months. The doctor noted it in the chart, but the conversation moved quickly toward diet and lifestyle changes. \u201cJust keep an eye on the salt,\u201d Dr. Patel said. \u201cWe\u2019ll get your lipid panel done next year.\u201d\n\nAs the months slipped by, John began to notice that his evenings felt heavier. He would find himself getting up twice or thrice after midnight, feeling \u201cparched\u201d despite having only a glass of water at midnight. \u201cMaybe I\u2019m just overhydrated,\u201d he thought before deciding to cut back. The next morning, he woke with a dry mouth, a headache that seemed worse than his usual 9\u2011am migraines, and a feeling of sluggishness that permeated his whole day. He attributed it to sleep apnea, which he'd been diagnosed with in 2021 and was still using a CPAP machine nightly. He had been a compliant user, yet his compliance dropped slightly during the holidays when the CPAP had been taken on the plane.\n\nHe didn\u2019t bring these concerns to Dr. Patel in the next visit (an annual physical in December 2023). The doctor asked about his weight and appetite, and recommended a 30\u2011minute walk after lunch in the office cafeteria. \u201cIt\u2019s the little things that add up,\u201d Dr. Patel said with a smile.\n\n---\n\n### The Gradual Lattice\n\nThe following year, John\u2019s weight climbed to 255 pounds. He found his CPAP machine was leaking slightly in the night, and his snoring had increased. Over the course of the summer, he began to sense that, when he drove at night, there was a flickering of lights in the backseat that he could almost perceive. He dismissed it as a mild form of nocturnal visual fatigue. A routine checkup in September 2024, prompted by a minor lower\u2011back strain, served as his first real opportunity to have his vital signs rechecked under more attentive conditions.\n\nDr. Patel recorded a blood pressure of 158/92. The physical exam was otherwise unremarkable: a slightly accentuated waist circumference, a soft abdomen, and no signs of peripheral edema. Dr. Patel prompted him, \u201cHow are you getting along with your diet?\u201d\u2014and the patient responded with an earnest, \u201cI\u2019ve been trying to trim down, but the carbs are a challenge.\u201d Dr. Patel scribbled a note in the chart: *Weight 255 lbs, BMI 34.5. BP 158/92. Patient reports increased nocturnal thirst, mild morning headaches.*\n\nDespite the mention of \u201cnocturnal thirst,\u201d no blood tests were ordered. John's only laboratory tests that year had been a fasting lipid panel (elevated LDL), a basic metabolic panel (normal electrolytes), and a urine microalbumin\u2011to\u2011creatinine ratio (UACR) that was 45 mg/g, raising a flag for early chronic kidney disease, which was noted but not acted upon beyond a referral to the nephrology clinic (which he never attended).\n\n---\n\n### Clinical Decision Points\n\n- **October 2024**: John\u2019s first nephrology appointment (the one he refused) was meant to discuss his mild albuminuria. When he did not attend, Dr. Patel sent a reminder that his kidney function should be monitored, but no glucose evaluation was recorded.\n\n- **January 2025**: After a small but significant fall at home that required a physical therapy evaluation, Dr. Patel requested an HbA1c to assess the possibility of metabolic disorders, citing the patient\u2019s \u201cpersistent fatigue and daytime sleepiness.\u201d Dr. Patel ordered an HbA1c, and later that week, the laboratory returned a result of 6.6%. The result was tucked into John\u2019s chart, a half\u2011hearted acknowledgment that something \u201cwere going on\u201d but not pursued as a definite diagnosis. The patient was advised to \u201cmaintain your weight loss efforts; we\u2019ll revisit the results in a few months.\u201d\n\n- **March 2025**: On a routine check for his prescription refills, the pharmacy nurse noticed that John had picked up a new prescription: Metformin 500 mg delayed-release twice daily. Dr. Patel had responded to the HbA1c results with a prescription, assuming early diabetes but leaving the patient in a diagnostic gray zone. The pharmacy screen called in a red flag regarding his mild chronic kidney disease, specifically that a starting dose of Metformin was not recommended when eGFR was below 45 mL/min/1.73 m\u00b2. The pharmacist sent a note back to Dr. Patel: *Metformin contraindicated on CKD.*\n\n- **April 2025**: Dr. Patel\u2019s office sent a note to John's cardiologist, noting elevated LDL and borderline blood pressure. No mention of blood glucose status was made.\n\n- **September 2025**: John\u2019s blood sugar at home on a portable glucometer (the machine he\u2019d purchased from a local pharmacy) was 110\u2013120 mg/dL most evenings. He chalked it up to \u201cnormal fluctuations.\u201d The CPAP compliance continued to wobble; he had lost about five pounds in the month prior to the appointment for insomnia and sleep apnea management.\n\n- **December 2025**: John\u2019s eGFR had dropped to 40 mL/min/1.73 m\u00b2 on his latest chemistries (obtained during a routine nephrology visit, which he finally did attend due to a scheduled dental cleaning). The nephrologist wrote a note urging the patient to consult his primary provider about adjusting medication regimens, especially for Metformin, and also recommended a repeat HbA1c in six months. The appointment was rescheduled for March 2026 but never materialized.\n\n---\n\n### The Undiagnosed Present\n\nThroughout 2024 and 2025, John\u2019s chronic conditions evolved in a steady, unremarkable fashion. His blood pressure fluctuated between 150/90 and 162/98, his weight rose to 270 pounds by early 2025, and his sleep apnea continued to disrupt his nightly rest. Each exam revealed the same incremental changes:\n\n- **Blood pressure**: Notably elevated, but treated with a second\u2011line ACE inhibitor when the first drug failed to keep diastolic pressure below 95 mmHg.\n\n- **Weight**: Progressive increase.\n\n- **Kidney function**: From 55 eGFR to 45, then 40 mL/min/1.73 m\u00b2. No dialysis or transplant counseling was prompted because the decline was deemed to be slow and the patient\u2019s creatinine was still within the range that allowed for pharmacologic adjustments.\n\n- **Glucose**: HbA1c of 6.6% in January 2025 did not prompt a formal diabetes diagnosis because the clinical picture was otherwise quiet. The patient reported mild fatigue, but not more compelling symptoms. His home glucometer readings tended to hover in the high 80s to low 100s; occasional spikes into 140 mg/dL were dismissed as \u201cpost\u2011meal\u201d variations.\n\nBy March 2026, at the time of a scheduled follow\u2011up with his PCP, John had yet to receive a formal diagnosis\u2014his only label being \u201cpre\u2011diabetes\u201d in the chart, a label that had not been used consistently. The narrative of his disease course, as recorded by the providers, was a series of risk factor managements, incremental lifestyle changes, and mild adjustments in medications (ACE inhibitor, statin, and a single prescription of Metformin that was later flagged). The progression of Type 2 Diabetes Mellitus had proceeded largely unnoticed, slipping into the background of a patient burdened by hypertension, dyslipidemia, CKD, obesity, and sleep apnea.\n\n---\n\n### A Timeline You Can Map\n\n| Month | Event | Clinical Detail | Notes |\n|---|---|---|---|\n| **Oct\u201123** | Routine blood pressure visit | BP 142/96; weight 240 lbs | Noted hypertension; lifestyle advice |\n| **Dec\u201123** | Annual exam | BP 158/92; weight 240 lbs | Elevated BP; lipid panel ordered for next year |\n| **Mar\u201124** | Follow\u2011up for lower back | BP 161/95; weight 245 lbs | No labs for glucose |\n| **Jun\u201124** | CPAP compliance note | Mild leak; reported nocturnal thirst | No glucose work\u2011up |\n| **Sep\u201124** | Physical exam | Weight 255 lbs; BP 158/92; UACR 45 | Nephrology referral; no HbA1c |\n| **Oct\u201124** | Nephrology referral missed | No appointment attended | CKD stage 2 |\n| **Jan\u201125** | Physical therapy appointment | HbA1c 6.6% | Metformin prescribed, but no formal diabetes diagnosis |\n| **Mar\u201125** | Pharmacy flag on Metformin | CKD eGFR 48 | Note sent to PCP |\n| **Apr\u201125** | Cardiologist follow\u2011up | LDL elevated; BP controlled | No mention of glucose |\n| **Sep\u201125** | Home glucometer | 110\u2013120 mg/dL evenings | No formal follow\u2011up |\n| **Dec\u201125** | Nephrology visit | eGFR 40; creatinine 1.4 | Repeat HbA1c advised in 6 months |\n| **Mar\u201126** | PCP follow\u2011up scheduled | No new diagnoses; patient retains \u201cpre\u2011diabetes\u201d label | Appointment not kept; remains undiagnosed |\n\nIn the story of John, the progression of his Type 2 Diabetes Mellitus was a silent creep, masked by a cacophony of other comorbidities. No single clinical visit delivered a definitive diagnosis; instead, each step\u2014blood pressure check, lipid panel, CPAP usage, a fleeting HbA1c result\u2014additionally suggested an underlying metabolic derangement that was never formally labeled. By the end of the timeline drawn above, John's diabetes remained an invisible thread interwoven through his hypertension, dyslipidemia, CKD, obesity, and sleep apnea, an undiagnosed chronic condition that had yet to manifest compelling symptoms or a clinician\u2019s call to action.",
+  "timeline": [
+    {
+      "visit_number": 1,
+      "visit_date": "2023-10-15",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Routine blood pressure check",
+      "is_related_to_main_illness": true,
+      "note": "Patient John Doe, a 55\u2011year\u2011old male with a history of hypertension, obesity, chronic kidney disease (CKD), dyslipidemia, and sleep apnea, presented for a routine blood pressure check.\n\n**Chief Complaint:** Routine BP and weight check.\n\n**History & Review of Systems:** No acute complaints or new symptoms. Denied chest pain, palpitations, dyspnea, edema, urinary changes, or recent medication changes. Reports adherence to CPAP during sleep.\n\n**Vitals:** BP 142/96\u202fmmHg, HR 78\u202fbpm, T 98.6\u202f\u00b0F, BMI 33 (weight 240\u202flb). \n\n**Physical Exam:** \n- Cardiovascular: regular rate/rhythm, no murmurs, normal S1/S2, no peripheral edema.\n- Pulmonary: clear to auscultation bilaterally.\n- Abdomen: soft, non\u2011distended, non\u2011tender.\n- Extremities: no cyanosis or edema.\n\n**Assessment & Differential Diagnosis:**\n1. **Hypertension \u2013 Stage\u202f1** (borderline; systolic 140\u2013159 or diastolic 90\u201399\u202fmmHg). Likely driven by diet, sedentary lifestyle, and obesity.\n2. **Obesity** \u2013 class\u202fI (BMI 30\u201334.9). Contributing factor to HTN and CKD.\n3. **Chronic kidney disease** \u2013 stage 3 (stable as per prior values). Close monitoring of BP is essential.\n4. **Obstructive sleep apnea** \u2013 well\u2011controlled on CPAP.\n5. **Dyslipidemia** \u2013 pending future lab work.\n\n**Plan:**\n- Lifestyle modification: \n   \u2022 Initiate low\u2011sodium diet (<2\u202fg/day); provide handouts.\n   \u2022 Encourage at least 150\u202fmin/week of moderate aerobic activity; suggest daily 30\u2011min brisk walking.\n   \u2022 Keep a food log for review at next visit.\n- BP monitoring: \n   \u2022 Home BP monitoring twice daily (morning/evening) for two weeks; return readings.\n   \u2022 Reassess BP in 3\u202fmonths.\n- Labs: \n   \u2022 Order fasting lipid panel in 12\u202fmonths (as per long\u2011term management).\n   \u2022 Consider repeat serum creatinine/eGFR in 6\u202fmonths.\n- Medications: \n   \u2022 No pharmacologic therapy indicated at this time; patient is medication\u2011na\u00efve.\n   \u2022 If BP remains \u2265140/90\u202fmmHg after 3\u202fmonths of lifestyle changes, initiate ACE inhibitor or ARB.\n- Follow\u2011up: \n   \u2022 Return in 3\u202fmonths for BP and weight reassessment.\n   \u2022 Encourage continued CPAP adherence; refer to sleep clinic if any issues.\n   \u2022 Consider referral to dietitian and exercise physiologist for structured counseling.\n\n**Patient Education & Response:** Discussed the importance of salt restriction, weight loss, and exercise. Patient was receptive, agreed to maintain a food diary, and committed to adding walking to daily routine.\n\n**Signature:** \nMD \u2013 Primary Care\n",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [],
+      "vitals": {
+        "BP": "142/96",
+        "HR": "78",
+        "Temperature": "98.6",
+        "BMI": "33"
+      },
+      "relevant_history": [
+        "Hypertension",
+        "Obesity",
+        "Sedentary lifestyle",
+        "CPAP use for sleep apnea"
+      ],
+      "known_conditions": [],
+      "current_medications": [],
+      "allergies": [],
+      "visit_scenario": "John arrived for a routine BP check. The physician measured a borderline hypertensive reading of 142/96 mmHg and noted his weight at 240 lbs. The discussion focused on salt restriction and lifestyle modification. The patient was reminded to keep a food diary and given encouragement to incorporate more walking.",
+      "examination_findings": [
+        "Cardiovascular exam: normal heart rate, regular rhythm, no murmurs",
+        "Pulmonary exam: clear lung fields",
+        "Abdominal exam: soft, non-distended, no tenderness",
+        "No peripheral edema"
+      ],
+      "tests_ordered": [
+        "Fasting lipid panel next year"
+      ],
+      "test_results": [],
+      "treatments_administered": [
+        "Lifestyle counseling (salt reduction, weight loss goals)"
+      ],
+      "patient_response": "Acknowledged the plan and agreed to start a low-sodium diet and increase daily steps.",
+      "disease_progression_notes": "No formal diagnosis. BP borderline, risk factors documented."
+    },
+    {
+      "visit_number": 2,
+      "visit_date": "2023-12-05",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Annual physical examination",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Annual physical examination.\n\nHistory of Present Illness: Patient is a 55\u2011year\u2011old male presenting for routine annual physical. He reports no new complaints. He has a history of hypertension, dyslipidemia, obesity, chronic kidney disease (Stage 3), and obstructive sleep apnea managed with CPAP. He notes slight non\u2011compliance with CPAP during recent holiday travel.\n\nReview of Systems: All systems reviewed and negative for new symptoms.\n\nPast Medical History: Hypertension, Dyslipidemia, Obesity (BMI 33), CKD stage 3, Obstructive sleep apnea.\n\nMedications: None prior to this visit.\n\nAllergies: NKDA.\n\nSocial History: Patient denies tobacco use, drinks alcohol socially.\n\nVitals: BP 158/92\u00a0mmHg, HR 80\u00a0bpm, Temp 98.7\u202f\u00b0F, BMI 33.\n\nPhysical Examination:\n- General: Alert, oriented, no acute distress.\n- Cardiovascular: Regular rhythm, mild systolic murmur not noted, BP elevated.\n- Pulmonary: Clear to auscultation bilaterally.\n- Abdomen: Soft, non\u2011tender, no organomegaly, central obesity.\n- Extremities: No pitting edema.\n\nAssessment:\n1. Uncontrolled hypertension \u2013 patient\u2019s BP remains above guideline targets. Given obesity and CKD, ACE inhibitor is appropriate as first\u2011line.\n2. Obesity \u2013 BMI 33 continues to increase risk of cardiovascular disease.\n3. Chronic kidney disease \u2013 baseline renal function to be monitored.\n4. Obstructive sleep apnea \u2013 variable CPAP compliance; need to reinforce importance of adherence.\n\nPlan:\n- Initiate lisinopril 10\u202fmg daily as first\u2011line agent; will titrate to achieve diastolic <95\u202fmmHg.\n- Advise patient to resume consistent CPAP use, especially during travel.\n- Refer to dietitian for weight reduction plan focusing on low\u2011sodium diet, calorie control, and heart\u2011healthy fats.\n- Order fasting lipid panel and baseline serum creatinine/eGFR prior to starting ACE inhibitor.\n- Patient to monitor home BP twice daily for two weeks and keep record.\n- Schedule follow\u2011up in 4 weeks for BP assessment and medication tolerance; labs due in 2 weeks.\n- Discuss potential side effects: cough, hyperkalemia; instruct patient to report these promptly.\n\nEducation: Reviewed goals of therapy, lifestyle modifications, and importance of medication adherence.\n\nDisposition: Will continue to treat hypertension with medications and lifestyle modifications, with close monitoring of BP and renal function.\n\nProvider: ________________________",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [],
+      "vitals": {
+        "BP": "158/92",
+        "HR": "80",
+        "Temperature": "98.7",
+        "BMI": "33"
+      },
+      "relevant_history": [
+        "Hypertension",
+        "Obesity",
+        "CPAP with slightly lower compliance during holiday travel",
+        "No new complaints"
+      ],
+      "known_conditions": [
+        "Hypertension"
+      ],
+      "current_medications": [],
+      "allergies": [],
+      "visit_scenario": "During the annual visit, the physician noted the patient's BP at 158/92 mmHg and his unchanged weight. The patient reported slight CPAP non\u2011compliance due to travel. The provider prescribed a first\u2011line angiotensin\u2011converting enzyme inhibitor (Lisinopril 10 mg daily) to maintain diastolic pressure below 95 mmHg and advised a dietitian referral.",
+      "examination_findings": [
+        "Cardiovascular exam: mild hypertension, regular rhythm",
+        "Pulmonary exam: clear",
+        "Abdominal exam: soft, no organomegaly",
+        "Moderate central obesity"
+      ],
+      "tests_ordered": [
+        "Fasting lipid panel (to be performed next week)",
+        "Baseline serum creatinine and eGFR"
+      ],
+      "test_results": [],
+      "treatments_administered": [
+        "Started Lisinopril 10 mg daily",
+        "Advised dietitian referral"
+      ],
+      "patient_response": "Agree to take medication and diet plan.",
+      "disease_progression_notes": "Blood pressure remains uncontrolled, new ACEI started. No diabetes screening yet."
+    },
+    {
+      "visit_number": 3,
+      "visit_date": "2024-03-18",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Follow-up for lower back strain",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Follow\u2011up for ongoing low back discomfort secondary to recent strain.\n\nHistory of Present Illness: 55\u2011year\u2011old male presents with low back pain that exacerbates with prolonged sitting. Pain is localized at the thoracolumbar junction, non\u2011radiating, and improves modestly with rest. No new neurological deficits reported.\n\nPast Medical History: Hypertension, Dyslipidemia, Obesity (BMI 34), Chronic Kidney Disease, Obstructive Sleep Apnea on CPAP. No history of previous spinal surgery.\n\nMedications: Lisinopril 10 mg daily. No known drug allergies.\n\nReview of Systems: Positive for back pain, mild daytime sleepiness. All other systems negative.\n\nPhysical Examination:\n- Vitals: BP 161/95, HR 82, Temp 98.6\u00b0F. BMI 34.\n- Musculoskeletal: Tenderness over thoracolumbar junction; no deformity or asymmetry.\n- Neurologic: Strength 5/5 bilaterally, normal reflexes, no sensory loss.\n- Cardiovascular: Systolic murmur absent.\n- No peripheral edema.\n\nAssessment:\n1. Acute low back strain \u2013 likely muscular origin secondary to recent activity.\n2. Uncontrolled hypertension \u2013 current BP remains above goal.\n3. Obstructive sleep apnea \u2013 likely contributory to daytime sleepiness.\n\nPlan:\n- Prescribed referral to physical therapy focusing on core strengthening, posture education, and graded activity.\n- Continue lisinopril 10 mg daily pending further BP control.\n- Reinforce lifestyle measures: low\u2011sodium diet, increased aerobic activity, weight loss.\n- No labs were ordered at this visit; baseline renal function and electrolytes remain within acceptable limits.\n- Patient advised to continue CPAP use consistently.\n- Follow\u2011up in 4 weeks for BP evaluation, review of PT progress, and reassessment of obesity management.\n\nDisposition: Outpatient clinic visit.\n\nEncourage home BP monitoring twice daily for 2 weeks and keep a symptom log for back pain.\n\nSignature: ____________________",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [
+        "Low back pain, worsened by prolonged sitting"
+      ],
+      "vitals": {
+        "BP": "161/95",
+        "HR": "82",
+        "Temperature": "98.6",
+        "BMI": "34"
+      },
+      "relevant_history": [
+        "Recent lower back strain",
+        "Hypertension on Lisinopril",
+        "CPAP with mild daytime sleepiness"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "Patient presented with ongoing low back discomfort. The physician performed a focused musculoskeletal exam, confirmed normal neurological status, and prescribed a referral to physical therapy. Blood pressure remained high at 161/95 mmHg; no new labs were ordered at this time.",
+      "examination_findings": [
+        "Spine: tenderness at thoracolumbar junction",
+        "Neurologic exam: strength 5/5, normal reflexes",
+        "Cardiovascular: systolic murmur absent",
+        "No peripheral edema"
+      ],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [
+        "Physical therapy referral",
+        "Continue Lisinopril 10 mg daily"
+      ],
+      "patient_response": "Patient noted discomfort improved with PT recommendations.",
+      "disease_progression_notes": "Hypertension remains poorly controlled; weight increased to 235 lbs. No glucose work\u2011up performed."
+    },
+    {
+      "visit_number": 4,
+      "visit_date": "2024-06-10",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "CPAP compliance check",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Follow\u2011up for CPAP compliance and review of nocturnal thirst and dry mouth.\n\nHistory of Present Illness: John Doe, a 55\u2011year\u2011old male with a history of hypertension, dyslipidemia, obesity, chronic kidney disease, and obstructive sleep apnea, presents for a routine touch\u2011point visit. He reports nocturnal thirst and dry mouth the next morning despite reporting good compliance with his CPAP therapy. He notes a mild daytime sleepiness, and during the last holiday travel he experienced a slight decrease in CPAP usage. He denies snoring changes, snort/ snore pauses, headaches, chest pain, or new neurologic symptoms.\n\nPast Medical History: HTN, dyslipidemia, obesity (BMI 34.5), CKD stage 3, OSA.\n\nMedications: Lisinopril 10 mg daily.\n\nAllergies: NKDA.\n\nReview of Systems: Positive for nocturnal thirst and morning dry mouth; negative for palpitations, chest pain, dyspnea, GI reflux symptoms, or weight changes.\n\nVitals: BP 159/94 mmHg, HR 80 bpm, Temp 98.7\u00b0F, BMI 34.5.\n\nPhysical Examination: General: well\u2011appearing male, no acute distress. Cardiovascular: regular rate and rhythm, normal S1 S2, no murmurs. Respiratory: clear to auscultation bilaterally, no wheezes or crackles. Head, Eyes, Ears, Nose, Throat: nasopharyngeal mucosa slightly dry, no corneal dryness noted. Neurologic: alert, oriented, no focal deficits.\n\nAssessment:\n1. Obstructive sleep apnea, well\u2011controlled with CPAP; mild mask leak causing mucosal dryness and nocturnal thirst.\n2. Uncontrolled hypertension (BP > 140/90) likely exacerbated by poor sleep quality and possibly high salt intake.\n3. Differential for nocturnal thirst: CPAP mask leak, dehydration from inadequate fluid intake during the day, GERD.\n\nPlan:\n- Educate patient on mask leak management; advise adjustment of mask seal and consider a different mask style if leak persists.\n- Encourage use of humidifier with CPAP if not already in use.\n- Reinforce fluid intake > 1500 mL/day.\n- Review sleep diary and CPAP compliance during next visit.\n- Continue lisinopril 10 mg daily; if BP remains > 140/90 after lifestyle modifications, consider adding an antihypertensive (e.g., thiazide diuretic). \n- Discuss weight loss plan; refer to dietitian for counseling.\n- Schedule follow\u2011up in 4 weeks to reassess BP, CPAP usage, and symptom resolution. If dry mouth persists, consider ordering fasting glucose to rule out diabetic changes.\n- Continue routine monitoring for CKD progression; repeat serum creatinine/eGFR in 6 months as per prior plan.",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [
+        "Nocturnal thirst",
+        "Dry mouth upon waking"
+      ],
+      "vitals": {
+        "BP": "159/94",
+        "HR": "80",
+        "Temperature": "98.7",
+        "BMI": "34.5"
+      },
+      "relevant_history": [
+        "CPAP mask leak and mild daytime sleepiness",
+        "Recent decreased CPAP use during holiday travel"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "During a touch\u2011point visit, John reported nocturnal thirst and dry mouth, though he remained compliant with CPAP. The clinician reviewed mask fit, noted a mild leak, and advised a mask adjustment. No glucose evaluation was undertaken; the patient was reassured and instructed to return if symptoms persisted.",
+      "examination_findings": [
+        "Respiratory exam: normal",
+        "Ophthalmologic exam: no corneal dryness noted",
+        "Cardiovascular: normal rhythm"
+      ],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [
+        "Mask adjustment recommendation",
+        "Follow\u2011up CPAP compliance review"
+      ],
+      "patient_response": "Agreed to adjust mask at home and monitor symptoms.",
+      "disease_progression_notes": "No changes to medications. Continued mild nocturnal thirst noted but not pursued."
+    },
+    {
+      "visit_number": 5,
+      "visit_date": "2024-09-12",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Routine physical exam",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Routine physical exam.\n\nHistory of Present Illness: 55\u2011year\u2011old male presented for a scheduled routine physical. He reports no new symptoms. The patient has a gradual weight gain, now 255 lbs with a BMI of 34.5. Vital signs reveal a systolic\u2011dominant hypertension of 158/92 mmHg. No change was noted in his current antihypertensive regimen (lisinopril 10 mg daily). UACR of 45 mg/g confirmed early albuminuria in the setting of CKD stage IIIa (eGFR 55 mL/min/1.73 m\u00b2). No glucose or lipid panels were drawn during this visit.\n\nPast Medical History: Hypertension, Obstructive sleep apnea on CPAP, Dyslipidemia, Obesity, Chronic kidney disease stage IIIa.\n\nMedications: Lisinopril 10 mg PO daily. (CPAP continues for sleep apnea but is not a medication.)\n\nAllergies: NKDA.\n\nReview of Systems: Negative for chest pain, dyspnea, palpitations, hematuria, edema, fever, chills, abdominal pain, or neurological deficits.\n\nPhysical Examination:\n- General: Alert, well\u2011appearing male, BMI 34.5, weight 255 lbs.\n- HEENT: No cervical adenopathy, no thyroid fullness.\n- Cardiovascular: Systolic BP 158 mmHg, pulse 78 bpm, normal heart sounds, no murmurs.\n- Respiratory: Clear to auscultation bilaterally, normal respiratory rate.\n- Abdomen: Soft, non\u2011tender, no organomegaly.\n- Extremities: No pedal edema, peripheral pulses intact.\n- Skin: No rashes, no signs of cellulitis.\n\nAssessment:\n1. Uncontrolled hypertension (stage 2). 2. Early nephropathy evidenced by UACR 45 mg/g in context of CKD IIIa. 3. Obesity with BMI > 34.5. 4. Risk factors for progression of renal disease.\n\nPlan:\n- Continue lisinopril 10 mg daily; consider uptitration to 20 mg once BP remains >150/90 mmHg after 3\u20114 weeks.\n- Reinforce dietary counseling: calorie\u2011restricted, low\u2011sodium (<2 g/day), weight\u2011loss goal 1\u20132 lbs/week.\n- Encourage aerobic activity \u2265150 min/week + resistance training; refer to dietitian for tailored weight\u2011loss program.\n- Reinforce CPAP adherence; review mask fit and humidifier usage next visit.\n- Order fasting lipid panel, fasting glucose, HbA1c now; review results in 4\u20116 weeks.\n- Schedule nephrology follow\u2011up next year; monitor eGFR and albuminuria annually.\n- Educate on home BP monitoring twice daily; advise to bring readings to next visit.\n- Reassess BP, weight, and labs in 4 weeks; adjust therapy accordingly.\n- Provide written instructions for weight management and BP control.\n- No acute interventions or new prescriptions at this visit.",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [],
+      "vitals": {
+        "BP": "158/92",
+        "HR": "78",
+        "Temperature": "98.6",
+        "BMI": "34.5",
+        "Weight": "255 lbs"
+      },
+      "relevant_history": [
+        "Weight gain to 255 lbs",
+        "UACR 45 mg/g previously noted",
+        "Current eGFR 55 mL/min/1.73 m\u00b2 from past year"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "The physician noted the patient\u2019s weight increase to 255 lbs and a slight rise in BMI to 34.5. Blood pressure remained 158/92 mmHg. The UACR 45 mg/g had been flagged as early albuminuria. No glucose or lipid panels were drawn during this visit. The patient was advised to maintain a calorie\u2011restricted diet and to follow up with the nephrology clinic next year.",
+      "examination_findings": [
+        "Central obesity",
+        "No peripheral edema",
+        "Cardiovascular: systolic BP 158 mmHg"
+      ],
+      "tests_ordered": [],
+      "test_results": [
+        "UACR 45 mg/g (elevated)",
+        "eGFR 55 mL/min/1.73 m\u00b2"
+      ],
+      "treatments_administered": [
+        "Reinforce diet and exercise plan",
+        "Encourage routine follow\u2011up"
+      ],
+      "patient_response": "Agreed to schedule nephrology appointment.",
+      "disease_progression_notes": "CKD stage 2 indicated; no glucose work\u2011up. Weight continued to rise."
+    },
+    {
+      "visit_number": 6,
+      "visit_date": "2025-01-15",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Post\u2011fall and fatigue review",
+      "is_related_to_main_illness": true,
+      "note": "**Chief Complaint:** 55\u2011year\u2011old male reports fatigue, mild morning headache, and light\u2011headedness after standing, following a recent fall at home.\n\n**History of Present Illness:** Patient states increased fatigue and a light morning headache the past week. He also reports feeling light\u2011headed shortly after standing from a seated position. He fell at home two weeks ago; physical therapy was obtained. He notes decreased CPAP use during recent holiday travel and ongoing weight gain. No chest pain, shortness of breath, syncope, or neurologic deficits were described.\n\n**Past Medical History:** \n- Hypertension\n- Dyslipidemia\n- Obesity (BMI 34.5 noted in past visits)\n- Chronic kidney disease stage 3 (eGFR 45\u201150 reported previously)\n- Obstructive sleep apnea (moderate\u2011severe)\n- Albuminuria (UACR 45 mg/g)\n\n**Medications:** \n- Lisinopril 10 mg daily\n- CPAP device (patient reports intermittent use)\n\n**Allergies:** NKDA\n\n**Social History:** Non\u2011smoker, occasional alcohol, no illicit drugs. Office\u2011bound. Physical activity limited to brief walks; diet high in processed foods.\n\n**Family History:** No known diabetes or cardiovascular disease.\n\n**Review of Systems:** Positive for fatigue, mild headache, lightheadedness. Negative for chest pain, dyspnea, vision changes, gait instability, or seizures.\n\n**Vitals (Clinic):**\n- BP: 160/95 mmHg\n- HR: 78 bpm\n- Temp: 98.6\u00b0F\n- BMI: 36\n- Weight: 255\u202flb\n\n**Physical Examination:**\n- General: Alert, oriented, mildly fatigued.\n- HEENT: Normocephalic, atraumatic. No focal neuro deficits.\n- Cardiovascular: Regular rate & rhythm, no murmurs, bounding pulses, no peripheral edema.\n- Respiratory: Clear to auscultation bilaterally, no wheezes.\n- Musculoskeletal: No tenderness to palpation aside from mild thoracolumbar discomfort. Full ROM, no instability.\n- Neurologic: Grossly intact, no cranial nerve deficit, gait stable.\n- Skin: No lesions.\n\n**Assessment:**\n1. **Hypertension** \u2013 BP remains uncontrolled at 160/95; likely secondary to weight gain, non\u2011adherence to CPAP, and possible insulin resistance.\n2. **Early diabetes / pre\u2011diabetes** \u2013 HbA1c 6.6% indicates impaired glucose tolerance.\n3. **Obesity\u2011related metabolic syndrome** \u2013 contributing to hypertension, insulin resistance, sleep apnea, and albuminuria.\n4. **Post\u2011fall fatigue** \u2013 likely multifactorial; PT continues to monitor for underlying musculoskeletal contribution.\n5. **Mild morning headache & lightheadedness** \u2013 could be orthostatic BP shift or volume depletion; will monitor.\n\n**Plan:**\n- **Metformin 500 mg delayed\u2011release BID** initiation to target impaired glucose tolerance; counsel on GI tolerance.\n- Continue **Lisinopril 10 mg daily**; evaluate need for a second antihypertensive if BP >140/90 after 4 weeks.\n- Order **eGFR, serum creatinine** and **electrolytes** at next visit to monitor renal function with metformin.\n- Reinforce **CPAP adherence** at next sleep\u2011apnea follow\u2011up; discuss home oxygen if indicated.\n- Encourage **weight loss**: 500\u2011gram BMI reduction per month; referral to dietitian; 150 minutes/week of moderate aerobic exercise.\n- Advise **home BP monitoring** twice daily (morning and evening) for 2 weeks; record in log.\n- **Home glucose monitoring**: fingerstick fasting glucose twice weekly; record values.\n- Monitor **orthostatic vitals** at next visit for lightheadedness; if significant drop (>20/10 mmHg) consider evaluation for volume status.\n- Continue **physical therapy** for core strengthening; reevaluate progress at next visit.\n- Follow up in **4 weeks** for BP, weight, glucose, eGFR, and assessment of metformin tolerance.\n- If BP remains >140/90 or glucose >140 mg/dL fasting, consider adding a thiazide diuretic or a second antihypertensive as per ACC/AHA guidelines.\n- If albuminuria worsens >30% or eGFR drops <30 mL/min/1.73\u202fm\u00b2, consider adjustment of ACE inhibitor dose.\n\n**Patient Education:** Reviewed the importance of medication adherence, weight management, consistent CPAP use, and home monitoring of BP and glucose. Discussed signs of hypoglycemia and when to seek care.\n\n**Disposition:** Patient remains stable; no acute safety concerns.\n\n**Signature:** \n[Provider Name], M.D.\n",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [
+        "Fatigue",
+        "Mild morning headache",
+        "Lightheadedness after standing"
+      ],
+      "vitals": {
+        "BP": "160/95",
+        "HR": "78",
+        "Temperature": "98.6",
+        "BMI": "36",
+        "Weight": "255 lbs"
+      },
+      "relevant_history": [
+        "Recent fall at home; PT evaluation",
+        "Decrease in CPAP use on holiday travel",
+        "Ongoing weight gain"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea",
+        "CKD stage 2 (eGFR 55)"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "John reported fatigue and a light morning headache. The physician noted increased BP and decided to order an HbA1c to assess for possible metabolic disorder. Lab results returned a value of 6.6%. The doctor started Metformin 500 mg delayed release twice daily, citing early pre\u2011diabetes, but refrained from formal diagnosis. The patient was advised to monitor weight and glucose at home.",
+      "examination_findings": [
+        "BP 160/95 mmHg",
+        "Heart rate 78 bpm",
+        "Weight 255 lbs, BMI 36",
+        "No signs of peripheral edema"
+      ],
+      "tests_ordered": [
+        "HbA1c"
+      ],
+      "test_results": [
+        "HbA1c 6.6%"
+      ],
+      "treatments_administered": [
+        "Metformin 500 mg delayed-release BID",
+        "Continue Lisinopril 10 mg daily"
+      ],
+      "patient_response": "Said she would keep monitoring weight and glucose levels.",
+      "disease_progression_notes": "Early pre\u2011diabetes noted; Metformin started pre\u2011emptively despite mild CKD."
+    },
+    {
+      "visit_number": 7,
+      "visit_date": "2025-03-10",
+      "clinician_specialty": "Pharmacy",
+      "reason_for_visit": "Medication review and flag",
+      "is_related_to_main_illness": true,
+      "note": "**Subjective**\n\nPatient, 55\u2011year\u2011old male, presented for routine medication review. No new symptoms reported.\n\n**Objective**\n\n- BP\u202f158/90 mmHg\n- HR\u202f78 bpm\n- Temp\u202f98.7\u202f\u00b0F\n- BMI\u202f36 (weight 255\u202flb)\n- Medications: Lisinopril 10\u202fmg daily, Metformin 500\u202fmg delayed\u2011release BID\n- eGFR\u202f48\u202fmL/min/1.73\u202fm\u00b2 (recently documented)\n\n**Review of Systems**\n\n- No complaints of dizziness, palpitations, or orthostatic symptoms.\n- No gastrointestinal symptoms that might be related to metformin.\n\n**Assessment**\n\n1. **Hypertension** \u2013 uncontrolled (stage\u202f2), likely secondary to obesity and CKD.\n2. **Chronic kidney disease** \u2013 stage\u202f3a (eGFR\u202f45\u201159). Metformin is generally contraindicated once eGFR falls below 45\u202fmL/min/1.73\u202fm\u00b2; patient is near threshold.\n3. **Impaired glucose tolerance / pre\u2011diabetes** \u2013 HbA1c (6.6\u202f%) suggests early glucose dysregulation.\n4. **Obesity** \u2013 BMI\u202f36.\n5. **Sleep apnea** \u2013 ongoing CPAP therapy.\n\n**Plan**\n\n- **Discontinue metformin** pending PCP discussion, given eGFR near the 45\u202fmL/min cutoff and risk of lactic acidosis.\n- **Continue lisinopril 10\u202fmg daily** for HTN and renoprotection.\n- **Lifestyle counseling**: aggressive weight loss (dietitian referral, continue CPAP usage, aerobic activity \u2265150\u202fmin/week). Encourage home BP monitoring twice daily.\n- **Lab monitoring**: Repeat serum creatinine, eGFR, and electrolytes in 3\u202fmonths (PCP order). HbA1c in 3\u202fmonths to assess glycemic control after stopping metformin.\n- **Coordinate with PCP**: send written note recommending metformin discontinuation, request alternative diabetes management (e.g., lifestyle\u2011only or other oral agents with renal dosing guidance).\n- **Follow\u2011up in 4\u202fweeks** with pharmacy (telehealth) to review BP logs, weight, and any adverse effects from medication changes.\n- **Alert PCP** to consider low\u2011dose or renal\u2011dose alternatives if glucose control worsens.\n\n---\n\nThis note serves to document the medication review, highlight the potential contraindication of metformin in CKD, and outline a coordinated plan for discontinuation and monitoring.\n",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [],
+      "vitals": {
+        "BP": "158/90",
+        "HR": "78",
+        "Temperature": "98.7",
+        "BMI": "36"
+      },
+      "relevant_history": [
+        "Lisinopril ongoing",
+        "Metformin 500 mg BID",
+        "eGFR 48 mL/min/1.73 m\u00b2 recently documented"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea",
+        "CKD stage 2.5 (eGFR 48)",
+        "Pre\u2011diabetes"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily",
+        "Metformin 500 mg delayed-release BID"
+      ],
+      "allergies": [],
+      "visit_scenario": "Pharmacist reviewed John\u2019s medication list and flagged that Metformin is contraindicated in CKD with eGFR <45. The pharmacist sent a note to PCP recommending discontinuation. No action taken on the pharmacy side.",
+      "examination_findings": [],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [],
+      "patient_response": "None (pharmacy side).",
+      "disease_progression_notes": "Metformin potentially stopped; awaiting PCP confirmation."
+    },
+    {
+      "visit_number": 8,
+      "visit_date": "2025-04-20",
+      "clinician_specialty": "Cardiology",
+      "reason_for_visit": "Dyslipidemia management",
+      "is_related_to_main_illness": true,
+      "note": "Visit #: 8 \u2013 2025-04-20\n\nChief Complaint: Management of dyslipidemia.\n\nHistory of Present Illness: 55\u2011year\u2011old male with a history of hypertension, stage 2.5 CKD (eGFR 48 mL/min/1.73 m\u00b2), sleep apnea, and pre\u2011diabetes presents for routine lipid management. He has no current complaints.\n\nPast Medical History: Hypertension (controlled on lisinopril), CKD stage 2.5, sleep apnea (CPAP user), pre\u2011diabetes, obesity (BMI 36). He has been on metformin 500 mg delayed\u2011release BID since 2025-01-15 but reports intolerance and wishes to discontinue due to CKD.\n\nMedications: Lisinopril 10 mg daily. Metformin discontinued. Atorvastatin 20 mg daily started today.\n\nAllergies: NKDA.\n\nReview of Systems: Negative for chest pain, dyspnea, palpitations, edema, weight change, or exercise limitation.\n\nPhysical Examination:\nVitals: BP 152/90 mmHg, HR 76 bpm, Temp 98.5\u00b0F, BMI 36. No peripheral edema.\nCardiovascular: Regular rate/rhythm, no murmurs, rubs, or gallops.\nRespiratory: Clear to auscultation bilaterally, no wheezes.\nAbdominal: Soft, non\u2011tender. No organomegaly.\nExtremities: No cyanosis or clubbing.\n\nAssessment & Plan:\n1. **Dyslipidemia** \u2013 LDL 160 mg/dL; goal: 50% reduction. Started atorvastatin 20 mg daily. Target LDL <100 mg/dL by 6\u2011month repeat lipid panel.\n2. **Hypertension** \u2013 BP 152/90 mmHg. Continue lisinopril 10 mg. Home BP monitoring twice daily; maintain logs.\n3. **CKD** \u2013 eGFR 48 mL/min/1.73 m\u00b2. Avoid nephrotoxic agents; discontinue metformin. Continue ACE inhibitor.\n4. **Pre\u2011diabetes** \u2013 HbA1c 6.6%. Lifestyle modification; schedule repeat HbA1c in 3 months.\n5. **Obesity** \u2013 BMI 36. Reinforce dietitian referral and CPAP compliance; continue weight\u2011loss plan.\n6. **Sleep apnea** \u2013 Advised ongoing CPAP adherence, especially during travel; follow up on symptomatic improvement.\n\nTests Ordered: Repeat fasting lipid panel in 6 months.\n\nFollow\u2011Up: Return in 6 months for lipid panel and BP review. Continue home BP and exercise logs. If LDL remains >100 mg/dL or BP uncontrolled, consider uptitration of atorvastatin or addition of second antihypertensive. If eGFR declines, collaborate with nephrology. Re\u2011evaluate HbA1c in 3 months.\n",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [],
+      "vitals": {
+        "BP": "152/90",
+        "HR": "76",
+        "Temperature": "98.5",
+        "BMI": "36"
+      },
+      "relevant_history": [
+        "Elevated LDL 160 mg/dL",
+        "Hypertension controlled on Lisinopril",
+        "Sleep apnea"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea",
+        "CKD stage 2.5 (eGFR 48)",
+        "Pre\u2011diabetes"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "Cardiologist reviewed the patient\u2019s lipid panel and noted LDL 160 mg/dL with normal HDL. Started atorvastatin 20 mg daily to target a 50% reduction. The doctor also reinforced the discontinuation of Metformin due to CKD. Advised continued BP monitoring and dietary modifications.",
+      "examination_findings": [
+        "BP 152/90 mmHg",
+        "Heart rate 76 bpm",
+        "No peripheral edema"
+      ],
+      "tests_ordered": [
+        "Repeat lipid panel in 6 months"
+      ],
+      "test_results": [
+        "LDL 160 mg/dL",
+        "HDL 45 mg/dL"
+      ],
+      "treatments_administered": [
+        "Atorvastatin 20 mg daily",
+        "Continue Lisinopril 10 mg daily"
+      ],
+      "patient_response": "Accepts medication plan; will follow-up in 6 months.",
+      "disease_progression_notes": "LDL improved trend; Metformin stopped. Diabetes still pre\u2011diabetic; patient remains hyperglycemic on home monitors."
+    },
+    {
+      "visit_number": 9,
+      "visit_date": "2025-09-15",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Glucose monitoring and weight management",
+      "is_related_to_main_illness": true,
+      "note": "Subjective: Patient is a 55\u2011year\u2011old male presenting for routine review of glucose monitoring and weight management. He brought a log of evening capillary glucose readings. He reports consistent readings of 110\u2013120 mg/dL, but notes occasional nighttime thirst and possible sleep disturbances. He also reports occasional fatigue after meals. No changes in medications or new symptoms.\n\nObjective: Vitals: BP 158/92 mmHg, HR 78 bpm, Temperature 98.6\u00b0F, BMI 36, Weight 256 lbs. Physical exam remarkable only for obesity; no peripheral edema, normal heart sounds, normal lung exam. Capillary glucose log stable.\n\nAssessment: 1) Impaired glucose tolerance/prediabetes \u2013 HbA1c 6.6% from last visit, stable capillary readings. 2) Hypertension \u2013 BP remain >150/90. 3) Obesity \u2013 BMI 36. 4) CKD stage 2.5 with early albuminuria \u2013 UACR 45 mg/g. 5) Sleep apnea \u2013 ongoing CPAP compliance issues and nighttime thirst. Potential progression to type 2 diabetes.\n\nPlan: - Continue current pharmacotherapy: Lisinopril 10 mg daily; Atorvastatin 20 mg daily. - Reinforce lifestyle modification: weight loss goal 10\u201315% over 6 months, daily physical activity >150 min/week, low\u2011salt diet. - Dietitian follow\u2011up for carb counting, caloric restriction. - Continue self\u2011monitoring of capillary glucose in evenings; send log at next visit. - Repeat HbA1c in 6 months. - Monitor kidney function: repeat eGFR and albumin/creatinine ratio in 6 months. - Encourage CPAP adherence; review mask fit and humidifier use next week. - Home blood\u2011pressure monitoring twice daily; educate on when to seek care. - Follow\u2011up in 6 months unless patient develops symptoms of worsening BP, glycemia or kidney function.",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [
+        "Occasional fatigue after meals"
+      ],
+      "vitals": {
+        "BP": "158/92",
+        "HR": "78",
+        "Temperature": "98.6",
+        "BMI": "36",
+        "Weight": "256 lbs"
+      },
+      "relevant_history": [
+        "Home glucometer readings 110-120 mg/dL in evenings",
+        "No new medication changes"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea",
+        "CKD stage 2.5",
+        "Pre\u2011diabetes"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily",
+        "Atorvastatin 20 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "Patient brought a log of evening capillary glucose readings. The clinician noted stable values but noted slight nighttime thirst and possible sleep disturbances. Advised continued self\u2011monitoring, discussed diet modifications, and recommended a repeat HbA1c in 6 months. No new labs were sent at this visit.",
+      "examination_findings": [
+        "BP 158/92 mmHg",
+        "Weight 256 lbs, BMI 36",
+        "No peripheral edema"
+      ],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [
+        "Dietitian follow\u2011up for carb counting",
+        "Repeat HbA1c in 6 months"
+      ],
+      "patient_response": "Agrees to send glucose log to office.",
+      "disease_progression_notes": "Glucose remains borderline; weight still climbing."
+    },
+    {
+      "visit_number": 10,
+      "visit_date": "2025-12-10",
+      "clinician_specialty": "Nephrology",
+      "reason_for_visit": "Kidney function assessment",
+      "is_related_to_main_illness": true,
+      "note": "**Subjective**\nChief complaint: Follow\u2011up for kidney function assessment. Patient is a 55\u2011year\u2011old male with known CKD stage 3a (eGFR 40 mL/min/1.73 m\u00b2), hypertension, sleep apnea, and pre\u2011diabetes. He reports mild ankle edema over the past week. No new symptoms such as flank pain, hematuria, or weight change. He denies NSAID use or exposure to contrast media.\n\n**Objective**\nVital signs: BP 155/95 mmHg, HR 80 bpm, Temp 98.7\u00b0F, BMI 36, Weight 260 lbs.\nPhysical exam: Mild pitting edema at both ankles, otherwise normal. No abdominal tenderness, no flank tenderness, no peripheral neuropathy.\nRecent labs: Serum creatinine 1.4 mg/dL, eGFR 40 mL/min/1.73 m\u00b2 (stable), urine microalbumin/creatinine ratio 60 mg/g (mildly elevated).\n\n**Assessment**\n1. CKD stage 3a (eGFR 40) \u2013 stable over the past year with mild progression.\n2. Hypertensive nephrosclerosis \u2013 BP remains above goal despite ACE inhibition.\n3. Early albuminuria \u2013 UACR 60 mg/g suggests ongoing glomerular injury.\n4. Prediabetes \u2013 recent HbA1c 6.6% and recent metformin therapy; will re\u2011assess in 6 months.\n\n**Plan**\n- Continue lisinopril 10 mg daily (ACE\u2011I) and atorvastatin 20 mg daily.\n- Reinforce avoidance of nephrotoxic agents (NSAIDs, iodinated contrast).\n- Counsel patient on sodium restriction (<1500 mg/day), maintain weight\u2011loss goal, and increase aerobic activity.\n- Educate on home BP monitoring twice daily (morning and evening) and record values in log.\n- Repeat fasting HbA1c, serum creatinine/eGFR, and urine albumin/creatinine ratio in 6 months.\n- Schedule nephrology follow\u2011up in 6 months or sooner if BP >160/100 or if eGFR decreases >10%.\n- Continue CPAP therapy for sleep apnea and monitor adherence.\n\n**Follow\u2011up**: Return in 6 months for repeat labs and clinical assessment. In case of worsening edema, rising creatinine, or BP >160/100, contact clinic earlier.\n",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [
+        "Mild ankle edema"
+      ],
+      "vitals": {
+        "BP": "155/95",
+        "HR": "80",
+        "Temperature": "98.7",
+        "BMI": "36",
+        "Weight": "260 lbs"
+      },
+      "relevant_history": [
+        "CKD eGFR 40 mL/min/1.73 m\u00b2 documented",
+        "Hypertension controlled on Lisinopril",
+        "No new medications"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea",
+        "CKD stage 3a (eGFR 40)",
+        "Pre\u2011diabetes"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily",
+        "Atorvastatin 20 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "The nephrologist reviewed the recent creatinine 1.4 mg/dL, eGFR 40 mL/min/1.73 m\u00b2, and mild pedal edema. The doctor emphasized that the patient should continue ACE inhibition, avoid nephrotoxic agents, and plan for repeat HbA1c in 6 months. The patient was advised to continue the current medication regimen and to monitor proteinuria.",
+      "examination_findings": [
+        "BP 155/95 mmHg",
+        "Peripheral edema: mild pitting at ankles",
+        "No renal pain"
+      ],
+      "tests_ordered": [
+        "HbA1c in 6 months"
+      ],
+      "test_results": [
+        "Creatinine 1.4 mg/dL",
+        "eGFR 40 mL/min/1.73 m\u00b2",
+        "Urine microalbumin/creatinine ratio 60 mg/g (mildly elevated)"
+      ],
+      "treatments_administered": [
+        "Maintain Lisinopril",
+        "Maintain Atorvastatin",
+        "No change in diabetes meds"
+      ],
+      "patient_response": "Understood importance of monitoring kidney function.",
+      "disease_progression_notes": "CKD progressing from stage 2.5 to 3a. Diabetes remains pre\u2011diabetic; no clear diagnosis."
+    },
+    {
+      "visit_number": 11,
+      "visit_date": "2026-03-05",
+      "clinician_specialty": "Primary Care",
+      "reason_for_visit": "Scheduled follow\u2011up",
+      "is_related_to_main_illness": true,
+      "note": "P: 55\u2011year\u2011old male presents for a scheduled follow\u2011up that was missed due to travel. He was contacted by phone to reschedule. He reports no new symptoms. Vital signs at the time of the missed visit were: BP 150/90 mmHg, HR 78 bpm, Temp 98.6\u00b0F, BMI 36 (weight 262\u202flb). Patient has a history of hypertension (stage\u202f1/2), CKD stage\u202f3a, dyslipidemia, obesity, sleep apnea on CPAP, albuminuria, and impaired glucose tolerance. Current medications: lisinopril 10\u202fmg daily, atorvastatin 20\u202fmg daily. Allergies: NKDA.\n\nAssessment: \n1. Uncontrolled hypertension \u2013 BP remains above goal, requiring re\u2011evaluation of antihypertensive regimen and adherence. \n2. CKD stage\u202f3a \u2013 recent eGFR ~40\u202fmL/min (nephrology visit December) and persistent albuminuria (UACR 60\u202fmg/g) warrant continued ACE\u2011I therapy and close monitoring. \n3. Obesity \u2013 BMI 36, weight 262\u202flb; ongoing weight\u2011loss plan and lifestyle modifications. \n4. Impaired glucose tolerance \u2013 no change in therapy; review home glucose log and consider HbA1c in next appointment. \n5. Sleep apnea \u2013 CPAP compliance review pending.\n\nPlan: \n- Remind patient of importance of nephrology follow\u2011up in December; verify attendance. \n- Encourage continuation of lisinopril 10\u202fmg daily and atorvastatin 20\u202fmg daily; no medication changes today. \n- Reinforce home BP monitoring twice daily for 2 weeks; if readings persist >140/90, discuss adding a thiazide or beta\u2011blocker. \n- Review home glucose log; if post\u2011meal spikes or FPG >140\u202fmg/dL, schedule HbA1c in 2\u202fmonths. \n- Continue CPAP; advise patient to maintain fluid intake >1500\u202fmL/day and use humidifier. \n- Weight\u2011loss counseling: aim for 5\u201310\u202f% weight loss over 6\u202fmonths; consider dietitian referral if adherence poor. \n- Schedule new primary\u2011care visit for 2026\u201104\u201110 to review BP logs, weight, glucose log, and update labs. \n- If patient misses nephrology appointment, call again to reschedule.\n\nFollow\u2011up will be scheduled via phone call/clinic as appropriate. Encourage patient to contact office if BP readings consistently high, or if any symptoms such as dizziness, chest pain, or shortness of breath develop.\n",
+      "patient_age": 55,
+      "patient_sex": "M",
+      "symptoms": [],
+      "vitals": {
+        "BP": "150/90",
+        "HR": "78",
+        "Temperature": "98.6",
+        "BMI": "36",
+        "Weight": "262 lbs"
+      },
+      "relevant_history": [
+        "Scheduled for appointment but missed due to travel",
+        "CKD stage 3a",
+        "Hypertension controlled"
+      ],
+      "known_conditions": [
+        "Hypertension",
+        "Sleep apnea",
+        "CKD stage 3a",
+        "Pre\u2011diabetes"
+      ],
+      "current_medications": [
+        "Lisinopril 10 mg daily",
+        "Atorvastatin 20 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "The patient missed the scheduled March 5 visit. PCP office called to reschedule. The plan is to confirm medication adherence, review home glucose log, and remind the patient of the importance of keeping the nephrology follow\u2011up in December. No new diagnostics ordered. The patient\u2019s condition remains unchanged and continues as undiagnosed T2DM with pre\u2011diabetic status.",
+      "examination_findings": [],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [],
+      "patient_response": "Unable to attend; will return with new date.",
+      "disease_progression_notes": "No progression since last visit. Diabetes remains in the pre\u2011diabetic diagnostic gray zone."
+    }
+  ],
+  "notes": [
+    {
+      "visit_number": 1,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2023-10-15",
+      "content": "Patient John Doe, a 55\u2011year\u2011old male with a history of hypertension, obesity, chronic kidney disease (CKD), dyslipidemia, and sleep apnea, presented for a routine blood pressure check.\n\n**Chief Complaint:** Routine BP and weight check.\n\n**History & Review of Systems:** No acute complaints or new symptoms. Denied chest pain, palpitations, dyspnea, edema, urinary changes, or recent medication changes. Reports adherence to CPAP during sleep.\n\n**Vitals:** BP 142/96\u202fmmHg, HR 78\u202fbpm, T 98.6\u202f\u00b0F, BMI 33 (weight 240\u202flb). \n\n**Physical Exam:** \n- Cardiovascular: regular rate/rhythm, no murmurs, normal S1/S2, no peripheral edema.\n- Pulmonary: clear to auscultation bilaterally.\n- Abdomen: soft, non\u2011distended, non\u2011tender.\n- Extremities: no cyanosis or edema.\n\n**Assessment & Differential Diagnosis:**\n1. **Hypertension \u2013 Stage\u202f1** (borderline; systolic 140\u2013159 or diastolic 90\u201399\u202fmmHg). Likely driven by diet, sedentary lifestyle, and obesity.\n2. **Obesity** \u2013 class\u202fI (BMI 30\u201334.9). Contributing factor to HTN and CKD.\n3. **Chronic kidney disease** \u2013 stage 3 (stable as per prior values). Close monitoring of BP is essential.\n4. **Obstructive sleep apnea** \u2013 well\u2011controlled on CPAP.\n5. **Dyslipidemia** \u2013 pending future lab work.\n\n**Plan:**\n- Lifestyle modification: \n   \u2022 Initiate low\u2011sodium diet (<2\u202fg/day); provide handouts.\n   \u2022 Encourage at least 150\u202fmin/week of moderate aerobic activity; suggest daily 30\u2011min brisk walking.\n   \u2022 Keep a food log for review at next visit.\n- BP monitoring: \n   \u2022 Home BP monitoring twice daily (morning/evening) for two weeks; return readings.\n   \u2022 Reassess BP in 3\u202fmonths.\n- Labs: \n   \u2022 Order fasting lipid panel in 12\u202fmonths (as per long\u2011term management).\n   \u2022 Consider repeat serum creatinine/eGFR in 6\u202fmonths.\n- Medications: \n   \u2022 No pharmacologic therapy indicated at this time; patient is medication\u2011na\u00efve.\n   \u2022 If BP remains \u2265140/90\u202fmmHg after 3\u202fmonths of lifestyle changes, initiate ACE inhibitor or ARB.\n- Follow\u2011up: \n   \u2022 Return in 3\u202fmonths for BP and weight reassessment.\n   \u2022 Encourage continued CPAP adherence; refer to sleep clinic if any issues.\n   \u2022 Consider referral to dietitian and exercise physiologist for structured counseling.\n\n**Patient Education & Response:** Discussed the importance of salt restriction, weight loss, and exercise. Patient was receptive, agreed to maintain a food diary, and committed to adding walking to daily routine.\n\n**Signature:** \nMD \u2013 Primary Care\n",
+      "symptoms_reported": [],
+      "vitals": {
+        "BP": "142/96 mmHg",
+        "HR": "78 bpm",
+        "Temperature": "98.6\u00b0F",
+        "BMI": "33"
+      },
+      "tests_ordered": [
+        "Fasting lipid panel (to be performed in 1 year)"
+      ],
+      "diagnoses_considered": [
+        "Hypertension \u2013 Stage\u202f1",
+        "Obesity \u2013 class\u202fI",
+        "Chronic kidney disease \u2013 stage\u202f3",
+        "Obstructive sleep apnea \u2013 well\u2011controlled"
+      ],
+      "medications": [],
+      "follow_up_recommendations": [
+        "Return for BP and weight check in 3 months",
+        "Adhere to low\u2011sodium diet",
+        "Increase walking to 30\u202fmin/day",
+        "Keep food diary",
+        "Schedule fasting lipid panel in 12 months",
+        "Maintain CPAP use",
+        "Consider dietitian and exercise physiologist referral"
+      ]
+    },
+    {
+      "visit_number": 2,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2023-12-05",
+      "content": "Chief Complaint: Annual physical examination.\n\nHistory of Present Illness: Patient is a 55\u2011year\u2011old male presenting for routine annual physical. He reports no new complaints. He has a history of hypertension, dyslipidemia, obesity, chronic kidney disease (Stage 3), and obstructive sleep apnea managed with CPAP. He notes slight non\u2011compliance with CPAP during recent holiday travel.\n\nReview of Systems: All systems reviewed and negative for new symptoms.\n\nPast Medical History: Hypertension, Dyslipidemia, Obesity (BMI 33), CKD stage 3, Obstructive sleep apnea.\n\nMedications: None prior to this visit.\n\nAllergies: NKDA.\n\nSocial History: Patient denies tobacco use, drinks alcohol socially.\n\nVitals: BP 158/92\u00a0mmHg, HR 80\u00a0bpm, Temp 98.7\u202f\u00b0F, BMI 33.\n\nPhysical Examination:\n- General: Alert, oriented, no acute distress.\n- Cardiovascular: Regular rhythm, mild systolic murmur not noted, BP elevated.\n- Pulmonary: Clear to auscultation bilaterally.\n- Abdomen: Soft, non\u2011tender, no organomegaly, central obesity.\n- Extremities: No pitting edema.\n\nAssessment:\n1. Uncontrolled hypertension \u2013 patient\u2019s BP remains above guideline targets. Given obesity and CKD, ACE inhibitor is appropriate as first\u2011line.\n2. Obesity \u2013 BMI 33 continues to increase risk of cardiovascular disease.\n3. Chronic kidney disease \u2013 baseline renal function to be monitored.\n4. Obstructive sleep apnea \u2013 variable CPAP compliance; need to reinforce importance of adherence.\n\nPlan:\n- Initiate lisinopril 10\u202fmg daily as first\u2011line agent; will titrate to achieve diastolic <95\u202fmmHg.\n- Advise patient to resume consistent CPAP use, especially during travel.\n- Refer to dietitian for weight reduction plan focusing on low\u2011sodium diet, calorie control, and heart\u2011healthy fats.\n- Order fasting lipid panel and baseline serum creatinine/eGFR prior to starting ACE inhibitor.\n- Patient to monitor home BP twice daily for two weeks and keep record.\n- Schedule follow\u2011up in 4 weeks for BP assessment and medication tolerance; labs due in 2 weeks.\n- Discuss potential side effects: cough, hyperkalemia; instruct patient to report these promptly.\n\nEducation: Reviewed goals of therapy, lifestyle modifications, and importance of medication adherence.\n\nDisposition: Will continue to treat hypertension with medications and lifestyle modifications, with close monitoring of BP and renal function.\n\nProvider: ________________________",
+      "symptoms_reported": [],
+      "vitals": {
+        "BP": "158/92 mmHg",
+        "HR": "80 bpm",
+        "Temperature": "98.7\u00b0F",
+        "BMI": "33"
+      },
+      "tests_ordered": [
+        "Fasting lipid panel",
+        "Baseline serum creatinine and eGFR"
+      ],
+      "diagnoses_considered": [
+        "Hypertension",
+        "Obesity",
+        "Chronic Kidney Disease",
+        "Obstructive Sleep Apnea"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Home BP monitoring twice daily for 2 weeks",
+        "Return in 4 weeks for BP assessment",
+        "Labs (lipid panel, creatinine/eGFR) in 2 weeks",
+        "Review dietitian follow\u2011up plan",
+        "Adjust lisinopril as needed, monitor potassium and renal function",
+        "Encourage regular CPAP use"
+      ]
+    },
+    {
+      "visit_number": 3,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2024-03-18",
+      "content": "Chief Complaint: Follow\u2011up for ongoing low back discomfort secondary to recent strain.\n\nHistory of Present Illness: 55\u2011year\u2011old male presents with low back pain that exacerbates with prolonged sitting. Pain is localized at the thoracolumbar junction, non\u2011radiating, and improves modestly with rest. No new neurological deficits reported.\n\nPast Medical History: Hypertension, Dyslipidemia, Obesity (BMI 34), Chronic Kidney Disease, Obstructive Sleep Apnea on CPAP. No history of previous spinal surgery.\n\nMedications: Lisinopril 10 mg daily. No known drug allergies.\n\nReview of Systems: Positive for back pain, mild daytime sleepiness. All other systems negative.\n\nPhysical Examination:\n- Vitals: BP 161/95, HR 82, Temp 98.6\u00b0F. BMI 34.\n- Musculoskeletal: Tenderness over thoracolumbar junction; no deformity or asymmetry.\n- Neurologic: Strength 5/5 bilaterally, normal reflexes, no sensory loss.\n- Cardiovascular: Systolic murmur absent.\n- No peripheral edema.\n\nAssessment:\n1. Acute low back strain \u2013 likely muscular origin secondary to recent activity.\n2. Uncontrolled hypertension \u2013 current BP remains above goal.\n3. Obstructive sleep apnea \u2013 likely contributory to daytime sleepiness.\n\nPlan:\n- Prescribed referral to physical therapy focusing on core strengthening, posture education, and graded activity.\n- Continue lisinopril 10 mg daily pending further BP control.\n- Reinforce lifestyle measures: low\u2011sodium diet, increased aerobic activity, weight loss.\n- No labs were ordered at this visit; baseline renal function and electrolytes remain within acceptable limits.\n- Patient advised to continue CPAP use consistently.\n- Follow\u2011up in 4 weeks for BP evaluation, review of PT progress, and reassessment of obesity management.\n\nDisposition: Outpatient clinic visit.\n\nEncourage home BP monitoring twice daily for 2 weeks and keep a symptom log for back pain.\n\nSignature: ____________________",
+      "symptoms_reported": [
+        "Low back pain worsening with prolonged sitting"
+      ],
+      "vitals": {
+        "BP": "161/95",
+        "HR": "82",
+        "Temperature": "98.6\u00b0F",
+        "BMI": "34"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Acute lumbar strain",
+        "Uncontrolled hypertension",
+        "Obstructive sleep apnea"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Review blood pressure and weight at next visit 4 weeks from today",
+        "Continue PT as per referral",
+        "Consider adding an antihypertensive agent if BP remains above goal",
+        "Maintain CPAP therapy",
+        "Monitor renal function and electrolytes during therapy progression"
+      ]
+    },
+    {
+      "visit_number": 4,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2024-06-10",
+      "content": "Chief Complaint: Follow\u2011up for CPAP compliance and review of nocturnal thirst and dry mouth.\n\nHistory of Present Illness: John Doe, a 55\u2011year\u2011old male with a history of hypertension, dyslipidemia, obesity, chronic kidney disease, and obstructive sleep apnea, presents for a routine touch\u2011point visit. He reports nocturnal thirst and dry mouth the next morning despite reporting good compliance with his CPAP therapy. He notes a mild daytime sleepiness, and during the last holiday travel he experienced a slight decrease in CPAP usage. He denies snoring changes, snort/ snore pauses, headaches, chest pain, or new neurologic symptoms.\n\nPast Medical History: HTN, dyslipidemia, obesity (BMI 34.5), CKD stage 3, OSA.\n\nMedications: Lisinopril 10 mg daily.\n\nAllergies: NKDA.\n\nReview of Systems: Positive for nocturnal thirst and morning dry mouth; negative for palpitations, chest pain, dyspnea, GI reflux symptoms, or weight changes.\n\nVitals: BP 159/94 mmHg, HR 80 bpm, Temp 98.7\u00b0F, BMI 34.5.\n\nPhysical Examination: General: well\u2011appearing male, no acute distress. Cardiovascular: regular rate and rhythm, normal S1 S2, no murmurs. Respiratory: clear to auscultation bilaterally, no wheezes or crackles. Head, Eyes, Ears, Nose, Throat: nasopharyngeal mucosa slightly dry, no corneal dryness noted. Neurologic: alert, oriented, no focal deficits.\n\nAssessment:\n1. Obstructive sleep apnea, well\u2011controlled with CPAP; mild mask leak causing mucosal dryness and nocturnal thirst.\n2. Uncontrolled hypertension (BP > 140/90) likely exacerbated by poor sleep quality and possibly high salt intake.\n3. Differential for nocturnal thirst: CPAP mask leak, dehydration from inadequate fluid intake during the day, GERD.\n\nPlan:\n- Educate patient on mask leak management; advise adjustment of mask seal and consider a different mask style if leak persists.\n- Encourage use of humidifier with CPAP if not already in use.\n- Reinforce fluid intake > 1500 mL/day.\n- Review sleep diary and CPAP compliance during next visit.\n- Continue lisinopril 10 mg daily; if BP remains > 140/90 after lifestyle modifications, consider adding an antihypertensive (e.g., thiazide diuretic). \n- Discuss weight loss plan; refer to dietitian for counseling.\n- Schedule follow\u2011up in 4 weeks to reassess BP, CPAP usage, and symptom resolution. If dry mouth persists, consider ordering fasting glucose to rule out diabetic changes.\n- Continue routine monitoring for CKD progression; repeat serum creatinine/eGFR in 6 months as per prior plan.",
+      "symptoms_reported": [
+        "Nocturnal thirst",
+        "Dry mouth upon waking"
+      ],
+      "vitals": {
+        "BP": "159/94 mmHg",
+        "HR": "80 bpm",
+        "Temperature": "98.7\u00b0F",
+        "BMI": "34.5"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Obstructive Sleep Apnea with Mask Leak Leading to Mucosal Dryness",
+        "Uncontrolled Hypertension",
+        "Dehydration/Polyuria",
+        "Gastroesophageal Reflux Disease"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Adjust CPAP mask fitting and use humidifier",
+        "Increase daily fluid intake",
+        "Monitor BP daily and reassess in 4 weeks",
+        "Return if nocturnal thirst/dry mouth persists or BP remains uncontrolled",
+        "Continue weight loss efforts and dietitian referral"
+      ]
+    },
+    {
+      "visit_number": 5,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2024-09-12",
+      "content": "Chief Complaint: Routine physical exam.\n\nHistory of Present Illness: 55\u2011year\u2011old male presented for a scheduled routine physical. He reports no new symptoms. The patient has a gradual weight gain, now 255 lbs with a BMI of 34.5. Vital signs reveal a systolic\u2011dominant hypertension of 158/92 mmHg. No change was noted in his current antihypertensive regimen (lisinopril 10 mg daily). UACR of 45 mg/g confirmed early albuminuria in the setting of CKD stage IIIa (eGFR 55 mL/min/1.73 m\u00b2). No glucose or lipid panels were drawn during this visit.\n\nPast Medical History: Hypertension, Obstructive sleep apnea on CPAP, Dyslipidemia, Obesity, Chronic kidney disease stage IIIa.\n\nMedications: Lisinopril 10 mg PO daily. (CPAP continues for sleep apnea but is not a medication.)\n\nAllergies: NKDA.\n\nReview of Systems: Negative for chest pain, dyspnea, palpitations, hematuria, edema, fever, chills, abdominal pain, or neurological deficits.\n\nPhysical Examination:\n- General: Alert, well\u2011appearing male, BMI 34.5, weight 255 lbs.\n- HEENT: No cervical adenopathy, no thyroid fullness.\n- Cardiovascular: Systolic BP 158 mmHg, pulse 78 bpm, normal heart sounds, no murmurs.\n- Respiratory: Clear to auscultation bilaterally, normal respiratory rate.\n- Abdomen: Soft, non\u2011tender, no organomegaly.\n- Extremities: No pedal edema, peripheral pulses intact.\n- Skin: No rashes, no signs of cellulitis.\n\nAssessment:\n1. Uncontrolled hypertension (stage 2). 2. Early nephropathy evidenced by UACR 45 mg/g in context of CKD IIIa. 3. Obesity with BMI > 34.5. 4. Risk factors for progression of renal disease.\n\nPlan:\n- Continue lisinopril 10 mg daily; consider uptitration to 20 mg once BP remains >150/90 mmHg after 3\u20114 weeks.\n- Reinforce dietary counseling: calorie\u2011restricted, low\u2011sodium (<2 g/day), weight\u2011loss goal 1\u20132 lbs/week.\n- Encourage aerobic activity \u2265150 min/week + resistance training; refer to dietitian for tailored weight\u2011loss program.\n- Reinforce CPAP adherence; review mask fit and humidifier usage next visit.\n- Order fasting lipid panel, fasting glucose, HbA1c now; review results in 4\u20116 weeks.\n- Schedule nephrology follow\u2011up next year; monitor eGFR and albuminuria annually.\n- Educate on home BP monitoring twice daily; advise to bring readings to next visit.\n- Reassess BP, weight, and labs in 4 weeks; adjust therapy accordingly.\n- Provide written instructions for weight management and BP control.\n- No acute interventions or new prescriptions at this visit.",
+      "symptoms_reported": [],
+      "vitals": {
+        "BP": "158/92 mmHg",
+        "HR": "78 bpm",
+        "Temperature": "98.6\u00b0F",
+        "BMI": "34.5",
+        "Weight": "255 lbs"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Uncontrolled hypertension (stage 2)",
+        "Early nephropathy (albuminuria) in CKD stage IIIa",
+        "Obesity contributing to metabolic syndrome",
+        "Potential progressive renal disease"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Arrange nephrology follow\u2011up next year",
+        "Return for BP, weight, and lab reassessment in 4 weeks",
+        "Continue CPAP adherence and monitor comfort",
+        "Follow home BP logs and bring to next visit",
+        "Consider weight\u2011loss goals and dietary modifications"
+      ]
+    },
+    {
+      "visit_number": 6,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2025-01-15",
+      "content": "**Chief Complaint:** 55\u2011year\u2011old male reports fatigue, mild morning headache, and light\u2011headedness after standing, following a recent fall at home.\n\n**History of Present Illness:** Patient states increased fatigue and a light morning headache the past week. He also reports feeling light\u2011headed shortly after standing from a seated position. He fell at home two weeks ago; physical therapy was obtained. He notes decreased CPAP use during recent holiday travel and ongoing weight gain. No chest pain, shortness of breath, syncope, or neurologic deficits were described.\n\n**Past Medical History:** \n- Hypertension\n- Dyslipidemia\n- Obesity (BMI 34.5 noted in past visits)\n- Chronic kidney disease stage 3 (eGFR 45\u201150 reported previously)\n- Obstructive sleep apnea (moderate\u2011severe)\n- Albuminuria (UACR 45 mg/g)\n\n**Medications:** \n- Lisinopril 10 mg daily\n- CPAP device (patient reports intermittent use)\n\n**Allergies:** NKDA\n\n**Social History:** Non\u2011smoker, occasional alcohol, no illicit drugs. Office\u2011bound. Physical activity limited to brief walks; diet high in processed foods.\n\n**Family History:** No known diabetes or cardiovascular disease.\n\n**Review of Systems:** Positive for fatigue, mild headache, lightheadedness. Negative for chest pain, dyspnea, vision changes, gait instability, or seizures.\n\n**Vitals (Clinic):**\n- BP: 160/95 mmHg\n- HR: 78 bpm\n- Temp: 98.6\u00b0F\n- BMI: 36\n- Weight: 255\u202flb\n\n**Physical Examination:**\n- General: Alert, oriented, mildly fatigued.\n- HEENT: Normocephalic, atraumatic. No focal neuro deficits.\n- Cardiovascular: Regular rate & rhythm, no murmurs, bounding pulses, no peripheral edema.\n- Respiratory: Clear to auscultation bilaterally, no wheezes.\n- Musculoskeletal: No tenderness to palpation aside from mild thoracolumbar discomfort. Full ROM, no instability.\n- Neurologic: Grossly intact, no cranial nerve deficit, gait stable.\n- Skin: No lesions.\n\n**Assessment:**\n1. **Hypertension** \u2013 BP remains uncontrolled at 160/95; likely secondary to weight gain, non\u2011adherence to CPAP, and possible insulin resistance.\n2. **Early diabetes / pre\u2011diabetes** \u2013 HbA1c 6.6% indicates impaired glucose tolerance.\n3. **Obesity\u2011related metabolic syndrome** \u2013 contributing to hypertension, insulin resistance, sleep apnea, and albuminuria.\n4. **Post\u2011fall fatigue** \u2013 likely multifactorial; PT continues to monitor for underlying musculoskeletal contribution.\n5. **Mild morning headache & lightheadedness** \u2013 could be orthostatic BP shift or volume depletion; will monitor.\n\n**Plan:**\n- **Metformin 500 mg delayed\u2011release BID** initiation to target impaired glucose tolerance; counsel on GI tolerance.\n- Continue **Lisinopril 10 mg daily**; evaluate need for a second antihypertensive if BP >140/90 after 4 weeks.\n- Order **eGFR, serum creatinine** and **electrolytes** at next visit to monitor renal function with metformin.\n- Reinforce **CPAP adherence** at next sleep\u2011apnea follow\u2011up; discuss home oxygen if indicated.\n- Encourage **weight loss**: 500\u2011gram BMI reduction per month; referral to dietitian; 150 minutes/week of moderate aerobic exercise.\n- Advise **home BP monitoring** twice daily (morning and evening) for 2 weeks; record in log.\n- **Home glucose monitoring**: fingerstick fasting glucose twice weekly; record values.\n- Monitor **orthostatic vitals** at next visit for lightheadedness; if significant drop (>20/10 mmHg) consider evaluation for volume status.\n- Continue **physical therapy** for core strengthening; reevaluate progress at next visit.\n- Follow up in **4 weeks** for BP, weight, glucose, eGFR, and assessment of metformin tolerance.\n- If BP remains >140/90 or glucose >140 mg/dL fasting, consider adding a thiazide diuretic or a second antihypertensive as per ACC/AHA guidelines.\n- If albuminuria worsens >30% or eGFR drops <30 mL/min/1.73\u202fm\u00b2, consider adjustment of ACE inhibitor dose.\n\n**Patient Education:** Reviewed the importance of medication adherence, weight management, consistent CPAP use, and home monitoring of BP and glucose. Discussed signs of hypoglycemia and when to seek care.\n\n**Disposition:** Patient remains stable; no acute safety concerns.\n\n**Signature:** \n[Provider Name], M.D.\n",
+      "symptoms_reported": [],
+      "vitals": {},
+      "tests_ordered": [],
+      "diagnoses_considered": [],
+      "medications": [],
+      "follow_up_recommendations": []
+    },
+    {
+      "visit_number": 7,
+      "clinician_specialty": "Pharmacy",
+      "note_date": "2025-03-10",
+      "content": "**Subjective**\n\nPatient, 55\u2011year\u2011old male, presented for routine medication review. No new symptoms reported.\n\n**Objective**\n\n- BP\u202f158/90 mmHg\n- HR\u202f78 bpm\n- Temp\u202f98.7\u202f\u00b0F\n- BMI\u202f36 (weight 255\u202flb)\n- Medications: Lisinopril 10\u202fmg daily, Metformin 500\u202fmg delayed\u2011release BID\n- eGFR\u202f48\u202fmL/min/1.73\u202fm\u00b2 (recently documented)\n\n**Review of Systems**\n\n- No complaints of dizziness, palpitations, or orthostatic symptoms.\n- No gastrointestinal symptoms that might be related to metformin.\n\n**Assessment**\n\n1. **Hypertension** \u2013 uncontrolled (stage\u202f2), likely secondary to obesity and CKD.\n2. **Chronic kidney disease** \u2013 stage\u202f3a (eGFR\u202f45\u201159). Metformin is generally contraindicated once eGFR falls below 45\u202fmL/min/1.73\u202fm\u00b2; patient is near threshold.\n3. **Impaired glucose tolerance / pre\u2011diabetes** \u2013 HbA1c (6.6\u202f%) suggests early glucose dysregulation.\n4. **Obesity** \u2013 BMI\u202f36.\n5. **Sleep apnea** \u2013 ongoing CPAP therapy.\n\n**Plan**\n\n- **Discontinue metformin** pending PCP discussion, given eGFR near the 45\u202fmL/min cutoff and risk of lactic acidosis.\n- **Continue lisinopril 10\u202fmg daily** for HTN and renoprotection.\n- **Lifestyle counseling**: aggressive weight loss (dietitian referral, continue CPAP usage, aerobic activity \u2265150\u202fmin/week). Encourage home BP monitoring twice daily.\n- **Lab monitoring**: Repeat serum creatinine, eGFR, and electrolytes in 3\u202fmonths (PCP order). HbA1c in 3\u202fmonths to assess glycemic control after stopping metformin.\n- **Coordinate with PCP**: send written note recommending metformin discontinuation, request alternative diabetes management (e.g., lifestyle\u2011only or other oral agents with renal dosing guidance).\n- **Follow\u2011up in 4\u202fweeks** with pharmacy (telehealth) to review BP logs, weight, and any adverse effects from medication changes.\n- **Alert PCP** to consider low\u2011dose or renal\u2011dose alternatives if glucose control worsens.\n\n---\n\nThis note serves to document the medication review, highlight the potential contraindication of metformin in CKD, and outline a coordinated plan for discontinuation and monitoring.\n",
+      "symptoms_reported": [],
+      "vitals": {
+        "BP": "158/90 mmHg",
+        "HR": "78 bpm",
+        "Temperature": "98.7 \u00b0F",
+        "BMI": "36"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Hypertension",
+        "Chronic kidney disease stage\u202f3a",
+        "Impaired glucose tolerance / pre\u2011diabetes",
+        "Obesity",
+        "Obstructive sleep apnea"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily",
+        "Metformin 500 mg delayed\u2011release BID (to be discontinued)"
+      ],
+      "follow_up_recommendations": [
+        "Discontinue metformin after PCP approval",
+        "Continue lisinopril 10 mg daily",
+        "Follow home BP monitoring twice daily",
+        "Repeat serum creatinine/eGFR and electrolytes in 3 months",
+        "Repeat HbA1c in 3 months",
+        "Refer to dietitian for weight loss plan",
+        "Encourage CPAP adherence",
+        "Follow up with pharmacy in 4 weeks"
+      ]
+    },
+    {
+      "visit_number": 8,
+      "clinician_specialty": "Cardiology",
+      "note_date": "2025-04-20",
+      "content": "Visit #: 8 \u2013 2025-04-20\n\nChief Complaint: Management of dyslipidemia.\n\nHistory of Present Illness: 55\u2011year\u2011old male with a history of hypertension, stage 2.5 CKD (eGFR 48 mL/min/1.73 m\u00b2), sleep apnea, and pre\u2011diabetes presents for routine lipid management. He has no current complaints.\n\nPast Medical History: Hypertension (controlled on lisinopril), CKD stage 2.5, sleep apnea (CPAP user), pre\u2011diabetes, obesity (BMI 36). He has been on metformin 500 mg delayed\u2011release BID since 2025-01-15 but reports intolerance and wishes to discontinue due to CKD.\n\nMedications: Lisinopril 10 mg daily. Metformin discontinued. Atorvastatin 20 mg daily started today.\n\nAllergies: NKDA.\n\nReview of Systems: Negative for chest pain, dyspnea, palpitations, edema, weight change, or exercise limitation.\n\nPhysical Examination:\nVitals: BP 152/90 mmHg, HR 76 bpm, Temp 98.5\u00b0F, BMI 36. No peripheral edema.\nCardiovascular: Regular rate/rhythm, no murmurs, rubs, or gallops.\nRespiratory: Clear to auscultation bilaterally, no wheezes.\nAbdominal: Soft, non\u2011tender. No organomegaly.\nExtremities: No cyanosis or clubbing.\n\nAssessment & Plan:\n1. **Dyslipidemia** \u2013 LDL 160 mg/dL; goal: 50% reduction. Started atorvastatin 20 mg daily. Target LDL <100 mg/dL by 6\u2011month repeat lipid panel.\n2. **Hypertension** \u2013 BP 152/90 mmHg. Continue lisinopril 10 mg. Home BP monitoring twice daily; maintain logs.\n3. **CKD** \u2013 eGFR 48 mL/min/1.73 m\u00b2. Avoid nephrotoxic agents; discontinue metformin. Continue ACE inhibitor.\n4. **Pre\u2011diabetes** \u2013 HbA1c 6.6%. Lifestyle modification; schedule repeat HbA1c in 3 months.\n5. **Obesity** \u2013 BMI 36. Reinforce dietitian referral and CPAP compliance; continue weight\u2011loss plan.\n6. **Sleep apnea** \u2013 Advised ongoing CPAP adherence, especially during travel; follow up on symptomatic improvement.\n\nTests Ordered: Repeat fasting lipid panel in 6 months.\n\nFollow\u2011Up: Return in 6 months for lipid panel and BP review. Continue home BP and exercise logs. If LDL remains >100 mg/dL or BP uncontrolled, consider uptitration of atorvastatin or addition of second antihypertensive. If eGFR declines, collaborate with nephrology. Re\u2011evaluate HbA1c in 3 months.\n",
+      "symptoms_reported": [],
+      "vitals": {
+        "BP": "152/90 mmHg",
+        "HR": "76 bpm",
+        "Temperature": "98.5\u00b0F",
+        "BMI": "36"
+      },
+      "tests_ordered": [
+        "Repeat fasting lipid panel in 6 months"
+      ],
+      "diagnoses_considered": [
+        "Dyslipidemia",
+        "Hypertension",
+        "CKD stage 2.5",
+        "Pre\u2011diabetes",
+        "Obesity",
+        "Sleep apnea"
+      ],
+      "medications": [
+        "Atorvastatin 20 mg daily",
+        "Lisinopril 10 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Return in 6 months for lipid panel and BP review",
+        "Continue home BP monitoring twice daily",
+        "Maintain dietitian-directed weight\u2011loss plan",
+        "Ensure CPAP adherence",
+        "Schedule HbA1c repeat in 3 months",
+        "Monitor eGFR; consult nephrology if decline"
+      ]
+    },
+    {
+      "visit_number": 9,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2025-09-15",
+      "content": "Subjective: Patient is a 55\u2011year\u2011old male presenting for routine review of glucose monitoring and weight management. He brought a log of evening capillary glucose readings. He reports consistent readings of 110\u2013120 mg/dL, but notes occasional nighttime thirst and possible sleep disturbances. He also reports occasional fatigue after meals. No changes in medications or new symptoms.\n\nObjective: Vitals: BP 158/92 mmHg, HR 78 bpm, Temperature 98.6\u00b0F, BMI 36, Weight 256 lbs. Physical exam remarkable only for obesity; no peripheral edema, normal heart sounds, normal lung exam. Capillary glucose log stable.\n\nAssessment: 1) Impaired glucose tolerance/prediabetes \u2013 HbA1c 6.6% from last visit, stable capillary readings. 2) Hypertension \u2013 BP remain >150/90. 3) Obesity \u2013 BMI 36. 4) CKD stage 2.5 with early albuminuria \u2013 UACR 45 mg/g. 5) Sleep apnea \u2013 ongoing CPAP compliance issues and nighttime thirst. Potential progression to type 2 diabetes.\n\nPlan: - Continue current pharmacotherapy: Lisinopril 10 mg daily; Atorvastatin 20 mg daily. - Reinforce lifestyle modification: weight loss goal 10\u201315% over 6 months, daily physical activity >150 min/week, low\u2011salt diet. - Dietitian follow\u2011up for carb counting, caloric restriction. - Continue self\u2011monitoring of capillary glucose in evenings; send log at next visit. - Repeat HbA1c in 6 months. - Monitor kidney function: repeat eGFR and albumin/creatinine ratio in 6 months. - Encourage CPAP adherence; review mask fit and humidifier use next week. - Home blood\u2011pressure monitoring twice daily; educate on when to seek care. - Follow\u2011up in 6 months unless patient develops symptoms of worsening BP, glycemia or kidney function.",
+      "symptoms_reported": [
+        "Occasional fatigue after meals",
+        "Slight nighttime thirst",
+        "Possible sleep disturbances"
+      ],
+      "vitals": {
+        "BP": "158/92 mmHg",
+        "HR": "78 bpm",
+        "Temperature": "98.6\u00b0F",
+        "BMI": "36",
+        "Weight": "256 lbs"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Impaired glucose tolerance / prediabetes",
+        "Hypertension",
+        "Obesity / BMI 36",
+        "Stage 2.5 Chronic Kidney Disease with early albuminuria",
+        "Sleep apnea",
+        "Risk of progression to type 2 diabetes mellitus"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily",
+        "Atorvastatin 20 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Repeat HbA1c in 6 months",
+        "Continue dietitian supervision for carb counting and caloric restriction",
+        "Continue self\u2011monitoring of blood glucose (evening) and send log at next visit",
+        "Monitor weight; aim for 0.5\u20131 kg/week weight loss",
+        "Encourage CPAP adherence; review mask fit and humidifier use next week",
+        "Schedule next primary care visit in 6 months unless blood pressure or glycemic control worsens",
+        "Order repeat eGFR and albumin/creatinine ratio in 6 months"
+      ]
+    },
+    {
+      "visit_number": 10,
+      "clinician_specialty": "Nephrology",
+      "note_date": "2025-12-10",
+      "content": "**Subjective**\nChief complaint: Follow\u2011up for kidney function assessment. Patient is a 55\u2011year\u2011old male with known CKD stage 3a (eGFR 40 mL/min/1.73 m\u00b2), hypertension, sleep apnea, and pre\u2011diabetes. He reports mild ankle edema over the past week. No new symptoms such as flank pain, hematuria, or weight change. He denies NSAID use or exposure to contrast media.\n\n**Objective**\nVital signs: BP 155/95 mmHg, HR 80 bpm, Temp 98.7\u00b0F, BMI 36, Weight 260 lbs.\nPhysical exam: Mild pitting edema at both ankles, otherwise normal. No abdominal tenderness, no flank tenderness, no peripheral neuropathy.\nRecent labs: Serum creatinine 1.4 mg/dL, eGFR 40 mL/min/1.73 m\u00b2 (stable), urine microalbumin/creatinine ratio 60 mg/g (mildly elevated).\n\n**Assessment**\n1. CKD stage 3a (eGFR 40) \u2013 stable over the past year with mild progression.\n2. Hypertensive nephrosclerosis \u2013 BP remains above goal despite ACE inhibition.\n3. Early albuminuria \u2013 UACR 60 mg/g suggests ongoing glomerular injury.\n4. Prediabetes \u2013 recent HbA1c 6.6% and recent metformin therapy; will re\u2011assess in 6 months.\n\n**Plan**\n- Continue lisinopril 10 mg daily (ACE\u2011I) and atorvastatin 20 mg daily.\n- Reinforce avoidance of nephrotoxic agents (NSAIDs, iodinated contrast).\n- Counsel patient on sodium restriction (<1500 mg/day), maintain weight\u2011loss goal, and increase aerobic activity.\n- Educate on home BP monitoring twice daily (morning and evening) and record values in log.\n- Repeat fasting HbA1c, serum creatinine/eGFR, and urine albumin/creatinine ratio in 6 months.\n- Schedule nephrology follow\u2011up in 6 months or sooner if BP >160/100 or if eGFR decreases >10%.\n- Continue CPAP therapy for sleep apnea and monitor adherence.\n\n**Follow\u2011up**: Return in 6 months for repeat labs and clinical assessment. In case of worsening edema, rising creatinine, or BP >160/100, contact clinic earlier.\n",
+      "symptoms_reported": [
+        "Mild ankle edema"
+      ],
+      "vitals": {
+        "BP": "155/95",
+        "HR": "80",
+        "Temperature": "98.7",
+        "BMI": "36",
+        "Weight": "260 lbs"
+      },
+      "tests_ordered": [
+        "HbA1c in 6 months"
+      ],
+      "diagnoses_considered": [
+        "Chronic kidney disease stage 3a (stable)",
+        "Hypertensive nephrosclerosis",
+        "Early albuminuria",
+        "Prediabetes"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily",
+        "Atorvastatin 20 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Repeat eGFR, uACR, and HbA1c in 6 months",
+        "Home BP monitoring twice daily",
+        "Maintain weight\u2011loss and sodium\u2011restricted diet",
+        "Return nephrology in 6 months or sooner if worsening labs"
+      ]
+    },
+    {
+      "visit_number": 11,
+      "clinician_specialty": "Primary Care",
+      "note_date": "2026-03-05",
+      "content": "P: 55\u2011year\u2011old male presents for a scheduled follow\u2011up that was missed due to travel. He was contacted by phone to reschedule. He reports no new symptoms. Vital signs at the time of the missed visit were: BP 150/90 mmHg, HR 78 bpm, Temp 98.6\u00b0F, BMI 36 (weight 262\u202flb). Patient has a history of hypertension (stage\u202f1/2), CKD stage\u202f3a, dyslipidemia, obesity, sleep apnea on CPAP, albuminuria, and impaired glucose tolerance. Current medications: lisinopril 10\u202fmg daily, atorvastatin 20\u202fmg daily. Allergies: NKDA.\n\nAssessment: \n1. Uncontrolled hypertension \u2013 BP remains above goal, requiring re\u2011evaluation of antihypertensive regimen and adherence. \n2. CKD stage\u202f3a \u2013 recent eGFR ~40\u202fmL/min (nephrology visit December) and persistent albuminuria (UACR 60\u202fmg/g) warrant continued ACE\u2011I therapy and close monitoring. \n3. Obesity \u2013 BMI 36, weight 262\u202flb; ongoing weight\u2011loss plan and lifestyle modifications. \n4. Impaired glucose tolerance \u2013 no change in therapy; review home glucose log and consider HbA1c in next appointment. \n5. Sleep apnea \u2013 CPAP compliance review pending.\n\nPlan: \n- Remind patient of importance of nephrology follow\u2011up in December; verify attendance. \n- Encourage continuation of lisinopril 10\u202fmg daily and atorvastatin 20\u202fmg daily; no medication changes today. \n- Reinforce home BP monitoring twice daily for 2 weeks; if readings persist >140/90, discuss adding a thiazide or beta\u2011blocker. \n- Review home glucose log; if post\u2011meal spikes or FPG >140\u202fmg/dL, schedule HbA1c in 2\u202fmonths. \n- Continue CPAP; advise patient to maintain fluid intake >1500\u202fmL/day and use humidifier. \n- Weight\u2011loss counseling: aim for 5\u201310\u202f% weight loss over 6\u202fmonths; consider dietitian referral if adherence poor. \n- Schedule new primary\u2011care visit for 2026\u201104\u201110 to review BP logs, weight, glucose log, and update labs. \n- If patient misses nephrology appointment, call again to reschedule.\n\nFollow\u2011up will be scheduled via phone call/clinic as appropriate. Encourage patient to contact office if BP readings consistently high, or if any symptoms such as dizziness, chest pain, or shortness of breath develop.\n",
+      "symptoms_reported": [],
+      "vitals": {
+        "BP": "150/90",
+        "HR": "78",
+        "Temperature": "98.6",
+        "BMI": "36",
+        "Weight": "262 lbs"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Uncontrolled hypertension",
+        "CKD stage 3a",
+        "Obesity",
+        "Impaired glucose tolerance",
+        "Sleep apnea"
+      ],
+      "medications": [
+        "Lisinopril 10 mg daily",
+        "Atorvastatin 20 mg daily"
+      ],
+      "follow_up_recommendations": [
+        "Schedule new PCP appointment for 2026\u201104\u201110",
+        "Confirm nephrology December appointment",
+        "Continue home BP monitoring twice daily",
+        "Review home glucose log",
+        "Maintain CPAP adherence",
+        "Weight\u2011loss counseling and dietitian referral if needed"
+      ]
+    }
+  ],
+  "final_medical_history": {
+    "demographics": {
+      "age": 55,
+      "sex": "M",
+      "height": null,
+      "weight": null
+    },
+    "known_conditions": [
+      "Hypertension",
+      "Dyslipidemia",
+      "Obesity",
+      "Chronic Kidney Disease",
+      "Sleep Apnea",
+      "Albuminuria",
+      "Impaired glucose tolerance"
+    ],
+    "current_medications": [
+      "Lisinopril 10 mg daily",
+      "Atorvastatin 20 mg daily"
+    ],
+    "prior_visit_summaries": [
+      "Routine blood pressure check on 2023-10-15: BP 142/96 mmHg, BMI 33, weight 240 lb. No new symptoms reported. Patient advised to follow a low\u2011sodium diet, increase aerobic activity to at least 150 min/week, and perform home BP monitoring twice daily for two weeks. Labs ordered: fasting lipid panel in 12 months; repeat serum creatinine/eGFR in 6 months. Follow\u2011up in 3 months for BP and weight reassessment.",
+      "Annual physical on 2023-12-05: BP 158/92 mmHg, BMI 33. Initiated lisinopril 10 mg daily for uncontrolled hypertension; ordered fasting lipid panel and baseline serum creatinine/eGFR. Advised continued CPAP use during travel, dietitian referral for weight loss plan, home BP monitoring twice daily for 2 weeks, and follow\u2011up in 4 weeks.",
+      "2024-03-18: Follow-up for low back strain. Patient reports localized thoracolumbar pain worsened by prolonged sitting, without radiation or neurologic deficits. BP 161/95 mmHg, BMI 34. Physical exam shows tenderness at the thoracolumbar junction; strength and reflexes intact. Patient referred to physical therapy for core strengthening and posture education. Continue lisinopril 10 mg daily, low\u2011sodium diet, aerobic activity, and weight loss effort. Advised home BP monitoring twice daily and symptom log. No labs ordered. Follow\u2011up in 4 weeks.",
+      "2024-06-10: CPAP compliance review; patient reports nocturnal thirst and morning dry mouth. BP 159/94 mmHg. Advised mask leak management, humidifier use, >1500 ml/day fluid intake, dietitian referral for weight loss. Continue lisinopril 10 mg daily. Follow\u2011up in 4 weeks.",
+      "Routine physical exam on 2024-09-12: BP 158/92 mmHg, weight 255 lbs, BMI 34.5. UACR 45 mg/g indicating early albuminuria. Fasting lipid panel, fasting glucose, and HbA1c ordered. Lisinopril 10 mg daily continued. Reinforced dietary counseling, weight\u2011loss plan, CPAP adherence, and home BP monitoring.",
+      "2025-01-15: Patient presented with fatigue, mild morning headache, and lightheadedness post\u2011standing after a prior fall. Vitals: BP 160/95 mmHg, HR 78, BMI 36, weight 255 lb. Physical exam: mild thoracolumbar discomfort, otherwise normal. Labs: HbA1c 6.6% indicating impaired glucose tolerance. Management: Metformin 500 mg delayed\u2011release BID, continue lisinopril 10 mg daily; ordered eGFR, serum creatinine, electrolytes. Advised CPAP adherence, weight\u2011loss plan, home BP and glucose monitoring, and orthostatic vitals assessment. Follow\u2011up in 4 weeks.",
+      "2025-04-20: Routine cardiology follow\u2011up for dyslipidemia. BP 152/90 mmHg, BMI 36. LDL 160 mg/dL. Started atorvastatin 20 mg daily, discontinued metformin. Repeat fasting lipid panel ordered in 6 months. Home BP monitoring twice daily advised. Follow\u2011up in 6 months.",
+      "2025-09-15: Routine review of glucose monitoring and weight management. Vitals: BP 158/92 mmHg, HR 78 bpm, BMI 36, weight 256 lbs. Capillary glucose log stable 110\u2011120 mg/dL with occasional nighttime thirst and post\u2011meal fatigue. No medication changes. Continued lisinopril 10 mg daily and atorvastatin 20 mg daily. Plan includes lifestyle modifications, repeat HbA1c and eGFR/UACR in 6 months, CPAP adherence review next week, and next primary care visit scheduled in 6 months.",
+      "2025-12-10 nephrology follow\u2011up for kidney function: BP 155/95 mmHg, BMI 36, weight 260 lbs. Mild ankle edema noted. Labs: serum creatinine 1.4 mg/dL, eGFR 40 mL/min/1.73 m\u00b2, UACR 60 mg/g. Continue lisinopril 10 mg daily, atorvastatin 20 mg daily, maintain sodium restriction, weight\u2011loss goal, and home BP monitoring. Repeat labs and clinical assessment in 6 months.",
+      "2026-03-05: Follow\u2011up for missed primary care visit; patient reports no new symptoms. Vital signs: BP 150/90 mmHg, HR 78 bpm, BMI 36 (weight 262\u202flb). Continued lisinopril 10\u202fmg daily and atorvastatin 20\u202fmg daily. Home BP monitoring twice daily advised; potential addition of a thiazide or beta\u2011blocker if readings >140/90. Reviewed home glucose log; no glucose testing ordered. Advised continued CPAP use, fluid intake >1500\u202fmL/day, humidifier use. Weight\u2011loss counseling reiterated; dietitian referral considered if adherence poor. Scheduled next PCP visit 2026\u201104\u201110; nephrology appointment in December to be confirmed."
+    ],
+    "allergies": []
+  }
+}

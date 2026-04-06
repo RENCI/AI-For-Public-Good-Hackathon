@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case b68a5cc2</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: b68a5cc2</h1><div class="subtitle">Type 2 Diabetes Mellitus | Male, 58</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-chronic">chronic</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Hypertension, Obesity</div><div class="meta-line">Risk Factors: Sedentary lifestyle, Family history of diabetes, High BMI</div></div>
+<details><summary>Narrative <span class="preview-text">When Mr. James Carter, a 58‑year‑old accountant, was due for his yearly health check‑up, he found himself standing in th...</span></summary><div class="section-body"><p>When Mr. James Carter, a 58‑year‑old accountant, was due for his yearly health check‑up, he found himself standing in the fluorescent‑lit room of his doctor’s office with a quiet complaint that had been gnawing on him for a few months: “I’ve been feeling more tired and thirsty lately, and I keep getting up to pee more often.” He had never been particularly active; long hours at his desk were the norm, and after each shift a bowl of noodles and a bottle of soda seemed more tempting than a jog in the park. His family history was a cautionary tale: his father was diagnosed with type 2 diabetes in his early fifties, and his grandfather’s hypertension had plagued the family for generations.</p><p>The physical exam was largely unremarkable – a high‑blood‑pressure reading of 150/95 mm Hg (the baseline on his antihypertensive therapy, losartan 50 mg), a BMI of 32.5, and no obvious signs of hyperglycaemia. “Any other symptoms?” Dr. Patel asked. James answered that he had started noticing blurry spots when reading and a sense of “foggy thinking” that made it harder at work. “Did you lose any weight?” Dr. Patel inquired. “A couple of pounds over the last month, but nothing dramatic.” James shrugged, because his weight had fluctuated over the years with occasional weight‑loss attempts that never stuck.</p><p>Given the constellation of fatigue, polyuria, blurred vision, and family history, Dr. Patel ordered a fasting glucose and an HbA1c. The results were telling: a fasting glucose of 182 mg/dL and an HbA1c of 7.8 %. The diagnosis came with a sigh on both sides – James had type 2 diabetes, and it had been silently developing for years while his insulin resistance had silently climbed. Dr. Patel scheduled a second visit in three weeks and recommended immediate lifestyle changes: increase walking to 30 minutes a day, cut added sugars, and aim for a 10‑percent weight loss over the next six months. With a small prescription of metformin 500 mg twice daily, James felt hopeful that the “new wave of illness” could be controlled.</p><p>---</p><p>### Three‑Week Follow‑Up
+At the first follow‑up, James reported some snags and some gains. He had integrated a “walk to the office” routine for an hour and was more mindful of desserts but still found himself reaching for the last chocolate chip cookie at lunch. Blood pressure had dropped slightly to 145/92. Dr. Patel encouraged him to continue the habits, added a low‑dose sitagliptin (dipeptidyl peptidase‑4 inhibitor) to address the residual hyperglycaemia, and referred him to a dietitian. The dietitian suggested a Mediterranean‑style diet, emphasizing vegetables, whole grains, lean protein, and healthy oils, and devised a simple grocery list to keep pantry staples in check.</p><p>Between visits, James noticed “a change” – though he still woke up tired, his vision had become clearer, and he had a bit more pep to the finish line of his workday. At the three‑month check, his HbA1c had fallen to 6.9 %, and his weight was 6 lb lighter. Blood pressure remained stubborn at 140/90, prompting a switch of her losartan dose to 100 mg daily and a reminder to monitor salt intake.</p><p>---</p><p>### Six-Month Review
+Six months into the plan, James had become something of a “walking” man. He now routinely walked 45 minutes during lunch breaks, often with a work buddy, and began cycling home on weekends. His weight fell another 8 lb, bringing his BMI down to 30.1. The dietitian had introduced a meal‑prep routine: a Sunday dinner where he cooked large batches of stews and grilled chicken, portioned into insulated containers, and ate the portioned meals in the week.</p><p>At the six‑month exam, his fasting glucose had stabilized at 112 mg/dL, and HbA1c was 6.5 %. Blood pressure trended down to 138/88. Dr. Patel congratulated him, but suggested adding a small dose of empagliflozin (an SGLT2 inhibitor), which, beyond modest glycaemic control, has proven benefits in reducing cardiovascular risk for patients with diabetes and hypertension.</p><p>James hesitated; the idea of another pill was unsettling, especially after the long period where he had resisted “medication” in favor of lifestyle alone. Dr. Patel explained the mechanistic benefits – glucose excretion, modest blood pressure reductions, and weight loss – and assured him that the side‑effect profile was mild, usually limited to a mild genital yeast infection that could be prevented with proper hygiene. With a nod, James agreed to try the new agent.</p><p>---</p><p>### Twelve-Month Check‑In
+A year in, the narrative looked different. With empagliflozin added, James’s HbA1c dipped to 6.2 %. Blood pressure had improved to 130/80 without further medication adjustments, thanks to the combined fluid‑loss effect of the drug and lifestyle changes. His weight was a modest 2 lb below his baseline at the start of the program, and his BMI hovered around 29.5. He now reported not only increased energy and mental clarity but also a renewed sense of control over his health – a mood shift that was reflected in his smile and in the quiet pride he felt when a colleague asked on a sunny Tuesday, “How do you stay in shape?” He answered with a quick nod to the gym membership he finally joined, after a long period of hesitation.</p><p>Throughout the course, James navigated the typical ebb and flow of chronic disease management: moments of self‑doubt early on, bursts of motivation after the first HbA1c improvement, and the constant reminder that &quot;improvement&quot; in type 2 diabetes is not a finish line but a marathon. His care team – the primary care physician, dietitian, pharmacist, and a friend who jogged with him – provided a steady rhythm that kept him on track. The patient’s own engagement, sparked by early symptoms of fatigue and blurry vision and anchored by family history, became the cornerstone of his improvement.</p><p>At the end of the narrative timeline, James’s disease course mirrors an improving chronic condition: he remains diabetic, but his glycaemic control is within the target range, his blood pressure is well managed, his weight is modestly reduced, and the psychosocial burden of the disease has lessened. The story underscores how a mid‑life man with typical risk factors can, through a realistic blend of medication, lifestyle, and support, shift from early hyperglycaemia to a stable, improving trajectory.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-10</h3><div class="visit-meta">General Practice | Reason: Annual health check</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Annual health check; Patient reports fatigue, thirst, polyuria, blurred vision, and foggy cognition.
+
+History of Present Illness: Mr. Carter is a 58‑year‑old male with known hypertension and obesity presenting for routine review. He reports increasing fatigue, a sensation of thirst, and frequent nighttime urination over the past three weeks. He notes blurred vision and difficulty concentrating. He works at a sedentary office job, spends long hours in front of a computer, and has a family history of hypertension.
+
+Past Medical History: Hypertension, obesity; no other chronic conditions documented.
+
+Medications: Losartan 50 mg daily.
+
+Allergies: NKDA.
+
+Physical Examination:
+- General: Alert, oriented, in no acute distress.
+- Vitals: BP 150/95 mmHg, HR 72 bpm, BMI 32.5, RR 14, Temp 98.6°F.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Soft, non‑tender, no organomegaly.
+- Extremities: No pedal edema, no peripheral neuropathy noted.
+- Ophthalmologic: Visual acuity 20/25 with blurred spots, no obvious changes on slit‑lamp exam.
+
+Laboratory Results:
+- Fasting plasma glucose: 182 mg/dL (elevated).
+- HbA1c: 7.8% (above target).
+
+Assessment:
+1. Newly diagnosed type 2 diabetes mellitus (T2DM) – fasting glucose &gt;126 mg/dL and HbA1c &gt;6.5%.
+2. Uncontrolled hypertension – BP &gt;140/90 mmHg.
+3. Early diabetic complications (possible early retinopathy secondary to hyperglycemia) – requires ophthalmology follow‑up.
+
+Plan:
+- Continue Losartan 50 mg daily.
+- No medication change at this time; reinforce lifestyle modifications as first‑line therapy.
+- Initiate comprehensive diabetes education: carbohydrate counting, regular glucose monitoring.
+- Refer to registered dietitian for individualized diet plan focusing on low glycemic index foods, reduced added sugars, and portion control.
+- Encourage 150 minutes/week of moderate aerobic exercise (e.g., brisk walking).
+- Order baseline lipid profile and serum creatinine/eGFR next visit.
+- Repeat fasting glucose and HbA1c in 3 months; repeat BP at each office visit.
+- If goals not met, consider adding metformin (500 mg BID) once tolerated.
+- Schedule ophthalmology consult within 2 months for dilated retinal exam.
+- Advise patient to monitor for worsening symptoms, new onset chest pain, or vision changes and to seek care promptly.
+
+Patient Education:
+- Reviewed symptoms of hypoglycemia; patient understands when to seek assistance.
+- Provided handouts on DASH diet and exercise.
+
+Disposition:
+- Patient will return in 3 months for lab review; urgent follow‑up if symptoms worsen.
+
+Prepared by: Dr. Patel
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">thirst</span><span class="pill">polyuria</span><span class="pill">blurred vision</span><span class="pill">foggy thinking</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/95 mmHg</td></tr><tr><td>BMI</td><td>32.5</td></tr><tr><td>HR</td><td>72 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 32.5</li><li>BP 150/95 mmHg</li><li>visual acuity 20/25 with blurred spots</li><li>no peripheral neuropathy</li><li>no pedal edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting plasma glucose</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 182 mg/dL</li><li>HbA1c 7.8%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg twice daily</li><li>Lifestyle counseling</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Mr. Carter expressed relief that his symptoms had an explanation and a start on therapy; he appeared hopeful about managing his new diagnosis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 50 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>sedentary workplace routine</li><li>long hours in front of computer</li><li>family history of diabetes and hypertension</li><li>previous irregular weight changes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Carter presented with fatigue, thirst, polyuria, blurred vision, and foggy cognition. Dr. Patel performed a focused history and physical exam. Vital signs revealed elevated BP (150/95) and BMI 32.5. No overt signs of hyperglycemia were noted. A fasting plasma glucose and HbA1c were ordered and confirmed: fasting glucose 182 mg/dL and HbA1c 7.8%, establishing a new diagnosis of type 2 diabetes mellitus. Metformin 500 mg twice daily was prescribed, and the patient was counseled on lifestyle modifications—30 minutes of walking daily, reduced added sugars, and targeted weight loss—while the antihypertensive dose remained unchanged.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline diagnosis of newly detected type 2 diabetes mellitus; insulin resistance likely exacerbated by sedentary lifestyle and high BMI. Initiated metformin; lifestyle counseling advised.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-31</h3><div class="visit-meta">General Practice | Reason: Follow-up on lifestyle changes and glucose control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+Mr. Carter reports adherence to daily walking (30 minutes) and a Mediterranean‑style diet referred by a dietitian. He notes continued fatigue and morning grogginess, occasional cookie cravings despite reduced overall sugar intake, and no adverse events from metformin. He is motivated but slightly frustrated by persistent cravings.
+
+Objective:
+Vitals: BP 145/92 mmHg, HR 70 bpm, BMI 32.2. Physical exam is otherwise unremarkable; no signs of diabetic retinopathy or neuropathy. Prior labs show HbA1c 7.8%. No new tests ordered.
+
+Assessment:
+1. Type 2 Diabetes Mellitus – suboptimally controlled (HbA1c 7.8%) despite lifestyle changes; patient adherence is good.
+2. Hypertension – stage 1 (BP 145/92), modest improvement but goal &lt;130/80 not achieved.
+3. Obesity – BMI 32.2, continued risk factor.
+
+Plan:
+- Add Sitagliptin 100 mg daily to current Metformin 500 mg BID to improve glycemic control.
+- Continue Losartan 50 mg daily for hypertension.
+- Continue Mediterranean diet and 30‑minute daily walking; reinforce dietary counseling.
+- Reassess HbA1c, fasting glucose, lipid panel, renal function in 3 months.
+- Recheck BP at next visit; consider adding a second antihypertensive if BP remains &gt;150/95.
+- Monitor for hypoglycemia or GI side effects from Sitagliptin.
+- Encourage patient to keep a food and activity log to further identify craving triggers.
+- Schedule follow‑up visit in 3 months or sooner if BP worsens or new symptoms develop.
+
+Disposition: Patient educated on medication action and potential side effects; instructed to contact clinic if significant dizziness, palpitations, or worsening fatigue occur.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">continued fatigue</span><span class="pill">morning grogginess</span><span class="pill">reduced sugar intake</span><span class="pill">occasional cookie cravings</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/92 mmHg</td></tr><tr><td>BMI</td><td>32.2</td></tr><tr><td>HR</td><td>70 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 145/92</li><li>BMI 32.2</li><li>mild fatigue noted</li><li>no signs of retinopathy or neuropathy</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Added sitagliptin 100 mg daily</li><li>Referred to dietitian</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slightly frustrated by continued cravings but motivated to continue lifestyle changes and medication adherence.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg twice daily</li><li>Losartan 50 mg daily</li><li>Sitagliptin 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>implemented 30‑minute daily walk</li><li>reduced added sugars</li><li>still occasional sweets cravings</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Carter reported adherence to daily walking and dietary changes. BP improved slightly to 145/92. No adverse events from metformin noted. A low‑dose sitagliptin (100 mg daily) was added to address residual hyperglycemia. He was referred to a dietitian for a Mediterranean‑style meal plan and grocery list. No laboratory work was pending; prior HbA1c was 7.8%.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Type 2 diabetes remains uncontrolled; addition of DPP‑4 inhibitor to improve glycemic control; lifestyle counseling ongoing; monitoring progression.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-04-10</h3><div class="visit-meta">General Practice | Reason: Three‑month review of cardiovascular and glycemic status</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Three‑month review of cardiovascular and glycemic status.
+
+History: 58‑year‑old man with longstanding hypertension and obesity, newly diagnosed type 2 diabetes mellitus. Current meds: Metformin 500 mg BID, Sitagliptin 100 mg daily, Losartan 100 mg daily. Allergies: NKDA.
+
+Presenting: reports improved energy and clearer vision since last visit. Persistent mild fatigue. No new complaints. Adheres to daily 30‑minute walk and Mediterranean‑style diet, lost 6 lb over the past month.
+
+Physical Exam:
+* Vital signs: BP 140/90 mmHg, HR 68 bpm, BMI 31.8.
+* General: alert, oriented, no focal neuro deficits.
+* Cardiovascular: regular rhythm, no murmurs.
+* Eyes: visual acuity 20/20 bilaterally; fundoscopic exam clear, no diabetic retinopathy.
+* Extremities: no pedal edema, pulses present.
+
+Labs: HbA1c 6.9 % (↓ from 7.8 % at visit 2).
+
+Assessment:
+1. Hypertension – BP remains above target (&lt;130/80 mmHg). Losartan increased to 100 mg daily.
+2. Type 2 Diabetes Mellitus – HbA1c now &lt;7 % on Metformin/Sitagliptin; good control.
+3. Obesity – BMI 31.8; modest weight loss noted.
+4. Mild chronic fatigue – likely due to ongoing hypertension; improved energy noted.
+
+Differential for persistent hypertension: volume expansion, medication adherence, secondary causes (cushing, thyroid), lifestyle factors.
+
+Plan:
+* Continue current medication dosages.
+* Reinforce lifestyle: ≥30 min brisk walking, Mediterranean diet, weight‑loss goal 1–2 lb/week.
+* Monitor BP at home twice daily; record readings.
+* Repeat fasting lipid panel, serum creatinine, electrolytes, and HbA1c in 3 months.
+* If BP &gt;140/90 mmHg or symptomatic, consider adding thiazide diuretic or increasing losartan dose.
+* Educate about symptoms of hypotension, signs of diabetic complications.
+* Follow up in 3 months or sooner if BP deteriorates.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">improved energy</span><span class="pill">clearer vision</span><span class="pill">persistent mild fatigue</span><span class="pill">continued diet modifications</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90 mmHg</td></tr><tr><td>BMI</td><td>31.8</td></tr><tr><td>HR</td><td>68 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 140/90</li><li>BMI 31.8</li><li>visual acuity 20/20</li><li>no pedal edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 6.9%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Titrated losartan to 100 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Satisfied with the gradual improvement in vision and glucose; motivated to keep walking and follow diet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg twice daily</li><li>Losartan 100 mg daily</li><li>Sitagliptin 100 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>weekly 30‑minute walk</li><li>dietitian guidance followed for 3 months</li><li>weight dropped 6 lbs over the last month</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Carter presented with better energy and clearer vision. BP remained at 140/90, and weight was 31.8. An HbA1c was ordered and returned 6.9%, down from 7.8%. Losartan was titrated to 100 mg daily to approach target BP &lt;130/80. He reported good adherence to medication and lifestyle but expressed concern about remaining high BP. Lifestyle counseling was reinforced.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>HbA1c improved; BP still above goal—escalated losartan; ongoing medication adherence; lifestyle modifications continue.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-07-15</h3><div class="visit-meta">General Practice | Reason: Six‑month review of metabolic control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Six‑month review of metabolic control.
+
+History of Present Illness: 58‑year‑old male with type 2 diabetes mellitus (T2DM), hypertension (HTN), and obesity presents for routine follow‑up. Patient reports steady energy, no blurred vision, occasional light‑headedness upon standing, and regular exercise (45‑minute walks during lunch, weekly cycling). He has lost an additional 8 lb over the past month and continues a Mediterranean diet and meal‑preparation routine.
+
+Past Medical History: T2DM diagnosed 2023‑01‑10, hypertension, obesity. Family history: father – HTN, DM.
+
+Social History: Active; non‑smoker, moderate alcohol, no illicit drugs.
+
+Medications: Metformin 500 mg BID, Sitagliptin 100 mg daily, Losartan 100 mg daily (upgraded from 50 mg), Empagliflozin 10 mg daily (started today). Allergies: NKDA.
+
+Review of Systems: Cardiovascular – no chest pain or palpitations. Neurologic – no dizziness except mild light‑headedness on standing. Ophthalmologic – no blurry vision. Genitourinary – no infections reported.
+
+Physical Exam: Vitals: BP 138/88 mmHg, HR 66 bpm, BMI 30.1. Cardiovascular: regular rhythm, no murmurs. Respiratory: clear. Abdomen: soft. Extremities: no edema. Neurologic: normal sensory exam, no neuropathy. No orthostatic drop in BP; mild postural tachycardia noted but clinically insignificant.
+
+Labs (Repeat from today): Fasting glucose 112 mg/dL, HbA1c 6.5%.
+
+Assessment: 1) T2DM – well controlled (HbA1c 6.5%) with current regimen plus empagliflozin. 2) HTN – partially controlled (BP 138/88) on losartan 100 mg. 3) Obesity – BMI 30.1, 8 lb weight loss. 4) Mild orthostatic tachycardia – likely benign. 5) Risk of genital yeast infection from empagliflozin – patient educated on hygiene.
+
+Plan:
+- Continue Metformin 500 mg BID, Sitagliptin 100 mg daily, Losartan 100 mg daily.\n- Empagliflozin 10 mg daily started; monitor for genital mycotic infections, genital discharge, or genital itching.
+- Counsel on proper genital hygiene to mitigate mild side effects.
+- Repeat fasting glucose and HbA1c in 3 months; add serum creatinine, electrolytes, lipid panel if not done recently.
+- Continue regular exercise and Mediterranean diet; continue 45‑min walking and weekly cycling.
+- Patient to monitor BP at home monthly; record readings.
+- Return in 2 weeks for side‑effect assessment; routine clinic follow‑up in 3 months for labs and weight review.
+
+Differential diagnoses considered: mild orthostatic hypotension, SGBV-induced light‑headedness, early heart failure signs (unlikely), infection related to empagliflozin.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">steady energy</span><span class="pill">no blurred vision</span><span class="pill">occasional light‑headedness upon standing</span><span class="pill">regular exercise</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/88 mmHg</td></tr><tr><td>BMI</td><td>30.1</td></tr><tr><td>HR</td><td>66 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 138/88</li><li>BMI 30.1</li><li>mild postural tachycardia noted but clinically insignificant</li><li>no peripheral neuropathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 112 mg/dL</li><li>HbA1c 6.5%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started empagliflozin 10 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Initially hesitant but receptive after explanation of benefits; willing to monitor for minor side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg twice daily</li><li>Losartan 100 mg daily</li><li>Sitagliptin 100 mg daily</li><li>Empagliflozin 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>45‑minute walks during lunch</li><li>weekly cycling</li><li>meal prep Sunday routine</li><li>additional weight loss of 8 lbs</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Baseline labs: fasting glucose 112 mg/dL, HbA1c 6.5%. With sustained improvement, Dr. Patel discussed adding empagliflozin to leverage its cardiovascular benefits and modest weight/BP reduction. Patient was educated on possible mild genital yeast infection, which can be mitigated with hygiene. Empagliflozin 10 mg daily was initiated. Follow‑up for side effects will occur in two weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Glycemic control approaching target; added SGLT2 inhibitor for additional cardiovascular and weight benefits; monitor for genital infections; BP improving.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-01-10</h3><div class="visit-meta">General Practice | Reason: Twelve‑month comprehensive health review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Mr. Carter, a 58‑year‑old male with a history of type 2 diabetes mellitus (T2DM), hypertension, and obesity, presents for his annual comprehensive review. He reports sustained improvement in energy levels, stable weight, and a high mood. No new symptoms or adverse effects are noted. He continues regular gym attendance and adheres to a Mediterranean‑style diet. Current medications are well tolerated: Metformin 500 mg BID, Losartan 100 mg daily, Sitagliptin 100 mg daily, and Empagliflozin 10 mg daily. Vital signs are: BP 130/80 mmHg, HR 64 bpm, BMI 29.5. Physical exam is unremarkable with no pedal edema and a normal fundoscopic examination. Labs demonstrate a HbA1c of 6.2%, fasting glucose 105 mg/dL, and mild glucosuria on urinalysis – consistent with expected empagliflozin activity. No ketones were detected. The patient remains compliant and denies urinary tract or genital complaints. Assessments: Controlled T2DM (HbA1c 6.2%), controlled hypertension (SBP 130 mmHg), BMI in the overweight range (29.5). No evidence of hypoglycemia, volume depletion, or electrolyte disturbance. Plan: 1) Continue current medication regimen. 2) Reinforce lifestyle measures: maintain gym sessions, Mediterranean diet, and weight goal of 5–10% reduction. 3) Monitor renal function (serum creatinine, eGFR) and hematocrit at next routine labs. 4) Annual ophthalmology exam and lipid panel. 5) Home BP monitoring twice daily; adjust antihypertensive therapy if readings exceed 140/90 mmHg on three consecutive days. 6) Educate on genital hygiene to reduce risk of genital mycotic infections. 7) Schedule next visit in 3 months for labs and review of weight/BP. Educated patient on signs of dehydration and hypoglycemia; none reported. He is satisfied and motivated to continue current health trajectory.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">increased energy</span><span class="pill">stable weight</span><span class="pill">no infection symptoms</span><span class="pill">gym membership and regular sessions</span><span class="pill">high mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80 mmHg</td></tr><tr><td>BMI</td><td>29.5</td></tr><tr><td>HR</td><td>64 bpm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 130/80</li><li>BMI 29.5</li><li>no pedal edema</li><li>eye exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>Fasting glucose</li><li>Urinalysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 6.2%</li><li>Fasting glucose 105 mg/dL</li><li>Urinalysis: negative for ketones, mild glucosuria</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reinforced lifestyle counseling</li><li>No medication changes</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Very satisfied; feels empowered to maintain health; reports no adverse effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg twice daily</li><li>Losartan 100 mg daily</li><li>Sitagliptin 100 mg daily</li><li>Empagliflozin 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>continuous diet, exercise, medication adherence</li><li>started gym membership</li><li>consistent 10‑percent weight loss</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Carter reports sustained improvement in energy and mood. Labs reveal HbA1c 6.2%, fasting glucose 105 mg/dL, and mild glucosuria on urinalysis; glucose excretion confirms empagliflozin activity. BP at 130/80 reflects combined pharmacologic and lifestyle effects. The patient reports no side‑effects, and adherence remains excellent. Discussion focused on continued lifestyle maintenance and periodic monitoring of renal function and hematocrit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diabetes now well controlled (HbA1c &lt;7%), BP below 140/90, BMI reduced to 29.5; empagliflozin providing sustained glycemic, BP, and modest weight benefits; no complications observed.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 58</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Type 2 Diabetes Mellitus</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Sitagliptin 100 mg daily</li><li>Losartan 100 mg daily</li><li>Empagliflozin 10 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit #1 (2023-01-10, General Practice): Annual health check. Chief complaints of fatigue, thirst, polyuria, blurred vision, and foggy cognition. Vitals showed BP 150/95 mmHg and BMI 32.5. Fasting plasma glucose 182 mg/dL and HbA1c 7.8% confirmed a new diagnosis of type 2 diabetes mellitus; hypertension remains uncontrolled. Losartan 50 mg daily was continued. The plan included diabetes education, dietitian referral, 150 minutes/week of moderate exercise, baseline lipid and renal panel, ophthalmology referral, and repeat labs in 3 months. No new medication changes were made.</li><li>Visit #2 (2023-01-31, General Practice): Follow-up on lifestyle changes and glucose control. Patient reports adherence to walking and Mediterranean diet, persistent fatigue and morning grogginess. Vitals: BP 145/92 mmHg, BMI 32.2, HR 70 bpm; no retinopathy or neuropathy noted. HbA1c remains 7.8%. Added Sitagliptin 100 mg daily and continued Metformin 500 mg BID and Losartan 50 mg daily. Plan to reassess labs and BP in 3 months, monitor for GI side effects and hypoglycemia.</li><li>Visit #3 (2023-04-10, General Practice): Follow‑up review of cardiovascular and glycemic control. HbA1c 6.9% down from 7.8%. BP 140/90 mmHg, BMI 31.8. Visual acuity 20/20, no retinopathy. Losartan increased to 100 mg daily; other medications unchanged. Patient reports improved energy, clearer vision, mild persistent fatigue, and 6 lb weight loss. Home BP monitoring advised. Labs ordered: repeat fasting lipid panel, serum creatinine, electrolytes, HbA1c in 3 months. Plan includes continuing current medications, reinforcing lifestyle measures, and monitoring BP at home.</li><li>Visit #4 (2023-07-15, General Practice): Reviewed metabolic control. BP 138/88 mmHg, BMI 30.1, fasting glucose 112 mg/dL, HbA1c 6.5%. Initiated empagliflozin 10 mg daily. Labs ordered for creatinine, electrolytes, lipid panel; repeat glucose and HbA1c in 3 months. Patient advised on genital hygiene to mitigate side effects. Mild orthostatic tachycardia noted but clinically insignificant. Plan to revisit in 2 weeks for empagliflozin side‑effect assessment; routine follow‑up in 3 months for labs, weight, and BP.</li><li>Visit #5 (2024-01-10, General Practice): Annual comprehensive review. Patient reports sustained improvement in energy, stable weight, and high mood. Vitals show BP 130/80 mmHg, HR 64 bpm, BMI 29.5. Physical exam unremarkable; no pedal edema; normal fundoscopic exam. Labs reveal HbA1c 6.2%, fasting glucose 105 mg/dL, and mild glucosuria consistent with empagliflozin activity; no ketones detected. Medications (Metformin 500 mg BID, Sitagliptin 100 mg QD, Losartan 100 mg QD, Empagliflozin 10 mg QD) well tolerated with no new side effects. Plan includes continuing current regimen, reinforcing lifestyle measures, monitoring renal function and hematocrit at next labs, annual ophthalmology exam and lipid panel, home BP monitoring, and scheduling next visit in 3 months.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

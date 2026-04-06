@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 86ec7f59</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 86ec7f59</h1><div class="subtitle">Fracture of the Femur (intertrochanteric, AO/OTA 32A2) | Male, 60</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Osteoporosis, Osteoarthritis, Cardiovascular disease</div><div class="meta-line">Risk Factors: History of falls, Low bone mineral density, Smoking, Alcohol abuse</div></div>
+<details><summary>Narrative <span class="preview-text">On a bright, overcast morning in early March, Thomas Mitchell, a 60‑year‑old retired electrician, awoke feeling an ordin...</span></summary><div class="section-body"><p>On a bright, overcast morning in early March, Thomas Mitchell, a 60‑year‑old retired electrician, awoke feeling an ordinary stiffness in the left hip after a brief bout of coughing. The stiffness felt like a dull ache, not unlike the discomfort he had endured for years from osteoarthritis in both hips. He tried a short stretch, and the pain did not abate. He went back to bed, intending to get up around noon to get a coffee with his wife, only to hear a sudden, heavy thump from the hallway. He had slipped on the narrow, uneven steps that lead from the stairwell to his first‑floor apartment. The impact was loud and immediate, and he was unable to feel his left foot for a second because the jolt had knocked his gait so violently that his usual steady steps had been replaced by a disorienting, painful collapse.</p><p>He lay in bed for a few minutes, his left leg straight and aching. He tried to sit up, but the pain became so sharp that he realized his body had been thrown out of alignment. He could no longer put weight on his left leg, and standing up required a dramatic effort to brace himself with handrails and a cane that he had worn for years because of his osteoarthritis. Thomas’s wife, who had been making tea on the kitchen counter, came in with concern and immediately called 911. By the time the paramedics arrived, Thomas was sitting upright, holding the left side of his femur, his face pale from the shock of pain.</p><p>In the ambulance, the EMTs quickly noted his medication list: metoprolol for hypertension, aspirin for coronary artery disease, and alendronate which he had been taking for three years for his known osteoporosis. Thomas also had a history of COPD, a moderate drinker who had cut down after a recent diagnosis of liver dysfunction, and a long‑time smoker who quit twelve years ago but still had a nicotine habit through his work environment. All of these factors added to the complexity of his presentation.</p><p>At the emergency department, a resident physician on call assessed the patient’s left hip. A dull, throbbing pain radiating up the lateral thigh and to the groin was reported. Thomas was unable to bear weight, and an initial assessment revealed an obvious shortening of the limb and a palpable deformity. The resident ordered a plain anteroposterior (AP) pelvis and oblique and lateral hip radiographs, which showed a displaced type 32A2 intertrochanteric fracture – a break between the lateral and medial columns of the femoral neck, just below the lesser trochanter. The fracture was clearly displaced and angulated, consistent with a high‑energy mechanism (a fall from a ladder) and his underlying osteoporotic bone.</p><p>An orthopaedic surgeon, Dr. Patel, was called and examined Thomas. He noted the fracture pattern and the likely need for intramedullary fixation. Dr. Patel discussed the situation with Thomas and his wife in the waiting room. He explained that the fracture could be managed with a short intramedullary gamma nail. He also emphasized the necessity of early weight‑bearing as tolerated due to the poor bone quality and the patient’s comorbid osteoarthritis, which would hinder prolonged bed rest. The risk of prolonged immobilisation was substantial, given his cardiovascular disease and his propensity for falls.</p><p>Before the operation could proceed, Thomas’s cardiologist was consulted to review the plan. Thomas, who had a history of stable angina, was on low‑dose aspirin and required careful peri‑operative management of his cardiovascular status. The cardiologist confirmed that the patient’s blood pressure was well controlled, but recommended that the operating team be prepared with a beta‑blocker if tachycardia developed, and that an intra‑operative arterial line be placed because of his older age and known vascular disease.</p><p>On the day of surgery (Day 0), Thomas was taken to the operating room. Standard pre‑operative antibiotics and a lower‑segment subcutaneous heparin for deep venous thrombosis (DVT) prophylaxis were administered. Under spinal anesthesia, Dr. Patel achieved reduction of the fracture by traction and gentle manipulation. The intramedullary gamma nail was then positioned, and the femoral shaft was reamed to accommodate the implant. The surgeon chose a lag screw through the lesser trochanter to compress the fracture ends, and the nail was locked proximally to prevent varus collapse. The incision was closed in layers, and Thomas was positioned for gentle transfer to the recovery suite. Post‑operatively, his vital signs were stable, and he was started on a low‑dose morphine infusion for post‑operative pain.</p><p>For his first two post‑operative days (Days 1–2), Thomas remained on a bed‐rest protocol with the left leg in a splint to protect the operation site. He was treated for osteoporosis with intravenous zoledronic acid (200 mg) on Day 1, aiming to improve bone density and reduce the risk of subsequent fractures. Thomas was also counselled on vitamin D supplementation and was provided with a prescription for a calcium supplement. Dr. Patel discussed his smoking habit with him, noting that nicotine can delay fracture healing, and the patient promised to quit using nicotine replacement while abstaining from alcohol during his recovery.</p><p>On Day 3, Thomas was ambulated to the bedside by a physical therapist (PT) with a toe‑off gait, weight bearing as tolerated (WBAT) with the use of a single‑sided walking frame. The PT assessed his pain and noted mild swelling and bruising at the surgical site. The weight‑bearing instruction included a gentle progressive gait plan: start with 10–15 steps per day, then 20–30, and eventually 60–80 with the frame, always focusing on careful foot placement and keeping the pelvis level. Thomas&#x27;s pain was well managed with a multimodal regimen of acetaminophen, ibuprofen, and a scheduled dose of opioid, which was titrated down gradually.</p><p>By Day 5, the wound had dried and healing was progressing well. The incision looked pink with no signs of infection. The physical therapist encouraged light isometric exercises for the quadriceps and gluteal muscles while the patient remained seated. Thomas also began gentle active‑range‑of‑motion exercises using a dynamometer for the hip and knee, as he had previously used an exercise bike at the gym. His cardiovascular status was monitored in the hospital, and he was placed on an anticoagulation regimen of low‑molecular‑weight heparin for the next 14 days to reduce the risk of DVT, given his known cardiovascular disease.</p><p>On Day 7, Thomas had his first formal re‑examination by orthopaedics. Routine radiographs showed adequate fracture alignment and the implant in situ. The surgical incision had fully healed, and there was no evidence of infection. Thomas reported being able to do 30–40 steps with his walking frame before stopping for discomfort in the left hip. He noted that the stiffness from his osteoarthritis was still present but had not yet worsened. Dr. Patel encouraged continued participation in physiotherapy and recommended that Thomas begin a home exercise program once he was discharged on day 10.</p><p>Thomas was discharged on postoperative Day 10 with a home health aide scheduled to assist with bathing, dressing, and household chores. His home aide was instructed on fall prevention strategies — removing loose rugs, improving lighting, and installing grab bars in his bathroom. The therapist had devised an individualized, progressive walking plan: 60–80 steps using a walking cane (later to be replaced by a walker if needed) to maintain proper gait mechanics. The orthopedic surgeon scheduled a follow‑up visit in 6 weeks and advised Thomas to return sooner if he experienced any fever, increasing pain, or swelling.</p><p>In the next few weeks, Thomas participated in outpatient therapy sessions, attending twice a week for gait training, strength exercises, and balance work. He had a gradual, steady improvement in the strength of his left hip and the ability to take more continuous steps without pain. His radiographs in the six‑week follow‑up showed bony bridging at the fracture site, though the healing process was delayed compared to non‑ osteoporotic patients. Nevertheless, the callus formation was healthy, and the implant was stable. On a subsequent visit (eight weeks post‑fracture), Thomas reported that he could walk independently with a cane, do light activities of daily living, and had significant relief from both the acute fracture pain and the chronic osteoarthritis discomfort compared to pre‑fracture baseline.</p><p>Thomas’s narrative of recovery is shaped by his comorbid osteoporosis, osteoarthritis, and cardiovascular disease. Each factor required specific adjustments: his bone density therapy with zoledronic acid and vitamin D supplementation facilitated healing; the careful cardiovascular management ensured that the surgery and post‑operative period did not precipitate myocardial events; and the focus on gait training and fall prevention was crucial to avoid a repeat fracture. Moreover, addressing his risk factors—particularly encouraging smoking cessation, reducing alcohol intake, and improving nutrition—played a subtle yet essential role in the overall improvement of his functional status.</p><p>By the end of the first year after the fracture, Thomas had returned to many of his former hobbies, such as gardening and attending church services. He had adopted a stricter regimen of daily walking with a cane, kept his weight under control, and remained vigilant about fall risks. His cardiovascular medication were kept stable, and he continued regular blood pressure monitoring. While the intertrochanteric fracture was a significant event that altered his life trajectory, the combination of prompt surgical fixation, targeted comorbidity management, and a structured rehabilitation program enabled Thomas to regain independence and improve his quality of life.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-01</h3><div class="visit-meta">Emergency Medicine | Reason: Acute left hip pain after fall</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Acute left hip pain after fall.
+
+**History of Present Illness**: Thomas Mitchell, 60‑year‑old male, fell from a ladder, reporting sudden, sharp left hip pain radiating to the groin and an inability to bear weight. He describes the pain as severe and worsening with attempts to move. He denies any loss of consciousness. He reports no other associated injuries.
+
+**Past Medical History**: Hypertension (metoprolol), stable angina (low‑dose aspirin), osteoporosis (alendronate), osteoarthritis of left hip and knee, COPD (albuterol, home O₂ as needed), liver dysfunction, history of falls.
+
+**Medications**: None on admission.
+
+**Allergies**: NKDA.
+
+**Review of Systems**: Limited to pain, no fever, no chest pain, no neurological deficit.
+
+**Physical Examination**:
+- General: Alert, cooperative, in moderate distress.
+- Vital signs: BP 140/78 mmHg, HR 88 bpm, RR 16/min, T 98.6°F, SpO₂ 98% on 2 L/min O₂ via SBT.
+- Musculoskeletal: Left hip shortened ~3 cm, visible anterior deformity, tenderness over greater trochanter and lateral thigh. Passive ROM limited to 20° flexion, 0° extension, 10° abduction. No neurovascular deficit noted.
+
+**Imaging**: AP pelvis, oblique, and lateral hip radiographs obtained. Findings: displaced intertrochanteric fracture with &gt;5 mm shortening and &gt;30° angulation.
+
+**Assessment**: Displaced intertrochanteric femoral fracture with significant shortening and angulation. Differential includes femoral shaft fracture, pelvic fracture, acute hip dislocation, and severe osteoarthritis exacerbation; imaging confirms intertrochanteric fracture.
+
+**Plan**:
+1. Immediate pain control: IV fentanyl 50 mcg (administered), oral acetaminophen 650 mg q6h PRN.
+2. Fluid resuscitation: 250 mL NS bolus; continue monitoring vitals.
+3. Oxygen: Low‑flow O₂ 2 L/min.
+4. Transfer to orthopedic service for definitive management (likely internal fixation). 
+5. Labs pending: CBC, CMP, coagulation profile (especially due to liver dysfunction), ESR/CRP.
+6. Continue antihypertensive (metoprolol) and antiplatelet (aspirin) therapy as per baseline.
+7. Monitor for anemia or bleeding.
+8. Post‑operative plan: pain management, early mobilization with weight‑bearing status per orthopedic recommendation, initiate physical therapy, assess wound healing, and reassess pain and neurologic status.
+9. Discharge planning: coordinate outpatient follow‑up with orthopedic surgeon within 48 hours post‑operative, arrange home health support due to fall risk.
+
+**Disposition**: Transferred to orthopaedic service without complications.
+
+**Prognosis**: Good with timely surgical intervention and appropriate rehabilitation.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">sharp left hip pain radiating to groin</span><span class="pill">unable to bear weight</span><span class="pill">shortening of leg</span><span class="pill">deformity</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/78</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left hip shortened by ~3 cm</li><li>Visible deformity in anterior aspect</li><li>Tenderness over greater trochanter and lateral thigh</li><li>Passive ROM limited to 20° flexion, 0° extension, 10° abduction</li><li>No neurovascular deficit in left lower extremity</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>AP pelvis X-ray</li><li>Oblique hip X-ray</li><li>Lateral hip X-ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Radiographs confirmed displaced intertrochanteric fracture AO/OTA 32A2 with &gt;5 mm shortening and &gt;30° angulation</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV fentanyl 50 mcg</li><li>Acetaminophen 650 mg PO q6h PRN</li><li>IV normal saline 250 mL</li><li>SBT oxygen 2 L/min</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved moderately with fentanyl; able to sit briefly with support; remained alert and cooperative.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Stable angina</span><span class="pill">Osteoporosis</span><span class="pill">Osteoarthritis (left hip &amp; knee)</span><span class="pill">COPD</span><span class="pill">Liver dysfunction</span><span class="pill">History of falls</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg daily</li><li>Aspirin 81 mg daily</li><li>Alendronate 70 mg weekly</li><li>Albuterol rescue inhaler</li><li>Vitamin D 800 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension on metoprolol</li><li>Stable angina on low-dose aspirin</li><li>Osteoporosis on alendronate</li><li>COPD on albuterol, home oxygen when needed</li><li>Smoker (quit 12 yrs ago but nicotine patches used at work)</li><li>Alcohol use - reduced after liver dysfunction diagnosis</li><li>History of falls</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas Mitchell arrived in the ED after a fall from a ladder, reporting sudden, sharp left hip pain with inability to bear weight. The resident physician performed a focused orthopedic exam: obvious shortening, deformity, palpable bruising, limited ROM, and tenderness over the greater trochanter. A radiology tech performed plain anteroposterior pelvis, oblique, and lateral hip films. The resident reviewed the images on the bedside monitor, noted a displaced intertrochanteric fracture (AO/OTA 32A2) with significant angulation and shortening, and contacted the on‑call orthopaedic surgeon. Pain was managed with a bolus of IV fentanyl 50 mcg and a prescription for oral acetaminophen 650 mg tablets q6h PRN. Paramedics had already administered low‑dose oxygen and monitored vitals. The patient was transferred to the orthopaedic service for definitive management. He tolerated the transfer without hypotension or arrhythmia.
+The ED physician documented the fracture diagnosis, the need for urgent fixation, and the patient&#x27;s comorbid cardiovascular disease requiring careful peri‑operative management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosed with displaced intertrochanteric femoral fracture (32A2). Scheduled for urgent surgical fixation. Comorbidities noted for peri‑operative planning.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-02</h3><div class="visit-meta">Orthopaedic Surgery | Reason: Pre‑operative assessment &amp; operative fixation of intertrochanteric fracture</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 60‑year‑old male presents postoperative day 0 after intramedullary gamma nail fixation of a displaced left femoral neck/shaft fracture sustained from a ladder fall. He reports ongoing left hip pain, mild postoperative nausea, and pre‑operative anxiety. His pain is controlled with a morphine infusion at 2 mg/h. No dizziness, chest pain, or dyspnea. He denies fever, vomiting, or bleeding from the incision. He is otherwise tolerating neurovascular checks.\n\nObjective: Vitals stable—BP 135/70, HR 78, RR 16, Temp 98.4°F, SpO2 98%. Post‑op left hip incision ~4 cm, clean, no erythema, drainage, or induration. Splint secured; neurovascular status intact. Labs: CBC shows mild anemia (Hb 11.8 g/dL; WBC 5.2 ×10³/µL; Plt 200 ×10³/µL), CMP normal (Na 138, Cl 101, K 3.8, BUN 18, Cr 0.9 mg/dL), coagulation profile within normal limits, chest X‑ray clear. Surgical details: intramedullary gamma nail placed, femoral shaft reamed to 16 mm, lag screw through lesser trochanter, proximal lock achieved. An arterial line placed, spinal anesthesia delivered. Intraoperative course uncomplicated; no intra‑operative complications.\n\nAssessment/Plan: 1) Post‑operative left hip fracture fixation – uncomplicated, adequate hemostasis, no early signs of infection. 2) Mild anemia – likely pre‑operative; continue monitoring Hgb and consider iron supplementation if persistent &lt;12 g/dL. 3) DVT prophylaxis – continue subcutaneous heparin 5000 IU SC daily for 5 days post‑op, transition to enoxaparin if outpatient. 4) Infection prophylaxis – cefazolin 1 g IV pre‑op; continue to stay within first 24 h. 5) Pain management – morphine infusion taper as tolerated; consider addition of acetaminophen 650 mg q6h PRN after morphine. 6) Respiratory status – incentive spirometry, early ambulation with walking frame and toe‑off gait; splint left leg until bone healing. 7) Cardiac status – stable on metoprolol and aspirin; no changes needed. 8) Fall risk – patient history of falls; ensure safe home environment and consider physical therapy referral for strength and balance training.
+
+Follow‑up: Wound assessment in 48 h; repeat CBC and CMP in 1 week to monitor anemia; DVT prophylaxis evaluation and imaging if symptoms; physical therapy evaluation for progressive weight‑bearing at 2‑week visit; orthopedic outpatient review at 6 weeks for radiographs and hardware assessment; patient to notify clinic if fever, increased pain, drainage, dyspnea, chest pain, or signs of DVT.
+
+Disposition: Patient is stable, pain controlled, and will be discharged home with instructions for analgesia, DVT prophylaxis, and activity restrictions.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left hip pain, mild postoperative nausea</span><span class="pill">Pre‑operative anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/70</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Post‑operative left hip with incision ~4 cm, healing well</li><li>No erythema or drainage</li><li>Left leg secured in splint</li><li>Neurovascular status intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Coagulation profile</li><li>Chest X-ray</li><li>Pre‑operative X-rays reviewed</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 11.8 g/dL, WBC 5.2, Plt 200k</li><li>CMP: Na 138, Cl 101, K 3.8, BUN 18, Cr 0.9</li><li>PTT/INR normal</li><li>Chest X‑ray: clear lungs</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Cefazolin 1 g IV</li><li>Heparin 5000 IU SC</li><li>Morphine infusion 2 mg/h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable post‑operative vitals; pain controlled with morphine; tolerating neurovascular checks; no dyspnea or chest pain.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Stable angina</span><span class="pill">Osteoporosis</span><span class="pill">Osteoarthritis</span><span class="pill">COPD</span><span class="pill">Liver dysfunction</span><span class="pill">History of falls</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg daily</li><li>Aspirin 81 mg daily</li><li>Alendronate 70 mg weekly</li><li>Albuterol rescue</li><li>Vitamin D 800 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Urgent surgical fixation planned</li><li>Cardiac status optimized</li><li>Pre‑operative labs pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The orthopaedic surgeon reviewed the pre‑operative clearance and confirmed the patient’s cardiovascular stability. Dr. Patel obtained pre‑operative lab results: CBC, CMP, coagulation profile, and a pre‑operative chest x‑ray. All values were within acceptable limits except a mild anemia (Hb 11.8 g/dL). Dr. Patel discussed the surgical plan—intramedullary gamma nail fixation—with Thomas and his wife, emphasizing early weight‑bearing instructions and potential complications.
+The operating room team received the patient for anesthesia. Pre‑operative antibiotics (cefazolin 1 g IV) were administered, and lower‑segment heparin 5000 IU subcutaneously was given for DVT prophylaxis. An arterial line was placed for continuous BP monitoring given his age and vascular disease.
+Under spinal anesthesia, Dr. Patel achieved fracture reduction by traction and gentle manipulation. The intramedullary gamma nail was inserted; the femoral shaft was reamed to 16 mm, and a lag screw placed through the lesser trochanter for compression. The proximal portion of the nail was locked. The incision was closed, and the patient was transferred to recovery with stable vitals.
+Post‑op, Thomas received a low‑dose morphine infusion for pain control and was monitored for cardiac stability. He was instructed to use a toe‑off gait with a single‑sided walking frame and to keep the left leg in a splint until clearance.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Successful intramedullary gamma nail fixation of 32A2 fracture. Baseline post‑op imaging shows correct alignment. DVT prophylaxis initiated. Patient to begin toe‑off gait WBAT with walking frame on postoperative day 2.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-08</h3><div class="visit-meta">Orthopaedic Surgery | Reason: Post‑operative day 7 follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">S: Thomas presents for POD‑7 follow‑up after intramedullary gamma‑nail fixation of a left intertrochanteric fracture. He reports mild left hip pain that worsens with each step, tolerable and improved with OTC analgesia. He has been using a toe‑off gait with a single‑sided walking frame. No new systemic symptoms. P: Vitals stable: BP 132/68 mmHg, HR 76/min, RR 16/min, Temp 98.5°F, SpO₂ 98% on room air. Examination: left hip incision pink, well‑healed, no erythema, minimal swelling at lateral thigh. ROM limited by pain: flexion 40°, abduction 15°, external rotation 10°. Weight bearing with walking frame tolerated. Neurovascular status intact. Lab: none ordered (baseline CBC/chemistries stable on prior visit). AP pelvis X‑ray showed maintained reduction, no varus collapse, mild callus at lesser trochanter – consistent with early callus formation. A: Primary diagnosis: Post‑operative healing of osteoporotic intertrochanteric fracture with intramedullary fixation. Differential includes delayed union, subclinical infection, heterotopic ossification, and OA pain. Management: Continue current DVT prophylaxis (LMWH 2,000 IU SC daily). Discontinue morphine infusion; continue PRN acetaminophen 650 mg q6h for pain. Reinforce home exercise program: pendulum swings, isometric quadriceps, daily 15‑min walking with cane. Continue low‑dose calcium 1,200 mg, alendronate 70 mg weekly, vitamin D 800 IU. Encourage progressive weight bearing with walking frame until strength improves. B: Plan: Bi‑weekly PT during home health program; repeat AP pelvis X‑ray at 4 weeks postoperative; monitor for any signs of infection or hardware loosening. Refer to geriatric fall‑prevention if needed. Patient education: proper use of frame, importance of adequate rest, risk of falls. S: Thomas verbalized understanding, continues to use acetaminophen when needed and is compliant with PT schedule. R: Follow‑up in clinic in 2 weeks for physical exam and PT coordination, or sooner if pain worsens, wound changes, or new symptoms arise.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight left hip tenderness, mild swelling</span><span class="pill">Progressive pain as he walks</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/68</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left hip incision pink, healed, no erythema</li><li>Minimal swelling at lateral thigh</li><li>Joint ROM: flexion 40°, abduction 15°, external rotation 10°</li><li>Tolerant to weight bearing with walking frame</li><li>Neurovascular status intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>AP pelvis X-ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>X-ray: maintained alignment, no varus collapse, mild callus at lesser trochanter</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue LMWH</li><li>Prescribed home exercise program</li><li>Reinforced fall‑prevention advice</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain manageable with acetaminophen and occasional NSAIDs; reports improved walking endurance from 10 to 30 steps before resting.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Stable angina</span><span class="pill">Osteoporosis</span><span class="pill">Osteoarthritis</span><span class="pill">COPD</span><span class="pill">Liver dysfunction</span><span class="pill">History of falls</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg daily</li><li>Aspirin 81 mg daily</li><li>Alendronate 70 mg weekly</li><li>Albuterol rescue</li><li>Vitamin D 800 IU daily</li><li>Low‑molecular‑weight heparin 2,000 IU SC daily</li><li>Morphine PRN 2 mg q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Post‑op day 2 toe‑off gait started</li><li>Started IV zoledronic acid Day 1</li><li>Continued low‑dose heparin 2,000 IU SC q24h for 14 days</li><li>Physical therapy in house</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas returned to the orthopaedic clinic for his postoperative day 7 review. He reported mild left hip pain with each step, which was tolerable and improved with over‑the‑counter analgesia. He had completed 2 weeks of intramuscular zoledronic acid on day 1, and a low‑dose oral calcium (1,200 mg) was started. The surgeon reviewed the wound, noting a pink, well‑healed incision with no drainage. A routine AP pelvis X‑ray was performed and reviewed.
+The imaging showed maintained reduction, no hardware loosening, and early subtle signs of callus formation. The surgeon explained that normal healing for osteoporotic bone may take longer than in younger patients and emphasized the importance of continued physiotherapy and fall‑prevention in home.
+Thomas was advised to continue his toe‑off gait with a single‑sided walking frame until he gains stronger weight‑bearing ability. His physiotherapist had scheduled bi‑weekly visits during the home health program. The surgeon also prescribed a home exercise program: pendulum swings, isometric quadriceps contractions, and daily 15‑minute walking with a cane.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Good early fracture healing with intramedullary fixation. Osteoporotic bone may delay full union; continuing osteoporosis therapy and physiotherapy recommended.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-22</h3><div class="visit-meta">Orthopaedic Surgery | Reason: Six‑week postoperative follow‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 6‑week postoperative follow‑up after intramedullary gamma‑nail fixation of left intertrochanteric fracture.
+
+History: 60‑year‑old male with hypertension, stable angina, COPD, osteoporosis, osteoarthritis, liver dysfunction, and history of falls. He presents at 6 weeks post‑op reporting independent ambulation with a cane for 80 steps, resumed gardening, church attendance, and light activity. No significant pain or swelling; occasional mild ache when sitting prolonged. He is satisfied with functional recovery.
+
+Physical Examination: Vital signs within normal limits. Incision well‑healed, mild tenderness in left groin area but without erythema. Range of motion: flexion 80°, abduction 25°, external rotation 20°. No gait abnormalities with cane; neurovascular status intact. No weight‑bearing restrictions noted.
+
+Diagnostics: Standing AP pelvis X‑ray shows progressive bridging callus across fracture site with stable intramedullary nail, no hardware displacement, satisfactory alignment.
+
+Assessment: Excellent radiographic and clinical signs of progressive union. Given the robust healing, complete union is expected within the next 4–6 weeks. No evidence of implant failure or infection.
+
+Plan:
+1. Continue weight‑bearing as tolerated; advance home exercise program focusing on hip strength and gait training.
+2. Maintain osteoporosis management – alendronate 70 mg weekly, vitamin D 800 IU daily, calcium 1,200 mg daily.
+3. Continue current cardiac and cardiopulmonary medications (metoprolol 25 mg daily, aspirin 81 mg daily, albuterol rescue). No new anticoagulant needed.
+4. Monitor for red‑flag symptoms: new or worsening pain, swelling, erythema, fever, or fall recurrence.
+5. Return for follow‑up orthopaedic evaluation at 10–12 weeks post‑op or sooner if red‑flag symptoms occur.
+6. Continue home health aide support for transfers and fall prevention measures.
+
+No new surgical intervention anticipated.
+
+Patient education: Emphasized the importance of fall prevention, adherence to osteoporosis therapy, and early recognition of potential complications. Advised to seek care if new pain, swelling, fever, or difficulty ambulating develops.
+
+Disposition: Patient discharged with updated home exercise program prescription and follow‑up instructions.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain minimal, occasional ache at hip during prolonged sitting</span><span class="pill">No swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>131/67</td></tr><tr><td>HR</td><td>75</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Incision well healed, no tenderness</li><li>Left hip ROM: flexion 80°, abduction 25°, external rotation 20°</li><li>No gait abnormalities with cane</li><li>Neurovascular status intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Standing AP pelvis X-ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Radiographs show bridging callus at fracture site, stable intramedullary nail, no hardware loosening, satisfactory alignment</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed home exercise program with increased weight‑bearing</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Reports feeling much better, able to resume regular activities; no new pain or swelling; satisfied with recovery progress.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Stable angina</span><span class="pill">Osteoporosis</span><span class="pill">Osteoarthritis</span><span class="pill">COPD</span><span class="pill">Liver dysfunction</span><span class="pill">History of falls</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg daily</li><li>Aspirin 81 mg daily</li><li>Alendronate 70 mg weekly</li><li>Albuterol rescue</li><li>Vitamin D 800 IU daily</li><li>Calcium 1,200 mg daily</li><li>LMWH discontinued</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 6 weeks of physiotherapy</li><li>Home health aide assist with transfers</li><li>Completed 7‑week PT and walking frame has transitioned to cane</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas presented for his scheduled 6‑week postoperative orthopaedic appointment. He reported that he could walk independently with a cane for up to 80 steps without pain, has resumed gardening and attending church with light activity. He has no significant pain or swelling and is satisfied with his functional recovery.
+The surgeon performed a physical exam and noted well‑healed incision, mild tenderness in the left groin area but no erythema, and improved range of motion (flexion 80°, abduction 25°, external rotation 20°). A standing AP pelvis X‑ray was taken and demonstrated progressive bridging callus across the fracture site with no hardware displacement.
+Given the robust healing seen on imaging, the surgeon considered that the fracture would likely achieve complete union within the following 4–6 weeks. The patient was advised to continue weight‑bearing as tolerated, advance his home exercise program, and maintain rigorous fall‑prevention measures. The surgery team recommended that he maintain his current osteoporosis therapy (alendronate 70 mg weekly) and continue vitamin D and calcium supplementation. No further surgery is anticipated.</p><p>He was discharged from the clinic with a prescription for a structured home exercise program and was encouraged to follow up if he experiences new pain, swelling, or fever.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Partial fracture healing with callus formation. Bone density therapy ongoing; no need for additional surgical intervention. Continue osteoporosis management and fall prevention strategies. Prognosis favorable for full union.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 60</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Osteoporosis</span><span class="pill">Osteoarthritis</span><span class="pill">Cardiovascular disease</span><span class="pill">Hypertension</span><span class="pill">Stable angina</span><span class="pill">COPD</span><span class="pill">Liver dysfunction</span><span class="pill">History of falls</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metoprolol 25 mg daily</li><li>Aspirin 81 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li><li>Alendronate 70 mg weekly</li><li>Vitamin D 800 IU daily</li><li>Calcium 1,200 mg daily</li><li>Albuterol rescue</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Acute left hip pain after ladder fall. Physical exam revealed shortened, deformed left hip with limited ROM and tenderness. Radiographs showed a displaced intertrochanteric fracture with &gt;5 mm shortening and &gt;30° angulation. Managed with IV fentanyl and oral acetaminophen, 250 mL NS, and 2 L/min O₂. Patient was transferred to orthopaedic service for definitive internal fixation; labs (CBC, CMP, coagulation, ESR/CRP) were ordered; baseline metoprolol and aspirin were continued.</li><li>Post‑operative day 0 after intramedullary gamma nail fixation of left femoral neck/shaft fracture. Vitals stable. Wound clean, incision ~4 cm, no erythema. Pain managed with morphine infusion 2 mg/h; acetaminophen 650 mg q6h PRN. DVT prophylaxis with subcutaneous heparin 5000 IU daily for 5 days and planned transition to enoxaparin outpatient. Cefazolin prophylaxis 1 g IV given pre‑op. Mild anemia noted; monitor Hgb and consider iron supplement if persistently &lt;12 g/dL. Respiratory incentive spirometry; early ambulation with walking frame. Cardiac status stable on metoprolol and aspirin. Fall risk addressed; PT referral considered.</li><li>Post‑operative day 7 follow‑up after intramedullary gamma‑nail fixation of left intertrochanteric fracture. Reported mild hip pain with each step, tolerable and improved with OTC analgesia. Exam: incision well‑healed, minimal swelling, ROM limited by pain. X‑ray: maintained reduction, early callus. DVT prophylaxis switched to LMWH 2,000 IU SC daily. Morphine infusion discontinued; continue PRN acetaminophen and PRN morphine 2 mg q6h. Bi‑weekly home‑health PT scheduled. Follow‑up in clinic in 2 weeks.</li><li>Six‑week postoperative follow‑up after left intertrochanteric fracture fixation. Patient ambulates independently with a cane, gardening, and church attendance. Occasional mild ache when seated for prolonged periods; no pain or swelling. Exam: incision well‑healed, mild left groin tenderness, ROM within normal limits, no gait abnormality. Standing AP pelvis X‑ray shows bridging callus, stable hardware, satisfactory alignment. Anticoagulation therapy discontinued. Continue weight‑bearing as tolerated, osteoporosis management (alendronate, vitamin D, calcium), cardiac and cardiopulmonary medications, and fall‑prevention measures. Patient discharged with a home exercise program and follow‑up instructions.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

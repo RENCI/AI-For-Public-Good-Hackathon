@@ -1,0 +1,22 @@
+# ── Paths ──────────────────────────────────────────────────────────────────────
+DATASET_DIR: "~/dataset"
+CODING_RULES_DIR: "~/coding_rules"
+MANUALS_DIR: "~/manuals"
+
+# ── Model ──────────────────────────────────────────────────────────────────────
+AVAILABLE_MODELS: ["DeepSeek-V3.2", "gpt-4.1", "gpt-4.1-mini", "gpt-4o-mini", "gpt-5", "mistral-document-ai-2512", "o1-mini"]
+
+# ── Runtime settings ───────────────────────────────────────────────────────────
+REQUEST_PAUSE: 0.2          # seconds between API calls
+RATE_LIMIT_RETRIES: 5       # retry attempts on rate-limit errors
+RATE_LIMIT_WAIT: 2          # base wait (seconds) between retries
+TEST_CASE_IDS: [
+    "120387da", "12f30172", "1486b957", "51f0bd00", "5c1b726e",
+    "14bd3e4e", "18718237", "1b823cc2", "1c0217f1", "1cc3149d",
+    "050788b4", "0968de4b", "12a95c60", "14bdc2c8", "160948a3",
+    "169d2526", "194eb0e2", "1f9147ee", "20fb2ec6", "210ea5ed"
+]
+CANCER_TEST_CASE_IDS: [
+    "120387da", "12f30172", "1486b957", "51f0bd00", "5c1b726e",
+    "14bd3e4e", "18718237", "1b823cc2", "1c0217f1", "1cc3149d"
+]

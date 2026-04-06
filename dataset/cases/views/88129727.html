@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 88129727</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 88129727</h1><div class="subtitle">Acne Vulgaris with Superficial Bacterial Infection | Female, 20</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Comorbidities: Polycystic Ovary Syndrome, Obesity</div><div class="meta-line">Risk Factors: Pubertal hormonal surge, Excess sebum production, Follicular occlusion, Colonization by Staphylococcus aureus, Propionibacterium acnes, Poor skin hygiene, Use of occlusive cosmetics, High‑glycaemic diet, Smoking, Antibiotic misuse</div></div>
+<details><summary>Narrative <span class="preview-text">**Clinical Narrative: A 20‑year‑old University Student with Acne Vulgaris and a Superficial Bacterial Infection**  When ...</span></summary><div class="section-body"><p>**Clinical Narrative: A 20‑year‑old University Student with Acne Vulgaris and a Superficial Bacterial Infection**</p><p>When Maya first noticed the dark spots on her cheeks and the occasional red pimple on her chin, she thought it was simply the start of her teenage years. A 20‑year‑old female college sophomore living in a shared apartment, she described her skin as “oily, sometimes cracked, and definitely in need of a clean‑up.” She had been diagnosed with polycystic ovary syndrome (PCOS) and was on oral contraceptives (levonorgestrel‑containing pills) at her mother’s insistence to regulate her cycle and to help with her acne. Maya also had a BMI of 32 kg/m², classifying her as obese, and was a daily smoker of one pack of cigarettes. Her diet consisted mainly of processed carbs and sugary drinks, and she admitted to occasionally using heavy foundation that she left on the skin all night.</p><p>---</p><p>### Month 1, Week 1 — First Signs</p><p>Maya began to see a few blackheads on her nose and a handful of tiny papules on her jawline. Within a week she noticed that the lesions on her cheeks had slightly enlarged and become tender, with a faint yellow‑colored crust on the upper lip. She described the pain as a dull ache amplified by touching the area, and she had begun feeling “self‑conscious” about her appearance. Maya purchased a can of over‑the‑counter (OTC) benzoyl peroxide (5 %) wash and a mild moisturizing lotion, but she stopped using the cleanser after a day because the skin felt too dry. She mentioned in a brief call to her friend that “something smells like a bad cough in the morning.” That night she noticed the appearance of a single, relatively large, superficial pustule on her forehead that had a slightly opaque, purulent core—she recognized it as a stye of sorts, but it was on her skin, not her eye.</p><p>---</p><p>### Month 1, Week 2 — Self‑Care Decision Point</p><p>Maya’s skin did not improve. On that second week, she noticed a faint halo of redness around the purulent pustules, and the purulent material seemed to spread to neighboring follicles forming a “small cluster.” She began to experience mild warmth and mild swelling around the affected area. Maya’s mother, who had a history of recurrent boils, cautioned her that “this could be a bacterial infection on top of the acne.” Maya expressed anxiety about going to a dermatologist because of potential costs. Her online search led her to a local community health clinic that offered low‑cost dermatology appointments.</p><p>---</p><p>### Month 2, Week 1 — Dermatology Visit</p><p>At her first clinic appointment, the nurse assistant noted the characteristic comedones, papules, pustules, and superficial abscess-like lesions clustered on the nasal and maxillary region, with mild edema extending to the malar cheeks. The dermatologist, Dr. Patel, performed a gentle inspection and confirmed a superficial infection with Staphylococcus aureus superimposed on her acne. The lesions were erythematous, non‑spreading, and the purulent exudate was minimal. Dr. Patel explained the common interplay between acne vulgaris and superficial bacterial infection, noting the importance of controlling inflammation to reduce bacterial colonization.</p><p>The dermatologist prescribed a 4‑week course of topically applied clindamycin 1 % gel three times daily for bacterial control, supplemented with adapalene 0.1 % cream nightly for comedonal and inflammatory control. Maya was also told to use a gentle non‑comedogenic cleanser (pH‑balanced, fragrance‑free) twice daily and advised to avoid occlusive cosmetics overnight. Dr. Patel added a brief lifestyle counseling session, where Maya was encouraged to reduce her daily cigarette consumption, switch to an easier-to‑digest high‑protein snack instead of pastries, and to limit her usage of processed high‑glycaemic foods—all as potential adjuncts to her skincare routine.</p><p>---</p><p>### Month 2, Week 4 — Progress Check and Adjustment</p><p>Following two weeks of topical therapy, Maya had noted a moderate decrease in redness and a reduction in purulent discharge. However, a few new papules had appeared on her chin, especially after a late‑night study session where she’d rinsed her face with hot water and pressed a pillow against her cheeks while sleeping. Dr. Patel recognized the potential for occlusion and heat to aggravate comedones and advised her to avoid hot showers, use a cool compress on inflamed areas, and to shower at least 2–3 times a week.</p><p>Maya was prescribed oral doxycycline 100 mg twice daily for 2 weeks, as her superficial infection had not fully resolved. She was directed to resume clindamycin and adapalene for the full duration of the topical treatment, but to hold doxycycline after the 2‑week course unless recurrence occurred. Her dermatologist also discussed the risks of antibiotic over‑use and the need to limit systemic medication to clear bacterial infections only.</p><p>---</p><p>### Month 3, Week 1 — Final Improvements</p><p>During the third week of the combined therapy, Maya saw a significant improvement. The pustules had cleared, leaving behind faint pink spots that slowly faded, and the comedones were fewer in number. There was no evidence of a purulent discharge in the previous locations. Dr. Patel evaluated her progress, asked about adherence to treatments, and confirmed that Maya had remained compliant with her topical regimen and had taken a single dose of oral antibiotic, which she had finished with only a brief delay. Dr. Patel decided to taper out the clindamycin and adapalene to avoid long‑term irritation and called for a follow‑up in four weeks to confirm complete resolution.</p><p>After Dr. Patel’s last visit, Maya continued her daily moisturizing routine and a more disciplined approach to skin cleaning. More importantly, she attended the campus counseling service and reduced smoking to half a pack per day, with the plan of full cessation within a month. She also scheduled a nutritionist appointment to adjust her diet to a balanced protein–fiber–healthy‑fat plan, limiting sugary and high‑glycaemic items.</p><p>---</p><p>### Month 4, Week 1 — Resolution</p><p>When Maya returned for her follow‑up, the dermatologist noted a near‑complete resolution of her lesions, with only trace hyperpigmented patches remaining—expected mild post‑inflammatory hyperpigmentation. The superficial bacterial infection was fully cleared, and no new purulent lesions had formed. The skin texture had improved, and there was a noticeable reduction in sebaceous activity.</p><p>Dr. Patel thanked Maya for her compliance and explained that her acne vulgaris was now in a remission phase. She encouraged Maya to be vigilant for flare‑ups in the future, particularly during hormonal changes, periods of stress, or if she returns to smoking or high‑glycaemic nutrition. Maya left the clinic feeling hopeful, with a clear plan for maintaining her skin health and a resolved course of disease.</p><p>---</p><p>### Timeline Summary</p><p>| Date | Event | Intervention |
+|------|-------|--------------|
+| Week 1 | First noticing of comedones and papules | OTC benzoyl peroxide wash &amp; moisturizer |
+| Week 2 | Development of pustular lesions and superficial purulent cluster | None; increased self‑care vigilance |
+| Week 4 | Dermatology visit | Topical clindamycin 1 % gel, adapalene 0.1 % cream; lifestyle counseling |
+| Week 8 | Re‑evaluation; new papules appear | Oral doxycycline 100 mg BID for 2 weeks |
+| Week 10 | Noticeable resolution of inflammatory lesions; no purulent discharge | Discontinuation of doxycycline, taper of clindamycin/adapalene |
+| Week 14 | Final follow‑up | Near‑complete resolution; hyperpigmentation noted |</p><p>This narrative demonstrates a textbook progression of acne vulgaris complicated by a superficial Staphylococcus aureus infection in a 20‑year‑old female with PCOS and obesity. Adherence to a combined topical and short‑course systemic antibiotic treatment plan, coupled with lifestyle modifications, resulted in a complete resolution of both acne lesions and bacterial infection.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-01</h3><div class="visit-meta">Dermatology | Reason: Initial acne onset and self‑care question</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: New facial blemishes and skin dryness after OTC benzoyl peroxide 5% wash.
+History of Present Illness: Maya, 20‑year‑old female with PCOS, obesity (BMI 32), and daily smoking, reports visible blackheads on the nose, tiny papules along the jawline, tenderness over the right cheek, off‑tasting facial odor, and discomfort when touching skin. She stopped using a 5% BPO wash after 1 day due to dryness.
+Review of Systems: Positive for facial skin lesions; no fever, malaise, or systemic symptoms.
+Vitals: Temperature 98.6 °F; Blood pressure 118/70 mmHg; Heart rate 76 bpm; Respiratory rate 14 breaths/min; O₂ saturation 98%.
+Physical Examination: Facial exam shows comedones on nasal bridge, papules along zygomatic arch, tender erythema over the right cheek, faint yellow crust on the upper lip; no signs of systemic infection.
+Assessment:
+1. Acne vulgaris – comedonal and inflammatory component.
+2. Likely hormonal influence from PCOS.
+3. Irritant contact dermatitis from brief use of 5% BPO wash.
+Differential: Comedonal acne, inflammatory (papulopustular) acne, seborrheic dermatitis, contact dermatitis.
+Plan:
+- Discontinue 5% BPO wash.
+- Initiate 2.5% benzoyl peroxide wash twice daily;
+- Use fragrance‑free, non‑comedogenic cleanser twice daily;
+- Apply non‑comedogenic moisturizer after washing.
+- Counsel on appropriate skin hygiene, avoidance of heavy foundation, use of broad‑spectrum sunscreen.
+- Discuss lifestyle modifications: smoking cessation, reduce high‑glycemic foods, weight management.
+- Provide written skin‑care handout.
+- No immediate prescription therapy; will assess at follow‑up.
+Orders: None.
+Follow Up: Return in 2 weeks if lesions worsen or irritation continues; sooner if significant changes. If no improvement, consider topical retinoid or combined BPO‑retinoid therapy.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">visible blackheads on nasal region</span><span class="pill">tiny papules along jawline</span><span class="pill">tenderness on right cheek</span><span class="pill">off‑tasting odor from face</span><span class="pill">self‑reported discomfort when touching skin</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.6°F</td></tr><tr><td>blood_pressure</td><td>118/70 mmHg</td></tr><tr><td>heart_rate</td><td>76 bpm</td></tr><tr><td>respiratory_rate</td><td>14 breaths/min</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Comedones on the nasal bridge</li><li>Papules along zygomatic arch</li><li>Tender erythema around right cheek</li><li>Faint yellow crust on upper lip</li><li>No signs of systemic infection</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on cleaning routine and moisturizing</li><li>Educational handout on acne and smoking risks</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient understood plan and agreed to try an OTC 2.5 % benzoyl peroxide wash.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acne vulgaris</span><span class="pill">Polycystic ovary syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levonorgestrel‑containing oral contraceptive</li><li>Benzoyl peroxide 5 % wash (used once)</li><li>Mild emollient moisturizer</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>PCOS diagnosed, on levonorgestrel OCP for 6 months</li><li>obesity, BMI 32 kg/m²</li><li>daily smoker, 1 pack per day</li><li>high‑glycaemic diet and occasional heavy foundation use</li><li>recent use of OTC benzoyl peroxide 5 % wash, stopped after 1 day due to dryness</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya called the clinic to describe her new facial blemishes and the brief use of an OTC benzoyl peroxide wash that caused dryness. The nurse assistant noted the presence of comedones on the nose, papules on the jawline, and a faint yellow crust on the upper lip. She was advised to discontinue the 5 % wash, switch to a lower‑strength (2.5 %) product if needed, and to use a fragrance‑free cleanser twice daily. A discussion about skin hygiene, smoking cessation, and dietary changes was held. Maya was given a written plan and booked for a follow‑up after 2 weeks if symptoms worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline acne vulgaris, early inflammatory phase with minimal superficial bacterial colonization. No evidence of infection; patient educated on self‑care.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-08</h3><div class="visit-meta">Dermatology | Reason: Progressive acne with cluster of pustules</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents with worsening facial skin lesions; reports increased erythema, swelling, clustered pustules with purulent cores, mild warmth, and occasional mild pain on touch.
+
+History: 20‑year‑old female with PCOS and obesity; currently on levonorgestrel‑containing OCP, benzoyl peroxide 2.5% wash, fragrance‑free cleanser, non‑comedogenic moisturizer. She continues 2.5% BPO wash, has stopped heavy foundation use, smokes 1 pack per day, and expresses concern about care costs.
+
+Physical Exam: Facial erythematous plaques with purulent centers noted on nasal and maxillary areas; mild edema of malar cheeks; no systemic infection signs.
+
+Assessment:
+1. Acne vulgaris with secondary bacterial superinfection – likely folliculitis / impetigo.
+2. No systemic signs; temperature normal.
+
+Plan:
+- Initiate topical antibacterial gel: clindamycin 1% gel, apply to all affected areas thrice daily.
+- Initiate topical vitamin A derivative: tretinoin 0.025% cream, apply nightly.
+- Continue current benzoyl peroxide 2.5% wash twice daily as needed.
+- Reinforce gentle skin cleansing with fragrance‑free non‑comedogenic cleanser twice daily.
+- Counsel smoking cessation and diet modifications to support skin health.
+- Discuss low‑cost care options: referral to community health clinic.
+- Patient education on application technique; advised to avoid occlusive cosmetics.
+- Follow up in 4 weeks or sooner if lesions worsen or systemic symptoms develop.
+
+Disposition: Patient confident with plan, agrees to follow‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increased erythema and swelling around previous papules</span><span class="pill">Clustered pustules with opaque purulent cores</span><span class="pill">Mild warmth over affected skin</span><span class="pill">Occasional mild pain when touched</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.4°F</td></tr><tr><td>blood_pressure</td><td>120/72 mmHg</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>respiratory_rate</td><td>15 breaths/min</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Erythematous plaques with purulent core on nasal and maxillary region</li><li>Mild edema of malar cheeks</li><li>No systemic signs of infection</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started clindamycin 1 % gel application protocol</li><li>Started adapalene 0.1 % cream nightly</li><li>Continued OTC benzoyl peroxide 2.5 % wash (use optional if needed)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient is confident with topical regimen and agrees to follow-up at 4 weeks if she does not see improvement.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acne vulgaris</span><span class="pill">Polycystic ovary syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levonorgestrel‑containing oral contraceptive</li><li>Benzoyl peroxide 2.5 % wash</li><li>Mild emollient moisturizer</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continued use of 2.5 % benzoyl peroxide wash</li><li>Discontinued heavy foundation use</li><li>Smoked 1 pack daily</li><li>Patient expressed anxiety about cost of dermatologist visit</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya presented with worsening acne and the appearance of a small cluster of purulent pustules. On examination the lesions were erythematous, with clear purulent discharge and mild induration but no induration beyond the immediate sites. The physician noted the likely superinfection of Staphylococcus aureus on top of inflamed acne lesions. The plan was to initiate topical clindamycin 1 % gel and adapalene 0.1 % cream. Maya was shown how to apply gel thrice daily and cream nightly, and advised to continue the mild cleanser twice daily. The visit ended with a referral to a community health clinic for low‑cost care and reinforcement of lifestyle changes (cigarette cessation, diet modification, limiting occlusive cosmetics).</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Superficial staphylococcal infection confirmed clinically; initiating antibiotic‑gel and retinoid to control both infection and comedonal proliferation.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-22</h3><div class="visit-meta">Dermatology | Reason: Follow‑up on topical therapy, new papules on chin</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+The patient is a 20‑year‑old female with known PCOS, obesity, and acne vulgaris presenting for her week‑4 follow‑up. She reports a moderate reduction in redness at her prior lesion sites. She notes that new papules have appeared on her chin after hot showers and pillow contact, describing an occlusive sensation after sleeping. She denies purulent discharge or new itching.
+
+**Objective:**
+- Vitals: T 98.3 °F, BP 119/69 mmHg, HR 77 bpm, RR 14 bpm, SpO₂ 98 %
+- Clinical exam: Significant decrease in erythema over the nasal and maxillary regions. New papules are evident on the lower central face (chin), with no active pustules or drainage. Skin is otherwise warm and non‑edematous.
+- No adnexal or systemic signs of infection.
+
+**Assessment:**
+1. Acne vulgaris, improving with combined topical therapy.
+2. New focal papular eruption on the chin – most likely heat‑ or friction‑related follicular irritation (heat‑induced folliculitis or mechanical acne flare) in the setting of hot showers and pillow contact.
+3. No evidence of secondary infection, so oral antibiotic coverage is prudent while the skin barrier and mechanical triggers are addressed.
+
+**Plan:**
+- Prescribed oral doxycycline 100 mg BID for 2 weeks to manage the new papular eruption and prevent progression.
+- Re‑affirm continued use of clindamycin 1% gel once daily (or as directed for inflammatory lesions) and adapalene 0.1% cream nightly (note she has been using 0.025% in the past, but the standard dose is 0.1%).
+- Continue 2.5% benzoyl peroxide wash twice daily, fragrance‑free cleanser, and non‑comedogenic moisturizer.
+- Educate on heat avoidance: limit hot showers to &lt; 2 minutes, use lukewarm water, apply a cool compress afterward. Advise not to sleep with the pillow pressed against the chin; consider a pillowcase change and ensuring pillow is clean and dry.
+- Encourage smoking cessation and continue reducing nicotine intake.
+- Counsel on potential doxycycline side effects (GI upset, photosensitivity). Advise to take with food and avoid direct sunlight.
+- Reinforce good sleep hygiene to reduce occlusion.
+
+**Follow‑up:**
+- Return in 2 weeks to assess response to doxycycline and evaluate the new papules. If lesions persist or worsen, consider alternative oral therapy or short‑course systemic antibiotics. 
+- If the patient experiences significant GI intolerance or photosensitivity, schedule earlier follow‑up.
+- In the meantime, continue current topical regimen and the educational measures outlined.
+
+---
+*Patient verbalized understanding of the plan and will start doxycycline tomorrow.*</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">moderate reduction in redness at previous sites</span><span class="pill">new papules on the chin after hot shower and pillow contact</span><span class="pill">occlusive sensation after sleeping</span><span class="pill">no purulent discharge reported</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.3°F</td></tr><tr><td>blood_pressure</td><td>119/69 mmHg</td></tr><tr><td>heart_rate</td><td>77 bpm</td></tr><tr><td>respiratory_rate</td><td>14 breaths/min</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased erythema on nasal/maxillary region</li><li>New papules on lower central face</li><li>No active purulent drainage</li><li>Normal temperature</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed doxycycline 100 mg BID for 2 weeks</li><li>Reinforced continuation of clindamycin 1 % gel and adapalene 0.1 % cream for full duration</li><li>Educational counseling on heat avoidance and pillow hygiene</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient is compliant; will start doxycycline tomorrow and monitor for any adverse effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acne vulgaris</span><span class="pill">Polycystic ovary syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levonorgestrel‑containing oral contraceptive</li><li>Clindamycin 1 % gel</li><li>Adapalene 0.1 % cream</li><li>Benzoyl peroxide 2.5 % wash</li><li>Mild emollient moisturizer</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continuing clindamycin and adapalene regimen</li><li>Reported hot showers and using pillow against cheeks while sleeping</li><li>Tried to reduce nicotine consumption to 0.5 pack/day</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At week‑4 evaluation, Maya showed a noticeable decline in red inflammatory lesions and minimal purulent discharge. However, a cluster of new papules appeared on the chin, likely due to heat and occlusion from pillow contact. The dermatologist reinforced guidance on avoiding hot showers, using a cool compress, and showering 2–3 times per week. Given the persistence of bacterial colonization signs, oral doxycycline 100 mg twice daily for 2 weeks was started, along with continuation of clindamycin and adapalene for the full 4‑week topical course. The patient was counseled on the importance of completing the antibiotic course only if signs of infection recur, and told to resume clindamycin/adapalene after the 2‑week doxycycline period.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Superficial staphylococcal infection controlled; transition to oral antibiotics for persistent bacterial involvement while topical retinoid continues to manage comedonal inflammation.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-04-19</h3><div class="visit-meta">Dermatology | Reason: Mid‑course review of doxycycline therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Mid‑course review of doxycycline therapy and ongoing acne management. 
+
+History of Present Illness: Maya, a 20‑year‑old female with PCOS and obesity, presents for a mid‑treatment review after completing a 2‑week course of doxycycline 100 mg BID. She reports minimal residual redness, a few lingering papules on the chin, no purulent discharge, and mild post‑inflammatory hyperpigmentation. She has been adherent to topical therapy (clindamycin 1% gel, adapalene 0.1% cream, benzoyl peroxide 2.5% wash) and has reduced cigarette consumption to 0.25 pack/day. She reports feeling better overall.
+
+Past Medical History: Polycystic Ovary Syndrome, Obesity.
+
+Medications: Levonorgestrel‑containing oral contraceptive; Clindamycin 1% gel (now tapered to once daily); Adapalene 0.1% cream (now tapered to once daily); Benzoyl peroxide 2.5% wash; Mild emollient moisturizer; Fragrance‑free cleanser; Non‑comedogenic moisturizer; Sunscreen SPF 30+; (Doxycycline 100 mg BID – completed 2‑week course). 
+
+Allergies: NKDA.
+
+Review of Systems: Negative for fever, chills, pruritus, or new systemic symptoms.
+
+Physical Examination: Vitals stable – temperature 98.5°F, BP 117/70 mmHg, HR 75 bpm, RR 14/min, O₂ sat 99% on room air. Cutaneous exam: slight erythema on nasal region; residual papules on chin; no purulent drainage; post‑inflammatory hyperpigmentation spots of small, irregular pale brown areas.
+
+Assessment:
+- Acne vulgaris – ongoing mild activity with residual papules and post‑inflammatory hyperpigmentation.
+- Post‑inflammatory hyperpigmentation – secondary to prior acne lesions.
+- Drug‑induced skin irritation from clindamycin/adapalene – minimal.
+
+Plan:
+1. Taper clindamycin 1% gel to once daily for the final week.
+2. Reduce adapalene 0.1% cream to once daily.
+3. Continue benzoyl peroxide 2.5% wash as needed; advise twice daily use if breakout recurs.
+4. Continue daily moisturizing, fragrance‑free non‑comedogenic cleanser, and broad‑spectrum sunscreen SPF 30+.
+5. Counsel patient to avoid excessive heat and hot showers to reduce follicular irritation.
+6. Encourage smoking cessation; refer to campus counseling service and schedule follow‑up with nutritionist.
+7. Discontinue doxycycline and schedule next dermatology follow‑up in 4 weeks.
+8. Patient education on expected gradual fade of post‑inflammatory hyperpigmentation; recommend topical vitamin C and azelaic acid if desired.
+
+Disposition: Patient verbalized understanding of plan and will follow taper instructions.
+
+Follow‑up: Dermatology appointment in 4 weeks to assess residual papules and hyperpigmentation. If lesions worsen or new purulent discharge occurs, return sooner.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">minimal residual redness</span><span class="pill">few lingering papules on chin</span><span class="pill">no purulent discharge</span><span class="pill">mild mild post‑inflammatory hyperpigmentation visible</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.5°F</td></tr><tr><td>blood_pressure</td><td>117/70 mmHg</td></tr><tr><td>heart_rate</td><td>75 bpm</td></tr><tr><td>respiratory_rate</td><td>14 breaths/min</td></tr><tr><td>oxygen_saturation</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slight erythema on nasal region</li><li>Residual papules on chin</li><li>No purulent drainage</li><li>Post‑inflammatory hyperpigmentation spots</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Tapered clindamycin 1 % gel to once daily</li><li>Reduced adapalene 0.1 % cream to once daily</li><li>Continued benzoyl peroxide 2.5 % wash if needed</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient feels better and will follow tapering instructions.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acne vulgaris</span><span class="pill">Polycystic ovary syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levonorgestrel‑containing oral contraceptive</li><li>Clindamycin 1 % gel</li><li>Adapalene 0.1 % cream</li><li>Benzoyl peroxide 2.5 % wash</li><li>Mild emollient moisturizer</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 2‑week course of doxycycline</li><li>Continuing clindamycin and adapalene</li><li>Reported adherence to topical therapy</li><li>Reduced cigarette consumption to 0.25 pack/day</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At the mid‑treatment visit, Maya had a good response to therapy. The dermatologist assessed that active infection was likely resolved, with only residual papules and mild post‑inflammatory hyperpigmentation. A decision was made to taper clindamycin and adapalene—reducing dosage to once daily for the final week—to minimize long‑term irritation and antibiotic exposure. Maya was advised to continue daily moisturizing and sunscreen and to attend the campus counseling service for continued smoking cessation support and a scheduled nutritionist visit. A follow‑up in four weeks was planned.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acne vulgaris in remission phase with superficial bacterial infection cleared; transitioning to maintenance phase with low‑dose topical therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-04-30</h3><div class="visit-meta">Dermatology | Reason: Resolution assessment and maintenance plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit 5 – 2026-04-30
+
+Chief Complaint: Resolution assessment and maintenance plan for acne.
+
+History of Present Illness: 20‑year‑old female presents for routine follow‑up of acne vulgaris. She reports near complete clearance, with only faint post‑inflammatory hyperpigmented spots. No new lesions, swelling, or discharge.
+
+Past Medical History: Acne vulgaris, PCOS. No other significant comorbidities. Meds: levonorgestrel oral contraceptive, clindamycin 1% gel (as needed), adapalene 0.1% cream (as needed), fragrance‑free moisturizer. Allergies: NKDA.
+
+Review of Systems: Positive for mild residual hyperpigmentation; negative for itching, pain, systemic symptoms.
+
+Vitals: Temperature 98.4°F, BP 118/71 mmHg, HR 76 bpm, RR 14, SpO2 98%.
+
+Physical Examination: Facial skin appears largely clear. Minimal post‑inflammatory hyperpigmented marks on nose bridge and chin. No erythema, comedones, papules, pustules, or nodules. Skin texture normal. No signs of active inflammation.
+
+Assessment: Acne vulgaris – remission. Good control with topical therapy. Hyperpigmentation secondary to prior inflammation. No evidence of active disease or alternative dermatoses.
+
+Plan:
+1. Discontinue doxycycline permanently (already discontinued).
+2. Stop tapering schedule of clindamycin/adapalene; advise to use clindamycin 1% gel once daily and adapalene 0.1% cream nightly at first sign of flare.
+3. Continue fragrance‑free moisturizer daily.
+4. Apply broad‑spectrum SPF 30+ sunscreen daily, especially when outdoors.
+5. Encourage ongoing smoking cessation; patient now &lt;1 pack/day and plans to quit within next month.
+6. Reinforce balanced diet and adequate hydration.
+7. Counsel on avoiding excessive heat, harsh cleansers, and tight fabrics that may irritate skin.
+8. Follow up in 3 months unless flare occurs sooner.
+
+Order: None.
+
+Differential diagnoses considered: Acne vulgaris (in remission), post‑inflammatory hyperpigmentation, hormonal acne flare from PCOS (ruled out currently), possible mild rosacea-like inflammation (unlikely).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Near‑complete clearance of acne lesions</span><span class="pill">Trace hyperpigmented patches</span><span class="pill">No swelling or purulent discharge</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.4°F</td></tr><tr><td>blood_pressure</td><td>118/71 mmHg</td></tr><tr><td>heart_rate</td><td>76 bpm</td></tr><tr><td>respiratory_rate</td><td>14 breaths/min</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Minimal post‑inflammatory hyperpigmented spots</li><li>No active lesions</li><li>Normal skin texture</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discontinued doxycycline</li><li>Stopped taper schedule; instructed to apply clindamycin/adapalene upon flare</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports high satisfaction with results and committed to long‑term skin care.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acne vulgaris (remission)</span><span class="pill">Polycystic ovary syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levonorgestrel‑containing oral contraceptive</li><li>Clindamycin 1 % gel (used as needed during flare)</li><li>Adapalene 0.1 % cream (used as needed during flare)</li><li>Mild emollient moisturizer</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed topical taper, no further doxycycline</li><li>Maintained compliance with regimen</li><li>Smoking reduced to less than a pack per day and scheduled for cessation within month</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the 4‑week follow‑up, Maya’s facial area appeared essentially clear with only faint post‑inflammatory hyperpigmentation. The dermatologist confirmed bacterial infection resolution and that inflammatory acne had shifted to a remission state. Doxycycline was discontinued permanently, and the taper of clindamycin/adapalene was stopped. A maintenance plan was developed: apply clindamycin and adapalene if flare‑ups appear, otherwise use fragrance‑free moisturizer and sun protection. Maya was encouraged to keep up with smoking cessation efforts and to continue balanced nutrition. The dermatologist scheduled a routine check‑in in 3 months.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acne vulgaris in remission; superficial bacterial infection fully resolved; patient shifted to intermittent maintenance topical therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-05-26</h3><div class="visit-meta">Dermatology | Reason: Long‑term follow‑up and monitoring of remission</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient presents for routine long‑term follow‑up of acne vulgaris managed with topical therapy and hormonal contraceptives. She reports overall good skin status with slight improvement in post‑inflammatory hyperpigmentation and confidence in her self‑care regimen. No new facial lesions noted. Skin exam shows normal texture with minor hyperpigmented spots; no active inflammatory lesions or signs of infection. Vital signs are within normal limits. Current medications continue unchanged; no new prescription given. 
+
+Assessment: Residual mild post‑inflammatory hyperpigmentation and well‑controlled acne vulgaris. No active disease flare or infection. 
+
+Plan: 1. Continue current topical regimen: 2.5 % benzoyl peroxide wash twice daily, fragrance‑free non‑comedogenic cleanser twice daily, non‑comedogenic moisturizer, clindamycin 1 % gel as needed, adapalene 0.1 % cream nightly as needed, daily broad‑spectrum SPF 30+, mild emollient moisturizer. 2. Continue oral levonorgestrel contraceptive. 3. Emphasize strict sun protection, gentle skin hygiene, and monitoring for any new breakouts or pigmentation changes. 4. Consider routine follow‑up in 3 months or sooner if flare or new symptoms arise. 5. Reinforce adherence to lifestyle measures (diet, smoking cessation). 6. No new labs or imaging indicated.
+
+Patient verbalized understanding and is satisfied with current management.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No new acne lesions</span><span class="pill">Slight improvement in post‑inflammatory hyperpigmentation</span><span class="pill">Patient feels confident in self‑care</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.5°F</td></tr><tr><td>blood_pressure</td><td>117/70 mmHg</td></tr><tr><td>heart_rate</td><td>75 bpm</td></tr><tr><td>respiratory_rate</td><td>14 breaths/min</td></tr><tr><td>oxygen_saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin texture normal with minor hyperpigmented spots</li><li>No inflammatory lesions</li><li>No signs of infection</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>No new prescriptions; reinforced maintenance routine</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient is satisfied, confident, and will adhere to routine care.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acne vulgaris (remission)</span><span class="pill">Polycystic ovary syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levonorgestrel‑containing oral contraceptive</li><li>Mild emollient moisturizer</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Maintained daily moisturizing regimen</li><li>No use of clindamycin/adapalene in past month</li><li>Completed smoking cessation program and remains non‑smoker</li><li>Nutritionist follow‑up completed; diet improved</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Final routine dermatology review. Maya reports perfect skin condition with only mild residual pigmentation that is improving. The dermatologist confirmed stable remission of acne and no signs of bacterial infection. The discussion focused on ongoing skin hygiene, sun protection, and the importance of monitoring for future hormonal changes or stressors that may provoke a flare. Maya was congratulated on her progress and advised to keep routine check‑ins every 6 months.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acne vulgaris remains in remission; superficial bacterial infection eliminated; patient achieved resolved outcome and is stable.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 20</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Polycystic Ovary Syndrome</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>2.5% benzoyl peroxide wash</li><li>Fragrance‑free cleanser</li><li>Non‑comedogenic moisturizer</li><li>Clindamycin 1% gel</li><li>Adapalene 0.1% cream</li><li>Sunscreen SPF 30+</li><li>Mild emollient moisturizer</li><li>Levonorgestrel‑containing oral contraceptive</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Initial dermatology visit for new facial blemishes and dryness following OTC 5% benzoyl peroxide wash. Symptoms: visible blackheads on nasal bridge, tiny papules along jawline, tenderness over right cheek, off‑tasting facial odor, discomfort on touch. Vitals stable. Physical exam revealed comedones on nasal bridge, papules along zygomatic arch, tender erythema over right cheek, faint yellow crust on upper lip. Plan: discontinue 5% BPO wash; start 2.5% BPO wash twice daily; use fragrance‑free non‑comedogenic cleanser twice daily; apply non‑comedogenic moisturizer after washing; counsel on skin hygiene, sunscreen, smoking cessation, and diet. Follow‑up in 2 weeks unless symptoms worsen.</li><li>Worsening acne with purulent pustules; started clindamycin 1% gel thrice daily and tretinoin 0.025% cream nightly; continued 2.5% BPO wash; advised smoking cessation, diet changes, and low‑cost care options; scheduled follow‑up in 4 weeks.</li><li>Week‑4 follow‑up; moderate reduction in redness, new papules on chin after hot showers and pillow contact; vitals normal. Started oral doxycycline 100 mg BID for 2 weeks; switched from tretinoin 0.025% to adapalene 0.1% cream nightly; continued clindamycin 1% gel once daily, 2.5% BPO wash twice daily, fragrance‑free cleanser, and non‑comedogenic moisturizer. Advised heat avoidance, pillow hygiene, smoking cessation. Plan follow‑up in 2 weeks.</li><li>Visit 4: Mid‑course review after completing 2‑week doxycycline. Minimal residual redness, a few papules on chin, post‑inflammatory hyperpigmentation noted. Vitals stable. Treatment: taper clindamycin and adapalene to once daily, continue benzoyl peroxide as needed, add daily sunscreen, maintain moisturizers and cleanser. Doxycycline discontinued. Follow‑up scheduled in 4 weeks.</li><li>Visit 5 – Routine follow‑up of acne vulgaris; near‑complete clearance with only faint post‑inflammatory hyperpigmented spots; no active inflammation; discontinued doxycycline; continue clindamycin 1% gel once daily as needed, adapalene 0.1% cream nightly as needed, fragrance‑free moisturizer daily, broad‑spectrum SPF 30+ sunscreen daily; advised smoking cessation and balanced diet; follow‑up in 3 months.</li><li>Visit 6: Routine long‑term follow‑up of acne vulgaris; patient reports good skin status with slight improvement in post‑inflammatory hyperpigmentation and confidence in self‑care; exam shows normal texture with minor hyperpigmented spots, no active inflammatory lesions or infection; vitals normal; medications continued unchanged; plan: continue current topical regimen and levonorgestrel contraceptive, emphasize sun protection, lifestyle measures; schedule routine follow‑up in 3 months.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

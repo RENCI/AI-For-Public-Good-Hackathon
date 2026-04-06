@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 51f0bd00</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 51f0bd00</h1><div class="subtitle">Metastatic Colorectal Adenocarcinoma Presenting in the Liver (Stage IIIA) | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic Hepatitis B infection, Chronic Hepatitis C infection, Cirrhosis of the liver, Type 2 Diabetes Mellitus, Obesity, Alcoholic liver disease, Metabolic syndrome, Non‑alcoholic fatty liver disease (NAFLD), Hereditary hemochromatosis</div><div class="meta-line">Risk Factors: Chronic HBV/HCV infection, Exposure to aflatoxins, Heavy alcohol consumption, Obesity / NAFLD, Hereditary hemochromatosis / genetic liver disorders, Smoking, Western diet high in red/processed meats, Low dietary fiber, Physical inactivity</div></div>
+<details><summary>Narrative <span class="preview-text">When James Thomas first felt the heaviness in his chest—an uneventful, throbbing pain that he chalked up to his lifelong...</span></summary><div class="section-body"><p>When James Thomas first felt the heaviness in his chest—an uneventful, throbbing pain that he chalked up to his lifelong habit of a few beer barrels each night—it was the day he was supposed to pick up a pizza for the family. The ache was dull, right‑upper‑quadrant, and came with a persistent fatigue that had been creeping over the past three months. He did not think much of it; like most of his life, he’d been more accustomed to “good enough” than to a medical appointment.</p><p>At the local clinic, the primary‑care physician, a man named Dr. Patel, recorded James’s blood pressure at 138/86, heart rate 78, and noted a mild pallor. James’s medical history was a long list: chronic active hepatitis B and C for over two decades, cirrhosis staged by transient elastography at 29 kPa, type 2 diabetes under insulin therapy, a BMI that hovered at 32, a habit of one–to–two glasses of whiskey nightly, and a lifetime smoked one pack a day. All of this was in the back of Dr. Patel’s mind as he ordered a routine panel of liver enzymes and a basic abdominal ultrasound.</p><p>The ultrasound was performed a week later. The machine caught a 4‑centimet, hypoechoic lesion in segment VIII of the liver, but it was also noted the background liver parenchyma was heterogeneous, suggestive of cirrhosis with nodular regenerative hyperplasia. Dr. Patel shrugged. “In someone with your background, that could be a small HCC or a portal‑site nodular change. Let’s keep an eye on it. Why don’t we bring James in for a CT scan in two weeks?” he suggested.</p><p>Two weeks later, James’s abdomen had not gotten heavier; he still felt a low‑grade malaise that was more pronounced in the mornings. The CT scan with contrast painted a sharper picture. A 4.8‑centimet soft‑tissue density with arterial phase hyperenhancement and washout on delayed imaging in right hepatic lobe—classic for a solitary metastasis, though HCC is not off the table. The radiologist also noted a mild collison of the portal system and minimal ascites.</p><p>On the same day, Dr. Patel scheduled James for a colonoscopy, knowing his risk profile. James, who had always been reluctant to “get ahead of himself,” complied after a few gentle reminders from his wife. The procedure revealed an ulcerated 2‑centimet polypoid lesion in the ascending colon. Biopsies returned a moderately differentiated adenocarcinoma; immunohistochemistry confirmed it was a colorectal in origin, not a primary hepatic lymphoma. A subsequent MRI of the abdomen and pelvis showed the 4.8‑centimet liver mass, but no other extra‑hepatic disease was seen—a presentation that, in the language of the staging system James’s oncologist would later explain, corresponded to a stage IIIA (regional nodal disease only, with metastasis limited to the liver). That label was a technicality; the reality was a metastatic colorectal cancer that had already breached the protective barrier of the portal system.</p><p>By late June, James had an appointment with Dr. Nguyen, a medical oncologist at the regional cancer center. The meeting was a cautious one, with Dr. Nguyen carefully walking James through the labyrinth of treatment possibilities. “Because of your liver disease,” he said, “you’ll have to balance the tumor’s sensitivity to chemotherapy against the risk of hepatic decompensation. We’ll start with a modified FOLFOX (oxaliplatin, leucovorin, 5‑FU) and closely monitor bilirubin, INR, and albumin.” James’s liver function tests, measured on day 0, were within a pre‑chemotherapy window: total bilirubin 1.2 mg/dL, INR 1.2, albumin 3.8 g/dL.</p><p>A week after the first dose, James found himself at the emergency department with vomiting, significant abdominal distension, and two days of “feeling confused.” He was diagnosed with early hepatic encephalopathy. Dr. Patel and Dr. Nguyen consulted a hepatologist, who placed him on lactulose and rifaximin. The liver enzymes spiked overnight: AST 145, ALT 132, and bilirubin rose to 4.5 mg/dL. Overnight decompensation led to an admission. On day 3, the oncologist pulled the FOLFOX for an extra‑ordinary precaution: a “stop first.” He added a bolus of dexamethasone to blunt the inflammatory response, and the patient’s mental status began to improve over the next 48 hours. The chemotherapy had to be withheld for a full four weeks.</p><p>In early July, James was discharged with a home‑care plan that included a strict low‑protein diet to limit ammonia load, careful monitoring with a mobile INR monitor, and weekly visits with a nurse practitioner for appetite support. Despite these interventions, James continued to lose muscle mass. By mid‑August, the oncology team noted rising carcinoembryonic antigen (CEA) levels; a new CT scan in early September indicated that the liver metastasis had increased to 6.2 cm and a new, small 1.5‑cm lesion had appeared in segment V. The disease, which had been under a tight leash, had finally broken free.</p><p>Back at James’s home, the weight of his condition settled in. The once familiar kitchen tiles now seemed alien, and the sound of the refrigerator buzzed like a constant alarm. He stopped attending the weekly physical therapy sessions, preferring to rest. His wife, Linda, tried to cook more fiber‑rich meals with beans, oats, and leafy greens, but the sugar on the menu could not be negotiated. His insulin regimen required a dose reduction to prevent hypoglycemia, but this added to his tiredness.</p><p>On September 15, a palliative care team arrived at James’s house to discuss a change in goals. There was a consensus: the cancer was now a chronic disease in the sense that it could not be cured, and there was a growing concern that aggressive chemotherapy could further lower his already compromised liver function. The team recommended a shift to a single‑agent capecitabine, hoping for some tumor control while reducing hepatotoxicity. James, after a brief moment of introspection, gave a nod. He had always been a man of resilience, but his lungs had taken their toll as well. His blood pressure had begun to oscillate wildly during his earlier chemo sessions—a side effect of the aggressive therapy.</p><p>The next month was a slow slide. James’s right upper abdominal region swollen, his skin turned a jaundiced orange, and he developed severe pruritus. His liver enzymes skyrocketed again: bilirubin 9.8 mg/dL, AST 380, ALT 360. Despite his best efforts over the last four weeks to stay hydrated and maintain nutrition, he was unable to tolerate the chemo. In late October, the palliative care nurse recommended hospice care, emphasizing the goal of comfort over survival.</p><p>It was a quiet, autumn evening, the smell of damp leaves outside, that James slipped into hospice. His wife stayed with him, holding his hand through the night. In hospice, James was not sedated; he managed to recall familiar melodies, his earlier disdain for “modern technology,” and the way a hot cup of tea could ease the pain of fatigue. The hospice team provided intermittent pain control, managed the itching with antihistamines, and used a low‑dose midazolam infusion to calm the anxiety that came with delirium.</p><p>On November 27, James Thomas took his final breath. He was 68. The disease that had grown like a stubborn weed in a soil already damaged by alcohol, viruses, and genetics had outpaced every attempt at control. The care team, his wife, and friends lay him down, the room quiet but for the soft hum of a refrigerator and the occasional cough of a nurse’s hand. His story—of a man who had been taught to live with the limits of a liver that had been a target of hepatitis, alcohol, and metabolic syndrome—reached its inevitable end, a testament to the slow, relentless march of metastatic colorectal cancer in a liver compromised by a lifetime of insults.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-06-01</h3><div class="visit-meta">Primary Care | Reason: Heaviness in right upper quadrant and fatigue</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**S:** 68‑year‑old male presents with a 3‑month history of chronic dull heaviness in the right upper quadrant and persistent fatigue. Reports mild pallor but denies jaundice, vomiting, or weight loss. No changes in alcohol intake noted, currently 1–2 glasses whiskey nightly.
+
+**O:** Vitals: BP 138/86, HR 78, Temp 98.6 °F, RR 16. BMI 32. Physical exam shows mild RUQ tenderness, mild facial pallor, abdominal exam otherwise unremarkable. No ascites or spider angiomas noted.
+
+Labs ordered (no results yet): CMP, LFTs, CBC with diff, hepatitis serology panel (HBV DNA, HCV RNA), HbA1c, baseline abdominal ultrasound.
+
+**A:** Differential diagnosis:
+1. Hepatocellular carcinoma (HCC) – chronic HBV/C infection and cirrhosis are high‑risk factors.
+2. Portal hypertension with variceal formation.
+3. Chronic hepatic inflammation or flare.
+4. Anemia of chronic disease or iron deficiency (mild pallor).
+5. Alcoholic liver disease progression.
+6. Non‑alcoholic fatty liver disease related cirrhosis.
+
+Given RUQ mass suspicion and ongoing cirrhosis, HCC remains top concern.
+
+**P:** 1. Await ultrasound and labs; if focal hepatic lesion, refer to hepatology for further imaging (CT/MRI) and potential biopsy.
+2. Continue current pharmacotherapy: insulin glargine 20 U nightly; rivaroxaban 5 mg daily (monitor for bleeding).
+3. Counsel on alcohol cessation; advise to stop drinking and follow up with alcohol use disorder program.
+4. Optimize glycemic control; repeat HbA1c in 3 months.
+5. Educate about signs of decompensation (ascites, variceal bleeding, encephalopathy) and to seek urgent care if symptoms arise.
+6. Plan dietitian referral for weight management.
+7. Schedule follow‑up visit in 4 weeks to review imaging and lab results.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic dull RUQ heaviness</span><span class="pill">Persistent fatigue</span><span class="pill">Mild pallor</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138/86</td></tr><tr><td>Heart Rate</td><td>78</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild RUQ tenderness on palpation</li><li>Mild facial pallor</li><li>Abdominal exam otherwise unremarkable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete metabolic panel</li><li>Liver function tests</li><li>Complete blood count</li><li>Hepatitis serology</li><li>HbA1c</li><li>Abdominal Ultrasound</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 units subcutaneously nightly</li><li>Rivaroxaban 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic Active Hepatitis B and C</li><li>Cirrhosis (elevated liver stiffness)</li><li>Type 2 Diabetes mellitus on insulin</li><li>BMI 32</li><li>Alcohol use (1–2 glasses whiskey nightly)</li><li>Pack‑year smoking history (30 years)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>James visited Dr. Patel complaining of a dull, persistent heaviness in the upper right abdomen that had been present for about three months, accompanied by fatigue. The physical exam revealed mild RUQ tenderness and mild pallor. Blood pressure and heart rate were borderline elevated. Dr. Patel noted the patient’s chronic hepatitis B/C, cirrhosis, diabetes, and heavy alcohol use. He ordered a comprehensive metabolic panel, liver function tests, complete blood count, hepatitis panel, HbA1c, and a baseline abdominal ultrasound to evaluate the RUQ mass and assess portal hypertension.</p><p>The patient was reassured and advised to schedule a follow‑up for the ultrasound results and to monitor dietary alcohol intake.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline presentation with RUQ mass suspicion; no confirmed diagnosis yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-06-08</h3><div class="visit-meta">Primary Care | Reason: Review ultrasound findings</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #2 – 2024-06-08. Chief complaint: Review of abdominal ultrasound findings.
+
+History of Present Illness: 68‑year‑old male with a history of chronic hepatitis B and C, cirrhosis, type 2 diabetes, and obesity presents today for a follow‑up of a recent abdominal ultrasound performed during Visit 1. He reports continued right upper quadrant (RUQ) heaviness and fatigue. He denies any new pain, jaundice, weight loss, nausea, or changes in bowel habits. No new medications have been started. He continues his baseline insulin glargine 20 U nightly and rivaroxaban 5 mg daily and reports no medication side effects.
+
+Past Medical History: Chronic hepatitis B and C, cirrhosis, type 2 diabetes mellitus, obesity.
+
+Medications: Insulin glargine 20 U nightly; rivaroxaban 5 mg daily.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for RUQ heaviness and fatigue; otherwise negative.
+
+Physical Examination: Not documented during this encounter.
+
+Vital Signs:
+  • Blood Pressure: 134/80 mm Hg
+  • Heart Rate: 76 bpm
+  • Temperature: 98.4 °F (36.9 °C)
+  • Respiratory Rate: 16 breaths/min
+
+Assessment:
+1. Hepatocellular carcinoma (HCC) – Suspected given a 4.0 cm hypoechoic lesion in a cirrhotic liver. High‑risk factors include chronic HBV/HCV infection, cirrhosis, and the lesion’s size and appearance.
+2. Alternative diagnoses: hepatic metastasis, benign focal hepatic lesion (e.g., focal nodular hyperplasia, regenerative nodule), hepatic abscess, or cyst.
+
+Plan:
+1. Order serum alpha‑fetoprotein (AFP) to support HCC evaluation.
+2. Order hepatitis B DNA and HCV RNA to assess viral activity.
+3. Order complete metabolic panel and CBC to monitor liver function and cytopenias.
+4. Refer for contrast‑enhanced abdominal MRI/CT to further characterize the lesion (size, vascularity, capsule). Consider a dynamic CT scan if MRI is contraindicated.
+5. Consult hepatology/oncology for multidisciplinary evaluation and discussion of treatment options (e.g., surgical resection, loco‑regional therapies, transplant candidacy).
+6. Continue current medications; monitor glucose and anticoagulation as usual.
+7. Counsel patient on alcohol cessation, weight management, and dietary measures to support liver health.
+8. Plan follow‑up in 4–6 weeks to review imaging and lab results; sooner if clinical status worsens.
+
+Follow‑up Recommendations: 
+- Schedule MRI/CT within 4‑6 weeks.
+- Repeat AFP, viral load studies, CMP, and CBC at that time.
+- Coordinate with hepatology/oncology for further staging and therapeutic planning.
+- Continue current insulin and rivaroxaban regimen.
+- Monitor for any new symptoms such as abdominal pain, jaundice, or bleeding.
+
+Signature: _______________________
+
+Date: 2024‑06‑08</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">RUQ heaviness</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>134/80</td></tr><tr><td>Heart Rate</td><td>76</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Stable RUQ tenderness</li><li>No stigmata of chronic liver disease (no jaundice, spider angiomata, ascites noted clinically)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Contrast‑enhanced abdominal CT scan</li><li>Colonoscopy</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 units nightly</li><li>Rivaroxaban 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Results of abdominal ultrasound: 4.0 cm hypoechoic lesion in segment VIII, heterogeneous background liver consistent with cirrhosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>James returned for results. The ultrasound confirmed a 4.0 cm hypoechoic lesion in segment VIII of the liver; the liver parenchyma was heterogeneous, implying cirrhosis with nodular regenerative hyperplasia. Dr. Patel explained differential possibilities including hepatocellular carcinoma (HCC), benign regenerative nodule, or metastatic lesion. He advised a contrast‑enhanced CT scan for better characterization and ordered one. He also suggested a colonoscopy because of the patient’s age and risk profile.</p><p>James agreed to the CT and colonoscopy. He was told the CT would be performed in two weeks and the colonoscopy scheduled immediately after.</p><p>Given the findings, Dr. Patel noted the potential for early-stage colorectal metastasis but emphasized the need for definitive imaging and histology.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Suspected liver lesion; imaging pending.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-06-22</h3><div class="visit-meta">Radiology / Gastroenterology | Reason: Discuss CT and colonoscopy results</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Review of CT and colonoscopy results and discussion of management.
+
+**History of Present Illness:** 68‑year‑old male with known cirrhosis secondary to chronic hepatitis B and C, alcoholic liver disease, type 2 diabetes, obesity, and hereditary hemochromatosis presents for imaging review. He reports right upper quadrant pain and early morning fatigue for the last 3 months, unchanged from prior visits. No jaundice, pruritus, or weight loss.
+
+**Review of Systems:** Positive for fatigue and RUQ pain. Denies nausea, vomiting, fever, chills, or changes in bowel habits.
+
+**Physical Examination:** Vitals: BP 136/82, HR 78, T 98.5°F, RR 16. Abdomen soft, mild RUQ tenderness, no rebound, mild rebound on deep palpation, no ascites palpable, no jaundice or spider angiomas.
+
+**Imaging Findings:** CT abdomen with contrast shows a 4.8‑cm lesion in the right hepatic lobe with arterial phase hyperenhancement and washout on delayed phase consistent with hepatocellular carcinoma (HCC). Mild ascites and portal venous compression noted.
+
+**Colonoscopy:** 2‑cm ulcerated polypoid lesion in the ascending colon. Biopsy obtained.
+
+**Laboratory Results:** CEA 12 ng/mL (elevated), AST 70 U/L, ALT 55 U/L, total bilirubin 1.2 mg/dL, INR 1.2, albumin 3.8 g/dL.
+
+**Assessment:** 
+1. HCC in cirrhotic liver – stage B (Milan criteria: single lesion 4.8 cm, no extrahepatic disease demonstrated yet).
+2. Colonic polypoid lesion suspicious for adenocarcinoma; biopsy pending.
+3. Chronic liver disease with mild portal hypertension.
+
+**Differential Diagnosis:** 
+- Primary hepatocellular carcinoma vs metastatic colorectal carcinoma vs cholangiocarcinoma vs benign hepatic adenoma.
+- Colonic adenocarcinoma vs benign polyp.
+
+**Plan:** 
+- Refer to oncology clinic for multidisciplinary review and to discuss modified FOLFOX regimen with emphasis on hepatotoxicity monitoring.
+- Order serum alpha‑fetoprotein (AFP) and hepatitis B DNA, hepatitis C RNA to assess viral activity and baseline tumor markers.
+- Continue insulin glargine 20 units nightly and rivaroxaban 5 mg daily.
+- Counsel patient on strict alcohol abstinence and dietary weight control; arrange dietitian consult.
+- Schedule repeat liver MRI in 3 months to assess treatment response.
+- Monitor liver function tests (AST/ALT, bilirubin, INR, albumin) biweekly during chemotherapy.
+- Obtain histopathology of colon biopsy; if malignant, coordinate with oncology for staging.
+- Educate patient on signs of hepatic decompensation (e.g., worsening ascites, encephalopathy, jaundice) and instruct to seek urgent care if these arise.
+
+**Disposition:** Patient consented to FOLFOX initiation at oncology clinic. Follow-up with oncology in 1 week, hepatology in 4 weeks, and primary care in 2 weeks.
+
+**Signature:** Dr. Patel, MD
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">RUQ pain</span><span class="pill">Early morning fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>136/82</td></tr><tr><td>Heart Rate</td><td>78</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild RUQ tenderness</li><li>No jaundice or spider angiomata</li><li>Soft abdomen with mild rebound on deep palpation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CEA level</li><li>Liver function panel</li><li>Coagulation profile</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CEA: 12 ng/mL (elevated)</li><li>AST: 70 U/L</li><li>ALT: 55 U/L</li><li>Total Bilirubin: 1.2 mg/dL</li><li>INR: 1.2</li><li>Albumin: 3.8 g/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Consent for FOLFOX to be started in oncology clinic</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 units nightly</li><li>Rivaroxaban 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT: 4.8 cm arterial‑phase hyperenhancing mass in right hepatic lobe with washout on delayed phase; mild portal venous obstruction, minimal ascites</li><li>Colonoscopy: ulcerated 2 cm polypoid lesion in ascending colon; biopsy: moderately differentiated adenocarcinoma, colorectal origin confirmed by CK20+, CEA positive</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel, the radiologist, explained that the CT scan demonstrated a 4.8‑cm lesion with classic imaging features of a colorectal metastasis rather than HCC. The mild ascites and portal venous compression were noted but had not yet led to clinical decompensation. Meanwhile, the gastroenterologist reviewed colonoscopy reports, confirming adenocarcinoma in the ascending colon with histology consistent with primary colorectal tract origin.</p><p>Dr. Patel and the Oncologist discussed staging: single hepatic metastasis without extra‑hepatic disease (pN+). The patient was counselled about a modified FOLFOX regimen, bearing in mind his liver disease. They also discussed the need for close monitoring of hepatic function and potential for hepatotoxicity.</p><p>James was referred to Dr. Nguyen for oncology consult and informed of the next steps.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed Stage IIIA metastatic colorectal cancer limited to liver.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-06-28</h3><div class="visit-meta">Medical Oncology | Reason: Initiate chemotherapy regimen</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of chemotherapy for hepatocellular carcinoma in the setting of cirrhosis, chronic hepatitis B/C, and other comorbidities.
+
+History of Present Illness: 68‑year‑old male with diagnosed HCC measuring 4.8 cm in a cirrhotic liver. Recent imaging and labs confirm active tumor and stable hepatic function (total bilirubin 1.2 mg/dL, INR 1.2, albumin 3.8 g/dL). The patient reports persistent RUQ pain, fatigue, and mild early‑morning nausea. No signs of jaundice or ascites. The patient has a history of alcohol use disorder; he expressed concern about ongoing consumption.
+
+Past Medical History: Chronic hepatitis B &amp; C, cirrhosis, alcoholic liver disease, NAFLD, hereditary hemochromatosis, type 2 diabetes mellitus, obesity, metabolic syndrome, on insulin glargine 20 U nightly and rivaroxaban 5 mg daily. No known drug allergies.
+
+Physical Examination: Vitals within normal limits (BP 132/78, HR 80, Temp 98.3 °F, RR 15). Mild RUQ tenderness on palpation, no ascites, no spider angiomas. Rest of exam unremarkable.
+
+Assessment:
+1. HCC in a patient with compensated cirrhosis – start systemic therapy.
+2. Risk of chemotherapy‑induced neutropenia and hepatic toxicity – dose‑adjusted FOLFOX.
+3. Risk of hepatic encephalopathy due to underlying liver disease – prophylaxis pending hepatology review.
+
+Plan:
+• Initiate modified FOLFOX (oxaliplatin 85 mg/m², leucovorin 200 mg/m², 5‑FU 400 mg/m² bolus) on day 1 of a 2‑week cycle; subsequent cycles at same dose.
+• Antiemetic prophylaxis: ondansetron 8 mg PO qd PRN.
+• Monitor CBC weekly, LFTs biweekly, INR/albumin, and hepatitis viral loads.
+• Hepatology consult scheduled to develop a de‑compensation prevention plan and to evaluate need for lactulose + rifaximin.
+• Continue insulin glargine and rivaroxaban.
+• Advise strict alcohol abstinence; refer to addiction support program.
+• Discuss weight‑loss goals; refer to dietitian.
+• Next oncology visit in 2 weeks for cycle 2 or sooner if toxicity develops.
+
+Patient education provided regarding chemotherapy side effects, signs of neutropenic fever, hepatic decompensation, and importance of adherence to follow‑up and lab monitoring.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">RUQ pain</span><span class="pill">Fatigue</span><span class="pill">Early morning nausea (mild)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>132/78</td></tr><tr><td>Heart Rate</td><td>80</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr><tr><td>Respiratory Rate</td><td>15</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal vitals</li><li>Stable RUQ tenderness</li><li>No ascites clinically</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Weekly CBC</li><li>Biweekly LFTs</li><li>Coagulation profile</li><li>Hepatitis viral load monitoring</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Modified FOLFOX initiated (oxaliplatin 85 mg/m², leucovorin 200 mg/m², 5‑FU 400 mg/m² bolus)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Stage IIIA metastatic colorectal adenocarcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 units nightly</li><li>Rivaroxaban 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Baseline labs: total bilirubin 1.2 mg/dL, INR 1.2, albumin 3.8 g/dL</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen reviewed the imaging and laboratory results. After informed consent, James was started on a modified FOLFOX regimen: 5‑FU bolus, leucovorin, and oxaliplatin, with dose adjustments reflecting his hepatic function. The oncology team explained the schedule: day 1 of each 2‑week cycle, the patient would receive the infusion and then home chemotherapy support for the remainder of the cycle. They also outlined monitoring plans (weekly CBC, biweekly LFTs, INR, albumin). James expressed concern about alcohol use; the team scheduled a hepatology consult for a decompensation prevention plan.</p><p>On the same visit, a hepatology consult was placed to review lactulose and rifaximin prophylaxis if needed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Chemotherapy started; risk of hepatic toxicity present.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-07-05</h3><div class="visit-meta">Emergency / Oncology | Reason: Acute abdominal pain, vomiting, confusion – possible hepatic encephalopathy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Acute abdominal pain, vomiting, confusion – possible hepatic encephalopathy.
+
+**History of Present Illness:** 68‑year‑old male with known chronic hepatitis B/C, cirrhosis, hepatocellular carcinoma on FOLFOX (first dose today), type 2 diabetes, obesity, alcohol use, metabolic syndrome, and hereditary hemochromatosis presented to ED after a night of vomiting and abdominal bloating. He was confused and drowsy upon arrival. Vital signs: BP 102/60, HR 110, Temp 98.7 °F, RR 20, SpO₂ 96% RA.
+
+**Past Medical History:** Chronic liver disease with decompensation, hepatocellular carcinoma, type 2 diabetes on insulin glargine 20 U nightly, rivaroxaban 5 mg daily.
+
+**Physical Exam:** Congested conjunctivae, abdominal distension, mild RUQ tenderness, mental status: disoriented to time/place, responsiveness drowsy. No jaundice, ascites minimal.
+
+**Laboratory Findings:**
+- AST 145 U/L
+- ALT 132 U/L
+- Total Bilirubin 4.5 mg/dL
+- INR 1.9
+- Serum ammonia 110 µmol/L
+- Blood glucose 180 mg/dL
+
+**Imaging:** Bedside abdominal scan – mild ascites, no cholecystitis.
+
+**Assessment:** Grade I–II hepatic encephalopathy precipitated by first day of FOLFOX in the setting of advanced cirrhosis. Acute variceal bleed ruled out on imaging, infection less likely (V/S otherwise stable), metabolic (elevated glucose) contributing, but ammonia elevation primary.
+
+**Plan:**
+1. **Hepatic Encephalopathy Management** – Lactulose 20 mL PO (10 mL orally, 10 mL nasally) q6h PRN until stool softens; Rifaximin 550 mg PO BID.
+2. **Chemotherapy Adjustment** – Hold further FOLFOX cycles. Administer dexamethasone 10 mg IV daily to address inflammatory response.
+3. **Glucose Control** – Transition to basal‑bolus insulin regimen (e.g., insulin glargine 10 U nightly + sliding‑scale insulin as needed). Target BG 140–180 mg/dL.
+4. **Volume &amp; Electrolyte** – IV crystalloids 1 L NS over 4 h; monitor electrolytes daily.
+5. **Dietary** – Low‑protein diet (0.6 g/kg/day), clear liquids until resolution. Fluid restriction 1.5 L/day.
+6. **Monitoring** – Daily mental status, serum ammonia, LFTs, INR, glucose. Admit for 4 days.
+7. **Discharge Plan** – Home monitoring with weekly nurse visits, INR self‑monitoring kit, strict low‑protein diet, oral lactulose, rifaximin. Educate on signs of HE recurrence.
+8. **Follow‑up** – Oncology and hepatology review in 2 weeks to reassess chemotherapy timing. Endocrinology for diabetes follow‑up.
+
+**Disposition:** Discharged after 4 days with stable mental status, no vomiting, ammonia 70 µmol/L, bilirubin ~3.0 mg/dL. Provided education and home-care plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Vomiting</span><span class="pill">Abdominal distension</span><span class="pill">Confusion</span><span class="pill">Drowsiness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>102/60</td></tr><tr><td>Heart Rate</td><td>110</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>Respiratory Rate</td><td>20</td></tr><tr><td>Oxygen Saturation</td><td>96% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Congested conjunctivae</li><li>Abdominal distension</li><li>Mild RUQ pain on palpation</li><li>Confused mental status</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>LFT panel</li><li>Coagulation profile</li><li>Serum ammonia</li><li>Blood glucose</li><li>Abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AST: 145 U/L</li><li>ALT: 132 U/L</li><li>Total Bilirubin: 4.5 mg/dL</li><li>INR: 1.9</li><li>Ammonia: 110 µmol/L</li><li>Blood Glucose: 180 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Lactulose 20 mL orally</li><li>Rifaximin 550 mg BID</li><li>Dexamethasone 10 mg IV</li><li>IV fluids</li><li>Adjusted insulin regimen</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Cognitive function improved, resolution of vomiting, but required hospital stay and adjustment to therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Stage IIIA metastatic colorectal adenocarcinoma</span><span class="pill">Current FOLFOX therapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 20 units nightly</li><li>Rivaroxaban 5 mg daily</li><li>5‑FU, leucovorin, oxaliplatin (dose on day 1 of cycle)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous day: first dose of FOLFOX</li><li>No reported dietary changes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>James presented to the emergency department after a night of vomiting and abdominal bloating. On arrival, he was confused and drowsy. Vital signs showed tachycardia and slightly low blood pressure, consistent with early hepatic encephalopathy (HE). A rapid mental status exam suggested grade I–II HE. Dr. Patel (emergency MD) consulted the oncology and hepatology teams.</p><p>Labs were drawn: AST 145 U/L, ALT 132 U/L, total bilirubin 4.5 mg/dL, INR 1.9, serum ammonia 110 µmol/L, blood glucose 180 mg/dL (new onset hyperglycemia with insulin). A bedside abdominal scan confirmed mild ascites and no obvious cholecystitis.</p><p>The hepatology team initiated lactulose 20 mL orally (10 mL in each nostril) and rifaximin 550 mg twice daily. They also advised limiting oral intake and a low‑protein diet. Oncology temporarily withheld further FOLFOX cycles (modified FOLFOX “stop‑first”) and added dexamethasone 10 mg IV to mitigate inflammatory sequelae. He was admitted for monitoring.</p><p>Over the next 48 hours, mental status improved, ammonia fell to 70 µmol/L, and bilirubin stabilized around 3.0 mg/dL. The patient was discharged after 4 days with a home‑care plan: weekly nurse follow‑up, strict low‑protein diet, mobile INR monitor, and an updated insulin regimen (from 20 units nightly to a basal‑bolus schedule).</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early hepatic encephalopathy triggered by first FOLFOX cycle; chemotherapy withheld for 4 weeks.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-09-05</h3><div class="visit-meta">Medical Oncology | Reason: Assess disease progression after FOLFOX pause</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+- Chief complaint: Assess disease progression after FOLFOX pause.
+- History of present illness: Patient James is a 68‑year‑old male with Stage IIIA metastatic colorectal adenocarcinoma now progressing. Over the past several months, his CEA has risen from 12 to 23 ng/mL and a repeat CT scan demonstrates a 6.2 cm hepatic lesion (previous 4.8 cm) plus a new 1.5 cm lesion in segment V. Bilirubin is 2.5 mg/dL, INR 1.4, albumin 3.4 g/dL. He has chronic Hepatitis B &amp; C, cirrhosis, type 2 diabetes, obesity, history of hepatic encephalopathy, and is on chronic anticoagulation (rivaroxaban).
+- Symptoms reported: increasing RUQ pain, 5‑lb weight loss, occasional pruritus; no jaundice currently.
+- Prior treatments: Modified FOLFOX was held during July because of hepatic encephalopathy; no chemotherapy since then.
+
+**Objective:**
+- Vitals: BP 120/70, HR 80, Temp 98.2 °F, RR 16.
+- Physical: mild RUQ tenderness, soft abdomen with mild distension, no jaundice, normal skin color.
+- Labs: CEA 23 ng/mL, AST 90 U/L, ALT 85 U/L, total bilirubin 2.5 mg/dL, INR 1.4, albumin 3.4 g/dL.
+- Imaging: CT shows growth of hepatic lesions; MRI scheduled.
+
+**Assessment:**
+1. Progressive colorectal hepatic metastases with new liver lesion and rising tumor markers.
+2. Underlying decompensated cirrhosis with borderline liver function; risk of hepatotoxicity with systemic chemo.
+3. Ongoing hepatic encephalopathy risk; current LFT abnormalities.
+
+**Plan:**
+- Initiate capecitabine 1250 mg/m² PO BID for 10 days every 14 days (oral; reduced hepatotoxicity).
+- Continue current supportive meds: lactulose PRN, rifaximin 550 mg BID, cetirizine 10 mg nightly, insulin glargine 10 units nightly, rivaroxaban 5 mg daily.
+- Provide patient education on hand‑feet syndrome, skin care, and diet.
+- Monitor weekly LFTs (AST/ALT, bilirubin), INR, albumin, and CBC. Adjust dose if LFTs exceed 2× baseline or INR &gt; 1.5.
+- MRI abdomen/pelvis before each cycle to assess disease burden.
+- Repeat CEA each cycle.
+- If disease progresses or liver function deteriorates, consider local therapy (radiofrequency ablation or Y‑90) or transition to best supportive care.
+- Palliative counseling and advance care planning discussion.
+
+**Prognosis:**
+- Expected disease‑control rather than cure; close surveillance for progression.
+
+**Follow‑up:**
+- Weekly lab visits in clinic; MRI 1 week prior to each capecitabine cycle.
+- Schedule oncology review in 1 month or sooner if symptoms worsen or LFTs abnormal.
+- Referral to palliative care as needed.
+- Continue alcohol abstinence, weight‑management dietitian referral.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increasing RUQ pain</span><span class="pill">Weight loss (~5 pounds)</span><span class="pill">Occasional pruritus</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>120/70</td></tr><tr><td>Heart Rate</td><td>80</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild RUQ tenderness</li><li>Soft abdomen with mild distension</li><li>No signs of jaundice at this time</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CEA level</li><li>MRI abdomen/pelvis</li><li>Liver function panel</li><li>Coagulation profile</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CEA: 23 ng/mL</li><li>AST: 90 U/L</li><li>ALT: 85 U/L</li><li>Total Bilirubin: 2.5 mg/dL</li><li>INR: 1.4</li><li>Albumin: 3.4 g/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated capecitabine 1250 mg/m² BID for 10 days (first cycle)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Stage IIIA metastatic colorectal adenocarcinoma (now progressing)</span><span class="pill">History of hepatic encephalopathy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine 10 units nightly</li><li>Rivaroxaban 5 mg daily</li><li>Lactulose 20 mL as needed</li><li>Rifaximin 550 mg BID</li><li>Cetirizine 10 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CEA: 23 ng/mL (up from 12 ng/mL)</li><li>CT abdomen: liver mass increased to 6.2 cm; new 1.5 cm lesion in segment V; mild ascites; no new extra‑hepatic disease</li><li>No further chemotherapy administered since July</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On this oncology visit, James had been told over the past few months that his CEA levels had climbed and his newly scheduled CT scan showed a 6.2 cm growth in the original hepatic lesion, plus a new 1.5 cm metastasis in segment V. His liver function remained borderline: bilirubin 2.5 mg/dL, INR 1.4, albumin 3.4 g/dL. Dr. Nguyen explained the limited tolerability of full‑dose FOLFOX due to the patient’s decompensated liver status and suggested a switch to a single‑agent capecitabine, which is less hepatotoxic and can be administered orally.</p><p>James consented to capecitabine 1250 mg/m² BID for 10 days on a 14‑day cycle, with weekly monitoring of LFTs and INR. The oncology team scheduled an MRI to evaluate for further spread before each cycle. Patient education on hand‑feet syndrome and hand‑care was provided.</p><p>James also received palliative counseling regarding expectations and the shift from curative to disease‑control intent.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Radiographic progression with new hepatic lesion; shift to palliative chemotherapy.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-10-31</h3><div class="visit-meta">Hospice/Palliative Care | Reason: Transition to comfort care, hospice admission</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transition to comfort care, hospice admission.
+
+Subjective: James, a 68‑year‑old male with chronic Hepatitis B/C, cirrhosis, type 2 diabetes, obesity, and a history of hepatic encephalopathy, presents with worsening right upper quadrant pain, jaundice, intense pruritus, decreased appetite, and recurrent agitation consistent with delirium. Recent labs show bilirubin 9.8 mg/dL, AST 380 U/L, ALT 360 U/L, INR 2.2, albumin 2.8 g/dL. Capecitabine was discontinued two weeks ago due to hepatotoxicity and uncontrolled pain. The family reports increased frequency of delirium episodes; current antipsychotic regimen has been ineffective.
+
+Objective:
+- Vitals: BP 110/65 mmHg, HR 90/min, Temp 97.8 °F, RR 18/min, SpO₂ 95% RA.
+- Physical: Marked scleral and cutaneous jaundice; pronounced RUQ tenderness with guarding; scratch marks from pruritus; patient disoriented in time and place; reduced oral intake.
+
+Assessment: Advanced liver failure with acute exacerbation manifesting as hepatocellular injury, coagulopathy, and hepatic encephalopathy. Intense cholestatic pruritus secondary to hyperbilirubinemia. Pain largely controlled with morphine; pruritus managed with cetirizine; delirium being addressed with low‑dose midazolam.
+
+Plan:
+1. Confirm comfort‑care status: Discussed goals of care with patient and wife; discontinued systemic chemotherapy to focus on palliative measures.
+2. Pain: Continue morphine 10 mg q4h PRN, consider opioid rotation to hydromorphone if breakthrough pain occurs.
+3. Pruritus: Continue cetirizine 10 mg nightly; consider antihistamine wash‑down if needed.
+4. Delirium: Maintain low‑dose midazolam infusion 0.1 µg/kg/min; educate family on recognizing agitation, providing a calm environment, and using sedation breaks when appropriate.
+5. Hepatic encephalopathy: Continue lactulose 20 mL PRN and rifaximin 550 mg BID; monitor stool frequency and ammonia.
+6. Hydration/nutrition: Advise small, frequent high‑calorie meals; encourage oral fluids as tolerated; consider enteral supplementation if intake insufficient.
+7. Monitoring: Repeat LFT panel, CBC, coagulation profile, serum ammonia within 24 h; evaluate trends.
+8. Hospice admission: Admit to hospice ward for 24‑hour observation with full interdisciplinary support; arrange transfer to home hospice as soon as clinically appropriate.
+9. Family education: Provide written instructions for medication administration, delirium recognition, safe handling of pruritus, and when to seek urgent care.
+10. Follow‑up: Daily assessment by hospice team; weekly lab review; adjust medications based on tolerance and pain control.
+
+Disposition: Patient admitted to hospice ward for observation; family provided with contact information for hospice case manager for any concerns.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe RUQ pain</span><span class="pill">Jaundice</span><span class="pill">Intense pruritus</span><span class="pill">Diminished appetite</span><span class="pill">Confusion (delirium episodes)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>110/65</td></tr><tr><td>Heart Rate</td><td>90</td></tr><tr><td>Temperature</td><td>97.8°F</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Oxygen Saturation</td><td>95% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Marked jaundice of sclerae and skin</li><li>Pronounced RUQ tenderness with guarding</li><li>Skin scratching lesions (pruritus)</li><li>Confused, disoriented in time and place</li><li>Reduced oral intake</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Liver function test panel (repeat)</li><li>CBC</li><li>Coagulation profile</li><li>Serum ammonia</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AST: 380 U/L</li><li>ALT: 360 U/L</li><li>Total Bilirubin: 9.8 mg/dL</li><li>INR: 2.2</li><li>Albumin: 2.8 g/dL</li><li>Ammonia: 85 µmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg q4h PRN</li><li>Cetirizine 10 mg nightly</li><li>Midazolam infusion at 0.1 µg/kg/min (low dose)</li><li>Lactulose 20 mL as needed</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B</span><span class="pill">Chronic Hepatitis C</span><span class="pill">Cirrhosis</span><span class="pill">Type 2 Diabetes</span><span class="pill">Obesity</span><span class="pill">Stage IIIA metastatic colorectal adenocarcinoma (progressive)</span><span class="pill">History of hepatic encephalopathy</span><span class="pill">Current advanced liver failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lactulose 20 mL as needed</li><li>Rifaximin 550 mg BID</li><li>Cetirizine 10 mg nightly</li><li>Morphine 10 mg q4h PRN for pain</li><li>Low‑dose midazolam infusion 0.1 µg/kg/min for delirium</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent labs: bilirubin 9.8 mg/dL, AST 380 U/L, ALT 360 U/L, INR 2.2, albumin 2.8 g/dL</li><li>Capecitabine discontinued two weeks prior due to hepatotoxicity and uncontrolled pain</li><li>Increasing frequency of delirium; current antipsychotic not effective</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The hospice team met with James and his wife to discuss end‑of‑life goals. Given the recent surge in bilirubin and transaminases, a decision was made to discontinue systemic chemotherapy and focus on comfort measures. Pain control was optimized: morphine titrated, opioid rotation considered. Antihistamines were used to reduce pruritus. The team educated the family on how to recognize and manage delirium in the home setting. Care plans prioritized hydration, nutritional support aimed at comfort, and the use of low‑dose midazolam to calm agitation. The patient was admitted to the hospice ward for 24‑hour observation; with the plan to transition to home hospice as soon as feasible.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Rapid hepatic encephalopathy, massive hepatic dysfunction; hospice care established due to imminent death.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Hepatitis B infection</span><span class="pill">Chronic Hepatitis C infection</span><span class="pill">Cirrhosis of the liver</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Obesity</span><span class="pill">Alcoholic liver disease</span><span class="pill">Metabolic syndrome</span><span class="pill">Non‑alcoholic fatty liver disease (NAFLD)</span><span class="pill">Hereditary hemochromatosis</span><span class="pill">Hepatocellular carcinoma</span><span class="pill">Hepatic encephalopathy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Morphine 10 mg q4h PRN</li><li>Cetirizine 10 mg nightly</li><li>Midazolam infusion 0.1 µg/kg/min</li><li>Lactulose 20 mL PRN</li><li>Rifaximin 550 mg BID</li><li>Insulin glargine 20 U nightly</li><li>Rivaroxaban 5 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>68‑year‑old male presents with 3‑month history of chronic dull heaviness in the right upper quadrant and persistent fatigue, mild pallor, and denies jaundice, vomiting, or weight loss. Vital signs include BP 138/86, HR 78, temperature 98.6°F, RR 16, BMI 32. Physical examination reveals mild RUQ tenderness, mild facial pallor; abdominal exam otherwise unremarkable, with no ascites or spider angiomas noted. Lab studies ordered include complete metabolic panel, liver function tests, complete blood count, hepatitis serology panel (HBV DNA, HCV RNA), HbA1c, and a baseline abdominal ultrasound. Medications continue to include insulin glargine 20 units sc nightly and rivaroxaban 5 mg daily. Patient receives counseling on alcohol cessation and referral to an alcohol use disorder program and a dietitian for weight management. Follow‑up scheduled in 4 weeks to review imaging and laboratory results.</li><li>Visit #2 (2024-06-08): Follow‑up review of abdominal ultrasound. Patient reports persistent RUQ heaviness and fatigue. Vital signs: BP 134/80, HR 76, Temp 98.4°F, RR 16. No new medications. Ultrasound noted a 4.0 cm hypoechoic lesion in the cirrhotic liver. Orders: serum alpha‑fetoprotein, hepatitis B DNA, hepatitis C RNA, complete metabolic panel, complete blood count, contrast‑enhanced abdominal MRI/CT. Referral to hepatology/oncology requested. Continue insulin glargine 20 U nightly and rivaroxaban 5 mg daily. Counsel on alcohol cessation and weight management. Follow‑up scheduled in 4–6 weeks.</li><li>Visit #3 (2024-06-22): Review of contrast CT and colonoscopy. CT shows a 4.8 cm arterial-phase hyperenhancing hepatic lesion with delayed washout, consistent with hepatocellular carcinoma; mild ascites noted. Colonoscopy reveals a 2 cm ulcerated polypoid lesion in the ascending colon; biopsy obtained. Labs: CEA 12 ng/mL, AST 70, ALT 55, total bilirubin 1.2 mg/dL, INR 1.2, albumin 3.8 g/dL. Plan includes referral to oncology for multidisciplinary review and initiation of modified FOLFOX regimen, repeat liver MRI in 3 months, biweekly monitoring of liver function tests during chemotherapy, and ongoing counseling on alcohol abstinence and weight control.</li><li>Visit #4 (2024-06-28): Initiated modified FOLFOX chemotherapy regimen (oxaliplatin 85 mg/m², leucovorin 200 mg/m², 5‑FU 400 mg/m² bolus) for hepatocellular carcinoma. Started ondansetron 8 mg PO qd PRN for antiemetic prophylaxis. Ordered weekly CBC and biweekly LFT monitoring. Hepatology consult scheduled to develop de‑compensation prevention plan. Continued insulin glargine and rivaroxaban. Counsel on strict alcohol abstinence and weight management.</li><li>Visit #5 (2024-07-05): Acute abdominal pain, vomiting, confusion. Admitted for hepatic encephalopathy. Labs: AST 145 U/L, ALT 132 U/L, total bilirubin 4.5 mg/dL, INR 1.9, serum ammonia 110 µmol/L. Started lactulose q6h PRN, rifaximin 550 mg IV daily, dexamethasone 10 mg IV daily, basal‑bolus insulin regimen. IV normal saline 1 L over 4 h. Chemotherapy held. Patient discharged after 4 days with stable mental status, ammonia improved to 70 µmol/L, bilirubin ~3.0 mg/dL; follow‑up arranged with oncology, hepatology, endocrinology.</li><li>Visit #6 (2024-09-05): Patient returns for assessment of disease progression after FOLFOX pause. Chief complaint of increasing RUQ pain, 5‑lb weight loss, and occasional pruritus. Vitals were BP 120/70, HR 80, temp 98.2°F, RR 16. Examination showed mild RUQ tenderness and mild abdominal distension; no jaundice. Labs: CEA 23 ng/mL, AST 90 U/L, ALT 85 U/L, bilirubin 2.5 mg/dL, INR 1.4, albumin 3.4 g/dL. CT imaging revealed growth of hepatic lesions (primary 6.2 cm, new 1.5 cm). Plan: Initiate capecitabine, continue lactulose PRN, rifaximin, cetirizine, insulin glargine, rivaroxaban; weekly LFT/INR monitoring; repeat MRI before each cycle; repeat CEA each cycle; weekly lab visits; referral to palliative care if progression; continue alcohol abstinence and weight management.</li><li>Patient admitted to hospice care for advanced liver failure and hepatic encephalopathy. Worsening RUQ pain, jaundice, pruritus, decreased appetite, and delirium noted. Labs: bilirubin 9.8 mg/dL, AST 380 U/L, ALT 360 U/L, INR 2.2, albumin 2.8 g/dL. Chemotherapy discontinued; comfort measures instituted: morphine 10 mg q4h PRN for pain, low-dose midazolam infusion 0.1 µg/kg/min for delirium, lactulose 20 mL PO PRN and rifaximin 550 mg BID for hepatic encephalopathy, cetirizine 10 mg nightly for pruritus, insulin glargine 20 U nightly, rivaroxaban 5 mg daily. Repeat LFT, CBC, coagulation, serum ammonia ordered. Daily hospice assessment; weekly lab review; transition to home hospice planned.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

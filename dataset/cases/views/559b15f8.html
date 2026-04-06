@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 559b15f8</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 559b15f8</h1><div class="subtitle">Acute Appendicitis | Male, 28</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Comorbidities: Type 2 Diabetes Mellitus, Hypertension, Obesity</div><div class="meta-line">Risk Factors: Low fiber diet, Recent viral illness, Family history of appendicitis, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">When Michael’s mother—who had just been told she would be undergoing her second appendectomy—told him that she was “sitt...</span></summary><div class="section-body"><p>When Michael’s mother—who had just been told she would be undergoing her second appendectomy—told him that she was “sitting on a hot potato inside her belly” and worried about a “slow‑to‑appear stomach flare‑up,” he laughed, a little too quickly. He was 28, a software engineer, a smoker who liked his food “in the cloud” and only ate a sandwich or a pizza with a side of beer most nights. He was 28, had type 2 diabetes for a year on metformin, high blood pressure controlled with lisinopril, and a BMI of 33. On the night of that call, he felt a flicker of discomfort in his lower right abdomen, a dull ache that he shrugged off and attributed to the late‑night gaming marathon.</p><p>**Day 0 – First Flicker of Pain**  
+Michael woke at 1 a.m. with a light nausea and a vague gnawing in what he later described as “the middle of my belly.” He had just finished a mild upper‑respiratory viral illness two weeks earlier, with a lingering low‑grade fever and sore throat that had resolved. The night before, he’d taken an over‑the‑counter antacid for an indigestion that never fully stopped. He told himself that perhaps he’d overindulged on the midnight snack—an extra cheese pizza. At 6 a.m., the pain tightened, becoming more localized just beneath his right rib cage.</p><p>**Day 1 – The Pain Migrates**  
+By midmorning, the pain had shifted to the right lower quadrant (RLQ). It was sharp now, especially when he twisted or walked. He noticed occasional fever spikes up to 99.4°F, a cough that had turned slightly productive, and a feeling of tiredness that still lingered from the viral illness. He avoided taking NSAIDs because of his type 2 diabetes; his doctor had warned him against ibuprofen. Michael posted on a friend’s group chat, half in jest, “Do I need to worry? Or is this just another stomach bug?” The most helpful comment, from a fellow diabetic, was a cautious reminder that his diabetes could blunt his pain perception, and to seek care if symptoms persisted.</p><p>**Day 2 – Primary Care Visit**  
+At 9 a.m., Michael walked into the outpatient clinic. He was greeted by the nurse who weighed him (195 lbs) and noted his blood pressure (142/86 mmHg). After a quick phone check with his health plan, he sat down for history. The office physician, Dr. Patel, noted the family history of appendicitis in his father, who had had a perforated appendix at 29. “That’s a significant detail,” Dr. Patel said. Michael described the RLQ pain as “burning, sharp at the start, but now pretty constant.” He mentioned a small episode of vomiting and low‑grade fever.</p><p>Differential diagnosis: viral gastroenteritis, mesenteric adenitis, ectopic pregnancy (unlikely, but not ruled out), gastric ulcer, and, of course, appendicitis. Dr. Patel ordered a basic labs panel (CBC, CMP, lipase) and a bedside ultrasound. The ultrasound was inconclusive due to Michael’s thick subcutaneous tissue, but it did show a small bowel loop with mild wall thickening. His white blood count came back at 12,500/µL with a left shift (neutrophils 85%). Blood glucose was 159 mg/dL; HbA1c had been 6.9% two months prior. The physician ordered a low‑dose CT scan of the abdomen and pelvis with contrast, citing “pain that shifted to the RLQ and leukocytosis.”</p><p>By the time the imaging results were available, it was 4 p.m. Michael’s pain had worsened, now described as “a crushing sensation” that made him “stand like he’s about to fall.” The CT scan came back at 4:45 p.m.—the appendix was dilated, 12 mm, with wall thickening, peri‑appendiceal fat stranding, and a small, non‑ruptured abscess. It was classic acute appendicitis. Dr. Patel called the surgical team.</p><p>**Day 3 – Overnight Observation &amp; Surgical Decision**  
+Michael was admitted to the surgical ward. Surgeons discussed a laparoscopic appendectomy. Because of his history of diabetes and hypertension, they wanted to optimize his pre‑operative glucose (target fasting &lt;130 mg/dL) and blood pressure (&lt;140/90 mmHg) to reduce surgical risk. Michael’s blood sugar ranged from 170 to 210 mg/dL in the first 6 hours, so the endocrinology consult was called in, and his insulin sliding scale was adjusted.</p><p>He also reported a moderate amount of cough and shortness of breath, but his oxygen saturation remained above 95% on room air. The chest X-ray showed a mild infiltrate, likely post‑viral. The pulmonologist noted that his mild smoking history (1 pack per day for 6 years) could worsen postoperative pulmonary complications but that with cautious peri‑operative pulmonary hygiene, these would be manageable.</p><p>At 11 a.m., the surgical team deemed him a good candidate for laparoscopic appendectomy. Michael&#x27;s pre‑operative assessment was routine: INR 1.0, platelets 200k, normal electrolytes. After a standard bowel prep with polyethylene glycol (PPS), he was taken to the OR.</p><p>**Day 3 – Laparoscopic Appendectomy**  
+At 1:30 p.m., the surgeon made three small incisions and inserted the camera and instruments. The appendix was inflamed but not perforated. It was successfully removed, and a 12‑x‑6 mm abscess cavity was drained and irrigated. The surgeon confirmed no other intra‑abdominal pathology. Michael’s operative time was just under 45 minutes. No drains or tubes were placed. Blood loss was minimal, and he was transferred to the post‑anesthesia care unit (PACU).</p><p>**Day 3–4 – Post‑operative Course**  
+In the PACU, Michael slept through the first night. He tolerated a clear liquid diet at 6 a.m. the next morning. At 8 a.m., he reported some mild abdominal tenderness, particularly at the incision sites, but no guarding. His vitals were stable: BP 130/78 mmHg, HR 78, temp 99.0°F. A post‑op CBC returned with WBC 9,500/µL and neutrophils 70%. Blood glucose was 146 mg/dL, controlled on basal insulin and a sliding scale.</p><p>He was monitored on the floor for 48 hours. At 2 p.m. Day 4, he had a mild fever spike to 100.2°F and complained of mild left lower chest tightness. A chest X-ray at that time was unchanged. An early pulmonary physiotherapy session, incentive spirometry, and deep breathing exercises were instituted. The pulmonologist noted that the mild infiltrate likely represented a viral pneumonia that was resolving; no antibiotics were started as cultures remained negative.</p><p>**Day 5 – Transition to Discharge**  
+By Day 5, Michael’s pain had subsided to a dull ache at the incision sites, controlled by acetaminophen. He tolerated a light diet—scrambled eggs, toast, and fruit. There were no signs of infection at the surgical sites; the incisions were warm but not erythematous, and the drainage output had been minimal.</p><p>He received a brief discharge teaching session, emphasizing glycemic control (carbohydrate counting, insulin adjustment), wound care, signs of infection or delayed healing, and follow‑up with his primary care provider in one week. He was instructed to return immediately if he experienced fever, worsening pain, or foul drainage.</p><p>**Day 6–10 – Home Recovery**  
+At home, he complied with the insulin regimens and glucose monitoring. His last meal of the night was a quick pizza, but he recognized a pattern: large carbohydrate loads followed by a glucose spike; he shifted to a low‑fiber, high protein snack, and his glucose readings dropped to the mid‑80s.</p><p>He had a minor rash at his incision sites on Day 7, which resolved with over‑the‑counter antihistamine. His cough lingered slightly longer than the viral illness, but on Day 9, the cough resolved, and his chest felt normal. He started walking again on Day 8, a short 10‑minute stroll. Dr. Patel scheduled a routine follow‑up for Day 14, but Michael decided to come in on Day 11 to discuss a re-check of his blood sugar and to confirm wound healing.</p><p>**Day 11 – Follow‑Up**  
+Michael’s incision sites were healing well; no redness or drainage. His blood sugar readings averaged 120 mg/dL over the prior week. He was congratulated by Dr. Patel on the resolution of appendicitis, advised on weight loss strategies, and referred to a nutritional counselor to reduce his risk of future gastrointestinal complications.</p><p>**Outcome**  
+Michael’s appendicitis resolved after a timely laparoscopic appendectomy. The only lingering impact was the need to adapt his diet for better glucose control and to reduce his sedentary lifestyle. No postoperative complications occurred, and his type 2 diabetes remained stable. By the end of the second week, he was back to his 9‑to‑5 office, still a smoker, but with a newfound appreciation for monitoring his abdominal pain and seeking care promptly.</p><p>The timeline of visits—primary care on Day 2, imaging on Day 2 evening, surgery on Day 3, postoperative monitoring Days 3–4, discharge Day 5, home recovery Days 6–10, and follow‑up Day 11—provides a clear, realistic progression for an acute appendicitis case in a patient with comorbidities and risk factors.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-07-03</h3><div class="visit-meta">Family Medicine | Reason: Right lower quadrant abdominal pain, low-grade fever, nausea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 28‑year‑old male presents with acute sharp right lower abdominal pain, nausea, and low‑grade fever.
+
+History of Present Illness: The patient reports a 12‑hour history of sharp abdominal pain that began centrally and migrated to the right lower quadrant. He notes associated nausea but denies vomiting. He also reports a mild low‑grade fever and fatigue. No prior episodes of similar pain. Onset preceded by a recent upper respiratory viral illness two weeks ago.
+
+Past Medical History: Type 2 Diabetes Mellitus, Hypertension, Obesity (BMI 33). Tobacco use: 1 pack/day for 6 years.
+
+Medications: Metformin 1000 mg BID, Lisinopril 10 mg daily. NKDA.
+
+Vital Signs: BP 142/86 mmHg, HR 98 bpm, T 99.0 °F, RR 16 breaths/min, SpO2 98% on room air.
+
+Physical Examination:
+• General: A well‑appearing male, mildly uncomfortable.
+• Abdomen: LLQ tenderness, RLQ focal tenderness with mild rebound. No guarding or rigidity. Bowel sounds normoactive. Skin warm and dry.
+• Other Systems: Unremarkable.
+
+Laboratory and Imaging:
+• CBC: WBC 12,500/µL, neutrophils 85%.
+• CMP: Within normal limits.
+• Serum lipase: Normal.
+• Bedside abdominal ultrasound: Inconclusive due to thick subcutaneous tissue.
+• CT abdomen/pelvis with contrast (16:45): 12 mm dilated appendix with wall thickening, peri‑appendiceal fat stranding, and a small, non‑ruptured peri‑appendiceal abscess.
+
+Assessment:
+The imaging and clinical picture are most consistent with acute appendicitis complicated by a small peri‑appendiceal abscess. Other differentials considered include diverticulitis, mesenteric adenitis, inflammatory bowel disease flare, and, given the patient’s metabolic comorbidities, a less common presentation of pancreatitis (but lipase is normal).
+
+Plan:
+1. Admit the patient tomorrow for definitive surgical evaluation and management of appendicitis with abscess.
+2. Initiate intravenous broad‑spectrum antibiotics (e.g., ceftriaxone 1 g IV q24h + metronidazole 500 mg IV q8h) pending culture results.
+3. Maintain NPO status with IV fluids (0.9% NaCl 1 L/hr). Reassess T, WBC, and pain 6‑hourly.
+4. Continue current chronic medications: continue Metformin 1000 mg BID and Lisinopril 10 mg daily unless contraindicated by renal function or hyperglycemia.
+5. Provide analgesia as needed (acetaminophen 1 g PO q6h PRN; consider ibuprofen if not contraindicated).
+6. Counsel patient regarding the need for an appendectomy and potential need for percutaneous drainage of the abscess.
+7. Follow up in the surgical clinic within 48 hours or sooner if symptoms worsen.
+8. Discuss smoking cessation and diabetes control to improve recovery.
+
+Disposition: Patient was informed of findings, education provided, and scheduled for hospital admission tomorrow for surgical management.
+
+Prepared by: ____________ (Family Medicine)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sharp lower right abdominal pain</span><span class="pill">Nausea</span><span class="pill">Low‑grade fever</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>142/86 mmHg</td></tr><tr><td>HR</td><td>98 bpm</td></tr><tr><td>Temp</td><td>99.0 °F</td></tr><tr><td>RR</td><td>16 breaths/min</td></tr><tr><td>SpO2</td><td>98 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>LLQ abdominal tenderness, positive rebound tenderness in RLQ</li><li>No guarding or rigidity</li><li>Bowel sounds normoactive</li><li>Skin warm and dry</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Comprehensive Metabolic Panel (CMP)</li><li>Serum lipase</li><li>Abdominal Ultrasound</li><li>CT Abdomen and Pelvis with Contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 12,500/µL, neutrophils 85%</li><li>CMP: within normal limits</li><li>Lipase: normal</li><li>Ultrasound: inconclusive</li><li>CT: appendix dilated to 12 mm, wall thickening, peri‑appendiceal fat stranding, small abscess</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>None at this visit</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed concern but agreed to proceed with admission tomorrow for surgical evaluation.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Type 2 diabetes mellitus on metformin 1000 mg BID</li><li>Hypertension controlled with lisinopril 10 mg daily</li><li>Obesity, BMI 33</li><li>Smoking 1 pack/day for 6 years</li><li>Recent upper‑respiratory viral illness 2 weeks ago</li><li>Family history of appendicitis (father at 29)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient presented with acute sharp abdominal pain that had migrated to the RLQ, accompanied by nausea and low‑grade fever. After verbal history and focused abdominal palpation revealing RLQ tenderness with mild rebound, the clinician ordered a CBC, CMP, lipase, bedside ultrasound, and a contrast abdominal CT. The ultrasound was inconclusive due to thick subcutaneous tissue. CBC showed leukocytosis (WBC 12,500/µL, neutrophils 85%). CT performed at 16:45 demonstrated a 12‑mm dilated appendix with wall thickening, peri‑appendiceal fat stranding, and a small, non‑ruptured abscess—classic acute appendicitis. The patient was informed of the findings, advised to seek elective surgical evaluation, and scheduled for admission the next day for definitive surgical management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosed with acute appendicitis with small peri‑appendiceal abscess; scheduled for urgent laparoscopic appendectomy.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-07-04</h3><div class="visit-meta">General Surgery | Reason: Admission for laparoscopic appendectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Admission for laparoscopic appendectomy.
+
+History of Present Illness: 28‑year‑old male with known type 2 diabetes, hypertension, and obesity presents with persistent right lower quadrant (RLQ) tenderness and mild abdominal discomfort. He was evaluated on Visit 1 for acute appendicitis with a 12‑mm appendix and a small peri‑appendiceal abscess. He was admitted for surgical intervention. On this admission, fasting glucose readings ranged 170–210 mg/dL in the first 6 hours despite an insulin sliding‑scale infusion initiated by endocrinology.
+
+Past Medical History: Type 2 DM, hypertension, obesity (BMI 33).
+
+Medications: Metformin 1000 mg BID, Lisinopril 10 mg daily, Ceftriaxone 1 g IV q24h, Metronidazole 500 mg IV q8h, Acetaminophen 1 g PO q6h PRN, insulin sliding‑scale (as per endocrinology protocol).
+
+Allergies: NKDA.
+
+Physical Examination: Vitals stable – BP 135/80 mmHg, HR 76 bpm, Temp 98.6 °F, RR 14 /min, SpO₂ 97 %. Abdomen is soft with mild RLQ tenderness, no guarding or rebound; surgical prep sites are clear. No signs of peritoneal irritation.
+
+Pre‑operative Labs: BUN 30 mg/dL, creatinine 1.2 mg/dL, INR 1.0, platelets 200,000/µL, Hb 13.2 g/dL. Fasting glucose consistently 170–210 mg/dL over first 6 hours. Chest X‑ray demonstrates a mild post‑viral upper‑lobe infiltrate, no acute pneumothorax or other findings.
+
+Operative Details: Laparoscopic appendectomy with drainage of a 12‑× 6 mm peri‑appendiceal abscess performed at 1:30 p.m. Operative time 45 min, blood loss minimal, no additional intra‑abdominal pathology identified. Patient tolerated the procedure well, remained alert, and had no hypoglycemic episodes.
+
+Assessment:
+1. Acute appendicitis with peri‑appendiceal abscess – definitive surgical treatment achieved.
+2. Type 2 DM – peri‑operative hyperglycemia controlled; continue insulin sliding scale until discharge.
+3. HTN – currently controlled with lisinopril; monitor BP daily.
+4. Potential post‑viral pulmonary infiltrate – no clinical compromise.
+5. Risk of postoperative wound infection – prophylactic antibiotics continued.
+
+Plan:
+- Continue ceftriaxone 1 g IV q24h and metronidazole 500 mg IV q8h for 5 days total.
+- Maintain insulin sliding‑scale intra‑operatively and post‑operatively; aim fasting glucose &lt;130 mg/dL.
+- Continue metformin 1000 mg BID as tolerated; hold during NPO and until adequate oral intake resumes.
+- Discontinue acetaminophen until postoperative pain control is assessed.
+- Continue lisinopril 10 mg daily.
+- Monitor daily vitals, glucose, and wound sites. Obtain CBC and CMP on postoperative day 1.
+- Diet: NPO until satisfactory return of bowel function; advance as tolerated.
+- Educate patient on signs of infection or hypoglycemia; provide discharge instructions accordingly.
+- Follow‑up: Postoperative day 1 surgical check, day 7 wound review, and primary care visit for diabetes management review.
+
+The patient was discharged home on postoperative day 1 with stable vitals, controlled glucose, and no immediate complications.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistently tender RLQ</span><span class="pill">Mild abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/80 mmHg</td></tr><tr><td>HR</td><td>76 bpm</td></tr><tr><td>Temp</td><td>98.6 °F</td></tr><tr><td>RR</td><td>14 breaths/min</td></tr><tr><td>SpO2</td><td>97 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen with mild RLQ tenderness, no guarding or rebound</li><li>Incision sites in surgical prep clear</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>BUN/Cr</li><li>Coagulation profile</li><li>Fasting glucose</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>BUN 30 mg/dL</li><li>Creatinine 1.2 mg/dL</li><li>INR 1.0</li><li>Platelets 200,000/µL</li><li>Hb 13.2 g/dL</li><li>Chest X‑ray: mild upper lobe infiltrate</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Insulin sliding scale</li><li>Bowel prep (PEG)</li><li>Pre‑operative medications (none other)</li><li>Anesthesia for laparoscopic surgery</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated fasting and the procedure well, remained alert post‑op without hypoglycemic episodes.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span><span class="pill">Acute Appendicitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Acute appendicitis confirmed</li><li>Type 2 diabetes on metformin</li><li>Hypertension on lisinopril</li><li>Obesity, BMI 33</li><li>Recent viral illness</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was admitted to the General Surgery floor. Pre‑operative labs were obtained: BUN 30 mg/dL, creatinine 1.2 mg/dL, INR 1.0, platelets 200,000/µL, Hb 13.2 g/dL. Fasting glucose monitoring showed values 170–210 mg/dL in the first 6 hours. An endocrinology consult was placed; insulin sliding scale was initiated to achieve a fasting target &lt;130 mg/dL. A chest X‑ray revealed a mild post‑viral infiltrate. The patient received a standard polyethylene glycol bowel prep at 10 a.m. and was taken to the operating room at 1:30 p.m. for laparoscopic appendectomy with drainage of the 12‑× 6 mm abscess. Operative time was 45 min, blood loss minimal, no intra‑abdominal pathology aside from the Appendix.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Appendix successfully removed; peri‑appendiceal abscess drained; patient stable for postoperative recovery.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-07-05</h3><div class="visit-meta">Post‑Anesthesia Care | Reason: Immediate postoperative assessment after appendectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Post‑operative assessment of 28‑year‑old male following routine laparoscopic appendectomy performed on 2023‑06‑30.
+
+**Chief Complaint / Reason for Encounter**: Immediate postoperative evaluation in the Post‑Anesthesia Care Unit (PACU).
+
+**Past Medical History**: Type 2 Diabetes Mellitus (on metformin, insulin sliding‑scale), Hypertension (on lisinopril), Obesity.
+
+**Medications**: Metformin 1000 mg BID (held intra‑operative until post‑op NPO status resolved), Lisinopril 10 mg daily, Ceftriaxone 1 g IV q24h, Metronidazole 500 mg IV q8h, Insulin sliding‑scale per endocrinology protocol.
+
+**Allergies**: NKDA.
+
+**Encounter Summary**:
+The patient was extubated and transferred to the PACU within 30 min of surgery. He was alert, oriented, and hemodynamically stable. Pain was described as mild at the incision sites; the patient had taken acetaminophen 650 mg PO which reduced discomfort to a mild ache. No nausea, vomiting, or shoulder tip pain noted.
+
+**Vitals (at admission to PACU)**:
+- BP: 130/78 mmHg
+- HR: 78 bpm
+- Temp: 99.0 °F (37.2 °C)
+- RR: 16 breaths/min
+- SpO₂: 98 % on room air
+
+**Physical Examination**:
+- **Abdomen**: Mild tenderness at both laparoscopic port sites; no rebound, guarding, or rigidity. Bowel sounds normal.
+- **Wound**: Pale incisions, no erythema, no drainage or seroma.
+
+**Laboratory/Tests**:
+- Post‑operative CBC: WBC 9,500/µL, neutrophils 70 %
+- Blood glucose: 146 mg/dL on arrival; continuous monitoring remained 140‑160 mg/dL during 6‑hour observation.
+
+**Treatments Administered in PACU**:
+- Acetaminophen 650 mg PO (reduces pain to mild)
+- Clear liquid diet initiated
+- Insulin sliding‑scale PRN (as per protocol)
+- Antibiotics continue as per pre‑operative plan.
+
+**Patient Response**:
+Pain well controlled; ambulated to bathroom with assistance, no nausea/vomiting, able to tolerate clear liquids.
+
+**Assessment**:
+- Stable postoperative recovery after laparoscopic appendectomy.
+- No evidence of early wound infection or intra‑abdominal complication.
+- Glucose within acceptable range; continue monitoring.
+
+**Differential Diagnosis (considered during assessment)**:
+1. Postoperative wound infection — currently unlikely; no erythema or drainage.
+2. Bowel ileus — unlikely given normal bowel sounds and mild abdominal tenderness.
+3. Seroma/hematoma at incision sites — none detected.
+4. Delayed gastric emptying — patient tolerating clear liquids.
+
+**Plan**:
+1. Continue current antibiotic regimen as ordered (ceftriaxone q24h, metronidazole q8h) for total 5 days.
+2. Progress diet to regular as tolerated; assess for tolerance to solids.
+3. Maintain insulin sliding‑scale; continue capillary glucose checks q4h.
+4. Monitor incision sites for erythema, drainage, or pain escalation; document findings on surgical floor assessment.
+5. Educate patient on signs of infection (fever &gt;100.4 °F, increased pain, purulent drainage) and advise to report promptly.
+6. Encourage ambulation and early mobilization; assist as needed.
+7. Plan to reevaluate vitals and labs on surgical floor and next scheduled medication administration.
+8. Follow‑up: Routine postoperative visit on postoperative day 3 or sooner if symptoms develop.
+
+**Disposition**: Patient remained stable for 6 h in PACU, then transferred to the surgical floor for continued postoperative care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild abdominal tenderness</span><span class="pill">Incision site soreness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78 mmHg</td></tr><tr><td>HR</td><td>78 bpm</td></tr><tr><td>Temp</td><td>99.0 °F</td></tr><tr><td>RR</td><td>16 breaths/min</td></tr><tr><td>SpO2</td><td>98 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Pale surgical incisions without erythema or drainage</li><li>Mild tenderness at incision sites</li><li>No rebound or guarding</li><li>Normal abdominal bowel sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Postoperative CBC</li><li>Blood glucose monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 9,500/µL, neutrophils 70%</li><li>Glucose: 146 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 650 mg PO</li><li>Clear liquid diet</li><li>Insulin sliding scale PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain controlled by acetaminophen; no nausea; patient able to ambulate to bathroom with assistance.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Baseline insulin</li><li>Insulin sliding scale PRN</li><li>Acetaminophen 650 mg PO q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent laparoscopic appendectomy</li><li>Type 2 diabetes</li><li>Hypertension</li><li>Obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In the PACU, the patient was evaluated for vitals, pain, and incision integrity. He reported mild tenderness at the incision sites and took acetaminophen, which reduced pain to a mild ache. A clear liquid diet was initiated. Blood glucose trending was stable, 146 mg/dL on admission to PACU. A postoperative CBC was ordered and returned with WBC of 9,500/µL and neutrophils 70%. The patient was monitored for 6 hours and then transferred to the surgical floor.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early postoperative recovery stable; postoperative infection markers trending downward; patient remains a candidate for discharge within 48h.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-07-06</h3><div class="visit-meta">General Surgery | Reason: Pre‑discharge evaluation and discharge teaching</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Pre‑discharge evaluation and discharge teaching.
+
+History of present illness: A 28‑year‑old male with type 2 diabetes mellitus, hypertension, and obesity underwent laparoscopic appendectomy with abscess drainage (Day 4 of admission). He is now on postoperative day 5. He reports occasional mild soreness at his incision sites but denies fever, chills, increased pain, drainage, or other concerning symptoms.
+
+Past medical history: Type 2 DM, hypertension, obesity. Prior surgeries: Laparoscopic appendectomy with abscess drainage.
+
+Current medication list (as of discharge): Metformin 1000 mg PO BID, insulin sliding‑scale PRN, acetaminophen 650 mg PO q6h PRN, lisinopril 10 mg PO daily, ceftriaxone 1 g IV q24h, metronidazole 500 mg IV q8h. A multivitamin was added for nutrition support.
+
+Allergies: NKDA.
+
+Review of systems: Negative for chest pain, dyspnea, hematuria, or any new systemic symptoms.
+
+Physical Examination:
+* Vital signs: BP 128/76 mmHg, HR 72 bpm, T 98.8°F, RR 16/min, SpO2 97% on room air.
+* General: Alert, oriented, ambulating with minimal assistance.
+* Abdomen: Soft, non‑tender, no guarding or rebound. Incision sites (right lower quadrant) are clean, dry, mildly erythematous, well‑healed, no drainage, no purulent discharge. Mild tenderness to palpation at incisions but no erythema extending beyond 2 cm.
+* Chest: Clear to auscultation bilaterally, no wheezes, rales, or rhonchi.
+
+Labs: CBC 9,200/µL (WBC 9.2k), glucose 140 mg/dL. No other abnormal values.
+
+Assessment: The patient demonstrates uncomplicated recovery after laparoscopic appendectomy with abscess drainage. Wound inspection shows no signs of infection or dehiscence. Laboratory values are stable. No indication for continued antibiotics.
+
+Plan:
+1. Discharge with education on wound care (keep incision dry, monitor for increasing redness, warmth, drainage), glycemic control (continue metformin, use insulin sliding scale for post‑meal spikes), diet, and activity restrictions (avoid heavy lifting for 6 weeks, gradual return to normal activity).
+2. Continue current medication regimen: metformin 1000 mg BID, insulin sliding‑scale PRN, acetaminophen 650 mg PO q6h PRN as needed for pain, lisinopril 10 mg PO daily, ceftriaxone and metronidazole discontinued upon discharge, multivitamin PO daily.
+3. Follow up: Primary‑care provider in 7 days for wound inspection, review of chronic disease management, and adjustment of diabetes medications if needed.
+4. Red‑flag symptoms: Return to ED immediately if fever &gt;100.4°F, increased incision pain, drainage, redness &gt;2 cm, rapid swelling, new chest pain or dyspnea (possible pulmonary embolism), or signs of infection elsewhere.
+
+The patient reports feeling good, complied with care instructions, and is willing to follow the plan.
+
+Signed: ____________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Occasional mild soreness at incision sites</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/76 mmHg</td></tr><tr><td>HR</td><td>72 bpm</td></tr><tr><td>Temp</td><td>98.8 °F</td></tr><tr><td>RR</td><td>16 breaths/min</td></tr><tr><td>SpO2</td><td>97 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Incision sites clean with mild erythema of surrounding skin, no drainage</li><li>Abdominal exam normal, no tenderness</li><li>Chest percussion clear</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Glucose</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 9,200/µL</li><li>Glucose: 140 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discharge instructions</li><li>Reinforcement of insulin sliding scale</li><li>Multivitamin PO</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling good, complied with instructions, and expressed willingness to follow up.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Baseline insulin</li><li>Insulin sliding scale PRN</li><li>Acetaminophen 650 mg PO q6h PRN</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Appendectomy performed on Day 4</li><li>Diabetes, hypertension, obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The surgical team reviewed the incision sites and overall recovery. Wound inspection showed no drainage or significant erythema; mild tenderness remained. The patient was educated on wound care, glycemic control, diet, avoidance of heavy lifting, and signs of infection or pulmonary complications. Pre‑discharge lab work returned a CBC of 9,200/µL and glucose of 140 mg/dL. No antibiotics were prescribed due to lack of infection. The patient was scheduled for a primary‑care follow‑up in one week.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Appendicitis resolved with laparoscopic appendectomy; postoperative course uncomplicated; patient discharged with stable vitals and wound care compliance.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-07-12</h3><div class="visit-meta">Family Medicine | Reason: Post‑operative follow‑up, wound healing, diabetes management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑operative follow‑up for incision healing and diabetes management. 
+
+History of Present Illness: 28‑year‑old male presents on postoperative day 9 after laparoscopic appendectomy for a 12 mm peri‑appendiceal abscess. Incision sites are neat with no erythema or drainage. The patient reports mild left chest tenderness that has improved. He has been monitoring blood glucose, with an average of 120 mg/dL over the past week. HbA1c performed today is 6.8% (slightly lower than 6.9% two months ago). 
+
+Past Medical History: Type 2 DM, hypertension, obesity (BMI 33), recent mild pulmonary infiltrate. 
+
+Medications: Metformin 1000 mg BID, baseline insulin, insulin sliding scale PRN, Lisinopril 10 mg daily, multivitamin PO, acetaminophen 650 mg PO q6h PRN. 
+
+Allergies: NKDA.
+
+Review of Systems: Positive for resolved chest tenderness; negative for fever, infection, pain, shortness of breath. 
+
+Vitals: BP 126/78 mmHg, HR 70 bpm, Temp 98.6 °F, RR 14 bpm, SpO₂ 98 %.
+
+Physical Examination: 
+• Skin: Incision sites without redness, discharge or swelling. 
+• Abdomen: Soft, nondistended, no tenderness. 
+• Chest: Clear, no residual tenderness. 
+• Weight: 192 lb, BMI 33.
+
+Assessment: 
+1. Incision healing properly post‑appendectomy – no signs of infection. 
+2. Type 2 diabetes remains well controlled with an average glucose of 120 mg/dL and HbA1c 6.8 %. 
+3. Hypertension well controlled. 
+4. Obesity – continues to represent a risk factor for future cardiovascular events. 
+5. Smoking status: current smoker; patient motivated to quit.
+
+Plan: 
+• Continue current antidiabetic regimen; reinforce insulin titration based on glucose log. 
+• Continue Lisinopril 10 mg daily. 
+• Continue Metformin 1000 mg BID. 
+• Continue acetaminophen PRN for pain. 
+• Counsel on smoking cessation; provide printed resources and schedule a follow‑up call within a week to assess progress. 
+• Refer to registered dietitian in 2 weeks; advise balanced low‑carb, high‑fiber diet consistent with diabetes management. 
+• Encourage gradual weight loss (1–2 lb/week) via modest caloric deficit and physical activity; discuss safe exercise modalities. 
+• Schedule follow‑up visit in 4 weeks for wound status, review of HbA1c in 3 months, hypertension check, and evaluate lifestyle changes. 
+• Instruct patient to seek immediate care for fever, increasing tenderness, new discharge, or respiratory symptoms.
+
+Patient is understanding, motivated, and will proceed with referral and counseling. 
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Incision sites healing well</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>126/78 mmHg</td></tr><tr><td>HR</td><td>70 bpm</td></tr><tr><td>Temp</td><td>98.6 °F</td></tr><tr><td>RR</td><td>14 breaths/min</td></tr><tr><td>SpO2</td><td>98 %</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Incision sites without redness or discharge</li><li>No abdominal tenderness</li><li>Chest exam normal, no residual tenderness</li><li>Weight 192 lbs, BMI 33</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Blood glucose log review</li><li>HbA1c</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c: 6.8%</li><li>Weekly glucose log: average 120 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reinforcement of insulin titration</li><li>Smoking cessation counseling</li><li>Nutritionist referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed motivation to improve diet, continue exercise, and consider quitting smoking; plans to meet with nutritionist in two weeks.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Baseline insulin</li><li>Insulin sliding scale PRN</li><li>Lisinopril 10 mg daily</li><li>Multivitamin PO</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Appendectomy on Day 4</li><li>Type 2 diabetes controlled with metformin and insulin</li><li>Hypertension</li><li>Obesity, BMI 33</li><li>Recent mild pulmonary infiltrate</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented for routine wound evaluation and review of his diabetes regimen. Incision sites were neat with no erythema or drainage; patient reported mild, resolving left chest tenderness that had improved by day 9. Blood glucose log over the past week averaged 120 mg/dL. An HbA1c was performed, showing 6.8%, down from 6.9% two months earlier. Discussion focused on weight‑loss strategies, smoking cessation counseling, and referral to a nutritional counselor. The patient was advised to maintain a balanced diet and to continue regular monitoring and insulin adjustments.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute appendicitis fully resolved; chronic conditions under control with ongoing lifestyle modifications.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 28</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Baseline insulin</li><li>Insulin sliding scale PRN</li><li>Acetaminophen 650 mg PO q6h PRN</li><li>Lisinopril 10 mg daily</li><li>Multivitamin PO daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with acute right lower quadrant abdominal pain, nausea, low‑grade fever, and fatigue. Physical exam notable for RLQ tenderness with mild rebound. Labs: elevated WBC 12.5k, neutrophil 85%. Imaging: CT abdomen/pelvis showed 12 mm dilated appendix with wall thickening, peri‑appendiceal fat stranding, and small non‑ruptured peri‑appendiceal abscess. Diagnosis: acute appendicitis with abscess. Admission pending surgical evaluation. Started IV ceftriaxone 1 g q24h and metronidazole 500 mg q8h. Continued Metformin 1000 mg BID and Lisinopril 10 mg daily. NPO, IV fluids, analgesia with acetaminophen 1 g PO q6h PRN. Plan: surgical consult, monitor vitals and labs every 6h, discuss smoking cessation and diabetes control.</li><li>Admitted for laparoscopic appendectomy to treat acute appendicitis with peri‑appendiceal abscess. Surgery performed with drainage of a 12 x 6 mm abscess; operative time 45 min, minimal blood loss. Postoperatively, continued ceftriaxone 1 g IV q24h and metronidazole 500 mg IV q8h for total 5 days, insulin sliding‑scale for glycemic control, metformin 1000 mg BID as tolerated (held during NPO). Acetaminophen discontinued. Monitored vitals, glucose, wound; discharged home on postoperative day 1 with stable vitals and controlled glucose.</li><li>Post‑operative assessment in PACU following laparoscopic appendectomy performed on 2023-06-30. Extubated and transferred to PACU within 30 min. Alert, oriented, hemodynamically stable with BP 130/78 mmHg, HR 78 bpm, temp 99.0 °F. Mild incision tenderness, pain controlled with acetaminophen 650 mg PO. No nausea or shoulder tip pain. Wound intact, no erythema or drainage. Post‑operative CBC WBC 9,500 /µL, neutrophils 70%. Blood glucose 146 mg/dL on arrival, remained 140‑160 mg/dL over 6 h of observation. Continued ceftriaxone 1 g IV q24h and metronidazole 500 mg IV q8h for total 5 days. Insulin sliding‑scale PRN, continuous glucose monitoring q4 h. Clear liquid diet initiated; plan to progress to regular diet as tolerated. Monitor incision sites for erythema, drainage, or pain escalation. Patient ambulated to bathroom with assistance. Discharged to surgical floor for continued postoperative care.</li><li>Pre‑discharge evaluation: patient recovered uncomplicatedly post-appendectomy, incision clean with mild soreness, labs stable, discharged with continued metformin, insulin sliding‑scale PRN, acetaminophen PRN, lisinopril, added multivitamin; antibiotics discontinued; PCP follow‑up in 7 days, red‑flag symptoms outlined.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

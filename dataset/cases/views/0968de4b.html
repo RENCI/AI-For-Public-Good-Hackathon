@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 0968de4b</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 0968de4b</h1><div class="subtitle">Irritable Bowel Syndrome flare | Female, 32</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Anxiety disorders, Depressive disorders, Fibromyalgia, Sleep disturbance, Gastroesophageal reflux disease, Functional dysphagia, Allergic rhinitis, Seasonal allergies</div><div class="meta-line">Risk Factors: Psychological stress, Cognitive or emotional distress, High‑fat or high‑FODMAP diet, Recent antibiotic use, Hormonal fluctuations, Gut dysbiosis, History of infectious gastroenteritis</div></div>
+<details><summary>Narrative <span class="preview-text">**A Patient’s Journey: From the Storm of a Flare to a Calm of Improvement**  When the first gray clouds of an IBS flare ...</span></summary><div class="section-body"><p>**A Patient’s Journey: From the Storm of a Flare to a Calm of Improvement**</p><p>When the first gray clouds of an IBS flare rolled in on March 27, Emily—a 32‑year‑old marketing strategist—noticed a quiet, persistent discomfort in her lower abdomen. It felt like a dull “hunger” that never eased, even after she finished her lunch of greasy pizza and a soda. The pain flared a bit during the workday, and by early evening she found herself clutching an over‑filled plastic bag of frozen peas, a desperate bid for relief that only made things worse.</p><p>Emily’s medical history was a tapestry of interwoven conditions. She had been battling anxiety and depression for over a decade, has chronic fibromyalgia pain that flares intermittently, and suffers from sleep disturbances that leave her rubbing her temples each morning. Her gastroesophageal reflux disease (GERD) meant she had to stay away from acidic foods, while her functional dysphagia made her wary of eating quickly or with large mouthfuls. Seasonal allergies plagued her from March through September, often giving her a runny nose and post‑nasal drip that she blamed on “the kids at the office.” Now, a recent course of amoxicillin taken for a sinus infection last month appeared to have stirred her gut.</p><p>---</p><p>### March 27 – The First Warning Lights</p><p>**Morning:** Emily woke with a sense of bloated fullness—her stomach appeared visibly distended. She tried to power through a morning meeting, but the discomfort nagged at the edges of her focus.</p><p>**Mid‑afternoon:** She visited a coworker’s office for a quick snack. The cafeteria served fried chicken, but a small bowl of spinach, though tempting with her low‑FODMAP diet she’d started last year, was off‑limits because of its high FODMAP content. She stayed home instead.</p><p>**Evening:** After a stressful client presentation, Emily took her daily prescription of duloxetine for depression. She tried to sleep but kept waking up with a gnawing gnaw in her belly and a sour taste from the lingering GERD reflux. The next morning, she felt exhausted and mildly dehydrated.</p><p>---</p><p>### March 28 – First Encounter with a Family Physician</p><p>She arrived at Dr. Patel’s clinic around noon. The nurse, familiar with Emily’s history, noted in the vitals screen that she had a low-grade temperature of 99.1°F, a heart rate of 82, and a tense, bloated abdomen that yielded mild tenderness on palpation. Emily described “a continuous pressure, more than just ordinary bloating,” coupled with alternating constipation and soft stools. She added that her anxiety had shot up in the last month, her hormones were in flux (she was mid‑cycle), and she had been eating a lot of fried foods and drinking coffee.</p><p>Dr. Patel listened attentively: “You’re hitting a familiar storm—an IBS flare, mixed with your chronic conditions. Let’s confirm that it’s not something more ominous, but I don’t expect we’ll find a hidden cause.”</p><p>He ordered a basic CBC, CMP, and a fecal calprotectin to rule out inflammatory bowel disease and performed a quick abdominal ultrasound to ensure there was no obstruction—results were normal within 48 h. No need for colonoscopy at this juncture.</p><p>---</p><p>### March 29 – A New Plan Emerges</p><p>While awaiting test results (which came back normal by early Thursday), Dr. Patel drafted a plan focused on symptom relief. Because Emily had recently taken amoxicillin, he offered a short course of a probiotic cocktail (Lactobacillus rhamnosus, Bifidobacterium longum) to aid her gut dysbiosis. He also prescribed low‑dose peppermint oil capsules for abdominal cramping and advised her to keep a food and symptom diary—this would help track any triggers such as high‑fat or high‑FODMAP foods.</p><p>Given Emily’s anxiety and depressive history, Dr. Patel suggested a brief referral to a licensed therapist familiar with CBT for GI conditions, and offered a short‑term mindfulness meditation app to use during stressful moments. For her GERD, he reinforced her existing PPI but added “take it 30 minutes before meals” to help reduce nighttime reflux.</p><p>---</p><p>### March 31 – The First Night of Improvement</p><p>Emily’s evening that night was different. After a light dinner of steamed chicken and a side of steamed broccoli—avoiding the earlier fussy fried foods—she took the peppermint capsules and her PPI. She used her meditation app for 10 minutes after work, which slowed her racing thoughts. Hours later, she’s found relief on her first night’s sleep: no stomach gnawing, no acid backing up, and not a single episode of waking. The morning after was a quiet, bright start—the first day since the flare began where she didn’t feel bloated all morning.</p><p>---</p><p>### April 3 – Follow‑Up with a Gastrointestinal Dietitian</p><p>Because of her history of fibromyalgia and anxiety, Emily decided to schedule a visit with a registered dietitian specialized in gut health. By mid‑morning, she was in a bright, airy office. The dietitian, Ms. Chen, reviewed her symptom diary. It was clear that Emily’s flare had been triggered largely by a combination of high‑fat, high‑FODMAP foods (fried chicken, garlic‑heavy sauces), a surge in caffeine consumption to manage tiredness from sleep loss, and the psychological stress of a looming project deadline.</p><p>Ms. Chen taught Emily how to structure a low‑FODMAP diet more sustainably: incorporating fermented foods that are rich in prebiotics (like sauerkraut and kimchi—both low FODMAP in controlled amounts), limiting high‑fat snacks, and using a spice blend that’s gentle on the gut. She also explained the possibility of a “FODMAP rebound” effect – that by eating well-balanced portions even of certain high‑FODMAP foods, Emily might feel less bloated and more comfortable.</p><p>Additionally, Ms. Chen suggested a brief trial of an herbal supplement—ashwagandha—to help reduce psychosomatic stress on her gut, and a topical massage routine targeted at the abdomen to ease fibromyalgia pain that often overlapped with abdominal discomfort.</p><p>---</p><p>### April 5 – A Return to Work, A Surge of Confidence</p><p>With the dietitian’s guidance and the supportive therapy referrals from Dr. Patel, Emily returned to work with a new meal plan: lunch comprised a quinoa salad with grilled chicken, sliced avocado (low FODMAP portion), and a vinaigrette made from olive oil and lemon juice. She also scheduled 10-minute “mindful breaks” every hour, using her phone to guide quick breathing exercises. The anxiety that used to flare during stressful periods was lessened.</p><p>By the end of the week, her bowel habits settled: she had one stool per day, with a soft to semi‑formed consistency, and no painful cramping. The bloating was mild—just a subtle fullness sometimes after long meetings, but less intrusive. Sleep quality improved dramatically; she no longer woken up mid‑night with the urge to use the bathroom or feel acid in her throat. A sense of control replaced the helplessness that had been a hallmark of her previous flares.</p><p>---</p><p>### April 10 – The Day of the Final Check‑In</p><p>Dr. Patel came in for a routine “IBS flare review” to assess progress. He noted her weight had dipped only a fraction of a pound from the previous month, and her abdominal exam was soft with no tenderness. Emily reported that her pain had dwindled from “constant pressure” to a low‑grade, “irritating pressure” that was easily managed with a peppermint tea after meals. Her anxiety scores, measured via the GAD‑7, had dropped from 15 to 7. She no longer had depressive days that left her couch‑bound.</p><p>Dr. Patel congratulated Emily on the successful dietary and mental‑health interventions, and advised her to maintain regular visits for ongoing support. He also suggested that she might consider a structured exercise program—a moderate yoga routine—since movement can soothe both fibromyalgia and IBS symptoms.</p><p>---</p><p>### April 15 – Continuing the Journey</p><p>From now on, Emily will continue with her newly adopted diet and will maintain monthly follow‑ups with the gastroenterology team and therapy. She will keep her probiotic regimen and plan to rotate herbal supplements if needed. Most importantly, she knows what triggers a flare and can anticipate stressors, thereby preventing a full‑blown IBS episode.</p><p>By the story’s close, Emily’s IBS flare had been managed and subsided. Her gut felt calmer, her anxiety more tempered, and her quality of life steadily ascending. She now walks into the office, no longer with a trembling stomach, but with a clear plan—an evidence‑based foundation that has turned her once‑dramatic flare into a manageable, improving chapter of her health narrative.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-03-28</h3><div class="visit-meta">Primary Care Physician | Reason: Acute abdominal discomfort and bowel irregularities</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+Emily, a 32‑year‑old female, reports a 7‑day history of bloated fullness, intermittent constipation alternating with soft stools, and a constant feeling of pressure in the abdomen. She indicates that anxiety exacerbates her symptoms and she has a background of anxiety disorder, depressive disorder, fibromyalgia, GERD, functional dysphagia, and seasonal allergies. She completed a course of amoxicillin for sinusitis 2 weeks ago.
+
+**Objective:**
+Vitals: Temp 99.1 °F, HR 82 bpm, BP 118/72 mmHg, RR 16/min, SpO₂ 98 %. Physical exam shows a tense, distended abdomen with mild tenderness in the lower quadrants; no guarding, rebound, or focal abnormalities. Bowel sounds are normoactive.
+
+**Assessment:**
+1. **Irritable Bowel Syndrome – Constipation Predominant (IBS‑C)** – most consistent with her alternating constipation and soft stools, bloating, and lack of alarm features.
+2. **Functional abdominal bloating/irregular bowel pattern** – likely secondary to psychosocial stress and anxiety.
+3. **GERD** – ongoing but controlled with omeprazole.
+4. **Functional dysphagia** – as per history, no obstructive cause documented.
+
+Normal CBC, CMP, fecal calprotectin, and abdominal ultrasound effectively rule out infection, inflammatory bowel disease, anemia, metabolic derangements, and mechanical obstruction.
+
+**Plan:**
+- **Dietary modification** – low‑FODMAP diet guidance, increase dietary fiber gradually, counsel on mindful eating.
+- **Probiotics** – Lactobacillus rhamnosus and Bifidobacterium longum (daily). 
+- **Peppermint oil** – low‑dose capsules (2 mg) every 6 hours PRN for abdominal discomfort.
+- **Acid suppression** – continue omeprazole 20 mg 30 min before meals.
+- **Psychologic support** – refer to CBT‑trained therapist; provide meditation app for anxiety management.
+- **Follow up** – scheduled in 4 weeks to evaluate symptom trajectory. Counsel to return sooner if pain worsens, develops vomiting, fever, blood in stool, or if symptoms fail to improve.
+- **Education** – reinforcing medication adherence, diet, sleep hygiene, and stress‑reduction strategies.
+- **Consider GI referral** if no improvement after 8 weeks of this therapeutic trial.
+
+**Disposition:** Patient educated on plan and is scheduled for a follow‑up appointment in 4 weeks.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent abdominal fullness</span><span class="pill">Continuous pressure</span><span class="pill">Alternating constipation and soft stools</span><span class="pill">Heightened anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>99.1°F</td></tr><tr><td>Heart_Rate</td><td>82</td></tr><tr><td>Blood_Pressure</td><td>118/72</td></tr><tr><td>Respiratory_Rate</td><td>16</td></tr><tr><td>O2_Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tense, distended abdomen</li><li>Mild tenderness in lower quadrants</li><li>No guarding or rebound</li><li>Normal bowel sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC with differential</li><li>Comprehensive metabolic panel</li><li>Fecal calprotectin</li><li>Abdominal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal WBC 5.8 K/µL, hematocrit 42%, platelets 230 K/µL</li><li>CMP: electrolytes and liver enzymes within normal limits</li><li>Fecal calprotectin: 12 µg/g (&lt;50 µg/g normal)</li><li>Abdominal ultrasound: unremarkable, no obstruction or masses</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Probiotic supplement (Lactobacillus rhamnosus and Bifidobacterium longum)</li><li>Low-dose peppermint oil capsules (2 mg q6h PRN)</li><li>Low-FODMAP dietary counseling</li><li>Omeprazole 20 mg 30 minutes before meals</li><li>Referral to CBT therapist</li><li>Mindfulness meditation app instruction</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Irritable Bowel Syndrome</span><span class="pill">Anxiety disorder</span><span class="pill">Depressive disorder</span><span class="pill">Fibromyalgia</span><span class="pill">GERD</span><span class="pill">Functional dysphagia</span><span class="pill">Seasonal allergies</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 60 mg daily</li><li>Omeprazole 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of Irritable Bowel Syndrome (IBS)</li><li>Anxiety disorder</li><li>Depressive disorder</li><li>Fibromyalgia</li><li>Gastroesophageal reflux disease (GERD)</li><li>Functional dysphagia</li><li>Seasonal allergic rhinitis</li><li>Recent amoxicillin course for sinusitis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Emily presented with a week‑long feeling of bloated fullness and intermittent constipation. Physical examination revealed a tense, distended abdomen with mild tenderness in the lower quadrants but no guarding or rebound. The provider ordered a CBC, CMP, fecal calprotectin, and abdominal ultrasound within a 48‑hour timeframe to rule out IBD or obstruction and confirmed normal results. To address the flare, the clinician prescribed a probiotic cocktail, low‑dose peppermint oil capsules, reinforced Omeprazole timing, advised a low‑FODMAP diet, referred Emily to a CBT‑trained therapist, and provided a mindfulness meditation app.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial flare consistent with IBS; no red flags after labs. Gut dysbiosis and anxiety likely contributors. Plan to address diet, gut flora, and mental health.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-04-03</h3><div class="visit-meta">Registered Dietitian – Gastrointestinal Specialist | Reason: Dietary counseling for IBS management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**SUBJECTIVE**
+Ms. Chen presents for dietary counseling to manage mild bloating after meals and occasional abdominal discomfort (regular bowel habits). She reviewed her symptom diary and identified high‑fat, high‑FODMAP foods (fried chicken, garlic‑laden sauces) and caffeine as primary pain triggers. Recent amoxicillin course may have altered gut microbiota. She reports good adherence to current medications—probiotic cocktail, low‑dose peppermint oil PRN, and omeprazole 20 mg pre‑meal.
+
+**OBJECTIVE**
+Vital signs: BP 117/70 mmHg, HR 78 bpm, Temp 98.6 °F. No objective exam recorded. Patient appears alert, BMI not documented.
+
+**ASSESSMENT**
+Likely functional gastrointestinal disorder (FODMAP sensitivity/IBS‑like) exacerbated by dietary triggers and recent antibiotic use. GERD and functional dysphagia coexist but are well controlled with omeprazole and peppermint oil. Fibromyalgia-related abdominal discomfort may be augmented by psychosomatic stress.
+
+**PLAN**
+1. Provide individualized low‑FODMAP meal plan, permitting controlled portions of fermented foods (sauerkraut, kimchi) and reduced high‑fat snacks.
+2. Introduce gentle spice blend and a trial of ashwagandha 250 mg twice daily for stress reduction.
+3. Teach abdominal massage technique to alleviate fibromyalgia‑related pain.
+4. Continue current regimen: probiotic cocktail daily, low‑dose peppermint oil 2 mg q6h PRN, omeprazole 20 mg 30 min before meals.
+5. Maintain symptom diary with diary entries reviewed at next visit.
+6. Encourage use of meditation app and CBT referral as needed for anxiety/depression.
+
+**FOLLOW‑UP**
+Reassess dietary compliance and symptom response in 4 weeks. If bloating or discomfort persists, consider GI specialist evaluation and repeat testing (e.g., pH probe, endoscopy). Ongoing monitoring of probiotic and ashwagandha tolerance. Continue regular monitoring of BP, heart rate, and temperature as clinically indicated.
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild bloating after meals</span><span class="pill">Occasional abdominal discomfort</span><span class="pill">Regular bowel habits</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>117/70</td></tr><tr><td>Heart_Rate</td><td>78</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Individualized low‑FODMAP meal plan</li><li>Fermented foods recommendation (sauerkraut, kimchi)</li><li>Herbal supplement ashwagandha (250 mg twice daily)</li><li>Abdominal massage technique teaching</li><li>Spice blend recipe</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Expressed motivation to begin the new diet and incorporate herbal supplement</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Irritable Bowel Syndrome</span><span class="pill">Anxiety disorder</span><span class="pill">Depressive disorder</span><span class="pill">Fibromyalgia</span><span class="pill">GERD</span><span class="pill">Functional dysphagia</span><span class="pill">Seasonal allergies</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 60 mg daily</li><li>Omeprazole 20 mg daily</li><li>Probiotic supplement</li><li>Peppermint oil capsules</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous IBS flare</li><li>High-fat and high‑FODMAP dietary triggers</li><li>Recent dietary changes due to amoxicillin course</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Ms. Chen reviewed Emily’s symptom diary and identified high‑fat, high‑FODMAP foods (fried chicken, garlic‑heavy sauces) and caffeine load as key pain triggers. The dietitian educated Emily on a sustainable low‑FODMAP plan that permits controlled portions of fermented foods like sauerkraut and kimchi, reduced high‑fat snacks, and a gentle spice blend. She also introduced a trial of ashwagandha for psychosomatic stress and an abdominal massage routine to ease fibromyalgia pain. Emily expressed enthusiasm and committed to the new plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Dietary intervention initiated to reduce flare triggers. Anticipated gradual symptom reduction and avoidance of FODMAP rebound.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-04-10</h3><div class="visit-meta">Primary Care Physician | Reason: IBS symptom review and medication adjustment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Review of abdominal symptoms and medication adjustment
+
+History of Present Illness: Emily presents for a routine review following her recent dietitian visit. She reports mild, low‑grade abdominal pressure that has remained stable over the past week with no new cramping or pain. Bowel habits have remained regular: one soft stool per day with normal passage. She notes marked improvements in sleep quality and a reduction in anxiety symptoms (GAD‑7 score 7/21). She denies any nausea, vomiting, weight loss, or changes in appetite.
+
+Past Medical History: IBS-C, Anxiety Disorder, Depressive Disorder, Fibromyalgia, GERD, Functional Dysphagia, Seasonal Allergic Rhinitis, Sleep Disturbance.
+
+Medications: Duloxetine 60 mg daily, Omeprazole 20 mg daily, Probiotic supplement, Peppermint oil capsules, Ashwagandha 250 mg twice daily.
+
+Review of Systems: Positive for abdominal pressure. Negative for abdominal pain, distention, diarrhea, constipation beyond baseline, melena, hematochezia, urinary or pelvic symptoms.
+
+Physical Examination: Vitals within normal limits – BP 118/72, HR 76, Temp 98.4 °F. General: A well‑appearing female in no acute distress. Abdomen: Soft, non‑tender, non‑distended, normal bowel sounds bilaterally. No guarding or rebound. Rest of exam unremarkable.
+
+Assessment: Emily’s IBS remains well‑controlled on current regimen. The recent improvement in sleep and anxiety suggests positive response to behavioral interventions and medication adherence. No new GI pathology is evident.
+
+Plan:
+1. Continue current medications unchanged.
+2. Reinforce structured yoga routine and daily light aerobic exercise.
+3. Maintain probiotic and peppermint oil as adjuncts.
+4. Encourage continued use of CBT app and meditation for anxiety.
+5. No new tests ordered; continue routine monitoring.
+6. Schedule follow‑up in 4 weeks to reassess abdominal symptoms and overall well‑being.
+
+Patient education: Discussed importance of stress management, sleep hygiene, and gradual activity increases. Advised to return sooner if new abdominal pain, changes in bowel habits, or GI bleeding develop.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Low‑grade abdominal pressure</span><span class="pill">No cramping</span><span class="pill">Regular bowel habits (1 soft stool per day)</span><span class="pill">Improved sleep quality</span><span class="pill">Reduced anxiety (GAD‑7 7/21)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>118/72</td></tr><tr><td>Heart_Rate</td><td>76</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen, non‑tender</li><li>Normal bowel sounds</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling regarding gentle yoga routine</li><li>Encouragement of daily light aerobic activity</li><li>Reaffirmation of probiotic continuation</li><li>Plan for quarterly follow‑up</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Positive; grateful for supportive care and proactive plan</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Irritable Bowel Syndrome</span><span class="pill">Anxiety disorder</span><span class="pill">Depressive disorder</span><span class="pill">Fibromyalgia</span><span class="pill">GERD</span><span class="pill">Functional dysphagia</span><span class="pill">Seasonal allergies</span><span class="pill">Sleep disturbance</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 60 mg daily</li><li>Omeprazole 20 mg daily</li><li>Probiotic supplement</li><li>Peppermint oil capsules</li><li>Ashwagandha 250 mg twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Follow‑up after dietitian visit</li><li>Recent anxiety improvement</li><li>Ongoing medication regimen</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Emily reported mild abdominal pressure, regular bowel movements, and marked improvement in sleep and anxiety. Exam showed a soft, non‑tender abdomen. The provider encouraged a structured yoga routine, continued probiotic use, and recommended regular aerobic exercise. Emily agreed to a 4‑week follow‑up.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>IBS symptoms are under control; anxiety and sleep disturbances are improving.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-04-15</h3><div class="visit-meta">Licensed Clinical Psychologist – CBT | Reason: Follow‑up therapy for anxiety and depression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up therapy for anxiety and depression.
+
+History of Present Illness: Ms. Emily Chen, 32‑year‑old female, presents for a fourth CBT session. She reports mild anxiety, mood stable, and occasional intrusive thoughts. GAD‑7 score remains at 7/21. She identifies work deadlines as current stress trigger.
+
+Psychiatric Assessment: The patient continues to meet criteria for generalized anxiety disorder with comorbid depressive disorder. She shows improvement in anxiety symptoms, increased engagement in coping strategies, and a decrease in subjective stress levels.
+
+Therapeutic Interventions: The session focused on reviewing stress triggers, practicing progressive muscle relaxation, and setting realistic coping goals for upcoming work deadlines. A discussion regarding a potential adjustment of her duloxetine dosage was held.
+
+Diagnosis Considered: • Generalized Anxiety Disorder
+• Depressive Disorder (secondary)
+• Stress‑related anxiety
+
+Plan: • Continue weekly CBT sessions for the next 4 weeks.
+• Introduce daily progressive muscle relaxation practice.
+• Monitor GAD‑7 scores at each session.
+• Consider increasing Duloxetine to 80 mg daily if anxiety symptoms persist or worsen over the next 2 weeks.
+• Maintain current medication regimen: Duloxetine 60 mg daily, Omeprazole 20 mg daily, probiotic supplement, peppermint oil capsules, Ashwagandha 250 mg twice daily.
+• Exercise physiologist referral to complement mental health strategy.
+• Encourage use of the meditation app and symptom diary.
+• Schedule next visit in one week.
+
+Disposition: Patient appeared engaged and empowered, reporting noticeable decrease in anxiety. No adverse events or new symptoms noted.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild anxiety</span><span class="pill">Mood stable</span><span class="pill">Occasional intrusive thoughts</span></div></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CBT session focused on stress management</li><li>Progressive muscle relaxation introduction</li><li>Discussion of possible medication adjustment</li><li>Referral to exercise physiologist</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Feeling engaged and empowered; anxiety has noticeably decreased</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Anxiety disorder</span><span class="pill">Depressive disorder</span><span class="pill">Irritable Bowel Syndrome</span><span class="pill">Fibromyalgia</span><span class="pill">GERD</span><span class="pill">Functional dysphagia</span><span class="pill">Seasonal allergies</span><span class="pill">Sleep disturbance</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 60 mg daily</li><li>Omeprazole 20 mg daily</li><li>Probiotic supplement</li><li>Peppermint oil capsules</li><li>Ashwagandha 250 mg twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Long‑standing anxiety disorder</li><li>Depressive disorder</li><li>IBS influencing mood</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In CBT session, Emily explored stress triggers, practiced progressive muscle relaxation, and set realistic goals for coping with work deadlines. The therapist monitored her GAD‑7 score and discussed potential adjustments to duloxetine. An exercise physiologist referral was provided to complement mental‑health strategy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Psychological resilience improving, supporting GI symptom control.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-04-20</h3><div class="visit-meta">Gastroenterology | Reason: Review IBS management and exercise program compliance</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #5 – 2023‑04‑20
+
+Chief Complaint: Review of management and exercise program compliance.
+
+History of Present Illness:
+Ms. Chen, a 32‑year‑old female with chronic IBS, GERD, functional dysphagia, anxiety, depression, fibromyalgia, seasonal allergies, and sleep disturbance, presented for a routine follow‑up. She reports no new GI complaints; mild occasional abdominal fullness but continues to have regular bowel pattern. She is compliant with low‑FODMAP diet, medication, probiotic, peppermint oil, and ashwagandha. She has been performing a daily yoga routine and reports no adverse effects.
+
+Review of Systems:
+GI – Negative except for mild abdominal fullness. Cardiovascular – None. Respiratory – None.
+
+Past Medical History:
+IBS, GERD, functional dysphagia, anxiety disorder, depressive disorder, fibromyalgia.
+
+Medication Review:
+- Duloxetine 60 mg daily
+- Omeprazole 20 mg daily
+- Probiotic supplement (Lactobacillus rhamnosus &amp; Bifidobacterium longum)
+- Peppermint oil capsules
+- Ashwagandha 250 mg BID
+- Hydroxyzine 10 mg PRN at bedtime (new)
+
+Physical Examination:
+Vitals: BP 116/70, HR 75, Temp 98.5°F.
+General: Alert and oriented.
+Abdomen: Soft, non‑tender, normal bowel sounds.
+
+Assessment:
+1. Irritable Bowel Syndrome – stable, well‑controlled.
+2. Gastroesophageal reflux disease – stable, remains on omeprazole 20 mg QD.
+3. Functional dysphagia – asymptomatic at present.
+4. Anxiety disorder – improved with duloxetine and CBT, consider increasing dosage if relapse.
+5. Depression – stable on duloxetine.
+
+Plan:
+- Continue current regimen.
+- Reinforce gentle Vinyasa yoga; recommend attending a local class 2–3 times per week.
+- Discuss low‑dose hydroxyzine 10 mg at bedtime if nighttime anxiety persists.
+- Encourage continued use of probiotic, peppermint oil, and ashwagandha.
+- Maintain symptom diary and CBT app.
+- Schedule quarterly well‑being check‑in in clinic. Bring diary to review.
+- No new labs or imaging indicated.
+
+The patient expressed satisfaction with her progress and willingness to adhere to the plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No significant GI symptoms</span><span class="pill">Mild occasional abdominal fullness</span><span class="pill">Maintained regular bowel pattern</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>116/70</td></tr><tr><td>Heart_Rate</td><td>75</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen, non‑tender</li><li>Normal bowel sounds</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discussion of yoga routine</li><li>Recommendation of Vinyasa class</li><li>Consideration of hydroxyzine 10 mg before bedtime if needed</li><li>Scheduled quarterly follow‑up</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Encouraged and optimistic about maintaining lifestyle changes</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Irritable Bowel Syndrome</span><span class="pill">Anxiety disorder</span><span class="pill">Depressive disorder</span><span class="pill">Fibromyalgia</span><span class="pill">GERD</span><span class="pill">Functional dysphagia</span><span class="pill">Seasonal allergies</span><span class="pill">Sleep disturbance</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 60 mg daily</li><li>Omeprazole 20 mg daily</li><li>Probiotic supplement</li><li>Peppermint oil capsules</li><li>Ashwagandha 250 mg twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>IBS flare</li><li>Dietary and mental‑health interventions</li><li>Exercise program initiation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The gastroenterologist reviewed Emily’s adherence to the yoga routine, confirmed no adverse reactions to the probiotic, and assessed overall GI comfort. No new labs were required. Guidance on a gentle Vinyasa yoga class was provided, and the option of low‑dose hydroxyzine for nighttime anxiety was discussed. Emily expressed satisfaction with the progress and agreed to quarterly check‑ins.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>IBS remains controlled; lifestyle modifications effective and sustainable.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 32</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Anxiety disorders</span><span class="pill">Depressive disorders</span><span class="pill">Fibromyalgia</span><span class="pill">Sleep disturbance</span><span class="pill">Gastroesophageal reflux disease</span><span class="pill">Functional dysphagia</span><span class="pill">Allergic rhinitis</span><span class="pill">Seasonal allergies</span><span class="pill">Irritable bowel syndrome – Constipation Predominant (IBS‑C)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Probiotic cocktail (Lactobacillus rhamnosus &amp; Bifidobacterium longum) daily</li><li>Low‑dose peppermint oil capsules 2 mg q6h PRN</li><li>Omeprazole 20 mg daily</li><li>Ashwagandha 250 mg twice daily</li><li>Duloxetine 60 mg daily</li><li>Hydroxyzine 10 mg PRN at bedtime</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with 7‑day history of abdominal fullness, alternating constipation and soft stools, and lower abdominal pressure exacerbated by anxiety. Physical exam showed tense, distended abdomen with mild lower quadrant tenderness; vitals normal. CBC, CMP, fecal calprotectin, and abdominal ultrasound were normal. Diagnosis of IBS‑C was established. Initiated low‑FODMAP diet guidance and gradual fiber increase, started probiotic (Lactobacillus rhamnosus &amp; Bifidobacterium longum) daily, low‑dose peppermint oil 2 mg q6h PRN, and continued omeprazole 20 mg 30 min before meals. Referred for CBT and provided a meditation app for anxiety management. Follow‑up scheduled in 4 weeks.</li><li>Ms. Chen visited for dietary counseling. She reports mild bloating after meals and occasional abdominal discomfort with regular bowel habits. Symptom diary identified high‑fat, high‑FODMAP foods (fried chicken, garlic‑laden sauces) and caffeine as triggers; recent amoxicillin course noted. Vital signs: BP 117/70 mmHg, HR 78 bpm, Temp 98.6 °F. Plan: individualized low‑FODMAP meal plan permitting controlled fermented foods and reduced high‑fat snacks; introduced gentle spice blend and trial of ashwagandha 250 mg twice daily; taught abdominal massage. Continue probiotic, peppermint oil, omeprazole; maintain symptom diary and meditation app; follow‑up in 4 weeks.</li><li>Patient reviewed for IBS symptom stability; reports mild low‑grade abdominal pressure, regular bowel habits (1 soft stool/day), improved sleep quality, reduced anxiety (GAD‑7 7/21). Vitals BP 118/72, HR 76, Temp 98.4°F. Physical exam: soft, non‑tender abdomen, normal bowel sounds; remainder normal. Current medications unchanged except initiation of Duloxetine 60 mg daily; patient encouraged to continue yoga, light aerobic exercise, CBT app, meditation. No new tests ordered; follow‑up in 4 weeks.</li><li>Visit 4: Follow‑up CBT session focusing on stress trigger review and progressive muscle relaxation. Patient reports mild anxiety and stable mood with GAD‑7 7/21. No new symptoms. Continued current regimen (Duloxetine 60 mg daily, Omeprazole 20 mg daily, probiotic, peppermint oil, Ashwagandha). Plan to consider increasing duloxetine to 80 mg if anxiety persists over next 2 weeks, introduce daily progressive relaxation, maintain exercise physiologist referral, and continue diary and meditation app. Next session scheduled in one week.</li><li>Visit #5 – 2023‑04‑20: Reviewed IBS management and exercise compliance. No new GI symptoms, only mild occasional abdominal fullness, regular bowel pattern. Physical exam: soft, non‑tender abdomen; vitals normal. Continued current regimen including duloxetine, omeprazole, probiotic, peppermint oil, ashwagandha, and newly added hydroxyzine 10 mg PRN at bedtime. Recommendations: quarterly check‑ins, continued yoga 2–3 times per week, maintain symptom diary and CBT app.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

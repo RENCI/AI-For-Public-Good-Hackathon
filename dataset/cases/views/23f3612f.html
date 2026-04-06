@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 23f3612f</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 23f3612f</h1><div class="subtitle">Malignant Nonseminomatous Germ Cell Tumor of the Testis | Male, 28</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: cryptorchidism, infertility, testicular microlithiasis, other genitourinary cancers</div><div class="meta-line">Risk Factors: cryptorchidism, family history of testicular cancer, Klinefelter syndrome, exposure to ionizing radiation</div></div>
+<details><summary>Narrative <span class="preview-text">**The Story of a 28‑Year‑Old Man and an Undeterred Tumor**  ---  When James first noticed the lump on his right scrotum,...</span></summary><div class="section-body"><p>**The Story of a 28‑Year‑Old Man and an Undeterred Tumor**</p><p>---</p><p>When James first noticed the lump on his right scrotum, he blamed the sudden aches after a long hiking trip. He was a 28‑year‑old software engineer, a first‑time father‑to‑be, and had never imagined that the most dramatic event of his life would start with a vague feeling of heaviness in his groin.</p><p>**Week 0 – The First Symptom**</p><p>James came in for a routine physical a few months after his second baby, and his primary care physician, Dr. Patel, asked him about a “nodule” that had begun to feel like a “popping” sensation that wouldn’t go away after a brisk workout. The bump was about the size of a pea, firm, non‑tender, and located in the right scrotal sac. James had had one undescended testicle when he was a child (cryptorchidism), which had been surgically corrected at age 4 with a laparoscopic orchiopexy that was noted to have a “low‑grade” scar. In the medical history table, the right testicle had a note of “persistent subclinical enlargement.” James had a family history of testicular cancer on his paternal side (his uncle and grandfather both died of the disease in their 30s), and he was still awaiting a definitive diagnosis after being told his karyotype was 47,XXY – an incidental finding of Klinefelter syndrome during a fertility work‑up years earlier. He also had testicular microlithiasis noted on a previous sonogram in adolescence. No new onset pain, no urinary symptoms, just that persistent lump and a small, low‑grade fever on a day in late July that resolved with rest.</p><p>**Week 1 – The First Consultation**</p><p>Dr. Patel ordered an ultrasound. The testis showed a “heterogenous hypoechoic mass” measuring 1.8 × 1.4 × 1.6 cm. This prompted an urgent urology referral. James was taken to the urology clinic where Dr. Singh, a urologist with a specialty in male reproductive cancers, explained the likelihood of a malignant germ cell tumor. He referenced the classic risk profile: cryptorchidism, familial history, presence of microlithiasis, and his underlying Klinefelter condition—all increasing the odds of a non‑seminomatous germ cell neoplasm.</p><p>**Week 3 – The Diagnosis is Confirmed**</p><p>An MRI of the pelvis showed no extension beyond the testis. An indocyanine green fluorescence dye was used intraoperatively to confirm the vascular margins. In early August, James underwent an open radical inguinal orchiectomy for the right testicle. The pathology report returned a 1.8 × 1.5 × 1.6 cm embryonal carcinoma, stage pT2 (extension to rete testis), with lymphovascular invasion but no nodal involvement or distant metastasis. Serum tumor markers – alpha‑fetoprotein (AFP) rose to 250 ng/mL (normal &lt;10), beta‑HCG to 35 IU/L (normal &lt;5), and LDH to 500 U/L (normal 122–496). These were markedly elevated, confirming advanced disease.</p><p>**Week 12 – Oncologic Planning**</p><p>James&#x27;s first oncology visit with Dr. Martinez at the Cancer Center. The multidisciplinary tumor board convened. They recommended “standard” adjuvant chemotherapy: BEP (Bleomycin, Etoposide, Cisplatin) for 3 cycles because of the stage II disease and the presence of vascular invasion. He was taught about the potential for severe pulmonary toxicity with bleomycin and that, given his Klinefelter‑associated pulmonary fibrosis, the decision would require close monitoring.</p><p>James agreed and was scheduled to start chemo in mid‑September.</p><p>**Month 3 – Bad News During 1st Chemotherapy Cycle**</p><p>James began his first BEP cycle. Early after the first dose of cisplatin, he developed anorexia, nausea, and a rash on his upper arms. By day 7, his LDH climbed to 800 U/L, AFP to 520 ng/mL, and beta‑HCG to 112 IU/L. Imaging repeated in October revealed a 3.2 × 2.5 × 3.0 cm lymph node in the retroperitoneum (inguinal) with SUV 8.5 on PET‑CT. “Stage III” was documented. The tumor board debated a change in regimen; however, BEP remained standard. James declined to add a second cycle of bleomycin due to his pulmonary issues.</p><p>**Month 5 – Second Cycle, Worsening Pulmonary Status**</p><p>The second BEP cycle began in early November. James’s baseline pulmonary diffusing capacity (DLCO) was 65% predicted. By day 10 he developed dyspnea on exertion; a chest X‑ray showed mild diffuse interstitial haziness. The oncologist advised a temporary hold on bleomycin, but the third cycle was still scheduled for late November, pending a repeat CT. In December, the CT was unchanged in the retroperitoneal node but revealed an emergent small 2‑cm pulmonary nodule with 12% SUV – suspicious for a metastasis.</p><p>**Month 7 – Failure of Conventional Therapy**</p><p>After the 3rd cycle, James&#x27;s AFP again peaked to 850 ng/mL and LDH to 1100 U/L. His lungs showed a new 7‑mm ground‑glass opacity in the left upper lobe. In late January, the multidisciplinary team, now including thoracic surgery, decided that the patient had progressed under standard BEP therapy. They discussed options: salvage chemotherapy (VIP – ifosfamide, etoposide, cisplatin) or high‑dose therapy with autologous stem‑cell rescue. James’s chronic infertility, coupled with Klinefelter’s hypogonadism, made him worried about future fertility; he declined the high‑dose approach citing fear of myelodysplasia and financial cost.</p><p>**Month 8 – palliative decision &amp; quality of life**</p><p>The oncologist and James met to talk about goals of care. James expressed he still wanted to pursue treatment but was now wary of the long-term toxicities. The final decision was to start palliative chemotherapy with a modified regimen of low‑dose ifosfamide and etoposide, and to limit cisplatin exposure to 2 cycles. They also recommended close surveillance of the pulmonary lesions.</p><p>**Month 10 – Disease progresses**</p><p>A routine PET‑CT in March 2025 showed the retroperitoneal node grew to 4.0 × 3.8 × 3.7 cm and the lung nodule increased to 12 mm with higher SUV. Serum markers had not normalized; AFP remained &gt;600 ng/mL. The patient reported weight loss of 10 pounds over two months, fatigue, insomnia, and occasional cough. Dr. Martinez explained that the tumor was now likely platinum‑refractory.</p><p>James&#x27;s Klinefelter syndrome manifested as worsening alopecia in the scalp and gynecomastia around the chest; his testosterone levels were 150 ng/dL (normal 300–1000). He was started on testosterone replacement, but this further fueled the tumor growth, leading to a paradoxical rise in AFP to 950 ng/mL.</p><p>**Month 12 – Complications and end‑of‑life**</p><p>In September, James developed deep vein thrombosis in the right leg, likely due to hypercoagulable state from the tumor. He received LMWH and a compression stocking, but his pain was refractory. A week later, the lung nodule progressed to a 20 mm mass with surrounding pleural effusion. A thoracentesis yielded malignant cells confirming metastatic dissemination. James’s respiratory distress necessitated oxygen support.</p><p>On October 3, James’s family gathered in the hospital’s small palliative care room. He was diagnosed with Stage IV metastatic non‑seminomatous germ cell tumor with multi‑organ failure. He opted to forgo further chemotherapy in favor of comfort care. Dr. Martinez administered a single dose of palliative radiation to the retroperitoneal node, a short 30‑day course of steroids for dyspnea, and a pain management regimen of opioids. James passed peacefully in the early hours of November 1, surrounded by his partner and two children, a final testament to a life touched by a formidable foe.</p><p>---</p><p>**Key Take‑aways from the Narrative**</p><p>- The patient’s early presentation was characteristic of a unilateral painless testicular mass, but his unique combination of risk factors (cryptorchidism, Klinefelter syndrome, family history, and testicular microlithiasis) created a more aggressive disease trajectory.  
+- Rapid progression after orchiectomy, with rising tumor markers and the emergence of retroperitoneal nodes within 3 months, underscored the malignant biology of embryonal carcinoma.  
+- The interplay of comorbidities (Klinefelter‑associated pulmonary fibrosis, infertility, prior ionizing radiation from childhood head and neck cancer treatment) complicated the therapeutic options and the patient’s tolerance to standard cisplatin‑based regimens.  
+- The patient’s decision-making, reflecting a balance between aggressive therapy, quality of life, fertility concerns, and financial constraints, manifested in a gradual shift toward palliative care rather than salvage high‑dose therapy.</p><p>This narrative provides an authentic snapshot of a patient’s clinical journey from symptom onset through disease progression, illustrating each decision point, the rationale behind it, and the natural trajectory toward eventual decline.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-07-01</h3><div class="visit-meta">Primary Care | Reason: Routine physical, noticing scrotal lump</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine physical exam; patient reports a new painless scrotal lump present for 2 weeks.
+History of Present Illness: 28‑year‑old male with past cryptorchidism (orchiopexy at age 4), Klinefelter syndrome, and testicular microlithiasis. Family history significant for testicular cancer (uncle, grandfather). He reports heaviness in the groin, a painless right‑testicular lump, and a low‑grade fever yesterday. No urinary symptoms or pain.
+Past Medical History: Cryptorchidism, laparoscopic orchiopexy at age 4, Klinefelter syndrome (47,XXY), testicular microlithiasis noted in adolescence. No chronic systemic conditions. Current medications: none. Allergies: NKDA.
+Review of Systems: Positive for mild left‑right difference in scrotal size noted on exam. No dysuria, hematuria, or urinary frequency. No constitutional symptoms except low‑grade fever.
+Physical Examination: Vitals: BP 118/70 mmHg, HR 75 bpm, T 37.8°C, RR 16/min, SpO₂ 98% RA. Genitourinary: Scrotum intact, no erythema or swelling. Right testis: ~1–2 cm firm, non‑tender nodule; no erythema, warmth, or lymphadenopathy; left testis normal. No inguinal lymphadenopathy. The remainder of the examination was within normal limits.
+Assessment: 1) Right testicular nodule of unknown etiology – differential includes benign entities (epididymal cyst, epidermoid cyst, benign granuloma), testicular microlithiasis–related benign growth, or malignant process (intradermal testicular tumor, metastatic disease, testicular lymphoma) given family history and Klinefelter syndrome.
+Plan: 1) Order scrotal ultrasound to characterize nodule (size, cystic vs. solid, vascularity, relation to testicular parenchyma). 2) Reassure patient about no current red flag symptoms; counsel on surveillance for testicular cancer with self‑exam and routine visits. 3) If ultrasound shows solid mass or suspicious features, discuss referral to urology for possible orchiectomy. 4) Advise the patient to return promptly if the lump increases in size, becomes tender, or if he develops urinary symptoms, new fever, or weight loss. 5) Schedule follow‑up in 6 weeks to review imaging, or sooner if earlier results available. 6) No medications prescribed.
+Disposition: Patient advised to monitor scrotum for changes and to seek care urgently if acute pain or swelling.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">heaviness in groin</span><span class="pill">painless scrotal lump</span><span class="pill">low-grade fever yesterday</span><span class="pill">no pain or urinary symptoms</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/70</td></tr><tr><td>HR</td><td>75</td></tr><tr><td>Temp</td><td>37.8</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right testis: 1‑2 cm firm nodule, non‑tender</li><li>No inguinal lymphadenopathy</li><li>Scrotum normal otherwise</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Scrotal ultrasound</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>cryptorchidism, laparoscopic orchiopexy at age 4</li><li>historical Klinefelter syndrome (47,XXY)</li><li>family history of testicular cancer (uncle and grandfather)</li><li>testicular microlithiasis noted on adolescent sonogram</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel conducted a general physical exam and asked about the new scrotal lump. The patient reported the lump has been present for two weeks and is painless. No urinary symptoms or significant pain. Physical exam revealed a firm, non‑tender, pea‑sized nodule on the right testis. Dr. Patel explained the need for imaging to evaluate the mass and ordered an scrotal ultrasound. The patient was advised to return if any new symptoms develop.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation of a painless scrotal mass. No known diagnosis yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-07-08</h3><div class="visit-meta">Urology | Reason: Evaluation of scrotal mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Evaluation of a scrotal mass.
+
+**History of Present Illness**: The patient is a 28‑year‑old male who presents for evaluation of a right scrotal mass discovered during a routine physical exam in Visit 1. He reports a persistent heaviness in the groin area and a painless lump in the right testicle that has not changed in size for the past six weeks. He denies fever, night sweats, or weight loss.
+
+**Past Medical History**: Cryptorchidism with laparoscopic orchiopexy at age 4; Klinefelter syndrome (47,XXY); family history of testicular cancer; testicular microlithiasis.
+
+**Medications**: None. **Allergies**: NKDA.
+
+**Review of Systems**: Negative except for the above-presenting symptoms.
+
+**Physical Examination**:
+- **Scrotum**: Right testis contains a firm, 1.8 cm nodule. No overlying erythema or swelling. Left testis unremarkable.
+- **Genitourinary**: No signs of infection or inflammation.
+- **Inguinal Lymphadenopathy**: None palpated.
+- **Vital Signs**: BP 120/72 mmHg, HR 77 bpm, Temp 37.6 °C, RR 16 breaths/min, O₂ sat 98% on room air.
+
+**Diagnostic Studies**:
+- **Scrotal ultrasound** (performed in Visit 1): Heterogeneous hypoechoic mass 1.8 × 1.4 × 1.6 cm in the right testicle, highly suspicious for malignancy.
+- **Plan**: Order pelvic MRI to evaluate potential local extension and retroperitoneal nodes.
+
+**Assessment**:
+- Right testicular mass, 1.8 cm, hypoechoic, highly suggestive of a germ cell tumor. Differential includes seminoma, embryonal carcinoma, teratoma, or lymphoma. His cryptorchidism and Klinefelter syndrome increase his risk. Testicular microlithiasis adds further concern.
+
+**Plan**:
+1. **Surgical**: Recommend radical right orchiectomy to obtain definitive diagnosis and complete treatment.
+2. **Oncology Referral**: Arrange referral to urologic oncology for staging workup and post‑operative management.
+3. **Imaging**: Complete pelvic MRI as ordered; results will guide surgical planning.
+4. **Pre‑operative labs**: CBC, CMP, LDH, AFP, β‑hCG, and chest radiograph.
+5. **Fertility counseling**: Discuss potential impact on fertility; consider sperm banking before surgery.
+6. **Post‑operative follow‑up**: 2‑week post‑op visit to assess wound healing and initiate pathology review.
+7. **Patient education**: Reviewed risks, benefits, and alternatives; patient verbalized understanding and consent.
+
+**Disposition**: Patient will follow-up in clinic following MRI results and pre‑op workup. Will be scheduled for orchiectomy within 2–4 weeks.
+
+---
+
+**Signature**
+Dr. Singh
+Urology Clinic</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">heaviness in groin</span><span class="pill">painless scrotal lump</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/72</td></tr><tr><td>HR</td><td>77</td></tr><tr><td>Temp</td><td>37.6</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right testis: firm, 1.8 cm nodule</li><li>No inguinal lymphadenopathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Scrotal ultrasound: heterogenous hypoechoic mass 1.8 × 1.4 × 1.6 cm</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">Klinefelter syndrome</span><span class="pill">family history of testicular cancer</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>cryptorchidism, laparoscopic orchiopexy at age 4</li><li>historical Klinefelter syndrome (47,XXY)</li><li>family history of testicular cancer</li><li>testicular microlithiasis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Singh reviewed the scrotal ultrasound, which revealed a heterogenous hypoechoic mass measuring 1.8 × 1.4 × 1.6 cm in the right testicle. The patient was informed that the imaging characteristics are highly suggestive of a malignant non‑seminomatous germ cell tumor. Dr. Singh recommended a surgical orchiectomy to confirm diagnosis and remove the primary tumor. Discussed risks, benefits, and the need for oncology referral.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Imaging strongly suggestive of malignant germ cell tumor; plan surgical resection.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-07-22</h3><div class="visit-meta">Oncology Surgery | Reason: Right radical inguinal orchiectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑operative follow‑up after right radical inguinal orchiectomy for presumed testicular germ‑cell tumor.
+
+History of Present Illness:
+The patient, a 28‑year‑old male with a history of cryptorchidism corrected at age 4, Klinefelter syndrome, and a strong family history of testicular cancer, underwent a standard open right radical inguinal orchiectomy on 2023‑07‑19. The procedure proceeded without intra‑operative complications; indocyanine‑green fluorescence confirmed clear margins. Post‑operative course has been uncomplicated. The patient reports mild, controllable pain at the incision site, managed with acetaminophen 500 mg PRN.
+
+Post‑operative laboratory work shows markedly elevated serum tumor markers: AFP 250 ng/mL, β‑HCG 35 IU/L, LDH 500 U/L. A baseline CT chest/abdomen/pelvis was performed on 2023‑07‑21 and demonstrated no evidence of retroperitoneal or distant metastatic disease.
+
+Past Medical History: cryptorchidism, Klinefelter syndrome, testicular microlithiasis.
+Past Surgical History: right radical inguinal orchiectomy (today).
+Medications: prophylactic cefazolin peri‑operatively, acetaminophen 500 mg PRN for pain.
+Allergies: NKDA.
+
+Physical Examination:
+- Vitals: BP 116/68, HR 72, Temp 36.9 °C, RR 14, O2 sat 99%.
+- Incision: well‑healed, no drainage, mild erythema only.
+- Right lower quadrant: mild tenderness, no palpable mass.
+- No regional lymphadenopathy.
+
+Assessment:
+Given the histologic nature of the resection (to be retrieved), markedly elevated AFP and β‑HCG, and absence of metastatic disease on imaging, the differential includes non‑seminomatous germ‑cell tumor (e.g., embryonal carcinoma, yolk sac tumor, choriocarcinoma) versus a mixed germ‑cell tumor with seminomatous components. The patient requires pathologic confirmation and staging to guide adjuvant therapy.
+
+Plan:
+1. Obtain formal histopathologic evaluation of orchiectomy specimen; review tumor grade, stage, vascular/perineural invasion.
+2. Repeat serum tumor markers (AFP, β‑HCG, LDH) at 4‑week intervals until normalization.
+3. If pathology confirms non‑seminomatous disease (stage IIA or higher) or markers remain elevated, discuss adjuvant platinum‑based chemotherapy (BEP regimen). For seminoma, consider surveillance or radiotherapy depending on pathology.
+4. Consider PET/CT or MRI chest/abdomen/pelvis if markers do not fall as expected or if pathologic staging suggests advanced disease.
+5. Continue acetaminophen PRN for pain; no new analgesics needed.
+6. Continue routine surgical wound care.
+7. Discuss sperm banking options if not already done.
+
+Follow‑up:
+- Next appointment in 2 weeks to receive pathology report and discuss adjuvant therapy.
+- Additional visits every 4 weeks for tumor marker monitoring until negative.
+- Educate patient on self‑examination of contralateral testis and to report any new lumps or pain.
+- Contact oncology department with any significant changes.
+
+Signature: ____________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">post‑operative pain at incision site</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>116/68</td></tr><tr><td>HR</td><td>72</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>RR</td><td>14</td></tr><tr><td>O2Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Incision: well‑healed, no drainage</li><li>Right lower quadrant: mild tenderness</li><li>No lymphadenopathy</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum tumor markers AFP, β‑HCG, LDH</li><li>Baseline CT chest/abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AFP 250 ng/mL (↑)</li><li>β‑HCG 35 IU/L (↑)</li><li>LDH 500 U/L (↑)</li><li>CT: no retroperitoneal disease</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Right radical inguinal orchiectomy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Recovering well, following medication schedule, no new symptoms</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">Klinefelter syndrome</span><span class="pill">family history of testicular cancer</span><span class="pill">suspected non‑seminomatous germ cell tumor</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prophylactic cefazolin</li><li>Acetaminophen 500 mg PRN for pain</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>cryptorchidism corrected at age 4</li><li>Klinefelter syndrome</li><li>family history of testicular cancer</li><li>testicular microlithiasis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient underwent a standard open radical inguinal orchiectomy. Intra‑operative indocyanine‑green fluorescence confirmed clear margins. Post‑operative recovery was uncomplicated; the patient reported mild, controllable pain. Pathology returned embryonal carcinoma, 1.8 × 1.5 × 1.6 cm, stage pT2 (extension to rete testis) with lymphovascular invasion but no nodal or distant spread. Serum markers were markedly elevated: AFP 250 ng/mL, β‑HCG 35 IU/L, LDH 500 U/L. The oncology team reviewed the case and recommended adjuvant BEP chemotherapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed stage IIA embryonal carcinoma with vascular invasion; high risk of relapse. Plan BEP chemotherapy.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-10-04</h3><div class="visit-meta">Medical Oncology | Reason: Treatment planning for adjuvant chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #4 – 2023-10-04
+Chief Complaint: Treatment planning for adjuvant chemotherapy.
+
+History of Present Illness:
+28‑year‑old male with Klinefelter syndrome, prior right orchiectomy for germ‑cell testicular cancer, and baseline pulmonary fibrosis. Discussed pathology and tumor marker trends; pathology consistent with stage I/II non‑seminomatous germ‑cell tumor. Multidisciplinary tumor board recommended adjuvant BEP for 3 cycles. Patient counseled on pulmonary toxicity given pre‑existing fibrosis and consented. First cycle to start 2023‑10‑15.
+
+Past Medical History:
+- Klinefelter syndrome; cryptorchidism; infertility; testicular microlithiasis; other GU cancers (history noted).
+- Baseline pulmonary fibrosis noted on prior imaging.
+
+Medications:
+- Acetaminophen 500 mg PRN for pain
+- Vitamin D 2000 IU daily
+
+Allergies: NKDA.
+
+Physical Examination:
+- General: Well‑appearing, no distress.
+- Respiratory: Mild basal crackles; no wheezes.
+
+Vital Signs (10/04/23):
+- BP 118/70, HR 70, Temp 36.8°C, RR 16, SpO2 98% RA.
+
+Assessment:
+- Residual germ‑cell tumor with risk of micrometastatic disease; indicated for adjuvant BEP.
+- Pre‑existing pulmonary fibrosis; baseline PFTs show FEV1 70% predicted, DLCO 65% predicted. Risk of bleomycin‑induced pneumonitis increased.
+
+Plan:
+1. Initiate BEP chemotherapy: Bleomycin 30 U SC, Etoposide 100 mg/m² IV, Cisplatin 20 mg/m² IV on days 1, 8, 15 of a 21‑day cycle — total 3 cycles. First cycle begins 2023‑10‑15.
+2. Monitor for pulmonary toxicity: repeat PFTs at the start of cycle 2; obtain chest X‑ray/CT if new symptoms; discontinue bleomycin if symptoms develop. Provide breathing exercises.
+3. CBC, CMP, urinalysis before each cycle; monitor for neutropenia, renal dysfunction.
+4. Continue acetaminophen PRN for pain; vitamin D daily.
+5. Educate patient on signs of infection, pneumonitis, and encourage prompt reporting.
+6. Follow‑up visit one week after cycle 1 (or sooner if toxicities) to review labs and symptoms; subsequent follow‑ups prior to cycles 2 &amp; 3; post‑therapy surveillance imaging and markers 4–6 weeks after last cycle.
+
+Disposition:
+Patient scheduled for Cycle 1 on 15 Oct; arrangements for oncology clinic review on 22 Oct.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">none</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/70</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General: well‑appearing, no distress</li><li>Respiratory: mild crackles at lung bases</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline pulmonary function tests</li><li>Baseline CT chest/abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pulmonary FEV1 2.2 L (70% predicted)</li><li>DLCO 65% predicted</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>BEP chemotherapy schedule initiated</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">Klinefelter syndrome</span><span class="pill">family history of testicular cancer</span><span class="pill">embryonal carcinoma, stage pT2 with vascular invasion</span><span class="pill">baseline pulmonary fibrosis (Klinefelter‑related)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 500 mg PRN for post‑op pain</li><li>Vitamin D 2000 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior right orchiectomy for embryonal carcinoma</li><li>Klinefelter syndrome – pulmonary fibrosis noted on prior imaging</li><li>Previous low‑grade fever without source</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the multidisciplinary tumor board, the team reviewed the patient&#x27;s pathology and serum markers. Due to stage II disease plus vascular invasion, they recommended BEP (Bleomycin 30 U IV qd, Etoposide 100 mg/m²/d 5–7 days, Cisplatin 20 mg/m²/d 5–7 days) for three cycles. The patient was counselled on pulmonary toxicity from bleomycin and the increased risk due to his existing Klinefelter‑related fibrosis. He consented and began the first cycle on 2023‑10‑15.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑orchiectomy stage IIA, planning adjuvant BEP. Early monitoring for pulmonary toxicity required.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-01-12</h3><div class="visit-meta">Medical Oncology | Reason: Post‑first BEP cycle evaluation and complication management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑first BEP cycle evaluation and complication management.
+
+History of Present Illness: The patient is a 28‑year‑old male with Klinefelter syndrome and cryptorchidism status post‑right radical orchiectomy for a testicular germ‑cell tumor. He is currently on adjuvant BEP chemotherapy (Bleomycin 30 U SC, Etoposide 100 mg/m² IV, Cisplatin 20 mg/m² IV days 1, 8, 15). Seven days after his first cycle he presents with persistent nausea, vomiting, low‑grade fever (38.0 °C yesterday), anorexia, and a diffuse non‑pruritic macular rash on the upper arms. He reports poor oral intake and reports that the rash has not been pruritic.
+
+Physical Examination:
+- Vitals: BP 112/68, HR 78, Temp 38.0 °C, RR 18, O₂ sat 97% on room air.
+- General: Mild pallor, mild fatigue.
+- Skin: Diffuse, non‑pruritic macular rash on bilateral upper arms; no erythema or scaling.
+- Abdomen: Mild tenderness, no organomegaly.
+- Respiratory: Bilateral crackles, compatible with baseline mild pulmonary fibrosis.
+- Cardiovascular: Normal S₁, S₂, no murmurs.
+- Extremities: No edema.
+
+Labs and Imaging:
+- AFP 520 ng/mL (baseline 250 ng/mL post‑orchiectomy), β‑HCG 112 IU/L (baseline 35 IU/L), LDH 800 U/L (baseline 500 U/L).
+- CBC: Mild leukopenia (WBC 3.2 × 10⁹/L).
+- CMP: Mild elevation of transaminases.
+- PET‑CT: 3.2 × 2.5 × 3.0 cm retroperitoneal node, SUV 8.5.
+- PFTs: Repeat indicated.
+
+Assessment:
+1. Residual/metastatic extragonadal germ‑cell tumor: Retroperitoneal lymph node with significant SUV (8.5) suggests active disease.
+2. BEP‑related adverse effects:
+   a. Nausea/vomiting refractory to ondansetron alone.
+   b. Rash: likely drug‑induced or hypersensitivity; mild, non‑pruritic.
+   c. Low‑grade fever: possible infection or inflammatory reaction.
+3. Pulmonary toxicity risk: Baseline fibrosis, mild crackles.
+4. Mild leukopenia: neutropenia risk.
+
+Plan:
+- Continue BEP regimen with dose‑reduced bleomycin (15 U IV) for cycle 2; schedule administration after a 2‑week break to allow recovery.
+- Antiemetic regimen: Continue ondansetron 8 mg PRN; add dexamethasone 12 mg PO BID for 2 days with each cycle and consider ondansetron + dexamethasone + aprepitant for refractory nausea.
+- Rash management: Continue antihistamine (diphenhydramine 25 mg PO BID). Consider adding a low‑dose oral steroid (prednisone 10 mg PO daily for 3 days) if rash does not improve.
+- Fever: Order CBC with differential, CMP, blood cultures if neutropenic. If fever persists beyond 48 h or WBC &lt;1.0 × 10⁹/L, start empiric broad‑spectrum antibiotics.
+- Pulmonary monitoring: Repeat PFTs prior to cycle 2, and repeat chest CT 4 weeks after completion of therapy.
+- Tumor markers: Repeat AFP, β‑HCG, LDH 2 weeks post‑cycle 2.
+- Imaging: Follow‑up PET‑CT 3 months after completion of chemotherapy.
+- Continue acetaminophen 500 mg PRN for pain.
+- Vaccinations: Ensure influenza and pneumococcal vaccination in neutropenic period.
+- Patient education: Reinforce oral hydration, antiemetic scheduling, signs of infection. Emphasize reporting persistent fever, worsening rash, or respiratory symptoms.
+
+Disposition: Patient will return for cycle 2 in 2 weeks. If any adverse events arise, contact oncology office immediately.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">anorexia</span><span class="pill">nausea</span><span class="pill">rash on upper arms</span><span class="pill">fever 38.0 °C yesterday</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>112/68</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>38.0</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2Sat</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Skin: non‑pruritic rash on upper arms</li><li>Abdomen: mild tenderness, no organomegaly</li><li>Respiratory: bilateral crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>AFP, β‑HCG, LDH</li><li>CBC, CMP</li><li>PET‑CT</li><li>Pulmonary function test repeat</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>AFP 520 ng/mL</li><li>β‑HCG 112 IU/L</li><li>LDH 800 U/L</li><li>PET‑CT: retroperitoneal node 3.2 × 2.5 × 3.0 cm, SUV 8.5</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ondansetron 8 mg PRN</li><li>Epinephrine injection for possible anaphylaxis (rash)</li><li>Dose‑reduced bleomycin 15 U IV</li><li>Schedule BEP cycle 2</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Continued nausea despite ondansetron, rash improved with antihistamine.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">Klinefelter syndrome</span><span class="pill">family history of testicular cancer</span><span class="pill">embryonal carcinoma, stage pT2 with vascular invasion</span><span class="pill">baseline pulmonary fibrosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ondansetron 8 mg PRN for nausea</li><li>Vitamin D 2000 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed first BEP cycle 7 days ago</li><li>No prior chemotherapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with significant nausea, vomiting, and a diffuse macular rash on his upper arms. He reported poor oral intake and a low-grade fever. Physical exam revealed mild pallor and a diffuse non‑pruritic rash. Labs were drawn: AFP 520 ng/mL, β‑HCG 112 IU/L, LDH 800 U/L, CBC with mild leukopenia, and liver function tests mildly elevated. A PET‑CT was performed, revealing a retroperitoneal node 3.2 × 2.5 × 3.0 cm (SUV 8.5) consistent with metastatic disease. The tumor board reviewed data and decided to continue BEP but reduced bleomycin dose due to pulmonary concerns and allowed for a 2‑week break before the next cycle.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage III disease with retroperitoneal node. Pulmonary function declining; bleomycin hold planned.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-03-01</h3><div class="visit-meta">Medical Oncology | Reason: Second BEP cycle and pulmonary complication assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 28‑year‑old male with Stage III retroperitoneal nodal disease undergoing second BEP cycle; presents with worsening dyspnea, dry cough, low‑grade fever.
+
+History of Present Illness: Patient reports progressive exertional dyspnea, intermittent dry cough, and recurrent low‑grade fevers over the past 6 days. Symptoms began during the last 2 days of the second BEP cycle (bleomycin 15 U IV dose‑reduced). He recalls transient interstitial haziness on baseline chest films. No chest pain, hemoptysis, or weight loss.
+
+Past Medical History: Cryptorchidism, Klinefelter syndrome, familial testicular cancer predisposition, known pulmonary fibrosis (baseline PFTs documented 58% DLCO), Stage III retroperitoneal nodal disease.
+
+Current Medications: Ondansetron 8 mg PRN, Prednisone 20 mg daily (pulmonary edema prophylaxis), Vitamin D 2000 IU daily, Acetaminophen 500 mg PRN, Bleomycin 30 U SC, Etoposide 100 mg/m² IV, Cisplatin 20 mg/m² IV (days 1, 8, 15 of 21‑day cycle), Dexamethasone 12 mg PO BID with cycle, Diphenhydramine 25 mg PO BID. For cycle 2: Dose‑reduced bleomycin 15 U IV.
+
+Allergies: NKDA.
+
+Social History: Non‑smoker, denies recreational drug use.
+
+Review of Systems: Positive for dyspnea, cough, low‑grade fever; negative for chest pain, orthopnea, edema, night sweats, or weight change.
+
+Physical Examination:
+- Vitals: BP 110/65, HR 80, Temp 37.5 °C, RR 20, O₂ Sat 94% RA.
+- General: Alert, mild tachypnea.
+- HEENT: No sinus tenderness, no cervical lymphadenopathy.
+- Cardiovascular: S₁ S₂ normal, no murmurs, no jugular venous distension.
+- Respiratory: Bilateral fine crackles, mild wheeze; no rhonchi. Lungs are otherwise clear to auscultation.
+- Abdomen: Soft, non‑tender, no organomegaly.
+- Extremities: No edema. Skin shows no pruritic rash.
+
+Assessment:
+1. Bleomycin‑induced interstitial lung disease (BILD) – most likely given temporal relation, diffuse interstitial haziness, new pulmonary nodule with high SUV, and known pulmonary fibrosis. Clinical picture of dyspnea, crackles, low DLCO.
+2. Pulmonary metastasis from germ‑cell tumor – new 2‑cm pulmonary nodule with SUV 12 on CT. Given active disease, this is a strong differential.
+3. Infectious pneumonia (bacterial, atypical, viral) – low‑grade fever, cough; must be ruled out.
+4. Exacerbation of underlying pulmonary fibrosis – may be worsened by chemotherapy.
+
+Plan:
+- Hold bleomycin in cycle 3; proceed with cisplatin + etoposide only for cycle 3, with interval extended to 4 weeks.
+- Continue daily prednisone 20 mg for pulmonary toxicity; consider tapering to 10 mg over 2 weeks as symptoms improve.
+- Initiate broad‑spectrum antibiotics (e.g., azithromycin 500 mg PO daily) until infection is excluded, given persistent fever. Re‑evaluate CBC, ESR/CRP, and obtain sputum cultures.
+- Order repeat chest CT with contrast in 6 weeks to monitor pulmonary nodule and interstitial changes.
+- Repeat PFTs in 4 weeks to assess DLCO trend.
+- Tumor markers (AFP, β‑hCG, LDH) to be collected prior to cycle 3; monitor for rising trend (possible disease progression).
+- Educate patient on early signs of pulmonary toxicity and advise avoidance of high‑altitude or strenuous exertion.
+- Provide supportive measures: humidified air, inhaled bronchodilator if wheeze persists.
+- Follow‑up: In‑person or tele‑medicine visit in 2 weeks to review labs, imaging, and symptom status; reschedule cycle 3 if improvement observed.
+
+Disposition: Patient remains stable on RA, no need for supplemental O₂. Will receive cycle 3 after discussion and informed consent regarding bleomycin avoidance.
+
+Signature: ____________________ (Oncologist)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dyspnea on exertion</span><span class="pill">cough</span><span class="pill">persistent low‑grade fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/65</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>37.5</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>O2Sat</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Respiratory: bilateral fine crackles, mild wheeze</li><li>Cardiac: normal heart sounds</li><li>Abdominal: soft, nontender</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Pulmonary function test</li><li>CT chest/abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: diffuse interstitial haziness</li><li>DLCO 58% predicted</li><li>CT: retroperitoneal node 3.3 × 2.9 × 3.2 cm, new 2‑cm pulmonary nodule SUV 12</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 20 mg daily</li><li>Hold bleomycin for cycle 3</li><li>Schedule BEP cycle 3 with cisplatin and etoposide only</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Dyspnea improved slightly with steroids; patient concerned about pulmonary toxicity</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">Klinefelter syndrome</span><span class="pill">family history of testicular cancer</span><span class="pill">embryonal carcinoma, stage pT2</span><span class="pill">pulmonary fibrosis</span><span class="pill">Stage III retroperitoneal nodal disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ondansetron 8 mg PRN</li><li>Prednisone 20 mg daily for pulmonary edema prophylaxis</li><li>Vitamin D 2000 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Second BEP cycle started 6 days ago</li><li>Prior transient interstitial haziness on CX‑ray</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported worsening dyspnea, mild dry cough, and intermittent low‑grade fever. He reported that his last two days of the second BEP cycle were associated with a mild dry cough. Physical exam showed bilateral crackles; lungs otherwise clear. A chest X‑ray demonstrated diffuse interstitial haziness. Pulmonary function tests revealed DLCO 58% predicted. The oncology team decided to hold bleomycin for the third cycle, increase the interval between cycles to 4 weeks, and administer additional low‑dose corticosteroids. A CT of the chest, abdomen, and pelvis was ordered to re‑assess the retroperitoneal node and evaluate for new pulmonary lesions. The results in week 5 after cycle 2 indicated the retroperitoneal node remained 3.3 × 2.9 × 3.2 cm, and a new 2‑cm pulmonary nodule appeared.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Persistent retroperitoneal node and newly detected pulmonary metastasis. Pulmonary function deteriorating; BEP with bleomycin held.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-03-10</h3><div class="visit-meta">Palliative Care &amp; Medical Oncology | Reason: Advanced disease and comfort care planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">History and Assessment:
+28‑year‑old male with Klinefelter syndrome and metastatic germ cell tumor currently in a platinum‑refractory state. After 2 cycles of low‑dose BEP, PET‑CT in March 2025 demonstrates progression: retroperitoneal node 4.0 × 3.8 × 3.7 cm (SUV 28) and pulmonary nodule 12 mm (SUV 25); AFP &gt;600 ng/mL, β‑HCG 90 IU/L, LDH 1100 U/L. The patient remains cachectic, with dyspnea on minimal exertion, night sweats, and worsening fatigue, and expresses a preference for comfort‑focused care. Given the disease burden, poor functional status, and the family’s input, we have agreed to transition to palliative care.
+
+Plan:
+• Palliative radiation to retroperitoneal node: 8 Gy in 2 fractions.
+• Steroid taper: Prednisone 30 mg daily for 3 days, then taper over 2 weeks.
+• Analgesia: Morphine 15 mg PO PRN after breakthrough pain; consider adding acetaminophen 1 g PO every 6 h PRN.
+• Continue anticoagulation: Enoxaparin 1 mg/kg SC BID; switch to oral DOAC if clinically appropriate.
+• Respiratory support: Albuterol 2 puffs PRN, supplemental O₂ 2 L NC to maintain sat ≥92%.
+• Hormone replacement: Continue testosterone 50 mg SC weekly, monitor for gynecomastia.
+• Nutrition: Dietitian referral for high‑protein, high‑calorie plan; consider G‑tube if oral intake inadequate.
+• Hospice: Provide outpatient hospice referral, home health, psychosocial counseling.
+• Labs: Repeat AFP, β‑HCG, LDH in 4–6 weeks to monitor disease activity.
+• Follow‑up: Palliative care appointment in 2 weeks, adjust treatment plan based on symptom control and family wishes.
+
+Conclusion:
+The patient and family understand the transition to comfort measures, with a focus on pain control, dyspnea management, and psychosocial support. All team members are aligned to provide supportive care while monitoring for complications such as bleeding, infection, and thrombotic events.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">weight loss 10 lb over 2 months</span><span class="pill">fatigue</span><span class="pill">insomnia</span><span class="pill">occasional cough</span><span class="pill">dyspnea on minimal exertion</span><span class="pill">night sweats</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>104/58</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>37.0</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>O2Sat</td><td>90% on 2 L nasal cannula</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General: cachectic, afebrile</li><li>Respiratory: crackles, expiratory wheeze</li><li>Abdomen: soft, slight distension</li><li>Lower extremity: erythema, mild swelling (DVT history)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PET‑CT March 2025</li><li>Serum tumor markers AFP, β‑HCG, LDH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PET‑CT: retroperitoneal node 4.0 × 3.8 × 3.7 cm, SUV 28; pulmonary nodule 12 mm SUV 25</li><li>AFP &gt;600 ng/mL</li><li>β‑HCG 90 IU/L</li><li>LDH 1100 U/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Palliative radiation to retroperitoneal node (8 Gy total)</li><li>Prednisone 30 mg daily taper</li><li>Morphine 15 mg PRN</li><li>Anticoagulation continued</li><li>Supportive care education</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported improved dyspnea overnight; mild pain control.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">Klinefelter syndrome</span><span class="pill">family history of testicular cancer</span><span class="pill">embryonal carcinoma, stage IIA</span><span class="pill">stage III retroperitoneal node</span><span class="pill">multifocal pulmonary metastases</span><span class="pill">pulmonary fibrosis</span><span class="pill">deep vein thrombosis</span><span class="pill">hypogonadism on testosterone replacement</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Low‑dose ifosfamide 750 mg/m²/d 4 days</li><li>Etoposide 100 mg/m²/d 5 days</li><li>Prednisone 10 mg daily</li><li>Enoxaparin 1 mg/kg SC twice daily</li><li>Albuterol x 2 puffs PRN</li><li>Morphine 10 mg PRN for pain</li><li>Prednisolone 10 mg nightly for sleep</li><li>Vitamin D 2000 IU daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive disease under modified BEP; limited ifosfamide/etoposide</li><li>Persistent pulmonary nodules</li><li>Worsening alopecia and gynecomastia due to Klinefelter syndrome</li><li>Testosterone supplementation started 2 months ago</li><li>Recent deep vein thrombosis in right leg</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During this visit, the patient and family discussed goals of care. While the patient expressed willingness to continue low‑dose chemotherapy, the oncology team emphasized that the disease was now platinum‑refractory and that progression was evident on a PET‑CT performed in March. The imaging showed the retroperitoneal node enlarged to 4.0 × 3.8 × 3.7 cm with increased metabolic activity, and the largest pulmonary nodule had progressed to 12 mm with SUV 25. Serum AFP remained &gt;600 ng/mL. Given the poor functional status and the patient&#x27;s preference for comfort, the team agreed to transition to palliative care. A single dose of palliative radiation (8 Gy in 2 fractions) was administered to the retroperitoneal node, a short course of oral steroids (prednisone 30 mg daily taper) was started for dyspnea, and the pain regimen was intensified. The patient received a short course of counseling, and family education was provided on hospice resources. The patient was discharged with outpatient palliative support and ultimately passed away peacefully at home on 2025‑11‑01.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IV metastatic non‑seminomatous germ cell tumor with progressive disease despite modified BEP and limited ifosfamide/etoposide; now receiving palliative care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 28</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">cryptorchidism</span><span class="pill">infertility</span><span class="pill">testicular microlithiasis</span><span class="pill">other genitourinary cancers</span><span class="pill">Klinefelter syndrome</span><span class="pill">pulmonary fibrosis</span><span class="pill">metastatic germ‑cell tumor</span><span class="pill">pulmonary metastasis</span><span class="pill">platinum‑refractory metastatic germ‑cell tumor</span><span class="pill">cachexia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 30 mg daily taper</li><li>Morphine 15 mg PO PRN for breakthrough pain</li><li>Enoxaparin 1 mg/kg SC twice daily</li><li>Albuterol 2 puffs PRN</li><li>Testosterone replacement 50 mg SC weekly</li><li>Vitamin D 2000 IU daily</li><li>Acetaminophen 1 g PO every 6 h PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Routine physical exam; patient reported a new painless 1–2 cm right testicular nodule; vitals normal; scrotal ultrasound ordered; advised monthly self‑exams and follow‑up in 6 weeks.</li><li>Patient presented for evaluation of a persistent right scrotal mass. Reported heaviness in the groin and a painless right testicular lump unchanged for six weeks. Physical exam: firm 1.8 cm right testicular nodule, no erythema; left testis normal; no inguinal lymphadenopathy. Ultrasound: heterogeneous hypoechoic 1.8×1.4×1.6 cm mass highly suspicious for malignancy. Vitals normal. Ordered pelvic MRI, pre‑operative labs (CBC, CMP, LDH, AFP, β‑hCG, chest X‑ray). Plan: radical right orchiectomy, referral to urologic oncology, sperm banking discussed, 2‑week post‑op follow‑up.</li><li>Post‑operative visit following right radical inguinal orchiectomy for presumed testicular germ‑cell tumor. Incision well‑healed with mild erythema, mild incision pain controlled with acetaminophen PRN. Serum tumor markers markedly elevated (AFP 250 ng/mL, β‑HCG 35 IU/L, LDH 500 U/L). Baseline CT chest/abdomen/pelvis shows no metastatic disease. Plan: histopathologic review, repeat markers at 4‑week intervals, discuss adjuvant therapy if indicated; continue acetaminophen PRN and routine wound care. Next appointment in 2 weeks to receive pathology report.</li><li>Visit for adjuvant chemotherapy planning; patient started on BEP regimen of Bleomycin, Etoposide, and Cisplatin over 3 cycles beginning 2023‑10‑15. Baseline pulmonary fibrosis noted with PFTs performed; baseline CT chest/abdomen/pelvis ordered. Patient educated on pulmonary toxicity and monitoring; follow‑up visits scheduled before each cycle and post‑therapy surveillance imaging and markers 4–6 weeks after final cycle.</li><li>Post‑first BEP cycle evaluation: patient reported nausea, vomiting, low‑grade fever, anorexia, and a diffuse non‑pruritic macular rash on upper arms. Vitals showed mild fever 38.0°C, BP 112/68, HR 78. Labs revealed rising tumor markers (AFP 520 ng/mL, β‑HCG 112 IU/L, LDH 800 U/L), mild leukopenia, mild transaminase elevation. PET‑CT identified a 3.2×2.5×3.0 cm retroperitoneal node with SUV 8.5. Respiratory exam noted bilateral crackles compatible with baseline pulmonary fibrosis. Antiemetic regimen expanded to ondansetron PRN and dexamethasone 12 mg PO BID. Rash managed with diphenhydramine 25 mg PO BID; prednisone 10 mg PO daily added for 3 days if not resolving. Dose‑reduced bleomycin 15 U IV planned for cycle 2. Follow‑up labs, PFTs, and imaging scheduled as per plan.</li><li>Visit on 2024-03-01: patient undergoing second BEP cycle reported worsening dyspnea, dry cough, low‑grade fever; vitals BP 110/65, HR 80, Temp 37.5°C, RR 20, O₂ Sat 94%; physical exam with bilateral fine crackles; CT chest/abdomen/pelvis revealed new 2 cm pulmonary nodule with SUV 12 and evidence of interstitial changes; plan to hold bleomycin for cycle 3, continue cisplatin + etoposide, maintain prednisone 20 mg daily, start azithromycin 500 mg PO daily; ordered repeat chest CT 6 weeks later, repeat pulmonary function tests in 4 weeks, tumor marker panel prior to cycle 3, CBC/ESR/CRP and sputum cultures; follow‑up visit in 2 weeks.</li><li>Visit on 2025-03-10 for palliation of platinum‑refractory metastatic germ‑cell tumor. PET‑CT showed progression of retroperitoneal node 4.0×3.8×3.7 cm (SUV 28) and pulmonary nodule 12 mm (SUV 25); AFP &gt;600 ng/mL, β‑HCG 90 IU/L, LDH 1100 U/L. Patient was cachectic with dyspnea on minimal exertion, night sweats, and mild cough. Plan included palliative radiation to retroperitoneal node (8 Gy in 2 fractions), prednisone taper starting 30 mg daily, morphine 15 mg PO PRN for breakthrough pain, acetaminophen 1 g PO q6h PRN, enoxaparin 1 mg/kg SC BID, albuterol PRN, supplemental O₂ 2 L NC, testosterone 50 mg SC weekly, dietitian referral, hospice referral, with follow‑up in 2 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

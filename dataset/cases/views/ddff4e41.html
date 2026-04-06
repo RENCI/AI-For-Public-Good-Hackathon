@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case ddff4e41</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: ddff4e41</h1><div class="subtitle">EGFR L858R mutant adenocarcinoma of the right upper lobe of the lung | Male, 67</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic obstructive pulmonary disease (COPD), Chronic bronchitis, Emphysema, Pulmonary fibrosis, Cardiovascular disease, History of smoking, Diabetes mellitus, Hypertension</div><div class="meta-line">Risk Factors: Tobacco smoking, Second‑hand smoke exposure, Radon exposure, Occupational exposure to asbestos, Exposure to air pollution</div></div>
+<details><summary>Narrative <span class="preview-text">**A Patient’s Odyssey Through a Rapidly Progressive Lung Cancer**  *July, 2025 – a quiet morning in a modest apartment i...</span></summary><div class="section-body"><p>**A Patient’s Odyssey Through a Rapidly Progressive Lung Cancer**</p><p>*July, 2025 – a quiet morning in a modest apartment in suburban Midwest. The 67‑year‑old retired mechanic, Mr. Robert Hayes (not his real name), wakes to a lingering cough that has been gnawing at him for the past few weeks. “It’s just a flare from the old COPD,” he tells his wife. But the cough is no longer his usual productive sputum; it’s dry, sometimes accompanied by a faint white sputum that turns his shirt a little darker each day. He also feels a new, sharp cut across the right side of his chest that rises and falls with each breath.*</p><p>Mr. Hayes’s history is a tapestry of exposures that any physician would recognize as harbingers of lung disease. He smoked a pack and a half a day for 42 years, quit two years ago, and was perpetually surrounded by second‑hand smoke in his garage. His former job as a pipe fitter in a steel plant exposed him to asbestos fibers for nearly a decade. He lives close to a large highway, where air pollution is a constant background hum. In the summer of 2024 he tested positive for radon in his home—a factor that, combined with his smoking, placed him at high risk for lung pathology.</p><p>He also is not a “clean slate.” Besides COPD with chronic bronchitis and emphysema, his chest X‑ray a year ago had already shown subtle pulmonary fibrosis—low‑grade, but unmistakable. His cardiovascular board reads coronary artery disease, a handful of angioplasties, and mild heart failure status as well. He keeps his blood sugar on a tight leash with metformin, and his hypertension is controlled with lisinopril and a diuretic. These comorbidities sit like stones in the pond of his lung disease, each stone ripple affecting the others.</p><p>---</p><p>### First Consultation – Dr. Patel, Family Medicine (July 5)</p><p>The visit begins with Mr. Hayes describing an “unusual dry cough” that has left him feeling short‑of‑breath on a light walk. He has also lost 8 pounds over the past three months, and he now feels the weight of a heaviness in his chest after simple tasks. Dr. Patel orders a chest X‑ray, noting that the patient’s baseline imaging already shows chronic changes. The new image, however, portrays a focal opacity in the right upper lobe, shadowed by old emphysematous lungs.</p><p>He is referred to pulmonology within a week. The doctor’s note: “Consider malignancy; high likelihood given history; proceed with CT and bronchoscopy.”</p><p>---</p><p>### Pulmonology – Dr. Singh (July 12)</p><p>A chest CT scans the right upper lobe and uncovers a 3.2‑cm spiculated mass with slight bronchial wall thickening. There is a small right pleural effusion and mild lymph node enlargement.  
+The clinical suspicion rises: “Primary adenocarcinoma, possible metastatic involvement.”</p><p>Bronchoscopy with transbronchial biopsy follows. The pathology report on July 15 reports an adenocarcinoma, immunostaining positive for TTF‑1, Napsin A. The tumor is subtyped as EGFR‑mutant, specifically the L858R mutation on the sequencing results that reach the laboratory on July 18.</p><p>Dr. Singh explains the significance: “Your tumor is likely to respond to EGFR‑tyrosine kinase inhibitors. We will start treatment, but we must keep a close eye on your COPD, as well as your diabetes and hypertension. You’ll need regular monitoring for interstitial lung disease, a known side effect of these drugs.”</p><p>---</p><p>### Oncology – Dr. Marquez (July 20)</p><p>On the day of the first oncology visit, Mr. Hayes looks exhausted but determined. Dr. Marquez prescribes **erlotinib** at 150 mg daily, the frontline therapy for EGFR L858R tumors. She prescribes a low‑dose prednisone taper for the COPD flare that the imaging had revealed. She emphasizes that the prednisone will need careful adjustment because of his diabetes; she instructs him to monitor blood glucose and to notify the clinic if he sees signs of infection.</p><p>Mr. Hayes’s first week on erlotinib includes mild skin rash—characteristic and manageable. By the end of the second week, the cough eases, the chest heaviness subsides, and he reports a 2‑lb weight gain as he tolerates less sputum. For a moment, the narrative seems hopeful.</p><p>---</p><p>### Rising Worry – August 2</p><p>Three weeks into erlotinib, an unexpected twist: Mr. Hayes experiences a sudden, severe shortness of breath and a sharp chest ache. He finds himself coughing up frothy sputum. He feels his chest feel heavy and tight. Dr. Patel is called in quickly; Mr. Hayes&#x27;s wife is already holding his hand.</p><p>The emergency room notes tachypnea, mild hypoxia (SpO₂ = 90% on room air), and crackles at the lung bases. Rapid arterial blood gas shows a mild respiratory alkalosis. A chest X‑ray demonstrates bilateral new alveolar infiltrates—softer than the old fibrosis, but new and patchy. A workup for pneumonitis follows: ESR, CRP, and serum IgE are mildly raised. His diabetes management worsens—his HbA1c spikes, reflecting a possible steroid‑induced hyperglycemia.</p><p>**Diagnosis:** *EGFR‑TKI induced interstitial pneumonitis*—a known, dangerous side effect. This diagnosis triggers the immediate discontinuation of erlotinib. Dr. Marquez initiates high‑dose steroids (methylprednisone 1 mg/kg) to quell the lung inflammation.</p><p>---</p><p>### Complications – August 10–25</p><p>Mr. Hayes’s course is stormy. The steroid taper is complicated by a mild hyperglycemic crisis—he requires a temporary shift from metformin to insulin glargine. He also experiences a breakthrough COPD exacerbation that requires a course of antibiotics (azithromycin) and supplemental oxygen.</p><p>His chest pain worsens. A CT angiography done on August 15 rules out pulmonary embolism but shows extensive pleural effusion on the right. A thoracentesis obtains exudative fluid; cytology returns negative for malignant cells but high LDH and mild protein content consistent with a reactive pleural process. Mr. Hayes&#x27;s daily oxygen requirement climbs from 1–2 L to 4–6 L; his chest x‑ray reveals the effusion expanding.</p><p>During this time, cardiology sees him for a *“new‑onset atrial fibrillation”* likely precipitated by the systemic inflammatory reaction, steroid use, and hypoxemia. He is started on rate control with diltiazem and an anticoagulant.</p><p>---</p><p>### Resistance and New Therapies – September 1</p><p>The oncologist, Dr. Marquez, reviews the data. The erlotinib therapy had been suspended for nearly a month, and the tumor appears to have resumed growth; the right upper lobe mass is now 4.1 cm on imaging done on September 3, and the pleural effusion has increased. A repeat biopsy shows no T790M resistance mutation, but histology is consistent with a progressive adenocarcinoma.</p><p>**Decision:** *First‑line osimertinib is not an option without the T790M mutation.* Dr. Marquez discusses *pemetrexed + carboplatin* for a short course as a platinum‑based combination, citing evidence that it can overcome resistance in EGFR‑mutant tumors with wild‑type T790M.</p><p>Mr. Hayes&#x27;s comorbidities complicate the choice. Carboplatin’s nephrotoxicity is a concern, but his kidney function is adequate. However, his diabetes, hypertension, and the prior radiation of steroids suggest heightened risk of mucositis and neuropathy.</p><p>---</p><p>### Worsening Outlook – September 18</p><p>Just weeks after the initiation of pemetrexed, Mr. Hayes experiences a sudden confusion episode; he is disoriented, cannot answer simple questions. An urgent neurologic evaluation reveals mild focal weakness on the left side of his body. An MRI brain shows two small enhancing lesions in the parietal lobe—consistent with brain metastases.</p><p>The imaging timeline is clear: mass progression within a month, pleural effusion expansion, now cerebral spread. Meanwhile, his pulmonary fibrotic changes have become confluent, and he now spends most of his day out of breath, clutching the oxygen tubing. Dr. Marquez convenes a multidisciplinary team: oncology, pulmonology, neuro‑oncology, and palliative care.</p><p>A comprehensive discussion with Mr. Hayes and his wife outlines the grim reality: the disease is aggressive, comorbidities are limiting aggressive chemotherapy, supportive measures are now the focus. The team proposes *palliative radiation* to the right chest wall to relieve pain and a *tumor‑burden‑reducing approach* with maintenance erlotinib, re‑initiated at a reduced dose with careful monitoring for pneumonitis, paired with aggressive diabetes and steroid management.</p><p>Mr. Hayes agrees, citing his desire not to die in a hospital but to spend his remaining time with his family. The plan includes careful oxygen titration, low‑dose steroids, inhaled bronchodilators, insulin titration, and strict blood pressure control.</p><p>---</p><p>### Final Days – November 2025</p><p>Despite the palliative measures, Mr. Hayes’s dyspnea escalates again. The pleural effusion returns, now massive and tamponade‑like; a pigtail catheter is inserted, draining 800 mL of fluid—still exudative. He experiences intermittent fevers of unknown origin; cultures remain negative. His left‑handedness diminishes as the cerebral lesions enlarge.</p><p>On his 200th day after the initial diagnosis, the family&#x27;s circle gathers in the modest living room. Mr. Hayes, now on a continuous oxygen supply and an insulin pump, says, “I just want to remember this house—my garage, the smell of oil, the feel of a hammer.” His wife holds his hand. The narrative ends there, with the understanding that Mr. Hayes passed peacefully, surrounded by loved ones, the disease having overtaken him despite a rapid cascade of diagnostic vigilance, therapeutic attempts, and multidisciplinary coordination.</p><p>---</p><p>### A Timed Story from Symptom to Decline</p><p>| **Date / Time** | **Event** | **Key Findings / Decision** |
+|---|---|---|
+| **July 5** | Pulking cough, SOB, weight loss; chest X‑ray reveals right upper‑lobe opacity. | Referral to pulmonology. |
+| **July 12** | CT shows spiculated 3.2‑cm mass, pleural effusion; bronchoscopy + biopsy. | EGFR L858R mutation identified. |
+| **July 20** | Initiation of erlotinib 150 mg daily. | Close monitoring advised for pneumonitis. |
+| **August 2** | Sudden SOB, pleuritic chest pain; ER shows bilateral alveolar infiltrates. | Diagnosis: EGFR‑TKI induced interstitial pneumonitis; erlotinib discontinued. |
+| **August 10–25** | Steroid taper, hyperglycemia, COPD exacerbation, pleural effusion enlargement. | Multidisciplinary management of complications. |
+| **September 1** | Repeat imaging shows mass growth; decision for carboplatin + pemetrexed. | Initiated chemotherapy. |
+| **September 18** | New confusion, focal weakness; MRI reveals brain mets. | Multidisciplinary discussion, palliative intent established. |
+| **Late September – November** | Progressive dyspnea, massive effusion, failure to respond to palliative radiation. | Transition to comfort care. |</p><p>Throughout, each clinical decision point reflects the patient’s pre-existing burdens—COPD that masked early respiratory complaints, diabetes that limited steroid usage, and a history of exposure that predisposed his lung tissue to both malignant transformation and drug‑induced injury. The narrative, though bleak, illustrates the complex interplay of a highly targetable mutation in the context of a frail, multisystem patient, and why the disease ultimately progressed relentlessly.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-07-05</h3><div class="visit-meta">Family Medicine | Reason: Persistent dry cough, shortness of breath, weight loss</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent dry cough, shortness of breath, weight loss.
+
+History of Present Illness:
+Mr. Hayes is a 67‑year‑old male with a 5‑day history of a dry cough now producing faint white sputum, new right‑sided chest heaviness, and an 8‑lb weight loss over the past 3 months. The cough is non‑productive until now, and he reports mild dyspnea on exertion. No fever, chest pain other than heaviness, or hemoptysis.
+
+Past Medical History:
+COPD with chronic bronchitis, emphysema, and baseline pulmonary fibrosis. Coronary artery disease (prior angioplasties). DM2, HTN. Long‑term smoking history (42 years, quit 2 years ago). Occupational asbestos exposure and radon detected in the home.
+
+Medications: Lisinopril 20 mg PO daily, Furosemide 20 mg PO daily, Metformin 500 mg PO BID, Albuterol inhaler PRN, Ipratropium bromide inhaler PRN. NKDA.
+
+Review of Systems: Negative for fever, chills, night sweats, chest pain, hemoptysis, or orthopnea.
+
+Physical Examination:
+- Vital signs: BP 138/80 mmHg, HR 92 bpm, RR 20/min, Temp 98.6 °F, SpO₂ 94% on room air.
+- General: thin, slightly pale, appears anxious.
+- Lungs: Mild wheezing bilaterally. Percussion over the right upper lung field reveals dullness. No egophony or crackles noted.
+- Cardiac: Regular rate and rhythm, no murmurs.
+- Extremities: No edema.
+- Skin: No rashes.
+
+Assessment:
+1. **Pulmonary opacity** – new 2.5 cm opacity in RUL on chest X-ray, in a patient with significant cardiopulmonary comorbidities and risk factors for malignancy (smoking, asbestos, radon). Differential: primary lung cancer, metastatic disease, benign granuloma, atypical pneumonia, pneumothorax, or progression of interstitial fibrosis.
+2. **COPD exacerbation** – intermittent wheezing and new cough could signify an acute exacerbation; however, absence of sputum purulence and stable SpO₂ make infection less likely.
+3. **Early weight loss and malaise** – could reflect chronic disease progression or undiagnosed malignancy.
+
+Plan:
+- **Imaging**: Chest CT with contrast scheduled within the week to further characterize the RUL opacity.
+- **Pulmonary consult**: Refer to pulmonology after CT results for possible bronchoscopy and tissue diagnosis.
+- **Medications**: Continue current regimen. Add short‑course oral prednisone 30 mg PO daily for 5 days only if exacerbation suspected; discontinue if imaging suggests otherwise.
+- **Smoking cessation counseling**: Reinforce abstinence; consider nicotine replacement.
+- **Vaccinations**: Administer seasonal influenza vaccine if not up to date; review pneumococcal vaccination status.
+- **Diabetes/Hypotension**: Monitor fasting glucose and BP; adjust metformin or lisinopril as needed following follow‑up.
+- **Symptom logging**: Patient to record cough frequency, sputum color, and dyspnea on exertion.
+- **Follow‑up**: Return in 2 weeks if symptoms worsen or earlier if CT results are abnormal. Ensure prompt oncology referral if malignancy suspected.
+
+Disposition: Advised patient to follow imaging schedule and to return sooner if new symptoms arise.
+
+---
+
+Patient was educated on the importance of imaging and potential need for tissue diagnosis. All questions addressed; patient verbalized understanding.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dry cough</span><span class="pill">Shortness of breath on mild exertion</span><span class="pill">Weight loss (8 lbs over 3 months)</span><span class="pill">Chest heaviness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138/80</td></tr><tr><td>Heart Rate</td><td>92</td></tr><tr><td>Respiratory Rate</td><td>20</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>SpO2</td><td>94% (ambient air)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>SOB on mild exertion; SpO2 94% ambient</li><li>Dullness at right upper chest percussion</li><li>Diffuse expiratory wheezes</li><li>Thin, slightly pale patient</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray (PA &amp; lateral)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray shows new 2.5 cm opacity in the right upper lobe over existing emphysematous changes</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Metformin 500 mg twice daily</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD with chronic bronchitis and emphysema</li><li>Pulmonary fibrosis (baseline imaging)</li><li>Coronary artery disease with prior angioplasties</li><li>Type 2 diabetes mellitus</li><li>Hypertension</li><li>History of 42 years of smoking (quit 2 years ago)</li><li>Occupational asbestos exposure</li><li>Radon positive home test</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Hayes presents with a five‑day history of a dry cough now producing faint white sputum, new right‑sided chest heaviness, and a 8‑lb weight loss. Examination shows mild wheezing bilaterally and a dull note at the right upper lung field on percussion. The primary care physician orders a chest X‑ray to evaluate the new opacity. The clinician explains the suspicion of a possible lung malignancy given the strong risk profile and schedules a pulmonology referral. The patient agrees to a CT scan within the week.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial workup reveals a right upper lobe opacity; high risk for malignancy given tobacco history and occupational exposures. Decision to refer to pulmonology for further imaging and possible biopsy.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-07-12</h3><div class="visit-meta">Pulmonology | Reason: Evaluation of right upper lobe mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint (CC): Right upper lobe mass evaluation.
+
+History of Present Illness (HPI): 67‑year‑old male with known COPD, emphysema, pulmonary fibrosis, CAD, DM2, HTN presents for pulmonology follow‑up after recent imaging and biopsy confirming a 3.2 cm spiculated right upper lobe (RUL) mass. He reports a persistent dry cough, mild exertional dyspnea, and subjective chest heaviness worsening over the last 2 weeks. He denies hemoptysis, fever, or constitutional symptoms beyond a minor 8‑lb weight loss noted at prior visit.
+
+Past Medical History (PMH): COPD (chronic bronchitis), pulmonary fibrosis, emphysema, coronary artery disease, type 2 diabetes mellitus, hypertension.
+
+Medications: Lisinopril 20 mg PO qd, Furosemide 20 mg PO qd, Metformin 500 mg PO bid, Albuterol inhaler PRN, Ipratropium bromide inhaler PRN.
+
+Allergies: NKDA.
+
+Social History: Former smoker, 45 pack‑years, quit 10 years ago. Lives with wife.
+
+Review of Systems (ROS): Positive for dry cough and mild shortness of breath. Denies fever, chills, weight change (other than prior loss), chest pain, sputum changes, or orthopnea.
+
+Physical Examination:
+• Vital Signs: BP 140/82, HR 94, RR 22, Temp 98.7 °F, SpO₂ 93% on RA.
+• General: Well‑appearing, mildly deconditioned.
+• HEENT: No cyanosis.
+• Cardiovascular: Regular rate/rhythm, no murmurs.
+• Pulmonary: Dull percussion note over right upper lung field, slight decrease in breath sounds intercostally, mild wheezes bilaterally. No crackles or egophony.
+• Extremities: No edema.
+
+Diagnostic Data:
+• Chest CT with contrast: 3.2 cm spiculated RUL mass, small pleural effusion, mild mediastinal node enlargement.
+• Bronchoscopy with transbronchial biopsy: Adenocarcinoma, immunohistochemistry positive for TTF‑1 and napsin‑A. EGFR mutation analysis pending.
+
+Assessment:
+1. Primary lung adenocarcinoma, stage ? (T2aN1M0 pending PET‑CT). 2. COPD exacerbation (stable). 3. Pulmonary fibrosis (stable). 4. Stable CAD, T2DM, HTN.
+
+Plan:
+• Refer to medical oncology for definitive staging (PET‑CT, brain MRI) and multidisciplinary tumor board discussion.
+• Continue current COPD management: Albuterol and ipratropium PRN; consider low‑dose prednisone taper only if clinical worsening.
+• Monitor SpO₂; advise patient to use home oximeter and seek ED if SpO₂ &lt; 90% or dyspnea increases.
+• Educate about cancer symptoms, smoking cessation (enrolled in cessation program), and vaccination updates.
+• Schedule pulmonology follow‑up in 4 weeks or sooner if symptoms worsen.
+• Coordinate with primary care for diabetes and hypertension control.
+
+Disposition: Patient verbalized understanding of the diagnosis and will proceed to oncology referral. No new medications added at this visit.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dry cough</span><span class="pill">Mild shortness of breath</span><span class="pill">Chest heaviness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/82</td></tr><tr><td>Heart Rate</td><td>94</td></tr><tr><td>Respiratory Rate</td><td>22</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>SpO2</td><td>93% (ambient air)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Dullness over right upper lung</li><li>Slightly reduced breath sounds intercostally</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest with contrast</li><li>Bronchoscopy with transbronchial biopsy</li><li>TTF‑1 immunostaining</li><li>EGFR mutation analysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT chest: 3.2 cm spiculated mass in RUL</li><li>Bronchoscopy: adenocarcinoma, TTF‑1+, napsin A+</li><li>EGFR mutation: L858R</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span><span class="pill">Right lung mass (suspected malignancy)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Metformin 500 mg twice daily</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>New right upper lobe mass on recent X‑ray</li><li>Known COPD and pulmonary fibrosis</li><li>COPD flare with increased sputum</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Hayes attends the pulmonology assessment. A chest CT confirms a 3.2 cm spiculated lesion in the right upper lobe, associated with a small pleural effusion and mild mediastinal node enlargement. Bronchoscopy with transbronchial biopsy yields histology of adenocarcinoma, TTF‑1 and napsin A positive. Molecular testing identifies the EGFR L858R mutation. The pulmonologist advises referral to oncology for treatment planning and discusses the possibility of targeted therapy. The patient is informed about potential adverse effects of EGFR TKI therapy and the importance of glucose monitoring due to steroid use.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed EGFR L858R mutant adenocarcinoma, 3.2 cm spiculated mass with pleural effusion and mild node disease. Plan to initiate erlotinib.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-07-20</h3><div class="visit-meta">Oncology | Reason: Initiate EGFR TKI therapy, manage COPD flare</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiate targeted therapy for right lung adenocarcinoma and manage acute COPD flare.
+
+History of Present Illness:
+The patient is a 67‑year‑old male with known COPD, chronic bronchitis, emphysema, pulmonary fibrosis, coronary artery disease, type 2 diabetes, hypertension, and a newly diagnosed right lung adenocarcinoma (right upper lobe). He presents today for initiation of first‑line targeted therapy and for management of a recent COPD exacerbation characterized by increased sputum production, mild dyspnea, and a dry cough. The patient reports improvement in cough and is optimistic about the new treatment, though he remains slightly dyspneic.
+
+Past Medical History:
+• COPD (COPD flare with sputum production)
+• Chronic bronchitis, emphysema, pulmonary fibrosis
+• Coronary artery disease
+• Type 2 diabetes mellitus
+• Hypertension
+• Right lung adenocarcinoma (TTF-1 and napsin‑A positive; EGFR mutation pending)
+
+Medications:
+• Lisinopril 20 mg PO daily
+• Furosemide 20 mg PO daily
+• Metformin 500 mg PO BID
+• Albuterol inhaler PRN
+• Ipratropium bromide inhaler PRN
+• Prednisone 10 mg PO BID (low‑dose taper for COPD flare)
+• Targeted therapy (EGFR TKI) 150 mg PO daily (newly initiated)
+
+Allergies: NKDA
+
+Physical Examination:
+Vital Signs: BP 136/78 mmHg, HR 90 bpm, RR 20/min, Temp 98.4°F, SpO₂ 95% RA.
+General: Appears well‑appearing male in no acute distress.
+HEENT: Normocephalic, no cervical lymphadenopathy.
+Cardiovascular: Regular rate and rhythm, normal S1 S2, no murmurs.
+Respiratory: Rough, dry cough noted. Chest auscultation reveals mild expiratory wheeze bilaterally, otherwise clear. No crackles or wheeze beyond mild expiratory component.
+Abdomen: Soft, non‑tender, no organomegaly.
+Extremities: No edema beyond baseline due to chronic furosemide use.
+Skin: Warm, dry, no rashes.
+BMI: 24.5 kg/m².
+
+Laboratory Results:
+• CBC: within normal limits.
+• CMP: creatinine 1.0 mg/dL, normal electrolytes.
+• Fasting glucose: 110 mg/dL.
+
+Assessment:
+1. Right lung adenocarcinoma – initiating EGFR TKI therapy 150 mg daily.
+2. Acute COPD exacerbation – managed with low‑dose prednisone taper and supportive inhalation therapy.
+3. Uncontrolled hyperglycemia risk secondary to corticosteroid use – baseline glucose now 110 mg/dL; monitor closely.
+4. Stable creatinine; no nephrotoxic medication adjustments needed.
+
+Plan:
+1. Begin EGFR TKI 150 mg PO daily. Counsel patient on common side effects (rash, diarrhea, transaminitis) and instruct to report fever, worsening dyspnea, or signs of infection.
+2. Continue prednisone 10 mg PO BID with plan for 2‑week taper over next 2 weeks.
+3. Order baseline labs (CBC, CMP, fasting glucose) prior to treatment initiation; repeat labs in 2 weeks to monitor for cytopenias, renal function, liver enzymes, and glucose control.
+4. Continue existing COPD regimen: albuterol + ipratropium PRN, monitor for exacerbations, and advise return to urgent care if SpO₂ &lt; 90% or dyspnea worsens.
+5. Educate on diabetes management: advise dietary counseling, potential adjustment of metformin dose if hyperglycemia occurs.
+6. Refer for multidisciplinary tumor board discussion if EGFR mutation status confirms targetable alteration.
+7. Follow up in 4 weeks for clinical assessment, repeat labs, and review of side effect profile.
+8. Encourage smoking cessation counseling and influenza vaccination update if overdue.
+
+Disposition: The patient will be returned home with instructions to monitor for adverse effects and to contact the oncology clinic within 48 hours if any concerning symptoms develop.
+
+Disposition: Will schedule next oncology visit in 4 weeks.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Improved cough</span><span class="pill">Slight dyspnea</span><span class="pill">No significant chest pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>136/78</td></tr><tr><td>Heart Rate</td><td>90</td></tr><tr><td>Respiratory Rate</td><td>20</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>95% (ambient air)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Rough, dry cough</li><li>Normal lung auscultation except mild expiratory wheeze</li><li>BMI 24.5</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Fasting blood glucose</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>CMP: creatinine 1.0 mg/dL</li><li>Fasting glucose: 110 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Erlotinib 150 mg oral</li><li>Prednisone 10 mg twice daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span><span class="pill">Right lung adenocarcinoma, EGFR L858R</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Metformin 500 mg twice daily</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li><li>Erlotinib 150 mg daily</li><li>Prednisone 10 mg twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>EGFR L858R mutant adenocarcinoma</li><li>COPD flare with increased sputum</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist reviews the pathology reports and confirms active EGFR‑mutant tumor. Erlotinib 150 mg daily is prescribed as first‑line targeted therapy. A low‑dose prednisone taper (10 mg BID, then QD) is added to treat the COPD flare but will be carefully monitored because of diabetes. Baseline labs including CBC, CMP, fasting glucose are ordered to monitor for steroid‑induced hyperglycemia and renal function. The patient is counseled on typical skin side effects and instructed to report any fever, worsening dyspnea, or signs of infection. He reports feeling hopeful after the diagnosis and is motivated to stay on therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early response to erlotinib; mild skin rash noted in week one and resolved. Initial improvement in cough and weight. Routine monitoring planned; high risk for EGFR‑TKI pneumonitis.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-08-02</h3><div class="visit-meta">Emergency Medicine | Reason: Acute shortness of breath, chest pain, frothy sputum</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute shortness of breath, sharp chest pain, frothy sputum.
+
+History of Present Illness: Mr. Hayes, 67‑year‑old man with a history of COPD, emphysema, pulmonary fibrosis, right lung adenocarcinoma on EGFR‑TKI therapy (erlotinib 150 mg daily), prednisone 10 mg BID, and comorbid diabetes and coronary artery disease, presents to the ED with sudden onset, progressive dyspnea, pleuritic chest pain, and productive cough of frothy sputum. He reports worsening from baseline. No fever, recent travel, or known allergen exposures.
+
+Past Medical History: COPD, chronic bronchitis, emphysema, pulmonary fibrosis, coronary artery disease, type 2 diabetes mellitus, hypertension, and stage IIB right lung adenocarcinoma on EGFR‑TKI.
+
+Medications: Lisinopril 20 mg daily, furosemide 20 mg daily, metformin 500 mg BID, albuterol inhaler PRN, ipratropium bromide inhaler PRN, erlotinib 150 mg daily (discontinued now), prednisone 10 mg BID.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for dyspnea, chest pain, and cough; denies fever, hemoptysis, orthopnea, or trauma.
+
+Physical Examination:
+- Airway: patent
+- Breathing: Tachypneic (RR 28), using accessory muscles, bilateral crackles
+- Cardiovascular: Tachycardic 110 bpm, BP 150/90 mmHg, no murmurs
+- Abdomen: Soft, non‑tender
+- Extremities: No edema
+- Skin: No rashes
+
+Vitals:
+- BP: 150/90
+- HR: 110
+- RR: 28
+- Temp: 99.2°F
+- SpO₂: 90% on room air
+
+Investigations:
+- Chest X‑ray: New bilateral alveolar infiltrates, consistent with possible interstitial process or pulmonary edema
+- CBC: WBC 12,000/µL (mild leukocytosis)
+- CRP: 5 mg/L (mildly elevated)
+- ESR: 20 mm/hr (mildly elevated)
+- Serum IgE: 150 IU/mL (mildly elevated)
+- Arterial blood gas: mild respiratory alkalosis, PaO₂ 55 mmHg on RA
+
+Assessment:
+1. EGFR‑TKI–associated interstitial lung disease/pneumonitis (most likely, given recent initiation and classic imaging)
+2. Acute COPD exacerbation (possible overlap)
+3. Community‑acquired pneumonia (consider given leukocytosis and sputum characteristics)
+4. Pulmonary edema secondary to volume overload or left ventricular dysfunction
+5. Pulmonary fibrosis flare
+6. Other differentials: pulmonary embolism, acute coronary syndrome
+
+Plan:
+- Discontinued erlotinib 150 mg daily immediately.
+- Initiated high‑dose intravenous methylprednisolone 80 mg (1 mg/kg) daily.
+- Continue oral prednisone 10 mg BID; plan for gradual taper once stabilized.
+- Supplemental oxygen at 2 L/min via nasal cannula to maintain SpO₂ ≥94%.
+- Continue baseline COPD therapy (albuterol PRN, ipratropium PRN) and antihypertensives.
+- Hold furosemide temporarily to assess effect of steroids on pulmonary edema.
+- Monitor glucose closely (baseline 110 mg/dL) with twice daily BG due to steroid therapy.
+- Admit to high‑dependency unit for close monitoring; repeat ABG and CBC in 24 hrs.
+- Order chest CT with contrast in 2 weeks (post‑therapy) to evaluate residual infiltrates and rule out thromboembolism.
+- Refer to pulmonary consultation for ILD management and to oncology to discuss alternative systemic therapy.
+- Counsel patient on symptom monitoring; if SpO₂ &lt;90%, worsening dyspnea, fever &gt;100.4°F, or chest pain, return to ED immediately.
+- Plan for follow‑up with oncology in 1 week for decision on cancer therapy.
+- Educate patient on steroid side effects and importance of glucose control.
+
+Disposition: Admitted to medical floor with high‑dependency monitoring.
+
+&quot;</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden onset shortness of breath</span><span class="pill">Sharp pleuritic chest pain</span><span class="pill">Cough with frothy sputum</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>150/90</td></tr><tr><td>Heart Rate</td><td>110</td></tr><tr><td>Respiratory Rate</td><td>28</td></tr><tr><td>Temperature</td><td>99.2°F</td></tr><tr><td>SpO2</td><td>90% (room air)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tachypnea; RR 28</li><li>Bilaterally audible crackles</li><li>Non‑labored breathing with accessory muscle use</li><li>Mild tachycardia</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>CBC</li><li>CRP</li><li>ESR</li><li>Serum IgE</li><li>Arterial blood gas</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: new bilateral alveolar infiltrates</li><li>CBC: WBC 12,000/µL (elevated)</li><li>CRP: 5 mg/L (mildly elevated)</li><li>ESR: 20 mm/hr (mildly elevated)</li><li>Serum IgE: 150 IU/mL (mildly elevated)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Erlotinib discontinued</li><li>Methylprednisolone 80 mg IV daily (1 mg/kg)</li><li>Supplemental oxygen 2 L/min</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span><span class="pill">Right lung adenocarcinoma, EGFR L858R</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Metformin 500 mg twice daily</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li><li>Erlotinib 150 mg daily</li><li>Prednisone 10 mg twice daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>On erlotinib for 3 weeks</li><li>Prednisone 10 mg BID</li><li>Known COPD and diabetes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Hayes presents with acute dyspnea, sharp chest pain, and frothy sputum. Examination reveals tachypnea, auscultation shows bilateral crackles, and SpO₂ of 90% on room air. Rapid arterial blood gas indicates a mild respiratory alkalosis. A chest X‑ray demonstrates bilateral alveolar infiltrates not present on prior imaging. Labs including CBC, CRP, ESR, and serum IgE are mildly elevated. A working diagnosis of EGFR‑TKI induced interstitial pneumonitis is made. Erlotinib is immediately discontinued. The patient is started on methylprednisolone 1 mg/kg IV daily (80 mg) and placed on supplemental oxygen. He is advised to monitor blood glucose vigilantly due to steroid use.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnostic confirmation of EGFR‑TKI induced interstitial pneumonitis. High‑dose steroids initiated; expectable risk of hyperglycemia and infection.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-08-15</h3><div class="visit-meta">Pulmonology / Internal Medicine | Reason: Steroid taper, pleural effusion, COPD exacerbation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Steroid taper, pleural effusion, COPD exacerbation.\n\nHistory &amp; Physical: 67‑year‑old male with COPD, emphysema, pulmonary fibrosis, right‑lung adenocarcinoma (EGFR L858R), CAD, DM2, HTN, chronic pleural effusion, and steroid‑induced hyperglycemia presents for inpatient pulmonary follow‑up. Ill‑appearing, alert, mild tachypnea (RR 28), accessory muscle use, SpO₂ 92% on 4 L/min O₂, HR 108, BP 145/85, T 100.0 °F (38 °C). Exam reveals diffuse bilateral crackles, no peripheral edema. No chest pain reported.\n\nCurrent Meds: Lisinopril 20 mg daily, Furosemide 20 mg daily, Insulin glargine 10 U nightly (now titrated), Albuterol PRN, Ipratropium PRN, Azithromycin 500 mg daily (5 days), Methylprednisolone 40 mg daily (taper).\n\nRecent Interventions: Thoracentesis yielded exudative fluid (LDH 650 U/L, protein 3.2 g/dL, cytology negative). CT pulmonary angiography negative for embolism, confirmed 5 cm right pleural effusion.\n\nAssessment: 1) Residual inflammatory pleural effusion likely malignant or secondary to recent steroid taper and COPD exacerbation. 2) COPD‑related hypoxemic respiratory failure exacerbated by pleural effusion. 3) Steroid‑induced hyperglycemia (capillary 210 mg/dL). 4) New atrial fibrillation on cardiology consult, currently hemodynamically stable. 5) No infectious etiology; cultures negative.
+\nPlan: 1) Initiate oral prednisone 40 mg PO daily tapering over 4 weeks with gradual decrease (e.g., 40 mg → 30 mg → 20 mg → 10 mg). 2) Continue and titrate insulin glargine to maintain fasting glucose &lt;180 mg/dL; monitor BG QID. 3) Continue supplemental O₂ at 6 L/min via face mask to keep SpO₂ &gt;92%; adjust as needed. 4) Hold azithromycin; discontinue antibiotics given negative cultures. 5) Cardiology follow‑up for new atrial fibrillation; consider anticoagulation per CHA₂DS₂‑VASc. 6) Re‑evaluate pleural effusion with repeat chest X‑ray in 48 h; if effusion persists or enlarges, consider repeat thoracentesis or pleurodesis. 7) Continue COPD therapy (albuterol, ipratropium PRN). 8) Re‑initiate furosemide on stable fluid status; monitor edema. 9) Discuss discharge plan: home O₂ (6 L/min), prednisone taper, insulin regimen, scheduled oncology review within 1 week, cardiology review, regular outpatient pulmonology consult, and home pulmonary rehab.
+\nDisposition: Admit to pulmonary step‑down unit for continued monitoring, glucose control, and steroid titration. \n</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent dyspnea</span><span class="pill">Cough with yellow sputum</span><span class="pill">Recent weight loss</span><span class="pill">Low‑grade fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>145/85</td></tr><tr><td>Heart Rate</td><td>108</td></tr><tr><td>Respiratory Rate</td><td>28</td></tr><tr><td>Temperature</td><td>100.0°F</td></tr><tr><td>SpO2</td><td>92% (4 L/min O₂)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild tachypnea</li><li>Diffuse bilateral crackles</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT pulmonary angiography</li><li>Thoracentesis pleural fluid analysis</li><li>Blood glucose monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CTPA: no pulmonary embolism, 5 cm right pleural effusion</li><li>Pleural fluid: exudate, LDH 650 U/L, protein 3.2 g/dL, cytology negative</li><li>Blood glucose: 210 mg/dL fasting</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Methylprednisolone 40 mg daily taper</li><li>Insulin glargine adjustment</li><li>Oxygen 6 L/min</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span><span class="pill">Right lung adenocarcinoma, EGFR L858R</span><span class="pill">Pneumonitis</span><span class="pill">Pleural effusion</span><span class="pill">Steroid‑induced hyperglycemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Insulin glargine 10 U nightly</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li><li>Azithromycin 500 mg daily (5 days)</li><li>Methylprednisolone 40 mg daily (tapering)</li><li>Prednisone discontinued</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>High‑dose methylprednisolone taper</li><li>Recent pleural fluid drainage</li><li>Recent COPD exacerbation treated with azithromycin</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient returns for a follow‑up in the inpatient pulmonary unit. Examination shows an ill‑appearing but alert patient with mild tachypnea, use of accessory muscles, and diffuse bilateral crackles. A chest CT angiography is ordered to rule out pulmonary embolism and to evaluate pleural fluid. The CT reveals no embolus but shows a right pleural effusion measuring 5 cm, and no new pulmonary infiltrates beyond the known fibrosis. A diagnostic thoracentesis is performed; pleural fluid is exudative, high LDH, mild protein, negative cytology. The patient is started on a low‑dose oral prednisone taper (40 mg daily) to manage residual inflammation, as well as insulin glargine titration for hyperglycemia. His oxygen requirement is adjusted to 6 L/min to maintain SpO₂ &gt;92%. Antibiotics are held as cultures from pleural fluid are negative. The cardiology consult reveals new atrial fibrillation, but it is left‑untreated for now as the patient is stable.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Residual inflammation persists; pleural effusion manageable with drainage. Hyperglycemia controlled with insulin. COPD exacerbation improving.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-09-03</h3><div class="visit-meta">Oncology | Reason: Progressive tumor, initiate chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Progressive right lung adenocarcinoma, initiation of chemotherapy.
+
+History of Present Illness: 67‑year‑old male presents with worsening dyspnea, progressive weight loss, and fatigue. Recent imaging (September 3) shows tumor enlargement to 4.1 cm. Patient has a history of COPD, pulmonary fibrosis, emphysema, coronary artery disease, type 2 diabetes, hypertension, and prior high‑dose steroid therapy. No new chest pain or hemoptysis.
+
+Past Medical History: COPD with chronic bronchitis, emphysema, pulmonary fibrosis, coronary artery disease, type 2 diabetes, hypertension, right lung adenocarcinoma, steroid‑induced hyperglycemia, pneumonitis.
+
+Current Medications: Lisinopril 20 mg daily, furosemide 20 mg daily, insulin glargine 10 U nightly, albuterol inhaler PRN, ipratropium bromide inhaler PRN, methylprednisolone 40 mg daily (tapering).
+
+Social History: Former smoker, quit 10 years ago.
+
+Physical Examination:
+- Vitals: BP 138/84 mmHg; HR 92 bpm; RR 22/min; Temp 98.6 °F; SpO₂ 94% on 6 L/min O₂.
+- General: Pale, appears mildly tachypneic.
+- Chest: Diffuse bilateral crackles, no JVD.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Abdomen: Soft, non‑tender.
+- Extremities: No cyanosis.
+
+Assessment:
+1. Progressive right lung adenocarcinoma – tumor enlargement to 4.1 cm.
+2. Exacerbated COPD/pulmonary fibrosis – dyspnea, crackles.
+3. Steroid‑induced hyperglycemia – stable on insulin.
+4. Renal function preserved (Cr 1.0 mg/dL).
+
+Plan:
+- Initiate first cycle of platinum‑based doublet: 
+  • Pemetrexed 500 mg/m² IV day 1.
+  • Carboplatin AUC 5 IV days 2‑5.
+- G‑CSF support per oncology protocol.
+- Continue current COPD regimen; monitor for exacerbation.
+- Maintain insulin glargine; monitor capillary glucose 4×/day.
+- Maintain methylprednisolone taper; consider transitioning to low‑dose prednisone after cycle 1.
+- Educate patient on signs of mucositis, neuropathy, renal dysfunction; advise to keep O₂ flow ≤6 L/min if SpO₂ falls &lt;92%.
+- Order CBC, CMP, renal panel before each cycle; if Cr rises &gt;1.5 mg/dL, dose adjust.
+- Follow‑up in oncology clinic in 2 weeks for next cycle scheduling and review lab results.
+- Pulmonology follow‑up to assess pulmonary status within 1 week.
+- Cardiology review if arrhythmia recurrence.
+
+Patient has consented to the plan and understands the need for close monitoring of blood counts, renal function, and metabolic control.
+
+Prepared by: Dr. Marquez, Medical Oncology</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increasing shortness of breath</span><span class="pill">Weight loss</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138/84</td></tr><tr><td>Heart Rate</td><td>92</td></tr><tr><td>Respiratory Rate</td><td>22</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>SpO2</td><td>94% (6 L/min O₂)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild tachypnea</li><li>Diffuse bilateral crackles</li><li>No jugular venous distention</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Renal function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 11.5 g/dL, WBC 6,000/µL, Plt 150,000/µL</li><li>CMP: creatinine 1.0 mg/dL</li><li>BUN 18 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pemetrexed 500 mg/m² IV day 1</li><li>Carboplatin AUC5 IV days 2‑5</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span><span class="pill">Right lung adenocarcinoma, EGFR L858R</span><span class="pill">Pneumonitis</span><span class="pill">Pleural effusion (resolved)</span><span class="pill">Steroid‑induced hyperglycemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Insulin glargine 10 U nightly</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li><li>Methylprednisolone 40 mg daily (tapering)</li><li>Prednisone discontinued</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Radiographic progression to 4.1 cm mass on September 3 imaging</li><li>No EGFR T790M mutation</li><li>Recent high‑dose steroid exposure</li><li>COPD exacerbation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncology clinic reviews the recent CT showing tumor enlargement to 4.1 cm. The patient has no T790M resistance mutation, so first‑line osimertinib is not appropriate. Dr. Marquez discusses a platinum‑based doublet therapy with pemetrexed and carboplatin as a salvage option. Baseline labs are ordered: CBC, CMP, and renal function. The patient consents to the regimen and the plan is to administer pemetrexed 500 mg/m² IV on day 1 and carboplatin AUC5 IV on days 2–5 with G‑CSF support. The patient is advised to monitor for mucositis, neuropathy, and renal function. He expresses apprehension but agrees to proceed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Tumor progressing; starting standard chemo for EGFR‑mutant, T790M‑negative disease.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-09-18</h3><div class="visit-meta">Neuro-Oncology | Reason: Confusion, focal weakness; evaluate for brain metastases</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute confusion and left‑sided weakness. 
+
+History of Present Illness: The patient was brought to the ED by his wife due to sudden onset of disorientation the previous evening, accompanied by mild weakness of the left upper and lower extremities. He denied headache, vision changes, or seizures. He has recently completed two cycles of carboplatin/pemetrexed chemotherapy and is on a prednisolone taper. He has no recent trauma. Past medical history includes COPD with emphysema, pulmonary fibrosis, coronary artery disease, type 2 diabetes, hypertension, right‑lung adenocarcinoma EGFR L858R, and atrial fibrillation. Current medications include lisinopril 20 mg, furosemide 20 mg, insulin glargine 12 U nightly, albuterol albuterol, ipratropium PRN, erlotinib (currently 150 mg daily, now reduced to 50 mg), methylprednisolone 20 mg daily, digoxin 0.25 mg, and warfarin 5 mg.
+
+Physical Examination: Alert but disoriented to time, place, and person. Blood pressure 140/80 mm Hg, heart rate 88 bpm, respiratory rate 22 breaths/min, SpO₂ 92 % on 6 L/min O₂. Neurologic exam shows 4/5 strength in left upper and lower extremities, normal sensation, no cranial nerve deficits, normal gait. Respiratory exam reveals increased work of breathing with bilateral wheezing.
+
+Labs &amp; Imaging: MRI brain demonstrated two small enhancing lesions in the left parietal lobe, 0.9 cm and 1.2 cm, without hemorrhage. CBC: hemoglobin 10.8 g/dL. CMP: creatinine 1.1 mg/dL. INR 2.8. 
+
+Assessment: Metastatic disease to the brain is the most likely cause of the acute neurocognitive symptoms. Differential includes CNS infection, metabolic encephalopathy (hyperglycemia/hyponatremia), acute stroke, or medication effect.
+
+Plan: 1) Shift to palliative intent. 2) Initiate palliative radiotherapy to the right chest wall (20 Gy in 5 fractions) for pain control. 3) Continue erlotinib at a reduced dose of 50 mg daily while monitoring for pneumonitis. 4) Continue methylprednisolone 20 mg daily taper. 5) Adjust insulin glargine to maintain blood glucose 140‑180 mg/dL. 6) Continue oxygen titration, bronchodilator optimization. 7) Monitor INR weekly and adjust warfarin as needed. 8) Provide supportive care: pain, mood, swallow, nutrition support. 9) Discuss goals of care; patient elected to remain at home with a comfort‑focused plan.
+
+Follow‑up: Oncology review in one month to assess pain, symptom burden, and treatment tolerance. Pulmonology and cardiology follow‑up as needed. If neurological status deteriorates, consider emergent imaging.
+
+Medications:
+- Erlotinib 50 mg PO daily
+- Methylprednisolone 20 mg PO daily (taper)
+- Insulin glargine – titrate per glucose log
+- Warfarin 5 mg PO daily (adjust per INR)
+- Digoxin 0.25 mg PO daily
+- Lisinopril 20 mg PO daily
+- Furosemide 20 mg PO daily
+- Albuterol inhaler PRN
+- Ipratropium inhaler PRN
+- Other home medications unchanged.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden confusion and disorientation</span><span class="pill">Left‑side mild weakness</span><span class="pill">Recent fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/80</td></tr><tr><td>Heart Rate</td><td>88</td></tr><tr><td>Respiratory Rate</td><td>22</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>SpO2</td><td>92% (6 L/min O₂)</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left‑sided mild weakness</li><li>Alert but disoriented</li><li>Respiratory effort increased</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>MRI brain</li><li>CBC</li><li>CMP</li><li>INR</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI brain: two enhancing lesions, 0.9 cm and 1.2 cm in left parietal lobe</li><li>CBC: Hb 10.8 g/dL</li><li>CMP: creatinine 1.1 mg/dL</li><li>INR: 2.8</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Palliative radiation plan for right chest wall (20 Gy in 5 fractions)</li><li>Reduced erlotinib 50 mg daily</li><li>Methylprednisolone 20 mg taper</li><li>Insulin titration</li><li>Bronchodilator optimization</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Hypertension</span><span class="pill">Right lung adenocarcinoma, EGFR L858R</span><span class="pill">Pneumonitis</span><span class="pill">Steroid‐induced hyperglycemia</span><span class="pill">Chemotherapy exposure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Insulin glargine 12 U nightly</li><li>Albuterol inhaler PRN</li><li>Ipratropium bromide inhaler PRN</li><li>Carboplatin &amp; pemetrexed regimen (completed 2 cycles)</li><li>Methylprednisolone 20 mg daily (tapering)</li><li>Digoxin 0.25 mg daily (for AF)</li><li>Warfarin 5 mg daily (for AF)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing pemetrexed/carboplatin</li><li>Recent steroid taper</li><li>New atrial fibrillation (not yet treated)</li><li>History of diabetes, hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Upon arrival, the patient shows marked confusion and left‑sided weakness. A neurological exam reveals mild left upper and lower limb weakness with normal sensation. MRI of the brain is ordered and returns two small enhancing lesions in the left parietal lobe. A multidisciplinary meeting is convened, and the consensus is to shift to palliative intent: palliative radiation to the chest wall for pain control, continuation of erlotinib at a reduced dose (50 mg daily) while monitoring for pneumonitis, and aggressive supportive care (oxygen titration, insulin management, bronchodilator regimen). The team discusses goals of care with the patient and family; the patient chooses to remain at home, focusing on comfort. The oncology team schedules a follow‑up in one month to reassess pain and symptom status.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Development of brain metastases; disease becomes systemic. Current care goals: palliation and symptom control.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 67</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease (COPD)</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Cardiovascular disease</span><span class="pill">Coronary artery disease</span><span class="pill">History of smoking</span><span class="pill">Diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Primary lung adenocarcinoma</span><span class="pill">Right lung adenocarcinoma</span><span class="pill">Chronic pleural effusion</span><span class="pill">Steroid-induced hyperglycemia</span><span class="pill">Atrial fibrillation</span><span class="pill">Pneumonitis</span><span class="pill">Brain metastases from lung adenocarcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Furosemide 20 mg daily</li><li>Insulin glargine (titrated per glucose log)</li><li>Albuterol inhaler PRN</li><li>Ipratropium inhaler PRN</li><li>Erlotinib 50 mg daily</li><li>Methylprednisolone 20 mg daily taper</li><li>Digoxin 0.25 mg daily</li><li>Warfarin 5 mg daily (adjust per INR)</li><li>Oxygen 6 L/min</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with a 5‑day history of a dry cough now producing faint white sputum, new right‑sided chest heaviness, and an 8‑lb weight loss over 3 months. Vitals: BP 138/80 mmHg, HR 92 bpm, RR 20/min, SpO₂ 94% on room air. Physical exam revealed mild bilateral wheezing and dullness over the right upper lung field. Chest X‑ray demonstrated a new 2.5‑cm opacity in the right upper lobe. Plan included scheduling a chest CT with contrast within the week, referral to pulmonology after imaging, continuation of current COPD and comorbidity medications, and consideration of a short‑course prednisone taper only if exacerbation is suspected. Smoking cessation counseling, influenza vaccination review, and monitoring of glucose and blood pressure were also advised.</li><li>Pulmonology evaluation of a 3.2‑cm spiculated right upper lobe mass. Chest CT with contrast confirmed the mass, a small pleural effusion, and mild mediastinal node enlargement. Bronchoscopy with transbronchial biopsy revealed adenocarcinoma positive for TTF‑1 and napsin‑A; EGFR mutation analysis pending. Patient continued current COPD medications; low‑dose prednisone taper reserved for clinical worsening. Refer to medical oncology for PET‑CT, brain MRI, and multidisciplinary tumor board discussion. Monitor SpO₂ with home oximeter and advise seeking emergency care if SpO₂ &lt; 90% or dyspnea increases.</li><li>Initiated EGFR TKI therapy 150 mg PO daily for right lung adenocarcinoma. Started low‑dose prednisone 10 mg PO BID with 2‑week taper for acute COPD exacerbation. Continued existing COPD medications (albuterol and ipratropium PRN). Ordered baseline CBC, CMP, fasting glucose; repeat labs in 2 weeks. Baseline labs within normal limits (CBC, CMP, glucose 110 mg/dL). Advised monitoring of SpO₂, dyspnea, and side effects of EGFR TKI. Follow‑up scheduled in 4 weeks. Smoking cessation counseling and influenza vaccine update discussed.</li><li>Patient admitted to high‑dependency unit for acute dyspnea, pleuritic chest pain and frothy sputum. Chest X‑ray showed bilateral alveolar infiltrates; labs revealed mild leukocytosis. Discontinued erlotinib; started IV methylprednisolone 80 mg daily and supplemental O₂ at 2 L/min. Oral prednisone 10 mg BID continued; furosemide held temporarily. Repeat CBC, ABG, CMP within 24 hrs. Chest CT with contrast scheduled in 2 weeks. Pulmonary and oncology consultations arranged. Blood glucose monitored twice daily. Patient to follow up with oncology in 1 week for therapy decision.</li><li>Patient admitted to pulmonary step‑down unit with COPD exacerbation, hypoxemic respiratory failure secondary to pleural effusion, steroid‑induced hyperglycemia, and new atrial fibrillation. Thoracentesis yielded exudative fluid; CT pulmonary angiography negative for embolism. Started oral prednisone 40 mg daily taper and methylprednisolone 40 mg daily taper; insulin glargine titrated; oxygen 6 L/min via face mask; azithromycin discontinued. Repeat chest X‑ray in 48 hours; scheduled oncology, cardiology, and pulmonology follow‑ups.</li><li>On 2025‑09‑03, patient initiated first cycle of platinum‑based chemotherapy (pemetrexed 500 mg/m² IV day 1 and carboplatin AUC5 IV days 2‑5) with G‑CSF support. Continued COPD and cardiovascular medications. Labs (CBC, CMP, renal panel) ordered before each cycle. O₂ maintained at 6 L/min. Patient educated on monitoring for mucositis, neuropathy, and renal dysfunction, and instructed to keep O₂ flow ≤6 L/min if SpO₂ falls &lt;92%. Follow‑up with oncology in 2 weeks and pulmonology within 1 week.</li><li>Patient presented with acute confusion and left‑sided weakness. MRI brain revealed two small enhancing lesions in the left parietal lobe (0.9 cm and 1.2 cm) without hemorrhage. Labs showed mild anemia, normal creatinine, INR 2.8. Plan: initiate palliative radiotherapy to right chest wall (20 Gy in 5 fractions), switch erlotinib to 50 mg daily, continue methylprednisolone 20 mg daily taper, adjust insulin glargine to 140‑180 mg/dL control, continue oxygen and bronchodilators, monitor INR weekly, maintain goals of comfort care. Outlook: Oncology follow‑up in 1 month.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

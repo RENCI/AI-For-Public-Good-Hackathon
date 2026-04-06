@@ -1,0 +1,977 @@
+{
+  "case_id": "169d2526",
+  "clinical_variables": {
+    "primary_condition": "Community-acquired pneumonia",
+    "comorbidities": [
+      "Chronic obstructive pulmonary disease (COPD)",
+      "Heart failure",
+      "Diabetes mellitus",
+      "Chronic kidney disease",
+      "Smoking"
+    ],
+    "age": 60,
+    "sex": "M",
+    "risk_factors": [
+      "Smoking",
+      "Recent hospitalization",
+      "Recent influenza infection"
+    ]
+  },
+  "difficulty": "medium",
+  "case_type": "acute",
+  "intended_outcome": "worsening",
+  "narrative": "On a cool, gray November morning, Henry\u2014the kind of man who had spent most of his life breathing the haze from a thousand cigarette butts\u2014opened his eyes to a low, throbbing cough that had been lurking since he\u2019d fallen ill with the flu a week earlier. The influenza had been a brief, fierce burst of fever, muscle aches, and a relentless cough that left him near his bed. He\u2019d recovered, feeling a touch better, but the cough had not vanished. The chest felt tight, his breath had become a hurried effort, and his heart beat a notch too fast whenever the sun came through the blinds.\n\nHenry called his primary\u2011care provider, a nurse practitioner who\u2019d always managed his COPD with albuterol\u2011ipratropium inhalers, his congestive heart failure with lisinopril and furosemide, and his type\u20112 diabetes with metformin\u2014though in this case the drug was held because his kidneys were already in trouble. The visit, over the phone, revealed that Henry\u2019s fever had risen to 38.5\u202f\u00b0C, his cough had turned from dry to productive, and he felt an odd pressure in his chest when he\u2019d climbed the stairs to the kitchen. He was reminded to take his inhaler, to keep his diabetes meds on hold, and a presumptive diagnosis of community\u2011acquired pneumonia (CAP) was offered, with a recommendation of oral azithromycin to be taken for seven days.\n\nIn the days that followed, the symptoms didn\u2019t abate. With each breath, Henry felt a little more winded; his shortness of breath had progressed from \u201cI can\u2019t get a full breath\u201d to \u201cI\u2019m gasping even when I\u2019m lying down.\u201d By the fourth day after his flu, he woke up with a sharp pain in his right lower chest, a sudden cold sweat, and his heart racing at 110 beats per minute. He had also begun to feel \u201cpressure\u201d in his chest, a sensation that made him think of heart trouble\u2014a red flag for his heart failure. Realizing that the fever (now 39\u202f\u00b0C) and his rising heart rate were signs of something serious, he drove himself into the emergency department.\n\nIn the ED, the nurse quickly noted his respiratory rate at 26 breaths per minute, oxygen saturation at 88\u202f% on room air, a crackle sound over the left lower lung field, and distant heart sounds. His blood pressure was 120/70\u202fmmHg, but his respirations were laboriously shallow. A quick chest X\u2011ray in the waiting room confirmed a dense, right lower lobe consolidation, the classic sign of bacterial pneumonia. The triage doctor ordered a CBC, electrolytes, blood cultures, and started him on intravenous ceftriaxone (1\u202fg) and azithromycin (500\u202fmg daily) as empiric therapy, while also giving him supplemental oxygen at 4\u202fL via nasal cannula.\n\nHenry\u2019s medical history was a cocktail of risk factors\u2014active smoker, COPD, CHF, diabetes, and chronic kidney disease stage\u202f3 (baseline creatinine 1.4\u202fmg/dL). His recent 2\u2011week hospitalization for a urinary tract infection\u2014treated with ciprofloxacin\u2014had left him a little more frail. The clinicians were aware that choosing antibiotics in the presence of CKD required careful adjustment to avoid nephrotoxicity.\n\nThe next day, his chest X\u2011ray was repeated: the infiltrate had grown. His white blood cell count ballooned to 18\u202f000\u202f/\u00b5L with a left shift, and his C\u2011reactive protein peaked at 150\u202fmg/L. The rapid antigen influenza test was negative, ruling out a lingering viral infection. Henry\u2019s creatinine had climbed to 1.8\u202fmg/dL, a sign that the kidneys were fighting a second battle against the infection and the drugs. The nephrology consult suggested reducing the ceftriaxone dose to 500\u202fmg daily and monitoring renal function closely.\n\nDespite these adjustments, by day\u202f4 of admission Henry\u2019s breathing worsened to a respiratory rate of 32, and his oxygen desaturation dropped to 82\u202f% even on 6\u202fL/min. He complained of a sharp, left-sided chest pain that had been a dull ache for several days but suddenly became more intense. His heart sounds had become faint, and a new, low\u2011range murmur could be heard over the apex\u2014consistent with fluid overload in heart failure. He was placed on a non\u2011invasive ventilation mask, but even that failed to improve his saturation beyond 88\u202f%. His nursing team noted that the urine output had become scant\u2014only 200\u202fmL per day\u2014raising suspicion of prerenal azotemia or acute tubular necrosis.\n\nDay\u202f5 marked a turning point: Henry was intubated and transferred to the intensive care unit. In the PICU, the team added furosemide boluses (20\u202fmg IV) to attempt to mobilize fluid, but his pulmonary edema on serial chest X\u2011rays persisted. The bedside echo showed an ejection fraction of 40\u202f%\u2014decreased from his baseline 45\u202f%\u2014and a severely dilated left ventricle with mild tricuspid regurgitation. He was also started on a low dose of levophed (norepinephrine) to maintain a mean arterial pressure of at least 65\u202fmmHg.\n\nHenry\u2019s course took on the complex arc of a high\u2011stakes battle. By day\u202f7, his serum creatinine had risen to 2.5\u202fmg/dL, and his urine output was less than 50\u202fmL in the past 24\u202fhours. A trial of a diuretic infusion still failed to yield enough diuresis. The nephrology team recommended initiating continuous renal replacement therapy (CRRT) to aid the kidneys and reduce the risk of further nephrotoxicity from antibiotics. The decision was made, and CRRT was initiated within hours.\n\nIn the ensuing days, Henry\u2019s clinical picture remained stubbornly unidirectional. The sputum cultures returned a multidrug\u2011resistant *Pseudomonas aeruginosa*, prompting a shift from ceftriaxone to cefepime\u2014a potent antipseudomonal but also a known nephrotoxin. The nephrologists adjusted the CRRT parameters to balance antibiotic removal and kidney support. Meanwhile, his inflammatory markers stayed high (CRP 80\u202fmg/L), and a second chest X\u2011ray on day\u202f10 revealed more extensive bilateral infiltrates\u2014indicative of a superimposed pneumonia or progression of the original infection.\n\nHenry\u2019s diabetes remained a constant background tension. His glucose readings fluctuated wildly\u2014from hypoglycemic episodes during the first 48\u202fhours of ICU stay to hyperglycemic spikes at 280\u2013320\u202fmg/dL later on. The endocrinology team added insulin infusion to keep the glucose in a tight, albeit challenging, range. Unfortunately, the repeated adjustments and the continuous CRRT made insulin management a minefield.\n\nAs day\u202f12 dawned, Henry\u2019s oxygenation was critically low. Even with 100\u202f% FiO\u2082 and a high\u2011flow nasal cannula, his hemoglobin saturation could not exceed 85\u202f%. The surgical team discussed potential thoracostomy, but imaging showed no pleural effusion or pneumothorax. The only viable option was to secure a ventilator through intubation, which had already happened; the decision now was whether to apply a high\u2011volume, low\u2011pressure ventilator strategy to keep his alveoli open without causing barotrauma.\n\nDespite escalation of care\u2014including the addition of a corticosteroid taper (prednisone 40\u202fmg PO daily) to blunt the inflammatory cascade\u2014Henry\u2019s hemodynamics continued to wobble. Lactate levels climbed to 4.2\u202fmmol/L, indicating possible septic shock. The infection specialist switched the regimen to meropenem (1\u202fg every 8\u202fhours) and linezolid to cover any potential MRSA in the lungs\u2014an antibiotic combo that, while thorough, pushed his kidneys to the brink.\n\nOn day\u202f15, the multi\u2011organ failure narrative became unavoidable. Henry\u2019s heart rate fluctuated between 110 and 140; his blood pressure dipped below 90\u202fmmHg despite vasopressor support. Renal function remained at its nadir, and the CRRT was unable to keep pace with the kidney\u2019s deterioration. The ventilator settings had reached the threshold of safe lung protective strategies: high positive end\u2011expiratory pressure (PEEP) at 20\u202fcm H\u2082O, a tidal volume of 6\u202fmL/kg ideal body weight, yet his arterial oxygenation was still languishing below 70\u202fmmHg on FiO\u2082 100\u202f%. Electrocardiograms revealed left heart strain, and lactate had risen to 6\u202fmmol/L.\n\nFamily members, who had travelled from out of state to sit by Henry\u2019s side, watched a life that was slowly slipping away. They were asked to weigh the decision of continuing aggressive therapy versus comfort care. In the end, the family, the palliative care team, and the ICU physicians decided to transition Henry to a care plan focused on comfort, acknowledging that the trajectory was one of worsening despite every possible intervention.\n\nIn the quiet of the ICU room, Henry\u2019s breathing was now rhythmic, though shallow, and the oxygen we breathed into his lungs was a quiet, unassertive hiss. His chest, once a battlefield of wheezes and crackles, settled into an almost still repose, and the machines that held his heart and kidneys at bay went quiet. The story of Henry\u2014a 60\u2011year\u2011old man with an arsenal of comorbidities, fighting a community\u2011acquired pneumonia that spiraled into multi\u2011organ failure\u2014underscored the fragile interplay between infection, pre\u2011existing disease, and the limits of modern medicine. It left a narrative that a future clinician could walk through the visits, the labs, the decisions, and the progression of care in a detailed, realistic trajectory, a story of a disease course that relentlessly worsened.",
+  "timeline": [
+    {
+      "visit_number": 1,
+      "visit_date": "2023-10-01",
+      "clinician_specialty": "Primary Care Nurse Practitioner",
+      "reason_for_visit": "Telephone consult for worsening cough after recent influenza",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Telephone consult for worsening cough after recent influenza.\nHPI: 60\u2011year\u2011old male with known COPD, CHF, T2DM, CKD Stage\u202f3 and history of smoking presents via telemedicine with a low, throbbing productive cough, fever 38.5\u202f\u00b0C, mild dyspnea on exertion, chest tightness, and palpitations. Symptoms started one week after an uncomplicated influenza infection. Patient reports no chest pain but reports a persistent cough with yellow sputum and feeling \u201cthrobbing\u201d in chest. He reports heart rate feels elevated and denies shortness of breath at rest.\nPMHx: COPD with frequent exacerbations, CHF NYHA Class\u202fII on lisinopril 10\u202fmg daily and furosemide 20\u202fmg daily, T2DM on metformin 1000\u202fmg BID (held due to CKD), CKD Stage\u202f3 (Cr\u202f1.4\u202fmg/dL), recent 2\u2011week hospitalization for UTI on ciprofloxacin, smoker.\nCurrent Medications: Albuterol/ipratropium inhaler PRN, Lisinopril 10\u202fmg daily, Furosemide 20\u202fmg daily, Metformin 1000\u202fmg BID (held).\nAllergies: NKDA.\nReview of Systems: Positive for productive cough, fever, dyspnea on exertion, chest tightness; negative for chest pain, orthopnea, edema, urinary symptoms.\nVitals (home thermometer, pulse oximeter reading): HR 104\u202fbpm, BP 115/68\u202fmmHg, RR 22\u202fbreaths/min, Temp 38.5\u202f\u00b0C, SpO\u2082 91\u202f% on room air.\nAssessment: Likely secondary bacterial pneumonia superimposed on recent influenza in a patient with COPD; acute COPD exacerbation; potential CHF decompensation; differential includes viral/ bacterial respiratory infection, and drug\u2011induced arrhythmia from metformin.\nPlan:\n1. Prescribe Azithromycin 500\u202fmg PO daily for 7\u202fdays to treat presumed bacterial pneumonia.\n2. Continue albuterol/ipratropium inhaler PRN for COPD symptoms.\n3. Continue lisinopril 10\u202fmg daily and furosemide 20\u202fmg daily for CHF.\n4. Hold metformin until kidney function improves.\n5. Counsel patient to monitor SpO\u2082; if SpO\u2082 remains <94\u202f% or symptoms worsen (increased dyspnea, chest pain, severe cough), seek ED urgently.\n6. Advise patient to rest, stay hydrated, use acetaminophen for fever/aches.\n7. Follow\u2011up telecall in 48\u202fhrs to reassess vitals and symptom trajectory.\n\nNote: No in\u2011person exam was performed; all decisions made based on patient report and home vitals. Encourage patient to monitor pulse, SpO\u2082, and to keep home thermometer.\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "low, throbbing cough",
+        "productive sputum",
+        "fever 38.5\u00b0C",
+        "dyspnea on exertion",
+        "chest tightness",
+        "palpitations"
+      ],
+      "vitals": {
+        "heart_rate": "104 bpm",
+        "blood_pressure": "115/68 mmHg",
+        "respiratory_rate": "22 breaths/min",
+        "temperature": "38.5 \u00b0C",
+        "oxygen_saturation": "91% on room air"
+      },
+      "relevant_history": [
+        "influenza infection one week ago",
+        "COPD with frequent exacerbations",
+        "CHF NYHA II on lisinopril 10 mg daily and furosemide 20 mg daily",
+        "Type 2 diabetes on metformin 1000 mg BID (held due to CKD)",
+        "Stage 3 CKD (Cr 1.4 mg/dL)",
+        "recent 2\u2011week hospitalization for UTI on ciprofloxacin"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "Chronic kidney disease stage 3",
+        "Smoking history"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "Furosemide 20 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "The nurse practitioner received a call from Henry reporting a persistent productive cough and new fevers after recent influenza. After a structured telemedicine assessment, the clinician reviewed his vitals (from a home thermometer) and noted tachycardia and hypoxia. An empiric community-acquired pneumonia diagnosis was given with prescription of oral azithromycin 500 mg daily for seven days, continuation of his inhaler, and counsel to hold metformin. The PCP advised him to return to the ED if symptoms worsened or if he experienced chest pain or severe shortness of breath.",
+      "examination_findings": [
+        "None (telephone visit)"
+      ],
+      "tests_ordered": [],
+      "test_results": [],
+      "treatments_administered": [
+        "Azithromycin 500 mg PO daily",
+        "Counsel to hold metformin"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Patient develops presumptive CAP on telehealth consult; no laboratory data yet."
+    },
+    {
+      "visit_number": 2,
+      "visit_date": "2023-10-05",
+      "clinician_specialty": "Emergency Medicine",
+      "reason_for_visit": "Chest pain, worsening dyspnea, low oxygen saturation",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: 60\u2011year\u2011old male presents to ED with worsening chest pain, dyspnea, and hypoxia.\nHistory of Present Illness: Mr. Henry reports sharp right lower chest pain radiating to the back, associated with cold sweats. Symptoms began 2 days ago and have progressively worsened. He denies weight loss or night sweats. He states he is normally able to climb one flight of stairs without difficulty. He reports increased shortness of breath at rest and requires supplemental oxygen at home overnight.\nPast Medical History: Chronic Obstructive Pulmonary Disease, Heart Failure, Type 2 Diabetes Mellitus, Chronic Kidney Disease Stage 3, smoking history (quit 10 years ago, 45 pack\u2011years), recent influenza, recent UTI hospitalization.\nMedications: Albuterol/ipratropium inhaler PRN, Lisinopril 10 mg daily, Furosemide 20 mg daily, Metformin held.\nPhysical Examination:\n\u2022 Vitals: HR 110\u202fbpm, BP 120/70\u202fmmHg, RR 26\u202fbpm, Temp 39.0\u202f\u00b0C, SpO\u2082 88% on RA, 95% on 4\u202fL O\u2082 NC.\n\u2022 General: Alert, anxious, in mild respiratory distress.\n\u2022 Cardiovascular: Distant heart sounds, regular rhythm, no murmurs.\n\u2022 Pulmonary: Fine crackles at left lung base; rales at right lower lobe with consolidation; no wheezes.\n\u2022 Abdomen: Soft, nontender, normal bowel sounds.\n\u2022 Extremities: No JVD, no peripheral edema.\nLabs and Imaging:\n\u2022 Chest X\u2011ray: Right lower lobe consolidation.\n\u2022 CBC: WBC 16,000/\u00b5L, neutrophils 80%.\n\u2022 CMP: Creatinine 1.8\u202fmg/dL (baseline 1.4\u202fmg/dL), BUN 30\u202fmg/dL, bicarbonate 22\u202fmEq/L.\n\u2022 Blood cultures: pending.\n\u2022 Rapid influenza antigen: negative.\nAssessment: The presentation is most consistent with acute bacterial pneumonia secondary to right lower lobe consolidation with possible exacerbation of COPD and heart failure. Differential includes pulmonary embolism, acute coronary syndrome, and CHF decompensation.\nPlan:\n1. Initiate IV ceftriaxone 1\u202fg q24h and IV azithromycin 500\u202fmg q24h (renal function monitored, dose remains unchanged in CKD stage\u202f3). Consider switching azithromycin to oral if clinically stable.\n2. Continue home metered\u2011dose inhaler PRN. Add nebulized ipratropium bromide 0.5\u202fmg q4h if wheezing develops.\n3. Maintain IV fluids as needed; avoid volume overload. Continue furosemide 20\u202fmg orally; consider increasing to 40\u202fmg QD if worsening pulmonary crackles or rising creatinine.\n4. Supplemental oxygen titrated to maintain SpO\u2082 >94%. Consider ICU transfer if worsening.\n5. Repeat CBC, CMP, and renal panel daily. Re\u2011order chest x\u2011ray in 48\u202fh.\n6. Notify primary cardiology for CHF optimization and possible adjustment of ACE inhibitor.\n7. Discuss discharge planning: If clinically stable after 48\u202fh of IV therapy, consider discharge on oral antibiotics (e.g., levofloxacin 500\u202fmg PO daily for 7\u202fdays plus doxycycline 100\u202fmg BID for 5\u202fdays) and close follow\u2011up.\nFollow\u2011up: Admit to medical floor for close monitoring (or discharge as outpatient if stable), review in 48\u202fh, urgent follow\u2011up with PCP or pulmonology the next week.\nDisposition: Admit to Med Floor for IV antibiotics, fluid management, and pulmonary monitoring.\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "sharp right lower chest pain",
+        "cold sweats",
+        "rapid heart rate 110 bpm",
+        "dyspnea at rest",
+        "sleep\u2011dependent hypoxia"
+      ],
+      "vitals": {
+        "heart_rate": "110 bpm",
+        "blood_pressure": "120/70 mmHg",
+        "respiratory_rate": "26 breaths/min",
+        "temperature": "39.0 \u00b0C",
+        "oxygen_saturation": "88% on room air"
+      },
+      "relevant_history": [
+        "COPD",
+        "CHF",
+        "Diabetes",
+        "CKD stage 3",
+        "Recent influenza",
+        "Recent UTI hospitalization"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "Chronic kidney disease stage 3",
+        "Smoking history"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "Furosemide 20 mg daily"
+      ],
+      "allergies": [],
+      "visit_scenario": "Henry arrives to the ED with chest pain and dyspnea that appears to be progressing. The triage nurse records vitals and initiates supplemental oxygen at 4 L/min via nasal cannula. A chest X\u2011ray demonstrates right lower lobe consolidation. A CBC, comprehensive metabolic panel, electrolytes, blood cultures, and nasopharyngeal rapid influenza test (negative) are ordered. IV ceftriaxone 1 g and azithromycin 500 mg are administered empirically. The patient is monitored closely and the ED team is notified of the worsening renal function on the preliminary labs.",
+      "examination_findings": [
+        "RR 26 breaths/min",
+        "SaO2 88% on 4 L O2",
+        "Distant heart sounds",
+        "Fine crackles at left lung base",
+        "No peripheral edema"
+      ],
+      "tests_ordered": [
+        "Chest X\u2011ray",
+        "CBC",
+        "CMP/chemistry panel",
+        "Blood cultures",
+        "Rapid influenza antigen test"
+      ],
+      "test_results": [
+        "CXR: Right lower lobe consolidation",
+        "CBC: WBC 16,000/\u00b5L, neutrophils 80%",
+        "Cr 1.8 mg/dL (baseline 1.4)",
+        "Influenza antigen: negative"
+      ],
+      "treatments_administered": [
+        "IV ceftriaxone 1 g",
+        "IV azithromycin 500 mg",
+        "Oxygen 4 L/min by nasal cannula"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "CAP confirmed; renal function begins to deteriorate; CKD stage 3 now complicated by mild azotemia."
+    },
+    {
+      "visit_number": 3,
+      "visit_date": "2023-10-06",
+      "clinician_specialty": "Internal Medicine",
+      "reason_for_visit": "Hospital admission for CAP with worsening renal function",
+      "is_related_to_main_illness": true,
+      "note": "**Chief Complaint:** Hospital admission with worsening renal function.\n\n**History of Present Illness:**\n60\u2011year\u2011old male with COPD, heart failure, type\u202f2 DM, CKD stage\u202f3, and a significant smoking history was admitted on 2023\u201110\u201105 with a right lower lobe infiltrate and acute renal injury.  On 2023\u201110\u201106, daily monitoring shows persistent fever (38.9\u202f\u00b0C), productive cough, dyspnea on exertion, increasing chest pain, and markedly reduced urine output (200\u202fmL/day).  WBC peaked at 18\u202f000/\u00b5L, Cr rose to 1.9\u202fmg/dL, and BUN at 38\u202fmg/dL.  Repeat CXR confirms enlargement of the right lower lobe opacity.\n\n**Vitals (current):**\n- HR: 102\u202fbpm\n- BP: 118/74\u202fmmHg\n- RR: 28\u202fbreaths/min\n- Temp: 38.9\u202f\u00b0C\n- SpO\u2082: 90% on 5\u202fL/min O\u2082\n\n**Physical Exam:**\n- Distant heart sounds, fine crackles bilaterally in lower lung fields, SOB on minimal exertion.\n\n**Assessment:**\n1. Community\u2011acquired pneumonia (right lower lobe) with ongoing inflammatory response.\n2. Sepsis (community\u2011acquired) with evidence of systemic infection.\n3. Acute on chronic renal failure (elevated Cr/BUN) likely multifactorial\u2014contributory elements include sepsis\u2011related hypoperfusion, nephrotoxic antibiotics, and volume shifts.\n4. Exacerbation of chronic heart failure, possible pulmonary congestion.\n\n**Plan:**\n- **Antibiotics:** Continue IV ceftriaxone 500\u202fmg q24h (dose reduced to limit nephrotoxic potential) and azithromycin 500\u202fmg IV q24h.\n- **Diuresis:** Continue IV furosemide 20\u202fmg q12h, titrate up to 40\u202fmg q12h if urine output remains <30\u202fmL/kg/24\u202fh or if pulmonary congestion worsens.\n- **Fluid Management:** Carefully titrate IV fluids to avoid volume overload; monitor daily intake/output.\n- **Cardiology/Heart Failure:** Consider holding lisinopril 10\u202fmg daily due to rising Cr; reassess in 48\u202fh based on renal trend.\n- **Monitoring:** Daily CBC, CMP, and renal panel; repeat chest X\u2011ray in 48\u201372\u202fh.\n- **Oxygenation:** Maintain SpO\u2082 >94% with supplemental O\u2082; titrate O\u2082 support as clinical status improves.\n- **Nephrology Consult:** Ongoing collaboration for potential antibiotic adjustment and ACE\u2011I management.\n- **Patient Education:** Counsel on cautious hydration to maintain adequate urine output while avoiding overload; instruct to report fevers >38.9\u202f\u00b0C, worsening dyspnea, or O\u2082 sat <90%.\n- **Disposition:** Continue IV antibiotics and supportive care; transition to oral antibiotics if clinically stable after completion of a 48\u2011hour IV course and improvement in leukocytosis and pulmonary findings.\n\n**Follow\u2011up:** 48\u2011hour review in inpatient rounding; adjust plan based on laboratory trends and clinical status.\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "persistent fever 38.9\u00b0C",
+        "productive cough",
+        "dyspnea on exertion",
+        "increasing chest pain",
+        "lower urinary output 200 mL/day"
+      ],
+      "vitals": {
+        "heart_rate": "102 bpm",
+        "blood_pressure": "118/74 mmHg",
+        "respiratory_rate": "28 breaths/min",
+        "temperature": "38.9 \u00b0C",
+        "oxygen_saturation": "90% on 5 L/min O2"
+      },
+      "relevant_history": [
+        "Recent ED visit",
+        "Elevated WBC and Cr",
+        "Current on IV ceftriaxone 1 g q24"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "Chronic kidney disease stage 3",
+        "Smoking history"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "Furosemide 20 mg daily",
+        "IV ceftriaxone 1 g q24",
+        "IV azithromycin 500 mg q24"
+      ],
+      "allergies": [],
+      "visit_scenario": "After overnight monitoring, the inpatient team determines that the patient\u2019s pneumonia is not improving; the right lower lobe infiltrate progressed on repeat CXR and WBC peaked at 18,000/\u00b5L. The nephrology consult is obtained, and the decision is made to reduce ceftriaxone to 500 mg daily while continuing azithromycin. IV fluids are carefully titrated to avoid volume overload. The daily labs show Cr rising to 1.9 mg/dL and BUN ascending. The plan is to continue IV antibiotics, monitor renal function, and address fluid status with diuretics.",
+      "examination_findings": [
+        "RR 28 breaths/min",
+        "O2 sat 90% on 5 L/min",
+        "Distant heart sounds",
+        "Fine crackles bilateral lower lung fields",
+        "SOB on minimal exertion"
+      ],
+      "tests_ordered": [
+        "Repeat CXR",
+        "CBC",
+        "CMP/chemistry panel"
+      ],
+      "test_results": [
+        "CXR: Enlargement of right lower lobe opacity",
+        "WBC 18,000/\u00b5L",
+        "Cr 1.9 mg/dL",
+        "BUN 38 mg/dL"
+      ],
+      "treatments_administered": [
+        "Ceftriaxone dose adjusted to 500 mg q24",
+        "Azithromycin 500 mg IV q24",
+        "Furosemide 20 mg IV q12 for fluid status"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Cap progression with worsening renal function; antibiotic regimen adjusted for CKD."
+    },
+    {
+      "visit_number": 4,
+      "visit_date": "2023-10-08",
+      "clinician_specialty": "Pulmonology / Cardiology",
+      "reason_for_visit": "Severe hypoxia, pulmonary edema, decreased urine output",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Severe hypoxia, pulmonary edema, and oliguria.\n\nHistory of Present Illness: 60-year-old male with known COPD, congestive heart failure (HF), type 2 diabetes, CKD stage 3, and history of acute bacterial pneumonia presents with progressive dyspnea, left chest pain and anuria. On admission (Visit #3) he had right lower lobe consolidation with acute on chronic renal failure (Cr 1.9 mg/dL, BUN 38 mg/dL). He was started on ceftriaxone 1 g IV q24h and azithromycin 500 mg IV q24h, furosemide 20 mg IV q12h, and was monitored for urine output (>30 mL/kg/24h). Despite treatment, his respiratory status worsened; he was transferred to the ICU with progressive hypoxemia, pulmonary crackles, and hemodynamic instability. Non\u2011invasive ventilation was ineffective, prompting intubation and initiation of lung\u2011protective mechanical ventilation (tidal volume 6 mL/kg IBW, PEEP 12 cm H\u2082O). Point\u2011of\u2011care echo showed EF 40%, mild tricuspid regurgitation, and LV dilation. MAP remained <65; norepinephrine 0.05 \u03bcg/kg/min was started. Urine output remained <200 mL/day, prompting initiation of continuous renal replacement therapy (CRRT) for oliguria and drug clearance.\n\nAssessment:\n1. Severe sepsis with septic shock secondary to bacterial pneumonia \u2013 supported by fever, leukocytosis, elevated CRP (80 mg/L), hypotension, and multi\u2011organ dysfunction.\n2. Acute cardiogenic pulmonary edema secondary to chronic systolic HF exacerbation \u2013 echo confirms reduced EF and LV dilation; pulmonary crackles. \n3. Acute on chronic renal failure requiring CRRT \u2013 serum creatinine 2.5 mg/dL and BUN 52 mg/dL, oliguria.\n4. Possible acute respiratory distress syndrome (ARDS) contributing to refractory hypoxemia \u2013 PaO\u2082 55 mmHg on FiO\u2082 100% with high PEEP.\n\nPlan:\n- Continue ICU care with mechanical ventilation on a lung\u2011protective strategy.\n- Maintain norepinephrine infusion; titrate to MAP >65 mmHg; consider adjunct vasopressin if required.\n- Continue ceftriaxone 1 g IV q24h and azithromycin 500 mg IV q24h; obtain cultures (blood, sputum, urine) and adjust antibiotics per sensitivities.\n- Furosemide 20 mg IV bolus; thereafter consider low\u2011dose continuous infusion (0.5 mg/h) if fluid status permits.\n- CRRT settings: CVVH with a dialysate flow 2.5 L/h; adjust electrolytes and monitor fluid balance.\n- Hold potentially nephrotoxic agents (metformin, lisinopril). Continue albuterol/ipratropium nebulizers PRN.\n- Daily arterial blood gases, electrolytes, renal panel, and complete metabolic panel.\n- Repeat bedside echo in 24\u201348 h to assess EF and fluid status.\n- Repeat chest X-ray in 24 h to evaluate pulmonary edema.\n- Consult cardiology for HF management (consider diuretic strategy, ACE inhibitor hold decision). \n- Reassess vasopressor dependence daily; wean as MAP improves.\n- Transition to intermittent hemodialysis once CRRT discontinued.\n\nDisposition: Continue ICU admission; anticipate a 48\u201372 hour period of stabilization before potential step\u2011down.\n\nFollow\u2011Up: Next-day review with intensivist; review culture results; evaluate need for antibiotic change; monitor urine output hourly; daily physical therapy consult for mobility as tolerated.\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "rapid breathing (32/min)",
+        "oxygen saturation 82% on 6 L",
+        "sharp left chest pain",
+        "dyspnea at rest",
+        "no urine output (<200 mL/day)"
+      ],
+      "vitals": {
+        "heart_rate": "112 bpm",
+        "blood_pressure": "115/72 mmHg",
+        "respiratory_rate": "32 breaths/min",
+        "temperature": "38.8 \u00b0C",
+        "oxygen_saturation": "82% on 6 L/min O2"
+      },
+      "relevant_history": [
+        "On IV ceftriaxone 500 mg",
+        "Azithromycin 500 mg IV",
+        "Furosemide 20 mg IV q12",
+        "Persistent pulmonary infiltrates"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "Chronic kidney disease stage 3",
+        "Smoking history"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "Furosemide 20 mg IV q12",
+        "IV ceftriaxone 500 mg q24",
+        "IV azithromycin 500 mg q24",
+        "IV furosemide 20 mg bolus 8 AM"
+      ],
+      "allergies": [],
+      "visit_scenario": "The patient is transferred to the ICU due to progressive respiratory failure and cardiogenic pulmonary edema. Non\u2011invasive ventilation is initiated but is ineffective. ICU team intubates Henry with an endotracheal tube, starts mechanical ventilation with a lung\u2011protective strategy (tidal volume 6 mL/kg IBW, PEEP 12 cm H2O). A point\u2011of\u2011care echo shows EF 40%, mild tricuspid regurgitation, dilated LV. Norepinephrine 0.05 \u00b5g/kg/min is started to maintain MAP >65. Continuous renal replacement therapy (CRRT) is initiated to manage oliguria and drug clearance. The patient is also given a bolus of furosemide 20 mg IV to attempt fluid mobilization.",
+      "examination_findings": [
+        "Intubated, mechanical ventilator",
+        "Pulmonary edema crepitations bilaterally",
+        "Weak peripheral pulses",
+        "Systolic murmur at apex",
+        "No abdominal tenderness"
+      ],
+      "tests_ordered": [
+        "Bedside echo",
+        "ABG",
+        "Cr, BUN",
+        "CRP"
+      ],
+      "test_results": [
+        "Echo: EF 40%, LV dilation, mild TR",
+        "ABG: pH 7.28, PaO2 55 mmHg on FiO2 100%",
+        "Cr 2.5 mg/dL",
+        "BUN 52 mg/dL",
+        "CRP 80 mg/L"
+      ],
+      "treatments_administered": [
+        "Intubation and mechanical ventilation",
+        "Norepinephrine infusion",
+        "Furosemide 20 mg IV bolus",
+        "CRRT initiation",
+        "Antibiotics continued: Ceftriaxone 500 mg q24, Azithromycin 500 mg q24"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Multi\u2011organ failure: respiratory, renal, cardiac. CRRT started to manage AKI and adjust antibiotic dosing."
+    },
+    {
+      "visit_number": 5,
+      "visit_date": "2023-10-10",
+      "clinician_specialty": "Infectious Disease",
+      "reason_for_visit": "Change in antibiotics based on culture results",
+      "is_related_to_main_illness": true,
+      "note": "Patient is a 60\u2011year\u2011old male with COPD, HFrEF, T2DM, CKD stage\u00a03 and multi\u2011organ failure on CRRT, norepinephrine and insulin infusions. He remains intubated with persistent fever (38.4\u202f\u00b0C), lethargy, and unchanged right lower lobe pulmonary infiltrates. Sputum cultures grew multi\u2011drug resistant *Pseudomonas aeruginosa*; blood cultures remain negative. CRP is modestly decreasing to 70\u202fmg/L but remains high. Serum lactate elevated at 4.2\u202fmmol/L and arterial blood gases show PaO\u2082\u00a060\u202fmmHg on 100\u202f% FiO\u2082. Given culture data and concern for inadequate source control, the infectious disease consultant altered antibiotics as follows:\n\n\u2022 Cefepime 1\u202fg IV q12\u00a0h (dose adjusted for CRRT clearance)\n\u2022 Meropenem 1\u202fg IV q8\u00a0h\n\u2022 Linezolid 600\u202fmg IV q12\u00a0h (for MRSA coverage)\n\nThe regimen was chosen to broaden anti\u2011Pseudomonal coverage while minimizing nephrotoxicity; cefepime provides 4\u2011th\u2011generation cephalosporin activity and is renally cleared, meropenem complements coverage, and linezolid provides MRSA coverage without nephrotoxicity. The patient continues on insulin infusion targeting 140\u2013180\u202fmg/dL, furosemide 20\u202fmg IV q12\u00a0h (infusion adjusted for CRRT), and norepinephrine titrated to maintain MAP\u202f>65\u00a0mmHg.\n\nThe patient\u2019s lactate remains elevated, suggesting ongoing hypoperfusion despite antimicrobial therapy and pressor support. No new source of infection has been identified, but ventilator\u2011associated pneumonia remains a concern. Repeat imaging (chest X\u2011ray or CT) and consideration of bronchoscopy with bronchoalveolar lavage will be obtained to evaluate for unresolved infiltrate or additional focus. Given the MDR phenotype, a review of susceptibility to *Pseudomonas* is pending; if resistance to both cefepime and meropenem develops, escalation to ceftolozane/tazobactam or polymyxin\u2011based therapy per susceptibility will be considered.\n\nAssessment: 1) Sepsis due to MDR *P. aeruginosa* pneumonia with persistent hypoperfusion; 2) Multi\u2011organ failure (cardiac, renal, hepatic) exacerbated by sepsis; 3) Ongoing nephrotoxicity risk from antibiotics and underlying CKD.\n\nPlan:\n1. Continue current antibiotic regimen with dose adjustments as per CRRT clearance; obtain therapeutic drug monitoring for cefepime and meropenem troughs. 2. Daily CBC, CMP, and renal panel; monitor serum creatinine, BUN, electrolytes. 3. Serial lactate measurements every 6\u20138\u202fh until trending down. 4. Repeat ABG and ABx cultures at 24\u202fh. 5. Repeat chest imaging at day\u00a03 or sooner if clinical deterioration. 6. Evaluate for source control \u2013 obtain bronchoscopy/bronchoalveolar lavage if no improvement by day\u00a02. 7. Maintain insulin infusion; adjust as per glucose trend. 8. Continue norepinephrine titration to maintain MAP\u202f\u226565\u202fmmHg. 9. Continue furosemide and CRRT as per fluid balance goals. 10. Discuss with pharmacy for potential de\u2011escalation if cultures show susceptibility to fewer agents.\n\nThe patient is instructed to continue sedation monitoring; no new allergies identified. Family will be updated and reassured of aggressive treatment plan.\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "persistent fever 38.4\u00b0C",
+        "lethargy",
+        "unchanged pulmonary infiltrates"
+      ],
+      "vitals": {
+        "heart_rate": "118 bpm",
+        "blood_pressure": "110/68 mmHg",
+        "respiratory_rate": "34 breaths/min (ventilator)",
+        "temperature": "38.4 \u00b0C",
+        "oxygen_saturation": "84% on FiO2 100%"
+      },
+      "relevant_history": [
+        "CRRT ongoing",
+        "Evolving pneumonia",
+        "Prior antibiotic therapy"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "Chronic kidney disease stage 3",
+        "Multi\u2011organ failure"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "IV furosemide 20 mg q12",
+        "IV ceftriaxone 500 mg q24",
+        "IV azithromycin 500 mg q24",
+        "CRRT infusion",
+        "Norepinephrine infusion",
+        "Insulin infusion (started 7/15 days in)"
+      ],
+      "allergies": [],
+      "visit_scenario": "Sputum cultures grow multi\u2011drug resistant Pseudomonas aeruginosa (MDR). The infectious disease consultant recommends switching from ceftriaxone to cefepime 1 g q12 adjusted for CRRT clearance. Meropenem 1 g q8 and linezolid 600 mg q12 are added to cover possible MRSA and broaden coverage. The antibiotic regimen is re\u2011balanced to minimize nephrotoxicity while maintaining adequate serum levels. The patient\u2019s CRP decreases modestly to 70 but remains high. The metabolic panel continues to show rising creatinine and BUN. The insulin infusion continues to target glucose 140\u2013180 mg/dL.",
+      "examination_findings": [
+        "Intubated, ventilated",
+        "Pulmonary infiltrates unchanged",
+        "No peripheral edema",
+        "Weak pulse"
+      ],
+      "tests_ordered": [
+        "Repeat ABG",
+        "Serum lactate",
+        "CRP",
+        "Blood cultures"
+      ],
+      "test_results": [
+        "ABG: PaO2 60 mmHg on FiO2 100%",
+        "Serum lactate 4.2 mmol/L",
+        "CRP 70 mg/L",
+        "Blood cultures negative"
+      ],
+      "treatments_administered": [
+        "Cefepime 1 g q12 (CRRT adjusted)",
+        "Meropenem 1 g q8",
+        "Linezolid 600 mg q12",
+        "Insulin infusion"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Pseudomonas pneumonia; antibiotic escalation; CRRT continues; increasing multi\u2011organ dysfunction."
+    },
+    {
+      "visit_number": 6,
+      "visit_date": "2023-10-13",
+      "clinician_specialty": "Critical Care",
+      "reason_for_visit": "Septic shock, refractory hypoxia, consideration of comfort care",
+      "is_related_to_main_illness": true,
+      "note": "Chief Complaint: Severe refractory hypoxia, hemodynamic instability, and persistent lactic acidosis in a 60\u2011year\u2011old male with COPD, HFrEF, T2DM, and CKD stage 3.\n\nHistory of Present Illness: The patient has been in the ICU for 8 days for severe pneumonia complicated by multi\u2011organ failure. Despite escalating support (high\u2011PEEP ventilation, CRRT, broad\u2011spectrum antibiotics, vasopressors, high\u2011dose steroids), arterial oxygenation remains <70% on 100% FiO2, MAP is 62 mmHg on norepinephrine 0.08\u202f\u00b5g/kg/min, and serum lactate is 6\u202fmmol/L. Recent multidisciplinary family meeting concluded that further escalation would not improve prognosis; family chooses comfort\u2011focused care.\n\nPhysical Examination: Intubated, ventilated with high PEEP (20\u202fcm\u202fH2O). Weak peripheral pulses, SpO2 70% on 100% FiO2. No lung crackles due to low tidal volume. Cardiovascular exam: tachycardia 140\u202fbpm, weak pulse. Respiratory: rapid (RR 36) with minimal chest excursion.\n\nLabs: ABG pH 7.24, PaO2 50\u202fmmHg on FiO2 100%; lactate 6\u202fmmol/L; CRP 60\u202fmg/L.\n\nAssessment: Refractory hypoxic respiratory failure secondary to severe bacterial pneumonia with sepsis, septic shock, and multi\u2011organ failure. Acute respiratory distress syndrome (ARDS) secondary to infection and underlying COPD. The patient has irreversible organ dysfunction despite optimal ICU therapy.\n\nPlan:\n1. Comfort\u2011care transition: Reduce intensity of support \u2013 wean norepinephrine to standby, maintain low\u2011volume ventilatory setting to keep SpO2 \u226570%. No further escalation of antibiotics; discontinue cefepime, meropenem, and linezolid.\n2. Continue current supportive measures that provide comfort: CRRT for volume control, low\u2011dose prednisone 40\u202fmg PO daily (continued for anti\u2011inflammatory effect), insulin infusion to control hyperglycemia, and furosemide 20\u202fmg IV q12h for fluid status.\n3. Palliative care consult: initiate symptom\u2011management plan (acetaminophen, low\u2011dose opioids for dyspnea, anticholinergics if needed). Provide psychosocial and spiritual support.\n4. Documentation: Update code status to DNR/DNI; record advance directives.\n5. Family communication: Schedule next family meeting within 24\u202fhrs to discuss goals, symptom expectations, and hospice resources.\n6. Monitor: Daily ABG, lactate trend, BP, urine output, and mental status of family. No further imaging or cultures.\n\nThe patient is under a comfort\u2011care regimen with no further escalation of antibiotics, and the ICU team will continue to assess for potential hospice referral.\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "persistent hypoxia <70% on FiO2 100%",
+        "hemodynamic instability",
+        "persistent lactate 6 mmol/L"
+      ],
+      "vitals": {
+        "heart_rate": "140 bpm",
+        "blood_pressure": "88/52 mmHg (MAP 62)",
+        "respiratory_rate": "36 breaths/min (ventilator)",
+        "temperature": "38.0 \u00b0C",
+        "oxygen_saturation": "70% on FiO2 100% with PEEP 20 cm H2O"
+      },
+      "relevant_history": [
+        "CRRT, antibiotics",
+        "Norepinephrine 0.08 \u00b5g/kg/min",
+        "High\u2011dose steroids (prednisone 40 mg PO daily) start 12 days"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "CKD stage 3",
+        "Septic shock",
+        "Multi\u2011organ failure"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "IV furosemide 20 mg q12",
+        "IV cefepime 1 g q12",
+        "IV meropenem 1 g q8",
+        "IV linezolid 600 mg q12",
+        "CRRT",
+        "Norepinephrine infusion",
+        "Prednisone 40 mg PO daily",
+        "Insulin infusion"
+      ],
+      "allergies": [],
+      "visit_scenario": "The ICU team notes that despite escalating support\u2014high\u2011PEEP ventilation, CRRT, vasopressors, and broad\u2011spectrum antibiotics\u2014the patient remains in septic shock and severe refractory hypoxia. Lactate peaks at 6 mmol/L. The team has a multidisciplinary discussion with the family. After reviewing prognosis and the persistent multi\u2011organ failure, the family opts for comfort\u2011focused care. The medical team reduces the intensity of interventions: vasopressors are weaned, ventilator support is maintained at a low\u2011volume setting to maintain oxygenation, and a palliative care consult is started. The patient is placed under a comfort\u2011care regimen with no further escalation of antibiotics.",
+      "examination_findings": [
+        "Intubated, high\u2011PEEP ventilation",
+        "Weak peripheral pulses",
+        "SPO2 70% on high FiO2",
+        "No lung crackles noted due to low volume"
+      ],
+      "tests_ordered": [
+        "Arterial blood gas",
+        "Serum lactate",
+        "CRP"
+      ],
+      "test_results": [
+        "ABG: pH 7.24, PaO2 50 mmHg on FiO2 100%",
+        "Serum lactate 6 mmol/L",
+        "CRP 60 mg/L"
+      ],
+      "treatments_administered": [
+        "High\u2011PEEP ventilation",
+        "Norepinephrine weaned to standby",
+        "CRRT continued",
+        "Prednisone continued",
+        "Palliative care consult"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Septic shock, multi\u2011organ failure; transition to comfort care."
+    },
+    {
+      "visit_number": 7,
+      "visit_date": "2023-10-15",
+      "clinician_specialty": "Palliative Care",
+      "reason_for_visit": "Symptom management and care plan reassessment",
+      "is_related_to_main_illness": false,
+      "note": "Chief Complaint: 60\u2011year\u2011old male with advanced COPD, heart failure, CKD, and sepsis\u2011related multi\u2011organ failure presents for palliative reassessment of goals and comfort plan.\n\nHistory of Present Illness:\n- The patient has been in progressive decline over the past few weeks, now requiring intubation, CRRT, and vasopressor support for septic shock. On 2023\u201110\u201113 we transitioned to comfort care: antibiotics were discontinued, prednisone 40 mg PO daily was initiated, and code status updated to DNR/DNI. No further therapeutic escalation is pursued.\n- During this visit the family was updated on the patient\u2019s disease trajectory. The patient continues to experience dyspnea, chest pain, and fatigue, all of which are addressed with comfort measures.\n- Current comfort regimen: scheduled morphine 5 mg IV q4h PRN and a continuous infusion (2 mg/hr) + albuterol nebulisation q4h for bronchospasm.\n\nReview of Systems:\n- Respiratory: Shortness of breath, bronchospasm, need for 100% FiO\u2082 with PEEP 15.\n- Cardiovascular: Weak peripheral pulses, MAP 53; hemodynamically unstable but no new arrhythmias.\n- Neurologic: No new focal deficits; remains sedated for comfort.\n- GI: No nausea/vomiting.\n- Others: Fatigue, mild chest discomfort.\n\nPast Medical History:\n- COPD with chronic bronchitis (emphysema likely).\n- Heart failure with reduced EF 40%.\n- Diabetes mellitus type 2.\n- CKD stage 3.\n- Chronic hypertension.\n- Acute bacterial pneumonia complicated by ARDS, septic shock, multi\u2011organ failure.\n\nCurrent Medications:\n- Morphine infusion 2 mg/hr.\n- Morphine PRN 5 mg IV q4h.\n- Albuterol nebulisation q4h.\n- Albuterol/ipratropium inhaler PRN.\n- furosemide 20 mg IV q12h.\n- Insulin infusion.\n- Prednisone 40 mg PO daily.\n- Continuous renal replacement therapy (CRRT).\n- No other antibiotics; all discontinued.\n\nAllergies: NKDA.\n\nVitals (at time of visit):\n- HR: 110 bpm\n- BP: 80/45 mmHg (MAP 53)\n- RR: 30 breaths/min (ventilator set)\n- Temp: 37.8\u00b0C\n- SpO\u2082: 78% on 100% FiO\u2082, PEEP 15 cm H\u2082O\n\nPhysical Examination:\n- Intubated and mechanically ventilated.\n- Lung fields: clear with low volume (ventilator settings noted).\n- Heart: weak peripheral pulses; no murmurs.\n- Extremities: cool, weak pulses.\n- Abdomen: soft, non\u2011tender.\n\nLaboratory / Diagnostic Findings:\n- ABG: pH 7.27, PaO\u2082 58 mmHg on FiO\u2082 100%; PaCO\u2082 64 mmHg, HCO\u2083 19, lactate 3.4 mmol/L.\n- Hemoglobin: 9.8 g/dL.\n- Hematocrit: 29%.\n- BUN/creatinine within CRRT parameters.\n- Lactate trending upward, consistent with ongoing tissue hypoxia.\n\nAssessment:\n1. Refractory hypoxemia (ARDS) in the setting of advanced COPD and heart failure.\n2. Multi\u2011organ failure secondary to septic shock; now in a palliative phase.\n3. Pain and dyspnea, currently being managed with opioid infusion and bronchodilators.\n4. Mild anemia (Hb 9.8) likely multifactorial: chronic disease, blood loss, CRRT.\n5. Persistent fever (37.8\u00b0C) likely due to inflammatory response; however, no new infection source per current evaluation.\n\nPlan:\n- Continue morphine infusion 2 mg/hr; titrate based on pain and dyspnea scales. Add anti\u2011emetic dexamethasone 4 mg q8h PRN to mitigate opioid\u2011related nausea.\n- Maintain albuterol nebulisation q4h; consider adding ipratropium as needed for bronchospasm.\n- Continue furosemide 20 mg IV q12h to manage fluid overload; monitor daily weights and lung exam.\n- Maintain CRRT parameters; adjust dialysate composition to optimize electrolytes.\n- Continue prednisone 40 mg PO daily for anti\u2011inflammatory effect.\n- Continue insulin infusion; target glucose 140\u2013180 mg/dL.\n- No further antibiotics; wound cultures negative; keep family informed that aggressive treatment is not pursued.\n- Consider addition of 4\u2011hydroxybutyl\u2011propanol (short\u2011acting benzodiazepine) for agitation or severe dyspnea if needed.\n- Monitor SpO\u2082; if comfort\u2011driven goal is SpO\u2082 >85% with minimal discomfort, consider weaning PEEP if physiologic stability allows.\n- Daily multidisciplinary rounds with palliative, ICU, nephrology, pharmacy, and nursing.\n\nFollow\u2011up Recommendations:\n- Family meeting today to reaffirm goals and discuss hospice transition.\n- Schedule next palliative care assessment within 24\u201348 hours to reassess comfort plans.\n- Home hospice services to be arranged should the patient go to a care facility or die in hospital.\n- Provide psychosocial support to family; coordinate with social work.\n- Document all changes in pain scores and dyspnea (using 0\u201310 scale) and adjust medication doses accordingly.\n- Continuation of current comfort regimen until patient\u2019s comfort or end-of\u2011life.\n\nPatient and family expressed acceptance of current plan and understanding of prognosis.\n\nSigned: Palliative Care Team",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "dyspnea",
+        "pain in chest",
+        "fatigue"
+      ],
+      "vitals": {
+        "heart_rate": "110 bpm",
+        "blood_pressure": "80/45 mmHg (MAP 53)",
+        "respiratory_rate": "30 breaths/min (ventilator)",
+        "temperature": "37.8 \u00b0C",
+        "oxygen_saturation": "78% on FiO2 100% with PEEP 15 cm H2O"
+      },
+      "relevant_history": [
+        "Comfort care plan",
+        "No further antibiotic escalation"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "CKD stage 3",
+        "Septic shock"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "IV furosemide 20 mg q12",
+        "CRRT",
+        "Prednisone 40 mg PO daily",
+        "Insulin infusion",
+        "Palliative meds (acetaminophen, morphine PRN)"
+      ],
+      "allergies": [],
+      "visit_scenario": "Palliative team visits to reassess goals and adjust comfort regimens. Pain control is optimized with scheduled morphine 5 mg IV q4h PRN and a continuous infusion. Short\u2011acting beta\u2011agonist nebulization for bronchodilation is added for shortness of breath. The family is updated on progression and encouraged to focus on quality of life. The care team confirms that no further therapeutic interventions are being pursued.",
+      "examination_findings": [
+        "Intubated, ventilated",
+        "Clear lung fields on auscultation (low volume)",
+        "Weak peripheral pulses"
+      ],
+      "tests_ordered": [
+        "ABG",
+        "Hemoglobin"
+      ],
+      "test_results": [
+        "ABG: pH 7.27, PaO2 58 mmHg on FiO2 100%",
+        "Hemoglobin 9.8 g/dL"
+      ],
+      "treatments_administered": [
+        "Morphine infusion 2 mg/hr",
+        "Albuterol nebulization q4h",
+        "Adjusted CRRT parameters"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Transition to comfort\u2011only care; ongoing supportive measures."
+    },
+    {
+      "visit_number": 8,
+      "visit_date": "2023-10-18",
+      "clinician_specialty": "Intensive Care",
+      "reason_for_visit": "End\u2011of\u2011life observation and family support",
+      "is_related_to_main_illness": false,
+      "note": "**ICU Comfort Care Evaluation \u2013 Visit 8**\n\n**Patient:** 60\u2011year\u2011old male with COPD, HFrEF, T2DM, CKD\u00a0stage\u00a03, former septic shock, currently on comfort measures.\n\n**Chief Complaint**: End\u2011of\u2011life observation and family support.\n\n**Subjective**: Family reports that the patient remains well\u2011composed with no new complaints. No spontaneous pain, no anxiety, minimal spontaneous breathing.\n\n**Objective**:\n- **Vital signs**: HR\u00a090\u202fbpm, BP\u00a078/38\u202fmmHg (MAP\u00a055\u202fmmHg), RR\u00a022\u202fbreaths/min (ventilator), Temp\u00a037.5\u202f\u00b0C, SpO\u2082\u00a080\u202f% on FiO\u2082\u00a060\u202f% with PEEP\u00a010\u202fcm\u202fH\u2082O.\n- **Labs**: CBC \u2013 Hb\u00a09.5\u202fg/dL, WBC\u00a012\u202f000/\u00b5L; CRP\u00a055\u202fmg/L.\n- **Exam**: Intubated, ventilated on low\u2011flow mode. Sedation provides comfort; patient is not in distress.\n\n**Assessment**:\nThe patient is in a steady end\u2011of\u2011life status with stable hemodynamics under comfort measures. No new physiologic derangements or complications are identified. The comfort\u2011sedation regimen keeps the patient calm and pain\u2011free. Current organ support is adequate: CRRT for CKD stage 3, ongoing furosemide for fluid control, insulin infusion for glycemic control, and low\u2011dose prednisone for anti\u2011inflammatory effect. He remains on a DNR/DNI status with palliative care consult.\n\n**Plan**:\n1. Continue current comfort\u2011sedation protocol \u2013 Lorazepam 1\u202fmg/hr infusion, Morphine 5\u202fmg IV q4h PRN.\n2. Maintain CRRT and furosemide 20\u202fmg IV q12h.\n3. Keep insulin infusion titrated to target BG 140\u2011180\u202fmg/dL.\n4. Continue low\u2011flow oxygen (FiO\u2082\u00a060\u202f%, PEEP\u00a010) to preserve comfort.\n5. Monitor vitals and sedation depth every 4\u202fh; adjust rates as needed.\n6. Family support: encourage regular visits, provide emotional counseling, and document family discussions regarding goals of care.\n7. No new interventions or diagnostics planned.\n8. Review goals and hospice resources with palliative team daily.\n\n**Disposition**: Plan to keep patient on current comfort strategy through end of life or until family wishes to consider hospice transfer.\n\n**Disposition notes**: None planned for discharge; will continue inpatient supportive care until death.\n\n**Signature**: \nIntensive Care Team\n",
+      "patient_age": 60,
+      "patient_sex": "M",
+      "symptoms": [
+        "minimal spontaneous breathing",
+        "stable hemodynamics under support"
+      ],
+      "vitals": {
+        "heart_rate": "90 bpm",
+        "blood_pressure": "78/38 mmHg (MAP 55)",
+        "respiratory_rate": "22 breaths/min (ventilator)",
+        "temperature": "37.5 \u00b0C",
+        "oxygen_saturation": "80% on FiO2 60% with PEEP 10 cm H2O"
+      },
+      "relevant_history": [
+        "Comfort care plan in place",
+        "Palliative sedation started"
+      ],
+      "known_conditions": [
+        "COPD",
+        "Heart failure",
+        "Type 2 diabetes mellitus",
+        "CKD stage 3",
+        "Septic shock"
+      ],
+      "current_medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "IV furosemide 20 mg q12",
+        "CRRT",
+        "Prednisone 40 mg PO daily",
+        "Insulin infusion",
+        "Morphine 5 mg IV q4h PRN",
+        "Sedation (lorazepam 1 mg q6h IV)"
+      ],
+      "allergies": [],
+      "visit_scenario": "The ICU team checks the patient\u2019s vital signs and notes steady state under comfort measures. The family remains present. The team confirms that the patient has no new symptoms and continues to receive comfort medications. No additional interventions are planned. The patient is kept on low\u2011flow oxygen and minimal ventilatory support to maintain comfort. The team assures the family of ongoing support and emotional care.",
+      "examination_findings": [
+        "Intubated, ventilated",
+        "Stable vital signs with comfortable sedation",
+        "No signs of distress"
+      ],
+      "tests_ordered": [
+        "CBC",
+        "CRP"
+      ],
+      "test_results": [
+        "CBC: Hb 9.5 g/dL, WBC 12,000/\u00b5L",
+        "CRP 55 mg/L"
+      ],
+      "treatments_administered": [
+        "Lorazepam infusion 1 mg/hr",
+        "Morphine 5 mg IV q4h",
+        "CRRT continued"
+      ],
+      "patient_response": "",
+      "disease_progression_notes": "Patient in a stable comfort state; ongoing palliative monitoring."
+    }
+  ],
+  "notes": [
+    {
+      "visit_number": 1,
+      "clinician_specialty": "Primary Care Nurse Practitioner",
+      "note_date": "2023-10-01",
+      "content": "Chief Complaint: Telephone consult for worsening cough after recent influenza.\nHPI: 60\u2011year\u2011old male with known COPD, CHF, T2DM, CKD Stage\u202f3 and history of smoking presents via telemedicine with a low, throbbing productive cough, fever 38.5\u202f\u00b0C, mild dyspnea on exertion, chest tightness, and palpitations. Symptoms started one week after an uncomplicated influenza infection. Patient reports no chest pain but reports a persistent cough with yellow sputum and feeling \u201cthrobbing\u201d in chest. He reports heart rate feels elevated and denies shortness of breath at rest.\nPMHx: COPD with frequent exacerbations, CHF NYHA Class\u202fII on lisinopril 10\u202fmg daily and furosemide 20\u202fmg daily, T2DM on metformin 1000\u202fmg BID (held due to CKD), CKD Stage\u202f3 (Cr\u202f1.4\u202fmg/dL), recent 2\u2011week hospitalization for UTI on ciprofloxacin, smoker.\nCurrent Medications: Albuterol/ipratropium inhaler PRN, Lisinopril 10\u202fmg daily, Furosemide 20\u202fmg daily, Metformin 1000\u202fmg BID (held).\nAllergies: NKDA.\nReview of Systems: Positive for productive cough, fever, dyspnea on exertion, chest tightness; negative for chest pain, orthopnea, edema, urinary symptoms.\nVitals (home thermometer, pulse oximeter reading): HR 104\u202fbpm, BP 115/68\u202fmmHg, RR 22\u202fbreaths/min, Temp 38.5\u202f\u00b0C, SpO\u2082 91\u202f% on room air.\nAssessment: Likely secondary bacterial pneumonia superimposed on recent influenza in a patient with COPD; acute COPD exacerbation; potential CHF decompensation; differential includes viral/ bacterial respiratory infection, and drug\u2011induced arrhythmia from metformin.\nPlan:\n1. Prescribe Azithromycin 500\u202fmg PO daily for 7\u202fdays to treat presumed bacterial pneumonia.\n2. Continue albuterol/ipratropium inhaler PRN for COPD symptoms.\n3. Continue lisinopril 10\u202fmg daily and furosemide 20\u202fmg daily for CHF.\n4. Hold metformin until kidney function improves.\n5. Counsel patient to monitor SpO\u2082; if SpO\u2082 remains <94\u202f% or symptoms worsen (increased dyspnea, chest pain, severe cough), seek ED urgently.\n6. Advise patient to rest, stay hydrated, use acetaminophen for fever/aches.\n7. Follow\u2011up telecall in 48\u202fhrs to reassess vitals and symptom trajectory.\n\nNote: No in\u2011person exam was performed; all decisions made based on patient report and home vitals. Encourage patient to monitor pulse, SpO\u2082, and to keep home thermometer.\n",
+      "symptoms_reported": [
+        "low, throbbing cough",
+        "productive sputum",
+        "fever 38.5\u00b0C",
+        "dyspnea on exertion",
+        "chest tightness",
+        "palpitations"
+      ],
+      "vitals": {
+        "heart_rate": "104 bpm",
+        "blood_pressure": "115/68 mmHg",
+        "respiratory_rate": "22 breaths/min",
+        "temperature": "38.5 \u00b0C",
+        "oxygen_saturation": "91% on room air"
+      },
+      "tests_ordered": [],
+      "diagnoses_considered": [
+        "Secondary bacterial pneumonia (post\u2011influenza)",
+        "COPD exacerbation",
+        "CHF exacerbation",
+        "Drug\u2011induced arrhythmia"
+      ],
+      "medications": [
+        "Azithromycin 500 mg PO daily for 7 days",
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "Furosemide 20 mg daily",
+        "Hold metformin"
+      ],
+      "follow_up_recommendations": [
+        "Call PCP within 24\u201348 hrs if symptoms worsen or SpO\u2082 remains <94\u202f%.",
+        "Return to ED if chest pain, worsening dyspnea, or severe cough.",
+        "Adhere to home oxygen and rest."
+      ]
+    },
+    {
+      "visit_number": 2,
+      "clinician_specialty": "Emergency Medicine",
+      "note_date": "2023-10-05",
+      "content": "Chief Complaint: 60\u2011year\u2011old male presents to ED with worsening chest pain, dyspnea, and hypoxia.\nHistory of Present Illness: Mr. Henry reports sharp right lower chest pain radiating to the back, associated with cold sweats. Symptoms began 2 days ago and have progressively worsened. He denies weight loss or night sweats. He states he is normally able to climb one flight of stairs without difficulty. He reports increased shortness of breath at rest and requires supplemental oxygen at home overnight.\nPast Medical History: Chronic Obstructive Pulmonary Disease, Heart Failure, Type 2 Diabetes Mellitus, Chronic Kidney Disease Stage 3, smoking history (quit 10 years ago, 45 pack\u2011years), recent influenza, recent UTI hospitalization.\nMedications: Albuterol/ipratropium inhaler PRN, Lisinopril 10 mg daily, Furosemide 20 mg daily, Metformin held.\nPhysical Examination:\n\u2022 Vitals: HR 110\u202fbpm, BP 120/70\u202fmmHg, RR 26\u202fbpm, Temp 39.0\u202f\u00b0C, SpO\u2082 88% on RA, 95% on 4\u202fL O\u2082 NC.\n\u2022 General: Alert, anxious, in mild respiratory distress.\n\u2022 Cardiovascular: Distant heart sounds, regular rhythm, no murmurs.\n\u2022 Pulmonary: Fine crackles at left lung base; rales at right lower lobe with consolidation; no wheezes.\n\u2022 Abdomen: Soft, nontender, normal bowel sounds.\n\u2022 Extremities: No JVD, no peripheral edema.\nLabs and Imaging:\n\u2022 Chest X\u2011ray: Right lower lobe consolidation.\n\u2022 CBC: WBC 16,000/\u00b5L, neutrophils 80%.\n\u2022 CMP: Creatinine 1.8\u202fmg/dL (baseline 1.4\u202fmg/dL), BUN 30\u202fmg/dL, bicarbonate 22\u202fmEq/L.\n\u2022 Blood cultures: pending.\n\u2022 Rapid influenza antigen: negative.\nAssessment: The presentation is most consistent with acute bacterial pneumonia secondary to right lower lobe consolidation with possible exacerbation of COPD and heart failure. Differential includes pulmonary embolism, acute coronary syndrome, and CHF decompensation.\nPlan:\n1. Initiate IV ceftriaxone 1\u202fg q24h and IV azithromycin 500\u202fmg q24h (renal function monitored, dose remains unchanged in CKD stage\u202f3). Consider switching azithromycin to oral if clinically stable.\n2. Continue home metered\u2011dose inhaler PRN. Add nebulized ipratropium bromide 0.5\u202fmg q4h if wheezing develops.\n3. Maintain IV fluids as needed; avoid volume overload. Continue furosemide 20\u202fmg orally; consider increasing to 40\u202fmg QD if worsening pulmonary crackles or rising creatinine.\n4. Supplemental oxygen titrated to maintain SpO\u2082 >94%. Consider ICU transfer if worsening.\n5. Repeat CBC, CMP, and renal panel daily. Re\u2011order chest x\u2011ray in 48\u202fh.\n6. Notify primary cardiology for CHF optimization and possible adjustment of ACE inhibitor.\n7. Discuss discharge planning: If clinically stable after 48\u202fh of IV therapy, consider discharge on oral antibiotics (e.g., levofloxacin 500\u202fmg PO daily for 7\u202fdays plus doxycycline 100\u202fmg BID for 5\u202fdays) and close follow\u2011up.\nFollow\u2011up: Admit to medical floor for close monitoring (or discharge as outpatient if stable), review in 48\u202fh, urgent follow\u2011up with PCP or pulmonology the next week.\nDisposition: Admit to Med Floor for IV antibiotics, fluid management, and pulmonary monitoring.\n",
+      "symptoms_reported": [
+        "sharp right lower chest pain",
+        "cold sweats",
+        "tachycardia",
+        "dyspnea at rest",
+        "sleep\u2011dependent hypoxia"
+      ],
+      "vitals": {
+        "heart_rate": "110 bpm",
+        "blood_pressure": "120/70 mmHg",
+        "respiratory_rate": "26 breaths/min",
+        "temperature": "39.0 \u00b0C",
+        "oxygen_saturation": "88% on room air; 95% on 4 L O2"
+      },
+      "tests_ordered": [
+        "Chest X\u2011ray",
+        "CBC",
+        "CMP/chemistry panel",
+        "Blood cultures",
+        "Rapid influenza antigen test"
+      ],
+      "diagnoses_considered": [
+        "Community\u2011acquired pneumonia",
+        "COPD exacerbation secondary to infection",
+        "Congestive heart failure exacerbation",
+        "Pulmonary embolism",
+        "Acute coronary syndrome"
+      ],
+      "medications": [
+        "IV ceftriaxone 1\u202fg q24h",
+        "IV azithromycin 500\u202fmg q24h",
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10\u202fmg daily",
+        "Furosemide 20\u202fmg daily"
+      ],
+      "follow_up_recommendations": [
+        "Repeat CBC, CMP, and renal panel daily",
+        "Repeat chest X\u2011ray in 48\u202fh",
+        "Monitor SpO\u2082 at home and keep O\u2082 humidifier if needed",
+        "Consider discharge on oral antibiotics after clinical improvement",
+        "Schedule follow\u2011up with pulmonology in 1\u202fweek",
+        "Urgent return to ED if SpO\u2082 <94% on O\u2082, chest pain worsens, or new arrhythmias"
+      ]
+    },
+    {
+      "visit_number": 3,
+      "clinician_specialty": "Internal Medicine",
+      "note_date": "2023-10-06",
+      "content": "**Chief Complaint:** Hospital admission with worsening renal function.\n\n**History of Present Illness:**\n60\u2011year\u2011old male with COPD, heart failure, type\u202f2 DM, CKD stage\u202f3, and a significant smoking history was admitted on 2023\u201110\u201105 with a right lower lobe infiltrate and acute renal injury.  On 2023\u201110\u201106, daily monitoring shows persistent fever (38.9\u202f\u00b0C), productive cough, dyspnea on exertion, increasing chest pain, and markedly reduced urine output (200\u202fmL/day).  WBC peaked at 18\u202f000/\u00b5L, Cr rose to 1.9\u202fmg/dL, and BUN at 38\u202fmg/dL.  Repeat CXR confirms enlargement of the right lower lobe opacity.\n\n**Vitals (current):**\n- HR: 102\u202fbpm\n- BP: 118/74\u202fmmHg\n- RR: 28\u202fbreaths/min\n- Temp: 38.9\u202f\u00b0C\n- SpO\u2082: 90% on 5\u202fL/min O\u2082\n\n**Physical Exam:**\n- Distant heart sounds, fine crackles bilaterally in lower lung fields, SOB on minimal exertion.\n\n**Assessment:**\n1. Community\u2011acquired pneumonia (right lower lobe) with ongoing inflammatory response.\n2. Sepsis (community\u2011acquired) with evidence of systemic infection.\n3. Acute on chronic renal failure (elevated Cr/BUN) likely multifactorial\u2014contributory elements include sepsis\u2011related hypoperfusion, nephrotoxic antibiotics, and volume shifts.\n4. Exacerbation of chronic heart failure, possible pulmonary congestion.\n\n**Plan:**\n- **Antibiotics:** Continue IV ceftriaxone 500\u202fmg q24h (dose reduced to limit nephrotoxic potential) and azithromycin 500\u202fmg IV q24h.\n- **Diuresis:** Continue IV furosemide 20\u202fmg q12h, titrate up to 40\u202fmg q12h if urine output remains <30\u202fmL/kg/24\u202fh or if pulmonary congestion worsens.\n- **Fluid Management:** Carefully titrate IV fluids to avoid volume overload; monitor daily intake/output.\n- **Cardiology/Heart Failure:** Consider holding lisinopril 10\u202fmg daily due to rising Cr; reassess in 48\u202fh based on renal trend.\n- **Monitoring:** Daily CBC, CMP, and renal panel; repeat chest X\u2011ray in 48\u201372\u202fh.\n- **Oxygenation:** Maintain SpO\u2082 >94% with supplemental O\u2082; titrate O\u2082 support as clinical status improves.\n- **Nephrology Consult:** Ongoing collaboration for potential antibiotic adjustment and ACE\u2011I management.\n- **Patient Education:** Counsel on cautious hydration to maintain adequate urine output while avoiding overload; instruct to report fevers >38.9\u202f\u00b0C, worsening dyspnea, or O\u2082 sat <90%.\n- **Disposition:** Continue IV antibiotics and supportive care; transition to oral antibiotics if clinically stable after completion of a 48\u2011hour IV course and improvement in leukocytosis and pulmonary findings.\n\n**Follow\u2011up:** 48\u2011hour review in inpatient rounding; adjust plan based on laboratory trends and clinical status.\n",
+      "symptoms_reported": [
+        "persistent fever",
+        "productive cough",
+        "dyspnea on exertion",
+        "increasing chest pain",
+        "lower urinary output 200 mL/day"
+      ],
+      "vitals": {
+        "heart_rate": "102 bpm",
+        "blood_pressure": "118/74 mmHg",
+        "respiratory_rate": "28 breaths/min",
+        "temperature": "38.9 \u00b0C",
+        "oxygen_saturation": "90% on 5 L/min O2"
+      },
+      "tests_ordered": [
+        "Repeat CXR",
+        "CBC",
+        "CMP/chemistry panel"
+      ],
+      "diagnoses_considered": [
+        "Community\u2011acquired pneumonia",
+        "Sepsis",
+        "Acute on chronic kidney injury",
+        "Heart failure exacerbation",
+        "Aspiration pneumonia (ruled out)",
+        "Drug\u2011induced nephrotoxicity"
+      ],
+      "medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily (consider hold)",
+        "Furosemide 20 mg IV q12h",
+        "Ceftriaxone 500 mg IV q24h",
+        "Azithromycin 500 mg IV q24h"
+      ],
+      "follow_up_recommendations": [
+        "Daily CBC, CMP, and renal panel",
+        "Repeat CXR in 48\u201372\u202fh",
+        "Monitor urine output; aim >30\u202fmL/kg/24\u202fh",
+        "Hold lisinopril due to rising creatinine; reassess in 48\u202fh",
+        "Adjust furosemide dose based on output and pulmonary findings",
+        "Maintain SpO\u2082 >94% with supplemental O\u2082",
+        "Continue monitoring for signs of pulmonary edema",
+        "Engage nephrology for antibiotic and ACE\u2011I management",
+        "Patient education on hydration and symptom monitoring",
+        "Review and consider transition to oral antibiotics if stable after 48\u202fh of IV therapy"
+      ]
+    },
+    {
+      "visit_number": 4,
+      "clinician_specialty": "Pulmonology / Cardiology",
+      "note_date": "2023-10-08",
+      "content": "Chief Complaint: Severe hypoxia, pulmonary edema, and oliguria.\n\nHistory of Present Illness: 60-year-old male with known COPD, congestive heart failure (HF), type 2 diabetes, CKD stage 3, and history of acute bacterial pneumonia presents with progressive dyspnea, left chest pain and anuria. On admission (Visit #3) he had right lower lobe consolidation with acute on chronic renal failure (Cr 1.9 mg/dL, BUN 38 mg/dL). He was started on ceftriaxone 1 g IV q24h and azithromycin 500 mg IV q24h, furosemide 20 mg IV q12h, and was monitored for urine output (>30 mL/kg/24h). Despite treatment, his respiratory status worsened; he was transferred to the ICU with progressive hypoxemia, pulmonary crackles, and hemodynamic instability. Non\u2011invasive ventilation was ineffective, prompting intubation and initiation of lung\u2011protective mechanical ventilation (tidal volume 6 mL/kg IBW, PEEP 12 cm H\u2082O). Point\u2011of\u2011care echo showed EF 40%, mild tricuspid regurgitation, and LV dilation. MAP remained <65; norepinephrine 0.05 \u03bcg/kg/min was started. Urine output remained <200 mL/day, prompting initiation of continuous renal replacement therapy (CRRT) for oliguria and drug clearance.\n\nAssessment:\n1. Severe sepsis with septic shock secondary to bacterial pneumonia \u2013 supported by fever, leukocytosis, elevated CRP (80 mg/L), hypotension, and multi\u2011organ dysfunction.\n2. Acute cardiogenic pulmonary edema secondary to chronic systolic HF exacerbation \u2013 echo confirms reduced EF and LV dilation; pulmonary crackles. \n3. Acute on chronic renal failure requiring CRRT \u2013 serum creatinine 2.5 mg/dL and BUN 52 mg/dL, oliguria.\n4. Possible acute respiratory distress syndrome (ARDS) contributing to refractory hypoxemia \u2013 PaO\u2082 55 mmHg on FiO\u2082 100% with high PEEP.\n\nPlan:\n- Continue ICU care with mechanical ventilation on a lung\u2011protective strategy.\n- Maintain norepinephrine infusion; titrate to MAP >65 mmHg; consider adjunct vasopressin if required.\n- Continue ceftriaxone 1 g IV q24h and azithromycin 500 mg IV q24h; obtain cultures (blood, sputum, urine) and adjust antibiotics per sensitivities.\n- Furosemide 20 mg IV bolus; thereafter consider low\u2011dose continuous infusion (0.5 mg/h) if fluid status permits.\n- CRRT settings: CVVH with a dialysate flow 2.5 L/h; adjust electrolytes and monitor fluid balance.\n- Hold potentially nephrotoxic agents (metformin, lisinopril). Continue albuterol/ipratropium nebulizers PRN.\n- Daily arterial blood gases, electrolytes, renal panel, and complete metabolic panel.\n- Repeat bedside echo in 24\u201348 h to assess EF and fluid status.\n- Repeat chest X-ray in 24 h to evaluate pulmonary edema.\n- Consult cardiology for HF management (consider diuretic strategy, ACE inhibitor hold decision). \n- Reassess vasopressor dependence daily; wean as MAP improves.\n- Transition to intermittent hemodialysis once CRRT discontinued.\n\nDisposition: Continue ICU admission; anticipate a 48\u201372 hour period of stabilization before potential step\u2011down.\n\nFollow\u2011Up: Next-day review with intensivist; review culture results; evaluate need for antibiotic change; monitor urine output hourly; daily physical therapy consult for mobility as tolerated.\n",
+      "symptoms_reported": [
+        "rapid breathing",
+        "oxygen saturation 82% on 6\u202fL",
+        "sharp left chest pain",
+        "dyspnea at rest",
+        "no urine output <200\u202fmL/day"
+      ],
+      "vitals": {
+        "heart_rate": "112",
+        "blood_pressure": "115/72",
+        "respiratory_rate": "32",
+        "temperature": "38.8",
+        "oxygen_saturation": "82% on 6\u202fL/min"
+      },
+      "tests_ordered": [
+        "Bedside echocardiogram",
+        "Arterial blood gas",
+        "Creatinine",
+        "Blood urea nitrogen",
+        "C\u2011reactive protein",
+        "Chest X\u2011ray"
+      ],
+      "diagnoses_considered": [
+        "Sepsis due to bacterial pneumonia",
+        "Acute cardiogenic pulmonary edema secondary to heart failure exacerbation",
+        "Acute on chronic kidney injury requiring CRRT",
+        "Septic shock",
+        "Acute respiratory distress syndrome (ARDS)"
+      ],
+      "medications": [
+        "Ceftriaxone 1\u202fg IV q24h",
+        "Azithromycin 500\u202fmg IV q24h",
+        "Furosemide 20\u202fmg IV bolus",
+        "Furosemide infusion 0.5\u202fmg/h",
+        "Norepinephrine 0.05\u202f\u00b5g/kg/min infusion",
+        "Continuous renal replacement therapy (CRRT)",
+        "Metformin hold",
+        "Lisinopril hold",
+        "Albuterol/ipratropium nebulizer PRN"
+      ],
+      "follow_up_recommendations": [
+        "Continue ICU monitoring and mechanical ventilation",
+        "Daily ABG and electrolytes",
+        "Wean vasopressors as MAP improves",
+        "Transition to intermittent hemodialysis after CRRT discontinuation",
+        "Repeat chest X\u2011ray in 24 h",
+        "Review culture results to guide antibiotics",
+        "Cardiology consult for HF management",
+        "Monitor urine output hourly"
+      ]
+    },
+    {
+      "visit_number": 5,
+      "clinician_specialty": "Infectious Disease",
+      "note_date": "2023-10-10",
+      "content": "Patient is a 60\u2011year\u2011old male with COPD, HFrEF, T2DM, CKD stage\u00a03 and multi\u2011organ failure on CRRT, norepinephrine and insulin infusions. He remains intubated with persistent fever (38.4\u202f\u00b0C), lethargy, and unchanged right lower lobe pulmonary infiltrates. Sputum cultures grew multi\u2011drug resistant *Pseudomonas aeruginosa*; blood cultures remain negative. CRP is modestly decreasing to 70\u202fmg/L but remains high. Serum lactate elevated at 4.2\u202fmmol/L and arterial blood gases show PaO\u2082\u00a060\u202fmmHg on 100\u202f% FiO\u2082. Given culture data and concern for inadequate source control, the infectious disease consultant altered antibiotics as follows:\n\n\u2022 Cefepime 1\u202fg IV q12\u00a0h (dose adjusted for CRRT clearance)\n\u2022 Meropenem 1\u202fg IV q8\u00a0h\n\u2022 Linezolid 600\u202fmg IV q12\u00a0h (for MRSA coverage)\n\nThe regimen was chosen to broaden anti\u2011Pseudomonal coverage while minimizing nephrotoxicity; cefepime provides 4\u2011th\u2011generation cephalosporin activity and is renally cleared, meropenem complements coverage, and linezolid provides MRSA coverage without nephrotoxicity. The patient continues on insulin infusion targeting 140\u2013180\u202fmg/dL, furosemide 20\u202fmg IV q12\u00a0h (infusion adjusted for CRRT), and norepinephrine titrated to maintain MAP\u202f>65\u00a0mmHg.\n\nThe patient\u2019s lactate remains elevated, suggesting ongoing hypoperfusion despite antimicrobial therapy and pressor support. No new source of infection has been identified, but ventilator\u2011associated pneumonia remains a concern. Repeat imaging (chest X\u2011ray or CT) and consideration of bronchoscopy with bronchoalveolar lavage will be obtained to evaluate for unresolved infiltrate or additional focus. Given the MDR phenotype, a review of susceptibility to *Pseudomonas* is pending; if resistance to both cefepime and meropenem develops, escalation to ceftolozane/tazobactam or polymyxin\u2011based therapy per susceptibility will be considered.\n\nAssessment: 1) Sepsis due to MDR *P. aeruginosa* pneumonia with persistent hypoperfusion; 2) Multi\u2011organ failure (cardiac, renal, hepatic) exacerbated by sepsis; 3) Ongoing nephrotoxicity risk from antibiotics and underlying CKD.\n\nPlan:\n1. Continue current antibiotic regimen with dose adjustments as per CRRT clearance; obtain therapeutic drug monitoring for cefepime and meropenem troughs. 2. Daily CBC, CMP, and renal panel; monitor serum creatinine, BUN, electrolytes. 3. Serial lactate measurements every 6\u20138\u202fh until trending down. 4. Repeat ABG and ABx cultures at 24\u202fh. 5. Repeat chest imaging at day\u00a03 or sooner if clinical deterioration. 6. Evaluate for source control \u2013 obtain bronchoscopy/bronchoalveolar lavage if no improvement by day\u00a02. 7. Maintain insulin infusion; adjust as per glucose trend. 8. Continue norepinephrine titration to maintain MAP\u202f\u226565\u202fmmHg. 9. Continue furosemide and CRRT as per fluid balance goals. 10. Discuss with pharmacy for potential de\u2011escalation if cultures show susceptibility to fewer agents.\n\nThe patient is instructed to continue sedation monitoring; no new allergies identified. Family will be updated and reassured of aggressive treatment plan.\n",
+      "symptoms_reported": [
+        "persistent fever 38.4\u00b0C",
+        "lethargy",
+        "unchanged pulmonary infiltrates"
+      ],
+      "vitals": {
+        "heart_rate": "118 bpm",
+        "blood_pressure": "110/68 mmHg",
+        "respiratory_rate": "34 breaths/min (ventilator)",
+        "temperature": "38.4 \u00b0C",
+        "oxygen_saturation": "84% on FiO2 100%"
+      },
+      "tests_ordered": [
+        "Repeat ABG",
+        "Serum lactate",
+        "CRP",
+        "Blood cultures"
+      ],
+      "diagnoses_considered": [
+        "Sepsis due to MDR Pseudomonas aeruginosa pneumonia",
+        "Ventilator\u2011associated pneumonia",
+        "Hypoperfusion/shock",
+        "Progression of multi\u2011organ failure"
+      ],
+      "medications": [
+        "Albuterol/ipratropium inhaler PRN",
+        "Lisinopril 10 mg daily",
+        "IV furosemide 20 mg q12h",
+        "IV cefepime 1 g q12h (CRRT adjusted)",
+        "IV meropenem 1 g q8h",
+        "IV linezolid 600 mg q12h",
+        "CRRT infusion",
+        "Norepinephrine infusion",
+        "Insulin infusion (started 7/15)"
+      ],
+      "follow_up_recommendations": [
+        "Continue current antibiotic regimen with dose adjustments per CRRT; therapeutic drug monitoring of cefepime and meropenem",
+        "Daily CBC, CMP, renal panel; monitor electrolytes and fluids",
+        "Repeat ABG and cultures at 24\u202fh; serial lactate q6\u20138\u202fh until trending down",
+        "Repeat chest imaging at day\u202f3 or earlier if clinical worsening",
+        "Consider bronchoscopy with BAL if no improvement by day\u202f2",
+        "Maintain insulin infusion targeting 140\u2013180\u202fmg/dL",
+        "Continue norepinephrine titration to maintain MAP\u202f\u226565\u202fmmHg",
+        "Discuss de\u2011escalation if cultures show susceptibility",
+        "Monitor for adverse drug reactions and adjust as needed"
+      ]
+    },
+    {
+      "visit_number": 6,
+      "clinician_specialty": "Critical Care",
+      "note_date": "2023-10-13",
+      "content": "Chief Complaint: Severe refractory hypoxia, hemodynamic instability, and persistent lactic acidosis in a 60\u2011year\u2011old male with COPD, HFrEF, T2DM, and CKD stage 3.\n\nHistory of Present Illness: The patient has been in the ICU for 8 days for severe pneumonia complicated by multi\u2011organ failure. Despite escalating support (high\u2011PEEP ventilation, CRRT, broad\u2011spectrum antibiotics, vasopressors, high\u2011dose steroids), arterial oxygenation remains <70% on 100% FiO2, MAP is 62 mmHg on norepinephrine 0.08\u202f\u00b5g/kg/min, and serum lactate is 6\u202fmmol/L. Recent multidisciplinary family meeting concluded that further escalation would not improve prognosis; family chooses comfort\u2011focused care.\n\nPhysical Examination: Intubated, ventilated with high PEEP (20\u202fcm\u202fH2O). Weak peripheral pulses, SpO2 70% on 100% FiO2. No lung crackles due to low tidal volume. Cardiovascular exam: tachycardia 140\u202fbpm, weak pulse. Respiratory: rapid (RR 36) with minimal chest excursion.\n\nLabs: ABG pH 7.24, PaO2 50\u202fmmHg on FiO2 100%; lactate 6\u202fmmol/L; CRP 60\u202fmg/L.\n\nAssessment: Refractory hypoxic respiratory failure secondary to severe bacterial pneumonia with sepsis, septic shock, and multi\u2011organ failure. Acute respiratory distress syndrome (ARDS) secondary to infection and underlying COPD. The patient has irreversible organ dysfunction despite optimal ICU therapy.\n\nPlan:\n1. Comfort\u2011care transition: Reduce intensity of support \u2013 wean norepinephrine to standby, maintain low\u2011volume ventilatory setting to keep SpO2 \u226570%. No further escalation of antibiotics; discontinue cefepime, meropenem, and linezolid.\n2. Continue current supportive measures that provide comfort: CRRT for volume control, low\u2011dose prednisone 40\u202fmg PO daily (continued for anti\u2011inflammatory effect), insulin infusion to control hyperglycemia, and furosemide 20\u202fmg IV q12h for fluid status.\n3. Palliative care consult: initiate symptom\u2011management plan (acetaminophen, low\u2011dose opioids for dyspnea, anticholinergics if needed). Provide psychosocial and spiritual support.\n4. Documentation: Update code status to DNR/DNI; record advance directives.\n5. Family communication: Schedule next family meeting within 24\u202fhrs to discuss goals, symptom expectations, and hospice resources.\n6. Monitor: Daily ABG, lactate trend, BP, urine output, and mental status of family. No further imaging or cultures.\n\nThe patient is under a comfort\u2011care regimen with no further escalation of antibiotics, and the ICU team will continue to assess for potential hospice referral.\n",
+      "symptoms_reported": [
+        "Persistent hypoxia <70% on FiO2 100%",
+        "Hemodynamic instability",
+        "Persistent lactate 6 mmol/L"
+      ],
+      "vitals": {
+        "heart_rate": "140 bpm",
+        "blood_pressure": "88/52 mmHg (MAP 62)",
+        "respiratory_rate": "36 breaths/min (ventilator)",
+        "temperature": "38.0 \u00b0C",
+        "oxygen_saturation": "70% on FiO2 100% with PEEP 20 cm H2O"
+      },
+      "tests_ordered": [
+        "Arterial blood gas",
+        "Serum lactate",
+        "CRP"
+      ],
+      "diagnoses_considered": [
+        "Refractory hypoxic respiratory failure (sepsis)",
+        "Septic shock",
+        "Acute respiratory distress syndrome (ARDS)",
+        "Severe bacterial pneumonia",
+        "Multi\u2011organ failure",
+        "Acute-on-chronic COPD exacerbation"
+      ],
+      "medications": [
+        "IV furosemide 20 mg q12h",
+        "IV cefepime 1 g q12h (discontinued)",
+        "Meropenem 1 g q8h (discontinued)",
+        "Linezolid 600 mg q12h (discontinued)",
+        "Prednisone 40 mg PO daily",
+        "Insulin infusion",
+        "CRRT",
+        "Norepinephrine (weaned to standby)",
+        "Low\u2011volume ventilatory support"
+      ],
+      "follow_up_recommendations": [
+        "Maintain comfort\u2011care regimen with low\u2011dose steroids and furosemide",
+        "Continue CRRT to manage fluid balance",
+        "Use palliative care protocol for symptom management (opioids, anti\u2011dyspnea agents)",
+        "Family discussions within 24\u202fhrs regarding hospice options",
+        "Document code status change to DNR/DNI",
+        "Reassess comfort measures and symptom burden daily",
+        "Coordinate hospice referral if patient is transferred to inpatient hospice or home hospice"
+      ]
+    },
+    {
+      "visit_number": 7,
+      "clinician_specialty": "Palliative Care",
+      "note_date": "2023-10-15",
+      "content": "Chief Complaint: 60\u2011year\u2011old male with advanced COPD, heart failure, CKD, and sepsis\u2011related multi\u2011organ failure presents for palliative reassessment of goals and comfort plan.\n\nHistory of Present Illness:\n- The patient has been in progressive decline over the past few weeks, now requiring intubation, CRRT, and vasopressor support for septic shock. On 2023\u201110\u201113 we transitioned to comfort care: antibiotics were discontinued, prednisone 40 mg PO daily was initiated, and code status updated to DNR/DNI. No further therapeutic escalation is pursued.\n- During this visit the family was updated on the patient\u2019s disease trajectory. The patient continues to experience dyspnea, chest pain, and fatigue, all of which are addressed with comfort measures.\n- Current comfort regimen: scheduled morphine 5 mg IV q4h PRN and a continuous infusion (2 mg/hr) + albuterol nebulisation q4h for bronchospasm.\n\nReview of Systems:\n- Respiratory: Shortness of breath, bronchospasm, need for 100% FiO\u2082 with PEEP 15.\n- Cardiovascular: Weak peripheral pulses, MAP 53; hemodynamically unstable but no new arrhythmias.\n- Neurologic: No new focal deficits; remains sedated for comfort.\n- GI: No nausea/vomiting.\n- Others: Fatigue, mild chest discomfort.\n\nPast Medical History:\n- COPD with chronic bronchitis (emphysema likely).\n- Heart failure with reduced EF 40%.\n- Diabetes mellitus type 2.\n- CKD stage 3.\n- Chronic hypertension.\n- Acute bacterial pneumonia complicated by ARDS, septic shock, multi\u2011organ failure.\n\nCurrent Medications:\n- Morphine infusion 2 mg/hr.\n- Morphine PRN 5 mg IV q4h.\n- Albuterol nebulisation q4h.\n- Albuterol/ipratropium inhaler PRN.\n- furosemide 20 mg IV q12h.\n- Insulin infusion.\n- Prednisone 40 mg PO daily.\n- Continuous renal replacement therapy (CRRT).\n- No other antibiotics; all discontinued.\n\nAllergies: NKDA.\n\nVitals (at time of visit):\n- HR: 110 bpm\n- BP: 80/45 mmHg (MAP 53)\n- RR: 30 breaths/min (ventilator set)\n- Temp: 37.8\u00b0C\n- SpO\u2082: 78% on 100% FiO\u2082, PEEP 15 cm H\u2082O\n\nPhysical Examination:\n- Intubated and mechanically ventilated.\n- Lung fields: clear with low volume (ventilator settings noted).\n- Heart: weak peripheral pulses; no murmurs.\n- Extremities: cool, weak pulses.\n- Abdomen: soft, non\u2011tender.\n\nLaboratory / Diagnostic Findings:\n- ABG: pH 7.27, PaO\u2082 58 mmHg on FiO\u2082 100%; PaCO\u2082 64 mmHg, HCO\u2083 19, lactate 3.4 mmol/L.\n- Hemoglobin: 9.8 g/dL.\n- Hematocrit: 29%.\n- BUN/creatinine within CRRT parameters.\n- Lactate trending upward, consistent with ongoing tissue hypoxia.\n\nAssessment:\n1. Refractory hypoxemia (ARDS) in the setting of advanced COPD and heart failure.\n2. Multi\u2011organ failure secondary to septic shock; now in a palliative phase.\n3. Pain and dyspnea, currently being managed with opioid infusion and bronchodilators.\n4. Mild anemia (Hb 9.8) likely multifactorial: chronic disease, blood loss, CRRT.\n5. Persistent fever (37.8\u00b0C) likely due to inflammatory response; however, no new infection source per current evaluation.\n\nPlan:\n- Continue morphine infusion 2 mg/hr; titrate based on pain and dyspnea scales. Add anti\u2011emetic dexamethasone 4 mg q8h PRN to mitigate opioid\u2011related nausea.\n- Maintain albuterol nebulisation q4h; consider adding ipratropium as needed for bronchospasm.\n- Continue furosemide 20 mg IV q12h to manage fluid overload; monitor daily weights and lung exam.\n- Maintain CRRT parameters; adjust dialysate composition to optimize electrolytes.\n- Continue prednisone 40 mg PO daily for anti\u2011inflammatory effect.\n- Continue insulin infusion; target glucose 140\u2013180 mg/dL.\n- No further antibiotics; wound cultures negative; keep family informed that aggressive treatment is not pursued.\n- Consider addition of 4\u2011hydroxybutyl\u2011propanol (short\u2011acting benzodiazepine) for agitation or severe dyspnea if needed.\n- Monitor SpO\u2082; if comfort\u2011driven goal is SpO\u2082 >85% with minimal discomfort, consider weaning PEEP if physiologic stability allows.\n- Daily multidisciplinary rounds with palliative, ICU, nephrology, pharmacy, and nursing.\n\nFollow\u2011up Recommendations:\n- Family meeting today to reaffirm goals and discuss hospice transition.\n- Schedule next palliative care assessment within 24\u201348 hours to reassess comfort plans.\n- Home hospice services to be arranged should the patient go to a care facility or die in hospital.\n- Provide psychosocial support to family; coordinate with social work.\n- Document all changes in pain scores and dyspnea (using 0\u201310 scale) and adjust medication doses accordingly.\n- Continuation of current comfort regimen until patient\u2019s comfort or end-of\u2011life.\n\nPatient and family expressed acceptance of current plan and understanding of prognosis.\n\nSigned: Palliative Care Team",
+      "symptoms_reported": [],
+      "vitals": {},
+      "tests_ordered": [],
+      "diagnoses_considered": [],
+      "medications": [],
+      "follow_up_recommendations": []
+    },
+    {
+      "visit_number": 8,
+      "clinician_specialty": "Intensive Care",
+      "note_date": "2023-10-18",
+      "content": "**ICU Comfort Care Evaluation \u2013 Visit 8**\n\n**Patient:** 60\u2011year\u2011old male with COPD, HFrEF, T2DM, CKD\u00a0stage\u00a03, former septic shock, currently on comfort measures.\n\n**Chief Complaint**: End\u2011of\u2011life observation and family support.\n\n**Subjective**: Family reports that the patient remains well\u2011composed with no new complaints. No spontaneous pain, no anxiety, minimal spontaneous breathing.\n\n**Objective**:\n- **Vital signs**: HR\u00a090\u202fbpm, BP\u00a078/38\u202fmmHg (MAP\u00a055\u202fmmHg), RR\u00a022\u202fbreaths/min (ventilator), Temp\u00a037.5\u202f\u00b0C, SpO\u2082\u00a080\u202f% on FiO\u2082\u00a060\u202f% with PEEP\u00a010\u202fcm\u202fH\u2082O.\n- **Labs**: CBC \u2013 Hb\u00a09.5\u202fg/dL, WBC\u00a012\u202f000/\u00b5L; CRP\u00a055\u202fmg/L.\n- **Exam**: Intubated, ventilated on low\u2011flow mode. Sedation provides comfort; patient is not in distress.\n\n**Assessment**:\nThe patient is in a steady end\u2011of\u2011life status with stable hemodynamics under comfort measures. No new physiologic derangements or complications are identified. The comfort\u2011sedation regimen keeps the patient calm and pain\u2011free. Current organ support is adequate: CRRT for CKD stage 3, ongoing furosemide for fluid control, insulin infusion for glycemic control, and low\u2011dose prednisone for anti\u2011inflammatory effect. He remains on a DNR/DNI status with palliative care consult.\n\n**Plan**:\n1. Continue current comfort\u2011sedation protocol \u2013 Lorazepam 1\u202fmg/hr infusion, Morphine 5\u202fmg IV q4h PRN.\n2. Maintain CRRT and furosemide 20\u202fmg IV q12h.\n3. Keep insulin infusion titrated to target BG 140\u2011180\u202fmg/dL.\n4. Continue low\u2011flow oxygen (FiO\u2082\u00a060\u202f%, PEEP\u00a010) to preserve comfort.\n5. Monitor vitals and sedation depth every 4\u202fh; adjust rates as needed.\n6. Family support: encourage regular visits, provide emotional counseling, and document family discussions regarding goals of care.\n7. No new interventions or diagnostics planned.\n8. Review goals and hospice resources with palliative team daily.\n\n**Disposition**: Plan to keep patient on current comfort strategy through end of life or until family wishes to consider hospice transfer.\n\n**Disposition notes**: None planned for discharge; will continue inpatient supportive care until death.\n\n**Signature**: \nIntensive Care Team\n",
+      "symptoms_reported": [
+        "Minimal spontaneous breathing",
+        "Stable hemodynamics under support",
+        "No new symptoms"
+      ],
+      "vitals": {
+        "heart_rate": "90 bpm",
+        "blood_pressure": "78/38 mmHg",
+        "respiratory_rate": "22 breaths/min",
+        "temperature": "37.5 \u00b0C",
+        "oxygen_saturation": "80% on FiO\u2082 60% with PEEP 10 cm H\u2082O"
+      },
+      "tests_ordered": [
+        "CBC",
+        "CRP"
+      ],
+      "diagnoses_considered": [
+        "Septic shock with multi\u2011organ failure",
+        "COPD exacerbation",
+        "HFrEF",
+        "CKD stage 3",
+        "End\u2011of\u2011life comfort care"
+      ],
+      "medications": [
+        "Lorazepam 1 mg/hr infusion",
+        "Morphine 5 mg IV q4h PRN",
+        "Furosemide 20 mg IV q12h",
+        "Insulin infusion",
+        "Prednisone 40 mg PO daily",
+        "CRRT ongoing"
+      ],
+      "follow_up_recommendations": [
+        "Continue current comfort care regimen; adjust sedation as needed",
+        "Monitor vitals and sedation depth q4h",
+        "Encourage family visits and provide emotional support",
+        "Palliative care consult daily",
+        "Consider hospice transfer discussions as patient\u2019s condition stabilizes or deteriorates"
+      ]
+    }
+  ],
+  "final_medical_history": {
+    "demographics": {
+      "age": 60,
+      "sex": "M",
+      "height": null,
+      "weight": null
+    },
+    "known_conditions": [
+      "Chronic obstructive pulmonary disease (COPD)",
+      "Heart failure",
+      "Diabetes mellitus",
+      "Chronic kidney disease",
+      "Smoking",
+      "Acute bacterial pneumonia",
+      "Acute on chronic renal failure",
+      "Sepsis",
+      "Multi\u2011organ failure",
+      "Ventilator\u2011associated pneumonia",
+      "Septic shock",
+      "Acute respiratory distress syndrome (ARDS)"
+    ],
+    "current_medications": [
+      "Albuterol/ipratropium inhaler PRN",
+      "Albuterol nebulisation q4h",
+      "Morphine infusion 2 mg/hr",
+      "Morphine PRN 5 mg IV q4h",
+      "furosemide 20 mg IV q12h",
+      "Insulin infusion",
+      "Prednisone 40 mg PO daily",
+      "Continuous renal replacement therapy (CRRT)",
+      "Dexamethasone 4 mg q8h PRN",
+      "Lorazepam 1 mg/hr infusion"
+    ],
+    "prior_visit_summaries": [
+      "Telephone consult on 2023-10-01 for worsening cough post\u2011influenza. Patient 60M with productive cough, fever 38.5\u00b0C, dyspnea on exertion, chest tightness, and palpitations. Home vitals: HR104 bpm, BP115/68 mmHg, RR22 breaths/min, Temp38.5\u00b0C, SpO\u208291% on room air. Prescribed Azithromycin 500mg PO daily for 7 days; continued albuterol/ipratropium inhaler PRN, lisinopril 10mg daily, furosemide 20mg daily; metformin held. Advised SpO\u2082 monitoring, rest, hydration, acetaminophen for fever, urgent care if SpO\u2082 <94% or worsening symptoms. Follow\u2011up telecall in 48hrs.",
+      "Admitted on 2023-10-05 for acute bacterial pneumonia with right lower lobe consolidation. Initial vitals: HR 110 bpm, BP 120/70 mmHg, RR 26 breaths/min, Temp 39.0\u00b0C, SpO\u2082 88% on room air (95% on 4L O\u2082). Chest X\u2011ray confirmed right lower lobe consolidation. Labs showed WBC 16,000/\u00b5L with 80% neutrophils and creatinine 1.8 mg/dL. Started IV ceftriaxone 1g q24h and IV azithromycin 500mg q24h, nebulized ipratropium 0.5mg q4h PRN, supplemental oxygen to maintain SpO\u2082 >94%, continued furosemide 20mg PO daily and lisinopril 10mg daily. Scheduled repeat CBC, CMP, and chest X\u2011ray in 48hrs. Discharged planned on oral antibiotics if clinically stable after 48hrs of IV therapy.",
+      "Hospital admission on 2023-10-06 for persistent fever, productive cough, dyspnea, and worsening renal function (Cr 1.9 mg/dL, BUN 38 mg/dL). Chest X\u2011ray showed enlargement of right lower lobe opacity. Continued IV ceftriaxone 500 mg q24h and azithromycin 500 mg IV q24h; started IV furosemide 20 mg q12h; lisinopril held. Daily CBC, CMP, renal panel, and repeat chest X\u2011ray in 48\u201372 hrs. Monitoring urine output (>30 mL/kg/24h) and O\u2082 saturations (>94%).",
+      "2023-10-08 ICU admission: 60M with severe hypoxia, pulmonary edema, oliguria. Intubated and placed on lung\u2011protective mechanical ventilation (tidal 6mL/kg IBW, PEEP12 cm H\u2082O). Bedside echo showed EF40%, mild tricuspid regurgitation, LV dilation. MAP <65 mmHg; norepinephrine 0.05 \u00b5g/kg/min initiated. Urine output <200 mL/day \u2192 continuous renal replacement therapy started. Ceftriaxone 1g IV q24h and azithromycin 500 mg IV q24h continued. Furosemide 20 mg IV bolus then infusion 0.5 mg/h. Metformin and lisinopril held. Daily arterial blood gases, electrolytes, renal panel, echocardiogram, and chest X\u2011ray ordered; cultures obtained.",
+      "Intubated 60\u2011year\u2011old male with COPD, HFrEF, T2DM, CKD stage\u202f3 on CRRT and norepinephrine. Persistent fever 38.4\u202f\u00b0C, lethargy, unchanged right lower lobe infiltrates. Sputum culture grew MDR Pseudomonas aeruginosa. Antibiotics changed to cefepime 1\u202fg IV q12h (CRRT adjusted), meropenem 1\u202fg IV q8h, and linezolid 600\u202fmg IV q12h. Continued insulin infusion, furosemide 20\u202fmg IV q12h, norepinephrine titration, CRRT. Daily CBC/CMP/renal panel, serial lactate, repeat ABG, imaging, and bronchoscopy considered if no improvement. No new allergies.",
+      "Visit 6 (2023-10-13): ICU patient with refractory hypoxic respiratory failure and septic shock. Transitioned to comfort\u2011care: antibiotic therapy discontinued (cefepime, meropenem, linezolid); prednisone 40\u202fmg PO daily started; continued furosemide 20\u202fmg IV q12h, insulin infusion, CRRT; norepinephrine weaned to standby; low\u2011volume ventilatory support maintained. Palliative care consulted; code status updated to DNR/DNI; hospice resources discussed.",
+      "Visit 8 (2023-10-18): ICU comfort\u2011care evaluation; patient remains stable under sedation. Lorazepam 1\u202fmg/hr infusion and morphine 5\u202fmg IV q4h PRN are used for comfort. Furosemide 20\u202fmg IV q12h continued. Insulin infusion and prednisone 40\u202fmg PO daily remain. CRRT ongoing. Vitals: HR 90, BP 78/38, RR 22 on ventilator, Temp 37.5\u202f\u00b0C, SpO\u2082 80% on FiO\u2082 60% with PEEP 10. No new complications noted; plan to continue comfort measures."
+    ],
+    "allergies": []
+  }
+}

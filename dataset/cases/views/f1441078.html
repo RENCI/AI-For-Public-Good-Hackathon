@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case f1441078</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: f1441078</h1><div class="subtitle">Parkinsonian Crisis Syndrome | Male, 68</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Parkinson’s disease, Polypharmacy, Infection (community-acquired pneumonia), Metabolic disturbances (electrolyte imbalance), Hypertension, Diabetes mellitus</div><div class="meta-line">Risk Factors: Withdrawal of levodopa or dopamine agonists, Use of antipsychotic medication, Advanced age, Stress from acute illness, Fever, Anticholinergic medication exposure, Alcohol use</div></div>
+<details><summary>Narrative <span class="preview-text">At the end of a quiet summer afternoon, 68‑year‑old Mr K. was left alone at home to recover from a sore throat that had ...</span></summary><div class="section-body"><p>At the end of a quiet summer afternoon, 68‑year‑old Mr K. was left alone at home to recover from a sore throat that had been worsening for a week. He lived alone, was on a complex drug list that included levodopa/carbidopa (Sinemet™), pramipexole, donepezil, lisinopril, metformin, and daily multivitamins. He was mildly obese (BMI 30), had type 2 diabetes (HbA1c 7.3% a month ago), hypertension, and a three‑year history of Parkinson’s disease manifesting with resting tremor and rigidity that had been steadily escalating over the last two years.</p><p>### Day 0–Day 2 – Initial Onset
+**Day 0 (Monday)** – Mr K’s daughter, Mrs S., noticed a fever of 38.9 °C, a productive cough with yellow sputum, and that he seemed “dull and foggy.” She left him at home. He complained of difficulty swallowing and a vague “tightness” in his chest.</p><p>**Day 1 (Tuesday)** – At 8 p.m., his daughter heard a low‑volume cough and noticed that he was staring blankly; his pupils were mid‑dilated. He was still on his scheduled levodopa dose of 12 pm that day but had taken his usual morning dose of pramipexole 3 mg.</p><p>Mrs S. called the primary care office. The nurse practitioner (NP) asked about his home medications. The NP noted that Mr K had inadvertently dropped his usual dose of levodopa two days earlier because the bottle had been misplaced, and that he had not taken pramipexole for the last 48 hours because he forgot. She advised re‑establishing his dopaminergic regimen but urged the daughter to bring him to urgent care if his confusion worsened.</p><p>**Day 2 (Wednesday)** – At 11 a.m., Mr K was brought to the urgent‑care department. He was febrile (39.4 °C), tachycardic 110 bpm, and had a respiratory rate of 22/min. Oxygen saturation on room air was 92%. Neurologically, he was alert but clouded, unable to articulate a full sentence, and showed mild tremor. His gait was unstable.</p><p>The clinical team diagnosed community‑acquired pneumonia (CAP) – likely aspiration given the swallowing difficulty. Broad‑spectrum antibiotics (IV ceftriaxone 2 g daily + azithromycin 500 mg daily) were started after obtaining blood cultures and a chest X‑ray that showed left lower lobe infiltrates. Mr K was given a parenteral levodopa (Sinemet® IV 500 mg) to compensate for the missed oral doses. His labs revealed:</p><p>- Sodium 133 mmol/L (low)
+- Potassium 3.8 mmol/L
+- Creatinine 1.2 mg/dL (baseline 1.0)
+- Glucose 250 mg/dL
+- CRP 14 mg/dL
+- Hb 14.5 g/dL</p><p>The team reviewed his medication list. The NP noted that he had been taking over‑the‑counter diphenhydramine 25 mg nightly for insomnia, an anticholinergic that can exacerbate Parkinsonian symptoms. She discontinued it. The patient’s home levodopa was re‑initiated at 100 mg po TID starting the same afternoon.</p><p>### Day 3–Day 4 – Early Hospital Course
+**Day 3 (Thursday)** – The patient was admitted to the medical floor for pneumonia management. He was given IV fluids (0.9% saline 1 L IV push + maintenance 150 mL/hr) to treat the hyponatremia. His levodopa dose was increased to 150 mg po TID because his clinical status remained “sluggish” and tremor persisted.</p><p>At 2 p.m., he developed a brief episode of agitation, shouting incoherent words, and appeared “very anxious.” The team administered diazepam 10 mg IV for presumed delirium. His confusion resolved shortly after. The clinical decision point: the bedside nurse queried the cardiology team about adding an antipsychotic for possible hallucinations. The cardiologist recommended low‑dose quetiapine (5 mg at bedtime) because of his risk of orthostatic hypotension, but noted the anticholinergic burden.</p><p>**Day 4 (Friday)** – Mr K’s mental status deteriorated again. He was now increasingly rigid, with severe tremor in both hands and stiffness of the forearms to the point that he could barely lift his arms when his daughter came to the bedside. His temperature spiked to 40.5 °C. Pulse was 120, BP dropped to 98/54 (orthostatic). His pupils remained mid‑dilated. He was still febrile and had a persistent productive cough.</p><p>The floor team consulted Neurology. A neurologist evaluated him, noting the sudden worsening of rigidity, bradykinesia, hypophonia, and autonomic instability (tachycardia, hypotension, hyperthermia). In light of the recent antipsychotic exposure, anticholinergic use, and infection, the neurologist suspected a Parkinsonian crisis syndrome.</p><p>The neurology team decided to institute a continuous IV levodopa infusion (Sinemet® 200 mg/24 h via a central line), increase the oral levodopa to 150 mg po TID, and add a low‑dose clonazepam 0.25 mg PO TID to manage rigidity and agitation. They discontinued quetiapine. Metformin was held due to concern for lactic acidosis secondary to hypoperfusion.</p><p>The endocrinology team was called because glucose remained in the 220–260 mg/dL range. They started insulin sliding‑scale regimen. Electrolytes were monitored hourly; sodium gradually trended upward to 136 mmol/L.</p><p>### Day 5–Day 7 – Escalating Crisis
+**Day 5 (Saturday)** – Despite the infusion, Mr K remained rigid and unresponsive. He had been unable to speak beyond a few hoarse words. His vital signs fluctuated: temperature 39–40 °C, BP 90/50–95/55, heart rate 110–120. The ICU team was consulted. He was transferred to the intermediate‑care unit. Mechanical ventilation was not yet initiated; the staff attempted to sedate him with propofol 10 mg/h, but he still exhibited excessive rigidity (“lead‑pipe” rigidity) as if the infusion was insufficient.</p><p>The ICU team started a benzodiazepine infusion (midazolam 0.1 mg/kg/h) and an anticholinergic antagonist (physostigmine 2 mg IV push) to counteract dystonia. The neurologist noted that the patient’s autonomic instability persisted: sweating was profuse (diaphoresis), temperature remained high. Blood cultures came back positive for Streptococcus pneumoniae. Antibiotics were switched to IV vancomycin plus cefepime 2 g q8h.</p><p>Metabolic panel showed a rising creatinine to 1.7 mg/dL, hyperglycaemia (280–310 mg/dL), and a mild hyperkalemia of 5.2 mmol/L. They continued insulin regimen and adjusted fluids to maintain a negative fluid balance. They initiated empiric steroids (hydrocortisone 100 mg IV q8h) for possible adrenal insufficiency given the profound stress and autonomic symptoms.</p><p>**Day 6 (Sunday)** – Mr K’s level of consciousness remained at a Glasgow Coma Scale of 10 (E3 V4 M3). His temperature remained &gt;40 °C. The ICU team considered neuromuscular blockade (pulses of pancuronium 0.1 mg/kg IV) due to severe generalized rigidity that was impairing ventilation mechanics. After consultation with anesthesia, they elected to proceed with a short‑term neuromuscular blockade to allow adequate ventilation and to facilitate further management.</p><p>Simultaneously, the nephrology team noted the patient’s rising creatinine and discussed initiating a renal replacement therapy due to fluid overload and electrolyte derangements. However, the neurologist cautioned that the patient’s renal dysfunction might be part of the crisis.</p><p>**Day 7 (Monday)** – Despite aggressive management—continuous levodopa infusion, escalating benzodiazepines, steroids, antibiotics, diuretics, and neuromuscular blockade—Mr K’s neurologic status remained refractory. Blood pressure fluctuations were worsening (BP 70/40 during wakeful periods, 112/70 during sedation). The ICU team added a dopamine‑based vasopressor (nor‑epinephrine) to maintain MAP ≥65 mmHg.</p><p>In a formal team meeting, the following decisions were made:</p><p>1. Increase the levodopa infusion to 300 mg/24 h, supplemented with levodopa/benserazide 100 mg po TID when he could tolerate oral intake.
+2. Add a short‑acting anticholinergic antidote (physostigmine) as needed for dystonic fits.
+3. Switch the sedative regimen to a propofol infusion to achieve sedation level RASS –4 with minimal hemodynamic impact.
+4. Discontinue vancomycin and start meropenem 2 g q8h, considering MRSA coverage not yet needed.
+5. Continue hydrocortisone at 80 mg q6h.
+6. Arrange for continuous renal replacement therapy (CRRT) for hyperkalemia and fluid overload.</p><p>### Day 8–Day 10 – The Crisis Hits Full Force
+**Day 8 (Tuesday)** – Mr K’s temperature rose to 41.2 °C. His serum sodium plateaued at 138 mmol/L, potassium at 5.5 mmol/L. The neurologist noted that his rigidity had become so severe that he could not even turn his head to the side. The physical examination revealed a rigid trunk, tremor in both hands, and a “pseudohypoesthesia” (difficulty swallowing). The ICU team started an anti‑hyperthermia protocol (cooling blankets, water‑cooled ventilator). Despite aggressive cooling, temperature remained around 40.5 °C.</p><p>Blood lactate trended upward (2.8–3.5 mmol/L), but central venous oxygen saturation (ScvO2) remained within normal limits (68%). There was no evidence of secondary organ failure. He had an arterial line; the BP remained unstable.</p><p>The team considered the possibility of a neuroleptic malignant–like syndrome, so they initiated a sodium bicarbonate drip (1 g/kg) to elevate end‑organ perfusion. Meanwhile, the nephrology team began CRRT to correct mild hyperkalemia and address fluid overload.</p><p>**Day 9 (Wednesday)** – Mr K’s neurologic exam had not improved. He had a Glasgow Coma Scale of 6 (E2 V2 M2). He remained sedated but had occasional “myoclonic” jerks of his limbs. The neurology consult suggested adding amantadine 100 mg PO QAM to attempt to modulate dopaminergic activity. However, the team felt the patient was too unstable to add oral medications.</p><p>The ICU team elected to increase the nor‑epinephrine infusion to 0.2 mcg/kg/min to keep MAP around 75 mmHg, and added phenylephrine 0.5 mcg/kg/min for better arterial perfusion. The patient’s temperature remained high; the cooling blankets were ineffective, and no further anti‑hyperthermic measures were attempted.</p><p>**Day 10 (Thursday)** – The patient was still deeply rigid, febrile, and on a high‑dose sedative and vasopressor regimen. CRRT was providing mild improvement in fluid balance, but creatinine remained elevated at 1.9 mg/dL. The decision was made to switch from CRRT to continuous arteriovenous hemofiltration due to equipment constraints.</p><p>The team considered a tracheostomy for long‑term ventilation, but the family had not yet been fully engaged in the decision‑making process. The neurology team noted that the patient had entered a phase of “exacerbated rigidity” with neuroleptic‑like features, and that the prognosis was poor.</p><p>### Day 11–Day 13 – Decline Continues
+**Day 11 (Friday)** – The patient’s temperature remained at 40.3 °C. His blood pressure had fallen again to 72/48 despite vasopressors. The ICU team instituted a third‑party blood product transfusion for a drop in hemoglobin to 8.2 g/dL. The patient had developed a new onset of arrhythmia—a ventricular premature complex (VPC) pattern. The cardiology consult was called, and amiodarone 150 mg IV was initiated. He then developed a rash on his chest, suggesting possible drug‑induced photosensitivity.</p><p>Neuroimaging was considered; an emergent head CT revealed no mass effect or infarction—just a diffuse low‑density brain parenchyma, consistent with cerebral edema secondary to hyperthermia.</p><p>Given the escalating crisis, the ICU team elected to wean the ventilator to a high‑frequency oscillatory mode to facilitate gas exchange while maintaining low tidal volumes that might mitigate the hemodynamic strain of conventional ventilation.</p><p>**Day 12 (Saturday)** – After a prolonged day, the patient’s metabolic workup revealed a rising bicarbonate (from 20 to 24 mmol/L), a slightly improving lactate (3.2 mmol/L) but a persistently elevated glucose (&gt;300 mg/dL). His creatinine plateaued at 2.0 mg/dL. The family was informed of the poor prognosis that continued despite aggressive care.</p><p>In an attempt to reset his dopaminergic tone, the neonatology team considered trialing a high‑dose levodopa infusion (600 mg/24 h) combined with a slow‑release dopamine agonist via continuous intravenous infusion; the neurologist declined as they feared additional adverse effects.</p><p>**Day 13 (Sunday)** – The patient’s condition continued to deteriorate. He had lost his ability to speak entirely. His rigidity had progressed to involve all four limbs with a “paralytic” rigidity. Blood pressure had dropped to 60/40; vasopressor requirements had increased again. The ICU team decided to limit further escalation of rescue therapies, focusing instead on comfort care. The family requested a brief family discussion about potential withdrawal from aggressive measures and considered palliative care consult.</p><p>### Day 14 – Outcome
+**Day 14 (Monday)** – With the family’s consent, the ICU team discontinued all non‑essential drug infusions (levodopa, vasopressors, benzodiazepines), transitioned to low‑dose morphine and a low‑dose midazolam infusion for comfort. They placed the patient on a humidified oxygen mask at 2 L/min. The patient’s temperature gradually came down to 38.6 °C over the next several hours. His pupils remained mid‑dilated; he was still unresponsive. The family decided to escort him home for hospice care.</p><p>Within 24 hours of hospice admission, Mr K’s heart rate dropped precipitously to 55 bpm, and then became variable. Family reported that he had had a brief episode of “seeing lights” before becoming unresponsive. An electrocardiogram showed a new onset atrial flutter with a rapid ventricular response (150 bpm). They could not resuscitate (DNR) due to his earlier decision.</p><p>Mr K passed away peacefully on Day 16 of hospitalization, a week after the onset of community‑acquired pneumonia. The sequence of events underscores how withdrawal of essential levodopa, anticholinergic exposure, infection, metabolic derangements, and comorbid hypertension and diabetes can culminate in a fulminant Parkinsonian crisis syndrome, with rapid progression from mild rigidity to catastrophic autonomic failure, refractory hyperthermia, and ultimately death.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2026-03-23</h3><div class="visit-meta">Urgent Care | Reason: Fever, productive cough, confusion, difficulty swallowing</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Fever, productive cough, confusion, difficulty swallowing.
+
+History of Present Illness: Mr. K, a 68‑year‑old male with a history of Parkinson’s disease, hypertension, type 2 diabetes mellitus, and a recent episode of community‑acquired pneumonia, was brought to the urgent‑care unit by his daughter. She reported a 2‑day history of fever, productive cough, mild chest tightness, confusion, and difficulty swallowing. He had missed several doses of his levodopa/carbidopa regimen. On arrival he was febrile (39.4 °C), tachycardic (HR 110 /min), tachypneic (RR 22 /min), oxygen saturation 92 % on room air, and blood pressure 100/60 mmHg. Examination revealed a mild state of confusion with disorientation to place. A chest X‑ray demonstrated a right lower lobe infiltrate. Neurologically, the remainder of the focal exam was unremarkable.
+
+Assessment:
+1. Community‑acquired pneumonia – Right lower lobe infiltrate consistent with clinical picture.
+2. Acute delirium secondary to infection, compounded by recent levodopa withdrawal and possibly hyponatremia.
+3. Hyperglycemia (blood glucose 250 mg/dL) likely secondary to stress response.
+4. Mild hyponatremia (Na 133 mmol/L) – contributing factor to cognitive dysfunction.
+
+Plan:
+- Antibiotics: Continue IV ceftriaxone 2 g q24h and add oral azithromycin 500 mg once daily for 5 days (total antibiotic duration 7 days).
+- Parkinson’s management: Initiate IV levodopa 500 mg to replace missed oral doses; transition to oral levodopa/carbidopa 200 mg q8h once clinically stable.
+- Hydration: 1 L normal saline IV; maintain adequate hydration.
+- Discontinue diphenhydramine due to anticholinergic burden and potential delirium exacerbation.
+- Continue baseline antihypertensive (lisinopril 10 mg qd) and diabetes regimen (metformin 500 mg bid) with monitoring of glucose.
+- Monitor electrolytes; consider sodium correction if trend toward further hyponatremia.
+- Observational: Keep patient in the UCC for overnight monitoring of mental status, vital signs, and oxygenation.
+- Labs: Repeat CBC, CMP, and CRP in 48 hours; monitor glucose and serum sodium closely.
+- Imaging: Repeat chest X‑ray in 5 days or sooner if clinical status worsens.
+
+Disposition: Admit to the acute care unit for continued IV antibiotic therapy, management of dehydration and delirium, and close monitoring of Parkinson’s medication status.
+
+Follow‑up: Return to urgent‑care or primary care within 48 hours if fever recurs or mental status deteriorates; if stable, outpatient follow‑up in the neurology clinic in 1 week to assess Parkinson’s medication titration.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever</span><span class="pill">productive cough</span><span class="pill">confusion</span><span class="pill">difficulty swallowing</span><span class="pill">chest tightness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>39.4°C</td></tr><tr><td>Heart_Rate</td><td>110/min</td></tr><tr><td>Respiratory_Rate</td><td>22/min</td></tr><tr><td>Oxygen_Saturation</td><td>92% on RA</td></tr><tr><td>Blood_Pressure</td><td>100/60 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Alert but disoriented</li><li>Mild right lower lobe infiltrate on chest X‑ray</li><li>Focal neurological exam otherwise normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>CRP</li><li>Blood cultures</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 14,000/µL, Hgb 14.5 g/dL, Plt 200,000/µL</li><li>CMP: Na 133 mmol/L, K 3.8, Cr 1.2 mg/dL, Glucose 250 mg/dL</li><li>CRP 14 mg/dL</li><li>Blood cultures pending</li><li>CXR: left lower lobe infiltrate</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV ceftriaxone 2 g q24h</li><li>Oral azithromycin 500 mg daily</li><li>IV levodopa 500 mg</li><li>IV fluids 1 L NS</li><li>Discontinued diphenhydramine</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in mental status, still dyspneic</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Community-acquired pneumonia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa/carbidopa 100 mg PO TID</li><li>Pramipexole 3 mg PO QD</li><li>Donepezil 5 mg PO QD</li><li>Lisinopril 10 mg PO QD</li><li>Metformin 500 mg PO BID</li><li>Multivitamin daily</li><li>Diphenhydramine 25 mg PO nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Parkinson&#x27;s disease</li><li>Type 2 diabetes mellitus</li><li>Hypertension</li><li>Recent missed levodopa doses</li><li>Diphenhydramine use for insomnia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr K was brought to urgent‑care after his daughter noticed fever and productive cough. Examination revealed mild confusion and right lower lobe infiltrate on chest X‑ray. Labs showed leukocytosis, hyponatremia, hyperglycemia and elevated CRP. He was started on IV ceftriaxone 2 g q24h, oral azithromycin 500 mg daily, IV levodopa 500 mg to replace missed oral doses, and IV fluids. Diphenhydramine was discontinued. The patient reported mild relief of confusion and improved mental status after levodopa administration. He was given a plan to start oral levodopa once stable.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute pneumonia with hypoxia and levodopa withdrawal suspected; initiation of antibiotics and dopaminergic replacement.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-03-24</h3><div class="visit-meta">Medical Floor | Reason: Worsening confusion, rigidity, persistent fever</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Worsening confusion, rigidity, persistent fever.
+
+History of Present Illness:
+The patient is a 68‑year‑old male with a history of Parkinson’s disease, hypertension, type 2 diabetes, and community‑acquired pneumonia (CAP). He was admitted on 2026‑03‑23 for fever, productive cough, confusion, and dysphagia. He was started on IV levodopa (continuous infusion 500 mg over 24 h) and oral levodopa/carbidopa 200 mg q8h, and antibiotics (ceftriaxone 2 g IV q24h &amp; azithromycin 500 mg PO daily) per Urgent Care. On the second day of hospitalization, the patient’s condition has worsened: temperature 39.5 °C, heart rate 112/min, RR 24/min, SpO₂ 90% on 2 L NR, BP 95/60 mmHg. He remains alert but disoriented, with marked rigidity &amp; tremor in all limbs, facial masking, and spontaneous coughing.
+
+Medications (current):
+• Levodopa infusion 200 mg/24 h
+• Levodopa/carbidopa 150 mg PO TID
+• Diazepam 10 mg IV stat (re‑administered
+• Ceftriaxone 2 g IV q24h
+• Azithromycin 500 mg PO daily
+• Lisinopril 10 mg PO daily
+• Metformin 500 mg PO BID
+• Donepezil 5 mg PO QD
+
+Physical Examination:
+- Alert, disoriented
+- Resting tremor bilaterally
+- Rigidity in all extremities
+- Facial masking
+- Spontaneous coughing
+- No focal neurological deficits
+- Chest auscultation: coarse crackles in RLL
+
+Labs:
+- CMP: Na 134 mmol/L, K 3.9 mmol/L, Cr 1.3 mg/dL, Glucose 260 mg/dL
+- Serum lactate 2.2 mmol/L
+
+Assessment:
+This patient most likely has a combined infectious and neuro‑parkinsonian etiology:
+1. Sepsis secondary to CAP with ongoing fever, tachycardia, and tachypnea. Antibiotics are appropriate, but close monitoring is required.
+2. Parkinsonian crisis (rigidity, tremor, confusion) potentially exacerbated by levodopa management and agitation; dose adjustments have been made.
+3. Possible hyponatremia and hyperglycemia contributing to altered mentation.
+4. Differential includes medication‑induced delirium (levodopa overdose, dexmedetomidine effects), metabolic encephalopathy, and acute respiratory failure.
+
+Plan:
+- Continue ceftriaxone 2 g IV q24h and azithromycin 500 mg PO q24h.
+- Maintain levodopa infusion at 200 mg/24 h; keep oral levodopa at 150 mg TID.
+- Repeat diazepam 10 mg IV if agitation or rigidity worsens.
+- Check CBC, CRP, blood cultures, repeat chest X‑ray within 24 h.
+- Monitor electrolytes, renal function, glucose, and lactate every 12 h.
+- Treat hyponatremia with fluid restriction and monitor response.
+- Consider adding amantadine 100 mg PO q12h if rigidity persists after titration.
+- Continue oxygen support; target SpO₂ &gt;92%.
+- Evaluate for possible ICU transfer if respiratory status deteriorates.
+- Educate staff about potential drug interactions and monitoring for sedation.
+
+Follow‑up:
+- Re‑evaluate clinical status every 4 h during the day.
+- Repeat vitals, mental status, and exam each shift.
+- Review EEG if focal seizures suspected.
+- Plan for discharge when infection controlled, vitals stable, mentation improved, and Parkinson’s management optimized.
+
+Disposition: Admitted to Medical Floor.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever</span><span class="pill">rigidity</span><span class="pill">confusion</span><span class="pill">persistent cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>39.5°C</td></tr><tr><td>Heart_Rate</td><td>112/min</td></tr><tr><td>Respiratory_Rate</td><td>24/min</td></tr><tr><td>Oxygen_Saturation</td><td>90% on 2L NR</td></tr><tr><td>Blood_Pressure</td><td>95/60 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Alert but disoriented</li><li>Resting tremor in both hands</li><li>Tremor and rigidity in limbs</li><li>Facial masking</li><li>Spontaneous coughing</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CMP</li><li>Serum lactate</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CMP: Na 134 mmol/L, K 3.9 mmol/L, Cr 1.3 mg/dL, Glucose 260 mg/dL</li><li>Serum lactate 2.2 mmol/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Diazepam 10 mg IV again</li><li>Increased levodopa infusion to 200 mg/24 h</li><li>Adjusted oral levodopa to 150 mg TID</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Post‑diazepam: mild improvement in agitation, remaining rigid but less tremulous</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Community-acquired pneumonia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 200 mg/24 h</li><li>Levodopa/carbidopa 150 mg PO TID</li><li>Diazepam 10 mg IV stat</li><li>Ceftriaxone 2 g IV q24h</li><li>Azithromycin 500 mg PO q24h</li><li>Lisinopril 10 mg PO q24h</li><li>Metformin 500 mg PO BID</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>IV levodopa infusion started</li><li>Diazepam 10 mg IV for agitation</li><li>Hyponatremia being addressed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient remained febrile and rigid. A dose of diazepam 10 mg IV was re‑administered, and the levodopa infusion was continued at 200 mg/24 h. The dose of oral levodopa was increased to 150 mg TID. The patient was noted to be more calm after diazepam, although rigidity persisted. The team decided to monitor renal function and electrolytes closely.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Delirium secondary to levodopa withdrawal and infection; levodopa infusion maintained; consider Parkinsonian crisis.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-03-25</h3><div class="visit-meta">Intensive Care Unit | Reason: Rigidity, hyperthermia, hypotension, suspected Parkinsonian crisis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Rigidity, hyperthermia, orthostatic hypotension.
+
+History of Present Illness:
+A 68‑year‑old male with Parkinson’s disease, hypertension, T2DM, and community‑acquired pneumonia presents to the ICU on March 25 with worsening rigidity, hyperthermia (T‑40.5°C), tachycardia (HR 120/min), and orthostatic hypotension (BP 98/54 mmHg). He is confused, with marked bradykinetic gait, hypophonia, and severe limb/trunk rigidity. He has a recent history of levodopa infusion (200 mg/24h) and a prior episode of agitation treated with diazepam 10 mg IV. Quetiapine 5 mg qhs was started but discontinued earlier in the course.
+
+Physical Examination:
+- Vitals: T 40.5°C, HR 120/min, RR 26/min, SpO₂ 88% on 2 L NR, BP 98/54 mmHg.
+- Neuro: Severe limb/trunk rigidity, bradykinesia, hypophonia, dilated pupils, orthostatic hypotension, and mild confusion.
+- Respiratory: Coarse crackles in RLL, diminished air entry.
+- Cardiovascular: Tachycardia with regular rhythm.
+- Abdomen: Soft, non‑tender.
+
+Key Interventions to Date:
+- Central venous line placed for continuous levodopa infusion.
+- Discontinued quetiapine to reduce anticholinergic burden.
+- Administered physostigmine 2 mg IV push with modest improvement.
+- Initiated insulin sliding scale for hyperglycemia.
+- Increased dopaminergic coverage.
+- Maintained ceftriaxone 2 g IV q24h and azithromycin 500 mg PO q24h.
+
+Lab/Imaging:
+- ABG: pH 7.32, PaCO₂ 50 mmHg.
+- Electrolytes: Na 136 mmol/L, K 4.0 mmol/L, Cr 1.5 mg/dL, Glucose 280 mg/dL.
+- Blood cultures: Streptococcus pneumoniae.
+
+Assessment:
+The patient’s constellation of severe rigidity, hyperthermia, autonomic instability, and altered mental status in the setting of recent levodopa infusion and confirmed pneumococcal bacteremia suggests a precipitating Parkinsonian crisis superimposed on sepsis‑induced delirium. Neuroleptic malignant syndrome (NMS) is considered but less likely given the ongoing dopaminergic therapy rather than withdrawal or abrupt cessation. Malignant catatonia is also on the differential, but infectious etiology drives the current hyperpyrexia.
+
+Plan:
+1. **Infection control** – Continue ceftriaxone 2 g IV q24h and azithromycin 500 mg PO q24h. Consider adding vancomycin if clinical deterioration is noted. Continue daily CBC, CRP, and blood cultures.
+2. **Parkinson’s management** – Continue levodopa infusion 200 mg/24h. Re‑evaluate requirement for levodopa/carbidopa PO TID. If rigidity persists, consider adding amantadine 100 mg PO BID.
+3. **Neuromuscular** – Repeat physostigmine 2 mg IV push if rigidity worsens; monitor for respiratory compromise. Continue clonazepam 0.25 mg PO TID for autonomic stability and akathisia.
+4. **Metabolic** – Maintain insulin sliding scale; obtain repeat glucose every 2 h. Monitor electrolytes every 12 h.
+5. **Hemodynamics** – Aggressive fluid resuscitation with isotonic crystalloids. If hypotension persists, initiate norepinephrine infusion (target MAP 65‑70 mmHg).
+6. **Temperature** – Employ external cooling blankets and acetaminophen 1 g PO q6h.
+7. **Airway** – Continue supplemental oxygen, titrate to SpO₂ &gt;92%. If respiratory status deteriorates, anticipate intubation.
+8. **Consultations** – Neurology (ongoing), Infectious Disease (antibiotic stewardship), Endocrinology (glycemic control).
+9. **Monitoring** – Continuous ECG, frequent ABGs, bedside ultrasound for volume status.
+10. **Disposition** – Once afebrile, stable hemodynamics, and improved rigidity, consider step‑down to medical floor; if not, continue ICU care.
+
+Follow‑up: Daily review of vital signs, neurologic exam, infection markers, and laboratory trends. Reassess levodopa dosing on day 3. Plan for eventual weaning of levodopa infusion if rigidity resolves.
+
+Signature: Dr. [Name], ICU Attending</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">rigidity</span><span class="pill">hyperthermia</span><span class="pill">orthostatic hypotension</span><span class="pill">confusion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>40.5°C</td></tr><tr><td>Heart_Rate</td><td>120/min</td></tr><tr><td>Respiratory_Rate</td><td>26/min</td></tr><tr><td>Oxygen_Saturation</td><td>88% on 2L NR</td></tr><tr><td>Blood_Pressure</td><td>98/54 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Severe limb and trunk rigidity</li><li>Bradykinesia and hypophonia</li><li>Dilated pupils</li><li>Orthostatic BP drop</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Arterial blood gas</li><li>Serum electrolytes</li><li>Blood cultures</li><li>ABG</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ABG: pH 7.32, PaCO2 50; Electrolytes: Na 136, K 4.0, Cr 1.5, Glucose 280</li><li>Blood cultures: S. pneumoniae</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Discontinued quetiapine</li><li>Started clonazepam 0.25 mg PO TID</li><li>Physostigmine 2 mg IV push</li><li>Insulin sliding scale</li><li>Central line for levodopa infusion</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Physostigmine improved rigidity slightly; the patient remained febrile and altered.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Community‑acquired pneumonia</span><span class="pill">Parkinsonian crisis suspected</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 200 mg/24 h</li><li>Levodopa/carbidopa 150 mg PO TID</li><li>Diazepam 10 mg IV stat</li><li>Ceftriaxone 2 g IV q24h</li><li>Azithromycin 500 mg PO q24h</li><li>Clonazepam 0.25 mg PO TID</li><li>Lisinopril 10 mg PO q24h</li><li>Metformin 500 mg PO BID</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Agitated episode treated with diazepam 10 mg IV</li><li>Recent initiation of levodopa infusion</li><li>Quetiapine 5 mg at bedtime started but later discontinued</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Neurology was consulted. Physical exam revealed severe rigidity, bradykinesia, hypophonia, tachycardia, and orthostatic hypotension. A central venous line was placed for continuous levodopa infusion (200 mg/24 h). Quetiapine was discontinued due to anticholinergic burden. Physostigmine 2 mg IV push was given, and insulin sliding scale was initiated for hyperglycemia. The patient remained febrile and had been unable to speak beyond hoarseness. Blood cultures grew Streptococcus pneumoniae. The team reinforced the Parkinsonian crisis diagnosis and increased dopaminergic coverage.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmation of Parkinsonian crisis; escalated dopaminergic and anticholinergic reversal; infection control.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-03-26</h3><div class="visit-meta">Intensive Care Unit | Reason: Persistent rigidity, autonomic instability, worsening infection</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent rigidity, autonomic instability, worsening infection.
+
+History: 68‑year‑old male with Parkinson’s disease, hypertension, type 2 DM, pneumococcal pneumonia, acute renal injury. Currently on levodopa infusion 200 mg/24h, levodopa/carbidopa 150 mg PO TID, clonazepam 0.25 mg PO TID, diazepam 10 mg IV stat, midazolam infusion 0.1 mg/kg/h, physostigmine 2 mg IV push, hydrocortisone 100 mg IV q8h, cefepime 2 g IV q8h (changed from vancomycin to meropenem 2 g IV q8h due to nephrotoxicity), insulin sliding scale, lisinopril 10 mg PO QD, donepezil 5 mg PO QD, metformin suspended. Patient has been in ICU for 3 days with persistent lead‑pipe rigidity, hyperthermia, tachycardia, orthostatic hypotension, profuse sweating, and acute kidney injury (Cr 1.7 mg/dL). An arterial line has been placed and CRRT has been planned.
+
+Objective:
+Vital signs - Temperature 39.8 °C; HR 118 bpm; RR 28 / min; SpO₂ 85 % on 4 L NR; BP 90/50 mmHg.
+Physical exam – lead‑pipe rigidity, profuse diaphoresis, temperature spike &gt;40 °C, heart rate 120‑130 bpm, BP 90‑95/50‑55 mmHg, no focal neuro deficits.
+
+Labs (pending): renal panel, serum sodium, serum potassium, CRP, lactate, arterial line readings.
+
+Assessment: The constellation of severe rigidity, hyperthermia, autonomic instability, and systemic infection suggests a complex overlap of possible neuro‑excitatory syndromes. Differential diagnoses include neuroleptic malignant syndrome (despite no recent atypical neuroleptic exposure), sepsis‑associated encephalopathy with autonomic dysfunction, malignant hyperthermia (unlikely without triggering agent), and Parkinsonian crisis secondary to abrupt levodopa withdrawal or overdose. Current therapy with benzodiazepines has partially blunted agitation but has not ameliorated rigidity.
+
+Plan:
+1) Continue midazolam infusion (0.1 mg/kg/h) and clonazepam 0.25 mg PO TID for autonomic stabilization.
+2) Maintain levodopa infusion 200 mg/24h and levodopa/carbidopa 150 mg PO TID.
+3) Continue hydrocortisone 100 mg IV q8h.
+4) Switch to meropenem 2 g IV q8h pending culture susceptibilities; hold vancomycin pending CRRT.
+5) Insulin sliding scale per current glucose level; monitor glucose.
+6) Initiate CRRT to correct rising creatinine and manage fluid balance.
+7) Repeat physostigmine 2 mg IV push if rigidity worsens and neuro‑evaluation obtained.
+8) Consider adding amantadine 100 mg PO BID if rigidity persists despite benzodiazepines.
+9) Daily labs (CBC, CMP, CRP, lactate), vitals, and neurologic exam.
+10) Consult neurology, infectious disease, and endocrinology.
+
+Follow‑up: ICU monitoring with continuous EEG (if neurologic status deteriorates). Repeat blood cultures and antibiotic sensitivity before 48 h. Target temperature &lt;38.5 °C with cooling blankets and acetaminophen 1 g q6h. Titrate norepinephrine if hypotension persists. Plan for ICU step‑down once afebrile, stable hemodynamics, and improved renal function. Document neuro‑physiology findings for long‑term Parkinson’s management.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">rigidity</span><span class="pill">fever</span><span class="pill">tachycardia</span><span class="pill">orthostatic hypotension</span><span class="pill">sweating</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>39.8°C</td></tr><tr><td>Heart_Rate</td><td>118/min</td></tr><tr><td>Respiratory_Rate</td><td>28/min</td></tr><tr><td>Oxygen_Saturation</td><td>85% on 4L NR</td></tr><tr><td>Blood_Pressure</td><td>90/50 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lead‑pipe rigidity</li><li>Profuse sweating</li><li>Temperature spiking &gt;40°C</li><li>Heart rate 120-130</li><li>BP 90-95/50-55</li><li>No focal neuro deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Renal panel</li><li>Serum sodium</li><li>Serum potassium</li><li>CRP</li><li>Lactate</li><li>Arterial line readings</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Serum Na 137, K 5.2, Cr 1.7, Glucose 310, CRP 18 mg/dL, Lactate 3.0 mmol/L, Urine output 600 mL/day</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Midazolam infusion 0.1 mg/kg/h</li><li>Physostigmine 2 mg IV push</li><li>Hydrocortisone 100 mg IV q8h</li><li>Vancomycin and cefepime continued</li><li>Insulin for hyperglycemia</li><li>Fluid restriction for negative balance</li><li>Started empiric steroids</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in agitation after benzodiazepine; rigidity still severe; autonomic instability persisted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 200 mg/24 h</li><li>Levodopa/carbidopa 150 mg PO TID</li><li>Clonazepam 0.25 mg PO TID</li><li>Diazepam 10 mg IV stat earlier</li><li>Midazolam infusion 0.1 mg/kg/h</li><li>Physostigmine 2 mg IV push</li><li>Hydrocortisone 100 mg IV q8h</li><li>Vancomycin 1 g IV q12h</li><li>Cefepime 2 g IV q8h</li><li>Insulin sliding scale</li><li>Lisinopril 10 mg PO QD</li><li>Metformin suspended</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continued levodopa infusion at 200 mg/24h</li><li>Physostigmine given earlier</li><li>Insulin started</li><li>Midazolam infusion 0.1 mg/kg/h</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient had persistent lead‑pipe rigidity and profuse sweating. A midazolam infusion was started at 0.1 mg/kg/h following a failed benzodiazepine trial. CRRT parameters were planned to correct rising creatinine. The team switched from vancomycin to meropenem due to nephrotoxicity concern. Steroid therapy was maintained. The patient responded to the benzodiazepine with decreased agitation but remained rigid. Autonomic instability continued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Escalating Parkinsonian crisis with high fevers; renal dysfunction; need for CRRT.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-03-27</h3><div class="visit-meta">Intensive Care Unit | Reason: Severe rigidity impeding ventilation, worsening renal function</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Severe rigidity impeding ventilation, worsening renal function.
+
+**History of Present Illness:** 68‑year‑old male with advanced Parkinson’s disease, HTN, T2DM, and recent pneumococcal pneumonia admitted to the ICU for persistent lead‑pipe rigidity, hyperthermia, and acute kidney injury. After multiple prior ICU visits (visits 1–4) with escalating sedation and antibiotics, this morning the patient remained profoundly rigid, could not be ventilated, and developed hyperthermia (40.2 °C) and refractory hypotension despite vasopressor support.
+
+**Current Status:** Neuromuscular blockade was initiated with pancuronium 0.1 mg/kg IV bolus and continuous infusion to facilitate mechanical ventilation. CRRT was started in response to rising creatinine (1.9 mg/dL) and hyperkalemia (K 5.5 mmol/L). Vasopressors were intensified (nor‑epinephrine 0.2 µg/kg/min, phenylephrine 0.5 µg/kg/min). Sedation remained adequate with midazolam infusion 0.1 mg/kg/h and clonazepam 0.25 mg PO TID. Levodopa infusion 200 mg/24 h continued.
+
+**Assessment:** The picture is most consistent with a severe neuroleptic malignant syndrome (NMS) precipitated by dopamine antagonism and exacerbated by sepsis, with concurrent acute kidney injury and multiorgan dysfunction. Differential includes malignant hyperthermia (unlikely post‑pneumonia), severe sepsis from pneumococcal pneumonia, and drug‑induced rigidity from levodopa/carbidopa.
+
+**Plan:
+1. **Ventilation &amp; Sedation** – Continue neuromuscular blockade and deep sedation until rigidity resolves; monitor for return of spontaneous breathing.
+2. **Hemodynamic Support** – Maintain MAP &gt;65 mmHg; titrate vasopressors; consider addition of epinephrine if needed.
+3. **Renal Replacement Therapy** – Continue CRRT; adjust dialysis prescription based on electrolytes and fluid status.
+4. **Antibiotic Therapy** – Continue cefepime 2 g IV q8h and vancomycin 1 g IV q12h; evaluate cultures, adjust based on sensitivity.
+5. **Metabolic Management** – Monitor lactate (currently 3.2 mmol/L), electrolytes, and renal function; treat hyperkalemia and acidosis as needed.
+6. **Medication Review** – Continue levodopa infusion; consider tapering once rigidity resolves; hold metformin and lisinopril.
+7. **Neurologic &amp; ICU Consult** – Continue neurocritical care evaluation; consider additional agents (e.g., dantrolene) if NMS persists.
+8. **Monitoring** – Daily arterial blood gases, coagulation profile, cardiac rhythm; hourly vitals.
+9. **Family Communication** – Update family on status and prognosis.
+
+**Disposition** – Continue ICU admission with close multidisciplinary rounds.
+
+**Education** – Reinforce importance of strict monitoring of Parkinsonian medications in the critical setting.
+
+**Follow‑up Recommendations** – Listed below.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">rigidity</span><span class="pill">inability to ventilate</span><span class="pill">hyperthermia</span><span class="pill">renal failure</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>40.2°C</td></tr><tr><td>Heart_Rate</td><td>120/min</td></tr><tr><td>Respiratory_Rate</td><td>32/min</td></tr><tr><td>Oxygen_Saturation</td><td>80% on 5L NR</td></tr><tr><td>Blood_Pressure</td><td>85/48 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Generalized rigidity; unable to sit or stand</li><li>Head remained straight</li><li>Profuse sweating</li><li>Heart rate 120</li><li>BP 85/48</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CRRT initiation parameters</li><li>Arterial line data</li><li>Lactate</li><li>Serum electrolytes</li><li>Coagulation screen</li><li>Pancuronium dosing</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Creatinine 1.9, BUN 70, Lactate 3.2, Electrolytes Na 138, K 5.5, Coag 12/8/14, Arterial PaCO2 60</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pancuronium 0.1 mg/kg IV bolus then drip</li><li>Initiated CRRT</li><li>Increased vasopressors (nor‑epinephrine 0.2 mcg/kg/min, phenylephrine 0.5 mcg/kg/min)</li><li>Continued levodopa infusion 200 mg/24h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Rigidity controlled with neuromuscular blockade; ventilation achieved; hemodynamics remained unstable.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 200 mg/24 h</li><li>Levodopa/carbidopa 150 mg PO TID</li><li>Clonazepam 0.25 mg PO TID</li><li>Midazolam infusion 0.1 mg/kg/h</li><li>Physostigmine 2 mg IV push</li><li>Hydrocortisone 100 mg IV q8h</li><li>Vancomycin 1 g IV q12h</li><li>Cefepime 2 g IV q8h</li><li>Insulin sliding scale</li><li>CRRT scheduled</li><li>Lisinopril suspended</li><li>Metformin suspended</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Benzodiazepine infusion started</li><li>Physostigmine earlier</li><li>Nephrology consulted for CRRT</li><li>Ventilator not yet initiated</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Pancuronium 0.1 mg/kg IV was administered, and a neuromuscular blockade was started to facilitate mechanical ventilation. CRRT was initiated to manage rising creatinine and mild hyperkalemia. Vasopressors were increased: nor‑epinephrine to 0.2 mcg/kg/min and phenylephrine to 0.5 mcg/kg/min. The patient’s temperature remained high and hemodynamics unstable but was now mechanically ventilated with spontaneous breathing efforts controlled. The team noted that sedation depth remained adequate but systemic instability persisted.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Critical phase of crisis with refractory rigidity; need for CRRT and full sedation.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-03-28</h3><div class="visit-meta">Intensive Care Unit | Reason: Persistent neuroleptic-like rigidity, worsening temperature, ongoing renal failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Persistent neuroleptic-like rigidity, worsening hyperthermia, ongoing renal failure, and refractory hypotension. 
+
+**History of Present Illness:** 68‑year‑old male with Parkinson’s disease, hypertension, type 2 diabetes mellitus, pneumococcal pneumonia, and acute renal injury now in ICU for severe rigidity and autonomic instability. The levodopa infusion was increased from 200 mg/24 h to 300 mg/24 h. Sedation changed from midazolam to propofol at 25 mg/h to deepen sedation. Hydrocortisone 80 mg q6h continued. Meropenem 2 g q8h replaced vancomycin for antibiotic coverage. Vasopressors intensified to maintain MAP &gt; 65 mmHg with nor‑epinephrine 0.3 µg/kg/min and phenylephrine 0.6 µg/kg/min. Pancuronium 0.05 mg/kg/h continued to support ventilation. The patient’s rigidity decreased modestly but remained profound; temperature remained &gt;41 °C; blood pressure remained low despite vasopressors; lactate remained elevated (3.5 mmol/L). 
+
+**Review of Systems:** 
+- Rigidity, profuse sweating 
+- High fever (41.0 °C) 
+- Hypotension, tachycardia 
+- Respiratory distress (RR 30) 
+- No focal neurological deficits noted. 
+
+**Physical Examination:** 
+- General: deeply sedated, muscular, profuse diaphoresis. 
+- HEENT: no focal findings. 
+- Cardiovascular: tachycardic 115 /min, MAP 70/40 mmHg, pulsus paradoxus noted. 
+- Respiratory: RR 30/min, SpO₂ 82% on 5 L NR, coarse crackles RLL. 
+- Abdomen: soft, non‑tender. 
+- Extremities: + rigidity of trunk and limbs, non‑reactive to stimuli. 
+- Neurologic: GCS 3, no spontaneous movement, no focal deficits. 
+
+**Labs/Diagnostics:** 
+- Serum lactate 3.5 mmol/L 
+- Creatinine 2.0 mg/dL (↑ from 1.7 mg/dL) 
+- Na 138 mmol/L 
+- K 5.6 mmol/L 
+- Vancomycin trough 12 µg/mL, Cefepime trough 20 µg/mL (from prior days) 
+- Pending serum benzodiazepine levels, CRRT effluent analysis, repeat blood cultures. 
+
+**Assessment:** The patient demonstrates profound drug‑induced rigidity, hyperthermia, and autonomic dysfunction in the setting of Parkinson’s disease treated with high‑dose levodopa and steroids, with ongoing critical illness (pneumococcal pneumonia, septic shock, acute renal failure). Differential diagnosis includes: 
+1. Dopamine agonist‑induced neuroleptic‑like rigidity (Parkinsonian crisis) 
+2. Neuroleptic‑like malignant hyperthermia or malignant catatonia 
+3. Sepsis‑associated hyperthermia and dysautonomia 
+4. Steroid‑induced hyperthermia 
+5. Critical illness myopathy with residual rigidity 
+6. Drug‑induced serotonin syndrome (unlikely given medication list). 
+
+**Plan:** 
+- Continue levodopa infusion at 300 mg/24 h; titrate based on clinical response and potential toxicity. 
+- Maintain propofol 25 mg/h and pancuronium 0.05 mg/kg/h; consider tapering propofol once sedation depth acceptable. 
+- Continue hydrocortisone 80 mg q6h; monitor for hyperthermia secondary to steroids. 
+- Continue meropenem 2 g q8h; hold vancomycin until culture results definitive. 
+- Intensify vasopressor support as needed, aiming for MAP &gt; 65 mmHg; titrate nor‑epinephrine and phenylephrine accordingly. 
+- Start dantrolene 0.2 mg/kg IV bolus pending confirmed NMS; monitor CK, electrolytes. 
+- Consider chlorpromazine 50 mg q6h if NMS not improving. 
+- Evaluate for malignant catatonia: initiate lorazepam 2 mg IV push if not contraindicated (although pancuronium may blunt response). 
+- Continue CRRT; adjust fluid and bicarbonate as needed. 
+- Monitor labs: CBC, CMP, lactate, CK, cultures every 6–12 h. 
+- Repeat serum benzodiazepine levels; adjust clonazepam if necessary. 
+- Maintain oxygen to keep SpO₂ &gt; 92%; consider escalation to mechanical ventilation if hypoxemia worsens. 
+- Consult Neurology and Infectious Diseases. 
+- Reassess renal function daily and wean CRRT when creatinine &lt; 1.5 mg/dL and hemodynamic stability achieved. 
+- Plan for ICU step‑down when afebrile, stable hemodynamics, reduced rigidity, and improved renal status. 
+- Family counseling on prognosis and potential prolonged ICU course. 
+
+**Disposition:** Continue ICU care with close monitoring of neuro‑hemodynamic status; re‑evaluate response to therapy at 24 h.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">rigidity</span><span class="pill">hyperthermia</span><span class="pill">low blood pressure</span><span class="pill">elevated lactate</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>41.0°C</td></tr><tr><td>Heart_Rate</td><td>115/min</td></tr><tr><td>Respiratory_Rate</td><td>30/min</td></tr><tr><td>Oxygen_Saturation</td><td>82% on 5L NR</td></tr><tr><td>Blood_Pressure</td><td>70/40 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Rigid trunk and limbs; unable to move; profuse sweating; BP low; high temperature; no focal deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum benzodiazepine levels</li><li>Lactate</li><li>Renal panel</li><li>CRRT effluent analysis</li><li>Blood culture repeat</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Serum lactate 3.5, creatinine 2.0, Na 138, K 5.6, vancomycin trough 12 µg/mL, cefepime trough 20 µg/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 300 mg/24 h</li><li>Switched sedative to propofol infusion 25 mg/h</li><li>Meropenem 2 g q8h</li><li>Hydrocortisone 80 mg q6h</li><li>Adjusted vasopressors</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight reduction of rigidity; temperature still &gt;40°C; patient remains sedated.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span><span class="pill">Vasopressor-dependent</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 200 mg/24 h</li><li>Clonazepam 0.25 mg PO TID</li><li>Midazolam infusion 0.1 mg/kg/h</li><li>Pancuronium infusion 0.05 mg/kg/h</li><li>Nor‑epinephrine 0.3 mcg/kg/min</li><li>Phenylephrine 0.6 mcg/kg/min</li><li>Hydrocortisone 80 mg IV q6h</li><li>Vancomycin 1 g IV q12h</li><li>Cefepime 2 g IV q8h</li><li>Insulin sliding scale</li><li>CRRT</li><li>Sodium bicarbonate 1 g/kg/h</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT ongoing</li><li>Pancuronium infusion</li><li>High-dose steroids</li><li>High-dose vasopressors</li><li>Levodopa infusion 200 mg</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The levodopa infusion was increased to 300 mg/24 h, and the sedative was switched from midazolam to a propofol infusion at 25 mg/h to achieve deeper sedation. Hydrocortisone dose was maintained at 80 mg q6h. Meropenem 2 g q8h replaced vancomycin to simplify antibiotic coverage. Vasopressor support was intensified to maintain MAP &gt; 65 mmHg with nor‑epinephrine and phenylephrine. The patient’s rigidity decreased slightly but remained profound; temperature remained elevated.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Severe Parkinsonian crisis progressing with refractory hyperthermia and hypotension; escalating dopaminergic therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-03-29</h3><div class="visit-meta">Intensive Care Unit | Reason: Hyperthermia, severe rigidity, high organ stress</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 68‑year‑old male with Parkinson’s disease, hypertension, type 2 diabetes, pneumococcal pneumonia, and acute renal injury admitted to ICU on 2026‑03‑28 for severe rigidity, hyperthermia (T &gt; 41 °C), and refractory hypotension. Current management includes levodopa infusion, pancuronium, propofol sedation, high‐dose vasopressors, hydrocortisone, sodium bicarbonate, and meropenem.\n\nSubjective: Patient remains deeply sedated; no self‑reported symptoms except maintained by team observation.\n\nObjective:\n– Temperature: 41.5 °C\n– Heart rate: 130 /min\n– Respiratory rate: 28 /min\n– SpO₂: 85 % on 6 L NR\n– Blood pressure: 75/45 mmHg\n– Physical exam: rigid limbs, profuse sweating, no focal neurologic deficits aside from rigidity.\n– Labs: ABG pH 7.28, PaCO₂ 48, PaO₂ 60; Coagulation 13/9/15; Bicarbonate 20 mmol/L; Lactate 3.7 mmol/L; Bicarbonate 2.3 g/dL; Creatinine 2.0 mg/dL.\n\nAssessment: The patient’s clinical picture is consistent with malignant hyperthermia (MH) or neuroleptic malignant syndrome (NMS) secondary to levodopa/propofol, compounded by sepsis from pneumococcal pneumonia. Persistent hyperthermia, generalized rigidity, metabolic acidosis, and elevated lactate raise concern for MH. Sepsis‑induced hyperthermia and steroid‑induced hyperthermia remain on the differential. Rhabdomyolysis is a potential complication that has not yet been ruled out.\n\nPlan:\n1. **Reassess for MH** – Obtain serum CK and myoglobin; if CK &gt;2000 U/L or clinical suspicion rises, initiate IV dantrolene 2.5 mg/kg over 10 min, repeat every 6 h as needed.\n2. **Optimize cooling** – Continue cooling blankets, water‑cooled ventilator circuit, and consider ice packs to axillae. Monitor core temperature hourly.\n3. **Hemodynamic support** – Titrate nor‑epinephrine and phenylephrine to maintain MAP ≥65 mmHg; consider adding vasopressin if refractory hypotension persists.\n4. **Metabolic correction** – Continue sodium bicarbonate infusion; repeat ABG, lactate, electrolytes every 4 h.\n5. **Neurology consult** – Discuss alternative routes for amantadine (IV if available) or consider ketamine infusion for rigidity.\n6. **Renal support** – Continue CRRT; monitor effluent electrolytes and adequacy.\n7. **Infection management** – Confirm cultures; continue meropenem 2 g IV q8h pending antibiotic sensitivity.\n8. **Monitor for complications** – Check serum CK, myoglobin, and renal function daily.\n9. **Long‑term plan** – Once afebrile, MAP stable, and creatinine trending down, consider transfer to step‑down unit.\n\nThe patient remains in critical condition; close monitoring and aggressive supportive care are imperative.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever &gt;41°C</span><span class="pill">rigidity</span><span class="pill">tachycardia</span><span class="pill">orthostatic hypotension</span><span class="pill">hypoactive state</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>41.5°C</td></tr><tr><td>Heart_Rate</td><td>130/min</td></tr><tr><td>Respiratory_Rate</td><td>28/min</td></tr><tr><td>Oxygen_Saturation</td><td>85% on 6L NR</td></tr><tr><td>Blood_Pressure</td><td>75/45 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Rigid, unable to move limbs</li><li>Profuse sweating</li><li>Temperature high</li><li>BP low</li><li>Normal neuro exam except rigidity</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Arterial blood gas</li><li>Coagulation panel</li><li>Fluid balance</li><li>Bicarbonate levels</li><li>Serum lactate</li><li>Coag</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ABG: pH 7.28, PaCO2 48, PaO2 60; Coag 13/9/15; Bicarbonate 20; Lactate 3.7; Bicarbonate 2.3 g/dL; Renal panel unchanged</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sodium bicarbonate drip 1 g/kg/h</li><li>Continued CRRT</li><li>Adjusted propofol 35 mg/h</li><li>Maintained hydrocortisone 80 mg q6h</li><li>Cooling blankets + water‑circuit</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No significant temperature drop; rigidity persists; hemodynamics somewhat stable, but MAP &lt; 65.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">Type 2 diabetes</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span><span class="pill">Severe hyperthermia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 300 mg/24 h</li><li>Clonazepam 0.25 mg PO TID</li><li>Propofol infusion 30 mg/h</li><li>Pancuronium infusion</li><li>Nor‑epinephrine 0.4 mcg/kg/min</li><li>Phenylephrine 0.7 mcg/kg/min</li><li>Hydrocortisone 80 mg IV q6h</li><li>Meropenem 2 g IV q8h</li><li>Insulin sliding scale</li><li>CRRT</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Cooling blankets not effective</li><li>High-dose propofol</li><li>CRRT ongoing</li><li>Vancomycin discontinued</li><li>Meropenem started</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sodium bicarbonate 1 g/kg drip was initiated to counteract potential malignant hyperthermia. Cooling blankets and a water‑cooled ventilator circuit were used, but temperature did not appreciably drop. Propofol infusion was increased to 35 mg/h; nor‑epinephrine and phenylephrine remained at maximal tolerated doses. The patient, still deeply sedated, exhibited persistent rigidity and mild improvement in hemodynamics. The team consulted neurology for possible amantadine, but the patient’s unstable status precluded oral administration.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Thermal dysregulation refractory; organ failure minimal; need for escalation.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-03-30</h3><div class="visit-meta">Intensive Care Unit | Reason: Persistent hyperthermia, low blood pressure, worsening metabolic acidosis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**
+Persistent hyperthermia, refractory hypotension, worsening metabolic acidosis, and severe rigidity
+
+**History &amp; Course**
+Patient is a 68‑year‑old male with Parkinson’s disease (PD), hypertension, T2DM, pneumococcal pneumonia, and acute renal injury currently on CRRT. Over the past week the patient has developed an escalating hyperthermic crisis with core temperatures &gt;41°C, profound orthostatic hypotension refractory to escalating vasopressors, and metabolic acidosis (pH 7.20, bicarbonate 21). The patient remains sedated and rigid, with pancuronium and propofol infusion unchanged. Sepsis from pneumonia remains likely; however, the dramatic rise in temperature, rigidity, and multi‑organ dysfunction raise concern for malignant hyperthermia (MH) or neuroleptic malignant syndrome (NMS). Recent labs show lactate 4.0 mmol/L, creatinine 2.0 mg/dL, and ongoing acidosis despite sodium bicarbonate infusion.
+
+**Physical Examination**
+- Temperature 40.8°C
+- HR 125/min, RR 30/min, SpO₂ 84% on 6 L NR
+- BP 70/38 mmHg (MAP≈50)
+- Rigid, unresponsive limbs, unable to voluntarily move
+- Profuse diaphoresis, no focal neurologic deficits
+- Chest: coarse crackles RLL
+
+**Labs &amp; Imaging**
+- ABG: pH 7.20, PaCO₂ 80, PaO₂ 58, HCO₃‑ 21
+- Lactate 4.0 mmol/L (unchanged from previous day)
+- Coagulation: 12/8/14
+- CRRT effluent: pending
+- Sodium bicarbonate level: pending
+
+**Current Management**
+- HFOV low tidal volume
+- Vasopressors: nor‑epinephrine 0.5 µg/kg/min, phenylephrine 1.0 µg/kg/min
+- CRRT ongoing
+- Hydrocortisone 80 mg IV q6h
+- Meropenem 2 g IV q8h
+- Insulin sliding scale
+- Sodium bicarbonate 1 g/kg/h
+- Propofol 35 mg/h
+- Pancuronium 0.05 mg/kg/h
+- Lev‑dopamine infusion 300 mg/24 h
+- Clonazepam 0.25 mg PO TID
+- Donepezil 5 mg PO QD
+
+**Assessment**
+1. **Malignant hyperthermia (suspected)** – Persistent hyperthermia &gt;41°C, rigidity, metabolic acidosis, high lactate, and normal CK so far (yet to be checked). History of levodopa infusion may precipitate a hyperthermic crisis.
+2. **Neuroleptic malignant syndrome (possible)** – Although no exogenous neuroleptics have been given recently, the sudden rigidity and autonomic instability are classic.
+3. **Sepsis from pneumococcal pneumonia** – Rising lactate and persistent hypotension despite vasopressors.
+4. **Multiorgan dysfunction from distributive shock** – Acute renal injury secondary to sepsis and hypoperfusion.
+5. **Acute respiratory failure** – Indicated by low PaO₂; HFOV is ongoing.
+
+**Plan**
+- **Medication Adjustments**
+  - Initiate dantrolene 2.5 mg/kg IV bolus (max 450 mg), repeat every 10 min until core temp &lt;39.5°C or up to 4 mg/kg.
+  - Add ketamine infusion 1–2 mg/kg/h (goal: reduce rigidity and may provide analgesia).
+  - Continue current levodopa infusion; consider adding amantadine 100 mg PO BID if oral tolerable.
+  - Continue hydrocortisone 80 mg q6h.
+  - Continue propofol 35 mg/h; consider reducing if hyperthermia does not improve.
+  - Add vasopressin 0.03 U/min if MAP remains &lt;65 mmHg despite high-dose norepi/phenylephrine.
+  - Repeat insulin sliding scale; monitor glucose 4–7 mmol/L.
+
+- **Monitoring**
+  - Core temperature hourly with esophageal probe.
+  - ABG, lactate, electrolytes, arterial blood gases every 4 h.
+  - Serum CBC, CMP, coagulation, CK, myoglobin, and serum benzodiazepine level daily.
+  - CRRT effluent electrolytes every shift.
+  - Hourly vitals; continuous ECG and invasive BP.
+  - Neurology consult for movement disorder management.
+  - Infectious disease review for antibiotics; consider adding clindamycin for toxic shock if indicated.
+
+- **Temperature Control**
+  - Continue external cooling blankets and ice packs.
+  - Water‑cooled ventilator circuit.
+  - Avoid overheating from monitors.
+
+- **Respiratory Support**
+  - Continue HFOV; evaluate need for endotracheal intubation if SpO₂ &lt;85% or inability to manage airway.
+
+- **Renal**
+  - CRRT continue; adjust bicarbonate dose to maintain serum bicarbonate &gt;22.
+  - Monitor ultrafiltration rate to avoid hypotension.
+
+- **Discharge / Step‑down**
+  - When patient is afebrile (&lt;38.5°C), MAP ≥ 65 mmHg on vasopressors ≤ 0.3 mcg/kg/min, and renal function trending down, plan transfer to step‑down ICU.
+  - Continue levodopa infusion and steroids as per baseline.
+
+**Follow‑up Recommendations**
+- Daily review by ICU team with neurology, infectious disease, and endocrine.
+- Reassess need for dantrolene after 24 h of treatment; if no improvement, repeat dose.
+- Evaluate for possible malignant hyperthermia in the family.
+- Consider a cardiopulmonary exercise test once recovered.
+- Educate family on PD crisis management and early recognition.
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">hyperthermia</span><span class="pill">hypotension</span><span class="pill">fatigue</span><span class="pill">noncompliant agitation?</span><span class="pill"></span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>40.8°C</td></tr><tr><td>Heart_Rate</td><td>125/min</td></tr><tr><td>Respiratory_Rate</td><td>30/min</td></tr><tr><td>Oxygen_Saturation</td><td>84% on 6L NR</td></tr><tr><td>Blood_Pressure</td><td>70/38 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Rigid limbs, unable to move; sputum aspirate apparent; no change in mental status; BP low; tachycardia</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ABG</li><li>Lactate</li><li>Coagulation</li><li>Fluid balance</li><li>CRRT effluent</li><li>Sodium bicarbonate levels</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ABG pH 7.20, PaCO2 80, PaO2 58, Lactate 4.0; Coag 12/8/14; Bicarbonate 21</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>HFOV low tidal volume</li><li>Increased nor‑epinephrine to 0.5 mcg/kg/min, phenylephrine 1.0 mcg/kg/min</li><li>CRRT continued</li><li>Hydrocortisone 80 mg q6h</li><li>Propofol infusion</li><li>Sodium bicarbonate 1 g/kg/h</li><li>Amantadine withheld</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No change in rigidity; minimal improvement in hemodynamics; temperature remains &gt;40°C</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">T2DM</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span><span class="pill">Metabolic acidosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 300 mg/24 h</li><li>Clonazepam 0.25 mg PO TID</li><li>Propofol 35 mg/h</li><li>Pancuronium 0.05 mg/kg/h</li><li>Nor‑epinephrine 0.45 mcg/kg/min</li><li>Phenylephrine 0.8 mcg/kg/min</li><li>Hydrocortisone 80 mg IV q6h</li><li>Meropenem 2 g IV q8h</li><li>Insulin sliding</li><li>CRRT</li><li>Sodium bicarbonate 1 g/kg/h</li><li>HFOV</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT ongoing</li><li>High-dose steroids</li><li>Sodium bicarbonate infusion</li><li>Propofol infusion</li><li>High-dose vasopressors</li><li>No ventilation yet</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>HFOV was initiated with low tidal volume to improve oxygenation while avoiding hemodynamic compromise. Vasopressor support was titrated: nor‑epinephrine 0.5 mcg/kg/min and phenylephrine 1.0 mcg/kg/min. CRRT continued. Amantadine 100 mg PO was withheld due to poor oral intake. The patient remained sedated and rigid; temperature remained high; lactate 4.0 mmol/L. The team noted that the crisis remained refractory to sedation, ventilation, and metabolic support.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Critical management; still refractory to sedation, ventilation, metabolic support.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2026-03-31</h3><div class="visit-meta">Intensive Care Unit | Reason: Persistent high temperature, organ stress, worsening renal function</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+The patient presents with persistent hyperthermia (40.3°C), refractory hypotension (BP 65/35 mmHg), elevated lactate (≈3.5‑4 mmol/L), and worsening renal function (creatinine 2.1 mg/dL). The patient remains deeply sedated on propofol 35 mg/h, pancuronium 0.05 mg/kg/h, with levodopa infusion 300 mg/24 h. High‑dose vasopressors (nor‑epinephrine 0.6 mcg/kg/min, phenylephrine 1.1 mcg/kg/min, vasopressin 0.03 U/min) are ongoing. Renal replacement has been switched to continuous arteriovenous hemofiltration for better potassium clearance.
+
+History of Present Illness:
+Day 9 of ICU admission for Parkinsonian crisis secondary to pneumococcal pneumonia and acute kidney injury. The patient has had escalating rigidity, hyperthermia, and refractory hypotension despite aggressive anti‑rigidity therapy (levodopa, clonazepam, dantrolene, ketamine) and a multi‑agent vasopressor strategy. The transition to continuous arteriovenous hemofiltration was performed on day 9; HFOV remains in use with SpO₂ 83 %.
+
+Physical Examination:
+• Temperature: 40.3 °C
+• HR: 120/min
+• RR: 32/min (HFOV)
+• SpO₂: 83 % on HFOV
+• BP: 65/35 mmHg (MAP ≈ 48 mmHg)
+• Skin: diaphoresis, erythematous
+• CV: normal sinus rhythm
+• Neuro: unresponsive, no vocalization, deeply sedated with propofol/pancuronium.
+
+Labs/Tests Ordered:
+- Coagulation panel: PT 13 s, aPTT 9 s, INR 1.5
+- CRRT effluent potassium: 5 mmol/L
+- Blood cultures: sterile
+- Serum bicarbonate: 22 mmol/L
+- ECG: sinus rhythm
+- Pending: serum CK &amp; myoglobin, serum benzodiazepine level, ABG, CRRT effluent electrolytes.
+
+Assessment:
+The patient remains in refractory septic shock superimposed on a severe Parkinsonian crisis. Hyperthermia likely reflects a combination of infection‑related inflammation, drug reaction (levodopa surge, dantrolene, ketamine), and a malignant‑hyperthermia‑like response to neuromuscular blockade. Persistent renal dysfunction is attributable to hypoperfusion, sepsis‑associated acute tubular necrosis, and CRRT load. Potential drug toxicity (propofol, benzodiazepine accumulation) remains a concern.
+
+Differential Diagnosis:
+1. Sepsis from pneumococcal pneumonia.
+2. Malignant hyperthermia‑like reaction to neuromuscular blocker or dantrolene.
+3. Neuroleptic malignant syndrome (rare in Park). 
+4. Propofol infusion syndrome.
+5. Acute kidney injury: pre‑renal, intrinsic (sepsis), or CRRT‑related.
+
+Plan:
+1. **Hemodynamics** – Continue high‑dose vasopressors; titrate to MAP ≥ 65 mmHg; consider increasing vasopressin if needed. Give isotonic crystalloid bolus if intravascular volume is low.
+2. **Renal Replacement** – Maintain continuous arteriovenous hemofiltration; aim for effluent K &lt; 5 mmol/L and adequate solute clearance. Reassess effluent electrolytes each shift.
+3. **Temperature Management** – Active cooling with water‑cooled circuit, ice packs, external blankets. Monitor core temperature hourly.
+4. **Antibiotics** – Continue meropenem 2 g IV q8h; add vancomycin 1 g IV q12h pending cultures. Re‑draw blood cultures in 12 h.
+5. **Parkinsonian Crisis** – Continue levodopa infusion 300 mg/24 h; consider amantadine 100 mg PO BID if rigidity persists. Continue clonazepam 0.25 mg PO TID. Dantrolene 2.5 mg/kg IV bolus already given; repeat only if rigidity remains.
+6. **Sedation** – Continue propofol 35 mg/h; monitor for propofol infusion syndrome (check bilirubin, metabolic acidosis).
+7. **Labs** – CBC, electrolytes, lactate, ABG, coagulation daily; serum CK, myoglobin, benzodiazepine level each shift.
+8. **Consults** – Neurology (pending family consent for tracheostomy), Infectious Disease (source of sepsis), Endocrinology (diabetes), Nephrology (RRT strategy).
+9. **Family/Consent** – Continue to obtain tracheostomy consent; update family on critical status.
+10. **Disposition** – Patient will remain ICU for organ support until afebrile, stable MAP, improved renal function, and family consent to tracheostomy.
+
+The patient will be monitored closely with daily multidisciplinary rounds and a dynamic treatment plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fever</span><span class="pill">hypotension</span><span class="pill">elevated lactate</span><span class="pill">renal dysfunction</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>40.3°C</td></tr><tr><td>Heart_Rate</td><td>120/min</td></tr><tr><td>Respiratory_Rate</td><td>32/min</td></tr><tr><td>Oxygen_Saturation</td><td>83% on HFOV</td></tr><tr><td>Blood_Pressure</td><td>65/35 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Rigid, unresponsive</li><li>BP low</li><li>Temperature high</li><li>No vocalization</li><li>Normal heart rhythm</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Coagulation panel</li><li>CRRT effluent</li><li>Blood cultures</li><li>Sodium bicarbonate levels</li><li>ECG</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Coag 13/9/15; CRRT effluent potassium 5; Blood cultures sterile; Bicarbonate 22; ECG sinus rhythm</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Switched CRRT to CVVH</li><li>Adjusted vasopressors (nor‑epinephrine 0.6 mcg/kg/min, phenylephrine 1.1 mcg/kg/min)</li><li>Initiated tracheostomy consult</li><li>Continued hydrocortisone 80 mg q6h</li><li>Hydration adjusted</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Minimal change; remains sedated; no signs of improvement</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">T2DM</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span><span class="pill">Severe hypotension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 300 mg/24 h</li><li>Clonazepam 0.25 mg PO TID</li><li>Propofol 35 mg/h</li><li>Pancuronium infusion 0.05 mg/kg/h</li><li>Nor‑epinephrine 0.55 mcg/kg/min</li><li>Phenylephrine 1.05 mcg/kg/min</li><li>Hydrocortisone 80 mg IV q6h</li><li>Meropenem 2 g IV q8h</li><li>Insulin sliding</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>HFOV ongoing</li><li>CRRT ongoing</li><li>High-dose vasopressors</li><li>Sodium bicarbonate drip</li><li>High-dose steroids</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The team transitioned from CVVH to continuous arteriovenous hemofiltration on day 9, anticipating better potassium removal. A tracheostomy consult was requested, but consent was pending from family. Vasopressor dosages were incrementally increased to maintain MAP. Sedation was continued with propofol and pancuronium. The patient remained sedated, with persistent high temperature and low BP. Labs showed elevated lactate and stable electrolytes.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multi‑organ systems stressed; Parkinsonian crisis refractory.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2026-04-01</h3><div class="visit-meta">Intensive Care Unit | Reason: Declining status, ongoing hyperthermia, new arrhythmia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Declining status, ongoing hyperthermia, new arrhythmia.  
+**Subjective:** Patient is an unresponsive 68‑year‑old male with a history of Parkinson’s disease, hypertension, type 2 diabetes mellitus, pneumococcal pneumonia, acute renal injury, severe arrhythmia, and hypoxic respiratory failure.  Family has been informed and a palliative care consult was initiated for goals of care discussion.  
+**Objective:**
+- Temperature 40.1 °C, Heart rate 120 bpm irregular, Respiratory rate 30/min, SpO₂ 84 % on HFOV, BP 70/36 mmHg.  
+- Physical exam: unresponsive, severe rigidity, palpable rash over chest, clear lung fields on auscultation except for crackles bilaterally.  
+- Labs: EKG shows T‑wave changes, troponin negative.  CBC: Hb 8.2 g/dL, WBC 12 ×10⁹/L.  Coagulation: PT 13 s, aPTT 9 s, INR 1.5.  Serum amiodarone level 0.8 µg/mL.  LFTs normal.  
+**Assessment:**
+1. **Malignant hyperthermia‑like picture** likely secondary to severe Parkinsonian crisis with high core temperature and rigidity despite cooling efforts; amiodarone may contribute to arrhythmia though serum level is within therapeutic range.  
+2. **Sepsis** from pneumococcal pneumonia with ongoing hypoxia, hypotension, and multi‑organ dysfunction (renal, hepatic, hematologic).  
+3. **Cardiac arrhythmia** – ventricular premature complexes; no evidence of ischemia on ECG or troponin.  
+4. **Drug reaction** – rash and pruritus secondary to antihistamine use or possible amiodarone hypersensitivity.  
+5. **Multiorgan failure** due to septic shock, acute renal failure requiring CRRT, and systemic inflammatory response.  
+**Plan:**
+- Continue current supportive measures: HFOV, propofol 35 mg/h, pancuronium, levodopa infusion 300 mg/24 h, insulin sliding scale, sodium bicarbonate 1 g/kg/h, hydrocortisone 80 mg q6h.  
+- Maintain vasopressor regimen: norepinephrine 0.6 µg/kg/min, phenylephrine 1.2 µg/kg/min, vasopressin 0.03 U/min.  
+- Continue amiodarone 150 mg IV for VPCs; monitor ECG daily.  
+- Antihistamine (diphenhydramine 25 mg IV) for rash; review for potential drug‑induced skin reaction.  
+- Cooling measures: maintain active core temperature control, ensure water‑cooled ventilator circuit, ice packs, and keep the patient in a temperature‑controlled room.  
+- Repeat labs: CBC, CMP, coagulation panel, serum CK and myoglobin to evaluate for rhabdomyolysis; repeat serum amiodarone levels in 24 h.  
+- Repeat blood cultures and consider broadening antibiotic coverage if cultures become positive or patient does not stabilize.  
+- Continue CRRT with frequent monitoring of effluent electrolytes and drug clearance.  
+- Discuss goals of care: family and palliative team to reiterate comfort‑focused approach; no further escalation of invasive interventions.  
+- Document decision to transition to comfort care, with orders for symptom control (e.g., deeper sedation, analgesia) and no further aggressive treatments.  
+- Follow‑up: Patient will remain in ICU under comfort‑focused care until death or discharge to hospice.  Any changes in status will be documented promptly.  
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">hyperthermia</span><span class="pill">hypotension</span><span class="pill">arrhythmia (VPC)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>40.1°C</td></tr><tr><td>Heart_Rate</td><td>120/min (irregular)</td></tr><tr><td>Respiratory_Rate</td><td>30/min</td></tr><tr><td>Oxygen_Saturation</td><td>84% on HFOV</td></tr><tr><td>Blood_Pressure</td><td>70/36 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive</li><li>Rigidity</li><li>Afebrile slightly</li><li>BP low</li><li>Temperature high</li><li>Rash palpable on chest</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>EKG</li><li>Troponin</li><li>CBC</li><li>Coag</li><li>Serum amiodarone level</li><li>Liver function</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>EKG T wave changes, troponin negative</li><li>CBC Hb 8.2, WBC 12, Coag 13/9/15</li><li>Serum amiodarone level 0.8 µg/mL</li><li>LFT normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Amiodarone 150 mg IV</li><li>Continued hydrocortisone</li><li>Antihistamine for rash</li><li>Maintained vasopressors</li><li>Continued sedation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>No change; stable on palliative plan</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">T2DM</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span><span class="pill">Severe arrhythmia</span><span class="pill">Hypoxic respiratory failure</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion 300 mg/24 h</li><li>Clonazepam 0.25 mg PO TID</li><li>Propofol 35 mg/h</li><li>Pancuronium infusion</li><li>Nor‑epinephrine 0.6 mcg/kg/min</li><li>Phenylephrine 1.2 mcg/kg/min</li><li>Hydrocortisone 80 mg q6h</li><li>Meropenem 2 g q8h</li><li>Insulin sliding</li><li>CRRT (CVVH)</li><li>Sodium bicarbonate</li><li>Amiodarone 150 mg IV</li><li>HFOV</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT ongoing</li><li>Tracheostomy not yet placed</li><li>Amiodarone started for VPC</li><li>New rash</li><li>High-dose steroid</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The ICU team initiated amiodarone for ventricular premature complexes and managed a new rash with antihistamines. A palliative care consult was called for family discussion. The patient&#x27;s temperature remained high, blood pressure low, and arrhythmia persisted. No major intervention was added beyond supportive care. The team decided to focus on comfort as the prognosis remained poor.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Prognosis poor; plan for comfort care.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2026-04-02</h3><div class="visit-meta">Intensive Care Unit | Reason: Limited intervention, comfort measures</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Comfort‐care protocol initiated; patient is under comfort measures.
+
+**History &amp; Current Status:** A 68‑year‑old male with Parkinson’s disease, hypertension, type 2 diabetes mellitus, pneumococcal pneumonia, acute renal failure, sepsis, septic shock, arrhythmia, hypoxic respiratory failure, rhabdomyolysis, multiorgan failure, and possible malignant hyperthermia. Previous ICU course has been marked by refractory hypotension, hyperthermia, severe rigidity and numerous pharmacologic interventions (levodopa infusion, propofol, pancuronium, vasopressors, hydrocortisone, dantrolene, etc.) with limited stability.
+
+**Recent Interventions (Day 11):**
+- Initiated morphine infusion 2 mg/h for comfort.
+- Reduced propofol to 5 mg/h to minimize sedation.
+- Tapered vasopressors (nor‑epinephrine, phenylephrine) under close monitoring.
+- CRRT flow reduced to low‑flow to prevent fluid overload.
+- Hydrocortisone 20 mg IV q8h continues.
+- HFOV and minimal sedation employed.
+- The patient remains unresponsive yet appears comfortable with minimal agitation.
+
+**Vital Signs (current):**
+- Temperature: 38.8 °C
+- Heart rate: 100 /min
+- Respiratory rate: 28 /min
+- Oxygen saturation: 85 % on HFOV
+- Blood pressure: 60/30 mmHg (MAP ~35 mmHg)
+
+**Physical Examination:**
+- Unresponsive, no purposeful movement.
+- Moderate rigidity throughout extremities, no overt agitation.
+- No respiratory distress.
+- Heart rhythm currently normal in rhythm with continuous telemetry.
+
+**Laboratory Results:**
+- CBC: Hb 7.8 g/dL, WBC 10 ×10⁹/L.
+- Lactate: 1.8 mmol/L.
+- Coagulation: PT 13 s, aPTT 9 s.
+- Urine output: 300 mL/day.
+- Fluid balance: net negative, consistent with low CRRT flow.
+
+**Assessment:**
+The patient continues to have severe sepsis with multiorgan failure and is in a refractory state despite aggressive supportive measures. The persistent hypotension and low cardiac output, combined with ongoing respiratory failure and renal dysfunction, render further escalation unlikely to reverse the disease course. Given the patient’s comfort status and the cumulative burdens of invasive therapies, the decision to focus on comfort measures aligns with the family’s goals of care.
+
+**Plan:**
+1. Continue comfort‑care protocol:
+   - Morphine infusion 2 mg/h for analgesia.
+   - Minimal sedation with propofol 5 mg/h to maintain patient comfort.
+   - Continue hydrocortisone 20 mg IV q8h as part of adrenal support.
+2. Maintain low‑flow CRRT to manage acute kidney injury while preventing fluid overload.
+3. HFOV continues as per respiratory status; adjust in response to oxygenation.
+4. Continue broad‑spectrum antibiotics (meropenem 2 g IV q8h). Vancomycin is held pending cultures.
+5. Monitor for worsening metabolic instability (lactate, electrolytes) every 4 hrs.
+6. Family meeting to discuss the transition to hospice or palliative care and reassess goals of care.
+7. Consult palliative care team for advanced symptom management and psychosocial support.
+8. Continue daily neurologic checks; if neurofunction improves, consider easing comfort measures.
+9. Document all comfort care interventions in the chart for quality metrics and continuity.
+
+**Follow‑up:**
+- Daily in‑ICU palliative care rounds.
+- Family education and psychosocial support.
+- Transition to hospice care team if family desires, with home or inpatient palliative care follow‑up within 24–48 hrs.
+- Reassess comfort needs and adjust pain management accordingly.
+
+**Conclusion:** The patient is under a comfort‑care protocol with a focus on minimizing invasive interventions. All measures aim to preserve dignity and alleviate suffering while respecting the patient’s advanced illness trajectory.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">hypotension</span><span class="pill">rigidity</span><span class="pill">pain minimal</span><span class="pill">no respiratory distress</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>38.8°C</td></tr><tr><td>Heart_Rate</td><td>100/min</td></tr><tr><td>Respiratory_Rate</td><td>28/min</td></tr><tr><td>Oxygen_Saturation</td><td>85% on HFOV</td></tr><tr><td>Blood_Pressure</td><td>60/30 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive</li><li>Moderate rigidity</li><li>No agitation</li><li>Low blood pressure</li><li>Normal heart rhythm</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Lactate</li><li>Coag</li><li>Urine output</li><li>Fluid balance</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC Hb 7.8, WBC 10, lactate 1.8, Coag 13/9/14, urine output 300 mL/day</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 2 mg/h</li><li>Reduced propofol to 5 mg/h</li><li>Tapered vasopressors</li><li>CRRT reduced to low flow</li><li>Hydrocortisone 20 mg q8h</li><li>Pain and comfort prioritized</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable and comfortable; no agitation</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">T2DM</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span><span class="pill">Acute renal injury</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Levodopa infusion stopped</li><li>Sedatives minimal (propofol 10 mg/h)</li><li>Pancuronium stopped</li><li>Nor‑epinephrine 0.2</li><li>Phenylephrine 0.4</li><li>Hydrocortisone 20 mg IV q8h</li><li>Meropenem 2 g q8h</li><li>Insulin sliding</li><li>CRRT (low flow)</li><li>HFOV</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CRRT limited due to renal failure</li><li>High-dose steroid taper</li><li>Vasopressors weaned down</li><li>Sedation light</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A comfort‑care protocol was initiated. Morphine infusion 2 mg/h was started for pain control, propofol sedation reduced to 5 mg/h, and vasopressors tapered. The patient remained unresponsive but appeared comfortable with minimal agitation. The renal replacement therapy was reduced to low flow to avoid further fluid overload. The team monitored for signs of deterioration but prepared for eventual withdrawal of life‑sustaining therapies.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to comfort; prognosis remains poor.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2026-04-04</h3><div class="visit-meta">Palliative Care | Reason: Withdraw aggressive care, hospice transition</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Withdrawal of aggressive care and hospice transition.
+
+S: Patient is a 68‑year‑old male with advanced Parkinson’s disease, hypertension, type 2 diabetes, and a history of pneumococcal pneumonia. He is currently unresponsive with no pain and minimal dyspnea. Family reports that the decision to withdraw curative measures has been made and that the patient is receiving comfort therapy.
+
+O:
+- Vitals: Temp 38.6°C; HR 55 bpm; RR 20 /min; SpO₂ 92% on 2 L/min O₂ mask; BP 70/35 mmHg.
+- Physical exam: Unresponsive, no pain, mild sedation, stable respiratory pattern on mask, normal heart rhythm (except atrial flutter noted on ECG), no focal deficits.
+- Hospital course: ICU course with refractory hyperthermia, rigidity, arrhythmia, multi‑organ failure; transitioned to hospice on Day 16.
+
+Labs/Tests Ordered: ECG, CBC, Lactate, Coagulation profile.
+- ECG: Atrial flutter at 150 bpm.
+- CBC: WBC 9 ×10⁹/L, Hgb 7.5 g/dL.
+- Lactate: 1.5 mmol/L.
+- Coag: PT 13 s, aPTT 9 s, INR 1.4.
+
+A: Comfort‑focused care has achieved minimal distress. No signs of active organ failure beyond underlying chronic disease and the patient has met the criteria for hospice transition. The low‑dose morphine infusion (4 mg/h) and midazolam infusion (1 mg/h) are effective in maintaining analgesia and sedation. Given the patient’s stable comfort status, we maintain the current regimen.
+
+P: Continue current comfort regimen:
+- Morphine infusion 4 mg/h.
+- Midazolam infusion 1 mg/h.
+- O₂ 2 L/min via humidified mask.
+- Hydrocortisone 20 mg IV q8h (as per prior ICU protocol for stress response).
+- Discontinue broad‑spectrum antibiotics (meropenem) as the patient no longer requires antimicrobial therapy.
+- Monitor vitals and comfort level every 4 hours.
+
+Disposition: The patient passed peacefully on Day 16 of hospice care with minimal distress. Hospice documentation completed, and bereavement support offered to the family. No further medical interventions are warranted.
+
+Follow‑up: Family to receive hospice bereavement services and counseling. No ongoing medical follow‑up needed for the patient.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">low consciousness</span><span class="pill">no pain</span><span class="pill">dyspnea minimal</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>38.6°C</td></tr><tr><td>Heart_Rate</td><td>55/min</td></tr><tr><td>Respiratory_Rate</td><td>20/min</td></tr><tr><td>Oxygen_Saturation</td><td>92% on 2 L O₂ mask</td></tr><tr><td>Blood_Pressure</td><td>70/35 mmHg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive, no pain, mild sedation</li><li>Normal heart rhythm</li><li>Stable respiratory pattern on mask</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ECG</li><li>CBC</li><li>Lactate</li><li>Coag</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ECG atrial flutter 150 bpm</li><li>CBC WBC 9, Hgb 7.5, lactate 1.5, Coag 13/9/14</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine 4 mg/h</li><li>Midazolam 1 mg/h</li><li>Low‑dose oxygen</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Comfortable, no distress</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson&#x27;s disease</span><span class="pill">Hypertension</span><span class="pill">T2DM</span><span class="pill">Pneumococcal pneumonia</span><span class="pill">Parkinsonian crisis syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Morphine infusion 4 mg/h</li><li>Midazolam infusion 1 mg/h</li><li>Sedative light</li><li>HFOV paused</li><li>CRRT discontinued</li><li>Hydrocortisone 20 mg q8h</li><li>Meropenem 2 g q8h</li><li>Insulin sliding</li><li>Donepezil 5 mg PO QD</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Past ICU course, ventilator weaned to mask, family decision to limit care</li><li>DNR</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was transferred to hospice care with a low‑dose morphine infusion and a single midazolam infusion for comfort. Oxygen was delivered via a humidified mask at 2 L/min. The family was informed of the patient’s comfort status. On Day 16, the patient passed peacefully with minimal distress. The hospice team documented the event and provided bereavement support.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>End‑of‑life, hospice care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Parkinson’s disease</span><span class="pill">Polypharmacy</span><span class="pill">Infection (community‑acquired pneumonia)</span><span class="pill">Metabolic disturbances (electrolyte imbalance)</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Pneumococcal bacteremia</span><span class="pill">Acute renal injury</span><span class="pill">Sepsis</span><span class="pill">Septic shock</span><span class="pill">Arrhythmia</span><span class="pill">Hypoxic respiratory failure</span><span class="pill">Rhabdomyolysis</span><span class="pill">Multiorgan failure</span><span class="pill">Malignant hyperthermia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Morphine infusion 4 mg/h</li><li>Midazolam infusion 1 mg/h</li><li>Hydrocortisone 20 mg IV q8h</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit 1 (2026-03-23, Urgent Care): 68-year-old male presented with fever, productive cough, confusion, and difficulty swallowing. ...</li><li>Visit 2 (2026-03-24, Medical Floor): 68-year-old male admitted to medical floor for worsening confusion, rigidity, persistent fever and ongoing community‑acquired pneumonia. ...</li><li>Visit 3 (2026-03-25, ICU): 68-year-old male admitted to ICU with worsening rigidity and hyperthermia. ...</li><li>Visit 4 (2026-03-26, ICU): 68-year-old male with Parkinson’s disease, hypertension, type 2 diabetes, pneumococcal pneumonia, and acute renal injury presented with persistent lead‑pipe rigidity, hyperthermia (T 39.8°C), tachycardia (HR 118/min), orthostatic hypotension, and profuse diaphoresis. ...</li><li>Visit 5 (2026-03-27, ICU): 68-year-old male with Parkinson’s disease, hypertension, type 2 diabetes, pneumococcal pneumonia and acute renal injury admitted to ICU for severe rigidity preventing ventilation and refractory hypotension. ...</li><li>Visit 6 (2026-03-28, ICU): Parkinsonian crisis continued; levodopa infusion increased to 300 mg/24h, switched to propofol 25 mg/h sedation. ...</li><li>Visit 7 (2026-03-29, ICU): 68-year-old male with Parkinson’s disease, hypertension, type 2 diabetes, pneumococcal pneumonia, and acute renal injury admitted with hyperthermia (&gt;41°C), severe rigidity, tachycardia, and refractory hypotension. ...</li><li>Visit 8 (2026-03-30, ICU): 68‑year‑old male with Parkinson’s disease, hypertension, type 2 diabetes mellitus, pneumococcal pneumonia, and acute renal injury presented with persistent hyperthermia (40.8°C), refractory hypotension (BP 70/38 mmHg, MAP ≈50), and severe rigidity while sedated on propofol and pancuronium. ...</li><li>Visit 9 (2026-03-31, ICU): Persistent hyperthermia 40.3°C, refractory hypotension 65/35 mmHg, elevated lactate 3.5‑4 mmol/L, worsening renal function creatinine 2.1 mg/dL. ...</li><li>Visit 10 (2026-04-01, ICU): 68-year-old male with severe Parkinsonian crisis, persistent hyperthermia, new arrhythmia, and rash. ...</li><li>Visit 11 (2026-04-02, ICU): 68-year-old male under comfort‑care protocol. Initiated morphine infusion 2 mg/h for analgesia, reduced propofol to 5 mg/h to minimize sedation, tapered vasopressors, and switched continuous arteriovenous hemofiltration to low‑flow CRRT. Hydrocortisone 20 mg IV q8h continued. High‑frequency oscillatory ventilation (HFOV) remained in place. Broad‑spectrum antibiotics continued with meropenem 2 g IV q8h; vancomycin held pending cultures. Daily palliative care rounds and family discussions for hospice transition were planned. The patient remained unresponsive with moderate rigidity, comfortable, and required ongoing monitoring of metabolic parameters.</li><li>Visit 12 (2026-04-04, Palliative Care): 68‑year‑old male transitioned to hospice care. Patient remained unresponsive, no pain, mild sedation, stable respiratory pattern on 2 L/min O₂ mask. Vitals: Temp 38.6 °C, HR 55 bpm, BP 70/35 mmHg, SpO₂ 92%. ECG showed atrial flutter (150 bpm). CBC: WBC 9 × 10⁹/L, Hgb 7.5 g/dL. Lactate 1.5 mmol/L, PT 13 s, aPTT 9 s, INR 1.4. Comfort regimen maintained: morphine infusion 4 mg/h, midazolam infusion 1 mg/h, hydrocortisone 20 mg IV q8h, O₂ 2 L/min. Broad‑spectrum antibiotics (meropenem) discontinued. Patient passed peacefully on Day 16 of hospice care.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

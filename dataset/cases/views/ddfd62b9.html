@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case ddfd62b9</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: ddfd62b9</h1><div class="subtitle">Severe Hemophilia A Acute Hemarthrosis | Male, 30</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Osteoarthritis (arthropathy), Factor VIII inhibitor, Septic arthritis, Renal impairment</div><div class="meta-line">Risk Factors: X‑linked inheritance, Recent trauma, Recent surgery or invasive procedure, High factor consumption, Concurrent NSAID use, History of factor inhibitors, Poor adherence to prophylaxis</div></div>
+<details><summary>Narrative <span class="preview-text">**Severe Hemophilia A Complicated by Factor VIII Inhibitor, Septic Arthritis, and Renal Impairment: A Clinical Narrative...</span></summary><div class="section-body"><p>**Severe Hemophilia A Complicated by Factor VIII Inhibitor, Septic Arthritis, and Renal Impairment: A Clinical Narrative**</p><p>---</p><p>### 1971–1988 – Early Life and Informed Beginnings</p><p>Thomas Williams was born into a family carrying the classic X‑linked mutation in the Factor VIII gene. He was diagnosed with severe Hemophilia A at the age of 4 when a routine school‑physical raised his hemoglobin to 12.9 g/dL, but his factor VIII activity was a mere 2 %. His first breakthrough was a mild nosebleed that, due to his parents’ proactive approach, led to a timely infusion of 3,000 IU of high‑purity factor VIII (FVIII). Throughout his pediatric years, Thomas was taught the importance of prophylaxis; yet his strict adherence waned as he entered his teenage years, a pattern that would resurface later.</p><p>At 18, after a fall from a tree, a left knee hemarthrosis ensued. The bleeding stopped only after a series of infusions that took days to achieve the target &gt; 30 % for 48 hours. By 24, the knee had returned to baseline pain, but the event etched a lingering fear of bleeding. The patient grew up living on the delicate balance between bleeding and clotting, with his physician encouraging periodic factor monitoring and reminding him that factor replacement was both a cure and a risk.</p><p>---</p><p>### 25 – 28 – Lifestyle, Occupational Constraints, and the First Inhibitor</p><p>At 25, Thomas began an apprenticeship in cabinetry, a profession with repetitive strain that began to wear heavily on his previously asymptomatic knees. The first few months were fine—no bleeds, limited joint pain—until a fall from a ladder, landing heavily on his right knee. An acute hemarthrosis developed, but Thomas’s self‑managed prophylaxis was missing; he had been ignoring the 48‑hour dosing due to work constraints. The bleed persisted for 12 hours, spiking his pain dramatically. He used ibuprofen for arthritis‐related discomfort, a decision which further tipped the hemostatic balance.</p><p>He was seen at an urgent care clinic where a modest infusion of 1,000 IU of factor VIII brought his factor level up to 5 % but did not arrest the bleeding. Blood work from that visit showed a high‑titer inhibitor (190 BU) against factor VIII, a development that was only discovered a week later when a repeat clotting assay revealed a markedly reduced specific activity. Thomas was counseled that he needed bypassing agents rather than additional FVIII, and the clinic was hesitant to make that transition given his limited insurance coverage. Thus his first inhibitor crisis remained partially untreated, setting the stage for recurring bleeding episodes and chronic joint disease.</p><p>---</p><p>### 29 – 30 – The Pre‑operative Scenario and Rising Renal Impairment</p><p>By age 29, Thomas’s osteoarthritis symptoms had begun to dominate his daily life. Radiographs showed joint space narrowing on the medial tibial plateau of his left knee—a chronic sequelae of his prior hemarthroses and unopposed NSAID use. He was scheduled for arthroscopic partial meniscectomy, an invasive orthopedic procedure intended to alleviate mechanical pain and restore range of motion. Before surgery, he underwent a comprehensive evaluation:</p><p>- **Coagulation panel:** Factor VIII activity 2 % (total).
+- **Inhibitor titer:** 150 BU.
+- **Renal function:** Serum creatinine 1.8 mg/dL, eGFR 40 mL/min/1.73 m², consistent with stage 3 chronic kidney disease.</p><p>Thomas’s physician arranged for a periprocedural strategy: a high‑dose, short‑term bypassing therapy using FEIBA (Factor Eight Inhibitor Bypass Activity), and an intensive postoperative pain protocol that minimized NSAIDs (favoring acetaminophen and low‑dose opioids). However, at the time of the operation, Thomas’s poor adherence to prophylaxis led to a delayed factor replacement protocol; the first dose of FEIBA was administered 2 hours post‑op, but the patient’s inhibitor activity remained high, and the joint still exhibited bleeding at the wound edges. He was also given a single dose of recombinant factor VIIa (rFVIIa) as a rescue for a small, persistent hemarthrosis that had developed during the procedure.</p><p>---</p><p>### 0 – + 7 Days Post‑Op – Initial Post‑operative Course</p><p>On the evening of the surgery, Thomas woke with throbbing pain in his left knee and a slight effusion. He initially believed it was a normal post‑operative response and avoided contacting the clinic, relying on scheduled home visits from his physiotherapist. On day + 3, the swelling was unmistakable: 6 cm circumferential at the joint line, mild warmth, and a pronounced limitation of flexion to only 30°. Despite having received FEIBA and a single rFVIIa infusion, the joint seemed to fill again with blood.</p><p>Thomas called the outpatient hematology clinic. The nurse practitioner recorded his vitals: BP 140/88, heart rate 88, temperature 99.2 °F. He was admitted to the orthopedic unit for evaluation. Labs were drawn:</p><p>- **CBC:** Hemoglobin 13.2 g/dL (stable).
+- **Coagulation profile:** aPTT markedly prolonged at 75 s (vs. baseline 35 s).
+- **Factor VIII activity:** &lt;1 % with 200 BU inhibitor.
+- **Serum creatinine:** 1.9 mg/dL (unchanged).</p><p>The orthopedic surgeon performed an ultrasound arthrography, showing a large joint effusion layered by anechoic fluid—consistent with hemarthrosis. Because the surgeon was concerned about potential infection (given the patient’s prior surgical history and the presence of a large fluid collection), the team added a joint aspiration for analysis.</p><p>---</p><p>### + 8 Days – The Sepsis Alert</p><p>The aspirate was straw‑colored but grossly turbid. Gram stain revealed gram‑positive cocci in clusters—an ominous hint of staphylococcal contamination. Synovial fluid culture later grew *Staphylococcus aureus*, methicillin‑sensitive. While the joint fluid analysis was consistent with septic arthritis, the timeline was startling: only 8 days after surgery, a joint that had been treated with the latest bypassing agents was now infected.</p><p>The emergency team consulted Infectious Disease. Empiric antibiotics—vancomycin plus cefazolin—were begun, and the orthopedic team scheduled a surgical washout and debridement of the joint. Importantly, the patient’s renal impairment complicated antibiotic dosing; vancomycin troughs were kept below 10 mg/L to avoid nephrotoxicity, but with a 40 mL/min GFR, the drug’s half‑life was considerably extended. This necessitated careful serial trough monitoring.</p><p>---</p><p>### + 10 – + 14 Days – Bypass Therapy Intermission</p><p>During the washout, the hematology team confronted a dilemma: how to maintain hemostasis in the presence of a high‑titer inhibitor without precipitating further bleeding or worsening renal clearance of the exogenous factor fragments. The patient had been on intermittent FEIBA previously, but the dosage (70 IU/kg every 12 h) was known to be renally cleared by some of its components—particularly the activated factor IX and factor X fragments, which accumulate in renal insufficiency.</p><p>They shifted to a higher initial dose of rFVIIa (90 µg/kg) followed by a second dose at 12 h, then a taper. While rFVIIa is not renally cleared, its short half‑life demanded repeated dosing, and each infusion could increase the thrombotic risk, especially given the patient’s underlying cardiovascular history. In addition, the renal insult from the infection precipitated an acute rise in serum creatinine to 2.5 mg/dL, further complicating the pharmacokinetics of the bypass agents.</p><p>Within 48 h of the washout, the joint pain diminished modestly, but the effusion persisted, partially due to the inflammatory milieu. The physiotherapy regimen was curtailed—the patient could only perform 10° of passive flexion per day.</p><p>---</p><p>### + 20 Days – Immunosuppression Trials and Clinical Decline</p><p>After 2 weeks of ineffective bleed control, the hematology board recommended aggressive immunosuppression to eradicate the inhibitor. They drafted a regime of prednisone 1 mg/kg daily plus rituximab 375 mg/m² weekly for four weeks. However, the patient’s stage 3 renal dysfunction, combined with a history of steroid‑induced hyperglycemia, raised concerns about adverse effects. Additionally, rituximab can prolong the duration of immunosuppression, potentially risking further infections. After an intensive discussion, Thomas opted to proceed with steroids alone, fearing rituximab’s long‑term impact on his kidney function.</p><p>Within 5 days, steroids did not significantly affect the inhibitor titer; his factor VIII activity remained &lt;1 % despite 500 IU of rFVIIa dosing. Moreover, the pain escalated again—he now reported constant throbbing across the entire right knee, with pain at rest exceeding 8 on the VAS. Radiographs of the left knee acquired on day + 25 showed worsening joint space narrowing, subchondral cyst formation, and an impending collapse of the medial femoral condyle—a mechanical failure secondary to chronic hemarthrosis and osteoarthritis rather than infection alone.</p><p>---</p><p>### + 30 Days – Functional Decline and the Imperative of Palliative Care</p><p>At day + 30, Thomas could no longer stand for more than 5 minutes. His gait was marked by a lurch; his left knee was visibly distended. Labs showed the following:</p><p>- **Hemoglobin:** 12.9 g/dL (steady).
+- **WBC:** 7.6 × 10⁹/L (within normal limits, reflecting controlled infection).
+- **Creatinine:** 3.0 mg/dL (stage 4 CKD).
+- **Inhibitor titer:** 220 BU.</p><p>The nephrology team advised he discontinue the current antibiotic regimen due to rising serum creatinine and the potential for nephrotoxicity; a new antibiotic with gentamicin-sparing properties (linezolid) was considered. However, the orthopedic team feared the potential for further septic spread, requiring re‑debridement within a 48 h window.</p><p>As the week progressed, Thomas’s pain intensified. At day + 35, a decision was made to perform a knee arthrodesis to provide definitive joint stability. The procedure was complicated by an intraoperative hemorrhage that required 2,000 IU of rFVIIa and an additional 1,200 IU of FEIBA to control the bleeding. Post‑operatively, despite the fused joint, Thomas experienced a new painful swelling around the tibial plateau, with imaging suggestive of a hematoma that seemed intractable due to the inhibitor.</p><p>---</p><p>### + 45 – + 60 Days – The Final Chapter of Worsening</p><p>One month after the arthrodesis, Thomas’s renal function had deteriorated to eGFR 25 mL/min/1.73 m². He remained on dialysis in the outpatient setting. The nephrologist explained that the cumulative burden of factor infusions and systemic antibiotics had likely contributed to this decline. His daily pain was severe: constant 9‑10/10, refractory to opioids, requiring high‑dose hydromorphone.</p><p>Repeated attempts at inhibitor suppression via high‑dose steroids eventually failed, as the titer stabilized at 250 BU. He also developed a mild thrombophlebitis in his left arm, possibly a paradoxical event of the bypass therapy. The interdisciplinary team convened a palliative care consultation to assess goals of care, culminating in the decision to focus on comfort, limit further invasive treatments, and support his family.</p><p>---</p><p>### Conclusion – A Worsening Narrative</p><p>Thomas’s severe Hemophilia A, coupled with a factor VIII inhibitor, acute hemarthrosis post‑surgery, septic arthritis, and pre‑existing renal impairment, created a vicious cycle of bleeding, infection, and end‑organ damage. Despite multiple rounds of bypassing therapy, immunosuppression, and orthopedic intervention, the inhibitor persisted, the joint deteriorated, and the kidney failed. At 30 days, he was functionally paralyzed, pain‑numbing, and kidney‑dependent—an example of a disease course that worsened despite aggressive, multidisciplinary intervention.</p><p>This case underscores the importance of early inhibitor management, careful selection of bypassing agents in renal compromise, and the dire consequences when prophylaxis is abandoned. It also demonstrates that even in the age of sophisticated hemostatic agents, a severe bleeding disorder with superimposed comorbidities can spiral into an unresponsive, debilitating path that, ultimately, mandates a compassionate approach to end‑of‑life care.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button><button class="">Visit 12</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-12-30</h3><div class="visit-meta">Hematology | Reason: Preoperative hematologic assessment prior to arthroscopy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Pre‑operative hematologic assessment prior to arthroscopy for left knee osteoarthritis.
+
+History: 30‑year‑old male with known Factor VIII inhibitor (titer 150 BU), chronic osteoarthritis of the left knee, and chronic renal impairment (serum creatinine 1.8 mg/dL, eGFR 40 mL/min/1.73 m²). The patient is not on any chronic medication and reports no drug allergies.
+
+Physical Examination: Mild (3 cm circumferential) swelling of the left knee with effusion and tenderness along the medial joint line. Range of motion is limited to 0–90° flexion. Neurovascular examination is normal.
+
+Baseline Laboratory: Factor VIII activity 2 %, inhibitor titer 150 BU, CBC and BMP within normal limits, renal panel consistent with chronic kidney disease stage 3b. Plain radiograph of the left knee shows mild joint space narrowing.
+
+Assessment:
+1. Hemophilia A with high‑titer Factor VIII inhibitor – significant peri‑operative bleeding risk.
+2. Chronic kidney disease (eGFR &lt;45) – may affect pharmacokinetics of bypassing agents.
+3. Osteoarthritis of the left knee – underlying indication for arthroscopy.
+
+Plan:
+1. Peri‑operative hemostatic strategy:
+   - Initiate bypassing protocol: FEIBA 50 units/kg intravenously with an initial dose prior to incision and repeat as per protocol (e.g., q12 h or on‑demand). 
+   - Supplemental rFVIIa 90 µg/kg IV as needed to maintain factor activity &gt;50 % peri‑operatively.
+   - Monitor coagulation: Factor VIII activity, inhibitor titer, PT/INR, aPTT, and fibrinogen daily.
+2. Renal‑adjusted dosing: Counsel that both FEIBA and rFVIIa have renal elimination components; adjust frequency/amount by the nephrology service as indicated.
+3. Pain control: Acetaminophen 1 g PO q6h PRN; avoid NSAIDs and acetylsalicylic acid due to renal function.
+4. Post‑operative monitoring: Continuous hemodynamic monitoring, serial hemoglobin/hematocrit, and assessment for hemarthrosis.
+5. Multidisciplinary coordination: Confirm surgical team’s understanding of the bypass protocol, secure availability of FEIBA/rFVIIa on the day of surgery.
+
+Discussions with the patient clarified the risks, the planned hemostatic regimen, and the importance of adherence to the postoperative follow‑up schedule.
+
+The patient left the clinic understanding the peri‑operative plan and the necessity of close monitoring.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild left knee pain</span><span class="pill">Limited range of motion</span><span class="pill">No active bleeding</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/78</td></tr><tr><td>HR</td><td>72</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>RR</td><td>14</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left knee mild swelling 3 cm circumferential</li><li>Effusion noted, tenderness medial joint line</li><li>Full ROM limited to 90° flexion</li><li>Neurovascular exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Coagulation panel including factor VIII activity</li><li>Inhibitor titer</li><li>CBC</li><li>BMP</li><li>Baseline renal panel</li><li>Imaging: left knee X-ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Factor VIII activity 2 %</li><li>Inhibitor titer 150 BU</li><li>CBC normal</li><li>Serum creatinine 1.8 mg/dL</li><li>eGFR 40 mL/min/1.73 m²</li><li>X-ray: mild joint space narrowing</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on perioperative bypass protocol</li><li>Scheduled FEIBA and rFVIIa regimen</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient understood the risks and was reassured.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 3 CKD</span><span class="pill">Osteoarthritis of left knee</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Factor VIII prophylaxis 5000 IU SC weekly</li><li>Acetaminophen 500 mg PRN</li><li>No NSAIDs</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Severe Hemophilia A diagnosed at age 4</li><li>Factor VIII inhibitor titer 150 BU</li><li>Stage 3 CKD</li><li>Osteoarthritis of left knee</li><li>Prior acute hemarthrosis</li><li>Recent NSAID use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas arrived for his preoperative visit. The hematologist reviewed his history of hemophilia, recent inhibitor titers, and chronic kidney disease. Physical exam of the left knee revealed mild swelling (3 cm) and tenderness at the medial joint line, with 90° of flexion. Baseline labs including coagulation panel, inhibitor titer, CBC, BMP, and eGFR were ordered and confirmed severe factor VIII deficiency (2 %) with a high-titer inhibitor (150 BU). The perioperative plan was established: high-dose FEIBA and rFVIIa protocol in case of bleeding. The patient was counseled on the need for bypass therapy during and after the upcoming arthroscopy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline clinical status established with inhibitor and CKD; perioperative plan documented.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2026-01-01</h3><div class="visit-meta">Orthopedic Surgery | Reason: Arthroscopic partial meniscectomy of left knee</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Arthroscopic partial meniscectomy of left knee.
+
+Subjective: 30‑year‑old male underwent arthroscopy. Patient reports moderate left‑knee pain post‑op and mild swelling noted during procedure. Intraoperative hemarthrosis was observed and managed with rescue rFVIIa.
+
+Objective: Vitals – BP 128/82, HR 78, Temp 36.6 °C, RR 16. Examination – left knee circumferential swelling 4 cm, moderate warmth, limited flexion to 50°, stable vitals.
+
+Labs – CBC: Hb 13.0 g/dL. Coagulation: aPTT 80 s (elevated). Renal panel: Creatinine 1.9 mg/dL. CRP 5 mg/L. Joint ultrasound: minimal fluid.
+
+Assessment: Post‑operative hemarthrosis successfully controlled with intraoperative rFVIIa and post‑op FEIBA. Patient has a high‑titer FVIII inhibitor and chronic renal impairment; aPTT elevation reflects ongoing inhibitor activity. Mild swelling and limited ROM are expected early post‑op; CRP is within normal limits, arguing against infection. Risk of recurrent bleeding remains; continued FEIBA dosing and coagulation monitoring are indicated.
+
+Plan:
+1. Administer next dose of FEIBA 70 IU/kg q12h (last dose 2 h post‑closure; administer next dose at home).
+2. Continue acetaminophen 500 mg PO q6–8h PRN for pain; avoid NSAIDs due to renal impairment.
+3. Use morphine 2 mg IV PRN if pain exceeds moderate.
+4. Initiate gentle range‑of‑motion exercises; refer to PT for guided rehab.
+5. Monitor for signs of recurrent bleeding (worsening swelling, pain, or bruising) and infection (fever, erythema, increased CRP).
+6. Re‑check CBC, aPTT, and renal panel 24 h post‑op; schedule follow‑up in 48 h for clinical and lab reassessment.
+7. Educate patient on home dosing of FEIBA, wound care, and when to seek emergent care (uncontrolled pain, increasing swelling, fever).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Left knee pain after meniscectomy</span><span class="pill">Mild swelling during procedure</span><span class="pill">Intraoperative hemarthrosis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.6</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left knee swelling 4 cm circumferential</li><li>Moderate warmth</li><li>Limited flexion 50°</li><li>Stable vitals</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Coagulation panel</li><li>Renal panel</li><li>Joint ultrasound</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 13.0 g/dL</li><li>aPTT 80 s</li><li>Creatinine 1.9 mg/dL</li><li>CRP 5 mg/L</li><li>Ultrasound: minimal fluid</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>FEIBA 70 IU/kg</li><li>rFVIIa 90 µg/kg</li><li>Acetaminophen 500 mg PO</li><li>Morphine 2 mg IV PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Post-op pain moderate, vitals stable, no bleeding observed.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 3 CKD</span><span class="pill">Osteoarthritis of left knee</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Intravenous FEIBA 70 IU/kg at 2 h post‑op</li><li>Single dose of rFVIIa 90 µg/kg intraop</li><li>Acetaminophen 500 mg PO</li><li>Morphine 2 mg IV PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Periprocedural plan: FEIBA 70 IU/kg q12h, rFVIIa 90 µg/kg rescue</li><li>Prior high-titer inhibitor</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During arthroscopy, a sudden hemarthrosis was noted. A single dose of rFVIIa (90 µg/kg) was administered intraoperatively, followed by the first dose of FEIBA (70 IU/kg) two hours post‑closure. Post‑op, the patient received acetaminophen and a short course of morphine for pain. Immediate labs (CBC, coagulation, renal panel, CRP) were ordered and returned showing mild elevation of aPTT and normal renal function. The patient was discharged home with instructions to receive the next dose of FEIBA and to monitor for swelling or bleeding.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Primary hemarthrosis managed with bypass; inhibitor remains active; renal function stable.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2026-01-02</h3><div class="visit-meta">Hematology | Reason: Postoperative day 1 review: monitor bleeding and coagulation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Post‑operative Day 1 review (Jan 2, 2026)
+
+Chief Complaint: Routine postoperative follow‑up after arthroscopic left knee procedure; monitoring for bleeding and coagulation status.
+
+History of Present Illness: Patient Thomas, 30‑year‑old male with severe Hemophilia A and high‑titer Factor VIII inhibitor, Stage 3 CKD, and osteoarthritis of the left knee, presented for routine POD‑1 check. He reports slight swelling in the left knee and discomfort on movement; denies any fevers or new bleeding episodes.
+
+Past Medical History: Severe Hemophilia A, Factor VIII inhibitor, Stage 3 CKD (Cr 1.8–1.9 mg/dL, eGFR ~40 mL/min), osteoarthritis left knee.
+
+Current Medications: FEIBA 70 IU/kg q12h (next dose 12h post‑op), Acetaminophen 500 mg PO q6h PRN, rFVIIa as rescue for bleeding, Morphine 2 mg IV PRN for pain, physical therapy referral.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for mild knee swelling and discomfort; negative for fever, dyspnea, rash, or other bleeding.
+
+Physical Examination:
+- Vital Signs: BP 124/80 mmHg, HR 76 bpm, Temp 36.9°C, RR 16/min
+- Left knee: Circumferential swelling 4.5 cm above baseline, mild warmth, limited flexion 55°, no erythema, no neurovascular deficits.
+- Pain: Reported as 4/10 on movement, 2/10 at rest.
+
+Laboratory Results:
+- CBC: Hemoglobin 12.8 g/dL (stable)
+- Coagulation: aPTT 78 s (slightly prolonged)
+- BMP/ CMP: Creatinine 1.9 mg/dL, otherwise normal.
+
+Assessment:
+1. Post‑operative hemarthrosis – mild, clinically stable; expected inflammatory response.
+2. Possible early postoperative bleeding exacerbated by Factor VIII inhibitor; current aPTT remains within target range for FVIII inhibitor management.
+3. Differential: Infectious arthritis vs. deep venous thrombosis (unlikely due to lack of pain, swelling limited to joint), and renal function trend.
+
+Plan:
+- Continue scheduled FEIBA 70 IU/kg q12h; next dose due in 12 h. Monitor for any breakthrough bleeding.
+- Maintain acetaminophen 500 mg PO q6h PRN; counsel about max 4 g/day.
+- Reserve morphine 2 mg IV PRN for breakthrough pain; monitor for opioid tolerance.
+- Continue rFVIIa as rescue if active bleeding.
+- Reinforce physical therapy: gentle ROM and quadriceps activation; patient encouraged to start with pain‑controlled exercises.
+- Follow‑up labs: Repeat CBC, aPTT, and BMP in 2 days to assess hematologic stability and renal function.
+- Imaging: If swelling worsens or joint space opening increases, order joint ultrasound or MRI.
+- Educate patient on signs of increased bleeding (prolonged ecchymosis, hemarthrosis) and infection (fever &gt;38°C, increased warmth, pain). Advise immediate contact if symptoms appear.
+- Schedule next follow‑up: 7 days post‑op or sooner if symptoms progress.
+
+Disposition: Discharged home with instructions; patient satisfied and no new bleeding.
+
+Signed: Dr. ___ (Hematology).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight swelling in left knee</span><span class="pill">Discomfort on movement</span><span class="pill">No fevers</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>124/80</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left knee swelling 4.5 cm circumferential</li><li>Warmth present</li><li>Limited flexion 55°</li><li>No neurovascular deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Coagulation panel</li><li>BMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.8 g/dL</li><li>aPTT 78 s</li><li>Creatinine 1.9 mg/dL</li><li>CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Next dose FEIBA 70 IU/kg at 12 h</li><li>Acetaminophen 500 mg PO</li><li>Physical therapy referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain manageable, no new bleeding noted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 3 CKD</span><span class="pill">Osteoarthritis of left knee</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>FEIBA 70 IU/kg q12h (next dose at 12 h)</li><li>Acetaminophen 500 mg PO</li><li>Physical therapy referral</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior FEIBA and rFVIIa therapy</li><li>No new medications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas returned the next day for a routine check. Examination showed mild increase in swelling (4.5 cm circumference) and limited flexion (55°). Labs drawn (CBC, coagulation, BMP) confirmed stable hemoglobin and aPTT 78 s. The next FEIBA dose was scheduled for 12 hours post‑op. Physical therapy was advised, though the patient expressed limited tolerance due to pain. He was instructed to continue acetaminophen and report any new bleeding.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Coagulopathy remains; ongoing FEIBA administration; monitor for hemarthrosis.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2026-01-04</h3><div class="visit-meta">Orthopedic Surgery | Reason: Escalated postoperative pain and swelling; possible hemarthrosis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Escalated postoperative pain and swelling of left knee.
+
+History of Present Illness:
+Thomas, a 30‑year‑old male with severe Hemophilia A and a Factor VIII inhibitor, presents post‑arthroscopy of the left knee with worsening pain (8/10) and swelling. He reports a gradual increase in tenderness and warmth over the last 24 h and a mild fever (99.2 °F). Pain is constant and worsens with movement, limiting flexion to about 30°. He is anxious about potential infection.
+
+Past Medical History:
+ • Severe Hemophilia A, Factor VIII inhibitor (150 BU)
+ • Stage 3 CKD (Cr 1.8 mg/dL, eGFR ~40 mL/min/1.73 m²)
+ • Osteoarthritis of left knee
+ • No known drug allergies
+
+Current Medications:
+ • FEIBA 70 IU/kg q12h (bypass)
+ • rFVIIa 90 µg/kg q12h (bypass)
+ • Acetaminophen 500 mg PO q6h PRN
+ • Cefazolin 1 g IV q12h (pre‑op &amp; postop prophylactic, now therapeutic)
+ • Morphine 2 mg IV q4h PRN
+ • Vancomycin 1 g IV q12h (started after Gram‑positive cocci on aspiration)
+
+Review of Systems:
+Pain, swelling, limited ROM, mild fever
+
+Physical Examination:
+• Vitals: BP 140/88 mm Hg, HR 88 bpm, Temp 99.2 °F, RR 18 /min
+• Left knee: 6 cm circumferential effusion, marked warmth, tenderness over medial joint line, no erythema of skin. Range of motion: flexion 30°, no active extension.
+
+Laboratory &amp; Imaging:
+• CBC: Hb 13.2 g/dL
+• Coagulation panel: aPTT 75 s (prolonged)
+• Renal panel: Cr 1.9 mg/dL
+• Inflammatory markers: CRP 12 mg/L (elevated)
+• Joint fluid aspiration: turbid, Gram stain positive gram‑positive cocci in clusters
+• Joint fluid culture: Staphylococcus aureus MSSA
+• Ultrasound arthrography: confirms joint effusion; no hemarthrosis seen on ultrasound.
+
+Assessment:
+1. Septic arthritis of the left knee due to MSSA – definite diagnosis.
+2. Hemarthrosis secondary to hemophilia A and Factor VIII inhibitor – ongoing bleeding, mitigated by bypass agents.
+3. Persistent postoperative pain and limited ROM – secondary to infection, inflammation, and possible bleeding.
+4. Mild systemic inflammatory response – low‑grade fever.
+
+Plan:
+• Continue current antibiotic regimen: Vancomycin 1 g IV q12h + Cefazolin 1 g IV q12h. Monitor trough levels of vancomycin; adjust for CKD.
+• Continue bypass therapy: FEIBA 70 IU/kg q12h and rFVIIa 90 µg/kg q12h to maintain aPTT &lt; 70 s and prevent further hemarthrosis.
+• Pain control: Continue Morphine 2 mg IV q4h PRN; consider adding tramadol 50 mg PO every 8 h if pain remains &gt; 5/10.
+• Analgesic: Acetaminophen 500 mg PO q6h PRN, avoid NSAIDs due to renal impairment.
+• DVT prophylaxis: Pharmacologic not indicated because of bleeding risk; mechanical compression stockings on non‑operative limb.
+• Joint care: Encourage elevation, apply cold compresses, and limit weight bearing. Re‑aspirate if effusion re‑accumulates.
+• Serial labs: CBC, aPTT, Cr, CRP, ESR every 48 h.
+• Follow‑up imaging: Repeat ultrasound in 48 h to assess effusion resolution.
+• Consult Hematology for optimized bleed protocol and potential desensitization to Factor VIII.
+• Orthopedic follow‑up: Schedule in 48 h for physical assessment; initiate PT once infection controlled.
+• Educate patient about signs of worsening infection (fever &gt; 101 °F, increased pain, redness, discharge) and instruct to return to ED immediately.
+
+Disposition: Admit for continued inpatient care until clinical improvement; consider discharge when fever resolves, pain controlled, and infection markers trend downward.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe swelling of left knee</span><span class="pill">Limited ROM to 30°</span><span class="pill">Mild fever 99.2 °F</span><span class="pill">Pain 8/10</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>99.2</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left knee effusion 6 cm circumferential</li><li>Warmth, tenderness</li><li>Limited flexion 30°</li><li>Vital signs slightly elevated</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Coagulation panel</li><li>CRP, ESR</li><li>Joint fluid analysis and culture</li><li>Renal panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 13.2 g/dL</li><li>aPTT 75 s</li><li>Factor VIII &lt;1 % with 200 BU</li><li>Creatinine 1.9 mg/dL</li><li>CRP 12 mg/L</li><li>Joint fluid: turbid, Gram stain positive GPC clusters</li><li>Culture: Staph aureus MSSA</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Vancomycin 1 g IV q12h</li><li>Cefazolin 1 g IV q12h</li><li>FEIBA 70 IU/kg q12h</li><li>rFVIIa 90 µg/kg q12h</li><li>Morphine 2 mg IV q4h PRN</li><li>Acetaminophen 500 mg PO</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight decrease in fever but pain remains high.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 3 CKD</span><span class="pill">Osteoarthritis of left knee</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>FEIBA 70 IU/kg q12h</li><li>rFVIIa 90 µg/kg q12h</li><li>Acetaminophen 500 mg PO</li><li>Cefazolin 1 g IV q12h</li><li>Morphine 2 mg IV q4h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Delayed FEIBA initiation</li><li>Recent rFVIIa rescue</li><li>Possible infection due to warmth</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas was admitted for evaluation. Examination revealed a large joint effusion, warmth, and tenderness. Orthopedic surgeon obtained ultrasound arthrography showing hemarthrosis and performed a joint aspiration. Lab results demonstrated prolonged aPTT, low factor VIII activity with a high inhibitor titer, and inflammatory markers. A positive Gram‑positive cocci cluster on Gram stain prompted the start of vancomycin and cefazolin. Bypass therapy (FEIBA and rFVIIa) was continued to control bleeding. The patient reported persistent pain and a new sense of anxiety regarding infection.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Septic arthritis confirmed, inhibitor still high, renal function stable but at risk.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2026-01-09</h3><div class="visit-meta">Infectious Disease | Reason: Septic arthritis management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent septic arthritis of the left knee in a 30‑year‑old male with severe Hemophilia A, Factor VIII inhibitor, Stage 4 CKD, and osteoarthritis.
+
+History of Present Illness: The patient continues IV antibiotics for confirmed MSSA septic arthritis. He remains on vancomycin (1 g IV q12h) and cefazolin (1 g IV q24h). Renal consultation has prompted a reduction of cefazolin to a once‑daily dose to limit nephrotoxicity given an eGFR of 25 mL/min/1.73 m². Blood cultures remain negative, while joint fluid PCR is negative for residual infection. The patient reports a slight improvement in fever but pain remains high.
+
+Past Medical History: Severe Hemophilia A with Factor VIII inhibitor, Stage 4 CKD, chronic osteoarthritis, and prior history of septic arthritis.
+
+Medications: Vancomycin 1 g IV q12h; Cefazolin 1 g IV q24h (adjusted); FEIBA 70 IU/kg q12h; rFVIIa 90 µg/kg q12h; Acetaminophen 500 mg PO; Morphine 2 mg IV q4h PRN.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for persistent knee pain, low‑grade fever, swelling, and decreased mobility.
+
+Physical Examination: Vitals – BP 138/86 mmHg, HR 90 bpm, Temp 100.4 °F, RR 18 /min. Left knee: 6 cm circumferential swelling, erythema, warmth; ROM limited to 20°; neurovascular exam intact.
+
+Assessment:
+1. MSSA septic arthritis – currently under treatment with bactericidal therapy; cultures negative, joint fluid PCR negative, but inflammatory markers remain elevated.
+2. Hemophilic bleeding risk – ongoing bypass therapy appears adequate.
+3. Renal impairment – eGFR 25 mL/min; vancomycin trough acceptable at 8 mg/L; cefazolin dosing adjusted accordingly.
+4. Pain control – continued high pain; opioid requirement high.
+
+Plan:
+- Continue vancomycin 1 g IV q12h (treatment target 15–20 mg/L for septic arthritis). Check trough prior to next dose.
+- Maintain cefazolin 1 g IV q24h; monitor renal function daily.
+- Continue bypass therapy with FEIBA 70 IU/kg q12h and rFVIIa 90 µg/kg q12h.
+- Morphine 2 mg IV q4h PRN; consider titration to pain scale; evaluate for adjunct analgesia (e.g., gabapentin 300 mg PO q12h) if opioid escalation continues.
+- Repeat joint aspiration and fluid analysis if swelling or pain worsens, or if joint effusion &gt;8 cm.
+- Monitor labs: BMP (Cr, BUN, electrolytes), CBC, CRP, ESR, vancomycin trough every 48 h.
+- Renal consultation for ongoing dose adjustments.
+- Consider alternative agents (linezolid 600 mg BID) if culture proves resistant or if renal function worsens.
+- Physical therapy for ROM and gait training with bleeding precautions.
+
+Disposition: Admit for continued IV therapy; plan discharge when cultures negative, inflammatory markers declining, and renal function stable. If no improvement within 5 days, consider switching to linezolid or adding rifampin if prosthetic involvement suspected.
+
+Follow‑up: 3 days in clinic or via telemedicine; sooner if symptoms worsen. Ensure daily wound check and pain assessment. Contact ID if fever &gt;101 °F or new septic signs.
+
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent pain</span><span class="pill">Low-grade fever</span><span class="pill">Swelling of left knee</span><span class="pill">Decreased mobility</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/86</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>Temp</td><td>100.4</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left knee swelling 6 cm</li><li>Erythema, warmth</li><li>ROM 20°</li><li>Neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Renal panel</li><li>Vancomycin trough</li><li>Blood cultures</li><li>Joint fluid follow‑up</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Cr 2.0 mg/dL</li><li>Vancomycin trough 8 mg/L</li><li>Blood cultures negative</li><li>Joint fluid: WBC 15000, neutrophils 90%, no organisms</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Adjusted cefazolin to 1 g IV q24h</li><li>Continued vancomycin</li><li>Maintained bypass therapy</li><li>Morphine 2 mg IV q4h PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight reduction in fever; pain remains high.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 4 CKD (eGFR 25)</span><span class="pill">Osteoarthritis</span><span class="pill">Septic arthritis history</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Vancomycin 1 g IV q12h</li><li>Cefazolin 1 g IV q12h</li><li>FEIBA 70 IU/kg q12h</li><li>rFVIIa 90 µg/kg q12h</li><li>Acetaminophen 500 mg PO</li><li>Morphine 2 mg IV q4h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>S. aureus septic arthritis</li><li>Antibiotic therapy ongoing</li><li>FEIBA and rFVIIa continued</li><li>Renal function trending up</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>ID confirmed MSSA infection. Vancomycin trough acceptable at 8 mg/L; cefazolin is being shifted to 1 g q24h to accommodate renal impairment. Renal consult recommends close monitoring. Blood cultures repeated and remained negative. Joint fluid PCR showed no residual infection. Antibiotic regimen was adjusted, maintaining linezolid as alternative had been considered. The patient’s pain remained high but slightly better.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Infection controlled; renal function gradually worsening; inhibitor remains high.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2026-01-11</h3><div class="visit-meta">Hematology | Reason: Worsening hemarthrosis after washout</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 30‑year‑old male with known factor VIII inhibitor, chronic renal impairment, osteoarthritis, and recent septic arthritis of the left knee. He underwent arthroscopic washout of the left knee 10 days ago and has been receiving high‑dose rFVIIa (90 µg/kg q12 h) and FEIBA, but due to worsening hemarthrosis and renal impairment FEIBA was stopped. Current pain control includes prednisone 60 mg PO daily, acetaminophen 500 mg PO q6 h PRN, and morphine 2 mg IV q4 h PRN.
+
+Chief Complaint: Worsening hemarthrosis, joint pain, swelling, limited motion, nausea.
+
+History of Present Illness: Post‑operative day 10, significant joint pain (8/10), 5 cm circumferential swelling, limited flexion (30°), mild redness, no neurovascular deficits. Nausea reported, possibly related to opioid use.
+
+Physical Exam: BP 130/84 mmHg, HR 92 bpm, Temp 99.0 °F, RR 16. No neurovascular deficits. Swelling 5 cm, redness, limited flexion 30°.
+
+Labs: CBC 12.9 g/dL, aPTT 70 s, Cr 2.5 mg/dL, D‑dimer 0.9 µg/mL, BMP normal. Coagulation panel pending.
+
+Assessment: 1) Recurrent hemarthrosis secondary to factor VIII inhibitor despite ongoing bypass therapy; 2) Potential post‑operative thrombosis (D‑dimer mildly elevated); 3) Renal impairment limiting use of FEIBA.
+
+Plan: 1) Continue rFVIIa 90 µg/kg IV q6 h for 24 h. 2) Initiate tranexamic acid 1 g IV q8 h to inhibit fibrinolysis. 3) Continue prednisone 60 mg PO, vancomycin 1 g IV q8 h (trough 8 mg/L), cefazolin 1 g IV q24 h. 4) Repeat CBC, CMP, coagulation panel, D‑dimer tomorrow. 5) Monitor renal function; consider dose adjustment of antibiotics and possible switch of bypass agent (e.g., recombinant activated factor VII) if renal function further declines. 6) Consider adding low‑molecular‑weight heparin prophylaxis after renal function stabilizes.
+
+Disposition: Admit for continuation of therapy and close monitoring. Follow‑up in 48 hours or sooner if symptoms worsen.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Joint pain</span><span class="pill">Swelling</span><span class="pill">Limited motion</span><span class="pill">Nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/84</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>99.0</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Swelling 5 cm circumferential</li><li>Redness, limited flexion 30°</li><li>No neurovascular deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Coagulation panel</li><li>BMP</li><li>D-dimer</li><li>Renal panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.9 g/dL</li><li>aPTT 70 s</li><li>Cr 2.5 mg/dL</li><li>D-dimer 0.9 µg/mL</li><li>BMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>rFVIIa 90 µg/kg IV q6h for 24 h</li><li>Tranexamic acid 1 g IV q8h</li><li>Prednisone 60 mg PO</li><li>Vancomycin 1 g IV q8h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved modestly; swelling decreased slightly.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 4 CKD</span><span class="pill">Osteoarthritis</span><span class="pill">Septic arthritis resolved</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>rFVIIa 90 µg/kg q12h</li><li>Vancomycin 1 g IV q8h (adjusted to 8 mg/L trough)</li><li>Cefazolin 1 g IV q24h</li><li>Prednisone 60 mg PO daily</li><li>Acetaminophen 500 mg PO</li><li>Morphine 2 mg IV q4h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Surgery washout 10 days ago</li><li>High-dose rFVIIa ongoing</li><li>FEIBA avoided due to renal clearance</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Following arthroscopic washout, the patient still reports significant swelling and pain. The decision was made to increase rFVIIa dosing to 90 µg/kg IV q6h for 24 h, stopping FEIBA due to accumulation in kidney impairment. Dextran (tranexamic acid) was added to reduce bleeding risk. A thrombotic workup (D-dimer) was ordered. The patient tolerated the therapy, with slight improvement in swelling.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>High-dose rFVIIa reduces hemarthrosis; renal function worsens; inhibitor unchanged.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2026-01-21</h3><div class="visit-meta">Hematology | Reason: Initiate immunosuppression to eradicate inhibitor</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 30‑year‑old male with severe hemophilia A and a persistent factor VIII inhibitor (220 BU) presents for persistence of left knee pain and limited motion despite high‑dose prednisone and bypass therapy.
+
+History of Present Illness:
+The patient has been on prednisone 60 mg PO daily and rFVIIa 90 µg/kg IV q12 h since his recent septic arthritis course. He reports ongoing left knee swelling, pain 6/10 on movement, ROM 35°, and mild fatigue that limits daily activity. No fevers or redness noted.
+
+Past Medical History:
+Severe hemophilia A, high‑titer factor VIII inhibitor, stage 4 CKD (Cr 2.5 mg/dL, eGFR ~25 mL/min·1.73 m²), osteoarthritis, prior septic arthritis treated with antibiotics and bypass agents.
+
+Medications: Prednisone 60 mg PO daily, rFVIIa 90 µg/kg IV q12 h, vancomycin 1 g IV q8 h, cefazolin 1 g IV q24 h, acetaminophen 500 mg PO, morphine 2 mg IV q4 h PRN.
+
+Review of Systems:
+Positive for joint pain, swelling, limited motion, mild fatigue; negative for fever, rash, or new bleeding.
+
+Physical Examination:
+Vital signs: BP 125/82, HR 78, Temp 36.8°C, RR 16. Left knee: 4 cm swelling, ROM 35°, no warmth or erythema.
+
+Labs:
+Inhibitor titer 220 BU (unchanged), CBC Hb 12.8 g/dL, Cr 2.5 mg/dL, CMP and LFTs normal. No signs of infection.
+
+Assessment:
+1. Persistent high‑titer factor VIII inhibitor in hemophilia A – ongoing bleeding risk.
+2. Steroid‑related side effects: fatigue, potential myopathy contributing to pain.
+3. Inadequate pain control despite current regimen.
+4. Renal impairment limiting some therapeutic options.
+
+Plan:
+• Continue prednisone 60 mg PO daily and rFVIIa 90 µg/kg IV q12 h.
+• Maintain antibiotic coverage with vancomycin 1 g IV q8 h and cefazolin 1 g IV q24 h pending cultures (both negative for new organisms).
+• Add gabapentin 300 mg PO q12 h to address chronic neuropathic pain and reduce opioid requirement; titrate as tolerated.
+• Reevaluate pain on a 0‑10 scale, adjust morphine dosing accordingly; consider low‑dose oxycodone if gabapentin insufficient.
+• Increase frequency of joint mobility sessions; physical therapy referral for strengthening and ROM within bleeding precautions.
+• Monitor inhibitor titer, CBC, CMP, renal panel daily; repeat inhibitor titer at 2‑week interval.
+• Discuss alternative immunosuppressive strategies (rituximab, mycophenolate) at next hematology visit should inhibitor remain &gt;200 BU for &gt;3 months.
+• Educate patient on signs of infection; advise immediate reporting of fevers or increased swelling.
+
+Disposition: Continue inpatient monitoring; expect discharge when pain controlled and renal parameters stable.
+
+Follow‑up in 7 days or sooner if pain worsens or new signs.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Ongoing joint pain</span><span class="pill">Limited function</span><span class="pill">Mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>125/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>RR</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>left knee swelling 4 cm</li><li>ROM 35°</li><li>No signs of infection</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Inhibitor titer</li><li>CBC</li><li>CMP</li><li>LFTs</li><li>Bone marrow aspirate (not performed)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Inhibitor titer 220 BU</li><li>Hb 12.8 g/dL</li><li>Cr 2.5 mg/dL</li><li>LFTs normal</li><li>CMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 60 mg PO</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Vancomycin 1 g IV q8h</li><li>Cefazolin 1 g IV q24h</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Minimal improvement in pain; limited mobilization.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Stage 4 CKD</span><span class="pill">Osteoarthritis</span><span class="pill">Septic arthritis history</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 60 mg PO daily</li><li>rFVIIa 90 µg/kg IV q12h (maintenance)</li><li>Vancomycin 1 g IV q8h</li><li>Cefazolin 1 g IV q24h</li><li>Acetaminophen 500 mg PO</li><li>Morphine 2 mg IV q4h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>High-dose steroids ongoing</li><li>Inhibitor titer persistently &gt;200 BU</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Hematologists approved high-dose steroids as primary immunosuppression. The option of rituximab was discussed but declined due to renal concerns and infection risk. The patient’s inhibitor remained high at 220 BU. Ongoing bypass therapy and steroids were maintained while monitoring for steroid side effects. Pain control remained inadequate.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Inhibitor still high; renal function stable; steroid side effects monitored.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-01-31</h3><div class="visit-meta">Orthopedic Surgery | Reason: Functional decline and renal deterioration; left knee failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Functional decline, renal deterioration, and left knee failure after multiple arthroscopic washouts and septic arthritis.
+
+History of Present Illness: 30‑year‑old male with severe hemophilia A, factor VIII inhibitor, end‑stage renal disease (eGFR 25) and chronic severe osteoarthritis of the left knee. Over the past week the patient reports worsening pain (9‑10/10), inability to stand, severely limited range of motion, and new calf swelling. He has been on chronic dialysis (5 times per week) since 02/02/2026 and on linezolid for MSSA treatment to avoid nephrotoxicity. His INR is not monitored as he is on rFVIIa.
+
+Past Relevant Surgical History: Arthroscopic washout of left knee for septic arthritis on 01/02/2026; subsequent hemarthrosis episodes requiring rFVIIa and tranexamic acid.
+
+Medications: Prednisone 60 mg PO daily; Linezolid 600 mg IV q12h; rFVIIa 90 µg/kg IV q12h; Hydromorphone 4 mg PO q8h; Dialysis 5x/wk.
+
+Physical Examination:
+- General: Alert, pain‑worried, no fever.
+- Vital Signs: BP 140/90, HR 95, Temp 36.7°C, RR 18.
+- Musculoskeletal (Left Knee): Effusion 7 cm, flexion limited to 15°, no erythema, neurovascular intact.
+- Lower Extremity: Calf swelling without erythema or warmth.
+
+Labs &amp; Imaging:
+- CBC: Hb 12.9 g/dL, normal WBC.
+- CMP: Cr 3.0 mg/dL, eGFR 25 mL/min.
+- Coagulation: aPTT 68 s.
+- Imaging: X‑ray shows advanced joint space narrowing and subchondral cysts; MRI reveals effusion and marrow edema.
+- Linezolid trough: 10 mg/L.
+
+Assessment:
+1. Left knee osteoarthritis with advanced degenerative changes leading to joint failure and impending medial femoral condyle collapse.
+2. Chronic hemarthrosis secondary to factor VIII inhibitor, now under control with rFVIIa.
+3. End‑stage renal disease on chronic hemodialysis; infection (MSSA) treated with linezolid.
+4. Severe pain (9‑10/10) controlled only with hydromorphone; may require escalation.
+5. New calf swelling — monitor for deep venous thrombosis; low‑molecular‑weight heparin will be considered once renal function allows.
+
+Plan:
+- Continue linezolid 600 mg IV q12h; monitor troughs.
+- Continue rFVIIa 90 µg/kg IV q12h; adjust dosing with renal calendar.
+- Initiate arthrodesis of left knee per multidisciplinary consensus; coordinate with anesthesia and hematology for peri‑operative hemostasis.
+- Continue prednisone 60 mg PO daily.
+- Manage pain with hydromorphone; consider adding gabapentin 300 mg PO q12h if opioid escalation required.
+- Maintain dialysis 5×/week; nephrology to monitor labs twice weekly.
+- Continue weekly CBC, CMP, aPTT, creatinine monitoring.
+- Initiate low‑molecular‑weight heparin prophylaxis once Cr &lt; 2.5 mg/dL; otherwise consider intermittent pneumatic compression.
+- Physical therapy for passive ROM under bleeding precautions; focus on quadriceps activation.
+- Educate patient on signs of DVT, infection, and bleeding.
+- Follow‑up in 2 weeks for reassessment of pain, ROM, labs, and surgical planning; urgent visit if pain worsens or signs of infection.
+
+Disposition: Plan for urgent orthopedic consult for arthrodesis and coordination with nephrology and hematology within 7 days. Provide education and emergency contact for bleeding or infection.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe pain</span><span class="pill">Inability to stand</span><span class="pill">Decreased ROM</span><span class="pill">New calf swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>95</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left knee effusion 7 cm</li><li>Limited flexion 15°</li><li>Calf swelling without erythema</li><li>Neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Coagulation panel</li><li>Renal panel</li><li>Left knee X-ray</li><li>MRI knee</li><li>Linezolid PK</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.9 g/dL</li><li>Cr 3.0 mg/dL</li><li>eGFR 25 mL/min</li><li>aPTT 68 s</li><li>X-ray: joint space narrowing, subchondral cyst</li><li>MRI: effusion, marrow edema</li><li>Linezolid trough 10 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Linezolid 600 mg IV q12h</li><li>Prednisone 60 mg PO</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Hydromorphone 4 mg PO q8h</li><li>Dialysis 5 times/wk starting 2026‑02‑02</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain slightly improved with hydromorphone; fatigue increased.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">End-stage renal disease (eGFR 25)</span><span class="pill">Osteoarthritis</span><span class="pill">Septic arthritis history</span><span class="pill">Arthrodesis pending</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Prednisone 60 mg PO daily</li><li>Vancomycin 1 g IV q12h (trough 8 mg/L)</li><li>Cefazolin 1 g IV q12h</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Acetaminophen 500 mg PO</li><li>Morphine 2 mg IV q4h PRN</li><li>Hydromorphone 4 mg PO q8h</li><li>Dialysis 5 times per week</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive osteoarthritis</li><li>Chronic hemarthrosis</li><li>Antibiotic therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Orthopedic evaluation revealed collapse of medial femoral condyle; radiographs confirmed worsening joint space narrowing and subchondral cysts. Nephrology advised initiation of chronic dialysis due to rising creatinine. Infectious disease recommended switching to linezolid to avoid nephrotoxicity. The patient’s pain remained high (9‑10/10). Dialysis schedule started 2026‑02‑02. The patient agreed to proceed with arthrodesis after multidisciplinary discussion.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Joint destruction progressing; renal failure imminent; antibiotics switched to linezolid.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2026-02-05</h3><div class="visit-meta">Orthopedic Surgery | Reason: Left knee arthrodesis for pain control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 30‑year‑old male with Factor VIII inhibitor managed with rFVIIa, FEIBA and dialysis for ESRD. The patient underwent left knee arthrodesis for refractory osteoarthritis. Intraoperatively significant blood loss required 2,000 IU rFVIIa and 1,200 IU FEIBA. Postoperatively a 2‑cm purplish hematoma developed, prompting debridement. He remains on linezolid 600 mg IV q12h and prednisone 60 mg PO for inflammatory control. Current pain still high (8/10) and swelling persists, although the joint is fixed and aligned as confirmed by X‑ray.
+
+Objective:
+- Vitals: BP 138/88, HR 92, Temp 36.6 °C, RR 18. 
+- Exam: fixed fused left knee; 2 cm purple hematoma over incision; neurovascular intact.
+- Labs: CBC Hb 13.0 g/dL; Cr 3.1 mg/dL; aPTT 70 s; wound cultures negative; x‑ray arthrodesis alignment confirmed.
+
+Assessment:
+1. Post‑operative wound hematoma – controlled after debridement.
+2. Persistent postoperative pain likely multifactorial (arthrodesis, residual inflammation, and ongoing hemophilia‑related bleeding risk).
+3. Stable hematologic and renal status; no evidence of infection.
+4. Factor VIII inhibitor remains high; hemostatic management appropriate.
+
+Plan:
+- Continue rFVIIa 2,000 IU IV BID and FEIBA 1,200 IU IV BID as needed; monitor aPTT daily.
+- Tranexamic acid 1 g IV q8h for anti‑fibrinolytic support.
+- Pain control: Hydromorphone 4 mg PO q8h PRN and acetaminophen 500 mg PO q8h; consider adding gabapentin 300 mg PO q12h if pain &gt;6/10 persists.
+- Antimicrobial stewardship: linezolid 600 mg IV q12h continues; monitor troughs, adjust for CrCl if &gt;3 weeks.
+- Dialysis schedule maintained; coordinate timing with rFVIIa administration.
+- Wound care: keep incision clean, monitor for erythema or drainage; revisit only if signs of infection.
+- Physical therapy: initiate passive ROM in the protected position once bleeding risk acceptable; reassess in 2 weeks.
+- Hematology follow‑up: track inhibitor titer twice weekly; adjust rFVIIa/FEIBA dosing if titers &gt;250 BU.
+
+Follow‑up:
+- Return to clinic in 3 days for wound assessment and labs (CBC, aPTT, CMP).
+- Repeat x‑ray in 6 weeks to confirm fusion stability.
+- Schedule PT session in 2 weeks if pain and swelling have improved.
+- If pain remains uncontrolled or if any new systemic signs appear, consider earlier imaging and potential IV opioid escalation.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe knee pain</span><span class="pill">Inability to ambulate</span><span class="pill">Persistent swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/88</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>36.6</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Fixed left knee, fused</li><li>Wound with 2 cm purple hematoma</li><li>Neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Coagulation panel</li><li>Renal panel</li><li>Wound cultures</li><li>X-ray arthrodesis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 13.0 g/dL</li><li>Cr 3.1 mg/dL</li><li>aPTT 70 s</li><li>Wound cultures negative</li><li>X-ray: arthrodesis alignment confirmed</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>rFVIIa 2,000 IU IV</li><li>FEIBA 1,200 IU IV</li><li>Tranexamic acid 1 g IV q8h</li><li>Hydromorphone 4 mg PO q8h</li><li>Acetaminophen 500 mg PO</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Post‑op pain still high; wound swelling persisted.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">End-stage renal disease</span><span class="pill">Septic arthritis resolved</span><span class="pill">Arthrodesis pending</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Linezolid 600 mg IV q12h</li><li>Prednisone 60 mg PO</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Hydromorphone 4 mg PO q8h</li><li>Dialysis 5 times per week</li><li>Acetaminophen 500 mg PO</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Failed conservative management</li><li>High-dose rFVIIa used prior</li><li>Infection resolved</li><li>Dialysis ongoing</li><li>High inhibitor titer</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The arthrodesis procedure was performed. Intraoperative bleeding was significant; 2,000 IU of rFVIIa and 1,200 IU of FEIBA were given to control hemorrhage. Postoperatively, the wound developed a hematoma requiring debridement. Antimicrobial prophylaxis with linezolid continued. The patient’s pain remained high, but the joint was stabilized. Renal function remained unchanged.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Arthrodesis achieved; hematoma ongoing; renal function unchanged; inhibitor persists.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2026-02-15</h3><div class="visit-meta">Nephrology | Reason: Initiate maintenance hemodialysis due to worsening renal failure</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Initiate maintenance hemodialysis due to worsening renal failure.
+
+**History of Present Illness:** The patient is a 30‑year‑old male with a history of severe hemophilia A complicated by a Factor VIII inhibitor, end‑stage renal disease (ESRD), prior septic arthritis, and left knee arthrodesis. He has been on a 5‑times‑per‑week dialysis schedule, linezolid, prednisone, rFVIIa, hydromorphone, and acetaminophen. During a routine review of his chronic kidney disease progression, creatinine rose to 3.5 mg/dL (eGFR 18 mL/min). The decision was made to shift to a thrice‑weekly hemodialysis regimen with target ultrafiltration aimed at reducing peripheral edema.
+
+**Symptoms Reported:**
+- Flank pain
+- Lower extremity pitting edema
+- Reduced urine output (now &lt;0.5 mL/kg/h)
+
+**Vitals:** BP 150/95 mmHg, HR 98 bpm, Temp 36.5 °C, RR 18 bpm.
+
+**Physical Examination:**
+- Lower extremities: +2 pitting edema bilaterally.
+- Abdomen: soft, non‑tender.
+- Wound: left knee arthrodesis incision well‑healed, no cellulitis.
+- Neurovascular: intact, pulses palpable.
+- Flank: mild tenderness (no peritoneal signs).
+
+**Labs/Tests Ordered:**
+- CBC
+- CMP
+- Coagulation panel
+- Renal Panel
+- Dialysis adequacy (Kt/V)
+
+**Results of Recent Tests (post‑dialysis):**
+- Hemoglobin 12.8 g/dL
+- Creatinine 3.6 mg/dL
+- BUN 85 mg/dL
+- eGFR 18 mL/min
+- Kt/V 1.2
+- Coagulation (aPTT, INR) normal
+
+**Assessment:**
+1. ESRD on maintenance dialysis – adequacy acceptable with Kt/V 1.2.
+2. Fluid overload as evidenced by edema and elevated BUN/Cr ratio.
+3. Persistent flank pain likely secondary to uremic neuropathy or postoperative changes; no evidence of obstruction or peritoneal irritation.
+4. Pain control suboptimal on current hydromorphone regimen; opioid tolerance possible.
+5. No signs of infection or bleeding at the arthrodesis site.
+
+**Plan:**
+- **Dialysis:** Continue thrice‑weekly hemodialysis; aim for net negative fluid balance 1–1.5 L per session. Use a low‑dose heparin anticoagulation (bolus 2500 units) unless coagulation profile warrants alternative.
+- **Fluid management:** Reassess ultrafiltration targets hourly; adjust based on daily weight and edema.
+- **Pain management:** Increase hydromorphone to 6 mg PO q8h if pain &gt;4/10; consider add‑on gabapentin 300 mg PO q12h if neuropathic component suspected.
+- **Medications:** Continue linezolid 600 mg IV q12h, prednisone 60 mg PO daily, rFVIIa 90 µg/kg IV q12h (maintain dose), acetaminophen 500 mg PO q6h PRN.
+- **Monitoring:** CBC, CMP, coagulation panel, renal panel, and Kt/V every 2 dialysis sessions; monitor liver function due to long‑term prednisone.
+- **Infection surveillance:** Continue linezolid for current indication; reassess culture and sensitivity results for potential deescalation once available.
+- **Bleeding risk:** Maintain rFVIIa regimen; monitor aPTT and factor VIII inhibitor titer q2‑weekly.
+- **Physical therapy:** Initiate passive ROM exercises for the arthrodesis site in 4 weeks if edema resolves.
+- **Follow‑up:** Return in 1 week for clinical assessment and repeat labs; sooner if BP &gt;160/100 mmHg, worsening pain, or signs of infection.
+
+---
+
+**Patient education:** Discussed goals of dialysis, fluid restriction (≤1.5 L/day), salt restriction, and medication adherence. Advised to report new pain, swelling, fever, or signs of bleeding promptly.
+
+**Signature:** Dr. [Name], Nephrology
+
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Flank pain</span><span class="pill">Edema</span><span class="pill">Reduced urine output</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/95</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>Temp</td><td>36.5</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Lower extremity pitting edema</li><li>Wound healing well</li><li>Neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Coagulation panel</li><li>Renal panel</li><li>Dialysis adequacy (Kt/V)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.8 g/dL</li><li>Cr 3.6 mg/dL</li><li>BUN 85 mg/dL</li><li>eGFR 18 mL/min</li><li>Kt/V 1.2</li><li>Coagulation normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated dialysis thrice weekly</li><li>Hydromorphone titrated</li><li>Optimized fluid removal</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Fatigue improved; pain remains severe.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">End-stage renal disease</span><span class="pill">Septic arthritis history</span><span class="pill">Arthrodesis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Linezolid 600 mg IV q12h</li><li>Prednisone 60 mg PO</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Hydromorphone 4 mg PO q8h</li><li>Acetaminophen 500 mg PO</li><li>Dialysis 5 times per week</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ongoing renal decline</li><li>High-dose bypass therapy</li><li>Infections</li><li>Steroid use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Baseline labs showed creatinine 3.5 mg/dL and eGFR 18 mL/min. The patient was started on a thrice-weekly hemodialysis schedule with ultrafiltration aimed at reducing edema. Drug doses were adjusted: linezolid and prednisone maintained; rFVIIa dosing held at current schedule. Dialysis adequacy monitored via Kt/V. Patient reported improved fatigue but persistent pain.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient transferred to dialysis; ongoing pain and inhibitor; renal function stabilized.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2026-02-25</h3><div class="visit-meta">Palliative Care | Reason: Discuss goals of care, manage pain, evaluate comfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #11 – 2026-02-25
+Palliative Care Team
+
+Chief Complaint: Goals of care discussion, pain management, comfort evaluation.
+
+History &amp; Current Status: 30‑year‑old male with severe hemophilia A, factor VIII inhibitor, end‑stage renal disease on thrice‑weekly hemodialysis, recent left knee arthrodesis. Current pain regimen includes hydromorphone, methadone, acetaminophen, linezolid, prednisone, rFVIIa, and bisacodyl. No active infection; labs show mild CRP (2 mg/L), stable renal parameters and hemoglobin 12.5 g/dL.
+
+Assessment: The patient continues to report severe, persistent pain likely from the arthrodesis site and chronic joint disease, accompanied by inability to ambulate and mood changes. Pain is partially controlled with the current opioid regimen but remains at an uncomfortable level. No evidence of infection (CRP low, no fever, joint aspiration negative). Renal function remains stabilized on dialysis (Cr 3.7 mg/dL, eGFR 17 mL/min). The primary goal is comfort and quality of life while avoiding further surgical interventions.
+
+Plan:
+1. Pain Management – Continue hydromorphone 8 mg PO q6h PRN and methadone 5 mg PO daily. If neuropathic component persists or pain remains &gt;4/10, add low‑dose gabapentin 25–50 mg PO daily. Reassess pain score in 24–48 hours.
+2. Adjunctive Analgesia – Acetaminophen 500 mg PO q6h PRN and bisacodyl 10 mg PO as needed for constipation. Monitor bowel function daily.
+3. Ongoing Therapies – Maintain linezolid 600 mg IV q12h, prednisone 60 mg PO daily, and rFVIIa 90 µg/kg IV q12h per current protocol.
+4. Monitoring – Repeat CBC, CMP, coagulation panel, LFTs, CRP in 48 hours. Monitor for signs of infection, bleeding, renal function, and opioid side effects.
+5. Dialysis – Schedule next hemodialysis session. Monitor blood pressure, edema, and fluid status closely.
+6. Goals of Care – Advance directives reviewed and informal code status documented. Re‑confirm goals with patient and family.
+7. Psychological Support – Mood changes noted; consider psychiatry consult if symptoms persist.
+8. Follow‑up – Palliative care visit in one week or sooner if pain worsens. Physical therapy referral for passive ROM once pain and swelling improve.
+
+Signature: _____________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe persistent pain</span><span class="pill">Inability to ambulate</span><span class="pill">Mood changes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/85</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>RR</td><td>20</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Sitting comfortably</li><li>Mild pitting edema</li><li>No fever</li><li>Neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Coagulation panel</li><li>LFTs</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.5 g/dL</li><li>Cr 3.7 mg/dL</li><li>eGFR 17 mL/min</li><li>CRP 2 mg/L</li><li>LFTs normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Hydromorphone 8 mg PO q6h PRN</li><li>Methadone 5 mg PO daily</li><li>Acetaminophen 500 mg PO</li><li>Opioid rotation</li><li>Laxatives</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain slightly decreased, more calm demeanor.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">End-stage renal disease</span><span class="pill">Septic arthritis history</span><span class="pill">Arthrodesis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Linezolid 600 mg IV q12h</li><li>Prednisone 60 mg PO</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Hydromorphone 8 mg PO q6h (increased)</li><li>Methadone 5 mg PO daily</li><li>Acetaminophen 500 mg PO</li><li>Dialysis</li><li>Bisacodyl 10 mg PO</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>End-stage renal disease</li><li>Arthrodesis</li><li>High-dose opioids</li><li>No active infection</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The palliative team reviewed the patient’s pain regimen. Hydromorphone was increased, and methadone was added to achieve better baseline control. Opioid rotation and dose optimization were discussed with the patient and family. Advance directives were reviewed and an informal code status was documented. The patient expressed desire to avoid additional surgical interventions.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Comfort care focus; shift from aggressive interventions to palliative management.</p></div></details></div><div class="visit-panel"><h3>Visit 12 &mdash; 2026-02-26</h3><div class="visit-meta">Palliative Care | Reason: Weekly follow-up, pain assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Weekly follow‑up, pain assessment. 
+
+History of Present Illness: 30‑year‑old male with end‑stage renal disease on hemodialysis, factor VIII inhibitor status, postoperative left knee arthrodesis following septic arthritis, and chronic opioid management. He reports a modest reduction in pain (now 4/10) and mild swelling of the joint area. No new fever, redness, drainage, or functional decline. He remains compliant with IV linezolid, rFVIIa, prednisone, and dialysis schedule. 
+
+Physical Exam: 
+- General: alert, oriented, well‑appearing
+- Vital Signs: BP 138/84, HR 78, Temp 36.6°C, RR 18
+- Head/Neck: no jugular venous distention, no cervical lymphadenopathy
+- Cardiovascular: regular rate/rhythm, normal S1/S2
+- Respiratory: clear to auscultation, no rales
+- Abdomen: soft, non‑tender, positive oral intake
+- Extremities: mild swelling around left knee, no erythema or warmth, neurovascular intact
+- Integumentary: left knee incision healed, no drainage or tenderness
+
+Assessment/Plan: 
+1. Post‑arthrodesis pain – current opioid regime (hydromorphone 8 mg PO q6h PRN, methadone 5 mg PO daily) is providing acceptable control (pain 4/10). Continue current dosing. Consider adding gabapentin 300 mg PO q12h if neuropathic component worsens. 
+2. Mild swelling – likely post‑operative inflammatory response. No signs of infection (CRP 1.5 mg/L, WBC normal, no fever). Continue monitoring; repeat CRP in 48 h.
+3. Renal function – creatinine 3.8 mg/dL, stable. Dialysis continues 5×/week, schedule next session in 2 days. Ensure adequate fluid removal, monitor BP. 
+4. Opioid side‑effect surveillance – monitor for constipation, sedation, respiratory depression. Maintain bisacodyl 10 mg PO as needed for bowel movements, educate on hydration and stool softening.
+5. Infection prophylaxis – continue IV linezolid 600 mg q12h, monitor complete blood count and drug levels; discontinue when infection proven clear.
+6. Hemostasis – rFVIIa and FEIBA dosing per current protocol; CBC, aPTT, coagulation panel will be repeated as ordered.
+7. Comfort measures – optimize positioning, passive ROM when pain permits, evaluate for physiotherapy referral.
+8. Psychosocial support – consider psychiatric consult for anxiety/depression related to chronic pain and renal disease.
+
+Follow‑up: 
+- Pain reassessment in 24–48 h via telephone or nursing contact.
+- Repeat CBC, CMP, coagulation panel, CRP in 48 h.
+- Next dialysis session: 5×/week, 3 days from today.
+- Palliative care visit in 5–7 days or sooner if pain escalates.
+- Wound assessment in 3 days with local examination.
+- Consider initiation of passive ROM therapy in 2 weeks if pain allows.
+
+The patient has been counselled on pain expectations, opioid risks, and constipation management. All treatments will be reassessed during the next scheduled visit.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain 4/10</span><span class="pill">Moderate swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.6</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Good oral intake</li><li>Mild swelling</li><li>No fever</li><li>Neurovascular intact</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Coagulation panel</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.4 g/dL</li><li>Cr 3.8 mg/dL</li><li>CRP 1.5 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Hydromorphone 8 mg PO q6h</li><li>Methadone 5 mg PO daily</li><li>Acetaminophen 500 mg PO</li><li>Laxatives</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Pain improved, no fever.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe Hemophilia A</span><span class="pill">Factor VIII inhibitor</span><span class="pill">End-stage renal disease</span><span class="pill">Septic arthritis history</span><span class="pill">Arthrodesis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Linezolid 600 mg IV q12h</li><li>Prednisone 60 mg PO</li><li>rFVIIa 90 µg/kg IV q12h</li><li>Methadone 5 mg PO daily</li><li>Hydromorphone 8 mg PO q6h</li><li>Acetaminophen 500 mg PO</li><li>Dialysis 5 times per week</li><li>Bisacodyl 10 mg PO</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stable on opioids and dialysis</li><li>No infection</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the routine check, the patient reported a modest reduction in pain, still manageable with current regimen. No new complaints of infection or bleeding. Dialysis remained stable; renal labs unchanged. The care plan continued to prioritize comfort, with monitoring for opioid side effects and renal adequacy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Disease in comfortable state; plan for possible hospice transition if necessary.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 30</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Osteoarthritis (arthropathy)</span><span class="pill">Factor VIII inhibitor</span><span class="pill">Septic arthritis</span><span class="pill">Renal impairment</span><span class="pill">End-stage renal disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydromorphone 8 mg PO q6h PRN</li><li>Methadone 5 mg PO daily</li><li>Acetaminophen 500 mg PO q6h PRN</li><li>Bisacodyl 10 mg PO as needed</li><li>Linezolid 600 mg IV q12h</li><li>Prednisone 60 mg PO daily</li><li>rFVIIa 90 µg/kg IV q12h</li><li>FEIBA 1,200 IU IV q12h</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Preoperative hematologic assessment for arthroscopy of the left knee. History of Factor VIII inhibitor, chronic renal impairment (serum creatinine 1.8 mg/dL, eGFR 40 mL/min/1.73 m²), and osteoarthritis. Physical exam revealed mild swelling with effusion and medial joint line tenderness; range of motion 0–90°. Baseline labs normal CBC/BMP; Factor VIII activity 2% and inhibitor titer 150 BU. Plan included peri‑operative hemostatic protocol with FEIBA 50 units/kg IV and supplemental rFVIIa 90 µg/kg IV, renal‑adjusted dosing, acetaminophen for pain control, daily coagulation monitoring, and multidisciplinary coordination for postoperative care.</li><li>Post‑operative Day 1 review (Jan 2, 2026). Patient reported slight left knee swelling and mild discomfort on movement; no fever. Physical exam: circumferential swelling 4.5 cm, mild warmth, flexion limited to 55°, pain 4/10 on movement. Vital signs stable. Labs: Hb 12.8 g/dL, aPTT 78 s, creatinine 1.9 mg/dL. Continued FEIBA 70 IU/kg q12h, acetaminophen 500 mg PO q6h PRN, morphine 2 mg IV PRN as needed, with rFVIIa reserved for breakthrough bleeding. Physical therapy referral initiated. Planned repeat CBC, aPTT, BMP in 2 days and next follow‑up in 7 days.</li><li>Postoperative day 3 encounter: patient reports severe left knee pain (8/10), swelling (6 cm circumference), limited flexion to ~30°, mild fever (99.2°F). Vitals: BP 140/88, HR 88, Temp 99.2°F. Labs: CBC Hb 13.2 g/dL, aPTT 75 s, Cr 1.9 mg/dL, CRP 12 mg/L. Joint aspiration turbid; Gram stain +; culture MSSA. Started IV cefazolin 1 g q12h and vancomycin 1 g q12h. Bypass therapy continued (FEIBA 70 IU/kg q12h, rFVIIa 90 µg/kg q12h). Pain managed with morphine 2 mg IV q4h PRN. Repeat labs, CRP, ESR, CBC, aPTT, and renal panel every 48h; repeat ultrasound in 48h; re‑aspirate if effusion persists. PT to be initiated once infection controlled.</li><li>Continued IV cefazolin q24h and vancomycin q12h for confirmed MSSA septic arthritis; bypass therapy with FEIBA 70 IU/kg q12h and rFVIIa 90 µg/kg q12h maintained. Pain high, managed with morphine 2 mg IV q4h PRN and acetaminophen 500 mg PO. Cefazolin dose adjusted for CKD (eGFR 25 mL/min/1.73 m²). Daily renal panel and vancomycin troughs monitored; BMP, CBC, CRP, ESR checked q48h. Repeat joint aspiration planned if swelling or pain worsens; consider gabapentin 300 mg PO q12h if opioid escalation continues. Physical therapy continues with bleeding precautions.</li><li>Visit on 2026-01-11: Hematology assessment for recurrent hemarthrosis following arthroscopic washout. Findings: joint pain 8/10, circumferential swelling 5 cm, limited flexion 30°, mild redness, vitals stable. Labs: CBC 12.9 g/dL, aPTT 70 s, Cr 2.5 mg/dL, D‑dimer 0.9 µg/mL. Treatment started: rFVIIa 90 µg/kg IV q6h, tranexamic acid 1 g IV q8h, prednisone 60 mg PO daily, vancomycin 1 g IV q8h, cefazolin 1 g IV q24h. Pain managed with acetaminophen 500 mg PO and morphine 2 mg IV q4h PRN. Plan to repeat CBC, BMP, coagulation panel, D‑dimer tomorrow; monitor renal function; consider low‑molecular‑weight heparin prophylaxis when renal function improves. Admit for close monitoring.</li><li>Visit on 2026-01-21. Persistent left knee swelling and pain (6/10) with limited ROM (35°). No fever or redness. Labs: inhibitor titer 220 BU unchanged, Hb 12.8 g/dL, Cr 2.5 mg/dL. Continue prednisone 60 mg PO daily, rFVIIa 90 µg/kg IV q12h, vancomycin 1 g IV q8h, cefazolin 1 g IV q24h. Initiated gabapentin 300 mg PO q12h for pain. Pain managed with morphine PRN; low‑dose oxycodone may be added if needed. Physical therapy referral for joint mobility under bleeding precautions. Monitor inhibitor titer twice weekly, CBC, CMP, renal panel daily; discuss immunosuppression if inhibitor &gt;200 BU &gt;3 months.</li><li>Visit on 2026-01-31: Patient with severe hemophilia A and factor VIII inhibitor on rFVIIa, undergoing dialysis, presented with progressive left knee pain, limited ROM, effusion, and new calf swelling. Labs: Hb 12.9 g/dL, Cr 3.0 mg/dL, eGFR 25, aPTT 68. Imaging: X‑ray shows advanced osteoarthritis, MRI shows effusion and marrow edema. Treatment: linezolid 600 mg IV q12h, rFVIIa 90 µg/kg IV q12h, hydromorphone 4 mg PO q8h, prednisone 60 mg daily; plan for left knee arthrodesis with hematology and anesthesia coordination; start LMWH once renal function improves; continue dialysis 5×/week. Labs monitored weekly; DVT prophylaxis as appropriate; follow‑up in 2 weeks.</li><li>Post‑operative left knee arthrodesis performed with significant intra‑operative blood loss managed by 2,000 IU rFVIIa and 1,200 IU FEIBA. A 2‑cm purplish hematoma over the incision was debrided. The knee remains fixed and aligned; no infection is identified. Pain remains high (8/10) and swelling persists. Current therapy includes rFVIIa 2,000 IU IV q12h, FEIBA 1,200 IU IV q12h, tranexamic acid 1 g IV q8h, prednisone 60 mg PO daily, linezolid 600 mg IV q12h, hydromorphone 4 mg PO q8h PRN, and acetaminophen 500 mg PO q8h. Labs show Hb 13.0 g/dL, Cr 3.1 mg/dL, aPTT 70 s. Follow‑up includes wound assessment in 3 days with repeat CBC, aPTT, CMP; repeat x‑ray arthrodesis in 6 weeks; initiation of passive ROM physical therapy in 2 weeks if pain and swelling improve; and continued dialysis coordination.</li><li>Visit on 2026-02-15. Initiated thrice‑weekly maintenance hemodialysis with a low‑dose heparin anticoagulation (bolus 2500 units). Targeted net negative fluid balance of 1–1.5 L per session. Physical exam revealed +2 bilateral pitting edema, mild flank tenderness, and a well‑healed left knee arthrodesis incision. Labs: hemoglobin 12.8 g/dL, creatinine 3.6 mg/dL, BUN 85 mg/dL, eGFR 18 mL/min, Kt/V 1.2, normal coagulation panel. Continued rFVIIa 90 µg/kg IV q12h, linezolid 600 mg IV q12h, prednisone 60 mg PO daily, hydromorphone 4 mg PO q8h PRN with plan to titrate to 6 mg if pain &gt;4/10, acetaminophen 500 mg PO q6h PRN, tranexamic acid 1 g IV q8h, and FEIBA 1,200 IU IV q12h. Pain control adjustments noted, gabapentin 300 mg PO q12h considered if neuropathic pain persists. Scheduled next dialysis in 3 days, repeat CBC, CMP, coagulation panel, renal panel, and Kt/V every 2 sessions; daily BP and edema monitoring; referral to physical therapy for passive ROM in 4 weeks if edema resolves.</li><li>Visit 11 – 2026-02-25: Palliative care evaluation focusing on goals of care, pain management, and comfort. Severe pain persisted despite current opioid regimen; hydromorphone dose increased (8 mg PO q6h PRN) and methadone 5 mg PO daily added. Bisacodyl 10 mg PO prescribed for constipation. Infection markers remained low (CRP 2 mg/L); renal function stable (Cr 3.7 mg/dL). Ongoing treatments—linezolid, prednisone, rFVIIa—were maintained. Follow-up planned with repeat CBC/CMP/coagulation panel/LFT/CRP in 48 h, pain reassessment 24–48 h, dialysis session scheduling, psychiatric consult consideration, and passive ROM therapy when pain permits.</li><li>Weekly palliative review: pain 4/10, mild postoperative swelling, vitals stable, continued hydromorphone 8 mg PO q6h PRN, methadone 5 mg daily, linezolid 600 mg IV q12h, prednisone 60 mg daily, rFVIIa 90 µg/kg IV q12h, FEIBA 1,200 IU IV q12h; labs ordered (CBC, CMP, coagulation panel, CRP); next dialysis in 3 days; palliative care follow‑up in 5–7 days.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 1f9147ee</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 1f9147ee</h1><div class="subtitle">Peptic Ulcer Bleed | Male, 58</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: GERD, Chronic kidney disease, Hypertension, Ischemic heart disease, Anemia</div><div class="meta-line">Risk Factors: NSAID use, Antiplatelet therapy (aspirin), Anticoagulant therapy (warfarin), Helicobacter pylori infection, Smoking, Alcohol use</div></div>
+<details><summary>Narrative <span class="preview-text">**John’s Story – A Hard‐Case Peptic Ulcer Bleed**  ---  **Thursday, 8:00 AM – The first whisper of trouble**  John M., a...</span></summary><div class="section-body"><p>**John’s Story – A Hard‐Case Peptic Ulcer Bleed**</p><p>---</p><p>**Thursday, 8:00 AM – The first whisper of trouble**</p><p>John M., a 58‑year‑old engineer, had been feeling “a bit off” that morning. After his usual bowl of oatmeal, a quiet coffee, and a slice of toast, a sour, dull ache settled in the upper left quadrant of his abdomen. He told his wife it was probably the reflux that kept him up on his PPI, and he took the extra dose he’d been using the weekend before to ease his back pain. Two hours later, he vomited a couple of small, wet‑looking waves; the first was a faint brownish tint, the next a bit darker. He felt a sudden, weak pulse and a brief, dizzy spell while reaching for a jar of pickles. His wife called the nurse she works with at the local urgent‑care clinic.</p><p>The nurse, a seasoned RN, noted that John’s blood pressure measured 132/84 mm Hg and his pulse was at 82 bpm. John denied any recent trauma or alcohol binge. The nurse asked about his medications, revealing a complex list: 81 mg aspirin daily for his ischemic heart disease, warfarin 2 mg daily for chronic atrial fibrillation, omeprazole 20 mg daily for GERD, and a handful of ibuprofen tablets taken three to four times a week for chronic lower back pain. He also gave the nurse a pack‑in‑hand smoking habit (½ pack per day for 30 years) and “a couple of beers after dinner” to “keep the nerves quiet.” The nurse noted a faint sign of nausea, and she recommended a home stay‑in and a call to his primary care physician (PCP) for a possible review.</p><p>**Friday, 10:30 AM – Overlooking the storm**</p><p>John’s PCP, Dr. Patel, saw him in the office. John complained of a persistent “burn” in the upper abdomen and occasional mild vomiting. Dr. Patel, noting the patient’s INR was 1.6 in his last pharmacy check, suggested continuing the warfarin and aspirin until the next INR reading, and added a stool guaiac test. John, reassured by the normal‑appearing exam and the PCP’s reassurance, left feeling that this was just another case of GERD flare‑up.</p><p>**Friday night – The first sign of a deeper crisis**</p><p>At 10 PM the patient’s wife found two black, mucus‑laden stools in the toilet — a sudden, alarming change. She placed the bucket on the phone and called 911. A rapid response had arrived within ten minutes. The paramedics documented a blood pressure of 110/54 mm Hg, pulse 108 bpm, and capillary refill one second. They noted a distended, tender abdomen and his conjunctivae appeared pale. The patient’s oxygen saturation was 94 % on room air.</p><p>An IV of normal saline was started while the EMTs collected a sample of the bowel peristalsis for labs. The rapid INR test returned 2.0. Hemoglobin was 13.2 g/dL, but the patient’s baseline was usually 11.8 g/dL, so the drop seemed minimal. Nevertheless, he felt “heavy” in the chest and noted a fleeting, unsteady feeling.</p><p>**Saturday, 7:30 AM – Emergency department assessment**</p><p>John arrived in the ED with a pulse of 116 bpm, BP 98/60 mm Hg, and an unsteady gait. There was a faint, tar‑black discoloration of the stool on the bed sheets. On examination, he demonstrated minimal abdominal tenderness, and his epigastric region seemed soft on palpation. No peritoneal signs.</p><p>Labs: Hemoglobin 11.6 g/dL (down 1.6 g/dL from baseline), INR 2.1, aPTT 28 sec, platelets 188 k/µL, electrolytes: Na 140 mEq/L, K 4.2, BUN 32 mg/dL, creatinine 2.1 mg/dL (CKD stage 3B baseline 1.8). A complete metabolic panel highlighted mild metabolic acidosis (pH 7.32, lactate 2.7 mmol/L). Coagulation was consistent with warfarin therapy; the INR had risen. The doctor decided to reverse: vitamin K 5 mg IV, along with a fresh frozen plasma load (4 units) to bring INR &lt;1.5.</p><p>He was placed on a 48‑hour telemetry monitor due to concern for hemodynamic instability and for cardiac arrhythmia risk from warfarin and anemia. A bedside ultrasound of the abdomen showed no free fluid; the gallbladder, pancreas, and kidneys were normal. A nasogastric tube was inserted for decompression, and the suction returned 0.5 L of dark, coffee‑ground‑like fluid, consistent with upper GI bleeding.</p><p>**Saturday night – Endoscopic intervention**</p><p>A gastroenterology consult was placed, and within two hours (10 PM), an endoscopy was performed. The gastric antrum revealed a 1.5 cm ulcer with active spurting of bright red blood, likely a non‑variceal ulcer. Endoscopic therapy was applied: hemostatic clips were placed around the bleeding vessel, and a dilute epinephrine spray was administered. The ulcer base was also photographed. The endoscopist noted moderate mucosal friability and diffuse gastritis. The team decided to proceed with a proton pump inhibitor (PPI) drip 80 mg IV q8h, and, given his warfarin requirement, they continued the anticoagulation in the evening with a 5 mg dose of warfarin (the usual daily dose) after correcting the INR, to avoid under‑anticoagulation for the atrial fibrillation.</p><p>**Sunday – A fragile equilibrium**</p><p>The next morning, John’s vital signs were borderline: BP 102/58, pulse 95, but he was alert and oriented. His stool remained black but was thinner. Hemoglobin had dropped to 10.8 g/dL. The team gave a unit of packed red blood cells (PRBCs) to keep his hemoglobin above 11.0 g/dL, as his baseline was 11.8. The decision to maintain warfarin (with a target INR 2–3) after the endoscopic bleed was weighed heavily — a necessary compromise for the atrial fibrillation’s embolic risk.</p><p>**Sunday afternoon – Deterioration**</p><p>At 3 PM, John complained of a new, crushing chest pain radiating to his left arm. His telemetry showed a non‑ST elevation acute coronary syndrome (NSTEMI) due to hemodynamic stress from ongoing bleeding and anemia. The cardiology team started aspirin 81 mg and clopidogrel 75 mg a day after an urgent cardiac cath that showed no culprit lesions but a diffuse 30 % stenosis in the left anterior descending artery. The team chose to hold warfarin and aspirin until the night of Thursday, hoping to reduce his bleeding risk while still addressing the ischemic heart disease.</p><p>Simultaneously, his blood pressure plummeted to 85/50 mm Hg, his heart rate spiked to 115 bpm, and his urine output fell to 250 mL in the preceding hour—signes of hypovolemic shock and acute kidney injury. He was transferred to the intensive care unit (ICU).</p><p>**Monday – The ICU stay**</p><p>John was intubated and sedated to control intrathoracic pressures and protect against aspiration, as the team deemed this essential for the re‑bleeding control. A central line was placed; renal replacement therapy was initiated. Serial labs showed hemoglobin 9.2 g/dL, INR 0.9, BUN 55, creatinine 3.2. A repeat endoscopy was scheduled to ensure hemostasis, but the team also considered packing or surgical intervention because of the high rebleeding risk in a patient on warfarin, with poor control of anemia and high cardiac risk. Unfortunately, the patient’s coagulation profile continued to shift, with the INR briefly peaking to 2.1 while on warfarin. Each time warfarin was held, the patient’s atrial fibrillation’s ventricular capture slowed, raising a paradoxical embolic risk.</p><p>**Tuesday – Complications cascade**</p><p>While sedated, John’s blood pressure decreased further to 75/40 mm Hg, his heart rate rose to 120, and the central venous pressure increased to 16 mm Hg. His chest pain escalated—a crescendo of chest discomfort, associated with diaphoresis. An ECG revealed a dynamic T‑wave inversion in leads V2–V4. The ICU team held anti‑platelets, ceased warfarin, and inserted an intra‑aortic balloon pump (IABP) to off‑load the heart. The decision to use IABP was a bold move, given the patient’s bleeding risk, but was deemed necessary to improve perfusion and prevent myocardial necrosis.</p><p>A second endoscopy revealed a new small ulcerated lesion in the stomach, with mild oozing. Hemostasis was re‑attempted with a combination of thermal coagulation and a single sclerotherapy bead. Despite interventions, the bleeding persisted.</p><p>**Wednesday – The downward spiral**</p><p>In the early morning, a sudden rise in heart rate to 140 bpm and blood pressure dropping to 68/42 mm Hg signaled a rebleed. The nasogastric tube drained 300 mL of fresh, bright‑red blood. The ICU team began transfusing PRBCs and started protamine to reverse the effect of warfarin further. They also placed a temporary femoral catheter for continuous hemodialysis, given the rise in creatinine to 4.5 mg/dL and oliguria.</p><p>Unfortunately, every attempt to stop the bleeding made the patient more unstable due to the balance required between anti‑coagulation for atrial fibrillation, antiplatelet therapy for coronary disease, and hemostatic control for the ulcer. The warfarin was held indefinitely. However, the patient’s INR began to rise again due to lingering pro‑coagulant factors, raising the risk of paradoxical emboli again.</p><p>**Thursday – The final day**</p><p>At 9 AM, the patient’s blood pressure suddenly collapsed to 55/30 mm Hg. Pulse was 170 bpm. He was in refractory hypotension. The bedside arterial line read 40 mm Hg. The ventilator was set on maximum support, and vasopressor support was escalated to a combination of norepinephrine and epinephrine. The ICU staff could not reverse the bleeding adequately. Meanwhile, the renal replacement machine alarmed frequently with rising central venous pressure and signs of venous congestion.</p><p>At 11:15 AM, John’s heart rhythm converted abruptly to asystole. In the brief interval before his pulse returned to 56 bpm from the resuscitation, the team performed two chest compressions and intubated. He had one transient, non‑progressing rhythm, but the clinical picture was grim. Within minutes, he lost palpable pulses, blood pressure reading ceased in the arterial line, and the ICU team, recognizing the futility, declared the condition lethal. John was pronounced deceased at 11:24 AM.</p><p>---</p><p>**A summary of the course**</p><p>- **Initial subtle symptom**: mild epigastric discomfort misinterpreted as reflux, delayed evaluation.
+- **Early blood‑stool changes**: first black stool at home, delayed presentation to emergency care.
+- **Diagnostic dilemma**: multiple comorbidities and anticoagulation complicated decision‑making about when to reverse warfarin.
+- **Therapeutic cross‑fire**: balancing the re‑bloody ulcer against cardiac events, with conflicting priorities.
+- **Complicating factors**: CKD limited the clearance of warfarin and other medications, smoking and alcohol impeded mucosal healing.
+- **Outcome**: worsening culminating in fatal rebleeding, shock, and death.</p><p>John’s case exemplifies how a seemingly straightforward “pain in the stomach” can unravel into an inter‑disciplinary crisis when risk factors, comorbidities, and medication interactions collide. The narrative underscores the critical importance of early recognition, rapid coordination, and the difficult choices clinicians face when multiple life‑threatening conditions coexist.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-01-12</h3><div class="visit-meta">Urgent Care Nurse | Reason: Upper abdominal discomfort and post‑prandial vomiting</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Upper abdominal discomfort and post‑prandial vomiting.
+
+History of Present Illness:
+John, a 58‑year‑old male, presented to urgent‑care with a one‑day history of vague upper abdominal discomfort and two episodes of dry vomiting after meals. He reports a mild sense of light‑headedness but denies bleeding, weight loss, or recent sick contacts. He notes chronic NSAID use (ibuprofen 400 mg PRN 3‑4 ×/week) and daily aspirin 81 mg. He is on warfarin for atrial fibrillation and takes omeprazole 20 mg daily for GERD. Denies changes in medication regimen or recent alcohol/bowel changes.
+
+Review of Systems:
+- GI: epigastric discomfort, vomiting, no blood.
+- Cardiovascular: no chest pain, palpitations.
+- Respiratory: no dyspnea.
+- General: denies fever, chills.
+
+Past Medical History:
+- GERD, CKD stage 3B GFR 35‑44, hypertension, ischemic heart disease, atrial fibrillation, baseline anemia (Hb 11.8 g/dL).
+
+Medications: None prescribed during this visit.
+
+Allergies: NKDA.
+
+Social History:
+- Smokes ½ pack/day for 30 years.
+- Consumes 2‑3 beers nightly.
+
+Physical Examination:
+- General: Alert, in no acute distress.
+- Vital Signs: BP 132/84 mmHg, HR 82 bpm, RR 16 /min, Temp 36.8 °C, SpO₂ 98% on room air.
+- HEENT: Oral cavity clear, no blood.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Mild epigastric tenderness, no guarding or rebound, normal bowel sounds.
+- Extremities: No edema.
+
+Assessment:
+1. Epigastric discomfort likely secondary to NSAID‑induced gastritis or peptic ulcer disease. Clinical concern for upper GI bleeding is low given absence of hematemesis, melena, or overt blood in vomitus.
+2. Possible post‑prandial vomiting secondary to GERD exacerbated by NSAIDs and aspirin.
+3. Mild light‑headedness possibly related to dehydration or low blood pressure, though stable.
+
+Plan:
+- Counsel patient to avoid NSAIDs and use OTC acetaminophen instead.
+- Continue current GERD therapy (omeprazole 20 mg PO daily). No adjustment needed.
+- Remind patient to maintain anticoagulation with warfarin and ensure INR monitoring.
+- Provide home stool guaiac test kit; instruct to perform and bring results.
+- Repeat INR at this clinic visit (phlebotomy) to verify therapeutic range.
+- Advise hydration and small, frequent meals.
+- Encourage patient to observe for signs of bleeding (melena, hematochezia) and return immediately if noted.
+- Recommend routine follow‑up with primary‑care physician within 3 days to discuss INR and GI symptoms.
+- If symptoms persist beyond 48 hrs or worsen, consider GI referral and potential upper endoscopy.
+
+Disposition: Patient left the clinic in stable condition with instructions noted above.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild epigastric discomfort</span><span class="pill">Two episodes of dry vomiting</span><span class="pill">Slight sense of light‑headedness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/84</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>O2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Epigastric tenderness, mild, no guarding</li><li>No visible blood in the mouth or vomitus</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Home stool guaiac test</li><li>Repeat INR in clinic</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on NSAID avoidance</li><li>Instruction to contact PCP</li><li>Home stool guaiac kit provided</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John expressed relief after learning that the discomfort might be due to GERD or NSAIDs. He was instructed to rest, use the stool kit, and see Dr. Patel the same day if any melena occurred.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B (GFR 35–44)</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Baseline anemia (Hb 11.8 g/dL)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Warfarin 2 mg daily</li><li>Omeprazole 20 mg daily</li><li>Ibuprofen 400 mg PRN 3–4×/week</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic NSAID use (ibuprofen 400 mg PRN 3–4×/week)</li><li>Daily aspirin 81 mg for IHD</li><li>Daily warfarin 2 mg for atrial fibrillation</li><li>Omeprazole 20 mg daily for GERD</li><li>Smokes ½ pack per day for 30 years</li><li>Consumes 2–3 beers nightly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John arrived on his own initiative to the urgent‑care clinic after a day of vague upper abdominal discomfort and vomiting. The nurse noted mild epigastric tenderness but no guarding or rebound. She measured his vital signs, noted his stable BP, and inquired about medication adherence. Concerned about possible NSAID‑induced gastritis and mild gastrointestinal bleeding, she advised him to refrain from NSAIDs, stay hydrated, and contact his primary‑care physician for a follow‑up. She recommended a home stool guaiac test and a repeat INR check before any new prescriptions. John was encouraged to remain home and return if symptoms worsened or new bleeding signs appeared.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation consistent with NSAID‑induced gastritis; early GI bleed signals not yet overt. Risk factors for PUD present: NSAID use, aspirin, warfarin, H. pylori possibility.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-01-13</h3><div class="visit-meta">Primary Care Physician | Reason: Persistent epigastric burning and occasional vomiting</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+John Doe, 58‑year‑old male, presents to the office with a 12‑hour history of burning epigastric discomfort and intermittent mild vomiting. Patient denies chest pain, dyspnea, diaphoresis, or syncope.
+
+History of Present Illness:
+The patient reports a 12‑hour progressive burning epigastric pain that worsens post‑prandially and is associated with 1–2 episodes of non‑bloody, non‑bilious vomiting. No abdominal distention or alteration of bowel habits noted. He has had a recent history of dark stools at home but is now asymptomatic regarding melena.
+
+Past Medical History:
+- GERD
+- CKD stage 3B
+- Hypertension
+- Ischemic heart disease
+- Atrial fibrillation
+- Baseline anemia
+
+Medications:
+- Aspirin 81 mg daily
+- Warfarin 2 mg daily
+- Omeprazole 20 mg daily
+- Ibuprofen 400 mg PRN 3–4×/week
+
+Social History:
+- Social alcohol use
+- Former smoker
+- NSAID use
+
+Physical Examination:
+General: Anxious but awake, alert, oriented ×3. No acute distress.
+Vital Signs: See vitals section below.
+HEENT: No pallor, mucous membranes moist.
+Cardiovascular: Regular rate and rhythm; no murmurs.
+Respiratory: Clear to auscultation bilaterally.
+Abdomen: Mild epigastric tenderness to palpation, no rebound, guarding, or rigidity. Bowel sounds normoactive.
+
+Assessment:
+1. GERD flare/pseudodiverticulitis-like presentation – likely exacerbation of chronic GERD. 2. NSAID‑induced gastritis/peptic ulcer disease is a concern given ibuprofen use and history of GI bleeding. 3. Low‑grade warfarin‑related mucosal bleeding still possible; INR 1.6 remains therapeutic.
+
+Plan:
+- Ordered stool guaiac test – negative.  - Repeat INR in two weeks; continue warfarin 2 mg daily with INR target 2.0–3.0.  - Baseline CBC to screen for anemia; consider retesting if hematocrit drops.  - Discontinue ibuprofen; advise use of acetaminophen ≤3 g/day as pain relief.
+- Omeprazole 40 mg loading dose administered; patient advised to resume maintenance omeprazole 20 mg daily.  - Counsel on diet modifications: small frequent meals, avoid late‑night eating, reduce alcohol, quit smoking.
+- Instruct patient to report worsening vomiting, abdominal pain, or signs of hemorrhage (black tarry stools, bright red blood).  - Follow‑up in clinic in 7 days or sooner if symptoms recurs; if epigastric pain persists &gt;2 weeks, consider upper endoscopy.
+
+Education:
+Patient was educated on the importance of medication adherence, potential drug interactions (aspirin + warfarin + NSAID), and the warning signs of gastrointestinal bleeding.
+
+Disposition:
+Patient tolerated loading dose of omeprazole, reports feeling better. No additional acute interventions required.
+
+Prepared by:
+Dr. Patel, MD
+Clinic Date: 2023‑01‑13</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Burning epigastric pain</span><span class="pill">Occasional mild vomiting</span><span class="pill">No chest pain or dyspnea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/82</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>37.0</td></tr><tr><td>O2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General appearance: anxious but alert</li><li>Mild epigastric tenderness, no rebound</li><li>Cardiovascular exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Stool guaiac test</li><li>Serum INR (follow‑up)</li><li>Baseline CBC (if not recent)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Stool guaiac negative</li><li>Serum INR 1.6</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>OMEPRAZOLE 40 mg loading dose</li><li>Advised ibuprofen cessation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John reported feeling better after the loading dose and remained compliant with medication instructions. No recurrence of vomiting reported.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Baseline anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Warfarin 2 mg daily</li><li>Omeprazole 20 mg daily</li><li>Ibuprofen 400 mg PRN 3–4×/week</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>NSAID use</li><li>Daily aspirin</li><li>Daily warfarin</li><li>OMEPRAZOLE</li><li>Recent black stools at home</li><li>Smoking</li><li>Alcohol use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presented to Dr. Patel’s office with a 12‑hour history of burning epigastric discomfort and intermittent vomiting. On examination, he was afebrile, with mild epigastric tenderness but no peritoneal signs. Dr. Patel verified his last INR from the pharmacy (1.6) and noted a stable hemoglobin. He was reassured that this was likely a GERD flare. The physician ordered a stool guaiac test, repeated INR in two weeks, and instructed John to discontinue ibuprofen pending the next visit. Patient was advised to take a loading dose of omeprazole 40 mg and to monitor for worsening symptoms.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Despite normal stool guaiac, risk factors for UGIB remain. The slight INR elevation suggests warfarin over‑anticoagulation could precipitate bleeding. Continued monitoring scheduled.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-01-14</h3><div class="visit-meta">Emergency Medicine | Reason: Hematemesis and melena with vital sign changes</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Hematemesis and melena with vital sign changes.
+
+**History of Present Illness**: 58‑year‑old male presents to the ED with a witnessed episode of coffee‑ground vomiting followed immediately by tar‑black stools. He reports light‑headedness and weakness. On prior visits, he had mild epigastric discomfort and dry vomiting; he was taking aspirin, warfarin, omeprazole, and intermittent ibuprofen. He discontinued ibuprofen per prior advice.
+
+**Past Medical History**: GERD, CKD stage 3B, hypertension, ischemic heart disease, atrial fibrillation, baseline anemia.
+
+**Medication History**: Aspirin 81 mg daily, warfarin 2 mg daily, omeprazole 20 mg daily, ibuprofen 400 mg PRN (discontinued).
+
+**Allergies**: NKDA.
+
+**Review of Systems**: Positive for hematemesis, melena, light‑headedness, weakness. Negative for chest pain, dyspnea, abdominal distention.
+
+**Vitals (at arrival)**: BP 98/60 mmHg, HR 116/min, RR 22/min, Temp 36.9°C, O₂ sat 94% RA.
+
+**Physical Exam**:
+- **General**: Appears anxious, pale conjunctivae.
+- **Cardiovascular**: Tachycardic, regular rhythm, no murmurs.
+- **Respiratory**: Clear lung fields bilaterally.
+- **Abdominal**: Mild epigastric tenderness, non‑tender, mild distension, no guarding or rebound.
+- **Neurologic**: Alert, oriented.
+
+**Labs**: CBC, BMP, INR, aPTT, lactate, troponin drawn.
+**Imaging**: Bedside abdominal ultrasound—no free fluid, no perforation.
+**Procedure**: NGT placed; suction yielded 350 mL coffee‑ground red‑tinged aspirate.
+
+**Laboratory Results**:
+- Hemoglobin 11.6 g/dL
+- INR 2.1
+- aPTT 28 sec
+- Platelets 188×10⁹/L
+- BUN 32 mg/dL, Cr 2.1 mg/dL
+- pH 7.32, lactate 2.7 mmol/L
+- Troponin I 0.05 ng/mL (slightly elevated)
+- NGT aspirate 0.5 L coffee‑ground 
+
+**Assessment**:
+1. Acute upper gastrointestinal hemorrhage (likely peptic ulcer disease; consider NSAID/warfarin‑induced mucosal injury). 2. Possible cardiac ischemia (slight troponin rise; atrial fibrillation), but no classic chest pain or ECG changes. 3. Hemodynamic instability secondary to blood loss.
+
+**Plan**:
+- Administer 5 mg vitamin K IV. 4 units FFP to lower INR to &lt;1.8 (now 1.7). 2 L NS bolus. Continue to monitor CBC and INR every 4–6 hr.
+- Initiate IV pantoprazole 80 mg q8h (PPI drip). Continue PPI pre‑endoscopy.
+- Place patient on 48‑hour telemetry for cardiac and hemodynamic monitoring.
+- Hold warfarin until bleeding controlled; re‑initiate after endoscopic hemostasis and INR &lt;1.5.
+- Keep aspirin withheld until hemostasis achieved; consider cardiology input regarding AF management.
+- Prepare for urgent upper endoscopy within 24‑48 h to localize bleed, perform therapeutic intervention (cautery, clipping). If endoscopy not immediately available, consider repeat EGD after stabilization.
+- Continue NGT suction; monitor output. If output persists &gt;1 L/24 h, consider repeat imaging.
+- Counsel patient on avoidance of NSAIDs/aspirin during high bleeding risk. Discuss anticoagulation strategy: possible temporary switch to low‑molecular‑weight heparin bridging once stable.
+- Educate on signs of re‑bleeding (vomiting bright red blood, melena, dizziness) and advise to return to ED immediately.
+
+**Disposition**: Admit to medical floor with telemetry. Plan for gastroenterology consult and emergent EGD.
+
+**Follow‑Up**: Endoscopy within 24‑48 h; review INR and CBC daily; cardiology consult for AF and ischemic heart disease management; schedule primary‑care follow‑up in 1 week to re‑assess anticoagulation strategy.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden onset of black, tarry stools</span><span class="pill">Two episodes of vomiting with darker blood</span><span class="pill">Light‑headedness and feeling weak</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>98/60</td></tr><tr><td>HR</td><td>116</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>O2</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Cardiovascular exam: tachycardic, systolic murmur none</li><li>Respiratory: clear lung fields</li><li>GI: mild epigastric tenderness, no peritoneal signs</li><li>Conjunctivae pale</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC, BMP, INR, aPTT, lactate, troponin</li><li>Abdominal ultrasound</li><li>NGT aspirate</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 11.6 g/dL</li><li>Serum INR 2.1</li><li>aPTT 28 sec</li><li>Platelets 188×10^9/L</li><li>BUN 32 mg/dL, Creatinine 2.1 mg/dL</li><li>Metabolic acidosis (pH 7.32, lactate 2.7 mmol/L)</li><li>Troponin I 0.05 ng/mL (slightly elevated)</li><li>NGT aspirate: 0.5 L coffee‑ground fluid</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Vitamin K 5 mg IV</li><li>FFP 4 units</li><li>IV normal saline 2 L</li><li>NGT insertion with suction</li><li>IV PPI drip (80 mg q8h) started pre‑endoscopy</li><li>Telemetry monitoring</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>After FFP and vitamin K, INR fell to 1.7. Patient remained hemodynamically stable for 4 hours post‑therapy, but bleeding continued as evidenced by black stools.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Baseline anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Warfarin 2 mg daily</li><li>Omeprazole 20 mg daily</li><li>Ibuprofen 400 mg PRN 3–4×/week</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent night of black stools</li><li>Aspirin, warfarin, NSAIDs</li><li>CKD stage 3B</li><li>Hypertension, IHD, AFB</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John arrived at the ED after a witnessed episode of bloody vomiting and tar‑black stools. Vital signs showed tachycardia, borderline hypotension, and oxygen sat of 94% on room air. The emergency physician performed a focused abdominal exam revealing mild epigastric tenderness, no guarding, and a distended but non‑tender abdomen. Immediate labs were drawn: CBC, BMP, INR, aPTT, troponin. A bedside abdominal ultrasound was done to exclude perforation or free fluid. An NGT was placed, suctioning 350 mL of coffee‑ground, red‑tinged aspirate. The INR returned 2.1, aPTT 28 sec, and hemoglobin 11.6 g/dL. Immediate management included 1 g IV vitamin K, 4 units of fresh frozen plasma to lower INR, 2L of normal saline, and a 48‑hour telemetry for cardiac and hemodynamic monitoring. The patient was admitted for further management.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Active UGIB identified, exacerbated by warfarin and aspirin. Hemodynamically unstable; urgent GI endoscopy required.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-01-14</h3><div class="visit-meta">Gastroenterology | Reason: Diagnostic and therapeutic upper GI endoscopy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 58‑year‑old male presents for diagnostic and therapeutic upper GI endoscopy following recent gastrointestinal bleeding event.
+
+History of Present Illness: Mr. John (ID withheld) was admitted to the ED on 14 Jan with hematemesis and melena, hypotension and tachycardia. He was found to have an INR of 2.1, hemoglobin 11.6 g/dL, BUN 32 mg/dL, creatinine 2.1 mg/dL and lactate 2.7 mmol/L. He was treated with IV vitamin K, FFP, fluids and PPI drip, with warfarin and aspirin held. After stabilization, an urgent upper endoscopy was performed within 24‑48 h. The scope revealed a 1.5 cm ulcer in the gastric antrum with an actively spurting vessel. Hemostasis was achieved by deployment of three hemostatic clips and dilute epinephrine spray (1:10,000). The ulcer exhibited moderate friability and diffuse gastritis; no varices were seen. Endoscopic photography was taken for documentation. Post‑procedure, the patient continued to pass melena of reduced volume, remained hemodynamically stable, and tolerated the PPI drip well. INR was corrected to 1.3 with vitamin K/FFP; warfarin was resumed at 5 mg PO in the evening, and aspirin 81 mg PO daily was re‑initiated for IHD. No active bleeding was noted in the throat.
+
+Past Medical History: GERD, CKD stage 3B, hypertension, ischemic heart disease, atrial fibrillation, baseline anemia. Current medications: aspirin 81 mg daily, warfarin 2 mg daily, omeprazole 20 mg daily, ibuprofen 400 mg PRN 3–4 ×/week, PPI drip 80 mg IV q8h. Allergies: NKDA.
+
+Physical Exam: He is alert, oriented, afebrile. Vitals: BP 100/58 mmHg, HR 110 bpm, RR 20 /min, SpO₂ 96 % on 4 L O₂ via nasal cannula. Abdomen soft, mild epigastric tenderness, no rebound or guarding. No active bleeding in oropharynx.
+
+Labs/Tests: INR 1.3; Hemoglobin 11.0 g/dL; Platelets 190 × 10⁹/L; BUN 30 mg/dL; Creatinine 2.0 mg/dL.
+
+Assessment: Acute peptic ulcer disease with active bleeding successfully controlled. Risk for re‑bleeding remains high due to anticoagulation (warfarin+aspirin) and underlying CKD. Current INR is corrected but on the lower side of therapeutic range for atrial fibrillation; aspirin is maintained for cardiac indication.
+
+Plan:
+1. Continue PPI drip 80 mg IV q8h until hemodynamically stable and no further bleeding; transition to oral PPI (omeprazole 20 mg daily) when tolerated.
+2. Resumption of warfarin 5 mg PO evening; target INR 2.0‑3.0 for AF; obtain repeat INR in 24 h and thereafter per anticoag protocol.
+3. Continue aspirin 81 mg PO daily; weigh risk–benefit; consider cardiology consult if bleeding risk escalates.
+4. Monitor vitals hourly for first 6 h, then q4 h; watch for tachycardia, hypotension, or increased melena.
+5. Repeat CBC and BMP daily; observe trend.
+6. If melena returns or worsens, schedule repeat endoscopy.
+7. Counsel patient on avoiding NSAIDs, careful medication review, and importance of adherence to anticoag/antiplatelet therapy.
+8. Provide discharge instructions and advise immediate return to ER if new-onset severe abdominal pain, hypotension, or persistent vomiting.
+
+Disposition: Patient was observed in the gastroenterology unit; discharged after stabilization with instructions.
+
+Follow‑up: Return to GI clinic in 3 days for repeat INR and assessment; if INR is stable and no bleeding, consider outpatient follow‑up with cardiology for anticoag optimization. Patient advised to call the office if he experiences any worsening symptoms. </div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Ongoing melena</span><span class="pill">Faint abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>100/58</td></tr><tr><td>HR</td><td>110</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>O2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Nasal cannula 4 L/min O₂</li><li>Stable vitals</li><li>No active bleeding in the throat</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat INR</li><li>CBC</li><li>PPI status</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>INR 1.3</li><li>Hemoglobin 11.0 g/dL</li><li>Platelets 190×10^9/L</li><li>BUN 30 mg/dL, Creatinine 2.0 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Hemostatic clips (3)</li><li>Epinephrine spray</li><li>PPI drip 80 mg IV q8h</li><li>Resume warfarin 5 mg evening dose</li><li>Continue aspirin 81 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John tolerated the procedure well, noted mild throat discomfort. Vital signs remained stable, and nausea was minimal.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Baseline anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Warfarin 2 mg daily</li><li>Omeprazole 20 mg daily</li><li>Ibuprofen 400 mg PRN 3–4×/week</li><li>PPI drip 80 mg IV q8h</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent UGIB with active bleeding</li><li>Warfarin and aspirin use</li><li>CKD stage 3B</li><li>Hypertension, IHD, AFB</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The gastroenterology team performed an emergent upper GI endoscopy. The scope revealed a 1.5 cm ulcer in the gastric antrum with an actively spurting vessel. Hemostasis was achieved by deploying multiple hemostatic clips (3) around the bleeding point followed by dilute epinephrine spray (1:10,000). The ulcer base showed moderate friability and diffuse gastritis. No varices were seen. Endoscopic pathology photography was taken for documentation. After the procedure, John’s stool remained black but with a slight decrease in volume. The team continued the PPI drip and, after confirming a corrected INR (1.3) with vitamin K/FFP, decided to resume a once‑daily 5 mg evening warfarin dose to maintain anti‑thrombotic coverage for atrial fibrillation. Aspirin was maintained at 81 mg daily due to known IHD.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Bleeding source identified and temporarily controlled; risk of rebleeding remains high due to anticoagulation and ongoing platelet inhibition.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-01-15</h3><div class="visit-meta">Internal Medicine | Reason: Post‑endoscopy monitoring and anemia management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit 5 – 2023-01-15
+
+Chief Complaint: Post‑endoscopy monitoring and anemia management
+
+History &amp; Exam: 58‑year‑old male with a history of GERD, CKD stage 3B, HTN, ischemic heart disease, AF, and chronic anemia presented for post‑procedural evaluation after urgent upper endoscopy with hemostatic clips for a spurting gastric antrum ulcer. 
+
+Symptom review: Patient reports black, thinner stools (melena), fatigue, and mild shortness of breath. No chest pain, dizziness, or syncope noted. 
+
+Vitals: BP 102/58 mmHg, HR 95 bpm, RR 18/min, Temp 36.5°C, SpO₂ 97% on RA. 
+
+General: pale conjunctivae,
+Abdomen: mild epigastric tenderness, no rebound or guarding,
+Cardiovascular: regular rhythm, no murmurs, 
+Pulmonary: clear to auscultation. 
+
+Laboratory Findings: CBC shows Hb 10.8 g/dL (↓ from 11.0 on prior day, baseline 11.8). INR 1.3 (therapeutic for warfarin). BMP: BUN 32 mg/dL, Cr 2.3 mg/dL, consistent with CKD 3B. 
+
+Management: 1 unit PRBC transfused with no adverse reaction; Hb rose to 11.0 g/dL. Aspirin 81 mg daily and warfarin 5 mg nightly continued due to ischemic heart disease and AF with therapeutic INR target of 2.0‑3.0. PPI continued at 20 mg PO daily. CKD‑safe IV fluids administered. Patient educated on strict avoidance of NSAIDs and instruction to seek urgent care if melena recurs or if he experiences dizziness, syncope, or chest pain.
+
+Assessment: 
+1. Gastrointestinal bleeding – likely rebleeding from previously clipped ulcer or related peptic ulcer disease. 
+2. Acute blood loss anemia on background of chronic anemia. 
+3. CKD stage 3B contributing to anemia and increased bleeding risk. 
+Differential considerations: angiodysplasia, gastric malignancy, medication‑related mucosal injury from aspirin/warfarin, anemia of chronic disease.
+
+Plan: 
+• Repeat CBC, INR, BMP tomorrow to assess trend and target Hb &gt;11 g/dL. 
+• Monitor for recurrence of melena or development of hematemesis. 
+• If melena recurs or Hb drops &lt;10.5 g/dL, consider repeat endoscopy. 
+• Maintain warfarin and aspirin with close INR monitoring; obtain weekly INR until stable. 
+• Continue PPI; if ulcers recur, consider increasing dose to 40 mg PO BID for 2 weeks. 
+• Encourage adequate hydration, low‑salt diet, protein intake, and iron supplementation as needed (ferrous sulfate 325 mg PO BID) after hematology consult. 
+• Counsel on avoiding NSAIDs, antipyretics with caution. 
+• Follow-up in clinic in 48 hours for labs; sooner if symptomatic. 
+
+Disposition: Patient tolerates transfusion, improved energy level, remains stable. Advised to return to ED if melena returns, worsening fatigue, orthostatic dizziness, chest pain, or abdominal pain. 
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Black stools with thinner appearance</span><span class="pill">Fatigue</span><span class="pill">Mild shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>102/58</td></tr><tr><td>HR</td><td>95</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>Temp</td><td>36.5</td></tr><tr><td>O2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General: pale conjunctiva</li><li>Abdomen: mild epigastric tenderness</li><li>Cardiovascular: regular rhythm</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat CBC</li><li>INR</li><li>BMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 10.8 g/dL</li><li>INR 1.3</li><li>BUN 32 mg/dL, Creatinine 2.3 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>1 unit PRBC</li><li>Continue aspirin 81 mg daily</li><li>Continue warfarin 5 mg nightly</li><li>Continue PPI 20 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John tolerated the transfusion with no reactions. He felt slightly better but remained pale.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Warfarin 5 mg nightly</li><li>Omeprazole 20 mg daily</li><li>IGF‑P 80 mg IV drip q8h (discontinued 12 hrs ago)</li><li>IV fluids</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent endoscopic hemostasis</li><li>Ongoing warfarin and aspirin</li><li>CKD stage 3B</li><li>Anemia severity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On the morning after endoscopy, John’s vitals were borderline but stable. A CBC showed a hemoglobin of 10.8 g/dL, a further drop from the previous 11.0 g/dL. Given his baseline Hb of 11.8 and the recent bleeding, the internal medicine team gave him a single unit PRBC to target &gt;11 g/dL. Routine labs showed continued INR 1.3. The patient was kept on aspirin and warfarin, aware that the risk of rebleeding remains. The team reinforced the need for strict avoidance of NSAIDs and for a repeat endoscopic review if melena recurs.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anemia worsening; decision to keep anticoagulation despite bleeding risk due to thromboembolic history.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-01-15</h3><div class="visit-meta">Cardiology | Reason: Chest pain and suspected NSTEMI</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief complaint: 58‑year‑old male presents with sudden, crushing chest pain radiating to the left arm and mild dyspnea. Patient reports anxiety and a feeling of impending doom. History of present illness: The patient experienced chest pain that developed suddenly in the afternoon. He had a prior episode of GI bleeding on January 14, during which warfarin and aspirin were held; aspirin was resumed the following Tuesday, and clopidogrel was started after an urgent cardiac cath that revealed diffuse 30 % proximal LAD stenosis but no culprit lesion.
+
+Past medical history: GERD, CKD stage 3B, hypertension, ischemic heart disease, atrial fibrillation, anemia. Medications: Aspirin 81 mg daily (recently restarted), warfarin 5 mg nightly (held until Thursday evening), omeprazole 20 mg daily, acetaminophen 500 mg PRN up to 3 g/day. Allergies: NKDA.
+
+Review of systems: Acute chest pain, dyspnea, anxiety. No chest wall tenderness, pulmonary exam clear.
+
+Physical exam: BP 85/50 mmHg, HR 115 bpm, RR 22 /min, Temp 36.6 °C, O₂ sat 94 % RA; alert, cooperative.
+
+Diagnostic studies: 12‑lead ECG showed ST‑segment depression in V2‑V4 and T‑wave inversions, consistent with subendocardial ischemia. Troponin I peaked at 0.78 ng/mL. Cardiac catheterization demonstrated diffuse 30 % LAD stenosis with no occlusion.
+
+Assessment: Suspicion for non‑ST‑segment‑elevation myocardial infarction (NSTEMI) secondary to plaque instability or vasospasm in the setting of underlying CAD. The absence of a culprit lesion suggests a non‑occlusive ischemic event. Differential includes microvascular angina, Takotsubo cardiomyopathy, and stress‑induced cardiomyopathy. Current hypotension and tachycardia likely attributable to volume depletion and high‑output state.
+
+Plan:
+1. Re‑initiate antiplatelet therapy: Aspirin 81 mg daily (as IHD indication) + clopidogrel 75 mg daily for 12 months.
+2. Resume warfarin at 5 mg nightly once INR therapeutic (2–3) and hemoglobin stable; monitor INR daily until stable.
+3. Continue omeprazole 20 mg daily to protect GI mucosa.
+4. Monitor vitals hourly for first 6 h then q4 h; repeat ECG in 6 h.
+5. Serial troponins every 6 h until trending down.
+6. Obtain daily CBC and BMP to monitor anemia and renal function.
+7. Counsel on fluid intake, avoidance of NSAIDs, and risk factor modification (BP control, smoking cessation, diet).
+8. Arrange follow‑up in Cardiology clinic in 48 h; advise to seek emergent care if chest pain recurs, hypotension worsens, or new tachycardia develops.
+9. Coordinate with Primary Care and GI to ensure iron supplementation and continued monitoring of GI bleeding risk.
+
+Disposition: Patient tolerated exam and started on clopidogrel. Will be monitored in the Cardiology step‑down unit.
+
+Follow‑up recommendations are documented in the follow_up_recommendations section.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Crushing chest pain radiating to left arm</span><span class="pill">Dyspnea</span><span class="pill">Anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>85/50</td></tr><tr><td>HR</td><td>115</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>36.6</td></tr><tr><td>O2</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Blood pressure low, heart rate high</li><li>No chest wall tenderness; lungs clear</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serial troponins</li><li>ECG</li><li>Cardiac catheterization</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Troponin I 0.78 ng/mL (peak)</li><li>ECG: T‑wave inversion V2–V4</li><li>CTA: diffuse 30% LAD stenosis, no occlusion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Hold warfarin until Thursday evening</li><li>Hold aspirin until Thursday evening</li><li>Start clopidogrel 75 mg daily</li><li>Antiplatelet hold</li><li>Plan for cardiac cath</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John was alert and cooperative, but reported worsening chest discomfort and a feeling of impending doom.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Anemia</span><span class="pill">NSTEMI (suspected)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Warfarin 5 mg nightly</li><li>Omeprazole 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Ischemic heart disease history</li><li>Recent UGIB</li><li>Aspirin and warfarin use</li><li>CKD stage 3B</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John arrived with sudden, sharp chest pain and mild dyspnea. Cardiac exam revealed no murmurs. An ECG showed ST‑segment depression in leads V2–V4, T‑wave inversions, and troponin I 0.78 ng/mL. The cardiology team diagnosed NSTEMI secondary to hemodynamic stress from ongoing anemia and bleeding. Given the high bleeding risk, they discontinued both warfarin and aspirin until the evening of the upcoming Thursday to reduce rebleeding potential. Aspirin was restarted at 81 mg once daily on Tuesday night, and clopidogrel 75 mg once daily was started the next morning after an urgent cardiac cath that found no culprit lesions but a diffuse 30% LAD stenosis.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cardiac event precipitated by bleeding‑induced anemia, prompting temporary cessation of antithrombotics to lower GI bleeding risk.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2023-01-16</h3><div class="visit-meta">Intensive Care Medicine | Reason: Rebleeding and acute decompensation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Acute decompensation – hypotension, tachycardia, bright‑red NG tube output.
+
+**History of Present Illness:**
+The patient, a 58‑year‑old male with GERD, CKD stage 3, hypertension, ischemic heart disease, anemia, and atrial fibrillation, was admitted to the ICU after a sudden episode of hypotension (BP 85/50) and chest pain on January 15 , 2023 (diagnosed as non‑culprit myocardial infarction). On January 16, 2023 the patient’s condition deteriorated: rising heart rate (~120 bpm), progressive hypotension (75/40 mmHg), and bright‑red output from a nasogastric tube (300 mL in 4 h). The patient was intubated and sedated. A central venous catheter was placed, and continuous renal replacement therapy (CRRT) was started due to evolving acute kidney injury (BUN 55 mg/dL, Cr 4.5 mg/dL). Persistent hypotension and tachycardia prompted initiation of an intra‑aortic balloon pump (IABP) and norepinephrine infusion, with epinephrine boluses as required. Antiplatelet therapy (aspirin 81 mg and clopidogrel 75 mg) was held due to ongoing bleeding.
+
+**Past Medical History:** GERD, CKD, hypertension, ischemic heart disease (non‑culprit MI), anemia, atrial fibrillation.
+
+**Medications Prior to ICU Admission (partial list):** Aspirin 81 mg daily, Warfarin 5 mg PO evening (recently stopped), Omeprazole 20 mg daily, Acetaminophen 500 mg PRN up to 3 g/day, Clopidogrel 75 mg daily, IV fluids, PRBCs (as needed), PPI drip (discontinued).
+
+**Allergies:** NKDA.
+
+**Physical Examination:**
+- Sedated and mechanically ventilated.
+- CVP 16 mmHg.
+- No abdominal tenderness (sedation may mask pain).
+- Pulseless femoral line (likely due to thrombosis or dislodgment).
+- Lungs: O2 92% on 5 L/min NC, otherwise no wheeze/rales.
+- Skin: Pale, cool extremities.
+- Heart: Tachycardic, irregular rhythm consistent with AF.
+
+**Vital Signs (ICU record, 16 Jan 2023):**
+- BP: 75/40 mmHg
+- HR: 120 bpm
+- RR: 28/min
+- Temp: 36.3 °C
+- SpO₂: 92% (5 L/min NC)
+- CVP: 16 mmHg
+
+**Labs (repeat values):**
+- Hemoglobin: 9.0 g/dL
+- INR: 1.2
+- BUN: 55 mg/dL
+- Cr: 4.5 mg/dL
+
+**Assessment:**
+1. **Massive upper GI hemorrhage** – likely re‑bleeding from a peptic ulcer (prior endoscopy revealed ulcer with clips; current NGT output bright‑red). Ongoing transfusion requirement and persistent bleeding.
+2. **Hemodynamic instability – cardiogenic/hemorrhagic shock** – sustained tachycardia, hypotension, low SVR despite vasopressors. Underlying ischemic heart disease exacerbated by bleeding and anemia.
+3. **Acute on chronic renal failure** – rising BUN/Cr, oliguria, requiring CRRT.
+4. **Anticoagulant/antiplatelet hold** – warfarin and dual antiplatelet therapy held amid bleeding.
+
+**Plan:**
+1. **GI Management**
+   - Repeat upper endoscopy with thermal coagulation and sclerotherapy (perform within 12 h if hemodynamic status permits).  
+   - Continue IV pantoprazole 80 mg q8 h (or 40 mg q6 h if available).  
+   - Hold NSAIDs and antithrombotic agents until bleeding controlled.
+2. **Hemodynamic Support**
+   - Continue norepinephrine infusion titrated to MAP &gt;65 mmHg.  
+   - Continue epinephrine boluses as needed for refractory hypotension.  
+   - Maintain IABP; monitor output and pressures.  
+   - Fluid resuscitation with balanced crystalloid; avoid over‑transfusion.
+3. **Blood Product Management**
+   - Transfuse PRBCs to maintain Hb ≥10 g/dL (target 10–11 g/dL).  
+   - Consider platelets or cryo if invasive procedures pending.
+4. **Renal Management**
+   - Continue CRRT; adjust dose based on fluid status and urea clearance.  
+   - Monitor electrolytes, acid‑base status, and hemodynamic parameters.
+5. **Antithrombotic Restoration**
+   - Once bleeding controlled and hemodynamically stable, re‑initiate aspirin 81 mg daily.  
+   - Resume clopidogrel 75 mg daily after endoscopic confirmation of hemostasis.  
+   - Warfarin will remain held until risk of thrombosis outweighs bleeding.
+6. **Cardiology**
+   - Continue telemetry; serial troponins and 12‑lead ECGs q6 h.  
+   - Consider cardiology consult for possible re‑evaluation of coronary status.
+7. **Monitoring**
+   - Daily CBC, BMP, INR.  
+   - Hourly vitals while vasopressors; CVP trends.  
+   - Check NG‑tube output color and quantity.
+8. **Consultations**
+   - GI for repeat endoscopy.  
+   - Nephrology for CRRT management.  
+   - Hematology for bleeding evaluation if coagulopathy persists.
+9. **Disposition**
+   - Once stabilized (MAP &gt;65, adequate urine output, Hb ≥10, NG output &lt;50 mL/24 h), transition to step‑down unit.  
+   - Plan for follow‑up with cardiology, GI, primary care, and nephrology.
+10. **Patient/family education**
+   - Discuss risks of re‑bleeding, antithrombotic therapy, and need for close monitoring.
+
+**Follow‑up Recommendations:**
+- Daily CBC, BMP, INR, and troponins.  
+- Repeat endoscopy if NG output remains bright red or volume &gt;50 mL/6 h.  
+- Transition to step‑down ICU once MAP ≥65, vasopressors &lt;0.1 µg/kg/min, and stable renal function.  
+- Schedule cardiology review within 48 h of stabilization.  
+- Plan GI follow‑up for elective endoscopy evaluation 1–2 weeks after discharge.  
+- Primary care scheduled 1 week post‑discharge to re‑assess anticoagulation strategy and renal function.
+
+---
+
+**Signature:**
+Intensive Care Medicine
+Date: 2023‑01‑16</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Profound fatigue</span><span class="pill">Light‐headedness</span><span class="pill">Rapid epigastric bleeding (NGT output 300 mL bright red)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>75/40</td></tr><tr><td>HR</td><td>120</td></tr><tr><td>RR</td><td>28</td></tr><tr><td>Temp</td><td>36.3</td></tr><tr><td>O2</td><td>92% on 5 L/min nasal cannula</td></tr><tr><td>CVP</td><td>16</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Sedated, mechanically ventilated</li><li>No abdominal tenderness (due to sedatives)</li><li>Pulseless femoral line</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat INR</li><li>CBC</li><li>BMP</li><li>Intra‑aortic balloon pump placement</li><li>CRRT initiation</li><li>Endoscopy re‑evaluation</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 9.0 g/dL</li><li>INR 1.2</li><li>BUN 55 mg/dL, Creatinine 4.5 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Intubation and sedation</li><li>Central line insertion</li><li>CRRT</li><li>PRBCs 2 units</li><li>Norepinephrine infusion</li><li>IABP insertion</li><li>Hold antiplatelets</li><li>Endoscopic thermal coagulation + sclerotherapy bead</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Despite aggressive support, John’s heart rate remained high and blood pressure continued to fall. No improvement in stool color or volume noted; NGT drainage was still bright red.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Anemia</span><span class="pill">NSTEMI</span><span class="pill">Acute kidney injury</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Clopidogrel 75 mg daily</li><li>Omeprazole 20 mg daily</li><li>IV fluids</li><li>PRBCs (as needed)</li><li>PPI drip (discontinued)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>UGIB with endoscopic clips</li><li>Warfarin discontinued</li><li>Anemia and CKD</li><li>Chest pain episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John was intubated and sedated within the ICU due to rising heart rate and unstable blood pressure. A central venous catheter was placed, and continuous renal replacement therapy (CRRT) was initiated for evolving acute kidney injury (creatinine 4.5 mg/dL). Hemodynamic monitoring revealed persistent hypotension and tachycardia. The ICU team gave 2 units of PRBCs, an infusion of norepinephrine with epinephrine boluses as needed, and started an intra‑aortic balloon pump (IABP) to improve coronary perfusion and reduce afterload. Due to ongoing bleeding, antiplatelets were held temporarily, and a repeat endoscopy was ordered to re‑assess and attempt further hemostasis via thermal coagulation and sclerotherapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Repeated attempts at endoscopic hemostasis failed; hemodynamic instability and acute kidney injury progressed, while antithrombotic therapy was paused, raising risk for atrial thrombi.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2023-01-17</h3><div class="visit-meta">Intensive Care Medicine | Reason: Second rebleeding episode and deteriorating perfusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 58‑year‑old male in ICU with recurrent upper GI bleeding. On 2023‑01‑17 he developed sudden tachycardia (HR 140) and hypotension (BP 68/42) with bright red NG output of ~300 mL despite ongoing therapy.
+
+Objective: Sedated, mechanically ventilated. Vitals: BP 68/42 mmHg, HR 140 bpm, RR 30/min, Temp 36.1 °C, SpO₂ 90 % on ventilator, CVP 18 mmHg. Abdomen not examable. Pulseless femoral line. Laboratories: Hb 8.8 g/dL, INR 1.1, BUN 70 mg/dL, Cr 5.0 mg/dL. Repeat endoscopy revealed a new small gastric body lesion with mild oozing; thermal coagulation and a sclerotherapy bead were applied.
+
+Assessment: Acute hemorrhagic shock secondary to recurrent gastric ulcer bleeding. Antithrombotic therapy (warfarin, clopidogrel) has been re‑initiated with close INR monitoring. Hemodynamic instability is due to ongoing bleeding and vasoplegia; managed with norepinephrine and IABP. Patient also has acute on chronic kidney injury requiring CRRT.
+
+Differential: • Re‑bleeding from gastric ulcer • Thromboembolic complication (e.g., coronary) • Infection/sepsis • IABP‑related complications.
+
+Plan: • Continue IV pantoprazole 80 mg q8h and initiate protamine sulfate to reverse warfarin. • Maintain warfarin at 1 mg PO with INR target 1.5‑2.0; repeat INR every 6 h. • Resume clopidogrel 75 mg once daily tomorrow. • Continue CRRT; review settings immediately. • Continue norepinephrine infusion and titrate to MAP &gt;65 mmHg; adjust IABP as needed. • Daily CBC, BMP, INR, and lactate; repeat endoscopy within 2‑4 h if NG output continues. • Discontinue epinephrine boluses unless MAP remains &lt;55 mmHg. • Notify cardiology and hematology of bleeding status and anticoagulation plan. • Plan for weaning IABP over next 24‑48 h once hemodynamically stable.
+
+Disposition: Patient will remain in ICU until hemodynamically stable with controlled bleeding, target INR achieved, and renal function improves. Anticipate ICU discharge once he is off norepinephrine, IABP, and CRRT and has stable labs for at least 48 h.
+
+Follow‑up: • Monitor for signs of pulmonary edema, ischemia, or further bleeding. • Serial bedside telemetry and daily labs. • Repeat endoscopy as indicated. • Coordinate with cardiology and hematology for anticoagulation strategy. • Discuss goals of care with family if bleeding persists or if multi‑organ failure develops.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden increase in heart rate to 140 bpm</span><span class="pill">Severe hypotension (BP 68/42)</span><span class="pill">Continued bright red NG tube output of ~300 mL</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>68/42</td></tr><tr><td>HR</td><td>140</td></tr><tr><td>RR</td><td>30</td></tr><tr><td>Temp</td><td>36.1</td></tr><tr><td>O2</td><td>90% on ventilator</td></tr><tr><td>CVP</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Sedated, ventilated</li><li>Abdomen not examable</li><li>Pulseless femoral line</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat INR</li><li>CBC</li><li>BMP</li><li>Re-look endoscopy results</li><li>CRRT settings</li><li>ICU monitoring</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 8.8 g/dL</li><li>INR 1.1 (after protamine)</li><li>BUN 70 mg/dL, Creatinine 5.0 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Endoscopic thermal coagulation + sclerotherapy bead</li><li>Protamine sulfate</li><li>PRBCs 2 units</li><li>Norepinephrine titration</li><li>IABP adjustments</li><li>Re-initiate warfarin 1 mg PO</li><li>Restart clopidogrel 75 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Despite interventions, John’s heart rate remained elevated and peripheral perfusion remained sub‐optimal. The NG tube continued to drain bright red blood.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Anemia</span><span class="pill">NSTEMI</span><span class="pill">Acute kidney injury</span><span class="pill">Rebleeding</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Omeprazole 20 mg daily</li><li>CRRT</li><li>Norepinephrine infusion</li><li>IABP</li><li>CLINOTROPIL (hold)</li><li>PRBCs as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Repeated rebleeding despite therapy</li><li>IABP support</li><li>CRRT therapy</li><li>Antiplatelet hold</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a routine ICU evaluation, the patient’s vitals worsened rapidly. A repeat endoscopy, performed within 2 hours, showed a new small ulcerated lesion in the gastric body with mild oozing. Thermal coagulation was delivered and a sclerotherapy bead placed. Given the persistent bleeding, the team administered protamine sulfate to reverse residual warfarin effect (even though anticoagulation had been held), and transfused PRBCs to maintain hemoglobin &gt;10 g/dL. They also re‑initiated warfarin at the lowest feasible dose (1 mg PO) with close INR monitoring, and resumed clopidogrel 75 mg daily the following morning. The IABP and norepinephrine were titrated to target MAP &gt;65 mmHg.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Balance between anticoagulation for atrial fibrillation / IHD and hemostasis remains unachievable; rebleeding persists.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2023-01-18</h3><div class="visit-meta">Intensive Care Medicine | Reason: Catastrophic rebleed and refractory shock</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 58‑year‑old male with known GERD, CKD‑stage 3B, HTN, IHD, AF, anemia, acute kidney injury, and chronic anticoagulation (warfarin 1 mg PO, clopidogrel 75 mg daily). The patient was admitted to the general ICU on 2023‑01‑16 after a massive upper GI bleed. On the morning of 2023‑01‑18 his condition deteriorated dramatically with sudden bright red NGT output (~300 mL), profound hypotension, tachycardia, lactic acidosis, and altered mental status (GCS 7). No spontaneous breathing; he remained ventilated.
+Objective: Vitals – BP 55/30 mmHg, HR 170 bpm, RR 36, Temp 35.9 °C, SpO₂ 88 % on mechanical ventilation, CVP 20 mmHg. ABG: pH 7.14, lactate 4.5 mmol/L. Echocardiogram: EF 30 %, global hypokinesis. He was on norepinephrine 0.4 µg/kg/min, epinephrine 0.1 µg/kg/min, norepinephrine infusion, fentanyl infusion, PRBCs, FFP, cryoprecipitate, vitamin K, protamine sulfate, CRRT, IABP high augmentation, and IV pantoprazole 80 mg q8h.
+Assessment: 1. Massive uncontrolled upper GI hemorrhage leading to hypovolemic shock. 2. Refractory cardiogenic shock secondary to severe LV dysfunction (EF 30 %). 3. Severe lactic acidosis from global hypoperfusion. 4. Acute on chronic renal failure requiring CRRT. 5. Coagulopathy (warfarin, antiplatelet therapy) contributing to bleeding.
+Plan: Aggressive resuscitation was continued; patient remained in cardiopulmonary arrest despite CPR. Transcatheter interventions were attempted but failed to control bleeding. With no return of spontaneous circulation after multiple resuscitation attempts, the decision was made to withdraw life‑sustaining therapy in accordance with family wishes. Family was notified and support services were offered. Documentation of death was completed.
+The patient has died; no ongoing medications are prescribed.
+
+Follow‑up: None – family informed of death and offered bereavement support. Post‑mortem arranged per family request.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sudden massive bleeding via NGT (≈300 mL bright red)</span><span class="pill">Profound hypotension</span><span class="pill">Altered mental status (GCS 7)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>55/30</td></tr><tr><td>HR</td><td>170</td></tr><tr><td>RR</td><td>36</td></tr><tr><td>Temp</td><td>35.9</td></tr><tr><td>O2</td><td>88% on ventilator</td></tr><tr><td>CVP</td><td>20</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Ventilated, no spontaneous movement</li><li>Abdominal crepitus not examed</li><li>CVP 20 mmHg</li><li>NG tube: bright red blood</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Arterial blood gas</li><li>Lactate</li><li>Echocardiogram</li><li>ICU hemodynamic assessment</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lactate 4.5 mmol/L</li><li>ABG pH 7.14, lactate 4.5</li><li>Echocardiogram: EF 30%, global hypokinesis</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>PRBC 4 units</li><li>FFP 8 units</li><li>Cryoprecipitate 4 units</li><li>Vitamin K 10 mg</li><li>Protamine 3 mg/kg</li><li>Norepinephrine infusion</li><li>Epinephrine boluses</li><li>IABP augmentation</li><li>Transfer to cardiac ICU</li><li>Attempted transcatheter interventions (failed)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John remained in cardiopulmonary arrest; no return of spontaneous circulation after multiple cycles of CPR. Despite full efforts, the patient could not be revived.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Anemia</span><span class="pill">NSTEMI</span><span class="pill">Acute kidney injury</span><span class="pill">Rebleeding</span><span class="pill">Refractory shock</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>CRRT</li><li>Norepinephrine infusion</li><li>IABP</li><li>Omeprazole 20 mg daily</li><li>PRBCs as needed</li><li>Protamine sulfate (recent)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Endoscopic rebleeding episodes</li><li>CRRT ongoing</li><li>IABP</li><li>High risk of cardiovascular events</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In the morning, John’s condition deteriorated dramatically. Serial arterial blood gas and lactate showed worsening lactic acidosis (lactate 4.5 mmol/L). The team resuscitated aggressively: 4 units PRBCs, 8 units FFP, 4 units cryoprecipitate, a high dose of vitamin K, and continued protamine. The IABP was switched to higher augmentation settings. An echocardiogram revealed severe left ventricular dysfunction with an ejection fraction of 30% and global hypokinesis. The decision was made to transfer to the cardiac ICU for mechanical circulatory support. Despite maximum vasopressor support (norepinephrine 0.4 μg/kg/min, epinephrine 0.1 μg/kg/min), the arterial line did not return any pressure. The care team was confronted with a persistent uncontrolled bleed, severe renal dysfunction, and impending multiorgan failure.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multifactorial organ failure from uncontrolled UGIB, anticoagulation reversal complexity, CKD preventing drug clearance, and severe cardiac dysfunction.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2023-01-18</h3><div class="visit-meta">Intensive Care Medicine | Reason: Death due to refractory hemorrhagic shock</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Death from refractory hemorrhagic shock secondary to massive upper gastrointestinal bleeding.
+
+**History and Relevant Course:**
+- 58‑year‑old male with a complex medical history: GERD, chronic kidney disease stage 3B, hypertension, ischemic heart disease, atrial fibrillation, anemia, NSTEMI, acute kidney injury, persistent rebleeding, and refractory shock.
+- Over the past week the patient suffered multiple episodes of massive upper GI hemorrhage despite endoscopic hemostasis, hemodynamic support, and aggressive transfusion strategy including PRBCs, fresh frozen plasma, cryoprecipitate, and vitamin K. The patient was on continuous renal replacement therapy (CRRT) for acute on chronic renal failure.
+- Despite optimal circulatory support with norepinephrine (0.4 µg/kg/min), epinephrine (0.1 µg/kg/min), intra‑aortic balloon pump (IABP), and aggressive volume resuscitation, the patient continued to hemorrhage, develop cardiogenic shock (EF ≈ 30%), and eventually succumbed to hypovolemic‑cardiogenic shock.
+
+**Physical Examination (at time of death):**
+- No detectable cardiac activity; pulses absent.
+- Arterial line not responsive; no arterial waveform.
+- Endotracheal tube in place; oxygen saturation 0 %.
+- Vital signs: BP 0/0 mmHg; HR 0 bpm; RR 0; Temp 36.0 °C; SpO₂ 0 %.
+
+**Interventions Prior to Death:**
+- 5‑minute CPR cycles with chest compressions, epinephrine boluses.
+- Continuous vasopressor infusion (norepinephrine, epinephrine) and IABP support.
+- Aggressive transfusion: ~10 units PRBCs, 6 units FFP, 4 units cryoprecipitate.
+- Vitamin K 5 mg IV, protamine sulfate for heparin reversal.
+- CRRT (continuous venovenous hemofiltration) for renal support.
+- Endoscopic interventions: initial hemostatic clips and epinephrine spray; subsequent thermal coagulation and sclerotherapy.
+- Antithrombotic therapy held during critical illness.
+
+**Assessment:**
+Refractory hemorrhagic shock secondary to recurrent massive upper GI bleeding in the setting of ischemic heart disease, anticoagulation, and advanced CKD. The patient’s organ dysfunction (cardiac, renal, coagulopathic) and ongoing bleeding culminated in irreversible shock and death.
+
+**Plan and Documentation:**
+- Official death declaration by attending physician at 11:24 AM.
+- Documentation completed for ethical review.
+- Family meeting scheduled to discuss goals of care and palliative measures.
+- No further diagnostic tests ordered given the circumstances.
+
+**Key Learnings:**
+- Even with maximal intervention, refractory upper GI bleeding can be unresponsive in patients with complex comorbidities.
+- Early palliative discussion may help guide future care plans in similar high‑risk patients.
+
+**Clinical Note End.**</div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>0/0</td></tr><tr><td>HR</td><td>0</td></tr><tr><td>RR</td><td>0</td></tr><tr><td>Temp</td><td>36.0</td></tr><tr><td>O2</td><td>0%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No cardiac activity</li><li>Arterial line not responsive</li><li>Endotracheal tube in place</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CPR attempts</li><li>Resuscitative medications</li><li>Supportive ICU measures until death</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>N/A</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">CKD stage 3B</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Atrial fibrillation</span><span class="pill">Anemia</span><span class="pill">NSTEMI</span><span class="pill">Acute kidney injury</span><span class="pill">Rebleeding</span><span class="pill">Refractory shock</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>CRRT</li><li>Norepinephrine</li><li>Epinephrine</li><li>IABP</li><li>PRBCs</li><li>FFP</li><li>Cryoprecipitate</li><li>Vitamin K</li><li>Protamine</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Repeated massive rebleeds</li><li>Ongoing warfarin reversal trials</li><li>Acute kidney injury progression</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Following an unsuccessful resuscitation attempt, the ICU team declared a futility of ongoing interventions. An official death declaration was made by the attending physician. John was pronounced deceased at 11:24 AM. The case was documented for ethical review and a family meeting was scheduled to discuss goals of care and palliative measures.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Uncontrolled upper GI bleed compounded by anticoagulation reversal and severe comorbidities ultimately led to irreversible circulatory collapse.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 58</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">GERD</span><span class="pill">Chronic kidney disease</span><span class="pill">Hypertension</span><span class="pill">Ischemic heart disease</span><span class="pill">Anemia</span><span class="pill">Atrial fibrillation</span><span class="pill">Acute on chronic kidney injury</span></div></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2023-01-12: 58-year-old male presents with mild epigastric discomfort, two episodes of dry postprandial vomiting, and slight light‑headedness. Vitals: BP 132/84 mmHg, HR 82 bpm, RR 16/min, Temp 36.8°C, SpO₂ 98% on room air. Mild epigastric tenderness on abdominal exam. Counseling to avoid NSAIDs, continue omeprazole 20 mg daily, and maintain warfarin with INR monitoring. Ordered home guaiac stool test and repeat INR in clinic. Advised hydration, small frequent meals. Follow‑up with primary‑care physician in 3 days.</li><li>2023-01-13: 58-year‑old male presents with 12‑hour burning epigastric pain and intermittent mild vomiting; exam shows mild epigastric tenderness; vitals BP 138/82, HR 78, RR 18, Temp 37.0°C, SpO₂ 99%; stool guaiac negative; INR 1.6 therapeutic; baseline CBC ordered. Management: loading dose omeprazole 40 mg administered, resume 20 mg daily; aspirin 81 mg daily and warfarin 2 mg daily continued; ibuprofen discontinued; acetaminophen 500 mg PRN up to 3 g/d; repeat INR in two weeks, CBC baseline; follow‑up in 7 days or sooner.</li><li>2023-01-14: 58‑year‑old male presented to the ED with hematemesis and melena, hypotension and tachycardia. Labs revealed INR 2.1, hemoglobin 11.6 g/dL, BUN 32 mg/dL, creatinine 2.1 mg/dL, lactate 2.7 mmol/L. Managed with IV vitamin K 5 mg, four units of fresh frozen plasma, 2 L normal saline, and IV pantoprazole 80 mg q8h. Warfarin and aspirin were held; NGT suctioned 350 mL coffee‑ground aspirate. Admitted for telemetry and urgent upper endoscopy within 24‑48 h.</li><li>2023-01-14: Patient underwent urgent upper GI endoscopy for an actively spurting gastric antrum ulcer (1.5 cm). Hemostasis achieved with three hemostatic clips and dilute epinephrine spray. Post‑procedure, patient remained hemodynamically stable, continued PPI drip 80 mg IV q8h until stabilized, then transitioned to oral omeprazole 20 mg daily. Warfarin resumed at 5 mg PO evening (target INR 2‑3) and aspirin 81 mg PO daily restarted for ischemic heart disease. Vitals monitored hourly first 6 h, then q4 h. CBC, BMP, and INR checked daily; patient discharged after stabilization with instructions to return to ER if severe abdominal pain, hypotension, or recurrent vomiting occurs.</li><li>2023-01-15: 58‑year‑old male presents for post‑endoscopy monitoring after gastric ulcer with clips. Symptoms: melena, fatigue, mild shortness of breath. Vitals: BP 102/58, HR 95, RR 18, Temp 36.5°C, SpO₂ 97%. Physical: pale conjunctivae, mild epigastric tenderness. Labs: Hb 10.8, INR 1.3, BUN 32 mg/dL, Cr 2.3 mg/dL. Intervention: 1 unit PRBC transfused, Hb rose to 11.0. Meds continued: aspirin 81 mg daily, warfarin 5 mg nightly, omeprazole 20 mg daily. Plan: repeat CBC/INR/BMP tomorrow, monitor for melena, consider repeat endoscopy if Hb &lt;10.5 or melena persists, weekly INR, consider iron supplementation. Follow‑up in 48 hours for labs or sooner if symptomatic.</li><li>2023-01-15: 58‑year‑old male presented with sudden crushing chest pain radiating to the left arm and mild dyspnea. Vitals: BP 85/50 mmHg, HR 115 bpm, RR 22/min, Temp 36.6°C, SpO₂ 94%. ECG showed ST‑segment depression in V2‑V4 and T‑wave inversions; troponin I peaked at 0.78 ng/mL. Cardiac catheterization revealed diffuse 30% LAD stenosis with no culprit lesion. Initiated clopidogrel 75 mg daily and continued aspirin 81 mg daily; warfarin 5 mg nightly resumed pending therapeutic INR. Continued omeprazole 20 mg daily. Serial troponins and ECGs performed every 6 hours. Daily CBC, BMP, and INR monitored. Advised fluid intake, NSAID avoidance, risk factor modification. Patient transferred to step‑down unit with follow‑up cardiology in 48 hours.</li><li>2023-01-16: 58‑year‑old male intubated and sedated in ICU for hypotension, tachycardia, and bright‑red NGT output. Managed with norepinephrine infusion, epinephrine boluses, IV pantoprazole 80 mg q8h, fentanyl infusion, PRBC transfusion. CRRT initiated for acute on chronic renal failure. Intra‑aortic balloon pump started. Antiplatelet and warfarin held. Repeat endoscopy planned.</li><li>2023-01-17: ICU admission for second recurrent GI bleeding; patient developed tachycardia (HR 140), hypotension (BP 68/42), bright red NG tube output 300 µL. Repeat endoscopy revealed new gastric body lesion with mild oozing, treated with thermal coagulation and sclerotherapy. Hemodynamics stabilized with norepinephrine infusion, IABP, and CRRT. Anticoagulation reinitiated: warfarin 1 mg PO (INR target 1.5‑2.0), clopidogrel 75 mg daily tomorrow. Protamine sulfate administered. Daily labs and telemetry continued.</li><li>2023-01-18: 58‑year‑old male admitted to ICU for massive upper GI bleed with refractory hypovolemic and cardiogenic shock. Vitals: BP 55/30 mmHg, HR 170 bpm, RR 36, Temp 35.9°C, SpO₂ 88%, lactate 4.5 mmol/L, EF 30%. Treated with norepinephrine 0.4 µg/kg/min, epinephrine 0.1 µg/kg/min, CRRT, IABP, PRBCs, FFP, cryoprecipitate, vitamin K, protamine sulfate, IV pantoprazole 80 mg q8h. Despite interventions, patient remained in arrest and died; life‑support withdrawn per family wishes.</li><li>2023-01-18: Death declared after refractory hemorrhagic shock secondary to massive upper gastrointestinal bleeding. Patient received aggressive resuscitation including norepinephrine, epinephrine, IABP, CRRT, and transfusion of PRBCs, FFP, cryoprecipitate. Antithrombotic therapy held. CPR performed for 5 minutes. Patient expired at 11:24 AM.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

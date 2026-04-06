@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 4b5b088c</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 4b5b088c</h1><div class="subtitle">Acute Post‑Traumatic Stress Disorder (PTSD) Episode | Female, 35</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Major Depressive Disorder, Generalized Anxiety Disorder, Alcohol Use Disorder</div><div class="meta-line">Risk Factors: Exposure to life‑threatening trauma, Recent severe physical assault, Limited social support network, High perceived threat to personal safety, History of multiple traumatic experiences</div></div>
+<details><summary>Narrative <span class="preview-text">**From the After‑Hours of a Violent Night to the Dawn of a New Day**  On a stormy Tuesday evening the world of 35‑year‑o...</span></summary><div class="section-body"><p>**From the After‑Hours of a Violent Night to the Dawn of a New Day**</p><p>On a stormy Tuesday evening the world of 35‑year‑old Maya Patel—a graphic designer living alone in a modest apartment—was shattered by a brutal assault. The attacker had used a broken bottle, threatening to stab her if she did not give him what he wanted. Maya escaped in a scramble, but bloodied and disoriented, the memory of the knife’s glint and the attacker’s guttural scream was etched into the back of her mind.  She managed to reach a neighbor’s building, where she was taken to the emergency department the next morning.  The ER staff ran the standard labs, and after a brief physical exam, Maya was admitted for observation.  They cleared her of serious physical injury, but they noted the trembling in her hands and the fact that she had clutched her own head with both hands, trying to “catch the pounding in her chest” (the first sign that something louder than pain was playing inside her).</p><p>***</p><p>**Week 0–1: The Silent Storm Rises**</p><p>Within a few days the adrenaline that had kept Maya upright began to wane.  Three nights of sleeplessness, interrupted repeatedly by “flash‑backs” in which she could feel the hot glass, her heart pounding at “the sound of a footfall in the hallway.”  She started drinking 5–6 beers in the first week after the assault as a way of dulling the intrusive memories; the alcohol made her feel safe, but it also made it hard for her to sleep and left her with a groggy, “unsettled” feeling during the day.  She began to “watch” the time, counting down until morning, and she avoided going outside after dark.  The next week, anxiety‑driven muscle aches would surface whenever she thought about the assault “in any context” – at work, at the grocery store, when she saw a car’s horn, when the rain tapped on her window.  Her coworkers noticed that she had become “so quiet,” often saying she didn’t want to engage in conversations after lunch.</p><p>Maya’s own notes, scribbled on the back of a notepad, reflected a spiraling sense of shame and guilt.  “I didn’t do anything wrong,” she wrote, &quot;I just let it happen.&quot;  Her depressed mood manifested in a loss of interest in her usual creative projects – the digital drawings that had once brightened her living room now stared back at her with indifference.  She felt numb, as if an invisible layer had covered her feelings.  By week 2, she began to dread going to her 9‑to‑5 office job; she would frequently arrive late or leave early, citing headaches that never lasted long enough to be taken seriously by her supervisor.</p><p>**</p><p>**Week 2–3: First Professional Encounter**</p><p>The night before Week 3, as tears streamed down Maya’s face while she tried to watch “a comedy show” on a streaming platform (the only thing that could keep her mind from the intrusive images), she called the hospital’s crisis line.  The operator directed her to the psychiatric emergency room (ER) on the same campus.  A psychiatric nurse conducted a rapid assessment: she had intrusive flash‑backs, nightmares, avoidance of situations that reminded her of the assault, persistent hyper‑arousal (muscle tension, startle response), and a depressed mood.  She met the DSM‑5 criteria for acute post‑traumatic stress disorder (PTSD) with a duration of 3 weeks.  Her Generalized Anxiety Disorder (GAD) symptoms were clear—cumulative worry “about everything” and a sense of “danger that’s lurking all the time.”  A brief medical evaluation ruled out any major somatic issue (blood work returned within normal limits).  She was started on sertraline (Zoloft) 25 mg nightly, titrating by week 5 to 50 mg.  A supportive letter was written for her employer to allow a flexible schedule for therapy appointments.  She was scheduled for a psychiatric follow‑up in two weeks, but the doctor also referred her to a Trauma‑Focused Cognitive Behavioral Therapist (CBT) and encouraged attendance of the local Alcoholics Anonymous (AA) meetings.</p><p>**Week 4–7: The First Therapeutic Step**</p><p>Maya’s first therapy session felt like “sitting between a wall and a mirror.”  The therapist used a trauma‑focused CBT model, teaching her to anchor herself in the present with breathing techniques, and starting a “safety plan” that defined clear boundaries for situations that might remind her of the assault.  She began with “exposure in imagination” – silently recounting the event while the therapist guided her to a non‑reactive state.  The nights were still violent with nightmares, but the number of them began to dwindle from “every night” to “every other night.”  A week later Maya began to keep a “trigger diary” – jotting down times when she felt “on edge,” noting the context, her mood, and her alcohol intake.  She quickly learned to link her “post‑nightmare anxiety rush” to the heavy evening drinks she had been sipping.</p><p>Her alcohol use, which had been 5–6 beers nightly at the beginning of the month, started to ease to 2–3 drinks in the evenings, as she found the coping benefit less necessary with her growing use of coping strategies.  When she attended her first AA meeting—a rough 12‑step program held in a dim basement—the sense of solidarity felt comforting.  She began to identify with a man who had “tried to quit” and another who “was only one drink away” from going “back.”</p><p>**Week 8–12: Consolidation and Complication**</p><p>Maya felt the “goodnight” dream of each morning—a dream that seemed less chaotic and more “structured, but I still feel the sting of the knife.”  Her insomnia improved; she slept ~7 hrs per night.  However, she fell into a new problem: a “pre‑flight&quot; panic attack whenever she had to leave her apartment – fear that she could “becoming again.&quot;  At a work conference, she became “so nervous that I started sweating” and left early, citing a “heart attack” to her manager.  The therapist pointed this out as a GAD flare‑up.  She added a low‑dose clonazepam (0.25 mg at bedtime) to her medication regimen for short‑term management, while the clinician carefully monitored for potential interactions with sertraline and alcohol.</p><p>When Maya’s therapist discussed the possibility of adding an “early exposure” to the event itself (structured in‑service “imaginal exposure”), Maya answered that the thoughts of the attacker still haunted her every time she saw a broken bottle at a supermarket.  The therapist suggested a gradual exposure: first watching a video of someone else using a bottle (with no injuries), then a scene of a broken bottle at a kitchen counter.  Maya committed to it, noting in her mental log the sense of relief when she realized that “the bottle can be a harmless object.”  She also began journaling about her sense of self-worth and accomplishments – a therapeutic exercise that targeted her depressive symptomatology.</p><p>**Week 13–16: Rewiring the Mind &amp; Body**</p><p>Maya’s sertraline had reached 75 mg nightly, a higher dosage that had resulted in a mild nausea that subsided after a week.  The therapy had become “more productive,” according to her; she now had a script that she could recite into anxiety – “I am not what happened; I have the right to breathe, I can talk to my therapist.”  Her nightmares had largely disappeared, replaced by “light dream scenes” that she could recall with clarity.  She had stopped using alcohol for a full 14 days, only sipping a glass of wine to celebrate finishing a painting.</p><p>On a Wednesday in week 15, her therapist suggested trying a “cognitive restructuring” exercise.  Maya had the thought, “If I ever get into a car again, the attacker could do what he did.”  She worked with her therapist to gather evidence that the world had changed; her mother had moved to a different city, the police had a unit in her city that responded faster now, and she had an emergency contact list.  The therapist noted Maya’s progress: she had moved from a &quot;total avoidance&quot; stance to a &quot;controlled exposure&quot; stance.</p><p>At the psychiatric office, the clinician noted that Maya’s sleep was now regular, she was not taking clonazepam, and she had no signs of alcohol withdrawal or relapse. The medication plan shifted to continue sertraline 75 mg in the long term, with a tapering schedule for eventual discontinuation in 6‑12 months. She was enrolled in a 12‑week group CBT for trauma survivors, with weekly 90‑minute sessions that included mindfulness, grounding, and building a personal safety plan.</p><p>**Week 17–20: The Return of Functionality**</p><p>Maya’s return to the office was marked as a “courageous step.”  She returned to her desk, and her manager appreciated “her fresh energy.”  Maya used a lunch break to walk around the downtown park, consciously practicing breathing and the grounding exercise of “touching a tree and noticing 5 things about it.”  Her anxiety was still present but diminished; she no longer avoided the bathroom after work.  Sleep was now stable, with 6‑7 hrs nightly, and she woke up feeling rested.</p><p>The therapy log from week 18 indicated a decrease of “intrusive thoughts” from “3‑4 times per day” to “once per week.”  She also reported a reduction in “negative self‑talk.”  When her therapist asked if she had re‑experienced the assault, Maya answered, “I have had a vivid flashback during a flash of lightning one night, but I stopped it. I told myself I’m safe now.”  The trauma team praised her resilience and the adaptation of coping strategies.</p><p>She also took part in AA’s “sober living” group; her attendance was 4‑5 meetings per month, with the group offering emotional support and accountability.  She felt her social network increase, no longer feeling stranded alone in a world that seemed, at times, like a threat.</p><p>**Week 21–24: A Clear Horizon**</p><p>At her psychiatric follow‑up at week 23, Maya was reported to be “in remission from PTSD; mild GAD still present but controllable.”  She had no more nightmares, sleep was undisturbed, and she was drinking socially (no more &gt;5 drinks) under a “moderation plan.”  She no longer required medication for anxiety; her self‑regulation skills were solid. The clinician noted a dramatic improvement: her depression improved by 70 % (PHQ‑9 from 18 to 6); her anxiety reduced by 65 % (GAD‑7 from 14 to 5). She had regained trust in her surroundings and had re‑engaged with her creative work—producing a short animation for an agency contract.</p><p>The therapy team planned a taper-out of CBT after the 12‑week program, with a follow‑up session in 3 months to assess for any relapse. Maya was encouraged to keep a trauma diary, to practice grounding, and to attend AA when feeling tempted to use alcohol. She also committed to a weekly 30‑minute “body scan” meditation to keep her mind from hyper‑arousal.</p><p>**Conclusion: A Journey toward Resilience**</p><p>Three months after the assault, Maya was still in an improving trajectory.  The acute PTSD episode had dissipated, largely with the help of early identification, medication, trauma‑focused CBT, supportive family outreach, and an active participation in AA.  Her depression and generalized anxiety had become more manageable; her sense of personal safety had regained footing. Her narrative had shifted from a victim of a terrible night to a survivor actively shaping her story.  Maya’s course shows that rapid intervention with a combination of targeted pharmacotherapy, exposure‑based psychotherapy, and social‑support mechanisms can reverse the spiral that often accompanies acute post‑traumatic stress.  Her future was, though still a work in progress, clearly brighter than the night the world had broken into pieces.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-08-01</h3><div class="visit-meta">Emergency Medicine | Reason: Evaluation after violent assault, bruises and acute distress</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Maya, a 35‑year‑old female, presents to the ED after a violent assault. She reports acute anxiety, trembling, chest pounding, mild headache, visual flash‑backs, and difficulty breathing.
+
+History of Present Illness: Maya arrived following an attempted escape from an assault. She reports being in a state of acute distress, with vivid flash‑backs of a knife and constant fear that an intruder is approaching. She has a history of multiple assaults in the past six months and reports heavy alcohol use (5–6 beers nightly for the last week). She has a longstanding diagnosis of Major Depressive Disorder, Generalized Anxiety Disorder, and Alcohol Use Disorder (self‑reported). No current psychoactive medication use.
+
+Past Medical History: Major Depressive Disorder, Generalized Anxiety Disorder, Alcohol Use Disorder. No known drug allergies.
+
+Physical Examination: Vitals stable: BP 122/80 mmHg, HR 92 bpm, RR 18/min, Temp 36.9 °C, SpO₂ 97% on room air. No external trauma. Full ROM, normal gait. Mild palmar tremor, pale diaphoretic forehead skin.
+
+Labs/Imaging: CT head without contrast = normal. CBC, CMP = within normal limits. Rapid urine drug screen negative.
+
+Interventions: Acetaminophen 500 mg PO q6h PRN for headache. IV ketamine 0.75 mg/kg administered for acute agitation. Patient admitted to the Observation Unit for 24 h monitoring. Psychiatric liaison consulted; patient engaged in a brief safety‑planning discussion.
+
+Assessment: 1) Acute stress reaction/adjustment disorder precipitated by recent violent assault. 2) Severe generalized anxiety exacerbated by alcohol use. 3) Possible early post‑traumatic stress disorder (PTSD). 4) No evidence of head injury or intoxication/withdrawal.
+
+Plan:
+• Continue observation and vital sign monitoring every 4 h.
+• Repeat CBC/CMP in 12 h to monitor for any evolving metabolic disturbance.
+• Psychiatric evaluation for potential acute stress disorder/PTSD and for safety planning.
+• Initiate structured safety planning; arrange for safe housing and crisis telephone line.
+• Post‑discharge: arrange outpatient psychiatric follow‑up within 3 days, and outpatient alcohol counseling.
+• Consideration for initiation of a low‑dose SSRI (e.g., escitalopram 10 mg daily) after psychiatric assessment.
+• Educate patient on coping strategies for acute anxiety and signs of impending crisis.
+• Provide educational handout on early signs of PTSD and alcohol withdrawal.
+
+Disposition: Discharged from OBS to home with safety plan and outpatient psychiatric appointment scheduled.
+
+Follow‑up: Patient to call ED or primary care if symptoms worsen, including suicidal ideation or severe anxiety.
+
+Disposition: Discharge with 24‑hour observation monitoring.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Acute anxiety</span><span class="pill">Trembling hands</span><span class="pill">Chest pounding</span><span class="pill">Mild headache</span><span class="pill">Visual flash‑back of knife</span><span class="pill">Difficulty breathing</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/80</td></tr><tr><td>HR</td><td>92 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>36.9°C</td></tr><tr><td>O2 Sat</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No visible external trauma</li><li>Full range of motion</li><li>Normal gait</li><li>Mild palmar tremor</li><li>Pale, diaphoretic skin on forehead</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT head without contrast</li><li>CBC</li><li>CMP</li><li>Rapid urine drug screen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT head normal</li><li>CBC normal</li><li>CMP normal</li><li>Urine drug screen negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pain managed with acetaminophen 500 mg PO q6h PRN</li><li>IV ketamine 0.75 mg/kg for acute agitation</li><li>Referral to psychiatric emergency for assessment</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Maya expressed intense fear and told staff she could still hear an approaching intruder. She was apprehensive but compliant with medication administration.</p></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Multiple previous assaults in past 6 months</li><li>Recent heavy alcohol use (5–6 beers nightly for 1 week)</li><li>Work attendance irregularity</li><li>History of GAD, MDD, AUD (self‑reported)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maya arrived after an attempt to escape from a violent assault. The Emergency Department staff performed a rapid physical exam, noted tachycardia and pronounced tremulousness, and performed a head CT that was negative for intracranial injury. Complete blood count and basic metabolic panel were ordered and returned normal. Because of the risk for post‑traumatic stress and the lack of any medical emergency, she was admitted to the observation unit for 24 hours of monitoring. Nursing staff documented her fluctuating anxiety and intrusive auditory memories. The psychiatric liaison was consulted before discharge to discuss a possible psychiatric emergency.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation consistent with acute reaction to trauma; no evidence of underlying medical pathology. No immediate psychiatric medication indicated at this point; plan for psychiatric observation pending psych evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-08-15</h3><div class="visit-meta">Psychiatric Emergency | Reason: First psychiatric assessment after acute trauma</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief complaint: First psychiatric evaluation following acute trauma. 
+
+Background: 35‑year‑old female with known Major Depressive Disorder, Generalized Anxiety Disorder, and Alcohol Use Disorder. Two weeks post‑violent assault, presenting persistent flashbacks, nightmares, avoidance of evening/dark environments, muscle tension, depressed mood, and heightened anxiety.  Current baseline PHQ‑9: 18, GAD‑7: 14. No suicidal ideation at time of assessment.
+
+History of Present Illness: Patient reports intense flashbacks and nightmares occurring 3 nights per week, along with avoidance of activities that remind her of the assault. She experiences muscle hyper‑tension, a startle response, and frequent blinking. She has not engaged in work for 3 days due to headaches and unexplained anxiety. She consumes 5–6 beers nightly.
+
+Past Psychiatric History: MDD and GAD, managed previously with sertraline and psychotherapy. Alcohol use has been chronic.
+
+Vitals: BP 120/78 mmHg, HR 85 bpm, RR 20 /min, Temp 36.8 °C, O₂ sat 98%.
+
+Physical Examination: Slight tremor of right hand, frequent blinking. Cranial nerves intact. No self‑harm behaviors observed.
+
+Assessment:
+1. Post‑Traumatic Stress Disorder (PTSD) – acute/early onset, presenting with flashbacks, nightmares, avoidance, hyper‑arousal.
+2. Major Depressive Disorder – moderate severity (PHQ‑9 18).
+3. Generalized Anxiety Disorder – moderate severity (GAD‑7 14).
+4. Alcohol Use Disorder – ongoing chronic use.
+5. Acute sleep disturbance secondary to trauma.
+
+Plan:
+- Pharmacologic: Prescribed sertraline 25 mg PO nightly with titration to 50 mg by week 5 to target PTSD, depression, and anxiety. Continue acetaminophen 500 mg PO q6h PRN for headache.
+- Psychotherapy: Initiated trauma‑focused CBT referral; patient encouraged to engage in sessions within 1 month. Safety planning discussed; provided written safety plan.
+- Alcohol use: Referred to Alcoholics Anonymous; advised to attend meetings.
+- Occupational: Drafted supportive employer letter requesting flexible hours to facilitate therapy and recovery.
+- Follow‑up: Scheduled psychiatric visit in 2 weeks. Patient advised to contact provider sooner if suicidal ideation, severe anxiety, or worsening of symptoms.
+- Monitoring: Repeat PHQ‑9, GAD‑7, and sleep questionnaire at next visit. Monitor tolerability of sertraline and potential side effects.
+
+Patient education: Reviewed medication adherence, potential side effects of sertraline (GI upset, sexual dysfunction, insomnia), the importance of dose stability, and adherence to therapy schedule. Discussed coping strategies for flashbacks and nightmares.
+
+Disposition: No acute safety concerns, patient is stable, discharged home with supportive letter and scheduled follow‑up.
+
+Signed: Dr. ________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent flashbacks</span><span class="pill">Nightmares</span><span class="pill">Avoidance of evening and dark environments</span><span class="pill">Muscle tension and startle response</span><span class="pill">Worsening depressed mood</span><span class="pill">Anxiety over perceived danger</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/78</td></tr><tr><td>HR</td><td>85 bpm</td></tr><tr><td>RR</td><td>20/min</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>O2 Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slight tremor of right hand</li><li>Frequent blinking</li><li>Normal cranial nerve exam</li><li>No suicidal ideation at time of assessment</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PHQ‑9</li><li>GAD‑7</li><li>Sleep questionnaire</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PHQ‑9 score 18</li><li>GAD‑7 score 14</li><li>Sleep questionnaire: difficulty falling asleep, nightmares 3/7 nights</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg oral nightly</li><li>Safety planning discussion</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient was apprehensive but engaged; expressed willingness to start therapy and medication to reduce her anxiety when she thinks about the assault.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>None at visit 2; sertraline 25 mg nightly prescribed after assessment</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Two weeks post‑assault</li><li>Regular nightly alcohol intake (5–6 beers)</li><li>Declined to attend work 3 days due to headaches/unexplained anxiety</li><li>Self‑reported GAD and MDD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was seen in the psychiatric emergency by a licensed psychiatrist who performed a structured DSM‑5 assessment. She met criteria for Acute PTSD (duration &gt;72 h, symptoms present for 14 days) and GAD. Baseline PHQ‑9 scored 18, GAD‑7 scored 14. Informed consent was obtained for pharmacologic treatment; sertraline 25 mg nightly was prescribed with a titration plan to 50 mg by week 5. A supportive employer letter was drafted for flexible work hours. The psychiatrist emphasized the importance of psychoeducation, safety planning, and beginning trauma‑focused CBT. She received a referral to an outpatient Trauma-Focused Cognitive Behavioral Therapist and was encouraged to attend Alcoholics Anonymous. A follow‑up psychiatric visit was scheduled in two weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosis of acute PTSD made; medication initiation started. Anxiety symptoms likely due to GAD; depressive symptoms moderate. Alcohol use identified as maladaptive coping.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-08-29</h3><div class="visit-meta">Psychiatric Outpatient | Reason: Follow‑up on medication and safety plan</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up on medication and safety plan.
+
+Subjective: The patient reports that sertraline 25 mg nightly has provided partial relief with decreased nightmares, but she continues to experience flash‑back dreams during the day. She reports an average of 6 hrs of sleep nightly per her sleep diary, morning tension, loss of interest in work projects, and occasional low mood. She reports consumption of 5–6 beers nightly, decreasing to 4 per night, attends AA (1 meeting so far), feels supported, and a commitment to reduce alcohol to 2–3 drinks per week. She denies suicidal ideation, homicidal thoughts or self‑harm since last visit.
+
+Objective:
+- Vitals: BP 118/76, HR 80 bpm, RR 18/min, Temp 36.7°C, O₃ sat 99%
+- Physical exam: No new findings; mild hyperventilation upon coughing.
+
+Assessment:
+- PTSD, GAD, MDD, Alcohol Use Disorder.
+- Sertraline level 35 ng/mL (therapeutic range 50–150 ng/mL) confirms sub‑therapeutic exposure; dose increase warranted.
+- Ongoing nightmares and daytime flashbacks; partial improvement with current dosage.
+- Alcohol consumption partially reduced; AA engagement continues.
+
+Plan:
+1. Increase sertraline to 50 mg nightly. Counsel patient on potential nausea or GI upset; advise to monitor mood swings.
+2. Consider short‑term low‑dose clonazepam 0.25 mg PO PRN for acute nightmares if side effects limit serotonergic tolerability.
+3. Continue acetaminophen 500 mg PO q6h PRN for headache.
+4. Maintain regular sleep diary and breathing exercises learned in therapy.
+5. Reinforce safety plan; encourage use of coping techniques during distress.
+6. Schedule group CBT for PTSD and anxiety in 2 weeks.
+7. Continue AA attendance; aim for 2–3 drinks/week.
+8. Repeat sertraline serum level in 4 weeks to verify therapeutic range.
+9. Follow up in 2 weeks to assess symptom trajectory, side effect profile, and alcohol use.
+
+The patient was optimistic about the dose escalation and has agreed to monitor for nausea. She expressed willingness to trial a short‑term benzodiazepine if needed.
+
+Follow‑up: 2‑week psychiatry visit; patient instructed to call the clinic for any adverse events or worsening symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Nightmares every other night</span><span class="pill">Avoidance of outside during night</span><span class="pill">Morning tension</span><span class="pill">Loss of interest in work projects</span><span class="pill">Occasional low mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/76</td></tr><tr><td>HR</td><td>80 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>O2 Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No new physical findings</li><li>Mild hyperventilation upon coughing</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Sertraline level (to confirm therapeutic range)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Sertraline level 35 ng/mL (therapeutic range 50–150 ng/mL, patient on 25 mg; thus dose increase warranted)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline dose increased to 50 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient was optimistic about the dose adjustment; reported willingness to try a short‑term benzodiazepine if needed for nightmares.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acute PTSD</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg nightly for 2 weeks; taking consistently</li><li>Reported nightly consumption of 5–6 beers decreasing to 4 per night</li><li>Attended 1 AA meeting; feels “supported”</li><li>Work schedule adjusted by employer</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The psychiatrist reviewed ongoing symptoms. Sertraline 25 mg still provided partial relief; the patient reported decreased nightmares but persistent flash‑back dreams during the day. The clinician noted improvement in sleep architecture as reported in a sleep diary (average 6 hrs per night). The psychiatrist increased sertraline to 50 mg nightly, with instructions to monitor for nausea. A brief review of AA attendance was carried out; patient expressed a commitment to reducing alcohol to 2–3 drinks per week. The safety plan was revisited, and the patient was encouraged to continue the breathing exercises introduced in therapy. A schedule for group CBT starting in 2 weeks was confirmed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Medication titration underway. PTSD symptoms partially regressed; nighttime insomnia moderate. Patient adheres to therapy appointments. Plan to add clonazepam for sleep if symptoms persist.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-09-15</h3><div class="visit-meta">Psychiatric Outpatient | Reason: Evaluation of persistent insomnia and hyper‑arousal</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Persistent insomnia and hyper‑arousal.  
+
+**Subjective:** The patient, a 35‑year‑old female with a complex psychiatric history (PTSD, GAD, MDD, AUD), reports frequent nighttime awakenings and difficulty falling asleep within 30 min. She notes a short pre‑flight panic episode when leaving the apartment, light intrusive thoughts during the day, and a desire to use a low‑dose clonazepam at bedtime. She has recently started sertraline 50 mg nightly for two weeks and has occasionally used 2–3 beers per week. She completed 4 sessions of trauma‑focused CBT and reports 3–4 flashbacks daily previously, now reduced to once per week.
+
+**Objective:** 
+- **Vitals:** BP 119/77 mmHg, HR 82 bpm, RR 19 /min, Temp 36.8 °C, O₂ Sat 98 %.  
+- **Physical exam:** Minimal tremor, mild tachypnea on mild exertion, normal neuro exam.  
+- **Medications:** Sertraline 50 mg PO nightly; clozapine 0.25 mg PO bedtime (pending start).
+- **Labs/Studies Ordered:** Home‑based PSG (sleep study) scheduled for next week, lipid panel for antidepressant metabolic side‑effects.
+
+**Assessment:** 
+1. Insomnia secondary to PTSD and GAD – predominant nocturnal hyper‑arousal.  
+2. Short‑term benzodiazepine use (clonazepam 0.25 mg) is appropriate for acute insomnia with minimal risk for dependence if limited to a two‑week course.  
+3. PTSD with reduced flashback frequency—progressive improvement noted in CBT exposure exercises.  
+4. Chronic mild alcohol use—continued monitoring.  
+5. MDD currently mild; sertraline likely adequate.
+
+**Differential Diagnosis (considered):** 
+- Primary insomnia 
+- PTSD‑related insomnia 
+- GAD with panic features 
+- Major depressive disorder (secondary insomnia) 
+- Alcohol‑induced sleep disturbance 
+- Possible obstructive sleep apnea (hence PSG review) 
+- Psychogenic or drug‑induced hyper‑arousal.
+
+**Plan:** 
+1. Initiate clonazepam 0.25 mg PO at bedtime for next 2 weeks, with strict monitoring for tolerance and adherence.  
+2. Continue sertraline 50 mg nightly; no dosage change at this juncture.  
+3. Reinforce diaphragmatic breathing technique and progressive muscle relaxation before sleep.  
+4. Commence 12‑week structured group CBT for trauma survivors next week; maintain individual sessions for 4 weeks as initially planned.  
+5. Patient to keep a sleep/wake and trigger log.  
+6. Continue AA participation and workplace accommodations.  
+7. Monitor alcohol intake; keep daily diary.  
+8. Follow‑up after 2 weeks to review sleep study results, evaluate benzodiazepine tolerance, and plan taper.  
+9. Re‑assess sertraline level in 4 weeks if clinical response plateaus.
+
+**Patient Education:** Discussed the short‑term nature of clonazepam, warning signs of tolerance and withdrawal, importance of medication adherence, and potential side‑effects. Reviewed CBT homework and coping strategies for daytime intrusive thoughts.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Frequent nighttime awakenings</span><span class="pill">Short pre‑flight panic when leaving apartment</span><span class="pill">Snooze of 0.25 mg clonazepam at bedtime not yet started</span><span class="pill">Light intrusive thoughts during day</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>119/77</td></tr><tr><td>HR</td><td>82 bpm</td></tr><tr><td>RR</td><td>19/min</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>O2 Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tremor: minimal</li><li>Mild tachypnea on mild exertion</li><li>Normal neurological exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Sleep study (home-based PSG) scheduled for next week</li><li>Lipid panel (screening for metabolic side‑effects of antidepressants)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Clonazepam 0.25 mg at bedtime</li><li>Reinforcement of breathing techniques</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported significant improvement in sleep quality and felt more in control of panic when leaving apartment. Expressed commitment to participate in group CBT.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acute PTSD</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Major Depressive Disorder</span><span class="pill">Alcohol Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Clonazepam 0.25 mg bedtime (starting as needed)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly for 2 weeks</li><li>Occasional use of 2–3 beers per week</li><li>Two brief encounters with clonazepam 0.25 mg at bedtime (once last night) – no adverse effects reported</li><li>Completed 4 sessions of trauma‑focused CBT</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient explained that she had tried clonazepam at bedtime when sleep didn&#x27;t settle. The psychiatrist noted that clonazepam 0.25 mg reduced her nighttime panic episodes and allowed her to fall asleep within 30 min. Because it was a short‑acting, low‑dose benzodiazepine, the psychiatrist authorized a short‑term prescription for two weeks, with the goal of tapering after a 4‑week exposure/CBT protocol. The psychiatrist also reviewed the first 8 sessions of CBT, noting progressive improvement in exposure exercises and a reduction in flashback frequency from 3–4 times daily to once per week. The plan was to start a 12‑week structured group CBT for trauma survivors beginning next week. The patient was asked to maintain a log of triggers and to continue AA and workplace accommodations.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Addition of low‑dose benzodiazepine improved short‑term insomnia. Therapy shows measurable exposure success. Continued monitoring for medication interaction due to concurrent sertraline and alcohol use.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-10-15</h3><div class="visit-meta">Psychiatric Outpatient | Reason: Medication adjustment and evaluation of treatment response</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Psychiatric Evaluation – Visit #5
+
+Chief Complaint: Medication adjustment and evaluation of treatment response.
+
+History of Present Illness:
+The patient returned to the clinic for a routine medication review. She reports that nightmares have largely disappeared; she experiences only light intrusive thoughts, which have not altered her mood or functioning. She notes minimal panic when leaving her apartment but remains able to work full‑time without symptom exacerbation. Alcohol intake has decreased to 0–1 drinks per occasion. She completed 12 weekly group CBT sessions and attends AA 3–4 times per week. She reports feeling stable, motivated to reduce medication burden, and confident in her coping skills.
+
+Past Psychiatric History:
+- PTSD (acute, now in remission)
+- Generalized Anxiety Disorder (mild)
+- Major Depressive Disorder (improved)
+- Alcohol Use Disorder (under control)
+
+Medication History:
+Sertraline 75 mg nightly (increased 2 weeks ago)
+Clonazepam tapered to 0 mg (last dose 1 month ago)
+
+Review of Systems:
+Psychiatric: positive for occasional intrusive thoughts; otherwise normal mood and affect.
+Neuro: no tremor, normal gait.
+Sleep: adequate, no awakenings.
+
+Physical Examination:
+Vital signs are within normal limits. No tremor. No abnormal neurological findings.
+
+Assessments:
+- Major Depressive Disorder – residual remission
+- Generalized Anxiety Disorder – mild
+- PTSD – remission
+- Alcohol Use Disorder – controlled
+- No emergent safety concerns
+
+Plan:
+1. Sertraline taper: reduce from 75 mg to 50 mg nightly tomorrow. Continue 50 mg nightly thereafter. Reassess in 4 weeks; if PHQ‑9 or GAD‑7 increase &gt;2 points, consider maintaining current dose.
+2. Continue monitoring for nightmares or flash‑backs; if re‑emerge at &gt;1 per week or distressing, consider reinstating higher dose or adjunct therapy.
+3. Lifestyle coaching referral already placed; patient encouraged to attend.
+4. Repeat lipid panel in 3 months (baseline unchanged).
+5. Continue routine PHQ‑9 and GAD‑7 screening at each visit.
+6. Encourage continued AA participation and psychotherapy attendance.
+
+Follow‑up:
+- Next visit scheduled in 3 months for reassessment of mood, anxiety, and PTSD status.
+- Patient advised to contact the office sooner if new nightmares, flash‑backs, or increased anxiety occur.
+
+Signature: ___________________
+
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Nightmares largely disappeared</span><span class="pill">Light intrusive thoughts</span><span class="pill">Minimal panic when leaving apartment</span><span class="pill">Mood stabilization during day</span><span class="pill">Reduced alcohol intake (0–1 drinks/occasion)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>117/75</td></tr><tr><td>HR</td><td>78 bpm</td></tr><tr><td>RR</td><td>18/min</td></tr><tr><td>Temp</td><td>36.6°C</td></tr><tr><td>O2 Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>All vitals normal</li><li>No tremor</li><li>No abnormal neuro findings</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat lipid panel (baseline unchanged)</li><li>Screening for depression relapse (PHQ‑9, GAD‑7) at each visit</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lipid panel normal</li><li>PHQ‑9 6, GAD‑7 5</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Tapering plan for sertraline: reduce to 50 mg nightly tomorrow</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling stable, motivated to reduce medication. She expressed confidence that her coping skills remain strong.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Acute PTSD (remission)</span><span class="pill">Generalized Anxiety Disorder (mild)</span><span class="pill">Major Depressive Disorder (improved)</span><span class="pill">Alcohol Use Disorder (under control)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 75 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline increased to 75 mg nightly 2 weeks prior</li><li>Clonazepam tapered to 0 mg (last dose 1 month ago)</li><li>Completed 12 weekly group CBT sessions</li><li>AA attendance 3–4 times/week</li><li>Returned to full-time work; employer supportive</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The psychiatrist reviewed the patient’s treatment trajectory. PHQ‑9 score lowered to 6, GAD‑7 to 5, and PTSD checklist (PCL‑5) almost negligible. The psychiatrist decided to taper sertraline slowly over the next 4‑months, starting with 50 mg nightly. The patient voiced a desire to maintain her mental health with less medication burden. The psychiatrist scheduled a taper plan and advised to monitor for any reemergence of nightmares or flash‐backs. The patient also received a referral for a lifestyle coaching program to build long‑term support outside of the AA and the workplace. The follow‑up visit was set in 3 months for reassessment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progress toward remission in PTSD and depression; GAD manageable. Medication tapering initiated; therapy and AA continued. No relapse of alcohol use.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-01-12</h3><div class="visit-meta">Psychiatric Outpatient | Reason: Consolidation and future planning after taper</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Consolidation of treatment and future planning after sertraline taper.
+
+History of Present Illness:
+The patient is a 35‑year‑old female with a history of Generalized Anxiety Disorder (controlled), Major Depressive Disorder (in remission), Alcohol Use Disorder (maintained), and Post‑Traumatic Stress Disorder (PTSD). She presents for a routine maintenance visit following a successful 10‑mg nightly sertraline taper with no adverse effects documented. She reports occasional mild anxiety during stressful work moments, with no nightmares or intrusive thoughts, and a stable mood. PHQ‑9 score is 4 and GAD‑7 score is 4, consistent with minimal current symptoms.
+
+Past Psychiatric Course:
+Over the last 6 visits, the patient progressed from acute PTSD presentation (Visit 1) toward remission of nightmares and intrusive experiences with sertraline titration up to 75 mg and CBT. She has discontinued clonazepam and reports sustained recovery through CBT, breathing techniques, and regular AA attendance.
+
+Vitals: BP 116/74 mmHg, HR 76 bpm, RR 17 /min, Temp 36.5 °C, O₂ Sat 99%. Vascular exam normal, no tremor, gait normal.
+
+Examination:
+Neurologic exam unremarkable; no tremor or gait instability.
+
+Lab Results:
+- CBC: Normal.
+- LFTs: Normal.
+
+Assessment:
+- PTSD, currently in remission.
+- GAD, controlled on low‑dose sertraline.
+- MDD, in remission.
+- Alcohol Use Disorder, maintained and under self‑reported control.
+
+Plan:
+1. Continue sertraline 10 mg nightly for the next 6 months as a preventative measure; re‑evaluate tapering to zero thereafter.
+2. No additional psychotropic medication indicated at this time.
+3. Maintain current stress‑reduction routine (CBT skills, diaphragmatic breathing, AA attendance 3–4 times/month).
+4. Monitor for any recurrence of intrusive experiences or mood changes via quarterly PHQ‑9/GAD‑7.
+5. Schedule next psychosocial follow‑up in 6 months; sooner if symptoms return.
+6. Patient encouraged to seek prompt care if symptoms recur.
+
+Patient responded positively, expressing confidence in her progress and agreement with the maintenance plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Occasional mild anxiety during stressful work moments</span><span class="pill">No nightmares</span><span class="pill">No intrusive thoughts in daily routine</span><span class="pill">Stable mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>116/74</td></tr><tr><td>HR</td><td>76 bpm</td></tr><tr><td>RR</td><td>17/min</td></tr><tr><td>Temp</td><td>36.5°C</td></tr><tr><td>O2 Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Vascular exam normal</li><li>No tremor</li><li>Normal gait</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Routine CBC</li><li>Liver function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>LFTs normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue sertraline 10 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed confidence in her progress and satisfaction with treatment. She agreed to a 6‑month follow‑up and to continue lifestyle coping strategies.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder (controlled)</span><span class="pill">Major Depressive Disorder (in remission)</span><span class="pill">Alcohol Use Disorder (maintained) </span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 10 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline tapered to 10 mg nightly (no adverse effects)</li><li>No SSRI side effects noted</li><li>AA attendance continuous, 3–4 times/month</li><li>Group CBT completed 12 weeks ago, final session 2 weeks prior</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The psychiatrist evaluated the patient’s overall stability. PHQ‑9 remained 4, GAD‑7 4. The patient reported no recurrence of PTSD symptoms and credited CBT, breathing techniques, and AA for sustained recovery. The psychiatrist agreed to continue the very low dose of sertraline as a preventative measure for the next 6 months, after which they would reassess tapering to zero. The psychiatrist also recommended a follow‑up in six months to evaluate for possible relapse and discuss options for continued therapy if needed. The patient was encouraged to maintain her current stress‑reduction routine and to seek prompt care if flashbacks return.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient remains in remission from PTSD and major depression. GAD manageable with low‑dose SSRI and CBT skills. Alcohol use remains controlled. Plan to taper sertraline to 5 mg and then discontinue within 12 months if stable.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Alcohol Use Disorder</span><span class="pill">Post-Traumatic Stress Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 10 mg PO nightly</li><li>Acetaminophen 500 mg PO q6h PRN for headache</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented to ED after violent assault with acute anxiety, tremor, chest pounding, mild headache, visual flashbacks, and difficulty breathing. Vitals were stable. Physical exam revealed mild palmar tremor; no external trauma. CT head, CBC, CMP, and rapid urine drug screen were normal. Received IV ketamine 0.75 mg/kg for agitation and acetaminophen 500 mg PO q6h PRN for headache. Admitted to Observation Unit for 24 hours, psychiatric liaison consulted, safety plan established. Discharged with outpatient psychiatric follow‑up and alcohol counseling scheduled.</li><li>Patient returned for first psychiatric evaluation after acute trauma; persistent flashbacks, nightmares, avoidance, muscle tension, depressed mood, and anxiety. Vitals stable; physical exam noted mild right hand tremor and frequent blinking. Psychiatric assessment found acute PTSD, moderate depression, moderate anxiety, and ongoing alcohol use. Prescribed sertraline 25 mg PO nightly with titration to 50 mg by week 5; acetaminophen continued PRN for headache. Initiated trauma-focused CBT referral, alcoholics anonymous referral, and safety plan. Follow‑up scheduled in 2 weeks.</li><li>Follow‑up visit to discuss medication adjustment and safety plan. Patient reports partial relief from sertraline 25 mg with ongoing daytime flashbacks and nightmares. Vitals normal. Sertraline serum level 35 ng/mL subtherapeutic; dose increased to 50 mg nightly. PRN clonazepam 0.25 mg proposed for nightmares. Acetaminophen 500 mg PO q6h PRN continued for headache. Patient continues to reduce alcohol intake to 4 drinks per night, AA attendance noted. Referred to group CBT in 2 weeks. Repeat sertraline level in 4 weeks. Follow‑up scheduled in 2 weeks.</li><li>Patient reports persistent insomnia and hyper‑arousal with frequent nighttime awakenings and difficulty falling asleep within 30 minutes. Vitals were BP 119/77 mmHg, HR 82 bpm, RR 19/min, Temp 36.8°C, O₂ Sat 98%. Physical exam showed minimal tremor, mild tachypnea on mild exertion, and normal neuro exam. Started clonazepam 0.25 mg PO at bedtime for 2 weeks; continued sertraline 50 mg nightly. Home‑based polysomnography sleep study and lipid panel ordered. Reinforced diaphragmatic breathing and progressive muscle relaxation, scheduled 12‑week structured group CBT next week, and instructed to keep sleep and trigger logs. Follow‑up in 2 weeks to review PSG results, evaluate benzodiazepine tolerance, and plan taper. Sertraline level to be reassessed in 4 weeks if needed.</li><li>Patient reported significant improvement: nightmares largely resolved, occasional intrusive thoughts, minimal panic, stable mood, and full‑time work. Alcohol intake reduced to 0–1 drinks per occasion. Currently on sertraline 75 mg nightly, clonazepam discontinued, acetaminophen PRN. Plan to taper sertraline to 50 mg tomorrow, repeat lipid panel, routine PHQ‑9/GAD‑7 screening, and follow‑up in 3 months. No emergent safety concerns.</li><li>Patient presented for routine maintenance following sertraline taper to 10 mg nightly; reports occasional mild anxiety during stressful work moments, no nightmares or intrusive thoughts, stable mood (PHQ-9=4, GAD-7=4). Vitals normal. Continuation of sertraline 10 mg nightly for next six months planned; no additional psychotropic medications prescribed. Follow‑up scheduled in 6 months; sooner if symptoms recur.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

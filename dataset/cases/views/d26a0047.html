@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case d26a0047</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: d26a0047</h1><div class="subtitle">Hypertension | Male, 60</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Coronary artery disease, Diabetes mellitus, Chronic kidney disease</div><div class="meta-line">Risk Factors: Advanced age, African American race, Family history of hypertension, Obesity, Physical inactivity, High sodium intake, Excessive alcohol consumption, Caffeine sensitivity, Stress, Use of NSAIDs</div></div>
+<details><summary>Narrative <span class="preview-text">When John “J.D.” Carter first started feeling out of tune with his body, it was in the late 1980s, when he was twenty‑se...</span></summary><div class="section-body"><p>When John “J.D.” Carter first started feeling out of tune with his body, it was in the late 1980s, when he was twenty‑seven and still a college sophomore. He lived alone in a small apartment, worked as a server in a fast‑food restaurant, and did most of his workouts at the local gym after hours. He was slim but energetic, a trait that kept him from catching the first line of the red flags that would eventually define his health story.</p><p>**Early 50s – The first alarm**</p><p>At age 52, a sudden episode of chest discomfort during a routine baseball game made the local urgent‑care center the scene of J.D.’s first heart‑related adventure. In the emergency room, a 12‑lead ECG revealed an inferior ST‑segment elevation, and an emergent cardiac catheterization confirmed a 70 % occlusion of the right coronary artery. A stent was implanted, and the cardiologist placed him on a prescription ladder: aspirin, a beta‑blocker, a statin, and a renin‑angiotensin‑aldosterone system (RAAS) inhibitor. A family history of early coronary artery disease, along with his own obesity (BMI 32.4) and sedentary office hours, had already placed him on the danger list.</p><p>Despite the event, he was not tested for blood pressure (BP) because the cardiac team prioritized his acute management and discharged him with a prescription to follow up with his new primary care physician (PCP) and a cardiologist. The first post‑discharge visit at 52 years and 4 months arrived two weeks later. The PCP, a friendly Dr. Nguyen, asked for a complete profile: “What was your chest pain like? Any headaches? Any vision changes?” J.D. laughed it off. “Only the usual head rush after a big Thanksgiving meal,” he said. The doctor noted in the chart, *“Prescribe bisoprolol 5 mg daily. Recheck BP after 4 weeks.”* The BP cuff was never used. The nurse assistant, meanwhile, was more interested in checking his fasting glucose and cholesterol.</p><p>**Mid‑50s – Chronic illness takes root**</p><p>By 55 years, J.D. was in the throes of his first diabetic diagnosis: fasting plasma glucose of 156 mg/dL, HbA1c 8.2 %. He was started on insulin glargine and metformin, and his PCP asked him to maintain a “balanced diet.” Yet the family kitchen, cluttered with canned sauces and salted snacks, did little to help. He drank, on most weekdays, a bottle of wine in the evening, and his evenings were punctuated by a few beers on Saturdays. His caffeine tolerance was low – one cup of coffee or a soda would send him into a jittery state, making him crave an extra cup for comfort. He complained a few nights per week of “brain fog” and “headaches,” but he took them to be stress‑related, stemming from the pressures at work and the rising cost of his diabetic medication. His doctor suggested “take a walk” – something John’s busy schedule could not accommodate.</p><p>In 57, J.D. got a routine blood test showing an eGFR of 52 mL/min/1.73 m² – that was his first official label of chronic kidney disease (CKD) stage 3. He was put on a low‑protein diet and started spironolactone to help with the proteinuria that now crept into his urine tests. Again, the PCP asked for a BP check – “We’re looking at that kidney function; we’ll see your BP.” On the record, no cuff was pressed. Meanwhile, his daily routine: long hours at a desk with a computer, a kettle of black coffee at 8 AM, an afternoon of office chairs, a home stretch that never happened. His social circle was small; his only night out was sometimes a club meeting or the church youth group, but even then, he only caught the occasional sip of whiskey or a beer with the group.</p><p>**Early 60s – Unheard signals**</p><p>At age 60, J.D. scheduled an annual cardiology follow‑up for his stent and a routine PCP visit. His PCP, Dr. Santos, was a bit of a multitasker, juggling a hundred patients in a day. During the visit, J.D. complained of “pressure in the chest&quot; and “shortness of breath after walking 3–4 blocks.” Dr. Santos inquired if his diet had changed, if he was taking meds properly, if he had any new headaches or blurry vision. J.D. answered, “Headaches? I have the usual. Blurry vision? Nope.” The lab panel had the usual: fasting glucose 155 mg/dL, HbA1c 8.5 %. His kidneys were showing a mild decline in eGFR to 48 mL/min/1.73 m², with a slight increase in proteinuria.</p><p>On the spot, Dr. Santos asked for a BP reading, because he had been instructed on the guidelines. The office assistant, juggling paperwork, simply turned to a colleague and said, “I think we forgot to check his BP; let’s just skip it.” The office had no cuff available in the exam room, a common issue in busy practices where the cuff is stored in the back. J.D. left feeling a bit unsettled by the phrase “Let’s review the labs next month,” but he felt that the visits were on the right track. The cardiology appointment, the day after, was largely a check of his stent and his medication compliance; he reported no headaches, no vision changes, and no chest pain on the day. An ECG was normal, but the cardiologist did not mention any BP monitoring.</p><p>Meanwhile, at home, J.D. began to notice the swelling on his lower legs after dinner. He told his wife, &quot;I think I&#x27;m just keeping too much sodium in my diet.&quot; She reminded him, “You always take the last pickle jar for dinner. Maybe try a low‑salt version.” But the old habits were resistant to change. His wife suggested a simple water bottle so he could drink more fluids and not rely on coffee for caffeine. J.D. appreciated the suggestion but did not follow it.</p><p>**Mid‑60s – The first hint of a hidden threat**</p><p>At 63, his friend, a retired accountant named Frank, stopped by for a lunch. J.D. mentioned the swollen ankles and &quot;a weird pressure in my chest.&quot; Frank, who had his own health issues, jokingly told him that it might be something serious like a new stroke. J.D. laughed it off. On his next PCP visit, J.D. complained that his headaches had become more frequent and &quot;a little worse.&quot; Dr. Santos, feeling pressed for time, recommended a home BP monitor for J.D. to start taking readings and to come with the readings for the next visit. J.D. was skeptical: “I have no interest in being a data collector.” So he left without an inexpensive cuff.</p><p>At 64, his wife mentioned that J.D. had started drinking a daily cup of coffee at 11 AM for energy. Dr. Santos told the couple about the importance of limiting caffeine, considering the patient&#x27;s heart rate and his medication. J.D. said, “I drink more after coffee, I use a lot of beer on weekends, but I feel fine.” The cardiologist, seeing an increase in his LDL levels, recommended an ACE inhibitor change from lisinopril to an ARB, hoping that it would also lower his kidney&#x27;s proteinuria.</p><p>Nevertheless, the routine checks at the practice had become a pattern: the PC, the cardiologist, the nephrologist would all look at labs, prescribe meds, and ask if J.D. had headaches, chest pain, or vision changes. The BP would invariably be left unchecked, either because of the busy clinic or because J.D. didn’t request it. He didn&#x27;t realize that he was living under the influence of the very risk that was unquantified: a high blood pressure reading that could be causing microvascular changes in his kidneys, heart, and brain.</p><p>**Late 60s – The silent, unrecognized killer**</p><p>At 68, J.D. had a modest fall while walking his dog, and he lost his balance trying to catch his foot. He landed in the garden and was promptly at the emergency department. His vitals showed a blood pressure of 184/108 mmHg – a staggering number that the ER had taken as an alarming clue. The staff did the standard work‑up: blood draw, ECG, and chest X‑ray. The ECG was benign, but the doctor noted &quot;his blood pressure is high; he has a chronic kidney issue&quot; and started him on a labetalol infusion to bring the BP down.</p><p>The admitting physician, Dr. Patel, entered his notes and said, &quot;Hypertension is now in the system. We&#x27;ll keep him on antihypertensives.&quot; But J.D. has no medication to manage such high BP. The overnight staff ran a quick urine test that showed microscopic hematuria. The nephrologist who visited later that night said: “I think we need a full evaluation for hypertension.” J.D. was discharged with a prescription for a calcium channel blocker and told to &quot;visit your cardiologist and PCP.&quot; But the note also said, &quot;Add an ACE inhibitor as the patient has CKD.&quot; This was the first time, apparently, that someone had flagged the problem as a diagnosis in his chart. Yet the previous records, the visits over the last two decades, had never been labelled as “hypertension.”</p><p>**Present day – Still unlabelled but on a slow path**</p><p>Now at 70, J.D. continues his routine visits, but the BP is still seldom measured. During a recent appointment, Dr. Martinez—his current PCP—asked him to use a home BP unit. J.D. bought one from an online retailer and has been checking his reading, but the values stay between 158–165 systolic, 92–106 diastolic, at home. He reports that the readings are “just a bit high,&quot; but his doctor, seeing a new label in the charts, started him on an ACE inhibitor with a target of better than 130/80 mmHg, but the patient feels better; he has no real symptoms besides tiredness after strenuous work. The CKD has progressed to stage 4; his eGFR is now 28 mL/min/1.73 m². The cardiology check-up continues to monitor his stent; the cardiologist notes a slight murmur in examination but attributes it to long‑standing hypertension that was undiagnosed for years.</p><p>Throughout this clinical life, the picture that had been painted in the chart was one of coronary disease, diabetes, kidney disease, and an array of risk factors—obesity, high salt intake, alcohol, caffeine sensitivity, stress, and NSAID use. Hypertension was an invisible partner, present on BP readings but never formally acknowledged. The narrative of John Carter is, in many ways, reflective of a silent chronic problem: a set of red flags that are never pulled together into a diagnosis until the consequences manifest in the form of a fall, a kidney failure alert, or an emergency.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 1991-03-15</h3><div class="visit-meta">Primary Care | Reason: Follow-up after coronary stent placement</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit Summary:
+John Carter, 60‑year‑old male, came for a follow‑up visit two weeks after percutaneous coronary intervention with drug‑eluting stent placement for a 70% RCA occlusion. He reports feeling well with no chest pain, headaches, dyspnea, or other complaints, and states full compliance with his medication regimen. The exam included review of his current cardiovascular therapy, counseling on lifestyle modifications, and planning for future testing.
+
+Subjective:
+- Chief complaint: Follow‑up after coronary stent placement.
+- Symptoms: Mild fatigue; absent chest pain, headaches, palpitations, edema, orthopnea.
+- Medications currently taken: Metoprolol 50 mg BID, Aspirin 81 mg daily (prescribed post‑PCI). No statin therapy yet.
+- Lifestyle: Sedentary job, BMI 32.4, diet high in saturated fats, limited fruit/vegetable intake.
+
+Objective:
+- Vitals: HR 72 bpm, RR 16/min. BP was not recorded due to cuff unavailability.
+- Physical exam: Heart regular, normal heart sounds. Lungs clear bilaterally. No peripheral edema, no tenderness.
+- Labs: Fasting glucose 108 mg/dL, HbA1c 5.7%, eGFR 98 mL/min/1.73 m², LDL 140 mg/dL.
+
+Assessment:
+1. Coronary artery disease – post‑PCI, stable, no ischemic symptoms.
+2. Type 2 diabetes mellitus – well controlled (fasting glucose and HbA1c within target).
+3. Hyperlipidemia – LDL above target for secondary prevention.
+4. Chronic kidney disease – stage 1 (eGFR &gt;90).
+5. Mild fatigue – likely benign, may be related to β‑blocker or suboptimal lifestyle.
+
+Plan:
+- Medications: Continue metoprolol 50 mg BID. Initiate atorvastatin 20 mg nightly to lower LDL toward &lt;70 mg/dL target. Continue aspirin 81 mg daily.
+- Lifestyle: Mediterranean diet, sodium restriction, weight loss goal 5‑10%, 150‑170 minutes of aerobic activity per week as tolerated.
+- Home BP monitoring: Educate on correct technique; record morning and evening readings.
+- Exercise stress test: Schedule for next month via cardiology rehab.
+- Labs: Repeat fasting lipid panel and CMP in 3 months.
+- Follow‑up: Return visit in 4 weeks to review BP logs, medication adherence, and fatigue.
+- Education: Reviewed antiplatelet importance, signs of bleeding, and emergency symptoms.
+
+Disposition: Patient left in good spirits, committed to medication adherence and lifestyle changes.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild fatigue</span><span class="pill">No chest pain</span><span class="pill">No headaches</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>72 bpm</td></tr><tr><td>respiratory_rate</td><td>16/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP not measured</li><li>Heart rate 72 bpm, regular</li><li>Respiratory rate 16/min, clear lungs</li><li>No tenderness to palpation</li><li>Auscultation normal</li><li>No edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete metabolic panel</li><li>Basic metabolic panel</li><li>Fasting glucose</li><li>Lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 108 mg/dL</li><li>HbA1c 5.7%</li><li>eGFR 98 ml/min/1.73m²</li><li>LDL 140 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on diet and exercise</li><li>Recommending home BP monitoring</li><li>Scheduled follow‑up in 4 weeks</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John left the office appreciative of the medication plan and said he would continue to take his pills and try to adopt a healthier diet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">History of acute myocardial infarction</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Bisoprolol 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stent placed 2 weeks ago</li><li>Recent MI with 70% RCA occlusion</li><li>Family history of coronary artery disease</li><li>BMI 32.4</li><li>Sedentary occupation</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen met John Carter in the office two weeks after he was discharged from the cardiac catheterization lab with a stent for a 70% occlusion of the right coronary artery. John reported feeling generally fine, no chest pain or headaches, and that he had been taking his prescribed medication as instructed. The physician reviewed the medication regimen, assessed that the beta‑blocker dosing was appropriate, counselled on diet and exercise, and planned to re‑check blood pressure in a month. No blood pressure cuff was available in the exam room, so the BP metric was omitted from the chart but was intended to be checked. An exercise stress test was scheduled for next month.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient presents after myocardial infarction with stent placement. No formal hypertension diagnosis; BP not taken at this visit. Current focus on CAD management.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 1994-11-22</h3><div class="visit-meta">Primary Care | Reason: Routine health check, new diagnosis of diabetes</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective**: 60‑year‑old male presents for routine check‑up, reports feeling drowsy and having nocturia. Denies chest pain or dyspnea. Reports increased thirst, increased urination, fatigue, regular alcohol consumption (10 units/week), high sodium intake, and physical inactivity. No known drug allergies.
+
+**Objective**:
+Vital signs: Heart rate 74 bpm, respiratory rate 16/min. Blood pressure cuff was unavailable; no BP recorded.
+Physical exam: BMI 32.4 kg/m². No edema or organomegaly. Cardiovascular: Regular rhythm, no murmurs. Pulmonary: Clear to auscultation bilaterally. Abdomen: Soft, non‑tender. Neurologic: Alert and oriented.
+
+**Assessment**:
+1. New diagnosis of type 2 diabetes mellitus (T2DM) – fasting glucose 156 mg/dL, HbA1c 8.2%.
+2. Early proteinuria (trace protein on UA) with serum creatinine 1.4 mg/dL, suggestive of stage 3a CKD; referral to nephrology planned.
+3. Coronary artery disease – stable, on guideline therapy.
+4. Obesity, hyperlipidemia, mild hypertension (unmeasured) – continue lifestyle counseling.
+
+**Plan**:
+- Start metformin 500 mg orally twice daily; educate on dosing, potential GI side effects, and need for renal dose adjustment if eGFR declines. 
+- Continue current cardiac medications: metoprolol 50 mg BID, aspirin 81 mg daily, atorvastatin 20 mg nightly. 
+- Advise carbohydrate counting, sodium restriction (&lt;2 g/day), limited alcohol (&lt;2 units/day), and initiation of aerobic exercise (150 min/week). 
+- Discuss insulin glargine initiation if HbA1c &gt;8.5% or fasting glucose &gt;180 mg/dL in 3 months. 
+- Schedule nephrology referral to evaluate proteinuria and CKD progression. 
+- Plan to monitor fasting glucose and HbA1c every 3 months, serum creatinine and eGFR quarterly, and BP at next visit. 
+- Encourage home BP monitoring and return visit in 4 weeks if any symptoms or medication concerns.
+
+**Disposition**: Patient agrees to medication regimen, understands need for follow‑up and monitoring, expresses concern about new schedule but committed to appointments.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Frequent thirst</span><span class="pill">Increased urination</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>74 bpm</td></tr><tr><td>respiratory_rate</td><td>16/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 32.4</li><li>No edema or organomegaly</li><li>Heart rate 74 bpm, regular</li><li>No murmurs or abnormal lung sounds</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting blood glucose</li><li>HbA1c</li><li>Serum creatinine</li><li>Urinalysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 156 mg/dL</li><li>HbA1c 8.2%</li><li>Serum creatinine 1.4 mg/dL</li><li>Urinalysis: trace protein, no hematuria</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Metformin 500 mg BID</li><li>Education on diet and exercise</li><li>Plan to begin insulin glargine if glycemic control inadequate</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John agreed to start metformin and understood the need for regular monitoring. He expressed concern about the new medication schedule but agreed to attend the referral appointment.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">History of acute myocardial infarction</span><span class="pill">Obesity (BMI 32.4)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Bisoprolol 5 mg daily</li><li>Atorvastatin 20 mg nightly</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension suspected but not diagnosed</li><li>Regular alcohol consumption (10 units/week)</li><li>History of high sodium intake</li><li>Physical inactivity</li><li>Family history of hypertension</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen conducted a comprehensive evaluation. John reported feeling drowsy and experiencing nocturia. The physician ordered a fasting glucose and HbA1c to investigate his symptoms. Results revealed fasting glucose 156 mg/dL and HbA1c 8.2%, meeting the criteria for type 2 diabetes mellitus. In addition, the blood pressure cuff was again unavailable; the office clinician noted that BP monitoring would be addressed at the next visit but did not record a measurement. Dr. Nguyen prescribed metformin 500 mg BID and discussed the need for insulin if glycemic targets were not met. Lifestyle counseling regarding carbohydrate counting, reduced sodium, and limiting alcohol was emphasized. A nephrological referral was scheduled to address early proteinuria and potential CKD.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>New diagnosis of type 2 diabetes with evidence of early renal involvement. Hypertension remains unmeasured; BP remains formally undocumented.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 1999-04-12</h3><div class="visit-meta">Primary Care | Reason: Annual wellness exam</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Annual wellness examination.
+
+History of Present Illness: Mr. John Doe, 60‑year‑old male with coronary artery disease, prior MI, type 2 diabetes, CKD stage 3, and obesity, presents for his annual wellness visit. He reports mild chest pressure during exertion (walking 3–4 blocks) and fatigue. He denies current headaches or vision changes but reports occasional headaches. No recent chest pain or dyspnea beyond exertional SOB. He continues to consume alcohol (wine, beer), modest caffeine intake, and reports jitteriness after caffeine. He declined purchase of a home BP monitor.
+
+Review of Systems: Cardiovascular – mild exertional chest pressure, no palpitations or orthopnea.
+Respiratory – exertional dyspnea, clear lungs.
+Constitutional – fatigue.
+Gastrointestinal – none.
+Neurologic – occasional headaches, no vision changes.
+
+Past Medical History: CAD, stent placement, MI, type 2 DM, CKD stage 3 eGFR 52, obesity, hypertension.
+
+Medications: Aspirin 81 mg daily; Bisoprolol 5 mg daily; Atorvastatin 40 mg nightly; Lisinopril 10 mg daily; Metformin 500 mg BID; Insulin glargine 10 units daily; Spironolactone 25 mg daily. No known drug allergies.
+
+Physical Examination: BP not obtained. HR 78 bpm, regular. RR 16/min. BMI 32.4. Cardiovascular: regular rate and rhythm, no murmurs. Pulmonary: clear to auscultation bilaterally, no wheezes. Extremities: no edema. Abdomen: soft, non-tender. Skin: no rash.
+
+Laboratory: Fasting glucose 155 mg/dL, HbA1c 8.5%, Serum creatinine 1.5 mg/dL, UA trace protein.
+
+Assessment:
+1) Stable CAD with possible exertional ischemia – patient reports chest pressure on exertion; no acute findings.
+2) CKD stage 3 – eGFR 52, trace proteinuria.
+3) T2DM poorly controlled – HbA1c 8.5%.
+4) Hypertension – no BP recorded, risk heightened.
+5) Obesity.
+6) Fatigue likely multifactorial (metabolic, cardiac).
+
+Plan:
+– Continue current medication regimen.
+– Reinforce dietary sodium and alcohol restriction; encourage Mediterranean diet and weight‑loss strategy.
+– Discuss importance of home BP monitoring; offer alternative—clinic BP cuff review if reconsiders.
+– Schedule nephrology evaluation within 6 weeks to assess CKD and consider additional renoprotective measures.
+– Cardiology follow‑up in 2 weeks to review stent patency; emphasize monitoring for chest pain and SOB.
+– Repeat fasting glucose, HbA1c, serum creatinine, eGFR in 3 months; adjust insulin dose if needed.
+– Consider adding HCTZ or other antihypertensive if BP rises; hold off until BP assessment.
+– Advise patient to report any worsening chest pain, dyspnea, or edema promptly.
+– Discuss potential for future lab testing, e.g., BNP if heart failure suspected.
+– Continue monitoring for anemia, electrolyte disturbances given spironolactone.
+– Return for routine follow‑up in 6 months or sooner if symptoms develop.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Shortness of breath after walking 3–4 blocks</span><span class="pill">Chest pressure</span><span class="pill">Occasional headaches</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>respiratory_rate</td><td>16/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 32.4</li><li>Heart rate 78 bpm, regular</li><li>Clear lungs, no wheezes</li><li>No lower extremity edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose</li><li>HbA1c</li><li>Serum creatinine</li><li>Urinalysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 155 mg/dL</li><li>HbA1c 8.5%</li><li>Serum creatinine 1.5 mg/dL</li><li>Urinalysis: trace protein</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reinforced lifestyle counseling</li><li>Suggested home BP monitoring</li><li>Referral to cardiology and nephrology for ongoing care</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John agreed to continue his medications and to revisit the labs. He remained skeptical about monitoring his blood pressure.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">Acute myocardial infarction history</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3 (eGFR 52)</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Bisoprolol 5 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Insulin glargine 10 units daily</li><li>Spironolactone 25 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Insulin glargine prescribed at age 55</li><li>Recent initiation of spironolactone at age 57 for kidney proteinuria</li><li>Continuation of daily alcohol (wine/wine + beer)</li><li>High caffeine intake (once daily cup coffee); patient experiences jittery after caffeine</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the visit, Dr. Santos noted that the patient complained of mild chest pressure on exertion and fatigue. John reported no current headaches or vision changes. The office assistant again did not bring a BP cuff into the exam room, so no BP measurement was recorded. Lab work from two months earlier (fasting glucose 155 mg/dL, HbA1c 8.5%) was available and reviewed. The clinic team scheduled future nephrology assessment for CKD management and reiterated the importance of limiting sodium and alcohol intake. A home blood pressure monitor was recommended for John to use, but he declined to purchase one, citing lack of interest in data collection. The cardiology visit the next day focused on stent patency and medication adherence; no BP was discussed. No new medications were added at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CKD stage 3 persists; hyperglycemia uncontrolled; hypertension remains unrecorded. No formal hypertension diagnosis.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2007-10-03</h3><div class="visit-meta">Emergency Medicine | Reason: Treatment of fall and evaluation for head injury</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 68‑year‑old male presents to ED after a fall while walking his dog, reporting dizziness and loss of balance, with no loss of consciousness.\n\nHistory of Present Illness: Patient fell with associated orthostatic dizziness noted by the on‑scene nurse. He denies headache beyond a mild post‑fall headache, and denies visual changes or focal neurological deficits. Chief complaint is exacerbated by a markedly elevated blood pressure (184/108 mmHg).\n\nPast Medical History: Coronary artery disease (stented RCA), acute MI, type 2 diabetes mellitus on insulin, chronic kidney disease stage 3 (eGFR 34 ml/min/1.73m²), chronic NSAID use for back pain.\n\nMedications: Aspirin 81 mg daily, Bisoprolol 5 mg daily, Atorvastatin 40 mg nightly, Lisinopril 10 mg daily (now reduced to 5 mg), Metformin 500 mg BID, Insulin glargine 12 units daily, Spironolactone 25 mg daily, Ibuprofen 400 mg q6h PRN.\n\nPhysical Examination: BP 184/108 mmHg, HR 96 bpm, RR 18/min, SaO₂ 97% RA. Clear lung fields, no focal neuro deficits, mild ankle edema, no bruising.\n\nLaboratory/Imaging: ECG – sinus rhythm, no acute ischemia. Chest X‑ray – normal. CBC, BMP, lipid panel, troponin, urinalysis ordered. Results: CBC normal, BMP shows creatinine 1.8 mg/dL, potassium 4.9 mmol/L, BUN 35 mg/dL, lipids LDL 130 mg/dL, troponin I &lt;0.01 ng/mL, urinalysis shows microscopic hematuria and trace protein.\n\nAssessment: Hypertensive urgency secondary to CKD stage 3 and NSAID use; mild acute kidney injury (Cr 1.8). Fall secondary to orthostatic dizziness. No evidence of intracranial bleed or significant head injury.\n\nPlan:\n1. IV labetalol 20 mg infusion titrated to SBP &lt;140 mmHg; achieved target within 10 min.\n2. Started amlodipine 5 mg daily.\n3. Reduced lisinopril from 10 mg to 5 mg daily to mitigate hyperkalemia risk.\n4. Continue aspirin 81 mg daily.\n5. Continue bisoprolol 5 mg daily, atorvastatin 40 mg nightly, metformin, insulin, spironolactone.\n6. Discontinue ibuprofen; advise NSAID avoidance and consider acetaminophen for pain.\n7. Prescribed home blood pressure monitoring device and instructed on proper technique.\n8. Dietary counseling: sodium restriction (&lt;1500 mg/day), balanced diet.\n9. Labs: Repeat CMP, electrolytes, and urinalysis in 48 hrs.\n10. Follow‑up: PCP within 1 week for BP control and diabetes check, cardiology within 2 weeks for rhythm and medication review, nephrology within 2 weeks for comprehensive hypertension work‑up.\n11. Counsel patient on fall risk mitigation: footwear, home environment, assistive devices if needed.\n\nDisposition: Admitted for monitoring; discharged after 48 hrs with stable BP, no neurological deficits, and instruction to follow up with PCP, cardiology, and nephrology. Patient verbalized understanding of medication changes and follow‑up plan.\n</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dizziness, loss of balance</span><span class="pill">Non‑traumatic ankle swelling</span><span class="pill">Headache (post‑fall mild)</span><span class="pill">No loss of consciousness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>184/108 mmHg</td></tr><tr><td>heart_rate</td><td>96 bpm</td></tr><tr><td>respiratory_rate</td><td>18/min</td></tr><tr><td>oxygen_saturation</td><td>97% room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 184/108 mmHg</li><li>Heart rate 96 bpm</li><li>Clear lungs</li><li>No focal neuro deficits</li><li>Ankle edema</li><li>No bruising</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete blood count</li><li>Basic metabolic panel</li><li>Lipid panel</li><li>Troponin I</li><li>Urinalysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>BMP: creatinine 1.8 mg/dL, potassium 4.9 mmol/L, BUN 35 mg/dL</li><li>Lipid panel: LDL 130 mg/dL</li><li>Troponin I: &lt;0.01 ng/mL</li><li>Urinalysis: microscopic hematuria, trace protein</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV labetalol infusion (goal SBP 140)</li><li>Started amlodipine 5 mg daily</li><li>Adjusted lisinopril to 5 mg daily to avoid hyperkalemia</li><li>Counseling on sodium restriction</li><li>Ordered home BP device</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>The patient tolerated the medications and described the blood pressure control as reassuring. He stated he would keep his home BP device and follow up with PCP and cardiologist for monitoring.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">Acute myocardial infarction history</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 3</span><span class="pill">Hypertension now documented (BP 184/108)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Bisoprolol 5 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Insulin glargine 12 units daily</li><li>Spironolactone 25 mg daily</li><li>Ibuprofen 400 mg every 6 hrs PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of CAD, MI, stent</li><li>CKD stage 3 (eGFR ~48 ml/min/1.73m²)</li><li>Type 2 diabetes on insulin</li><li>Chronic use of NSAIDs for back pain</li><li>Regular alcohol consumption</li><li>High salt diet</li><li>Smoking history (stopped 10 yrs ago)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John arrived after falling while walking his dog. The on‑scene nurse noted the patient’s orthostatic dizziness; he denied loss of consciousness. In the ED, vital signs disclosed a markedly elevated blood pressure of 184/108 mmHg. An ECG was performed and showed baseline sinus rhythm with no acute ischemic changes. Chest radiograph was normal. A laboratory panel revealed an elevated creatinine of 1.8 mg/dL (eGFR 34 ml/min/1.73m²), mild hematuria on urinalysis, and a slightly elevated potassium of 4.9 mmol/L. Based on the BP elevation and renal impairment, the attending physician, Dr. Patel, initiated intravenous labetalol 20 mg infusion, titrated to a 10-minute goal BP &lt; 140/90 mmHg. The patient was admitted for monitoring. Overnight, a nephrologist evaluated the patient and recommended a full hypertension work‑up. A calcium channel blocker (amlodipine 5 mg) was added to the regimen, and a dose adjustment of the ACE inhibitor was recommended. Home BP monitoring and dietary sodium restriction were emphasized. The patient was discharged after 48 hrs with instructions to continue his prescribed antihypertensives and to follow up with his PCP and cardiology.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Hypertension is now formally documented after a significant fall and elevated BP. CKD stage 4 (eGFR 28) will require ongoing monitoring. Diabetes remains poorly controlled; insulin dose may need adjustment.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2017-02-19</h3><div class="visit-meta">Primary Care | Reason: Routine check‑up with BP monitoring</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Routine check‑up with blood pressure monitoring.
+
+**History of Present Illness:** 70‑year‑old male with a past medical history of coronary artery disease (post‑MI), type 2 diabetes mellitus, chronic kidney disease stage 4 (eGFR 28 ml/min/1.73 m²), and hypertension presents for a routine bi‑annual visit. He reports feeling fatigued after work but denies chest pain, dyspnea, or headaches. He uses his home BP monitor and notes readings of 158/106 and 161/108 mmHg over the last two nights.
+
+**Medication Review:** Aspirin 81 mg, bisoprolol 5 mg, atorvastatin 40 mg, amlodipine 5 mg, lisinopril 2.5 mg, metformin 500 mg BID, insulin glargine 12 units daily, spironolactone 25 mg, ibuprofen 400 mg PRN.
+
+**Vascular:** Home BP elevated, office BP averaged 158/106 mmHg (measured three times). No orthostatic drop recorded.
+
+**Physical Exam:**
+- BP 158/106 mmHg, HR 72 bpm, RR 16/min, Temp 98.6 °F
+- Cardiac: Systolic murmur II/VI at apex, regular rhythm, no gallops
+- Lungs: Clear to auscultation bilaterally, no wheezes or crackles
+- Extremities: No pitting edema
+- Abdomen: Soft, non‑tender, no organomegaly
+- Neurologic: Alert and oriented, no focal deficits
+
+**Review of Systems:** Positive for fatigue; negative for chest pain, palpitations, dyspnea, syncope, headache, or limb pain.
+
+**Labs (most recent):**
+- CBC: WNL
+- BMP: creatinine 1.9 mg/dL, potassium 4.7 mmol/L
+- eGFR: 28 ml/min/1.73 m²
+- HbA1c: 7.9 %
+- Lipid panel: LDL 115 mg/dL
+- Urinalysis: trace protein
+
+**Assessment:**
+1. Uncontrolled systolic hypertension with target organ damage (proteinuria, CKD stage 4). 2. Type 2 diabetes with sub‑optimal glycemic control (HbA1c 7.9 %). 3. CKD progression risk factors (ACEi‑ARB use in concert with diuretic, NSAID). 4. Possible medication interaction/overlap with BP agents (lisopril + enalapril). 5. Fatigue likely multifactorial—renal anemia unlikely (CBC normal), medication side‑effects (beta‑blocker, diuretic), metabolic control.
+
+**Plan:**
+- Initiated enalapril 5 mg PO daily to supplement amlodipine for better renal protection; will taper lisinopril to 0 mg over 2 weeks.
+- Continue ASA 81 mg PO daily.
+- Counsel on sodium restriction (&lt;1500 mg/day) and encouragement of aerobic exercise 30 min most days.
+- Advise discontinuation of ibuprofen; alternative analgesic (acetaminophen) to control arthritis pain.
+- Refer to endocrinology for insulin dose adjustment, considering current HbA1c and renal function.
+- Schedule labs in 6 weeks: CMP, BMP, creatinine, eGFR, HbA1c, lipid panel. Repeat home BP log.
+- Educate patient on medication interactions, emphasize adherence to new regimen.
+- Provide fall risk reassessment, and home safety screening.
+- Follow‑up in 6 weeks for BP and labs; sooner if symptoms of hypotension or worsening renal function manifest.
+
+**Disposition:** Patient left clinic feeling reassured that his blood pressure is being addressed and feels positive about the medication changes.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">General fatigue after work</span><span class="pill">No chest pain or headaches</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>blood_pressure</td><td>158/106 mmHg</td></tr><tr><td>heart_rate</td><td>72 bpm</td></tr><tr><td>respiratory_rate</td><td>16/min</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 158/106 mmHg (averaged)</li><li>Heart rate 72 bpm</li><li>Clear lungs</li><li>No lower extremity edema</li><li>Systolic murmur II/VI at apex</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>BMP</li><li>Serum creatinine</li><li>HbA1c</li><li>Lipid panel</li><li>Urinalysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>BMP: creatinine 1.9 mg/dL, potassium 4.7 mmol/L</li><li>HbA1c 7.9%</li><li>Lipid panel: LDL 115 mg/dL</li><li>Urinalysis: trace protein</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started enalapril 5 mg daily</li><li>Increased amlodipine to 5 mg (remains)</li><li>Counseling on sodium restriction</li><li>Encouraged daily exercise</li><li>Scheduled follow‑up in 6 weeks for BP review</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>John felt the medication adjustment helped his energy levels. He agreed to adhere to dietary changes and regular exercise. He expressed confidence that his doctor had finally put a name to the high blood pressure he had been feeling.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">Acute myocardial infarction history</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Chronic kidney disease stage 4</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg daily</li><li>Bisoprolol 5 mg daily</li><li>Atorvastatin 40 mg nightly</li><li>Amlodipine 5 mg daily</li><li>Lisinopril 2.5 mg daily</li><li>Metformin 500 mg BID</li><li>Insulin glargine 12 units daily</li><li>Spironolactone 25 mg daily</li><li>Ibuprofen 400 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension diagnosed 1 year ago</li><li>CKD stage 4 (eGFR 28 ml/min/1.73m²)</li><li>Type 2 diabetes on insulin glargine</li><li>Regular NSAID use for arthritis</li><li>Continued alcohol consumption (2–3 drinks weekly)</li><li>Increased caffeine intake from coffee 11–12 am</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Martinez met John for his bi‑annual visit. The patient reported feeling tired after his usual work but denied chest pain or headaches. He reported using his home blood pressure monitor two nights before the visit and noted readings of 158/106 and 161/108 mmHg. In the office, the BP cuff was used appropriately. The office staff measured the patient’s BP three times, averaging 158/106 mmHg. The visit included a review of his recent labs (eGFR 28, HbA1c 7.9%, LDL 115 mg/dL). The physician initiated an ACE inhibitor (enalapril 5 mg daily) to add to the existing amlodipine for better renal protection, while tapering the low dose lisinopril. A high‑dose aspirin was continued for CAD. The patient was advised to limit sodium to &lt;1500 mg/day, increase exercise to 30 minutes most days, and to discuss adjustment of insulin dose with his endocrinologist. No new acute complaints were noted. The patient left the clinic feeling reassured that his blood pressure was being addressed, though he remained cautious about potential interactions between his medications.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 60</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">Diabetes mellitus</span><span class="pill">Chronic kidney disease</span><span class="pill">Hypertension</span><span class="pill">Obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Aspirin 81 mg PO daily</li><li>Bisoprolol 5 mg PO daily</li><li>Atorvastatin 40 mg PO nightly</li><li>Enalapril 5 mg PO daily</li><li>Amlodipine 5 mg PO daily</li><li>Lisinopril 2.5 mg PO daily</li><li>Metformin 500 mg PO BID</li><li>Insulin glargine 12 units daily</li><li>Spironolactone 25 mg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Follow‑up after drug‑eluting stent placement for RCA. Patient reports mild fatigue, no chest pain or dyspnea. Vitals: HR 72 bpm. Physical exam: heart regular, lungs clear, no edema. Labs: fasting glucose 108 mg/dL, HbA1c 5.7%, eGFR 98, LDL 140 mg/dL. Medications: continued metoprolol 50 mg BID, started atorvastatin 20 mg nightly, continued aspirin 81 mg daily. Advised Mediterranean diet, weight loss, aerobic activity, home BP monitoring. Ordered fasting lipid panel, CMP, and follow up in 4 weeks.</li><li>Routine primary care visit. Patient reports drowsiness, nocturia, increased thirst and urination, fatigue; BMI 32.4. Vitals: HR 74 bpm. Labs: fasting glucose 156 mg/dL, HbA1c 8.2%, serum creatinine 1.4 mg/dL, trace proteinuria. Started metformin 500 mg PO BID. Continue metoprolol, aspirin, atorvastatin. Nephrology referral scheduled. Plan for monitoring fasting glucose, HbA1c, creatinine, eGFR, and BP; home BP monitoring encouraged. Follow‑up in 4 weeks.</li><li>Annual wellness exam. Patient reports mild exertional chest pressure, fatigue, occasional headaches, and exertional dyspnea. BP not obtained; HR 78 bpm. Labs: fasting glucose 155 mg/dL, HbA1c 8.5%, creatinine 1.5 mg/dL, trace proteinuria. Current medications include aspirin, bisoprolol, atorvastatin 40 mg, lisinopril, metformin, insulin glargine, spironolactone. Plan: continue current regimen, emphasize diet and weight loss, encourage BP monitoring, nephrology referral within 6 weeks, cardiology follow‑up in 2 weeks, repeat labs in 3 months, consider antihypertensives if BP rises, monitor for heart failure. Return for routine follow‑up in 6 months.</li><li>Emergency department visit for fall with orthostatic dizziness and elevated BP 184/108 mmHg. Physical exam unremarkable except mild ankle edema. ECG sinus rhythm, normal troponin. Labs: creatinine 1.8, BUN 35, K 4.9, LDL 130, microscopic hematuria. Treated with IV labetalol to lower BP, started amlodipine 5 mg daily, reduced lisinopril to 5 mg, discontinued ibuprofen. Discharged stable after 48 hrs. Follow‑up: PCP, cardiology, nephrology, home BP monitoring, fall risk assessment.</li><li>Routine primary care visit with elevated BP of 158/106 mmHg, fatigue; labs show eGFR 28, creatinine 1.9, HbA1c 7.9, LDL 115, trace proteinuria; initiated enalapril 5 mg daily, continued amlodipine 5 mg, aspirin 81 mg, bisoprolol 5 mg, atorvastatin 40 mg, metformin 500 mg BID, insulin glargine 12 units, spironolactone 25 mg; discontinued ibuprofen; advised sodium restriction (&lt;1500 mg/day), aerobic exercise, endocrinology referral, and follow‑up in 6 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

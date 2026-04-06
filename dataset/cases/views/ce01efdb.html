@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case ce01efdb</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: ce01efdb</h1><div class="subtitle">Squamous Cell Carcinoma of the Left Lower Lobe of the Lung | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic Obstructive Pulmonary Disease (COPD), Chronic bronchitis, Emphysema, Asthma, History of Tuberculosis, Hypertension, Diabetes Mellitus, Cardiovascular disease</div><div class="meta-line">Risk Factors: Tobacco smoking, Radon exposure, Asbestos exposure, Silica dust exposure, Diesel exhaust exposure, Air pollution, Previous lung infections, Genetic predisposition</div></div>
+<details><summary>Narrative <span class="preview-text">Mr. James H. Whitaker, a 68‑year‑old retired machinist, had lived with a heavy smoking habit for sixty years—twenty of t...</span></summary><div class="section-body"><p>Mr. James H. Whitaker, a 68‑year‑old retired machinist, had lived with a heavy smoking habit for sixty years—twenty of those years a pack a day, then two packs a day for the rest of his life. His work on the plant machinery exposed him to diesel exhaust and silica dust. Years earlier he worked on a construction site that had cemented asbestos sheets, and he slept in a basement that had high radon levels. He’s had a long history of chronic lower respiratory illness: a decade of chronic bronchitis, a diagnosis of emphysema in his forties, and a childhood bout with tuberculosis that left a slight cavity in the right upper lobe. In addition, he has hypertension, type 2 diabetes, and a 45‑year history of coronary artery disease that required an angioplasty with stent placement in his mid‑fifties.</p><p>---</p><p>### **Week 1 – First Symptom**</p><p>James started the same cough he had been fighting for decades: a dry, hacking cough that grew worse at night, producing a small amount of whitish sputum. He also noticed a metallic taste in his mouth and an unusual fatigue that was not explained by his usual heavy breathing. A light, non‑productive cough became a more productive one over the next few days, with a few streaks of blood in the sputum by the end of the week. He attributed it to &quot;old lung disease catching up with him&quot; and postponed a doctor&#x27;s visit.</p><p>### **Week 3 – First Clinical Encounter**</p><p>The cough persisted. James finally called his primary care physician, Dr. Patel, who noted his smoking history, COPD exacerbations, and the new hemoptysis. Dr. Patel ordered a chest X‑ray. The image showed a mild, faint density in the left lower lobe and signs of chronic emphysema. A few days later, Dr. Patel referred James to Pulmonology.</p><p>At the Pulmonology office, James’s baseline spirometry was revealing: FEV₁ of 1.4 L (45% predicted), FEV₁/FVC ratio of 55%, confirming severe COPD. The pulmonologist added an inhaled corticosteroid/long‑acting bronchodilator regimen and advised him to try a sputum brush for possible culture, but the sputum remained unproductive. Because James had a new mass‑like opacity on the chest X‑ray, Dr. Carter ordered a CT scan of the chest with contrast.</p><p>### **Week 5 – Diagnostic Work‑up**</p><p>The CT scan confirmed a 2.3 cm spiculated nodule in the lower lobe of the left lung, with a small pleural reaction but no lymphadenopathy. Dr. Carter arranged an outpatient bronchoscopy; James was told that a suspicious area of the left lower lobe would be sampled via trans‑bronchial needle aspiration (TBNA). Given his emphysema, surgical resection was not an immediate consideration.</p><p>The bronchoscopy was performed without incident. A trans‑bronchial needle aspirate yielded a piece of tissue that was sent for pathology. James also donated a sputum sample, but it grew only opportunistic bacteria—no sign of active infection. Histopathology returned the following morning: squamous cell carcinoma, poorly differentiated, with a high Ki‑67 index. On immunohistochemistry, the tumor was p63‑positive, p40‑positive, CDX2‑negative—consistent with an NSCLC squamous subtype.</p><p>### **Week 7 – Oncology Consultation**</p><p>James’s oncologist, Dr. Nguyen, presented the pathology results. “The lesion is a squamous cell carcinoma, stage IIA (T2aN0M0).” She explained that the tumor size and location made him a candidate for surgical resection, but his severe COPD, diabetes, and cardiovascular disease complicated the picture. She performed a cardiopulmonary exercise test, which showed a maximal MET level of 4.8 and a predicted VO₂max of 10.5 ml/kg/min—below the threshold often cited for safe pulmonary resection. The surgical oncologist, Dr. Garcia, confirmed that a left lower lobectomy would likely result in a 30‑day mortality risk of about 7% and a 90‑day readmission rate approaching 25% for someone with James’s comorbidities.</p><p>After a detailed discussion of risks, benefits, and alternatives—including stereotactic body radiation therapy (SBRT) and systemic therapy—the group, along with James and his wife, decided to pursue SBRT rather than lobectomy.</p><p>### **Week 9 – SBRT Planning and Delivery**</p><p>Radiation oncologist Dr. Patel arranged four simulation scans to map the tumor precisely and account for breathing motion. James underwent a short course of SBRT: four fractions of 10 Gy each, delivered over two weeks. During the treatment, he experienced mild fatigue and low‑grade chest discomfort that resolved with rest.</p><p>In the weeks that followed, his initial cough and sputum production improved. He reported no hemoptysis after the third radiation session, and his forced expiratory volume remained stable. However, as he was scheduled for routine follow‑up in the oncology clinic, his wife mentioned that he had “been feeling more tired lately, and the coughing has gotten worse again.” There was also a subtle weight loss of 3 kg over the past month.</p><p>### **Week 12 – Follow‑up Review**</p><p>The oncologist ordered a PET‑CT to evaluate the response to radiation. The PET scan showed a residual 1.8 cm lesion in the left lower lobe, with mild fluorodeoxyglucose uptake. No distant metastases were visible, but the lesion size had not shrunk significantly; the standardized uptake value was 6.2. The oncologist told James that the tumor had not responded adequately to SBRT and that options now were limited: salvage surgery (very high risk), palliative chemotherapy, or best supportive care.</p><p>Given James&#x27;s baseline pulmonary reserve (FEV₁ still at 1.4 L) and his comorbidities, the oncology team decided that a single agent of cisplatin with pemetrexed was unlikely to be tolerated. The alternative was a combination of carboplatin and paclitaxel, but the patient expressed concern about neurotoxicity, neuropathy from his diabetes, and the potential for dehydration. He ultimately chose a palliative approach and agreed to a brief course of a low‑dose carboplatin/paclitaxel regimen.</p><p>### **Week 14 – First Chemotherapy Cycle**</p><p>The infusion was delivered. The day after, James developed mild leukopenia (WBC 2.3 K/µl), managed with growth factor support. He experienced the classic taxane‑induced neuropathy—tingling extremities, but no significant changes in blood pressure or glycemic control. He reported some relief from cough but little change in disease burden.</p><p>### **Week 18 – Disease Progression**</p><p>Three weeks later, James’s wife reported increasing dyspnea at rest, and he became more lethargic. A chest X‑ray revealed a new moderate pleural effusion on the left side and a faint increase in opacity at the tumor bed. He returned to the clinic, and Dr. Nguyen referred him for a thoracentesis. Approximately 350 ml of serosanguinous fluid was drained, and cytology confirmed metastatic squamous carcinoma cells. The effusion was not a significant contributor to hypoxia, but James’s cough and breathing effort had worsened.</p><p>During evaluation for further systemic therapy, a repeat CT scan of the chest showed an enlarged left hilar lymph node cluster, now measuring 1.5 cm. The PET‑CT also revealed faint uptake in the para‑aortic nodes (SUV 4.9). This progression indicated an early nodal metastasis, shifting his cancer to stage IIIA.</p><p>### **Week 20 – Palliative Care Consultation**</p><p>With disease progression and limited therapeutic options, Dr. Rodriguez, a palliative care specialist, met with James and his family. They discussed goals of care, recognizing James’s preference to avoid aggressive treatment given his comorbidities. Dr. Rodriguez suggested a palliative radiation focusing on the symptomatic pleural effusion and left lower lobe mass to relieve cough, pain, and dyspnea.</p><p>James consented. Dr. Patel administered a course of palliative radiation (10 Gy in two fractions). He had a transient improvement in cough severity but remained overall in a declining trajectory.</p><p>### **Week 25 – Cardiac Complication**</p><p>James’s hypertension, managed by an ACE inhibitor, had become poorly controlled after multiple infections. He developed a new onset of atrial fibrillation, requiring initiation of low‑dose beta‑blocker therapy. His blood pressure spiked to 160/95, coinciding with a mild renal insufficiency (creatinine 1.6 mg/dL) attributed to his diabetes and recent dehydration episodes.</p><p>In addition, he suffered a sudden, severe chest pain. Emergency services found him in atrial fibrillation with a rapid ventricular response; chest pain resolved with amiodarone. Urgent cardiac evaluation, including ECG and cardiac MRI, suggested ischemic changes in the inferior wall but no acute blockage. The cardiologist adjusted his anti‑anginal regimen and initiated a low‑dose aspirin, but this further limited options for anticoagulation.</p><p>### **Week 28 – Respiratory Decline**</p><p>James&#x27;s cough had become productive of thick sputum. A spirometry showed FEV₁ 1.2 L (40% predicted), a marked decrease due to the pleural effusion and increased tumor volume. A repeated thoracentesis removed 120 ml of fluid; cytology again confirmed squamous carcinoma cells. The pleural fluid remained exudative.</p><p>With persistent shortness of breath and an inability to tolerate even low‑dose radiation or chemotherapy, the team shifted fully into a palliative route. Dr. Rodriguez suggested a short‑course of oxygen therapy, low‑dose opioids for cough‑related discomfort, and close monitoring for infection.</p><p>### **Week 30 – Endocrine Deterioration**</p><p>James’s diabetic control worsened. He developed a foot ulcer that became infected; despite antibiotics and wound care, the ulcer progressed to cellulitis and required intravenous antibiotics. His glycemic control remained unstable due to steroid therapy initiated for short‑term anti‑inflammatory effect on his lung disease, culminating in hyperglycemia and further neutropenia.</p><p>During this period, James became increasingly depressed; his family was concerned about his quality of life. He expressed frustration over each new decline and a desire to minimize hospital procedures.</p><p>### **Week 32 – Final Days**</p><p>James was admitted with a fever of 39°C, productive cough, and worsening dyspnea. A chest CT revealed massive left pleural effusion and extensive ground‑glass opacities in the right lung—likely pulmonary edema exacerbated by congestive heart failure and infection. His oxygen saturation fell to 82% on room air. A bedside thoracentesis removed 600 ml of fluid, but the improvement was temporary.</p><p>The palliative care team, in consultation with his family and the oncology team, decided to transition James from aggressive care to comfort measures. He was placed on a home oxygen tank with 2 L/min flow, provided with a fentanyl patch for pain relief, and scheduled for home hospice visits.</p><p>On his sixty‑ninth birthday, James passed peacefully at home, surrounded by his wife and children, as the final notes of his life story dwindled. The care team, the family, and James himself agreed that his illness journey had come to an end, and the focus had fully shifted from cure to quality of life.</p><p>---</p><p>### **Key Clinical Decision Points**</p><p>1. **Diagnostic Confirmation** – Rapid work‑up of hemoptysis in an elderly heavy smoker with COPD.
+2. **Treatment Choice** – Opting for SBRT due to high surgical risk.
+3. **Re‑evaluation** – PET/CT at 12 weeks post‑SBRT showing residual disease prompted consideration of chemotherapeutic rescue.
+4. **Chemotherapy Tolerance** – Choosing a low‑dose carboplatin/paclitaxel regimen versus higher toxicity agents.
+5. **Metastatic Progression** – Transitioning to palliative radiation after nodal involvement.
+6. **Cardiovascular Management** – Balancing anti‑arrhythmic therapy with anti‑thrombotic needs.
+7. **Palliative Transition** – Early referral to hospice when disease progression outpaced available therapies.</p><p>This narrative reflects a realistic, evolving clinical journey for a 68‑year‑old male with squamous cell carcinoma of the left lower lobe, complicated by multiple chronic illnesses and environmental exposures. The story underscores the importance of individualized decision‑making in the face of high‑risk comorbidities and the inevitable shift from curative intent to comfort‑focused care as the disease advances.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-02-01</h3><div class="visit-meta">Primary Care | Reason: Persistent cough with hemoptysis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent cough with hemoptysis. 
+
+History of Present Illness: Mr. Whitaker is a 68‑year‑old male with a long history of COPD, chronic bronchitis, emphysema, asthma, and a prior TB infection with a known cavitary lesion. He presents with a dry cough that worsens at night and occasional whitish sputum. He reports a few streaks of blood in sputum. He denies chest pain, fever, dyspnea beyond baseline, recent travel, or weight loss.
+
+Past Medical History: COPD (15 yrs), Chronic bronchitis, Emphysema, Asthma, History of TB, Hypertension, Type 2 Diabetes Mellitus, Coronary artery disease (stent placed 20 yrs ago). 
+
+Medications: Albuterol sulfate 90 mcg MDI × 2 puffs PRN, Fluticasone/salmeterol 250/50 µg (Twisthaler) BID, Lisinopril 10 mg daily, Metformin 500 mg BID, Aspirin 81 mg daily.
+
+Allergies: NKDA.
+
+Social History: Heavy smoker, 60‑year history, 2 packs/day; denies alcohol or illicit drug use.
+
+Review of Systems: Positive for cough, sputum, mild nasal congestion. Negative for chest pain, dyspnea, fever, hematuria, GI bleeding.
+
+Vitals: BP 150/90 mmHg, HR 92/min, RR 18/min, Temp 36.8 °C, SpO₂ 94% RA.
+
+Physical Exam:
+- General: Alert, no acute distress.
+- HEENT: Clear speech, mild nasal congestion.
+- Chest: Decreased breath sounds in left lower lobe, slight wheezing.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Extremities: No edema.
+- Skin: No rashes, no clubbing.
+
+Assessment:
+1. COPD exacerbation with hemoptysis – likely due to chronic airway inflammation and possible superimposed infection.
+2. Possible bronchogenic carcinoma – hemoptysis and heavy smoking history raise concern.
+3. Tuberculosis relapse – history of TB and current cavitary-like density on CXR.
+4. Bronchiectasis – chronic sputum production.
+5. Pulmonary embolism – unexplained hemoptysis, but no risk factors; low likelihood.
+
+Plan:
+- Continue existing inhaled therapy (Albuterol PRN, Fluticasone/salmeterol BID). 
+- Start oral prednisone 40 mg daily for 5 days to treat COPD exacerbation.
+- Advise smoking cessation; refer to smoking cessation program.
+- Order chest X‑ray (done – mild, faint density in left lower lobe, emphysematous changes; no effusion).
+- Pulmonology referral within 2 weeks for review of imaging, consideration of CT chest and bronchoscopy if suspicion persists.
+- Educate patient on red flags (persistent hemoptysis &gt; 3 mL, worsening dyspnea, chest pain) – return to ED.
+- Continue blood pressure and diabetes control; monitor BP.
+- Follow up in office in 2 weeks or sooner if symptoms worsen.
+
+Patient understanding confirmed. All decisions explained and documented.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dry cough</span><span class="pill">Nighttime worsening</span><span class="pill">Whitish sputum</span><span class="pill">Few streaks of blood in sputum</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>150/90</td></tr><tr><td>Heart Rate</td><td>92</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Temperature</td><td>36.8°C</td></tr><tr><td>Oxygen Saturation</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear speech, mild nasal congestion</li><li>Chest: decreased breath sounds in left lower lobe, slight wheezing</li><li>Cardiac: regular rhythm, no murmurs</li><li>Extremities: no edema</li><li>Skin: no rashes, no clubbing</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: mild, faint density in left lower lobe; emphysematous changes; no pleural effusion.</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on smoking cessation</li><li>Advised follow‑up with pulmonology</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Heavy smoking history (60 years, 2 packs per day)</li><li>COPD diagnosis 15 years ago</li><li>History of tuberculosis with cavitary lesion</li><li>Hypertension, Type 2 diabetes, coronary artery disease (stent placed 20 years ago)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel evaluated Mr. Whitaker in the office, noting his long-standing COPD exacerbation and recent hemoptysis. A physical exam revealed decreased breath sounds in the left lower lung field. The clinician ordered a chest X‑ray to rule out new infiltrates or masses. The patient was reassured about his comorbidities and referred to a pulmonologist for further evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-02-15</h3><div class="visit-meta">Pulmonology | Reason: Follow-up after chest X‑ray abnormality</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after chest X‑ray abnormality.
+
+History of Present Illness: 68‑year‑old male (Mr. Whitaker) presents for follow‑up of a new left lower lobe (LLL) density identified on prior chest radiograph. Patient reports persistent dry cough for 3 weeks, occasional hemoptysis, and fatigue. Symptoms are not relieved by his inhaled therapy. No fever, night sweats, weight loss, or dyspnea beyond baseline. Past respiratory illnesses include COPD, chronic bronchitis, emphysema, asthma, and remote tuberculosis. Current medications include albuterol (90 mcg MDI PRN), fluticasone/salmeterol (250/50 µg Twisthaler BID), lisinopril 10 mg daily, metformin 500 mg BID, aspirin 81 mg daily, and a 5‑day course of prednisone 40 mg daily that started 2 days ago.
+
+Review of Systems: Respiratory: cough, occasional hemoptysis, no wheeze worsening. Constitutional: fatigue, no weight loss. Cardiovascular: no chest pain.
+
+Physical Examination:
+- Vital signs: BP 148/88 mmHg, HR 90 bpm, RR 20 /min, Temp 36.7 °C, SpO₂ 93 % RA.
+- General: Alert, no acute distress.
+- Lungs: mild bilateral wheezes, prolonged expiratory phase, no crackles, no clubbing.
+- Heart: regular rhythm, no murmurs.
+- Abdomen: soft, non‑tender, no hepatosplenomegaly.
+- Extremities: no edema.
+
+Baseline spirometry: FEV₁ 1.4 L (45 % predicted), FEV₁/FVC 55 %. No improvement after short‑acting bronchodilator.
+
+Assessment: 68‑year‑old male with COPD on optimal inhaled therapy and recent 5‑day course of prednisone. New spiculated 2.3 cm nodule in LLL on contrast‑enhanced CT. Differential includes primary lung cancer (especially squamous cell carcinoma or metastatic disease), granulomatous disease (post‑TB cavity or sarcoidosis), infectious etiologies (abscess, invasive fungal), and benign post‑bronchogenic processes.
+
+Plan:
+1. Add tiotropium 18 µg once daily for COPD optimization.
+2. Continue inhaled corticosteroid/long‑acting bronchodilator (fluticasone/salmeterol BID) and albuterol PRN.
+3. Send sputum sample for culture and AFB smear (even if scant); consider induced sputum.
+4. Discuss possible referral to thoracic surgery or interventional pulmonology for image‑guided needle biopsy or wedge resection based on CT findings.
+5. Educate patient on symptom red‑flag (increasing hemoptysis, unexplained weight loss, new dyspnea).
+6. Schedule follow‑up in 2 weeks to review CT results, sputum culture, and consider bronchoscopy. If patient deteriorates sooner, advise to call clinic immediately.
+7. Continue antihypertensive (lisinopril) and hyperglycemic (metformin) management. Monitor blood pressure and glucose.
+8. Reinforce smoking cessation and pulmonary rehab counseling.
+
+Disposition: Patient will return in 2 weeks for CT review and further work‑up. He is instructed to call the clinic for any acute change.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent cough</span><span class="pill">Occasional hemoptysis</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>148/88</td></tr><tr><td>Heart Rate</td><td>90</td></tr><tr><td>Respiratory Rate</td><td>20</td></tr><tr><td>Temperature</td><td>36.7°C</td></tr><tr><td>Oxygen Saturation</td><td>93% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Respiratory: mild wheezes bilaterally, prolonged expiratory phase</li><li>No signs of infection or clubbing</li><li>Cardiac: regular rhythm</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT chest with IV contrast</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT Chest: 2.3 cm spiculated nodule in left lower lobe; small pleural reaction; no mediastinal lymphadenopathy.</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Tiotropium 18 μg daily added</li><li>Advised sputum culture</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Results of chest X‑ray</li><li>COPD severity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The pulmonologist reviewed Mr. Whitaker’s X‑ray showing a left lower lobe density. A baseline spirometry demonstrated FEV1 of 1.4 L (45% predicted) and FEV1/FVC 55%. The clinician added tiotropium 18 μg daily, continued his inhaled corticosteroid/long‑acting bronchodilator, and ordered a contrast‑enhanced CT scan of the chest to assess the density. A sputum brush was suggested, but the patient produced scant sputum.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-02-28</h3><div class="visit-meta">Oncology | Reason: Discussion of diagnostic biopsy results</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Discussion of diagnostic biopsy results and treatment planning for newly diagnosed pulmonary malignancy.
+
+**History of Present Illness**: Mr. Whitaker, 68‑year‑old male with a significant pulmonary history (COPD, chronic bronchitis, emphysema, prior TB) presents for review of trans‑bronchial needle aspiration (TBNA) pathology. The specimen yielded poorly differentiated malignant cells, immunohistochemistry positive for p63 and a high Ki‑67 proliferation index. The patient reports persistent cough and nighttime fatigue. He has been on a short course of prednisone 40 mg daily for 5 days after initial hemoptysis and cough; inhaled bronchodilator therapy has been initiated.
+
+**Past Medical History**: COPD with emphysema and chronic bronchitis, asthma, hypertension, type 2 diabetes mellitus, coronary artery disease, prior pulmonary tuberculosis.
+
+**Medications**: Albuterol sulfate 90 µg MDI (PRN), Fluticasone/salmeterol 250/50 µg Twisthaler BID, Tiotropium 18 µg daily, Lisinopril 10 mg daily, Metformin 500 mg BID, Aspirin 81 mg daily.
+
+**Allergies**: NKDA.
+
+**Examination**:
+- General: Pale sclera, mild dyspnea at rest.
+- Respiratory: Decreased breath sounds bilaterally, wheezes.
+- Cardiovascular: Regular rhythm.
+
+**Vitals**:
+BP 152/92 mmHg, HR 88 bpm, RR 19 /min, Temp 36.6 °C, SpO₂ 92 % RA.
+
+**Objective Test Results**:
+- Cardiopulmonary exercise test: VO₂max 10.5 ml/kg/min, max MET 4.8.
+- CT chest (previous): 2.3 cm spiculated nodule in left lower lobe.
+- CT guided biopsy pathology: poorly differentiated carcinoma, p63+, high Ki‑67.
+
+**Assessment**:
+1. Suspected primary squamous cell carcinoma of the lung (stage I–IIA based on size and limited disease). The histology and high Ki‑67 indicate aggressive tumor biology.
+2. COPD exacerbation secondary to tumor‑related airway obstruction.
+
+**Differential Diagnoses**:
+- Primary lung carcinoma (squamous cell, large cell).
+- Metastatic disease to lung.
+- Chronic infectious process (e.g., TB relapse, bacterial pneumonia).
+
+**Plan**:
+1. **Treatment**: Proceed with stereotactic body radiation therapy (SBRT) as definitive local treatment given the patient’s comorbidities and exercise limitation (max MET 4.8). Plan SBRT simulation and treatment in 2 weeks.
+2. **Supportive Care**:
+   - Continue inhaled bronchodilator therapy (Albuterol PRN, Fluticasone/salmeterol BID, Tiotropium daily).
+   - Blood pressure and glucose monitoring; continue lisinopril and metformin.
+   - Consider a short prednisone taper (5 mg daily for 7 days) before SBRT to reduce risk of radiation pneumonitis.
+3. **Monitoring**:
+   - Weekly symptom check‑ins, vitals, and oxygen saturation.
+   - Baseline CBC, CMP, and coagulation profile before each SBRT session.
+   - Repeat CT chest at 3 months post‑SBRT to assess treatment response.
+4. **Coordination of Care**:
+   - Referral to radiation oncology for SBRT planning.
+   - Pulmonology follow‑up after first SBRT session for respiratory status.
+   - Dietitians for glycemic control.
+   - Schedule a follow‑up oncology visit in 1 month.
+5. **Education**:
+   - Discussed SBRT procedure, expected side effects (e.g., fatigue, cough, esophageal irritation), importance of medication adherence.
+   - Emphasized smoking cessation (patient is a former smoker). 
+
+**Follow‑Up**:
+- Radiation oncology simulation in 2 weeks.
+- Office oncology follow‑up in 1 month and then every 3 months for the first year.
+- Pulmonology reassessment after SBRT to evaluate airway function.
+- If disease progression or recurrence by 3 months, re‑evaluate for systemic therapy options.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent cough</span><span class="pill">Nighttime fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>152/92</td></tr><tr><td>Heart Rate</td><td>88</td></tr><tr><td>Respiratory Rate</td><td>19</td></tr><tr><td>Temperature</td><td>36.6°C</td></tr><tr><td>Oxygen Saturation</td><td>92% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>General: pale sclera, mild dyspnea at rest</li><li>Respiratory: decreased breath sounds, wheezes</li><li>Cardiac: regular rhythm</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Cardiopulmonary exercise test results</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Exercise test: VO₂max 10.5 ml/kg/min, max MET 4.8</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Patient education on SBRT</li><li>Planning for radiation therapy</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Tiotropium 18 μg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT chest findings</li><li>Bronchoscopy tissue pathology</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Whitaker met with the oncology team. Trans‑bronchial needle aspiration yielded squamous cell carcinoma, poorly differentiated, p63‑positive, Ki‑67 high. Stage was determined T2aN0M0 (stage IIA). The oncologist performed a cardiopulmonary exercise test revealing a maximum MET of 4.8, implying a high peri‑operative risk. The team discussed options: left lower lobectomy (30‑day mortality risk ~7%), stereotactic body radiation therapy (SBRT), and systemic therapy. Given the patient’s comorbidities, SBRT was chosen in advance of a surgical attempt.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosed as stage IIA squamous NSCLC. High surgical risk.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-03-13</h3><div class="visit-meta">Radiation Oncology | Reason: SBRT simulation and initiation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: SBRT simulation and initiation of definitive treatment for confirmed non‑small cell lung carcinoma.
+
+History of Present Illness:
+Mr. Whitaker, a 68‑year‑old male with a history of COPD, asthma, emphysema, chronic bronchitis, hypertension, diabetes mellitus, cardiovascular disease, and prior tuberculosis, presents for the first fraction of a four‑fraction SBRT regimen to treat a 2.3 cm spiculated nodule in the left lower lobe, histologically confirmed as poorly differentiated squamous cell carcinoma (p63+, high Ki‑67). He has been on a short course of prednisone 5 mg daily for 7 days pre‑treatment and continues inhaled bronchodilator therapy (Albuterol, Fluticasone/Salmeterol, Tiotropium). His cough is improving and he reports mild fatigue. He tolerates the first fraction well with low‑grade chest discomfort and moderate fatigue, managed with rest.
+
+Physical Examination:
+- Vital signs: BP 149/90 mmHg, HR 87 bpm, RR 20 /min, Temp 36.5 °C, SpO₂ 93 % RA (≥92 % post‑fraction).
+- Respiratory: no acute distress, mild bilateral wheezes, no end‑tidal crackles.
+- Cardiovascular: no murmurs, normal heart sounds.
+- Other: no acute adverse effects noted.
+
+Treatment Administered:
+- First SBRT fraction: 10 Gy prescribed to the planning target volume (PTV) with strict gating for diaphragmatic motion.
+
+Assessment:
+- Stage IA (T1cN0M0) non‑small cell lung carcinoma, currently being treated with definitive SBRT.
+- Comorbid COPD and cardiovascular disease; no acute complications from SBRT observed.
+
+Plan:
+1. Complete remaining three SBRT fractions (10 Gy each) on the established schedule (end of current week and beginning of next week).
+2. Repeat CBC and CMP prior to each subsequent fraction to monitor for hematologic and renal toxicity.
+3. Continue prednisone taper: 5 mg/day for 7 days (currently underway), adjust based on fatigue and chest symptoms.
+4. Maintain inhaled bronchodilator regimen (Albuterol PRN, Fluticasone/Salmeterol BID, Tiotropium daily) and antihypertensive therapy (lisinopril 10 mg daily).
+5. Monitor oxygen saturation after each fraction; if desaturation &lt;92 % or new wheeze, consider bronchodilator rescue and possible hospital evaluation.
+6. Counsel patient on signs of early radiation pneumonitis (persistent cough, dyspnea, fever) and instruct prompt reporting.
+7. Follow‑up:
+   - Oncology office visit 1 month post‑SBRT for clinical assessment.
+   - Repeat CT chest at 3 months post‑SBRT to evaluate local control.
+   - Pulmonary function test in 6 months to assess long‑term lung function.
+   - Cardiology consult if BP remains elevated &gt;140/90 mmHg.
+
+Patient education: Reviewed SBRT schedule, potential acute side effects, importance of adherence to medications and follow‑up. He verbalized understanding and is scheduled for next fractions.
+
+Disposition: Mr. Whitaker is stable and will receive the next SBRT fraction as planned.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Improving cough</span><span class="pill">Mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>149/90</td></tr><tr><td>Heart Rate</td><td>87</td></tr><tr><td>Respiratory Rate</td><td>20</td></tr><tr><td>Temperature</td><td>36.5°C</td></tr><tr><td>Oxygen Saturation</td><td>93% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No acute adverse effects noted</li><li>Oxygen saturation &gt; 92% after each session</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC and CMP before start of SBRT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 7.2 K/µl, Hb 13.5 g/dL, Platelets 210 K/µl</li><li>CMP: Creatinine 1.2 mg/dL, BUN 15 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>First SBRT fraction (10 Gy)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT chest showing 2.3 cm nodule</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The radiation oncology team performed four simulation scans to account for diaphragmatic motion. SBRT was planned as four fractions of 10 Gy over two weeks, delivering a total of 40 Gy. Mr. Whitaker tolerated the first fraction well, experiencing only low‑grade chest discomfort and moderate fatigue, managed with rest. The team scheduled subsequent fractions at the end of the current week and the beginning of the next.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiated SBRT, 1st fraction delivered.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-04-09</h3><div class="visit-meta">Oncology | Reason: Follow‑up after SBRT completion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up after completion of SBRT for Stage IIA left lower lobe carcinoma.
+
+History of Present Illness: A 68‑year‑old male presents for routine post‑SBRT review. He reports a significant reduction in cough compared with baseline, persistent fatigue, and a 3‑kg weight loss over the past month. No hemoptysis or chest pain is noted. He denies fever, dyspnea escalation or new systemic symptoms.
+
+Past Medical History: COPD (emphysema, chronic bronchitis, asthma), hypertension, type 2 diabetes mellitus, coronary artery disease, history of tuberculosis, Stage IIA pulmonary adenocarcinoma.
+
+Medications: Albuterol sulfate 90 µg (MDI) BID PRN, Fluticasone/salmeterol 250/50 µg (Twisthaler) BID, Tiotropium 18 µg daily PO, Lisinopril 10 mg PO daily, Metformin 500 mg BID, Aspirin 81 mg PO daily.
+
+Allergies: NKDA.
+
+Physical Examination:
+- Vital Signs: BP 147/88 mmHg, HR 85 bpm, RR 18 bpm, temp 36.7°C, SpO₂ 94% RA.
+- General: Appears mildly fatigued, weight 172 lb (↓3 lb).
+- HEENT: No abnormalities.
+- Chest: Mild inspiratory wheezing, no rales or rhonchi. Breath sounds otherwise clear.
+- Abdomen: Non‑tender, soft.
+- Extremities: No peripheral edema.
+
+Diagnostics: PET‑CT was performed today and demonstrated a residual 1.8 cm left lower lobe lesion with an SUV of 6.2. No distant metastatic disease or lymphadenopathy noted.
+
+Assessment:
+1. Residual primary left lower lobe carcinoma post‑SBRT with avid 18‑FDG uptake.
+2. No evidence of regional or distant metastasis (Stage IIB in‑field residual disease).
+3. Mild COPD symptoms controlled on maintenance inhalers; stable BMI.
+4. Chronic hypertension on lisinopril; controlled.
+5. Diabetes under control with metformin.
+
+Plan:
+- Initiate first cycle of low‑dose palliative chemotherapy: Carboplatin 200 mg/m² IV on day 1, Paclitaxel 80 mg/m² IV on day 1, repeated every 3 weeks.
+- Continue existing inhaled bronchodilator therapy (Albuterol, Fluticasone/Salmeterol, Tiotropium). Advise patient on medication adherence.
+- Reinforce nutritional counseling—encourage high‑protein, high‑calorie diet to mitigate weight loss; refer to dietitian if weight continues to decline.
+- Educate patient on potential chemo‑induced fatigue; recommend activity pacing.
+- Monitor CBC, CMP before each chemotherapy cycle.
+- Schedule follow‑up oncology visit in 4 weeks to assess tolerance, toxicity, and response. Repeat PET‑CT in 3 months to evaluate for disease regression.
+- Encourage prompt reporting of new or worsening symptoms (dyspnea, hemoptysis, fever). Follow the current COPD management plan and continue aspirin for cardiovascular protection.
+
+Patient expressed reluctance to high‑risk surgical salvage; palliative chemotherapy offers a tolerable compromise.
+
+Disposition: Outpatient.
+
+Signature: Dr. X, M.D.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Reduced cough</span><span class="pill">Fatigue</span><span class="pill">Weight loss of 3 kg</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>147/88</td></tr><tr><td>Heart Rate</td><td>85</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Temperature</td><td>36.7°C</td></tr><tr><td>Oxygen Saturation</td><td>94% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Chest: mild wheezing, no rales</li><li>Weight 172 lb (down from 175 lb)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PET‑CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PET‑CT: residual 1.8 cm left lower lobe lesion, SUV 6.2; no distant metastases.</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Patient scheduled for first cycle of low‑dose carboplatin/paclitaxel</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span><span class="pill">Stage IIA squamous cell carcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completion of SBRT</li><li>Post‑SBRT imaging</li><li>Current medications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist assessed Mr. Whitaker’s post‑SBRT status. A PET‑CT was performed, showing a residual 1.8 cm lesion in the left lower lobe with an SUV of 6.2. No distant disease. The team discussed salvage options: high‑risk surgery, palliative chemotherapy, or best supportive care. The patient expressed reluctance to intensive therapy; the oncologist explained low‑dose carboplatin/paclitaxel as a possible palliative approach. Treatment was planned. The patient was also advised to maintain nutritional intake to combat weight loss.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Residual disease after SBRT; progressing to stage IIA; considered palliative chemotherapy.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-04-23</h3><div class="visit-meta">Oncology | Reason: First cycle chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Mr. Whitaker, 68‑year‑old male with Stage IIA squamous cell carcinoma of the left lower lobe, presents today for post‑infusion evaluation of his first cycle of low‑dose carboplatin (AUC 2) and paclitaxel (50 mg/m²). He received the full 30‑minute infusion without acute reaction.\n\n**Subjective:** He reports mild leukopenia noted on his day‑after CBC, mild tingling in his extremities consistent with early peripheral neuropathy, persistent cough (although frequency has decreased), and mild fatigue. No dyspnea exacerbation or new chest pain.\n\n**Objective:** Vitals remain stable: BP 149/90 mmHg, HR 86 bpm, RR 19 /min, temp 36.5°C, SpO₂ 93% on RA. No acute allergic reaction observed during the infusion.\n\n**Assessment:** 1) **Chemotherapy‑induced neutropenia** – WBC 2.3 K/µL; pegfilgrastim (6 mg SC) started to mitigate further drop and reduce febrile neutropenia risk. 2) **Early peripheral neuropathy** likely related to paclitaxel; patient reports mild tingling only, no motor deficit. 3) **COPD/emphysema exacerbation** – persistent dyspnea; inhaler therapy unchanged. 4) **Risk of infection** – neutropenic state; monitor for fever, chills, malaise. 5) **Consideration of radiation pneumonitis** – patient completed SBRT 1.5 weeks prior; no new respiratory symptoms beyond baseline dyspnea.\n\n**Plan:**\n- Continue current chemotherapeutic protocol: next cycle of carboplatin (AUC 2) + paclitaxel (50 mg/m²) scheduled in 4 weeks.\n- Pegfilgrastim 6 mg SC to be given within 72 hrs of each cycle; CBC will be repeated at day 5 post‑infusion and again 7 days after pegfilgrastim.\n- Continue inhaled therapy: albuterol PRN, fluticasone/salmeterol BID, tiotropium 18 µg daily.\n- Counsel patient on signs of infection (fever &gt;38 °C, chills, persistent cough) and to seek immediate care.\n- Monitor neuropathic symptoms; consider dose adjustment or neuroprotective agent if progressing.\n- Encourage rest, adequate hydration, and continue nutritional counseling.\n- Plan for repeat PET‑CT in 3 months to assess residual disease.\n- Follow‑up oncology visit in 4 weeks (or sooner if symptom changes).\n- Maintain routine pulmonology follow‑up; consider pulmonary rehabilitation referral for dyspnea management.\n- No changes in antihypertensive or diabetes therapy for now.\n\n**Disposition:** Patient tolerating treatment well, advised to contact clinic if fever or worsening symptoms occur before next scheduled visit.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent cough</span><span class="pill">Mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>149/90</td></tr><tr><td>Heart Rate</td><td>86</td></tr><tr><td>Respiratory Rate</td><td>19</td></tr><tr><td>Temperature</td><td>36.5°C</td></tr><tr><td>Oxygen Saturation</td><td>93% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No acute allergic reaction</li><li>Stable vitals during infusion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC pre‑chemotherapy</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Day‑after CBC: WBC 2.3 K/µl, Hb 13 g/dL, Platelets 200 K/µl</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Carboplatin AUC 2</li><li>Paclitaxel 50 mg/m²</li><li>Pegfilgrastim 6 mg subcutaneously</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span><span class="pill">Stage IIA squamous cell carcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li><li>Growth factor support started as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chemotherapy plan (low‑dose carboplatin/paclitaxel)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Whitaker received the first infusion of carboplatin (AUC 2) plus paclitaxel (50 mg/m²) over 30 minutes. Post‑infusion, he reported mild leukopenia noted on the day‑after CBC. Growth factor therapy (pegfilgrastim) was initiated. He experienced mild neuropathy (tingling in extremities). The oncology team noted a slight improvement in cough frequency but persistent dyspnea. The patient was educated about side‑effect management and follow‑up appointments.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First cycle chemotherapy tolerated with mild leukopenia and neuropathy.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-05-21</h3><div class="visit-meta">Pulmonology/Oncology | Reason: Assessment of progressive respiratory symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+- Patient reports increasing shortness of breath at rest, worsening productive cough, and growing lethargy over the past week.
+- Denies chest pain, orthopnea, paroxysmal nocturnal dyspnea, or hemoptysis at this visit.
+- Notes that his overall symptom burden has escalated following completion of SBRT and two cycles of low‑dose carboplatin/paclitaxel.
+- Declines additional systemic chemotherapy; prefers symptom‑focused/palliative approach.
+
+Objective:
+Vitals:
+- BP 158/92 mmHg
+- HR 100 bpm
+- RR 22/min
+- Temp 37.4°C
+- SpO₂ 88% on room air
+
+Physical Exam:
+- General: appears tired, mildly distressed.
+- Chest: dull percussion over left lower lung field; decreased breath sounds without wheezes or crackles; no chest wall tenderness.
+- Cardiac: regular rhythm, no murmurs.
+- Extremities: no edema.
+
+Labs/Imaging:
+- Thoracentesis yielded 350 mL serosanguinous fluid; cytology positive for malignant cells.
+- CT chest repeat: left hilar node measuring 1.5 cm, faint para‑aortic uptake; no new distant metastases.
+- Prior PET‑CT shows residual left lower lobe lesion (SUV 6.2), no new sites.
+
+Assessment:
+- Stage IIIA non‑small cell lung carcinoma with malignant pleural effusion; progressive nodal involvement.
+- COPD exacerbation secondary to tumor burden.
+- Hypertension mildly elevated; Diabetes controlled.
+- Possible early radiation pneumonitis cannot be ruled out.
+
+Plan:
+1. Symptom control:
+   - Continue current inhaled therapy regimen (Albuterol 90 µg BID PRN, Fluticasone/Salmeterol 250/50 µg BID, Tiotropium 18 µg daily).
+   - Begin low‑dose oral prednisone 20 mg daily for 5 days with taper to manage inflammatory response.
+   - Initiate supplemental oxygen 2 L/min via nasal cannula to maintain SpO₂ ≥92%; titrate as needed.
+2. Management of pleural effusion:
+   - Refer to interventional pulmonology for possible therapeutic thoracentesis if symptomatic recurrence.
+   - Discuss pleurodesis or indwelling pleural catheter as palliative options.
+3. Oncology:
+   - Patient declined further cytotoxic chemo; discuss possible palliative SBRT to residual lesion or nodal radiation.
+   - PET‑CT now scheduled in 3 months to reassess metabolic activity; consider earlier imaging if clinical status worsens.
+4. Cardiovascular &amp; metabolic:
+   - Continue Lisinopril 10 mg daily; consider dose adjustment if BP remains &gt;150/90.
+   - Continue Metformin 500 mg BID; monitor renal function due to chemo exposure.
+5. Supportive:
+   - Encourage smoking cessation, nutritional counseling, and graded exercise plan.
+   - Provide education on signs of infection, worsening dyspnea, or pleural effusion recurrence.
+6. Follow‑up:
+   - Return to clinic in 2 weeks for reassessment of symptoms, vitals, and O₂ requirement.
+   - Urgent visit if SpO₂ &lt;90% at rest, new chest pain, or fever &gt;38°C.
+   - Palliative care consult within week to coordinate symptom management and end‑of‑life planning.
+
+Signature: Dr. [Name], MD
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increasing dyspnea at rest</span><span class="pill">Worsening cough</span><span class="pill">Lethargy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>158/92</td></tr><tr><td>Heart Rate</td><td>100</td></tr><tr><td>Respiratory Rate</td><td>22</td></tr><tr><td>Temperature</td><td>37.4°C</td></tr><tr><td>Oxygen Saturation</td><td>88% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Dull percussion note over left lower lung field</li><li>Reduced breath sounds</li><li>No chest wall tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis and cytology</li><li>CT chest repeat</li><li>PET‑CT (optional, pending)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis: 350 mL serosanguinous, cytology positive for squamous carcinoma</li><li>CT chest: left hilar node 1.5 cm, no distant mets</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis with drainage</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span><span class="pill">Stage IIA squamous cell carcinoma (now progressing)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li><li>Pegfilgrastim 6 mg SC (as needed)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Post‑chemotherapy progression</li><li>Current symptoms worsening</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with increasing shortness of breath and a new chest X‑ray showing a moderate left pleural effusion and enlargement of the tumor bed opacity. A thoracentesis was performed, draining 350 mL of serosanguinous fluid. Cytology revealed metastatic squamous carcinoma cells. A repeat CT chest demonstrated an enlarging left hilar node 1.5 cm and faint para‑aortic uptake. The oncology team confirmed nodal metastasis, upgrading the disease to stage IIIA. Given the limited options, the patient declined additional chemotherapy and opted for symptom‑focused care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progression to stage IIIA with pleural effusion and nodal disease.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-06-04</h3><div class="visit-meta">Palliative Care | Reason: Palliative radiation for symptom control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Visit #8 – 2025‑06‑04**
+
+**Chief complaint:** palliative radiation for symptom control
+
+**History &amp; Present Illness:**
+68‑year‑old male with Stage IIIA left lower lobe squamous cell carcinoma, chronic obstructive pulmonary disease (COPD) with chronic bronchitis, emphysema, asthma, prior tuberculosis, hypertension, diabetes mellitus, and cardiovascular disease. The patient is receiving carboplatin/paclitaxel chemotherapy, pegfilgrastim, prednisone 20 mg daily, and supportive inhalers (albuterol, fluticasone/salmeterol, tiotropium).  The patient has been receiving palliative radiation to the left lower lobe and pleural space (10 Gy in two fractions).  He reports a transient reduction in cough severity after the first fraction; however, dyspnea and chest discomfort remain.  He continues to require 2 L/min supplemental oxygen and reports a productive cough and mild chest pain that limits activity.
+
+**Subjective:**
+- Dyspnea at rest, currently 90 % on room air
+- Intermittent cough; patient notes slight improvement post‑fraction
+- Mild chest discomfort, described as pressure localized to left lower chest
+- No fever, no night sweats, no hemoptysis
+- Wishes to avoid hospice until family consensus
+
+**Objective:**
+- **Vitals:** BP 152/90 mmHg, HR 97 bpm, RR 21/min, Temp 36.4 °C, SpO₂ 90 % RA
+- **General:** Alert, oriented, in mild respiratory distress
+- **Chest:** Moderate inspiratory crackles over the left lower lung zone; no wheezes; no new systolic murmur
+- **Airway:** ETT not present, oral breathing
+- **Extremities:** No edema
+
+**Labs/Imaging:**
+- CBC and CMP obtained as baseline for upcoming fraction
+- Chest X‑ray: moderate left pleural effusion with post‑radiation changes and a small residual left lower lobe mass
+
+**Review of Current Medications:**
+- Albuterol 90 µg MDI PRN
+- Fluticasone/salmeterol 250/50 µg Twisthaler BID
+- Tiotropium 18 µg daily
+- Lisinopril 10 mg daily
+- Metformin 500 mg BID
+- Aspirin 81 mg daily
+- Carboplatin 200 mg/m² IV Q3W
+- Paclitaxel 80 mg/m² IV Q3W
+- Pegfilgrastim 6 mg SC q3w
+- Prednisone 20 mg daily
+- Supplemental O₂ 2 L/min via nasal cannula
+
+**Assessment:**
+1. Malignant pleural effusion with disease progression despite SBRT – persistent symptoms
+2. COPD with acute exacerbation of cough and dyspnea; ongoing steroid therapy
+3. Risk of radiation pneumonitis – patient currently asymptomatic apart from mild cough
+4. Possible infectious etiology (unlikely but not excluded)
+5. General decline in functional status; consider palliative sedation/comfort measures if refractory
+
+**Plan:**
+1. **Radiation:** Complete the second fraction of the 10 Gy course today; schedule follow‑up in 2 weeks to assess symptoms and repeat CBC prior to next fraction.
+2. **Medications:** 
+   - Continue current inhaler regimen and prednisone 20 mg daily.
+   - Initiate low‑dose opioid for cough: Hydromorphone 0.5 mg PO q4h PRN (titrate to control cough, monitor for sedation).
+   - Encourage use of home oxygen 2 L/min; reassess SpO₂ after therapy.
+3. **Symptom Management:** 
+   - Offer short‑acting benzodiazepine for anxiety if indicated.
+   - Maintain nutritional counseling; encourage adequate caloric intake.
+4. **Diagnostics:** 
+   - CBC, CMP before each radiation fraction.
+   - Chest X‑ray in 2 weeks or sooner if respiratory status worsens.
+   - Consider repeat CT chest at 3 months or earlier if effusion increases.
+5. **Palliative Referrals:** 
+   - Hospice referral discussion deferred; revisit if disease burden or symptom control worsens.
+   - Consider interventional pulmonology for therapeutic thoracentesis if effusion enlarges or causes hypoxia.
+6. **Follow‑up:** 
+   - Palliative care clinic visit in 2 weeks or sooner for symptom reassessment.
+   - Oncology office review in 1 month to evaluate treatment response.
+   - Monitor for signs of radiation pneumonitis (fever, increased cough, decreased SpO₂) – instruct patient to call immediately if these occur.
+7. **Education:** 
+   - Discuss goals of care, expected outcomes of remaining radiation, and potential for symptom relief.
+   - Reinforce importance of adherence to inhaler and steroid therapy.
+   - Advise family about signs of fluid overload or infection.
+
+**Disposition:** Patient remained stable; discharged home with home oxygen and medication instructions.
+
+**Signature:**
+Palliative Care Team
+
+**Follow‑up Recommendations:**
+- 2‑week palliative care clinic visit
+- 1‑month oncology office visit
+- CBC prior to each radiation fraction
+- Chest X‑ray in 2‑weeks or sooner if symptomatic
+- Consider therapeutic thoracentesis if effusion clinically significant
+- Hospice referral discussion pending family decision
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dyspnea</span><span class="pill">Cough</span><span class="pill">Chest discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>152/90</td></tr><tr><td>Heart Rate</td><td>97</td></tr><tr><td>Respiratory Rate</td><td>21</td></tr><tr><td>Temperature</td><td>36.4°C</td></tr><tr><td>Oxygen Saturation</td><td>90% on room air</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Moderate inspiratory crackles left lung</li><li>Systolic murmur faint, no new changes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC</li><li>Chest X‑ray</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: moderate pleural effusion, post‑radiation changes</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Palliative radiation: 10 Gy in 2 fractions</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span><span class="pill">Stage IIIA squamous cell carcinoma</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs as needed</li><li>Fluticasone/salmeterol 250/50 μg (Twisthaler) BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li><li>Oxygen 2 L/min via nasal cannula</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IIIA disease</li><li>Pleural effusion management</li><li>Prior chemotherapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The palliative care team administered a course of 10 Gy in two fractions to the left lower lobe and pleural space. The patient reported a transient reduction in cough severity, but overall respiratory status remained compromised. The team reinforced symptom management, encouraging home oxygen and low‑dose opioids for cough discomfort. A hospice referral was discussed but deferred pending patient/family preference.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IIIA treated with palliative radiation; symptom control modest.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2025-08-05</h3><div class="visit-meta">Hospice / Palliative Care | Reason: Transition to comfort care at home</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint** – Transition to comfort‑focused care at home.
+
+**History of Present Illness** – The patient is a 69‑year‑old male with a complex medical history that includes COPD, chronic bronchitis, emphysema, asthma, prior tuberculosis, hypertension, diabetes mellitus, and cardiovascular disease. He has an active malignant pleural disease (lung carcinoma with massive left pleural effusion and ground‑glass opacity in the right lung). Following a recent hospitalization for fever and infection, he underwent a bedside thoracentesis that drained 600 mL of serosanguinous fluid. Symptom burden remained high with severe dyspnea, productive cough, low‑grade fever, weight loss, and depression.
+
+**Physical Examination (Home Visit)** – Blood pressure 140/80 mmHg, heart rate 94 bpm, respiratory rate 24 /min, temperature 37.8 °C, oxygen saturation 82 % on room air, 94 % with 2 L / min O₂ via nasal cannula. Diminished breath sounds over the left lower lung; mild wheezing; otherwise no new signs of infection.
+
+**Assessment** – Rapid disease progression of advanced lung carcinoma with malignant pleural effusion causing refractory dyspnea and cough. Persistent symptomatic burden despite thoracentesis and supportive measures. Transition to comfort‑focused care is appropriate.
+
+**Plan**
+1. **Comfort‑focused care** – Continue home oxygen at 2 L / min. Maintain fentanyl patch 25 mcg/hr for dyspnea/cough with instruction to caregiver to change patch per schedule. Continue oral antihistamine (chlorpheniramine 4 mg PO BID) for cough. Discontinue oral prednisone.
+2. **Symptom management** – Re‑evaluate the need for opioids: hydromorphone 0.5 mg PO q4h PRN for cough/dyspnea if fentanyl alone is insufficient. Provide anticipatory guidance to caregivers about medication adjustments.
+3. **Emotional support** – Patient expressed depression; continue monitoring mental state and provide emotional support via hospice counseling.
+4. **Family support** – Discuss the patient’s death (the patient peacefully passed at home on his birthday). Offer bereavement counseling and hospice bereavement support.
+5. **Discharge summary** – Deliver to primary physician and oncology team. No further oncologic or pulmonary interventions are indicated.
+
+**Documentation** – This note is documented as part of the patient’s hospice care record. The patient has expired; no further medical follow‑up is scheduled.
+
+**Key Points for the Family** – Keep fluids, maintain hygiene, ensure the home environment is safe and comfortable, and don’t hesitate to contact hospice for assistance.
+
+**Signature** – [Clinician Name], Hospice/Palliative Care.
+
+---
+
+**Relevant Past History** – See visit summaries 1–8 for progressive pulmonary disease, SBRT, chemotherapy, and subsequent thoracentesis. The patient’s disease status is now clearly terminal. 
+
+**Medications** – Albuterol 90 mcg MDI x 2 puffs BID (PRN), Tiotropium 18 µg daily, Lisinopril 10 mg daily, Metformin 500 mg BID (re-assess due to renal function), Aspirin 81 mg daily, Oxygen 2 L/min, Fentanyl patch 25 mcg/hr, Chlorpheniramine HCl 4 mg PO BID, Hydromorphone 0.5 mg PO q4h PRN.
+
+---
+
+**Tests Ordered** – Chest CT (admission), CBC (admission) – results described.
+
+---
+
+**Diagnoses Considered** – Malignant pleural effusion as a complication of advanced lung carcinoma, chronic dyspnea secondary to COPD and emphysema, cough/fever due to pleural effusion infection.
+
+---
+
+**Follow‑Up Recommendations** – No further medical follow‑up. Provide hospice bereavement support. The family may contact hospice 24/7 for any urgent needs.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe dyspnea</span><span class="pill">Productive cough</span><span class="pill">Low-grade fever</span><span class="pill">Weight loss</span><span class="pill">Depression</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/80</td></tr><tr><td>Heart Rate</td><td>94</td></tr><tr><td>Respiratory Rate</td><td>24</td></tr><tr><td>Temperature</td><td>37.8°C</td></tr><tr><td>Oxygen Saturation</td><td>82% on room air, 94% with 2 L/min O₂</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diminished breath sounds over left lower lung</li><li>Mild wheezing, no new signs of infection</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT at admission</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest CT: massive left pleural effusion, right lung ground‑glass opacity, no new metastatic sites</li><li>CBC: WBC 3.5 K/µl, Hb 11 g/dL, Platelets 150 K/µl</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Bedside thoracentesis 600 mL</li><li>Fentanyl patch 25 mcg/hr</li><li>Home oxygen 2 L/min</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus</span><span class="pill">Cardiovascular disease</span><span class="pill">Stage IV squamous cell carcinoma (progressed)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI x 2 puffs BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li><li>Oxygen 2 L/min via nasal cannula</li><li>Fentanyl patch 25 mcg/hr</li><li>Chlorpheniramine HCl 4 mg PO BID (antihistamine for cough)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Massive pleural effusion</li><li>Extensive right lung ground‑glass opacities</li><li>Recent hospitalization for fever and infection</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After a recent hospital admission for fever, the patient had a bedside thoracentesis draining 600 mL of serosanguinous fluid. The fluid was cytology‑positive for malignant cells. With rapid progression and limited therapeutic options, the oncology, palliative and hospice teams jointly decided to transition to comfort‑focused care. A home oxygen plan was finalized, and a fentanyl patch was started for cough and dyspnea. The patient and family, after discussion, opted for home hospice, with daily visits from the palliative team. He passed peacefully at home on his birthday.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Death at home; disease now Stage IV. Complete transition to hospice care.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 69</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Obstructive Pulmonary Disease (COPD)</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Asthma</span><span class="pill">History of Tuberculosis</span><span class="pill">Hypertension</span><span class="pill">Diabetes Mellitus</span><span class="pill">Cardiovascular disease</span><span class="pill">Primary squamous cell carcinoma of the lung</span><span class="pill">Residual primary left lower lobe carcinoma post‑SBRT</span><span class="pill">Malignant pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol sulfate 90 mcg MDI PRN</li><li>Fluticasone/salmeterol 250/50 µg Twisthaler BID</li><li>Tiotropium 18 µg daily</li><li>Lisinopril 10 mg daily</li><li>Metformin 500 mg BID</li><li>Aspirin 81 mg daily</li><li>Supplemental O₂ 2 L/min via nasal cannula</li><li>Fentanyl patch 25 mcg/hr</li><li>Chlorpheniramine HCl 4 mg PO BID</li><li>Hydromorphone 0.5 mg PO q4h PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2025-02-01 for persistent cough with hemoptysis. Symptoms include dry cough, nighttime worsening, whitish sputum, and streaks of blood in sputum. Physical exam revealed decreased breath sounds in the left lower lobe and slight wheezing. Chest X‑ray showed mild density in the left lower lobe; no effusion. Started oral prednisone 40 mg daily for 5 days. Prescribed standard inhaled therapy (Albuterol PRN, Fluticasone/salmeterol BID). Smoking cessation advised. Pulmonology referral planned within 2 weeks. Follow‑up in office scheduled in 2 weeks.</li><li>Visit on 2025-02-15: Follow‑up after new left lower lobe density; persistent dry cough, occasional hemoptysis, fatigue; vitals BP 148/88 mmHg, HR 90, RR 20, SpO₂ 93%; exam: mild bilateral wheezes, prolonged expiratory phase; spirometry FEV1 1.4 L (45% predicted); CT chest shows 2.3 cm spiculated nodule; sputum culture ordered; added tiotropium 18 µg daily for COPD; continue existing inhaled therapy; plan CT review and sputum results in 2 weeks; consider biopsy if nodule remains suspicious.</li><li>Visit on 2025-02-28: Oncology discussion of trans‑bronchial needle aspiration pathology revealing poorly differentiated carcinoma with p63 positivity and high Ki‑67 index. Plan stereotactic body radiation therapy (SBRT) with short prednisone taper (5 mg daily for 7 days) before treatment. Continue inhaled bronchodilator therapy and supportive care. Scheduled SBRT simulation in 2 weeks and office oncology follow‑up in 1 month; repeat CT chest at 3 months post‑SBRT.</li><li>Visit on 2025-03-13: Initiated first of four SBRT fractions (10 Gy) for confirmed 2.3 cm left lower lobe squamous cell carcinoma. Patient tolerated fraction well, reporting mild chest discomfort and moderate fatigue, managed with rest. Prednisone 5 mg daily continued for a 7‑day taper. Inhaled bronchodilator therapy maintained. CBC and CMP to be repeated prior to each remaining fraction. Plan: monitor oxygen saturation after each session, counsel on early radiation pneumonitis, follow‑up oncology office in 1 month, repeat CT at 3 months, pulmonary function testing in 6 months.</li><li>Visit on 2025-04-09: Follow‑up after completion of SBRT for Stage IIA left lower lobe carcinoma. Reported reduction in cough, persistent fatigue, and 3‑kg weight loss. Physical exam: BP 147/88 mmHg, HR 85 bpm, RR 18 bpm, SpO₂ 94%; mild inspiratory wheezing. PET‑CT showed residual 1.8 cm left lower lobe lesion SUV 6.2. Initiated first cycle of low‑dose carboplatin and paclitaxel chemotherapy, advised nutritional counseling, and continued inhaler therapy. Next oncology visit scheduled in 4 weeks, repeat PET‑CT in 3 months.</li><li>Visit on 2025-04-23: Post‑infusion evaluation after first low‑dose carboplatin (AUC 2) and paclitaxel (50 mg/m²) cycle. No infusion reaction. Mild leukopenia (WBC 2.3 K/µL), early peripheral neuropathy, persistent cough decreased in frequency, mild fatigue. Started pegfilgrastim 6 mg SC. Vitals: BP 149/90, HR 86, RR 19, temp 36.5°C, SpO₂ 93%. Continued inhaled therapy (albuterol PRN, fluticasone/salmeterol BID, tiotropium 18 µg daily). Scheduled next chemo cycle in 4 weeks; CBC to be repeated day 5 post‑infusion and at 7 days after pegfilgrastim. Repeat PET‑CT planned in 3 months.</li><li>Visit on 2025-05-21: Patient reported increasing shortness of breath at rest, worsening productive cough, and lethargy. Vitals: BP 158/92 mmHg, HR 100 bpm, RR 22/min, Temp 37.4°C, SpO₂ 88% on room air. Physical exam: dull percussion left lower lung field, decreased breath sounds, no wheezes or crackles. Thoracentesis yielded 350 mL serosanguinous fluid with malignant cells. CT chest: left hilar node 1.5 cm. Started low‑dose oral prednisone 20 mg daily for 5 days, supplemental O₂ 2 L/min via nasal cannula. Referrals to interventional pulmonology for potential therapeutic thoracentesis and to palliative care. Follow‑up clinic visit scheduled in 2 weeks; PET‑CT planned in 3 months.</li><li>Visit on 2025-06-04: Palliative radiation to control symptoms. Patient remained stable at 90% room air, moderate inspiratory crackles over left lower lung zone, mild chest discomfort. Completed second fraction of 10 Gy course. Baseline CBC and CMP obtained; Chest X‑ray showed moderate left pleural effusion with post‑radiation changes and small residual left lower lobe mass. Started hydromorphone 0.5 mg PO q4h PRN for cough; continued inhalers, prednisone, and supplemental O₂ 2 L/min. Follow‑up: palliative care clinic in 2 weeks, oncology office in 1 month; CBC before each radiation fraction, Chest X‑ray in 2 weeks or sooner if symptomatic.</li><li>Visit on 2025-08-05: Transition to hospice comfort care at home. Patient maintained 2 L/min home oxygen, received Fentanyl patch 25 mcg/hr for dyspnea and cough, and Chlorpheniramine 4 mg PO BID. Hydromorphone 0.5 mg PO q4h PRN used as needed. Oral prednisone discontinued. Patient’s disease progressed with massive malignant pleural effusion and ground‑glass opacity. Bedside thoracentesis drained 600 mL serosanguinous fluid. The patient passed away peacefully at home on his birthday.</li><li></li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

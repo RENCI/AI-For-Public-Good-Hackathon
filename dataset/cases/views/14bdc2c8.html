@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 14bdc2c8</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 14bdc2c8</h1><div class="subtitle">Psoriasis Flare (Acute Exacerbation of Psoriasis Vulgaris) | Male, 35</div><div class="badges"><span class="badge badge-easy">easy</span><span class="badge badge-chronic">chronic</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Psoriatic arthritis, Metabolic syndrome, Cardiovascular disease, Depression and Anxiety</div><div class="meta-line">Risk Factors: Smoking, Obesity, Stress, Streptococcal pharyngitis, Family history of psoriasis</div></div>
+<details><summary>Narrative <span class="preview-text">Mark, a 35‑year‑old software engineer, had lived with psoriasis for nearly a decade. He was a proud family man, but his ...</span></summary><div class="section-body"><p>Mark, a 35‑year‑old software engineer, had lived with psoriasis for nearly a decade. He was a proud family man, but his health history was a patchwork of skin flare‑ups, joint aches, and a lingering heaviness that had recently become a part of his everyday life. He struggled with obesity, smoked a pack a day, and was in the throes of a mid‑life stress epidemic—long hours at the office, a high‑pressure project, and a recent bout of anxiety that left him exhausted every night. Mark’s father had had psoriasis, and Mark had always been told that “hereditary” was a warning rather than a verdict.</p><p>---</p><p>### Day 0: The Trigger</p><p>In late January, Mark woke with his throat raw and his neck swollen. A week earlier, he’d had a quick‑fix antibiotic course for a strep throat that came back, and his throat didn’t feel much better. The next morning, a patch of red, scaling skin had appeared on his elbows, and a new flare had erupted on his scalp. By the end of the day he could taste the sting of dry, flaky skin on his nails. The discomfort made it hard to get up to make coffee, let alone leave his car seat.</p><p>He tried over‑the‑counter hydrocortisone but found that it only dampened the itching for a few minutes before the flare returned with a vengeance. He also felt a dull, aching pain in his knees that was nothing new (the same pain he’d attributed to arthritis for the last five years). The next day, he drove himself to his family doctor, hoping for a quick fix to feel better.</p><p>### Week 1: Primary Care Encounter</p><p>**Visit:** Dr. Patel, primary care physician, 8 AM, 4 pm call.</p><p>**Assessment:** Mark’s rash was more extensive now: plaques on elbows, knees, and a diffuse scalp rash measuring about 5 × 3 cm on the vertex. Nails were pitted, with some onycholysis. He reported morning stiffness in his fingers that lasted about 30 minutes, and intermittent pain in his lower back—classic psoriatic arthritis (PsA). “I’ve had the same arthritis before, but this flare feels different,” he said, looking at the photos Dr. Patel had on his smartphone.</p><p>**Decision point:** Dr. Patel ordered a baseline CBC and CMP, because Mark had a history of metabolic syndrome and was already on metformin for elevated fasting glucose. He was also on amlodipine and a statin for his earlier cardiovascular event. Dr. Patel referred Mark to a dermatologist for a skin evaluation and to a rheumatologist for a full rheumatic work‑up. Meanwhile, Mark was given a prescription for the high‑potency topical halobetasol propionate and advised on gentle skin care—moisturizing, avoiding harsh soaps, and using emollients overnight.</p><p>**Lifestyle note:** Dr. Patel also urged Mark to quit smoking and began a smoking cessation talk. “Your nicotine use increases cardiovascular risk and can worsen inflammation,” he said, citing evidence linking tobacco to psoriasis progression. Mark left the office with a nicotine patch and a pamphlet from the local health department.</p><p>### Week 2: Dermatology Review</p><p>**Visit:** Dr. Sato, dermatologist, midday at the outpatient clinic.</p><p>**Assessment:** Mark’s plaques had spread to his neck and back. He described an itchy sensation that “wasn’t just for the skin, it was like a dull ache under the surface.” Dr. Sato diagnosed an acute flare of psoriasis vulgaris and noted the extent of scalp involvement. He also confirmed the nail changes and observed a mild erythema of the interphalangeal joint, an early sign of PsA on the skin side.</p><p>**Treatment plan:** Dr. Sato prescribed a moderate‑potency topical steroid (tacrolimus ointment) for the face and scalp. He recommended once daily application of an emollient containing ceramides. For the scalp, a keratolytic shampoo (sodium lactylate) was added. To address the flare’s systemic nature, she considered a systemic agent.</p><p>**Decision point:** Dr. Sato and Mark discussed options. Mark’s history of cardiovascular disease made her cautious about methotrexate—a drug that can affect liver function but also useful for PsA. They decided that a biologic would offer a more targeted approach. She recommended “adalimumab,” a TNF‑α inhibitor, given Mark’s moderate disease severity and systemic involvement. Mark agreed, after she explained the need for injections, typical dosing schedule, and possible side effects such as an increased risk of infections.</p><p>**Follow‑up:** Mark was scheduled for a rheumatology appointment the following week to confirm that adalimumab was appropriate, and he was advised to bring a photograph of the rash to show the rheumatologist for a visual baseline.</p><p>### Week 3: Rheumatology Review</p><p>**Visit:** Dr. Huang, rheumatologist, 9 AM.</p><p>**History &amp; Labs:** Dr. Huang reviewed Mark’s CBC, CMP, and liver enzymes. All were within normal limits. Mark complained of morning stiffness and numbness in the fingers. Dr. Huang confirmed active PsA involving both peripheral and axial joints. He noted that Mark’s recent flare had escalated his PsA activity scores. Mark had previously been on NSAIDs for flare‑ups, but they had not been enough.</p><p>**Decision point:** Given the new systemic flare and the risk of joint damage, Dr. Huang agreed to initiate adalimumab. He explained that a 40mg dose would be administered subcutaneously every two weeks, starting with a 160mg priming dose followed by 80mg at week two, as per the standard protocol. He also recommended a baseline screening for latent TB with IGRA test (which came back negative) and for hepatitis B (also negative). Mark was informed that he needed to avoid live vaccinations while on the biologic.</p><p>**Lifestyle &amp; comorbidity integration:** Dr. Huang also noted Mark’s obesity and metabolic syndrome as contributors to systemic inflammation. He advised a dietitian appointment for a weight reduction program and recommended a low‑sodium diet to improve his cardiovascular risk profile. Mark was referred to a local exercise program that included low‑impact activities like cycling and swimming, suited for joint‑pain patients.</p><p>### Month 2: First Two Injections (Week 5 &amp; 7)</p><p>Mark started adalimumab at home on schedule. **Week 5:** Inflammation in the ankles had begun to subside. He wrote a quick note in his phone: “the itching on my elbows is fading. My knee pain is tolerable after a simple stretch.” **Week 7:** He noticed a significant reduction in the rough, red patches. The scalp was almost clear, with minimal scaling. Yet the nails were still pitted—a slow‑moving improvement.</p><p>At his routine dermatology follow‑up (Week 9), Dr. Sato was impressed: the Psoriasis Area Severity Index (PASI) dropped from 15 to 4. Mark’s mood had also improved; his insomnia, a fallout from flare‑up itching, eased as the nighttime itch calmed.</p><p>### Month 3: Third Injection &amp; Mental Health</p><p>**Week 12:** Mark had his third adalimumab dose. He was visibly lighter; his energy level had steadied. He logged his activity: “10k steps a week, 30‑minute bike rides.” Dr. Huang noted that his blood pressure remained within target, and his fasting glucose had dropped from 110 mg/dL to 95 mg/dL—an encouraging sign that systemic inflammation was reduced.</p><p>During this period, Mark had started therapy with a licensed clinical psychologist for his anxiety. Through cognitive‑behavioral therapy he learned coping strategies for stress and learned to recognize early signs of flare‑up—such as the redness spreading over the elbows, a feeling of tightness in the throat—and apply his quick‑start topical regimen before the rash worsened.</p><p>### Month 4: Plateaus &amp; Adjustments</p><p>**Week 16:** Mark visited the rheumatology office where Dr. Huang noted that his joint swelling had largely resolved. His tender joint count had dropped from 6 to 1. He was still experiencing intermittent mild pain in the hips, but it was no longer incapacitating. Dr. Huang recommended discontinuing his low‑dose NSAID.</p><p>They evaluated whether to taper or maintain adalimumab. Given the steady improvement across skin, joints, and comorbid metabolic markers, they decided to maintain the current dosing while monthly monitoring continued. Dr. Sato added a small course of oral antibiotics to treat a mild streptococcal pharyngitis that had bloomed, which might have acted as a flare trigger.</p><p>### Month 6: Consolidation &amp; Lifestyle Gains</p><p>At the six‑month mark, Mark’s PASI was now 1.0—essentially clear skin. His nails had only minimal pitting, with slight improvement on the top nails. The joint pain was negligible; he could perform deep knee bends in the bathroom without feeling the previous stiffness. Metabolic syndrome was on a downward trajectory: his weight had dropped from 245 to 225 lb, and his BMI fell from 35.1 to 32.5. His fasting glucose decreased to 88 mg/dL, and lipid panel improved modestly.</p><p>He also had quit smoking a month earlier, using nicotine patches and counseling. A cardiology follow‑up in June confirmed that his blood pressure was within normal limits and that his cardiac stress test showed no new ischemic changes. His anxiety levels had improved, with a 30% reduction in self‑reported anxiety scales.</p><p>---</p><p>### Reflection</p><p>Mark’s journey illustrates the classic course of an acute exacerbation of psoriasis vulgaris superimposed on chronic psoriatic arthritis and a constellation of metabolic and cardiovascular comorbidities. The interplay of an infectious trigger (strep throat), stress, and systemic inflammation set the stage for a flare. Early, strategic interventions—topical steroids, systemic biologic therapy, lifestyle modification, and mental health support—were pivotal to halting the disease’s progression.</p><p>By month six, Mark’s improvement was evident:</p><p>- **Dermatologic:** Near‑complete clearance of plaques and scalp, minimal nail changes.
+- **Osteoarticular:** Resolved joint swelling, minimal pain, improved functional mobility.
+- **Metabolic:** Weight loss, improved glucose and lipid profiles.
+- **Cardiovascular:** Stable blood pressure, no new ischemic events.
+- **Psychological:** Decreased anxiety, regular sleep patterns, active coping mechanisms.</p><p>The timeline provides clear checkpoints: initial flare, primary care triage, dermatology and rheumatology referrals, biologic initiation, weekly and monthly check‑ins, and the ultimate plateau of improvement. It underscores the importance of a multidisciplinary approach for a condition as interconnected as psoriasis in a patient burdened by other systemic illnesses.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-07</h3><div class="visit-meta">Primary Care | Reason: Acute skin flare with joint pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute skin flare with joint pain. Patient Mark, 35 M with known psoriatic arthritis, metabolic syndrome, cardiovascular disease, depression and anxiety, presents with worsening pruritus and new scalp lesions noted early in the morning. Examination reveals multiple erythematous, scaly plaques on elbows, knees, and dorsal hands; diffuse scalp erythema with mild scaling; pitted nails with partial onycholysis; tenderness over the MCP joints and mild knee swelling. Vital signs: BP 138/86 mmHg, HR 78 bpm, Temp 99.1°F, Weight 245 lb, BMI 35.1. He reports low‑grade fever, sore throat, and morning stiffness in fingers (~30 min). Work‑up includes CBC, CMP, and baseline LFTs to rule out infection and assess hepatic function prior to initiating high‑potency topical steroids. Plan: Prescribe halobetasol propionate 0.05% ointment, apply 2× daily to affected areas; provide emollient moisturizer for nightly use and instruct gentle skin care. Emphasize smoking cessation; provide 21 mg nicotine patch daily and counseling pamphlet. Monitor for worsening infection (fever &gt;100.4°F or persistent sore throat) and review lab results in 4 weeks. If inadequate response, consider initiating systemic therapy (e.g., methotrexate or a TNF‑α inhibitor). Encourage lifestyle modifications for metabolic syndrome, including weight loss and aerobic exercise. Patient left the office reassured and understands the plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Red, scaling plaques on elbows and knees</span><span class="pill">Scalp patches with diffuse erythema</span><span class="pill">Dry, flaky nail changes</span><span class="pill">Morning stiffness in fingers (~30 min)</span><span class="pill">Low‑grade fever, sore throat</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/86</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>99.1°F</td></tr><tr><td>Weight</td><td>245 lb</td></tr><tr><td>BMI</td><td>35.1</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Multiple erythematous, scaly plaques on elbows, knees, dorsal hands</li><li>Diffuse scalp erythema with mild scaling</li><li>Pitted nails with partial onycholysis</li><li>Tenderness over MCP joints and mild knee swelling</li><li>No overlying fever, normal respiratory exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete Blood Count (CBC)</li><li>Comprehensive Metabolic Panel (CMP)</li><li>Baseline Liver Function Tests (LFTs)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Halobetasol propionate 0.05% ointment twice daily</li><li>Emollient moisturizer nightly</li><li>Nicotine patch 21 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Psoriasis vulgaris</span><span class="pill">Psoriatic arthritis</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Depression and anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 20 mg nightly</li><li>Nicotine patch 21 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Longstanding psoriasis vulgaris</li><li>Psoriatic arthritis history</li><li>Metabolic syndrome – obese, insulin resistance</li><li>Cardiovascular event – prior MI, on statin &amp; amlodipine</li><li>Streptococcal pharyngitis one month ago</li><li>Smoking – 1 pack/day</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mark arrived early in the morning, noting worsening itching and new scalp lesions. The clinician performed a focused exam, documented plaque distribution, nail changes, and joint synovial tenderness. CBC and CMP were ordered to rule out infection and evaluate liver function prior to prescribing high‑potency steroids. Dr. Patel prescribed halobetasol propionate 0.05% for skin, provided a moisturizer, and advised gentle skin care. He emphasized smoking cessation and provided a nicotine patch and counseling pamphlet. Mark left the office feeling reassured about the plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial acute flare of psoriasis with systemic signs. Baseline labs pending. Immediate topical therapy initiated; smoking cessation plan started.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-01-15</h3><div class="visit-meta">Dermatology | Reason: Evaluation of worsening psoriasis plaques</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: Patient presents for evaluation of worsening skin plaques.
+
+**History of Present Illness**: The 35‑year‑old male reports spread of psoriatic plaques to the neck and upper back with increasing pruritus and dryness. He also notes persistent scalp scaling and erythema. Plaques have expanded despite ongoing high‑potency topical therapy (halobetasol 0.05 % ointment). Current medications include amlodipine 10 mg daily, metformin 500 mg BID, atorvastatin 20 mg nightly, nicotine patch 21 mg daily, halobetasol 0.05 % ointment BID, and emollient moisturizer nightly. No new systemic agents are being used.
+
+**Past Dermatology History**: Previous visits for acute psoriatic arthritis flare with new scalp lesions. Prior topical treatment included halobetasol and emollient; CBC, CMP, and LFTs were ordered previously.
+
+**Medical Comorbidities**: Psoriatic arthritis, metabolic syndrome, cardiovascular disease, depression, and anxiety.
+
+**Current Medications** (current list):
+- Amlodipine 10 mg daily
+- Metformin 500 mg BID
+- Atorvastatin 20 mg nightly
+- Nicotine patch 21 mg daily
+- Emollient moisturizer nightly
+- Halobetasol 0.05 % ointment BID (to be discontinued)
+
+**Allergies**: NKDA.
+
+**Review of Systems**: Positive for pruritus, scalp scaling, nail pitting (7 nails); no systemic symptoms reported.
+
+**Vital Signs**:
+- BP: 136/84
+- HR: 76 bpm
+- Weight: 244 lb
+- BMI: 35.0
+
+**Physical Examination**:
+- Skin: Plaques with silvery scales on neck, shoulders, and upper back. Scalp erythema with crusting noted. Nail pitting present on 7 nails.
+- Musculoskeletal: Mild swelling at distal interphalangeal joints consistent with psoriatic arthritis.
+- No evidence of new dermatologic conditions.
+
+**Assessment**:
+1. Plaque psoriasis with extension to neck, shoulder, and upper back, currently inadequately controlled with halobetasol.
+2. Scalp psoriasis with ongoing erythema and scaling.
+3. Nail psoriasis (pitting).
+4. Psoriatic arthritis flare (mild DIP joint swelling).
+5. Comorbid metabolic syndrome and cardiovascular disease.
+
+**Differential Diagnosis**:
+- Plaque psoriasis (confirmed by clinical picture)
+- Psoriatic arthritis flare
+- Scalp psoriasis vs. seborrheic dermatitis (less likely given nail pitting)
+- Contact dermatitis (unlikely given distribution and prior history)
+
+**Plan**:
+1. **Topical Therapy**:
+   - Initiate tacrolimus 0.1 % ointment BID for sensitive areas (neck, shoulders) and once daily for other affected sites.
+   - Continue ceramide‑rich emollient moisturizer nightly.
+   - Prescribe keratolytic wash (sodium lactylate 3 %) for scalp twice weekly.
+   - Discontinue halobetasol 0.05 % ointment.
+2. **Systemic Therapy Consideration**:
+   - Discussed biologic therapy with the patient; specifically adalimumab as first‑line biologic for psoriatic disease with joint involvement.
+   - Patient to undergo rheumatology evaluation prior to initiation.
+3. **Lifestyle**:
+   - Reinforce weight loss and aerobic exercise to address metabolic syndrome.
+   - Encourage smoking cessation; consider nicotine patch taper schedule with rheumatology.
+4. **Monitoring**:
+   - Observe for topical steroid rebound or tacrolimus-associated burning.
+   - At follow‑up, re‑check CBC and LFTs if biologic therapy is started.
+5. **Follow‑Up**:
+   - Rheumatology appointment scheduled next week.
+   - Dermatology follow‑up in 4 weeks or sooner if lesions worsen.
+   - Patient advised to return earlier for any worsening pain, increased swelling, or new lesions.
+
+**Patient Education**:
+- Reviewed proper application of tacrolimus and emollient.
+- Discussed mechanism and potential side effects of biologic therapy.
+- Emphasized importance of adherence to treatment to prevent disease progression and joint damage.
+
+**Signature**
+---
+Dr. Sato
+Dermatology</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Spread of plaques to neck and back</span><span class="pill">Increasing pruritus and skin dryness</span><span class="pill">Persistent scalp scaling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/84</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Weight</td><td>244 lb</td></tr><tr><td>BMI</td><td>35.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Plaques on neck, shoulders, upper back with scaling</li><li>Scalp erythema and crusting</li><li>Nail pitting noted in 7 nails</li><li>Joint exam: mild swelling at DIP joints</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Tacrolimus ointment 0.1% BID</li><li>Ceramide emollient moisturizer daily</li><li>Keratolytic shampoo 3% twice weekly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Psoriasis vulgaris</span><span class="pill">Psoriatic arthritis</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Depression and anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 20 mg nightly</li><li>Nicotine patch 21 mg daily</li><li>Halobetasol propionate 0.05% ointment BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous dermatologist visits</li><li>Current high-potency topical therapy</li><li>No new medications beyond baseline</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Sato reviewed photographs, noted expansion of plaques, and confirmed scalp involvement. She advised switching to tacrolimus ointment 0.1% once daily for sensitive areas and a ceramide‑rich emollient for moisturization. For scalp, a keratolytic wash (sodium lactylate 3%) was prescribed twice weekly. Dr. Sato raised the option of systemic therapy given the extent and the presence of joint pain. She explained biologic therapy, specifically adalimumab, and outlined the dosing schedule. Mark agreed to pursue further rheumatology evaluation before starting injections. The plan was to schedule a rheumatology visit next week.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Dermatologic flare now includes scalp and trunk. Topical regimen broadened; recommendation for systemic therapy due to extent and psoriatic arthritis.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-01-22</h3><div class="visit-meta">Rheumatology | Reason: Assess psoriatic arthritis activity and discuss biologic therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 35‑year‑old male with known psoriatic arthritis (PsA) presents for joint activity assessment and initiation of biologic therapy.\n\nHistory of Present Illness: The patient reports persistent morning stiffness in the fingers lasting approximately 45 minutes, a dull ache in both knees, occasional low back discomfort, and an overall sense of fatigue. He has a long history of PsA with frequent flare‑ups controlled previously with NSAIDs. He has recently seen dermatology for worsening scalp and trunk plaques and has been on topical therapy only. No episodes of fever, weight loss, or recent infections.\n\nPast Medical History: Psoriasis vulgaris, Psoriatic arthritis, Metabolic syndrome, Cardiovascular disease (history of hypertension), Depression and Anxiety.\n\nPast Surgical History: None.\n\nMedications: Amlodipine 10 mg once daily, Metformin 500 mg twice daily, Atorvastatin 20 mg nightly, Nicotine patch 21 mg daily, Halobetasol propionate 0.05% ointment BID, Tacrolimus ointment 0.1% BID, Ceramide emollient moisturizer daily, Keratolytic shampoo 3% twice weekly.\n\nAllergies: NKDA.\n\nSocial History: Smokes 1 pack/day; currently using nicotine patch. Lives alone; sedentary occupation. Diet not monitored. No alcohol or substance use.\n\nReview of Systems: Positive for joint pain, stiffness, fatigue. Negative for fever, night sweats, visual changes, respiratory symptoms.\n\nPhysical Examination: Vitals BP 135/83 mmHg, HR 74 bpm, weight 243 lb, BMI 34.8. Skin: Scalp, neck, shoulders, and upper back with erythematous plaques, nail pitting on 7 nails. Musculoskeletal: Tenderness and swelling observed at bilateral MCP and PIP joints. Limited ROM in hands due to pain; DIP swelling mild; no sacroiliac tenderness; no back stiffness beyond occasional pain. Orthopedic exam normal. No lymphadenopathy.\n\nAssessment: 1. Psoriatic arthritis – active peripheral disease involving MCP/PIP joints. 2. Severe psoriasis – continuing scalp and truncal plaques. 3. Metabolic syndrome with obesity. 4. Stable hypertension and dyslipidemia.\n\nPlan: 1. Initiate adalimumab 160 mg SC loading dose today with subsequent 80 mg every 2 weeks. Patient received first dose; instructed in self‑injection technique and storage. 2. Repeat IGRA and Hepatitis B surface antigen already negative; no prophylaxis needed. 3. Order baseline laboratory for biologic initiation: CBC, CMP (incl. LFTs), ESR/CRP, hepatitis C antibody, HLA-B27 (optional). 4. Continue current medications. 5. Counsel on weight reduction (aim 0.5–1 kg/week), aerobic exercise (150 min moderate activity/week), smoking cessation (consider cessation support). 6. Discuss potential for future TNF inhibitor or IL‑17/IL‑23 inhibitors if inadequate response.\n\nFollow‑up: 2‑week telephone call to assess injection tolerability and any adverse events. Return in clinic at 4 weeks for next dose, review labs, and reassess disease activity (DAS28‑CRP or PASDAS). Discuss transition to maintenance dosing and schedule routine labs every 3 months thereafter.\n\nSignature: Dr. X. Rheumatology.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Morning stiffness in fingers lasting 45 min</span><span class="pill">Dull ache in knees, occasional back pain</span><span class="pill">Feeling of general fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/83</td></tr><tr><td>HR</td><td>74</td></tr><tr><td>Weight</td><td>243 lb</td></tr><tr><td>BMI</td><td>34.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tenderness and swelling at both MCP and PIP joints</li><li>Limited ROM in the hands due to pain</li><li>No sacroiliitis noted on exam</li><li>Skin lesions as previously described</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Interferon Gamma Release Assay (IGRA)</li><li>Hepatitis B Surface Antigen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>IGRA: Negative</li><li>Hepatitis B Surface Antigen: Negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Adalimumab 160 mg loading dose</li><li>Counseling for subcutaneous self‑injection</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Psoriasis vulgaris</span><span class="pill">Psoriatic arthritis</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Depression and anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 20 mg nightly</li><li>Nicotine patch 21 mg daily</li><li>Halobetasol propionate 0.05% ointment BID</li><li>Tacrolimus ointment 0.1% BID</li><li>Ceramide emollient moisturizer daily</li><li>Keratolytic shampoo 3% twice weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Past NSAID use for flare‑ups</li><li>Recent dermatology visit and prescriptions</li><li>Stable medication list per primary care</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Huang reviewed recent labs, confirming CBC and CMP within normal limits. The patient’s morning stiffness and joint tenderness were consistent with active peripheral and axial psoriatic arthritis. A baseline IGRA test was performed to rule out latent TB (negative) and a hepatitis B surface antigen was tested (negative). Dr. Huang explained the adalimumab 160 mg loading dose followed by 80 mg two weeks later, and 40 mg every two weeks thereafter. Adalimumab was chosen over methotrexate due to cardiovascular history and concern for liver toxicity. Mark agreed and the physician wrote the prescription for adalimumab, instructing self‑injection technique. A follow‑up dermatology appointment was scheduled for 4 weeks later to assess skin response.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed active psoriatic arthritis. Initiated biologic therapy with adalimumab considering comorbidities. Baseline infection screening negative.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-03-01</h3><div class="visit-meta">Dermatology | Reason: Assess psoriasis clearance after 2 months of biologic therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Visit 4 – 2024‑03‑01**
+
+**Chief Complaint:** Follow‑up of psoriasis after 2 months of adalimumab therapy.
+
+**History &amp; Medications:** 35‑year‑old male with psoriatic arthritis, metabolic syndrome, cardiovascular disease, depression/anxiety. Current therapy includes:
+- Adalimumab 40 mg SC every 2 weeks (initiated 2 months ago)
+- Halobetasol 0.05 % topical, PRN once daily
+- Tacrolimus 0.1 % ointment BID
+- Ceramide moisturizer daily
+- Keratolytic shampoo (Sodium lactylate 3 %) twice weekly
+- Amlodipine 10 mg daily, Metformin 500 mg BID, Atorvastatin 20 mg nightly
+- Weight‑loss program ongoing
+
+**Review of Systems:** No new skin lesions, reduced itching, improved sleep.
+
+**Physical Exam:**
+- PASI score: 4 (baseline 15)
+- Scalp: mild erythema, few mild scales
+- Nails: minor pitting, no onycholysis
+- Hands/feet: no active lesions; joints tender only with provocative motion
+
+**Vitals:** BP 129/80 mmHg, HR 72 bpm, weight 224 lb, BMI 32.5.
+
+**Labs:** CBC and CMP normal; LFTs within reference range.
+
+**Assessment:**
+- Psoriasis is well controlled on adalimumab; significant improvement from baseline PASI 15 to 4.
+- Scalp scaling minimal; nail pitting unchanged but gradually improving.
+- No signs of adverse drug reaction or secondary infection.
+
+**Plan:**
+1. Continue adalimumab 40 mg SC every 2 weeks.
+2. Taper halobetasol to PRN once daily; avoid chronic use.
+3. Continue tacrolimus 0.1 % BID for scalp and body areas.
+4. Maintain ceramide moisturizer daily.
+5. Reinforce weight‑loss and cardiovascular management.
+6. Recheck CBC/CMP/LFTs in 3 months.
+7. Dermatology follow‑up in 3 months unless flare occurs sooner.
+8. Monitor for nail changes; consider fungal culture if pitting worsens.
+9. Encourage routine reporting of new skin lesions or systemic symptoms.
+
+**Patient Education:** Discussed the importance of adherence to biologic therapy, judicious use of topical steroids, and continued lifestyle modifications to mitigate cardiovascular risk.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Minimal residual scaling on scalp</span><span class="pill">Slight pitting in the nails</span><span class="pill">Skin now largely smooth with no active plaques</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>129/80</td></tr><tr><td>HR</td><td>72</td></tr><tr><td>Weight</td><td>224 lb</td></tr><tr><td>BMI</td><td>32.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Scalp: mild erythema, few mild scales</li><li>Nails: minor pitting, no onycholysis</li><li>Hands and feet: no active plaques, joints tender only with provocative motion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC &amp; CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>CMP: normal LFTs</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Halobetasol 0.05% QD as needed</li><li>Tacrolimus 0.1% BID</li><li>Ceramide moisturizer daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Psoriasis vulgaris</span><span class="pill">Psoriatic arthritis</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Depression and anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 20 mg nightly</li><li>Nicotine patch discontinued</li><li>Halobetasol 0.05%</li><li>Tacrolimus 0.1%</li><li>Ceramide moisturizer</li><li>Keratolytic shampoo</li><li>Adalimumab 40 mg every 2 weeks</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Started adalimumab 160 mg loading, 80 mg at week 2, 40 mg biweekly thereafter</li><li>Continued topical regimen</li><li>Weight loss program underway</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Sato reviewed the patient’s photos and noted a PASI score of 4, an improvement from 15 at baseline. Skin was predominantly clear, scalp scaling minimal, and nail pitting largely unchanged but improving. No new lesions. The patient reported a significant reduction in itching, allowing better sleep. Dr. Sato advised continuation of the current biologic regimen, tapering the halobetasol to once daily as needed, and to continue the topical steroids sparingly. She also emphasized the importance of maintaining the weight‑loss and cardiovascular management plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Marked improvement in skin disease; PASI drop to 4. Biologic therapy well tolerated, no hepatotoxicity. Joint symptoms stable. Weight loss progressing; cardiovascular status improving.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-04-15</h3><div class="visit-meta">Rheumatology | Reason: Long‑term management of psoriatic arthritis and assessment for biologic taper</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Long‑term management of psoriatic arthritis and assessment for biologic taper.
+
+History of Present Illness: 35‑year‑old male with a history of psoriatic arthritis (PsA) and psoriasis vulgaris presents for routine rheumatology follow‑up. He reports slight intermittent hip pain but denies new joint swelling or new symptoms. He reports feeling overall well.
+
+Review of Systems: Negative for fever, chills, weight change beyond noted 222 lb, fatigue, or new dermatologic lesions.
+
+Past Medical History: Psoriasis vulgaris, Psoriatic arthritis, metabolic syndrome, cardiovascular disease, hypertension, depression, anxiety.
+
+Current Medications: Amlodipine 10 mg daily, Metformin 500 mg BID, Atorvastatin 20 mg nightly, Adalimumab 40 mg every 2 weeks (scheduled taper), Ceramide moisturizer daily, Tacrolimus 0.1% BID, Halobetasol 0.05% QD PRN.
+
+Allergies: NKDA.
+
+Social History: Former smoker, recent cessation counseling; currently inactive smoking.
+
+Physical Examination:
+- Vital Signs: BP 128/79 mmHg, HR 71 bpm, Weight 222 lb, BMI 32.0.
+- Musculoskeletal: Right hip mild tenderness, no effusion. Hands, feet: no active swelling. Tender joint count 1.
+- Dermatologic: Near‑clear skin, minimal scaling, minimal nail changes.
+
+Labs: CBC, CMP, and lipid panel obtained. Results are within normal limits (CBC normal; CMP normal; LDL 95 mg/dL, HDL 55 mg/dL, TG 140 mg/dL).
+
+Assessment: 1) Psoriatic arthritis – disease control achieved (low tender joint count, minimal swelling, normalized labs). 2) Psoriasis – near‑clear skin with minimal scaling. 3) Metabolic syndrome – LDL and TG within target on statin. 4) Hypertension – BP controlled on amlodipine.
+
+Plan:
+- Initiate biologic taper: transition Adalimumab to 40 mg every 4 weeks. Patient educated on monitoring for flare symptoms (joint swelling, pain, new skin lesions) and to contact clinic immediately if symptoms worsen.
+- Continue current disease‑modifying medication regimen (tacrolimus, halobetasol PRN) and topical skin care.
+- No interruption of adalimumab for recent streptococcal pharyngitis treated with amoxicillin.
+- Reinforce lifestyle modifications: continued weight loss goal, aerobic exercise, low‑salt diet, and smoking cessation.
+- Labs: Repeat CBC, CMP, and LFTs in 3 months to monitor for biologic safety.
+- Follow‑up rheumatology visit in 12 weeks to reassess disease activity and consider further taper or escalation.
+
+Differential Diagnoses Considered: Psoriatic arthritis flare, subclinical disease activity, infection, medication side effect.
+
+Disposition: Patient left the clinic in stable condition with understanding of taper plan and follow‑up schedule.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight intermittent hip pain</span><span class="pill">No new joint swelling</span><span class="pill">Overall well, no flare symptoms</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/79</td></tr><tr><td>HR</td><td>71</td></tr><tr><td>Weight</td><td>222 lb</td></tr><tr><td>BMI</td><td>32.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right hip mild tenderness, no effusion</li><li>Hands and feet: no active swelling</li><li>Skin: near‑clear, minimal scaling</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Lipid Panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: normal</li><li>CMP: normal</li><li>Lipid Panel: LDL 95 mg/dL, HDL 55 mg/dL, TG 140 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Adalimumab 40 mg Q4 weeks (discussed taper plan)</li><li>Counseling on taper schedule and flare monitoring</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Psoriasis vulgaris</span><span class="pill">Psoriatic arthritis</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Depression and anxiety</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Amlodipine 10 mg daily</li><li>Metformin 500 mg BID</li><li>Atorvastatin 20 mg nightly</li><li>Adalimumab 40 mg every 2 weeks</li><li>Ceramide moisturizer daily</li><li>Tacrolimus 0.1% BID</li><li>Halobetasol 0.05% QD as needed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>4 months of adalimumab therapy, 40 mg every 2 weeks</li><li>Near‑clear skin, minimal nail changes</li><li>Weight decreased to 222 lbs</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Huang reviewed the patient’s tender joint count (now 1) and minimal swelling. He noted stable biochemistries: CBC, CMP, and lipid panel within targets. Because joint disease and skin are well controlled, he discussed the possibility of tapering the adalimumab dose to 40 mg every 4 weeks, monitoring for flare signs. Mark expressed willingness to try a dose reduction while continuing the self‑injection procedure. Dr. Huang also discussed the recent mild streptococcal pharyngitis that was treated with a 10‑day amoxicillin course; no biologic interruption was needed. He reiterated lifestyle measures: continued weight loss, aerobic exercise, low‑salt diet, and smoking cessation counseling (patch discontinued). A follow‑up rheumatology visit was scheduled in 12 weeks to reassess disease activity.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Maintenance phase after 4 months of biologic therapy; joint activity minimal, skin clear. Consider tapering biologic dose. Weight and metabolic parameters improving.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Psoriatic arthritis</span><span class="pill">Metabolic syndrome</span><span class="pill">Cardiovascular disease</span><span class="pill">Depression and Anxiety</span><span class="pill">Psoriasis vulgaris</span><span class="pill">Hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Atorvastatin 20 mg nightly</li><li>Metformin 500 mg BID</li><li>Amlodipine 10 mg daily</li><li>Nicotine patch 21 mg daily</li><li>Ceramide emollient moisturizer daily</li><li>Tacrolimus 0.1% ointment BID</li><li>Keratolytic shampoo 3% twice weekly</li><li>Halobetasol propionate 0.05% ointment PRN once daily</li><li>Adalimumab 40 mg SC q4w</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2024-01-07: acute psoriatic arthritis flare with new scalp lesions treated with halobetasol propionate ointment, emollient moisturizer, and nicotine patch. CBC, CMP, and liver function tests ordered. Advised smoking cessation, weight loss, and aerobic exercise. Follow-up in 4 weeks with continuation of statin and amlodipine.</li><li>Visit on 2024-01-15: assessed worsening plaque psoriasis involving neck, shoulders, upper back, and scalp; nail pitting on 7 nails; mild DIP swelling. Halobetasol 0.05% ointment discontinued. Initiated tacrolimus 0.1% ointment BID on sensitive areas and once daily elsewhere; prescribed keratolytic wash sodium lactylate 3% for scalp twice weekly; ongoing emollient moisturizer nightly. Discussed rheumatology referral for possible biologic therapy. Reinforced weight loss, aerobic exercise, nicotine patch tapering. No new laboratory tests ordered. Follow‑up dermatology in 4 weeks or sooner.</li><li>Visit on 2024-01-22: evaluated active psoriatic arthritis and severe psoriasis; initiated adalimumab 160 mg SC loading dose with plan for 80 mg biweekly; ordered baseline labs (CBC, CMP, ESR/CRP, hepatitis C antibody); counseled on weight loss, exercise, smoking cessation; continued current medications.</li><li>Visit on 2024-03-01: follow‑up after 2 months of adalimumab therapy; PASI 4 from baseline 15; scalp mild erythema and few scales; nails minimal pitting; no new lesions; labs CBC/CMP normal; continue adalimumab 40 mg SC q2w, taper halobetasol to PRN once daily; continued tacrolimus 0.1% BID, ceramide moisturizer, keratolytic shampoo; weight‑loss program ongoing; plan to recheck CBC/CMP/LFTs in 3 months.</li><li>Visit on 2024-04-15: rheumatology follow‑up for long‑term PsA management; 35‑yr‑old male reports mild hip tenderness, tender joint count 1, near‑clear skin; labs normal; adalimumab tapered to 40 mg every 4 weeks; continued current topical and systemic regimen; labs repeated in 3 months; follow‑up in 12 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

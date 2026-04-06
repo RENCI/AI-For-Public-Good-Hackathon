@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case acad912a</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: acad912a</h1><div class="subtitle">Metastatic Poorly Differentiated Lung Cancer (N3), Tumor Cannot Be Assessed (Tx) | Male, 65</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic Obstructive Pulmonary Disease (COPD), Chronic bronchitis, Emphysema, Pulmonary fibrosis, Pulmonary hypertension</div><div class="meta-line">Risk Factors: Tobacco smoking, Occupational exposure to coal dust, Asbestos exposure, Silica exposure, Radon exposure, Air pollution, Advanced age</div></div>
+<details><summary>Narrative <span class="preview-text">**Mr. O, a 65‑year‑old male, lived long on the soot‑laden streets of a coal‑mining town. The first signs of trouble bega...</span></summary><div class="section-body"><p>**Mr. O, a 65‑year‑old male, lived long on the soot‑laden streets of a coal‑mining town. The first signs of trouble began almost abruptly, in late spring 2023, when a routine walk with his wife exposed him to an escalating cough that had always been part and parcel of his chronic bronchitis.**</p><p>---</p><p>### **1. The Quiet Beginning (July 2023) – Primary Care Visit**</p><p>It was a mild cough, a bit of wheezing that had gotten “a little less controllable,” he told Dr. Patel at the community clinic. He had tried his regular albuterol inhaler a few times a week, with only transient relief. The clinic note was brief: “Likely exacerbation of COPD; prescribe oral prednisone 40 mg daily for 7 days plus azithromycin 250 mg QD for 7 days.”</p><p>Mr. O left the office with a short‑course of steroids and antibiotics. The cough persisted, but he did not notice new pain or weight loss. His shortness of breath (SOB) had worsened during the last month, making it difficult to walk even a block without feeling a little out of breath—an expected limitation for a COPD patient with a forced expiratory volume (FEV1) of about 45 % predicted.</p><p>---</p><p>### **2. The First Alarm (Mid‑August 2023) – Symptom Escalation**</p><p>Three weeks later, an episode of bright‑red hemoptysis forced a return visit. A sudden burst of blood that lasted a few minutes, with no obvious trigger, was unusual for Mr. O. Dr. Patel ordered a chest radiograph. The film revealed a right upper lobe opacity with surrounding patchy infiltrates—interpreted as a “possible pneumonia or superimposed hemorrhage.”</p><p>A repeat chest CT was performed at the regional imaging center. The CT identified a dense, irregular 3.5 cm mass in the right upper lobe, surrounded by areas of scattered fibrosis. In addition, there were multiple bilateral pulmonary nodules, a prominent mediastinal lymph node mass, and a small right pleural effusion. The radiology report noted “possible metastatic disease; further work‑up recommended.”</p><p>Mr. O’s asthma‑like inhalers failed to improve his dyspnea. His oxygen desaturation at baseline had fallen from 94 % to 88 % on a 2 L nasal cannula. The patient, who had smoked a pack a day for 45 years, was now facing the possibility that the cough was not merely COPD.</p><p>---</p><p>### **3. The First Oncologic Consultation (Late August 2023)**</p><p>The pulmonologist, Dr. Kim, took him to the oncology department at the university hospital. She described the imaging findings as a “highly suspicious lung neoplasm with metastatic characteristics.” A bronchoscopy was scheduled; a transbronchial needle aspiration (TBNA) was performed, yielding a poorly differentiated malignant epithelial cell population. Cytology confirmed “non‑small cell carcinoma, poorly differentiated.” Genetic testing was negative for EGFR and ALK mutations.</p><p>Mr. O and his wife were told the stage was T0 (tumor cannot be assessed due to poor tissue sample), N3 (mediastinal lymph node involvement), M1 (lung nodules). The staging—IV, unresectable—left the medical team with a grim prognosis. Dr. Kim explained that the mass was likely aggressive and that his heavy COPD and pulmonary hypertension would limit aggressive surgery or high‑dose chemotherapy.</p><p>---</p><p>### **4. The Battle of Tactics (Late September 2023) – Chemotherapy Consideration**</p><p>Chemotherapy was discussed. The standard first‑line is a platinum doublet (cisplatin/carboplatin + pemetrexed). However, Mr. O’s pulmonary function tests revealed an FEV1 of 1.3 L (45 % predicted) and a forced vital capacity of 1.4 L. An arterial blood gas on room air showed PaO₂ of 58 mm Hg. In patients with severe COPD, cisplatin‑based regimens risk severe pulmonary toxicity. Dr. Kim, after consultation with a pulmonologist, decided to defer systemic chemotherapy until a better evaluation of his functional reserve could be made. Instead, they opted for palliative radiotherapy to the primary lung mass to control hemoptysis.</p><p>---</p><p>### **5. Palliative Radiotherapy &amp; Intermittent Hemoptysis (October 2023 – January 2024)**</p><p>Mr. O received 30 Gy in 10 daily fractions to the right upper lobe mass. The first week of therapy was marked by mild fatigue and a transient exacerbation of cough. A single episode of moderate hemoptysis occurred halfway through, but it resolved spontaneously. Post‑RT, the mass size decreased by 25 %, and the patient reported a small but meaningful reprieve: less coughing, shorter oxygen requirement (2 L to 1 L nightly). Yet the right pleural effusion was now larger, as per a follow‑up CT of September 20, 2023, prompting a drainage chest tube. The drainage yielded 150 mL of cloudy fluid, and pleural fluid cytology again found malignant cells and evidence of chronic inflammation.</p><p>Between his radiotherapy sessions, Mr. O experienced shortness of breath that escalated steadily. He had begun using a handheld CPAP device at home to ease nighttime hypoxia. Each subsequent month, his oxygen saturation on room air slipped 1–2 % deeper, and his weight dropped from 84 kg to 78 kg over 3 months.</p><p>---</p><p>### **6. The Complication (Mid‑January 2024) – Pulmonary Hypertension**</p><p>A cardiology evaluation revealed a tricuspid regurgitant jet velocity of 4.8 m/s, suggesting severe pulmonary hypertension. The patient had never had cardiac workup before; his heavy smoking and underlying emphysema had been assumed to be the source of dyspnea alone. The diagnosis precipitated a decision to initiate sildenafil therapy and low‑dose tadalafil to improve right‑heart flow. Unfortunately, the vasodilators were poorly tolerated; he suffered episodes of headaches and mild hypotension. In addition, these medications exacerbated his chronic bronchitis symptoms, culminating in another bout of severe cough.</p><p>---</p><p>### **7. The New Therapy - Pemetrexed Alone (March–April 2024)**</p><p>Mr. O’s pulmonary function now hovered at an FEV1 of 1.1 L, and baseline arterial blood gas showed PaO₂ of 52 mm Hg on 2 L nasal cannula. Dr. Kim, after a multidisciplinary meeting, agreed on a single‑agent pemetrexed to minimize toxicity. The regimen began on March 1, 2024, with 500 mg/m² every 21 days. A pre‑treatment folic acid and vitamin B12 supplementation protocol was instituted; he received a 500 mg oral supplement. However, after the first cycle, Mr. O experienced Grade 3 nausea and a transient rise in liver enzymes (AST 125 U/L, ALT 140 U/L). Treatment was held, and liver function normalized over 4 weeks. The second cycle was administered at a 75 % dose.</p><p>By week five of therapy, a CT scan demonstrated disease progression: the right primary mass increased to 4 cm, and new bilateral pulmonary nodules had enlarged. Mr. O reported an increased need for supplemental oxygen (now 4 L) and a persistent cough. The right pleural effusion had also become loculated, and he experienced a new episode of productive cough that was sputum‑rich and mildly hemoptysis.</p><p>---</p><p>### **8. The Crisis (Late April 2024) – Acute Respiratory Failure**</p><p>On April 27, Mr. O arrived at the emergency department with severe dyspnea, orthopnea, and confusion. His vitals: tachypnea at 32 breaths/min, heart rate 119 bpm, blood pressure 92/59 mm Hg, oxygen saturation 84 % on 6 L nasal cannula. He had a new onset of mild crackles in the right lung base and a faint wheeze in the left lung. Bedside chest X-ray revealed extensive opacification of the right lung, right pleural effusion, and a new left lung collapse.</p><p>The team suspected acute exacerbation of pulmonary fibrosis complicated by massive pleural effusion. A bedside ultrasound confirmed a 4 cm loculated effusion; thoracentesis yielded 300 mL of hemorrhagic fluid. Cytology again showed malignant cells. An arterial blood gas (PaO₂ = 55 mm Hg) with FiO₂ 60 % was unsatisfactory. Mechanical ventilation was considered, but Mr. O’s functional reserve and extensive comorbidities made the team hesitate.</p><p>After a rapid cardiopulmonary consultation, the decision was made to transition to hospice care. Mr. O&#x27;s wife was present as a hospice nurse administered CPAP and oxygen therapy. Mr. O was eventually placed on a continuous oxygen support of 10 L/min to maintain saturation above 90 %.</p><p>---</p><p>### **9. The Last Days (Early May 2024) – Decline and Death**</p><p>During the subsequent week, Mr. O’s condition fell further. He developed a low‑grade fever, pleural effusion increased in size, and a new episode of massive hemoptysis—500 mL of bright red blood over 15 minutes. Interventional pulmonology attempted bronchial artery embolization, but the procedure failed due to diffuse tumor spread. He was transferred to a regional hospice unit where he received comfort care.</p><p>On May 14, 2024, after a prolonged 24‑hour period of intense dyspnea and exhaustion, Mr. O passed away at home. His hospice nurse verified that the cause of death was likely respiratory failure secondary to widespread metastatic lung cancer, exacerbated by chronic pulmonary disease and pulmonary hypertension.</p><p>---</p><p>## **Key Clinical Themes**</p><p>- **Rapid Disease Progression**: The transition from initial cough to fatal respiratory failure occurred in less than a year, underscoring the aggressive nature of poorly differentiated lung cancer with N3 disease.
+- **Competing Pathologies**: Chronic COPD, emphysema, pulmonary fibrosis, and pulmonary hypertension complicated both diagnosis and management; therapeutic decisions were frequently constrained by poor pulmonary reserve.
+- **Multidisciplinary Management**: Despite aggressive supportive steps—radiotherapy, palliative chemotherapy, vasodilators—systemic therapy was limited by toxicity and disease progression.
+- **Palliative Focus**: The later phase of care prioritized comfort measures, oxygenation, and symptom control over curative intent, reflecting realistic goals given the disease burden and comorbidities.</p><p>This narrative captures a realistic timeline of a 65‑year‑old smoker’s journey from a chronic cough to ultimate demise, highlighting the interplay of comorbid pulmonary disease and aggressive malignancy.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-07-15</h3><div class="visit-meta">Family Medicine | Reason: Exacerbation of chronic cough and wheeze</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Worsening chronic cough and wheeze.
+History of Present Illness: Mr. O, a 65‑year‑old male with a 10‑year history of COPD, chronic bronchitis, emphysema, pulmonary fibrosis, and pulmonary hypertension, presents with increased cough, wheezing, and exertional dyspnea after a short walk. Denies chest pain, hemoptysis, fever, or weight loss. He reports that his cough has been persistent despite regular albuterol use.
+Past Medical History: COPD, chronic bronchitis, emphysema, pulmonary fibrosis, pulmonary hypertension.
+Medications: Albuterol inhaler PRN.
+Allergies: NKDA.
+Social History: 45 pack‑year smoking history, former smoker; occupational exposure to coal dust and asbestos.
+Review of Systems: Positive for cough, wheeze, and shortness of breath with exertion; negative for fever, chills, chest pain, hemoptysis, weight loss, or orthopnea.
+Physical Examination:
+- General: Alert, in no acute distress.
+- Vitals: BP 140/85 mmHg, HR 78 bpm, RR 18/min, SpO2 94% on room air, T 98.6°F.
+- HEENT: No oral lesions.
+- Cardiac: Regular rate/rhythm, no murmurs.
+- Pulmonary: Diffuse bilateral wheeze; expiratory crackles in lower lobes; no wheezes localized to single ventricle.
+- Extremities: No edema.
+Assessment:
+1. COPD exacerbation – acute worsening of chronic airflow limitation presenting with increased cough, wheeze, and exertional dyspnea.
+Possible contributing factors: Undetected infection or occupational dust exposure; no fever or leukocytosis noted.
+2. Chronic bronchitis – chronic productive cough.
+Plan:
+- Medications: Prescribe oral prednisone 40 mg daily for 7 days, azithromycin 250 mg daily for 7 days to cover possible bacterial superinfection, and advise increased use of albuterol inhaler as needed.
+- Educated patient on inhaler technique and expected course of prednisone taper.
+- Discuss smoking cessation and pulmonary rehabilitation referrals.
+- No immediate diagnostic tests ordered; obtain chest X‑ray or spirometry if symptoms fail to improve within 7 days or if new symptoms (hemoptysis, fever, worsening hypoxia) develop.
+Follow‑up:
+- Return to clinic in 2 weeks or sooner if symptoms worsen (e.g., increased dyspnea, new chest pain, hemoptysis, or oxygen saturation &lt;90%).
+- Provide phone number for urgent concerns.
+- Encourage patient to monitor daily SpO2 if available and report any precipitous declines.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">cough</span><span class="pill">wheezing</span><span class="pill">shortness of breath during exertion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>140/85</td></tr><tr><td>Heart_Rate</td><td>78</td></tr><tr><td>Respiratory_Rate</td><td>18</td></tr><tr><td>Oxygen_Saturation</td><td>94%</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Diffuse bilateral wheeze</li><li>Expiratory crackles in lower lobes</li><li>No chest pain or hemoptysis</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Oral prednisone 40 mg daily for 7 days</li><li>Azithromycin 250 mg daily for 7 days</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Cough persisted, but no new hemoptysis or weight loss.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic obstructive pulmonary disease (COPD) diagnosed 10 years ago</li><li>Chronic bronchitis</li><li>Emphysema</li><li>History of 45 pack-years smoking</li><li>Occupational exposure to coal dust and asbestos</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. O presented with worsening cough and wheezing, reporting shortness of breath after a short walk. The exam revealed audible wheezing bilaterally and scattered expiratory crackles. Dr. Patel diagnosed a COPD exacerbation, prescribed oral prednisone 40 mg daily for 7 days and azithromycin 250 mg daily for 7 days, and advised increased albuterol use. The patient was advised to follow up if symptoms worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable COPD with a mild exacerbation; no evidence of malignancy at this time.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-08-05</h3><div class="visit-meta">Family Medicine | Reason: Bright red hemoptysis and persistent cough</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Bright red hemoptysis and persistent cough.
+
+History: 65‑year‑old male with COPD, chronic bronchitis, emphysema, pulmonary fibrosis, pulmonary hypertension, former heavy smoker (45 pack‑years). Presented with a sudden burst of bright red blood lasting minutes, associated with a persistent cough. Hemoptysis resolved spontaneously. Current medications: prednisone 40 mg PO daily for 7 days (course completed), azithromycin 250 mg PO daily for 7 days (course completed), albuterol inhaler PRN.
+
+Physical exam: BP 135/80 mmHg, HR 82 bpm, RR 20 /min, SpO₂ 88 % on 2 L NC, T 98.4 °F. Decreased breath sounds over RUL; wheezing bilaterally; expiratory crackles in lower lobes.
+
+Imaging: Chest X‑ray shows RUL opacity. Chest CT: 3.5 cm irregular mass in RUL, scattered bilateral pulmonary nodules, prominent mediastinal lymph node, small right pleural effusion.
+
+Assessment: The most concerning etiology is a primary lung malignancy (likely squamous cell carcinoma) given the mass characteristics and smoking history. Other considerations include infectious processes (tuberculous/atypical pneumonia), pulmonary embolism with infarct, benign hyperplastic nodule, or metastatic disease. Hemoptysis resolved and no active bleeding.
+
+Plan:
+1) Continue albuterol inhaler PRN for bronchospasm.
+2) No new systemic steroids; prednisone course completed.
+3) Initiate smoking cessation counseling and offer pharmacotherapy.
+4) Refer to pulmonology/oncology for bronchoscopy with biopsy and possible PET‑CT.
+5) Monitor for recurrent hemoptysis or worsening dyspnea; seek urgent care if needed.
+6) Follow up in clinic 1 week after bronchoscopy results or sooner if symptoms recur.
+7) Continue pulmonary rehab referral per prior visit.
+
+Patient education: Discussed risk of malignancy, importance of diagnostic work‑up, smoking cessation, and symptom monitoring. Patient understands and will proceed.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">bright red hemoptysis</span><span class="pill">cough</span><span class="pill">shortness of breath</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>135/80</td></tr><tr><td>Heart_Rate</td><td>82</td></tr><tr><td>Respiratory_Rate</td><td>20</td></tr><tr><td>Oxygen_Saturation</td><td>88% (2L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased breath sounds over RUL</li><li>Wheezing bilaterally</li><li>Expiratory crackles in lower lobes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Chest CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest CT: 3.5 cm RUL mass with irregular borders, scattered bilateral nodules, prominent mediastinal lymph node, small right pleural effusion</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Respiratory discomfort improved slightly after episode; no further hemoptysis before next visit.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous COPD exacerbation</li><li>Smoking 45 pack-years</li><li>No prior malignancy diagnosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported a sudden burst of bright red blood that lasted minutes, associated with a persistent cough. Chest X‑ray revealed right upper lobe opacity. Intra‑patient conversation suggested a possible pneumonia but was noted to potentially be related to hemoptysis. Dr. Patel ordered a chest CT, which identified a 3.5 cm irregular mass in the RUL, scattered bilateral pulmonary nodules, a prominent mediastinal lymph node, and a small right pleural effusion. The radiology report indicated possible metastatic disease. Mr. O was referred to pulmonology/oncology for bronchoscopy and further work‐up. No immediate intervention was needed beyond observation and continuing albuterol. The patient’s hemoptysis resolved spontaneously after the episode.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Emerging pulmonary mass with possible metastatic spread; urgent evaluation recommended.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-08-18</h3><div class="visit-meta">Pulmonology/Oncology | Reason: Diagnostic evaluation of lung mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**: 65‑year‑old male presents for diagnostic evaluation of right upper lobe (RUL) lung mass. 
+
+**History of Present Illness**: 10‑month history of persistent cough, increasing shortness of breath on exertion, and occasional hemoptysis (bright red). Prior imaging (CT chest) identified a 3.5 cm irregular mass in the RUL with scattered bilateral nodules and mediastinal adenopathy; bilateral crackles and wheezes have been noted chronically with his COPD/emphysema and pulmonary fibrosis.
+
+**Past Medical History**: COPD, emphysema, pulmonary fibrosis, pulmonary hypertension (pending). 
+**Medications**: Albuterol inhaler PRN. 
+**Allergies**: None.
+
+**Social History**: Former smoker, ceased 12 years ago. No alcohol or illicit drug use.
+
+**Review of Systems**: Positive for cough, dyspnea, hemoptysis; denied chest pain, weight loss, fever, night sweats.
+
+**Physical Examination**: 
+- Vitals: BP 130/78 mmHg, HR 85 bpm, RR 22 /min, SpO₂ 86% on 2 L NC, Temp 98.2 °F. 
+- General: Alert, in no acute distress. 
+- Pulmonary: Decreased breath sounds over RUL; bilateral wheezes; diffuse crackles in lower lobes; no rales.
+- Cardiovascular: Regular rate &amp; rhythm, no murmurs.
+
+**Procedure**: Performed diagnostic bronchoscopy with transbronchial needle aspiration (TBNA) of the RUL mass. Patient tolerated the procedure well; post‑procedure mild coughing noted, otherwise stable.
+
+**Diagnostic Testing**: Cytology has been performed and results pending.
+
+**Assessment**: 1. Suspected primary lung carcinoma (most likely non‑small cell lung cancer, given the size, irregularity, and smoking history). 2. Pulmonary fibrosis and COPD exacerbating baseline respiratory status. 3. Intermittent hemoptysis likely from tumor invasion/erosion.
+
+**Plan**:
+1. Await cytology/ histopathology results; initiate multidisciplinary oncology discussion once pathology available.
+2. Initiate palliative radiotherapy targeting the RUL mass to control hemoptysis and reduce local airway obstruction.
+3. Refer to palliative care team for symptom management discussion (pain, dyspnea, psychosocial support).
+4. Obtain CBC, CMP, coagulation panel prior to radiotherapy; consider baseline imaging (PET‑CT) if not already done.
+5. Continue albuterol PRN; add low‑dose prednisone if exacerbation of COPD noted.
+6. Counsel on smoking cessation resources and pulmonary rehabilitation referral.
+7. Monitor SpO₂; encourage use of 2 L NC at rest if SpO₂ &lt;90%; consider high‑flow nasal cannula pending radiation plan.
+8. Educate patient on signs of worsening bleeding, increased dyspnea, or new chest pain – to return to ED or contact clinic.
+9. Follow up in clinic 2 weeks after initiation of radiotherapy for toxicity assessment and review of pathology, or sooner if symptoms worsen.
+
+**Disposition**: Patient remains stable post‑procedure; no immediate complications. Patient informed of palliative approach and expressed determination to continue fighting.
+
+**Signature**: 
+Dr. Kim, MD
+Pulmonology/Oncology</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span><span class="pill">shortness of breath</span><span class="pill">occasional hemoptysis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>130/78</td></tr><tr><td>Heart_Rate</td><td>85</td></tr><tr><td>Respiratory_Rate</td><td>22</td></tr><tr><td>Oxygen_Saturation</td><td>86% (2L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased breath sounds over RUL</li><li>Wheezes bilaterally</li><li>Diffuse crackles</li><li>No signs of acute distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Bronchoscopy with TBNA</li><li>Cytology</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Cytology: poorly differentiated NSCLC, negative EGFR/ALK</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated bronchoscopy; mild coughing postprocedure. He remains aware of need for palliative care but wishes to continue fighting.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chest CT with RUL mass</li><li>COPD, emphysema, pulmonary fibrosis</li><li>Pulmonary hypertension pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Kim performed a bronchoscopy with transbronchial needle aspiration of the right upper lobe mass. Cytology revealed a poorly differentiated non‑small cell carcinoma. Genetic testing was negative for EGFR and ALK mutations. The tumor was staged as T0 (cannot be assessed), N3 (mediastinal nodes), M1 (lung nodules), overall stage IV, unresectable. Given his severe pulmonary reserve (FEV1 1.3 L, PaO2 58 mmHg), systemic chemotherapy was deferred. The plan was to proceed with palliative radiotherapy for hemoptysis control and discuss palliative care options. The patient and family were informed of prognosis and treatment limitations.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IV NSCLC with N3 nodes; treatment plan shifted to palliative RT and supportive care due to limited pulmonary reserve.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-09-25</h3><div class="visit-meta">Oncology | Reason: Post‑radiotherapy assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑radiotherapy assessment. 
+
+History of Present Illness: Mr. O, a 65‑year‑old male with stage IV NSCLC and significant pulmonary comorbidities (COPD, emphysema, pulmonary fibrosis), presents for a follow‑up after completing 10 fractions of 30 Gy to the right upper lobe (RUL) mass. He has recently had a small‑bore chest tube placed for an enlarged right pleural effusion detected on a September 20 CT. Post‑procedure chest X‑ray confirmed correct placement with a small residual effusion. Patient reports a modest decrease in cough frequency and reduced nightly oxygen requirement (2 L → 1 L), yet persistent dyspnea at rest remains unremarkable. No hemoptysis today. 
+
+Past Medical History: Stage IV NSCLC, COPD, emphysema, pulmonary fibrosis. Prior treatments include palliative RT (March 2023), oral prednisone 40 mg daily (course completed 3 weeks ago), azithromycin 250 mg daily for 7 days, and ongoing albuterol inhaler PRN. 
+
+Medications: Albuterol nebulizer PRN (2–3 bids); no other current systemic agents. 
+
+Allergies: NKDA. 
+
+Vital Signs: BP 128/75 mmHg, HR 84 bpm, RR 21 breaths/min, SpO₂ 87 % on 2 L NC, Temp 98.0 °F. 
+
+Physical Examination: Decreased breath sounds over RUL, mild diffuse wheezing, S3 gallop, no jugular venous distension. 
+
+Labs/Imaging: Chest CT (Sept 20) – 25 % tumor shrinkage, enlarged pleural effusion. Chest X‑ray post‑tube – tube in situ, small residual effusion. 
+
+Assessment: • Residual right pleural effusion likely malignant; ongoing dyspnea most consistent with combined disease burden from pleural fluid, radiation pneumonitis, and chronic lung disease. 
+• Moderate improvement in cough suggests partial tumor response. 
+• No evidence of acute hemoptysis.
+
+Differential Diagnosis: 
+1. Malignant pleural effusion secondary to stage IV NSCLC 
+2. Radiation‑induced pneumonitis / fibrosis 
+3. COPD exacerbation in the setting of underlying lung disease 
+4. Pulmonary fibrosis progression 
+5. Pleural infiltration/obstruction 
+
+Plan: 
+1. Initiate a short‑term oral prednisone 40 mg daily for 7 days to address possible radiation pneumonitis, monitoring for hyperglycemia, hypertension, and infection. 
+2. Continue albuterol inhaler PRN; consider adding low‑dose oral inhaled corticosteroid (e.g., fluticasone 50 µg bid) if wheeze persists. 
+3. Maintain current 2 L NC; titrate down to 1 L as tolerated and recheck SpO₂ in clinic. 
+4. Refer to palliative care for symptom management and advance care planning. 
+5. Schedule imaging follow‑up: repeat chest CT in 4–6 weeks to assess pleural fluid size and tumor response. 
+6. Educate patient on signs of pleural effusion recurrence (increasing dyspnea, orthopnea, or cough) and advise early evaluation. 
+7. Pulmonology follow‑up within 2 weeks to review pulmonary function and optimize bronchodilator strategy.
+
+Disposition: Patient was advised to return if dyspnea worsens or if new respiratory symptoms appear. Encouraged to continue smoke cessation counseling and enrollment in pulmonary rehabilitation.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">slight relief of cough</span><span class="pill">persistent shortness of breath</span><span class="pill">no hemoptysis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>128/75</td></tr><tr><td>Heart_Rate</td><td>84</td></tr><tr><td>Respiratory_Rate</td><td>21</td></tr><tr><td>Oxygen_Saturation</td><td>87% (2L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.0°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased breath sounds over RUL</li><li>Mild wheezing</li><li>S3 gallop</li><li>No JVD</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT (Sept 20)</li><li>Chest X‑ray (post‑tube placement)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest CT: 25 % tumor shrinkage, pleural effusion enlarged</li><li>Chest X‑ray: chest tube in situ, small residual effusion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Chest tube insertion (small‐bore)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Cough frequency reduced, but overall fatigue and dyspnea remained high.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV NSCLC</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Cilostazol? none now</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Started palliative RT March 2023</li><li>Stable on albuterol only</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. O had completed 10 fractions of 30 Gy to the RUL mass. Follow‑up chest CT (September 20) showed a 25 % reduction in tumor size but an enlarged right pleural effusion. The oncologist recommended insertion of a small-bore chest tube, which had been performed. Post‑procedure chest X‑ray confirmed proper placement and mild residual effusion. The patient noted a modest decrease in cough frequency and less nightly need for oxygen from 2 L to 1 L. However, his cough was still frequent and his dyspnea at rest had not improved markedly. A discussion on palliative care referral and symptom management ensued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Tumor response to radiosensitization but pleural effusion progression; palliative radiation only partially effective.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-10-05</h3><div class="visit-meta">Pulmonology | Reason: Evaluation of worsening pleural effusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation of worsening pleural effusion.
+
+History of Present Illness: 65‑year‑old male with stage IV NSCLC, COPD, emphysema, pulmonary fibrosis, pulmonary hypertension, chronic bronchitis, and a right pleural effusion presents for assessment of a loculated right pleural effusion that has been progressive despite prior interventions.  The patient reports persistent cough, increasing dyspnea, and nighttime orthopnea.  He tolerated a therapeutic thoracentesis with chest tube placement 150 mL cloudy fluid drained; cytology again confirms malignant cells and chronic inflammatory changes.  He declined pleurodesis at this time.  Currently his oxygen requirement has worsened to 2 L NC with SpO₂ 88‑90 % (baseline 1 L NC SpO₂ 86 %) and he reports new fatigue and slight weight loss.
+
+Past Medical History: Stage IV NSCLC, right upper lobe mass (3.5 cm), COPD, emphysema, pulmonary fibrosis, pulmonary hypertension, chronic bronchitis, chronic right pleural effusion, prior radiation to RUL.
+
+Medications: Albuterol inhaler PRN; Albuterol nebulizer PRN; Prednisone 40 mg daily (7‑day course); Home CPAP nightly; 1 L nasal cannula (room air baseline). NKDA.
+
+Review of Systems:
+• Respiratory: persistent cough, shortness of breath, nighttime orthopnea.
+• Constitutional: fatigue, slight weight loss.
+• Cardiovascular: no JVD, but S3 gallop.
+
+Physical Examination: BP 127/74 mmHg, HR 88 bpm, RR 23 /min, SpO₂ 86 % on 1 L NC, Temp 98.5 °F. Decreased breath sounds at RUL, mild wheeze, accessory muscle use. No jugular venous distension.
+
+Assessment:
+1. Recurrent malignant pleural effusion – loculated, partially drained; patient declined pleurodesis.
+2. COPD exacerbation with underlying pulmonary hypertension; increased wheeze and accessory muscle use.
+3. Possible radiation‑related pneumonitis—history of RUL RT, recent fluid shift, but cytology does not show infection.
+4. Chronic fatigue and weight loss likely multifactorial (cancer, chronic disease, reduced oral intake).
+
+Plan:
+• Continue albuterol inhaler PRN and nebulizer PRN.
+• Continue prednisone 40 mg/day for 7 days (current course) and reassess once completed; consider stepping down to low‑dose inhaled corticosteroid if wheeze persists.
+• Increase oxygen to 2 L NC to maintain SpO₂ &gt;90 %.
+• No immediate pleurodesis; schedule repeat chest CT in 4–6 weeks to assess residual effusion.
+• Refer to palliative care for symptom control, psychosocial support, weight management, and advanced care planning.
+• Monitor for signs of infection (fever, purulent sputum); obtain CBC and CMP if concerning.
+• Encourage adequate oral intake, hydration, and discuss appetite stimulants.
+• Continue CPAP nightly as tolerated.
+
+Follow‑up: Respiratory follow‑up in 2 weeks; repeat chest CT in 4–6 weeks; palliative care referral immediately.
+
+Disposition: Patient was educated on signs of worsening effusion or infection, instructed to use home pulse oximeter, and advised to return if SpO₂ falls below 80 % or if new symptoms develop.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span><span class="pill">increasing shortness of breath</span><span class="pill">nighttime orthopnea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>127/74</td></tr><tr><td>Heart_Rate</td><td>88</td></tr><tr><td>Respiratory_Rate</td><td>23</td></tr><tr><td>Oxygen_Saturation</td><td>86% (1 L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Decreased breath sounds over RUL</li><li>Mild wheeze</li><li>S3 gallop</li><li>No JVD</li><li>Accessory muscle use</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest CT</li><li>Pleural fluid analysis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pleural fluid: malignant cells, chronic inflammation</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Therapeutic thoracentesis via chest tube (150 mL)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Post‑thoracentesis oxygen sat improved; however, cough remained frequent and fatigue increased.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV NSCLC</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Pulmonary hypertension - pending</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Home CPAP nightly</li><li>1 L nasal cannula (room air baseline)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent chest tube for pleural effusion</li><li>Worsening oxygen requirement</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>A repeat chest CT revealed a loculated right pleural effusion measuring 4 cm and a small residual mass. The patient underwent therapeutic thoracentesis via chest tube, draining 150 mL of cloudy fluid. Cytology again confirmed malignant cells with features consistent with NSCLC and chronic inflammatory changes. A pleurodesis plan was discussed, but the patient declined invasive procedures at this time. Oxygen therapy was increased to 2 L nasal cannula with SpO2 maintained at 88‑90%. The pulmonologist continued to monitor the patient’s pulmonary function and suggested referral for palliative care. The patient also reported increased fatigue and slight weight loss.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Active pleural disease with loculated effusion; disease burden continues to increase despite local interventions.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-01-15</h3><div class="visit-meta">Cardiology | Reason: Assessment of escalating dyspnea and orthopnea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Escalating dyspnea and orthopnea.
+
+History of Present Illness: The patient, a 65‑year‑old male with known Stage IV NSCLC complicated by COPD, emphysema, pulmonary fibrosis, and pulmonary hypertension, reports progressive shortness of breath over the past month, worsening orthopnea, and mild substernal chest pain. He has been on albuterol, CPAP nightly, and 1 L nasal cannula oxygen. Recent transthoracic echocardiography showed a tricuspid regurgitant jet velocity of 4.8 m/s and an estimated RV systolic pressure of 60 mmHg, consistent with severe pulmonary hypertension.
+
+Review of Systems: +Dyspnea, orthopnea, mild chest discomfort. No syncope, fever, or recent weight loss. Chronic cough and wheezing persist.
+
+Physical Examination: BP 120/70 mmHg, HR 90 bpm, RR 26, SpO₂ 84 % on 2 L NC, T 98.0 °F. Cardiac: mild TR murmur, S3 gallop. JVD present. Pulmonary: decreased breath sounds RUL, bilateral wheezing, crackles.
+
+Assessment: Severe pulmonary hypertension secondary to chronic lung disease (COPD, pulmonary fibrosis) in the setting of progressive malignancy. Right‑sided volume overload. Ongoing dyspnea likely multifactorial: pulmonary hypertension, fluid overload, and possible exacerbation of underlying lung disease.
+
+Plan:
+1. Pharmacologic: 
+   - Sildenafil titrated to 10 mg BID (previous 20 mg BID caused headache and hypotension). 
+   - Furosemide 20 mg daily to manage volume overload.
+   - Continue home oxygen (1 L NC) and CPAP.
+   - Continue albuterol PRN.
+2. Monitoring: Home BP monitoring; watch for headaches, dizziness, hypotension. Ensure adequate hydration.
+3. Diagnostics: Repeat transthoracic echocardiogram in 4 weeks to assess RV pressures and response to therapy.
+4. Labs: CBC, CMP, BNP, troponin to evaluate for anemia, metabolic disturbances, and cardiac strain.
+5. Referrals: Pulmonology for pleural effusion management and ongoing lung disease optimization; Palliative care for symptom control and nutrition.
+6. Patient education: Sign of medication intolerance (headache, hypotension), importance of adherence, fluid balance, and to seek emergent care for worsening dyspnea or chest pain.
+
+Follow‑up: Cardiology review in 4 weeks with repeat echo; pulmonology follow‑up in 2 weeks; palliative care review as scheduled.
+
+Prepared by: [Attending Cardiology]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">increasing shortness of breath</span><span class="pill">nighttime orthopnea</span><span class="pill">mild chest pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>120/70</td></tr><tr><td>Heart_Rate</td><td>90</td></tr><tr><td>Respiratory_Rate</td><td>26</td></tr><tr><td>Oxygen_Saturation</td><td>84% (2 L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.0°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Murmur of mild tricuspid regurgitation</li><li>S3 gallop</li><li>Jugular venous distention</li><li>Decreased breath sounds over RUL</li><li>Wheezing bilaterally</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram: RVSP 60 mmHg (estimated), TR velocity 4.8 m/s, severe pulmonary hypertension</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sildenafil 20 mg BID (later 10 mg BID)</li><li>Tadalafil 5 mg daily (held)</li><li>Furosemide 20 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Headache and mild hypotension resolved after dose adjustment; fluid retention improved modestly but dyspnea persists.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV NSCLC</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Pulmonary hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Home CPAP nightly</li><li>Home oxygen 1 L nasal cannula</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive cough and dyspnea</li><li>Prior pleural effusion</li><li>No known heart disease</li><li>COPD with pulmonary fibrosis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Transthoracic echocardiography revealed a tricuspid regurgitant jet velocity of 4.8 m/s, indicating severe pulmonary hypertension. The cardiologist initiated sildenafil 20 mg BID and tadalafil 5 mg daily, monitoring for side effects. After one week, the patient reported headaches and mild hypotension, and increased bronchial symptoms. Sildenafil was reduced to 10 mg BID, and tadalafil held. In addition, a low‑dose furosemide (20 mg daily) was started to manage fluid overload. The patient was educated on signs of medication intolerance and advised to maintain hydration. The cardiologist scheduled a repeat echo in 4 weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pulmonary hypertension exacerbating respiratory failure; medical therapy limited by hemodynamic and bronchial side effects.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-03-01</h3><div class="visit-meta">Oncology | Reason: Initiation of palliative chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of palliative chemotherapy for Stage IV NSCLC.
+
+History of Present Illness: 65‑year‑old male with known Stage IV NSCLC complicated by COPD, emphysema, pulmonary fibrosis, and pulmonary hypertension presents for continuation of palliative chemotherapy. He received single‑agent pemetrexed 500 mg/m² on day 1 of a 21‑day cycle with folic acid and B12 supplementation. One week later he developed grade 3 nausea and transaminitis (AST 125, ALT 140), leading to a 4‑week recovery period and dose reduction to 75 % (375 mg/m²) for the second cycle. Five weeks after initiation a post‑therapy CT revealed disease progression: the primary RUL mass increased to 4 cm, new pulmonary nodules, loculated pleural effusion, and new productive cough with mild hemoptysis. Oxygen requirement remained at 4 L nasal cannula (SpO₂ 82 %) and the patient lost 6 kg over the past 3 months.
+
+Past Medical History: Stage IV NSCLC, COPD, emphysema, pulmonary fibrosis, pulmonary hypertension, radiation therapy October 2023.
+
+Medications: Albuterol inhaler PRN; Sildenafil 10 mg BID; Furosemide 20 mg daily; CPAP nightly; Home oxygen 4 L NC; Pemetrexed 375 mg/m² (2nd cycle); Folic acid 1 mg daily; Vitamin B12 1000 µg IM; Ondansetron prophylaxis.
+
+Allergies: NKDA
+
+Review of Systems: Positive for worsening cough, increased dyspnea, weight loss.
+
+Physical Examination:
+- Vital Signs: BP 118/69, HR 92, RR 28, SpO₂ 82 % on 4 L NC, Temp 98.3 °F.
+- General: Cachectic, mild hepatomegaly.
+- Cardiovascular: S3 gallop, no cyanosis.
+- Pulmonary: Decreased breath sounds RUL, wheezing, mild crackles.
+- Other: No peripheral edema.
+
+Assessment:
+1. Progressive Stage IV NSCLC with new pleural effusion and pulmonary nodules – likely disease progression.
+2. Grade 3 pemetrexed‑induced nausea and transaminitis – tolerated at reduced dose with monitoring.
+3. Exacerbation of underlying COPD/pulmonary fibrosis/pulmonary hypertension – contributes to dyspnea.
+4. Possible drug‑induced interstitial lung disease or radiation pneumonitis – warrants close monitoring given history of thoracic radiotherapy.
+
+Plan:
+- Continue pemetrexed at 75 % dose (375 mg/m²) with folic acid, B12, and ondansetron continued.
+- Monitor liver function tests and CBC prior to each cycle; hold if AST/ALT &gt;5× ULN.
+- Weekly nursing call to assess nausea, appetite, and weight.
+- Add low‑dose prednisone 20 mg PO daily for 7 days to address potential radiation or drug‑induced pneumonitis; taper over 2 weeks.
+- Repeat CBC, CMP, BMP, and lipid panel in 2 weeks.
+- Repeat chest CT in 6 weeks or sooner if clinical deterioration.
+- Continue home oxygen; reassess oxygen need at each visit.
+- Consult palliative care for pain, nutrition, and goal‑setting.
+- Pulmonology follow‑up in 2 weeks to assess pulmonary hypertension therapy; consider escalation of sildenafil.
+- Discuss advanced care planning and hospice options if disease status deteriorates.
+
+Disposition: Patient wishes to continue palliative chemotherapy despite progression. Advised vigilant monitoring for toxicity and prompt reporting of any new or worsening symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">worsening cough</span><span class="pill">increased dyspnea</span><span class="pill">weight loss (6 kg over 3 months)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>118/69</td></tr><tr><td>Heart_Rate</td><td>92</td></tr><tr><td>Respiratory_Rate</td><td>28</td></tr><tr><td>Oxygen_Saturation</td><td>82% (4 L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.3°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild hepatomegaly</li><li>S3 gallop</li><li>Decreased breath sounds over RUL</li><li>Wheezing</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP (including LFTs)</li><li>Chest CT (baseline)</li><li>Chest CT (post‑therapy)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CMP: AST 125, ALT 140 during cycle 1</li><li>Chest CT post‑therapy: primary 4 cm, enlarged nodules, loculated effusion</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pemetrexed 500 mg/m² day 1</li><li>Folic acid 1 mg daily</li><li>Vitamin B12 1000 µg IM</li><li>Ondansetron prophylaxis</li><li>Second cycle 75 % dose</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Initially tolerated; grade 3 nausea and transaminitis led to temporary hold. Disease progression seen on CT; patient remains willing to continue palliative therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV NSCLC</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Pulmonary hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Sildenafil 10 mg BID</li><li>Furosemide 20 mg daily</li><li>Home CPAP nightly</li><li>Home oxygen 4 L nasal cannula</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV NSCLC, RUL mass, bilateral nodules, pleural effusion</li><li>Radiation therapy in Oct 2023</li><li>Pulmonary hypertension, current sildenafil dose 10 mg BID</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>After multidisciplinary discussion, the oncologist decided to start single‑agent pemetrexed 500 mg/m² on day 1 of a 21‑day cycle, with folic acid 1 mg daily and vitamin B12 intramuscular 1000 µg. On day 1 the patient tolerated the infusion well; ondansetron prophylaxis was given. One week later, the patient developed grade 3 nausea, and liver function tests revealed AST 125 U/L and ALT 140 U/L. Pemetrexed was held, and the patient was placed on a 4‑week recovery period. Liver enzymes returned to normal (AST 35, ALT 28). Second cycle was administered at 75 % dose (375 mg/m²). A repeat CT scan 5 weeks after initiation showed progression: primary mass 4 cm, new enlarged pulmonary nodules, loculated pleural effusion, and new productive cough with mild hemoptysis. The patient’s oxygen requirement increased to 4 L, and his weight fell to 78 kg. The oncologist discussed treatment options, including palliative radiotherapy repeat or switch to best supportive care. The patient decided to continue pemetrexed at the reduced dose with close monitoring.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Chemotherapy limited by hepatic toxicity; radiographic progression suggests aggressive disease. Continuation of single‑agent therapy with monitoring.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-04-27</h3><div class="visit-meta">Emergency Medicine | Reason: Acute respiratory failure and massive pleural effusion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe dyspnea, orthopnea, and altered mental status. \n\nHistory of Present Illness: Mr. O, a 65‑year‑old male with stage IV NSCLC, COPD/emphysema, pulmonary fibrosis, pulmonary hypertension, and a known large right pleural effusion, presented to the ED with sudden worsening shortness of breath that is positional and associated with confusion. He is on home CPAP, home oxygen 4 L/min, albuterol inhaler PRN, sildenafil 10 mg BID, furosemide 20 mg daily, and pemetrexed chemotherapy. Vital signs at triage: BP 92/59, HR 119, RR 32, SpO2 84% on 6 L NC, Temp 98.2°F. On exam: tachypnea, tachycardia, accessory muscle use, crackles at base of the right lung, faint wheeze on the left, jugular venous distention, altered mental status. \n\nDiagnostic Studies: Bedside chest X‑ray demonstrated extensive right lung opacification with massive right pleural effusion and left lung collapse. Bedside ultrasound confirmed a 4‑cm loculated effusion. Urgent bedside thoracentesis removed 300 mL of hemorrhagic fluid, but oxygenation did not improve; ABG on FiO2 60% showed PaO2 55 mmHg. \n\nAssessment: Acute respiratory failure secondary to a malignant, loculated right pleural effusion on a background of advanced COPD, pulmonary fibrosis, pulmonary hypertension, and stage IV NSCLC. The patient’s poor functional reserve, low systemic blood pressure, persistent hypoxemia refractory to oxygen escalation, and altered mental status indicate a very limited prognosis. Cardiac and pulmonary consultation recommended transition to comfort‑focused care as mechanical ventilation would provide little benefit and significant distress. \n\nPlan: 1. Transition to hospice with ongoing comfort care. 2. Continue home CPAP and increase supplemental oxygen to 10 L/min via nasal cannula to maintain SpO2 &gt;90%. 3. Continue current medication regimen (albuterol inhaler PRN, furosemide 20 mg daily, sildenafil 10 mg BID). 4. Initiate comfort medication as needed (e.g., low‑dose opioid and/or dexamethasone) per hospice protocol. 5. Provide family counseling regarding prognosis, hospice resources, advanced care planning, and emotional/spiritual support. 6. Arrange regular home nursing visits to monitor symptoms, manage oxygen equipment, and assist with ADLs. \n\nThe patient and family were counseled extensively and a hospice team arrived to initiate comfort‑focused care. The patient remained in hospice for the next week until passing on 2024‑05‑14.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe dyspnea</span><span class="pill">orthopnea</span><span class="pill">confusion</span><span class="pill">fever 99 °F</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood_Pressure</td><td>92/59</td></tr><tr><td>Heart_Rate</td><td>119</td></tr><tr><td>Respiratory_Rate</td><td>32</td></tr><tr><td>Oxygen_Saturation</td><td>84% (6 L nasal cannula)</td></tr><tr><td>Temperature</td><td>98.2°F</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tachypnea, tachycardia</li><li>Crackles right base, wheeze left</li><li>JVD</li><li>Accessory muscle use</li><li>Altered mental status</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray</li><li>Bedside ultrasound</li><li>Thoracentesis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>SPO2 84% on 6 L NC</li><li>ABG: PaO2 55 mmHg FiO2 60%</li><li>Thoracentesis: 300 mL hemorrhagic, cytology malignant</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Thoracentesis 300 mL hemorrhagic fluid</li><li>CPAP initiation</li><li>Supplemental oxygen 10 L/min</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient was oriented but increasingly confused; no improvement with oxygen escalation. Comfort care decision made.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Stage IV NSCLC</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Acute pleural effusion</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Sildenafil 10 mg BID</li><li>Furosemide 20 mg daily</li><li>Home CPAP nightly</li><li>Home oxygen 4 L nasal cannula</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Progressive disease with pleural effusion</li><li>Pemetrexed chemotherapy</li><li>Recent palliative RT</li><li>Sildenafil 10 mg BID</li><li>Systolic BP low</li><li>No mechanical ventilation yet</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. O arrived to the ED with a sudden worsening of shortness of breath, sleep‑position‑dependent worsening, and confusion. Physical exam revealed crackles in the right lung base, faint wheeze on the left, jugular venous distention, and accessory muscle use. Bedside chest X‑ray showed extensive opacification of the right lung, right pleural effusion, and left lung collapse. Ultrasound confirmed a 4 cm loculated effusion. An urgent bedside thoracentesis yielded 300 mL of hemorrhagic fluid. Cytology again confirmed malignant cells. ABG on FiO₂ 60% revealed PaO₂ 55 mmHg. Given his poor functional reserve, the team discussed the risks of mechanical ventilation versus comfort care. A rapid cardiopulmonary consult concluded that the best option was transition to hospice. The patient and family were counseled, and a hospice team arrived. Continuation of CPAP and supplemental oxygen at 10 L/min to maintain saturation &gt;90 % was arranged. The patient remained in comfort‑focused care for the next week until he passed on May 14 2024.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute respiratory failure precipitated by massive hemorrhagic pleural effusion in the setting of widespread metastatic disease. Transition to hospice care deemed appropriate.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 65</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic Obstructive Pulmonary Disease (COPD)</span><span class="pill">Chronic bronchitis</span><span class="pill">Emphysema</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Pulmonary hypertension</span><span class="pill">Pulmonary mass</span><span class="pill">Right pleural effusion</span><span class="pill">Stage IV NSCLC</span><span class="pill">Malignant pleural effusion (recurrent)</span><span class="pill">Right heart failure</span><span class="pill">Severe pulmonary hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Albuterol nebulizer PRN</li><li>Sildenafil 10 mg BID</li><li>Furosemide 20 mg daily</li><li>CPAP nightly</li><li>Home oxygen 10 L/min via nasal cannula</li><li>Low‑dose opioid PRN</li><li>Dexamethasone PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit for worsening cough and wheeze. Physical exam noted diffuse bilateral wheeze and expiratory crackles, SpO2 94%. Prescribed oral prednisone 40 mg daily for 7 days, azithromycin 250 mg daily for 7 days, and increased albuterol PRN. Advised smoking cessation and pulmonary rehabilitation referral. Follow‑up scheduled in 2 weeks.</li><li>Visit for bright red hemoptysis and persistent cough. Physical exam noted decreased breath sounds over RUL, wheezing bilaterally, expiratory crackles in lower lobes; SpO2 88% on 2L NC. Chest X-ray and CT revealed a 3.5 cm irregular mass in RUL with scattered bilateral nodules, prominent mediastinal lymph node, and small right pleural effusion. Plan: continue albuterol inhaler PRN; smoking cessation counseling and pharmacotherapy referral; refer to pulmonology/oncology for bronchoscopy with biopsy and possible PET‑CT; monitor for recurrent hemoptysis or worsening dyspnea; follow up 1 week after bronchoscopy results.</li><li>Pulmonology/Oncology evaluation for a 3.5 cm right upper lobe lung mass. Physical exam revealed decreased breath sounds over the RUL, bilateral wheezes, and diffuse crackles; SpO₂ 86% on 2L NC. Diagnostic bronchoscopy with transbronchial needle aspiration was performed and patient tolerated it well. Cytology pending. Plan: await pathology, initiate palliative radiotherapy to the RUL mass, refer to palliative care, order CBC, CMP and coagulation panel prior to radiotherapy, consider baseline PET‑CT if not already done, continue Albuterol PRN, add low‑dose prednisone if COPD exacerbation noted, counsel smoking cessation and pulmonary rehabilitation, monitor SpO₂ and use 2L NC if &lt;90%, follow up in 2 weeks post‑radiotherapy for toxicity assessment.</li><li>Post‑radiotherapy assessment for stage IV NSCLC with residual right pleural effusion and mild dyspnea. Chest CT shows 25% tumor shrinkage, pleural effusion enlargement. Chest X‑ray confirms chest tube placement with small residual effusion. Initiated short‑term prednisone 40 mg daily for 7 days to address possible radiation pneumonitis. Continued albuterol inhaler and nebulizer PRN; considered low‑dose inhaled corticosteroid if wheeze persists. Maintained 2L nasal cannula with plan to titrate down to 1L as tolerated. Referred to palliative care and scheduled repeat chest CT in 4–6 weeks and pulmonology follow‑up in 2 weeks. Patient advised to monitor for worsening dyspnea or signs of effusion recurrence.</li><li>Patient evaluated for progressive loculated right pleural effusion despite prior thoracentesis; chest fluid cytology malignant. SpO₂ 86% on 1L NC, increased to 2L NC; oxygen saturation improved to 88‑90%. New fatigue and slight weight loss. Continued albuterol inhaler PRN and nebulizer PRN; ongoing 7‑day prednisone course; oxygen therapy increased to 2L NC; no pleurodesis planned; scheduled repeat chest CT in 4–6 weeks; palliative care referral for symptom control and nutrition support; follow‑up in 2 weeks.</li><li>Visit for escalating dyspnea and orthopnea; physical exam showed orthopnea, S3 gallop, JVD, decreased breath sounds RUL, bilateral wheezing, crackles; SpO2 84% on 2L NC; transthoracic echo revealed severe pulmonary hypertension with RV systolic pressure 60 mmHg. Initiated sildenafil 10 mg BID, furosemide 20 mg daily, continued albuterol PRN, CPAP nightly, and home oxygen 1L NC. Labs ordered CBC, CMP, BNP, troponin. Follow‑up cardiology in 4 weeks and pulmonology in 2 weeks.</li><li>Visit for initiation of palliative chemotherapy with pemetrexed. Patient presented with worsening cough, increased dyspnea, and weight loss. Blood pressure 118/69, heart rate 92, respiratory rate 28, SpO2 82% on 4L nasal cannula, temperature 98.3°F. Physical exam noted cachexia, mild hepatomegaly, S3 gallop, decreased breath sounds RUL, wheezing, mild crackles. Treatment plan included pemetrexed 375 mg/m² with folic acid, vitamin B12, and ondansetron prophylaxis. Added low‑dose prednisone 20 mg daily for 7 days with taper. Home oxygen increased to 4 L NC. Ordered CBC, CMP, chest CT, followed by repeat labs in 2 weeks and repeat chest CT in 6 weeks. Scheduled pulmonology follow‑up in 2 weeks and palliative care referral for nutrition and advanced care planning.</li><li>Emergency visit for acute respiratory failure with massive right pleural effusion. Bedside chest X‑ray demonstrated extensive right lung opacification with massive right pleural effusion and left lung collapse; bedside ultrasound confirmed a 4‑cm loculated effusion. Urgent thoracentesis removed 300 mL hemorrhagic fluid, but oxygenation did not improve; ABG PaO2 55 mmHg. Patient transitioned to hospice, remained on CPAP, oxygen increased to 10 L/min, continued albuterol inhaler PRN, furosemide 20 mg daily, sildenafil 10 mg BID. Hospice care initiated with comfort medications as needed.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

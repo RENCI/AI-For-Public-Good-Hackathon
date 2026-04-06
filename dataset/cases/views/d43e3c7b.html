@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case d43e3c7b</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: d43e3c7b</h1><div class="subtitle">Poorly differentiated carcinoma of the upper lobe of the lung | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Chronic obstructive pulmonary disease, Emphysema, Bronchiectasis, Lung fibrosis, Anemia, Depression, Cardiovascular disease</div><div class="meta-line">Risk Factors: Tobacco smoking, Radon exposure, Occupational carcinogens, Air pollution</div></div>
+<details><summary>Narrative <span class="preview-text">In the early spring of 2025, Thomas had been feeling as if a small weight had settled in his chest. A three‑month histor...</span></summary><div class="section-body"><p>In the early spring of 2025, Thomas had been feeling as if a small weight had settled in his chest. A three‑month history of an irritating, dry cough that wouldn’t respond to over‑the‑counter antihistamines, he had started to notice a growing sense of breathlessness, especially on the right side of his body where he felt a dull ache that spread from the ribs to his shoulder blade. With a body weight that had slipped 12 pounds in the last two months, he began to avoid the short walks he used to take along the riverbank with his wife, Margaret. The cough had begun to come with a faint bloodstain on the first night of each episode; it was brief, but the sight of it was unsettling. His family noticed that the patient’s routine laughter was replaced with quiet groans, and the man who had once spent hours in the garden now lay almost entirely in bed.</p><p>Thomas had always been a hard‑working man, but the same qualities that had made him a reliable coal miner and later a long‑time plumber had also placed him in the highest risk categories for lung disease. He had smoked a pack a day for forty years, until four years ago when he finally gave up. He had also spent a decade living in a modest apartment in an industrial district, exposed to fumes from nearby factories. Although his family had never tested the home for radon, the landlord had never mentioned it, and Thomas had never installed a detector. His health history was a maze of comorbidities that had been managed but never truly cured: COPD with a forced expiratory volume in one second of 58 % predicted, progressive emphysema evident on chest radiographs, a diffuse network of bronchiectasis in the upper lobes, and a mild interstitial fibrosis of the lung parenchyma. He also suffered from anemia (hemoglobin 10.5 g/dL) that had been partially corrected with oral iron, and he had been prescribed fluoxetine for mild depression for the past year. A history of hypertension and coronary artery disease had resulted in a percutaneous coronary intervention on one of the bypass vessels two years earlier.</p><p>On March 12, Thomas’s breathing began to feel more labored with any exertion, and his cough was now productive with sputum that was occasionally mucoid but more often a thin, clear liquid. He described an odd sensation that something “was stuck in his chest.” Margaret noticed a new, mild, persistent low‑grade fever of 99.5 °F that appeared on the evenings. Concerned and in search of a diagnosis, Thomas finally agreed to visit the urgent‑care clinic.</p><p>A chest X‑ray at the clinic showed a new, dense opacity at the superior segment of the right lung, the size of which was not fully appreciable on the upright view. A chest CT was ordered promptly for better visualization. In the days that followed, Thomas’s appetite had further decreased, and he began to feel dizzy each time he attempted to sit up. He also started to notice that his pulse rate was irregular, and a faint, pale complexion signified worsening anemia.</p><p>On March 20, a high‑resolution CT scan revealed a 4.3 cm spiculated mass occupying nearly the entire right upper lobe, with evidence of mediastinal lymph node enlargement and a small pleural effusion. The lesion had a central area of low attenuation consistent with necrosis. No distant metastases were seen on the same study. The radiologist commented that the mass had a classic appearance of a high‑grade tumor, possibly a broncho‑alveolar carcinoma or a small‑cell carcinoma. However, the size and spiculation raised suspicion for a poorly differentiated carcinoma of unknown primary, an ominous diagnosis in any patient but especially in someone with Thomas’s comorbidities.</p><p>His oncologist, Dr. Singh, discussed the implications with Thomas and Margaret during a second‑day visit. The patient’s COPD and pulmonary fibrosis made him a poor candidate for standard lobectomy; the risk of postoperative respiratory failure was significant. Thoracic surgery recommended a bronchoscopic needle aspiration to obtain tissue; however, an endobronchial ultrasound (EBUS) was already booked. Meanwhile, the patient’s anemia, depression, and cardiovascular status were re-assessed and optimized. Dr. Singh discussed a “palliative intent” approach, emphasizing quality of life while considering systemic chemotherapy if the patient and family agreed.</p><p>On March 25, Thomas underwent an EBUS‑guided transbronchial needle aspiration (TBNA) of the right hilar lymph node. The pathology report returned five days later: a poorly differentiated adenocarcinoma with frequent mitotic figures and no squamous differentiation. Immunohistochemistry confirmed strong TTF‑1 positivity, ruling against primary squamous cell changes. The tumor was staged as T3N2M0 (Stage IIIA according to the AJCC), but the medical team quickly understood that the aggressive biology and comorbidities would make cure unlikely.</p><p>In an effort to preserve life‑sustaining quality, Dr. Singh recommended a chemotherapy regimen of carboplatin combined with pemetrexed, a schedule that had manageable cardiopulmonary side‑effects in many COPD patients. Thomas was scheduled for the first cycle on April 2. His first cycle, however, was interrupted by profound fatigue, exacerbated anemia (hemoglobin dropped to 8.8 g/dL), and an exacerbation of COPD that required a prednisone steroid taper and a short course of antibiotics for pneumonia. Despite this, Thomas elected to proceed with a second cycle.</p><p>By late April, Thomas was still battling a 90‑minute breathlessness episode, which made walking from the restroom to bed an ordeal. He had begun to express feelings of helplessness – a pattern that had been noted during his depression screening. Dr. Singh and the psychiatric team initiated a more aggressive antidepressant protocol with sertraline, but Thomas remained emotionally drained. At his end‑of‑month follow‑up, the CT scan revealed an increase of the right upper lobe mass to 5.2 cm and a markedly larger, homogenous pleural effusion.</p><p>The pleural fluid was aspirated under ultrasound guidance. Cytology was positive for malignant cells, confirming malignant pleural effusion and revealing advanced disease with possible pleural involvement. The oncology team discussed that, given the mass’ growth despite systemic chemotherapy, and the new pleural involvement, the disease had advanced to Stage IV. The patient no longer tolerated the chemotherapy regimen; his performance status had declined to ECOG 3. The decision was made to shift from a curative “palliative” intent to an aggressive hospice‑focused care.</p><p>On May 5, Thomas was transitioned to a hospice unit. Margaret attended the last morning meeting; the medical team emphasized symptom management: oxygen supplementation at 2 L/min via nasal cannula to alleviate dyspnea, scheduled IV bisphosphonate infusions for bone pain control, and daily low‑dose morphine for breakthrough pain. His anemia was re‑evaluated; packed RBC transfusion was given to reach a hemoglobin of 11 g/dL, but the benefits were limited. The oncology nurse encouraged Margaret to focus on the patient’s comfort rather than invasive diagnostics.</p><p>In the weeks that followed, Thomas’s cough became less frequent but more productive, turning to thick, blood‑laden sputum on occasions. Episodes of shortness of breath intensified with minimal exertion; the hospice oxygen requirement escalated from two to four litres. His fevers, although intermittent, became more pronounced; a repeat chest X‑ray showed a right‑sided, fluid‑filled chest cavity but no new consolidations. A palliative stent was suggested but deemed unnecessary. Thomas’s depression remained, but the hospice psychiatrist offered supportive counseling to Margaret.</p><p>On June 11, Thomas collapsed during a brief bathroom bout. The emergency call and ambulance arrival resulted in the patient being unresponsive. Despite resuscitative efforts with chest compressions, intravenous vasopressors, and emergent intubation, the heart rate remained arrhythmic and the oxygen saturation did not recover. The decision was made—after consultation with the hospice physician and Margaret—to withdraw CPR after fifteen minutes and return the patient to comfort; Thomas was noted deceased at 8:07 p.m.</p><p>Thomas’s disease course, though it spanned a little over three months from the point of his first urgent‑care visit to his passing, was marked by rapid progression of a poorly differentiated pulmonary carcinoma, complicated by chronic lung disease, anemia, depression, and cardiovascular comorbidities that limited therapeutic options. The aggressive biology of the tumor outpaced the supportive care that could have been offered given his fragile pulmonary and systemic reserve. The narrative ends in a stark reminder that for patients with multifactorial lung disease, the window to intervene is often small, and the trajectory quickly shifts from aggressive management toward comfort and dignity.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-03-12</h3><div class="visit-meta">Urgent Care | Reason: Persistent dry cough with occasional hemoptysis, breathlessness, and low‑grade fever</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent dry cough with occasional hemoptysis, progressive breathlessness, low‑grade fever.
+
+History of Present Illness: 68‑year‑old male with multiple comorbidities (COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, hypertension, coronary artery disease, depression). Patient reports a 3‑month history of a dry cough that occasionally yields blood‑tinged sputum, progressive dyspnea—more pronounced on the right side—and a mild evening low‑grade fever (~99.5 °F). No chest pain or orthopnea. Denies weight loss or night sweats.
+
+Past Medical History: COPD (FEV1 58 %), emphysema, bronchiectasis, pulmonary fibrosis, anemia (Hgb 10.5 g/dL), depression (fluoxetine 20 mg daily), hypertension, coronary artery disease.
+
+Medications: Albuterol inhaler, Fluticasone inhaler, Fluoxetine 20 mg daily, Lisinopril 10 mg daily, Metoprolol succinate 12.5 mg daily, Aspirin 81 mg daily, Ferrous sulfate 325 mg daily.
+
+Allergies: None.
+
+Physical Examination: Vitals – BP 138/82 mmHg, HR 96 bpm, RR 22 bpm, Temp 99.4 °F, SatO₂ 92 % on room air. Lungs: Mild wheezing over the right upper lobe, dullness to percussion over the right upper field, scattered crackles in bilateral lower zones. Cardiovascular exam unremarkable.
+
+Investigations: Upright chest X‑ray shows a new dense opacity in the right upper lobe. Chest CT (high‑resolution) has been ordered.
+
+Assessment: Differential diagnoses include (1) pulmonary neoplasm (primary lung cancer or metastatic lesion), (2) infectious etiology such as bacterial pneumonia or focal abscess, (3) exacerbation of bronchiectasis or pulmonary fibrosis, (4) pulmonary embolism with infarction or hemoptysis, (5) fungal infection, (6) other inflammatory or autoimmune process.
+
+Plan:
+1. Continue current inhaled bronchodilator (Albuterol) and anti‑inflammatory (Fluticasone) therapy.
+2. Initiate oral prednisone 40 mg daily for 5 days to address potential inflammatory component and COPD exacerbation.
+3. Oral antibiotics: Amoxicillin‑clavulanate 875/125 mg PO BID for 7 days—covering typical CAP pathogens given fever and sputum.
+4. Saline nebulization as needed for symptom relief.
+5. Arrange high‑resolution chest CT within 48 hrs to characterize the opacity.
+6. Educate patient on inhaler technique and importance of adherence.
+7. Counsel smoking cessation and discuss pulmonary rehab referral.
+8. Advise monitoring of oxygen saturation, temperature, and symptom trend. Call urgent care or ED if SatO₂ falls below 90 %, fever exceeds 100.4 °F, new hemoptysis or chest pain, or dyspnea worsens.
+
+Follow‑up:
+- Pulmonology clinic referral within 4 weeks or sooner if imaging or clinical status changes.
+- Re‑assess in urgent care if any new or worsening symptoms occur.
+- Continue routine monitoring of anemia and adjust iron therapy if needed.
+
+Signature: _______________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dry cough</span><span class="pill">Occasional faint hemoptysis</span><span class="pill">Gradual breathlessness</span><span class="pill">Low‑grade evening fever (99.5°F)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/82</td></tr><tr><td>HR</td><td>96</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>99.4°F</td></tr><tr><td>SatO2</td><td>92%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild wheezing right upper lobe</li><li>Dullness to percussion over right upper lung field</li><li>Scattered crackles</li><li>No peripheral edema</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray (already performed)</li><li>Chest CT (high‑resolution) – scheduled</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Saline nebulization</li><li>Albuterol nebulizer</li><li>Patient education on inhaler technique</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Stable; reported slight improvement in cough after albuterol. Expressed concern about new opacity.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Fluoxetine 20 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ferrous sulfate 325 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD (FEV1 58%)</li><li>Emphysema</li><li>Bronchiectasis</li><li>Pulmonary fibrosis</li><li>Anemia (Hgb 10.5 g/dL)</li><li>Depression (fluoxetine)</li><li>Hypertension</li><li>Coronary artery disease</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas presented to urgent‑care with a three‑month history of a dry cough that occasionally produced blood‑tinged sputum. He also complained of progressive breathlessness, especially on the right side, and a mild evening low‑grade fever. Physical exam revealed mild wheeze, dullness over the right upper lung field, and scattered crackles. An upright chest radiograph showed a new dense opacity in the right upper lobe. The urgent‑care team explained the need for a chest CT to further characterize the lesion and ordered the study, while instructing Thomas to call the pulmonology clinic if symptoms worsened.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial suspicion of infectious or inflammatory process; however, imaging suggests a focal lung mass requiring further evaluation.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-03-20</h3><div class="visit-meta">Radiology / Pulmonology | Reason: High‑resolution chest CT evaluation of right upper‑lobe mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+High‑resolution chest CT evaluation for suspected pulmonary mass.
+
+History of Present Illness:
+68‑year‑old male with known COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, depression, hypertension, and CAD presents for radiologic evaluation. Recent contrast‑enhanced high‑resolution chest CT (performed today) demonstrates a 4.3‑cm mass filling the entire right upper lobe, ipsilateral mediastinal lymphadenopathy, and a small pleural effusion. No distant metastases detected. Patient reports progressive breathlessness on exertion, productive cough, and occasional dizziness. He remains anxious but cooperative. He has completed a 5‑day course of oral prednisone, a 7‑day course of amoxicillin‑clavulanate, and continues chronic bronchodilator, steroid inhaler, and other baseline therapies.
+
+Past Medical History: COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia (Hb 9.8 g/dL), depression, hypertension, coronary artery disease.
+
+Medications:
+- Albuterol inhaler (SABA) PRN
+- Fluticasone inhaler (ICS) BID
+- Fluoxetine 20 mg daily
+- Lisinopril 10 mg daily
+- Metoprolol succinate 12.5 mg daily
+- Aspirin 81 mg daily
+- Ferrous sulfate 325 mg daily
+- Oral prednisone 40 mg daily (5‑day course completed)
+- Amoxicillin‑clavulanate 875/125 mg PO BID (7‑day course completed)
+- Saline nebulization PRN
+
+Allergies: NKDA
+
+Physical Examination:
+- Vital signs: BP 132/78 mmHg, HR 100 bpm, RR 24/min, Temp 99.6 °F, SaO₂ 90% on room air.
+- General: anxious, cooperative.
+- HEENT: atraumatic.
+- Cardiac: regular rate, no murmurs.
+- Pulmonary: bilateral wheezing; right upper lung field dullness, decreased breath sounds; no clubbing.
+- Extremities: no edema; pulses palpable.
+
+Diagnostic Work‑up:
+- Contrast‑enhanced HRCT chest (today) – 4.3‑cm right upper lobe mass, mediastinal LNs, pleural effusion.
+- CBC (repeat) – Hb 9.8 g/dL, WBC 7.2 k/µL, platelets 210 k/µL.
+- CMP – normal.
+
+Assessment:
+The imaging and clinical context are highly suggestive of a primary pulmonary neoplasm – most likely non‑small cell lung carcinoma (NSCLC) with mediastinal nodal involvement and malignant pleural effusion. Differential includes infectious etiologies (tuberculosis, fungal infection), granulomatous disease (sarcoidosis), and less likely metastatic disease from an unknown primary.
+
+Plan:
+1. Schedule endobronchial ultrasound‑guided transbronchial needle aspiration (EBUS‑TBNA) to sample mediastinal nodes and confirm histology.
+2. Continue baseline inhaled therapy (albuterol, fluticasone) and PRN nebulizations.
+3. Temporarily hold oral prednisone pending definitive diagnosis; re‑initiate if indicated for an inflammatory or infectious process.
+4. Maintain iron supplementation; consider repeat CBC in 2 weeks.
+5. Initiate home supplemental oxygen at 2 L/min if SaO₂ remains &lt;92% on exertion.
+6. Counsel patient regarding smoking cessation (if applicable) and psychosocial support for anxiety/depression.
+7. Provide instructions to monitor temperature, respiratory symptoms, and oxygen saturation twice daily; seek immediate care for fever &gt;100.4 °F, increasing dyspnea, chest pain, or hemoptysis.
+8. Follow-up: Return to pulmonology clinic in 1 week after EBUS‑TBNA results for staging discussion and management plan; or sooner if clinical status worsens.
+
+Follow‑up Recommendations:
+- Admit if pleural effusion compromises ventilation or causes hypoxia.
+- Review pathology and PET‑CT if indicated.
+- Consider oncology referral for definitive therapy planning.
+- Continue cardio‑pulmonary monitoring and adjust antihypertensives if needed.
+
+Prepared by: [Radiologist/Pulmonologist Name]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Breathlessness on exertion</span><span class="pill">Productive cough</span><span class="pill">Occasional dizziness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/78</td></tr><tr><td>HR</td><td>100</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>Temp</td><td>99.6°F</td></tr><tr><td>SatO2</td><td>90%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Wheezing bilateral</li><li>Dullness right upper lung field</li><li>Reduced breath sounds in right upper zone</li><li>No clubbing</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Endobronchial ultrasound‑guided transbronchial needle aspiration (EBUS‑TBNA) – scheduled</li><li>Complete blood count (repeat)</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 9.8 g/dL, WBC 7.2 k/µL, Platelets 210 k/µL</li><li>CMP: within normal limits</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxious but cooperative; expressed concern about potential cancer diagnosis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Fluoxetine 20 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ferrous sulfate 325 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD</li><li>Emphysema</li><li>Bronchiectasis</li><li>Pulmonary fibrosis</li><li>Anemia</li><li>Depression</li><li>Hypertension</li><li>CAD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the radiology visit, Thomas underwent a contrast‑enhanced high‑resolution chest CT. The scan revealed a 4.3 cm spiculated mass occupying the entire right upper lobe, mediastinal lymph node enlargement, and a small ipsilateral pleural effusion. There was no evidence of distant metastasis. The radiologist noted classic features of a high‑grade tumor and raised the suspicion for poorly differentiated carcinoma. The findings prompted the pulmonology team to refer Thomas to oncology for tissue diagnosis and management planning.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Mass characteristics consistent with a malignant process; staging pending histology. COPD burden remains high.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-03-23</h3><div class="visit-meta">Oncology – Medical | Reason: Multidisciplinary discussion of management options</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Multidisciplinary discussion of management options.
+
+**History of Present Illness:** 68‑year‑old male presents with a 4.3‑cm right upper‑lobe mass and ipsilateral mediastinal lymphadenopathy identified on recent high‑resolution chest CT. The patient has long‑standing COPD, emphysema, bronchiectasis, and pulmonary fibrosis, and reports persistent dyspnea, a dry cough, and anxiety regarding future treatment decisions.
+
+**Past Medical History:** COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia (Hb 9.8 g/dL), depression, hypertension, coronary artery disease.
+
+**Medications:** Albuterol inhaler, Fluticasone inhaler, Fluoxetine 20 mg daily, Lisinopril 10 mg daily, Metoprolol succinate 12.5 mg daily, Aspirin 81 mg daily, Ferrous sulfate 325 mg daily.
+
+**Allergies:** NKDA.
+
+**Physical Examination:** Vitals are stable: BP 130/76 mmHg, HR 98 bpm, RR 22 /min, Temp 98.5 °F, SpO₂ 91% on room air. Chest auscultation reveals wheezing throughout, right upper‑lobe dullness to percussion, and mild inspiratory crackles.
+
+**Assessment:**
+1. Suspected primary non‑small cell lung carcinoma (NSCLC) of the right upper lobe with mediastinal lymphadenopathy.
+2. Chronic respiratory comorbidities (COPD, emphysema, bronchiectasis, pulmonary fibrosis) contributing to baseline dyspnea.
+3. Anemia likely secondary to chronic disease and chronic blood loss.
+4. Depression exacerbated by potential terminal diagnosis.
+
+**Plan:**
+- **Diagnostic:** EBUS‑TBNA scheduled for 2025‑03‑28 to obtain tissue for histology, immunohistochemistry, and molecular profiling.
+- **Medical Management:** Continue inhaled bronchodilator and steroid therapy. Maintain iron supplementation and monitor hemoglobin; consider transfusion if Hb &lt;8 g/dL. Continue anti‑depressant regimen.
+- **Supportive Care:** Advise use of supplemental O₂ at 2 L/min if SpO₂ &lt;92% on exertion. Provide counseling and consider referral to psycho‑social support services.
+- **Treatment Options:** Upon pathology results, discuss systemic palliative chemotherapy (e.g., carboplatin + paclitaxel or immunotherapy) versus supportive care only, with emphasis on quality of life.
+- **Follow‑up:** Re‑evaluate in 1 week to review EBUS‑TBNA pathology and adjust plan accordingly. Monitor for signs of infection, worsening dyspnea, or anemia.
+
+**Disposition:** Patient expressed relief at having a clear plan and willingness to proceed with tissue diagnostic sampling.
+
+**Signature:** Dr. Singh, MD. </div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent dyspnea</span><span class="pill">Cough</span><span class="pill">Anxiety about cancer treatment</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/76</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>SatO2</td><td>91%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Wheezing throughout</li><li>Right upper lung field dullness</li><li>Mild inspiratory crackles</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>EBUS‑TBNA – scheduled 3/28</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Relieved to have a plan; expressed willingness to proceed with tissue diagnosis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Fluoxetine 20 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ferrous sulfate 325 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD</li><li>Emphysema</li><li>Bronchiectasis</li><li>Pulmonary fibrosis</li><li>Anemia</li><li>Depression</li><li>Hypertension</li><li>CAD</li><li>Recent CT findings of 4.3 cm mass with lymphadenopathy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Singh met Thomas and Margaret to review the CT results and discuss therapeutic approaches. Given the patient’s severe COPD, emphysema, bronchiectasis, and pulmonary fibrosis, the team determined that a traditional right upper‑lobe lobectomy would carry prohibitive risk for postoperative pulmonary failure. Thoracic surgery recommended a bronchoscopic needle aspiration to obtain tissue, while the oncology team proposed a palliative chemotherapy regimen (carboplatin + pemetrexed) with supportive care. Depression and anemia were reassessed, and plans were made to optimize hemoglobin and mood prior to initiation of cytotoxic therapy. The patient was advised that treatment would be aimed at prolonging life and improving quality of life rather than curative intent.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Diagnosis pending. High suspicion for aggressive poorly differentiated carcinoma.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-03-28</h3><div class="visit-meta">Pulmonology – Bronchoscopy | Reason: EBUS‑guided transbronchial needle aspiration of right hilar lymph node</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: EBUS‑guided transbronchial needle aspiration (TBNA) of right hilar lymph node for tissue diagnosis after imaging showed a 4.3‑cm right upper‑lobe mass with mediastinal lymphadenopathy.
+
+History of Present Illness: Thomas, 68‑year‑old male with longstanding COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, depression, hypertension, and coronary artery disease presents for diagnostic EBUS‑TBNA. He reports persistent cough and dyspnea without new systemic symptoms. No fever, chills, weight loss, or night sweats since last visit. He expresses anxiety regarding potential malignancy and fear of steroid side effects. Pre‑procedure labs revealed Hgb 9.8 g/dL. The procedure was completed under moderate sedation with no immediate complications.
+
+Past Medical History: COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, major depressive disorder, hypertension, coronary artery disease.
+
+Medications: Albuterol inhaler PRN; Fluticasone inhaler BID; Lisinopril 10 mg daily; Metoprolol succinate 12.5 mg daily; Aspirin 81 mg daily; Ferrous sulfate 325 mg daily; Fluoxetine 20 mg daily. (Prednisone 40 mg daily discontinued prior to procedure.)
+
+Review of Systems: Positive for cough and dyspnea. Negative for fever, hemoptysis, chest pain, or systemic constitutional symptoms.
+
+Physical Examination:
+- General: Alert, cooperative, no distress.
+- Vital signs: BP 128/76 mmHg, HR 92 bpm, RR 20/min, Temp 98.2 °F, SpO₂ 93% RA.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Pulmonary: Clear breath sounds bilaterally post‑bronchoscopy; no wheeze; mild inspiratory crackles at right base.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema.
+- Neurologic: No focal deficits.
+
+Procedural Details: EBUS‑guided TBNA performed with a 22‑G needle to obtain a sample from station 7 right hilar lymph node. No complications. Patient tolerated procedure well; sedation with midazolam/propofol. Post‑procedure monitoring uneventful.
+
+Laboratory Results:
+- CBC: Hgb 9.8 g/dL, WBC 7.2 k/µL, Platelets 200 k/µL.
+- CMP: Within normal limits.
+
+Assessment:
+1. Probable primary lung carcinoma with mediastinal lymph node involvement – pending pathology.
+2. COPD exacerbation risk due to underlying disease and recent steroid exposure.
+3. Chronic anemia of chronic disease – Hgb 9.8 g/dL – continue iron supplementation.
+4. Anxiety/depression – continue fluoxetine, provide counseling.
+
+Plan:
+• Send EBUS‑TBNA specimen for rapid on‑site cytology and comprehensive histopathology review.
+• Initiate a short‑course prednisone taper: 40 mg daily for 5 days, 30 mg for 3 days, 20 mg for 2 days, 10 mg for 1 day, then a 5‑day taper with 5 mg increments. Start immediately; monitor for hyperglycemia, mood changes, and sleep disturbance.
+• Continue albuterol PRN and fluticasone BID. Consider adding tiotropium if dyspnea persists.
+• Maintain iron supplementation and repeat CBC in 2 weeks.
+• Re‑evaluate SpO₂ on exertion; consider supplemental O₂ 2 L/min if SpO₂ &lt;92% during activity.
+• Provide psychosocial support; refer for counseling if anxiety escalates.
+• Instruct patient to monitor temperature, cough, and dyspnea at home; seek urgent care if SpO₂ &lt;90% or worsening symptoms.
+• Follow up in 1 week for pathology results; adjust plan based on findings.
+
+Follow‑up Recommendations:
+1. Return 7 days later for pathology review and next‑step discussion.
+2. If malignant, schedule multidisciplinary oncology consultation; if benign/inflammatory, reassess treatment necessity.
+3. Monitor SpO₂ and symptoms daily; keep a home log.
+4. Continue iron supplementation; repeat Hgb as indicated.
+5. Contact office promptly for significant mood changes, insomnia, or glucose disturbances after steroid initiation.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent cough</span><span class="pill">Dyspnea</span><span class="pill">No new systemic symptoms</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/76</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>98.2°F</td></tr><tr><td>SatO2</td><td>93%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear breath sounds after bronchoscopy</li><li>No wheeze</li><li>Vital signs stable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pathology review</li><li>Laboratory workup prior to chemotherapy (CBC, CMP)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Pathology: poorly differentiated adenocarcinoma, TTF‑1 positive, LNs N2</li><li>CBC: Hgb 9.8 g/dL, WBC 7.2 k/µL, Platelets 200 k/µL</li><li>CMP: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>EBUS‑TBNA</li><li>Parenteral hydrocortisone 200 mg IV taper</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxious about cancer treatment; remained alert and cooperative; expressed fear of treatment side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Fluoxetine 20 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ferrous sulfate 325 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT findings: 4.3 cm spiculated mass, mediastinal node enlargement</li><li>Baseline COPD/Emphysema/bronchiectasis</li><li>Anemia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas underwent an EBUS‑TBNA under moderate sedation. Fine‑needle aspirate from the right hilar lymph node was obtained. The procedure was uncomplicated; no procedure‑related complications were noted. The pathology report, returned on 4/03, confirmed a poorly differentiated adenocarcinoma with TTF‑1 positivity, high mitotic index, and absence of squamous differentiation. Staging per AJCC was T3N2M0 (Stage IIIA). The oncologist discussed the aggressive nature of the tumor, the limited surgical options, and the plan to initiate carboplatin/pemetrexed chemotherapy. Prior to discharge, Thomas was advised to start a short‑course prednisone taper for COPD exacerbation that may arise during treatment.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stage IIIA disease with mediastinal nodal involvement; considered palliative chemotherapy due to comorbid pulmonary disease.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-04-02</h3><div class="visit-meta">Oncology – Chemotherapy | Reason: First cycle carboplatin + pemetrexed chemotherapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: First cycle carboplatin (AUC 5) + pemetrexed (500 mg/m²) chemotherapy.
+
+History of Present Illness: Patient Thomas, 68‑year‑old male with a complex medical history of COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, depression, hypertension, and coronary artery disease, received his first cycle of carboplatin and pemetrexed on the oncology ward. Pre‑infusion CBC showed hemoglobin 9.5 g/dL and neutrophils 2.8 k/µL. The infusion was completed over 1 hour with no immediate complications. Post‑infusion, he reported mild nausea, low‑grade fever (99.2 °F), moderate fatigue, sore throat, and an increase in dyspnea with ambulation. He received ondansetron 8 mg q12h PRN and a 5‑day prednisone taper (40 mg daily). Clinical team advised rest, oral fluids, and continued ondansetron. A follow‑up CBC was scheduled for 7 days post‑infusion.
+
+Examination: Vitals – BP 125/70 mmHg, HR 88 bpm, RR 20 /min, Temp 98.6 °F, SpO₂ 94% on room air. Physical exam revealed slight pallor, stable breath sounds, and no wheezes.
+
+Assessment:
+1. Chemotherapy‑related cytopenia: Current CBC 7 days post‑infusion: Hgb 8.8 g/dL, WBC 5.2 k/µL, Platelets 170 k/µL – within acceptable limits for carboplatin/pemetrexed but indicates ongoing anemia.
+2. Anemia exacerbation secondary to platinum‑based therapy.
+3. Mild neutropenia/fever of unknown etiology – monitor for febrile neutropenia.
+4. COPD status: stable but increased dyspnea during ambulation; no exacerbation signs.
+5. Nausea and mild fatigue attributable to chemotherapy.
+
+Plan:
+- Continue current anti‑emetic regimen: ondansetron q12h PRN.
+- If nausea persists &gt;2 days, consider adding aprepitant or dexamethasone.
+- Monitor CBC again on day 7 (results already obtained). If Hgb &lt;8.5 g/dL, plan for transfusion prior to next cycle.
+- If neutrophils &lt;1.0 k/µL or persistent fever &gt;38.0 °C, initiate granulocyte colony‑stimulating factor (G‑CSF) and/or empiric antibiotics.
+- Encourage adequate oral fluids, rest, and analgesia as needed.
+- Continue inhaled albuterol and fluticasone; reassess pulmonary status after next cycle.
+- Discuss next chemotherapy cycle timing based on CBC results and patient&#x27;s performance status. Consider a 10‑day observation period.
+- Counsel patient on signs of infection (fever &gt;38.0 °C, chills, worsening dyspnea) and to contact oncology promptly.
+- Provide psychosocial support for anxiety related to treatment.
+
+Disposition: Patient tolerated first cycle well; will return for oncology review in 14 days or sooner if complications arise.
+
+Follow‑up plan: Continue scheduled CBC, monitor for anemia and neutropenia, maintain inhaled therapy, and coordinate next cycle dosing.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Sore throat</span><span class="pill">Nausea</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>125/70</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>SatO2</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slight pallor</li><li>Stable breath sounds</li><li>No wheezes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC on day 7 post‑chemotherapy</li><li>CMP if needed</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC day 7: Hgb 8.8 g/dL, WBC 5.2 k/µL, Platelets 170 k/µL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Intravenous carboplatin</li><li>Intravenous pemetrexed</li><li>Ondansetron</li><li>Prednisone taper</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated first cycle with mild fatigue; complained of increased dyspnea during ambulation.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Fluoxetine 20 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ferrous sulfate 325 mg daily</li><li>Ondansetron 8 mg q12h PRN</li><li>Prednisone 40 mg daily for 5 days taper</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IIIA poorly differentiated adenocarcinoma</li><li>COPD, emphysema, bronchiectasis, pulmonary fibrosis</li><li>Anemia</li><li>Depression</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas received his first dose of carboplatin (AUC 5) and pemetrexed (500 mg/m²) on the oncology ward. An pre‑infusion CBC was performed, revealing hemoglobin 9.5 g/dL, neutrophils 2.8 k/µL. The infusion was completed over 1 hour with no immediate complications. Post‑infusion, he experienced mild nausea, low‑grade fever (99.2°F), and moderate fatigue. The oncology team advised rest, oral fluids, and continued ondansetron. A follow‑up CBC was scheduled for 7 days later. The chemo was well‑tolerated overall, with no severe bleeding or allergic reactions.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑first cycle labs show anemia worsening; ongoing COPD control required.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-04-15</h3><div class="visit-meta">Oncology – Chemotherapy Follow‑up | Reason: Second cycle carboplatin + pemetrexed chemotherapy and side‑effect management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient returned for his second cycle of carboplatin (AUC 5) and pemetrexed (500 mg/m²) and to discuss side‑effect management.
+
+Subjective: 
+- Thomas reports &quot;excruciating&quot; fatigue, worsening dyspnea on exertion, a productive cough with purulent sputum, and a low‑grade fever. 
+- He has been experiencing an episode of pneumonia treated empirically with levofloxacin. 
+- Expressed feelings of helplessness and depression despite antidepressant adjustment.
+
+Objective: 
+- Vital signs: BP 120/68 mmHg, HR 82 bpm, RR 22/min, Temp 99.2°F, SpO₂ 93% on room air.
+- Physical examination: Bilateral wheezes, decreased breath sounds in right upper lobe, pallor of mucous membranes. 
+- Labs: 
+   • CBC day 7 post‑chemotherapy: Hgb 7.6 g/dL (↓ from 9.5), WBC 3.9 k/µL (↓, ANC ~2.9), Platelets 160 k/µL.
+   • CMP pending.
+
+Assessment: 
+1. Chemotherapy‑associated cytopenias: significant anemia and mild neutropenia likely due to carboplatin/pemetrexed. 
+2. Exacerbation of underlying COPD/bronchiectasis with clinical overlap of pneumonia (prior episode resolved with levofloxacin). 
+3. Depressive symptoms potentially worsened by disease burden, anemia, and treatment side‑effects. 
+4. Possible treatment‑related fatigue and decreased functional status.
+
+Plan: 
+- Continue current chemotherapy dosing for the next cycle but postpone until CBC shows WBC ≥ 3.0 k/µL and ANC ≥ 1.5 k/µL, and Hgb ≥ 8.0 g/dL.
+- Initiate a 3‑day prednisone taper (40 mg daily) for COPD exacerbation; patient already on this taper.
+- Maintain inhaled albuterol and fluticasone; consider adding a long‑acting bronchodilator if dyspnea persists.
+- Continue sertraline 50 mg daily; schedule mental health follow‑up within 2 weeks.
+- Continue iron supplementation with ferrous sulfate 325 mg PO daily; consider IV iron if transfusions remain required.
+- Monitor for signs of febrile neutropenia; patient should call immediately if fever &gt; 38.0°C or additional malaise.
+- Order CMP to evaluate electrolytes and renal function before next cycle.
+- Discuss potential benefits of dose reduction or granulocyte colony‑stimulating factor if cytopenias recur.
+- Arrange psychosocial support and consider palliative care consultation for quality‑of‑life optimization.
+
+Disposition: The patient agreed to proceed with the next chemotherapy cycle contingent on CBC thresholds and improved symptom control. A follow‑up oncology visit is scheduled for 2025-04-22.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Excruciating fatigue</span><span class="pill">Shortness of breath</span><span class="pill">Cough with purulent sputum</span><span class="pill">Low‑grade fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/68</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>Temp</td><td>99.2°F</td></tr><tr><td>SatO2</td><td>93%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Auscultation: bilateral wheeze</li><li>Lung sounds: decreased breath sounds right upper lobe</li><li>Pallor of mucous membranes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC day 7 post‑chemotherapy</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC day 7: Hgb 7.6 g/dL, WBC 3.9 k/µL, Platelets 160 k/µL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Intravenous carboplatin</li><li>Intravenous pemetrexed</li><li>Ondansetron</li><li>Prednisone taper</li><li>Levofloxacin</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported that fatigue limited all activities; shortness of breath increased; mood remained low despite antidepressant adjustment.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Sertraline 50 mg daily (titrated after fluoxetine)</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ferrous sulfate 325 mg daily</li><li>Ondansetron 8 mg q12h PRN</li><li>Prednisone 40 mg daily taper</li><li>Levofloxacin 500 mg daily for pneumonia</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IIIA disease</li><li>COPD exacerbation on 4/10 requiring prednisone and antibiotics</li><li>Anemia (Hgb 8.8 g/dL)</li><li>Mental health: depression</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas returned for his second carboplatin/pemetrexed infusion. He reported profound fatigue, worsening dyspnea during walking, and an episode of pneumonia treated empirically with levofloxacin. Vital signs were stable but his hemoglobin dropped to 8.2 g/dL. The oncology team reinforced the use of a 3‑day prednisone taper for COPD management, adjusted fluoxetine to sertraline to better control mood, and discussed the possibility of pausing chemo if side effects worsened. The dose of carboplatin was maintained at AUC 5 and pemetrexed at 500 mg/m². A repeat CBC was ordered after the infusion to monitor for neutropenia. The patient expressed feeling helpless and depressed but agreed to continue therapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anemia worsening; persistent COPD exacerbation; tumor likely progressive given early clinical decline.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-05-05</h3><div class="visit-meta">Palliative Care – Hospice | Reason: Transition to hospice and symptom‑management discussion</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Transition to hospice and symptom‑management discussion.
+
+Subjective: Thomas and spouse Margaret met with the hospice team on 5 May 2025. Thomas expressed acceptance of hospice care and understanding that active disease‑modifying therapy would be discontinued. He remains distressed about loss of active treatment but is focused on comfort.
+
+Objective: 
+Vitals: BP 118/66 mm Hg, HR 86 bpm, RR 24 /min, Temp 98.8 °F, SpO₂ 90 % on 2 L/min nasal cannula. 
+Physical exam: Right upper‑lobe decreased breath sounds, dullness to percussion over right pleural space, normal cervical lymph nodes, conjunctival pallor, otherwise unremarkable.
+
+Labs (repeat CBC 5 May 2025): Hgb 7.6 g/dL (↓ from 9.8), WBC 3.8 k/µL, Platelets 150 k/µL. CMP normal. Peripheral smear and haptoglobin ordered to evaluate hemolytic contribution.
+
+Assessment:
+1. Advanced lung cancer with malignant pleural effusion – poor prognosis.
+2. Severe dyspnea on minimal exertion secondary to pleural effusion and COPD/emphysema.
+3. Anemia likely multifactorial (chemotherapy marrow suppression, chronic disease, occult blood loss).
+4. Persistent low‑grade fever – possible unresolved infection or inflammatory response.
+5. Depressive mood – ongoing with sertraline 50 mg daily.
+
+Plan:
+- Hospice enrollment officially documented; informed Thomas and Margaret of discontinuation of chemotherapy and routine oncologic imaging.
+- Symptom control:
+  • Initiate low‑dose continuous subcutaneous morphine infusion 3 mg/h, titrate to relieve dyspnea and pain.
+  • Continue SC morphine PRN for breakthrough.
+  • 2 L/min oxygen via nasal cannula.
+- Anemia management:
+  • Transfuse PRBC to target Hb ≥11 g/dL.
+  • Start intravenous iron infusion (200 mg dextran).
+- Bone health:
+  • Schedule monthly IV bisphosphonate (zoledronic acid 4 mg).
+  • Vitamin D 400 IU and calcium 1 g oral daily.
+- Pulmonary:
+  • Palliative bronchoscopy if airway obstruction or persistent hemoptysis.
+  • Continue albuterol PRN and fluticasone inhaler.
+- Psychosocial:
+  • Continue sertraline 50 mg daily.
+  • Provide counseling support for Margaret; arrange family psychoeducational meetings.
+- Monitoring:
+  • Daily home visits first week, then twice weekly.
+  • Check vitals, SpO₂, pain score, dyspnea score, and CBC every 48 h.
+  • Adjust morphine dose and transfusion thresholds per response.
+  • Contact hospice urgently if fever &gt;99.5 °F for &gt;48 h, new hemoptysis, or sudden increase in dyspnea.
+
+Follow‑up: hospice team will meet at home most days; next scheduled visit on 12 May 2025. Family encouraged to use 24‑hour access line for any concerns.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Intensive dyspnea on minimal exertion</span><span class="pill">Severe cough with occasional blood‑laden sputum</span><span class="pill">Weight loss</span><span class="pill">Persistent low‑grade fever</span><span class="pill">Depressive mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/66</td></tr><tr><td>HR</td><td>86</td></tr><tr><td>RR</td><td>24</td></tr><tr><td>Temp</td><td>98.8°F</td></tr><tr><td>SatO2</td><td>90%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Right upper lobe decreased breath sounds</li><li>Dullness to percussion over right pleural space</li><li>Cervical lymph nodes not palpable</li><li>Pallor of conjunctivae</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Repeat CBC</li><li>CMP</li><li>Peripheral blood smear</li><li>Haptoglobin</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hgb 7.6 g/dL, WBC 3.8 k/µL, Platelets 150 k/µL</li><li>CMP: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine PRN</li><li>Oxygen 2 L/min</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed acceptance of hospice focus, though still experiencing distress over loss of active treatment.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler PRN</li><li>Fluticasone inhaler</li><li>Sertraline 50 mg daily</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Ondansetron PRN</li><li>Prednisone 20 mg daily taper</li><li>Levofloxacin (end of course)</li><li>Morphine 10 mg PRN subcutaneously for breakthrough pain</li><li>Oxygen 2 L/min via nasal cannula</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV poorly differentiated adenocarcinoma with pleural effusion</li><li>Multiple chemotherapy cycles</li><li>COPD and emphysema</li><li>Anemia (Hgb 7.6 g/dL)</li><li>Depression (sertraline)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The hospice team met with Thomas and Margaret to discuss the shift from active oncologic therapy to comfort‑focused care. Radiologic imaging (CT taken May 3) demonstrated a 5.2 cm right upper‑lobe mass, a larger homogeneous pleural effusion, and malignant cytology from pleural fluid. All clinicians confirmed disease progression to Stage IV with poor prognosis. The plan involved: initiation of low‑dose continuous morphine for dyspnea and pain; oxygen therapy at 2 L/min to relieve breathlessness; scheduled vitamin D and calcium with intravenous bisphosphonate infusions for bone home‑care; intravenous iron to correct anemia; blood transfusion to raise hemoglobin to at least 11 g/dL; palliative bronchoscopy if required for airway obstruction; and regular home visits. The team emphasized symptom control, psychological support for Margaret, and the option to discontinue active disease‑modifying therapy. Thomas agreed to hospice enrollment, understanding that he would no longer receive chemotherapy or imaging for disease control but would receive palliative measures.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed Stage IV disease with pleural involvement; no more systemic therapy appropriate.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2025-06-11</h3><div class="visit-meta">Hospice – End‑of‑Life Care | Reason: Inpatient hospice admission and EOL management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Subjective:**
+The patient, a 68‑year‑old male with a complex history of COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, depression, cardiovascular disease, hypertension, pleural effusion, pneumonia, neutropenia, and bone marrow suppression, was admitted to the hospice unit after a collapse in the bathroom. Paramedics performed CPR but the patient remained unresponsive with unstable hemodynamics. Family consented to discontinue resuscitative efforts in accordance with hospice policy and the patient&#x27;s wishes. The patient remained in significant distress with intense dyspnea, fever, chest pain, severe fatigue, and unresponsiveness throughout the admission.
+
+**Objective:**
+- **Vitals on admission:** BP 100/60 mmHg, HR 54 bpm (irregular), RR 30 breaths/min, Temp 97.8°F, SpO₂ 80% on 4 L/min oxygen.
+- **Physical exam:** Unresponsive, apneic with irregular breathing. Right pleural fullness on percussion. Signs of fluid overload noted. No new consolidations on initial chest X‑ray.
+- **Interventions:** Oxygen maintained at 4 L/min. Morphine infusion increased to 8 mg/h. In‑room ventilator used briefly for comfort. Chest X‑ray repeat showed a fluid‑filled right pleural cavity; no new consolidations. Patient died at 20:07 with SpO₂ 82% and HR 55 bpm.
+
+**Assessment:**
+The patient’s clinical picture is most consistent with a rapid decline secondary to a massive right pleural effusion (likely malignant given known pulmonary mass) in the setting of advanced COPD and cardiopulmonary compromise. The irregular ventricular rhythm and low oxygen saturation suggest exacerbated hypoxic respiratory failure and possibly acute decompensated heart failure. Differential diagnosis includes:
+1. Massive right pleural effusion with malignant etiology
+2. COPD exacerbation with acute respiratory failure
+3. Acute heart failure with pulmonary congestion
+4. Pulmonary embolism
+5. Sepsis secondary to pneumonia
+6. Electrolyte or medication‑induced arrhythmia
+
+**Plan:**
+- Transition all invasive monitoring to comfort‑focused palliative measures.
+- Continue morphine infusion at 8 mg/h and add PRN subcutaneous morphine 10 mg as needed for breakthrough pain.
+- Maintain oxygen at 4 L/min via nasal cannula; adjust based on SpO₂ and comfort.
+- No additional aggressive therapies (e.g., chest tube, antibiotics, vasopressors) per hospice protocol.
+- Continue current medications: albuterol inhaler, fluticasone inhaler; sertraline 50 mg daily; prednisone taper 10 mg daily; lisinopril 10 mg; metoprolol succinate 12.5 mg; aspirin 81 mg; saline nebulizations PRN; ondansetron 8 mg q12h PRN.
+- IV iron and bisphosphonate infusions discontinued.
+- Document death in the chart; arrange post‑mortem and bereavement counseling for family.
+
+**Follow‑up:**
+- Family counseling and bereavement support will be offered.
+- Hospice lines remain available 24/7 for any urgent needs.
+- End of life documentation completed and communicated to the primary team.
+**NOTE:** No further medical interventions will be pursued; focus remains on comfort and family support.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Intense dyspnea</span><span class="pill">Fever</span><span class="pill">Chest pain</span><span class="pill">Severe fatigue</span><span class="pill">Unresponsiveness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>100/60</td></tr><tr><td>HR</td><td>54 (arrhythmic)</td></tr><tr><td>RR</td><td>30</td></tr><tr><td>Temp</td><td>97.8°F</td></tr><tr><td>SatO2</td><td>80%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Unresponsive</li><li>Apneic with irregular breathing</li><li>Right pleural fullness</li><li>Signs of fluid overload</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray (repeat)</li><li>Blood cultures (none obtained)</li><li>Arterial blood gas (not performed due to comfort focus)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: right‑sided pleural fluid collection</li><li>CBC: not drawn at death</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Morphine infusion</li><li>Oxygen 4 L/min</li><li>Symptom‐directed care (no invasive procedures)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient deceased; care focused on comfort.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Coronary artery disease</span><span class="pill">COPD</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Pulmonary fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol PRN</li><li>Fluticasone inhaler</li><li>Sertraline 50 mg daily</li><li>Morphine continuous infusion 8 mg/hour</li><li>Oxygen 4 L/min via nasal cannula</li><li>Levofloxacin (completed)</li><li>Prednisone 10 mg daily taper</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Stage IV poorly differentiated adenocarcinoma</li><li>COPD, emphysema, bronchiectasis, fibrosis</li><li>Anemia</li><li>Depression</li><li>Previous chemotherapy exposure</li><li>Recent malignant pleural effusion</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Thomas was admitted to the hospice unit after collapsing in a bathroom. The paramedic team provided CPR, but the patient was unresponsive and hemodynamically unstable. Upon arrival, the hospice team noted an irregular ventricular rhythm, severe hypoxia, and a markedly low blood pressure. The decision was made to discontinue resuscitative efforts per the family’s wishes and hospice policy, and to focus on comfort. Oxygen was maintained at 4 L/min, morphine was increased for dyspnea, and the patient’s airway was protected with an in‑room ventilator for a brief period to provide comfort. A chest X‑ray on admission revealed a fluid‑filled right pleural cavity with no new consolidations. The hospice team met with Margaret for counseling, documented the death, and arranged for post‑mortem arrangements. The death occurred at 20:07 local time, with a recorded oxygen saturation of 82% and heart rate of 55 bpm during the final minutes.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Terminal phase; death due to respiratory failure in background of advanced lung carcinoma with pleural involvement.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Emphysema</span><span class="pill">Bronchiectasis</span><span class="pill">Lung fibrosis</span><span class="pill">Anemia</span><span class="pill">Depression</span><span class="pill">Cardiovascular disease</span><span class="pill">Hypertension</span><span class="pill">Pulmonary mass</span><span class="pill">Mediastinal lymphadenopathy</span><span class="pill">Pleural effusion</span><span class="pill">Pneumonia</span><span class="pill">Neutropenia</span><span class="pill">Malignant pleural effusion</span><span class="pill">Advanced lung cancer</span><span class="pill">Bone marrow suppression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol inhaler</li><li>Fluticasone inhaler</li><li>Lisinopril 10 mg daily</li><li>Metoprolol succinate 12.5 mg daily</li><li>Aspirin 81 mg daily</li><li>Saline nebulization PRN</li><li>Prednisone 10 mg daily taper</li><li>Ondansetron 8 mg q12h PRN</li><li>Sertraline 50 mg daily</li><li>Morphine 10 mg PRN subcutaneous</li><li>Continuous subcutaneous morphine infusion 8 mg/h</li><li>Oxygen 4 L/min</li><li>Vitamin D 400 IU</li><li>Calcium 1 g oral</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2025-03-12: 68‑year‑old male with COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, depression, hypertension, CAD presented with 3‑month dry cough with occasional hemoptysis, progressive dyspnea, low‑grade fever. Vitals: BP138/82, HR96, RR22, Temp99.4°F, SatO₂92%. Chest X‑ray showed a new dense opacity in the right upper lobe. Treated with albuterol, fluticasone, prednisone 40 mg daily for 5 days, amoxicillin‑clavulanate 875/125 mg PO BID for 7 days. High‑resolution CT ordered within 48 hrs. Follow‑up scheduled with pulmonology within 4 weeks, monitoring oxygen saturation and temperature at home.</li><li>Visit on 2025-03-20: 68‑year‑old male with known COPD, emphysema, bronchiectasis, pulmonary fibrosis, anemia, depression, hypertension, CAD underwent contrast‑enhanced high‑resolution chest CT revealing a 4.3‑cm right upper lobe mass, ipsilateral mediastinal lymphadenopathy, and small pleural effusion. Vitals: BP 132/78 m Hg, HR 100 bpm, RR 24/min, Temp 99.6 °F, SaO₂ 90% RA. Labs: Hb 9.8 g/dL. Plan: schedule EBUS‑TBNA, hold oral prednisone, continue inhaled therapy, consider supplemental O₂ at 2 L/min if SpO₂ &lt; 92% on exertion, maintain iron supplementation, and return in 1 week for staging.</li><li>Visit on 2025-03-23: 68‑year‑old male with known COPD, pulmonary fibrosis, pulmonary mass, and mediastinal lymphadenopathy reviewed. Reported persistent dyspnea, dry cough, and anxiety regarding future treatment. Vitals: BP 130/76, HR 98, RR 22, Temp 98.5°F, SpO₂ 91% on room air. Chest auscultation revealed wheezing throughout, right upper‑lobe dullness, mild inspiratory crackles. Continued albuterol and fluticasone inhalers, fluoxetine, lisinopril, metoprolol succinate, aspirin, and ferrous sulfate. Scheduled EBUS‑TBNA on 2025-03-28 for tissue diagnosis. Plan: maintain inhaled therapy, iron supplementation, consider supplemental O₂ 2 L/min on exertion, and provide psychosocial support. Follow‑up in 1 week to review pathology and adjust plan.</li><li>Visit on 2025-04-02: 68‑year‑old male received first cycle carboplatin (AUC 5) and pemetrexed (500 mg/m²) chemotherapy. Pre‑infusion CBC: Hgb 9.5 g/dL, neutrophils 2.8 k/µL. Post‑infusion symptoms: mild nausea, sore throat, fatigue, low‑grade fever 99.2°F, increased dyspnea. Treated with ondansetron 8 mg q12h PRN and a 5‑day prednisone taper (40 mg daily). Vitals stable: BP 125/70, HR 88, RR 20, Temp 98.6 °F, SpO₂ 94% RA. CBC 7 days post‑infusion: Hgb 8.8 g/dL, WBC 5.2 k/µL, platelets 170 k/µL. Continued inhaled albuterol and fluticasone, monitored CBC and symptoms, planned next chemotherapy cycle contingent on counts, and provided psychosocial support.</li><li>Visit on 2025-04-15: 68‑year‑old male returned for second cycle of carboplatin and pemetrexed chemotherapy. Chief complaints included severe fatigue, worsening dyspnea on exertion, productive cough with purulent sputum, and low‑grade fever. History of recent pneumonia treated empirically with levofloxacin. Vitals: BP 120/68, HR 82, RR 22, Temp 99.2°F, SpO₂ 93% RA. Examination revealed bilateral wheezes, decreased breath sounds in right upper lobe, and mucosal pallor. Labs: CBC day 7 post‑chemotherapy - Hgb 7.6 g/dL, WBC 3.9 k/µL (ANC ~2.9), platelets 160 k/µL; CMP pending. Plan included continuation of chemotherapy pending CBC thresholds, prednisone taper for COPD exacerbation, levofloxacin 500 mg daily for possible bacterial pneumonia, albuterol and fluticasone, sertraline 50 mg daily, iron supplementation, monitoring for febrile neutropenia, and ordering CMP. Follow‑up oncology visit scheduled for 2025-04-22.</li><li>Visit on 2025-05-05: Hospice enrollment, discontinue active oncologic therapy. Initiated low‑dose continuous subcutaneous morphine infusion 3 mg/h with PRN morphine; prescribed 2 L/min oxygen; ordered CBC, CMP, peripheral smear, haptoglobin; transfused PRBC to target Hb ≥11 g/dL; started IV iron infusion 200 mg dextran, monthly IV zoledronic acid 4 mg; prescribed vitamin D 400 IU and calcium 1 g oral daily; continued albuterol and fluticasone inhalers; ongoing sertraline 50 mg; scheduled daily home visits first week, then twice weekly with monitoring of vitals, SpO₂, pain, dyspnea, CBC every 48 h; contact hospice 24‑hr line for fever &gt;99.5 °F, new hemoptysis, or sudden dyspnea increase.</li><li>Visit on 2025-06-11: 68‑year‑old male admitted to hospice unit after collapse and CPR; remained unresponsive and family consented to discontinue resuscitation. Vitals: BP 100/60 mmHg, HR 54 bpm irregular, RR 30 min, Temp 97.8°F, SpO₂ 80% on 4 L/min oxygen. Interventions: maintained 4 L/min oxygen, increased continuous subcutaneous morphine infusion to 8 mg/h, brief use of in‑room ventilator for comfort, repeat chest X‑ray showed fluid‑filled right pleural cavity. No new aggressive therapies; comfort‑focused palliative measures continued. Patient died at 20:07 with SpO₂ 82%. Bereavement counseling offered post‑mortem.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 160948a3</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 160948a3</h1><div class="subtitle">Hashimoto&#x27;s Thyroiditis | Female, 55</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Hypertension, Type 2 Diabetes Mellitus, Hyperlipidemia, Depression, Obesity</div><div class="meta-line">Risk Factors: Autoimmune predisposition, Family history of thyroid disease, Iodine deficiency, History of neck radiation, Sedentary lifestyle, Poor diet, Advanced age, Female sex</div></div>
+<details><summary>Narrative <span class="preview-text">When 55‑year‑old Rosa Ramirez first noticed that her mornings were quieter than usual, she did not think of her thyroid ...</span></summary><div class="section-body"><p>When 55‑year‑old Rosa Ramirez first noticed that her mornings were quieter than usual, she did not think of her thyroid at all. She was a 10‑year‑retired schoolteacher who could barely keep up with the new student‑teacher conference at the local high school. Fatigue was not uncommon; it had become a steady background hum that no amount of coffee seemed to chase away.</p><p>Around 5 a.m. in late September of that year, she noted that her hair felt thinner, her scalp itched a little, and she had lost her sharpness in the morning. “I’m just older,” she told the vending machine attendant as she poured a black coffee. “It’s normal to slow down.”</p><p>The next month, Rosa’s doctor, Dr. Patel, saw her for a routine check‑up. Rosa’s blood pressure had been creeping up to 140/88 over the last two visits, her fasting glucose was 133 mg/dL, and her lipid panel—taken after her sister&#x27;s heart attack—showed LDL at 180 mg/dL with a normal HDL. Rosa’s height and weight (5’4”, 190 lbs) gave her a BMI of 32.5; her waist line measured 54 inches. “You’re a little larger than you want to be,” Dr. Patel said, “but a bit of weight loss can be achieved with your diet and a simple walking routine.” Rosa left feeling hopeful, convinced that her “normal” fatigue, hair loss, and weight gain were simply the product of a high‑stress lifestyle.</p><p>Two weeks later, she slipped on a patch of wet grass on the sidewalk and lost her sense of balance for a half‑minute. “I’m just a bit dizzy,” she murmured to her daughter, who suggested she go to the emergency department. The ER visit yielded no acute abnormality; her heart rhythm was regular, her neuro exam normal, and her blood pressure was 138/85. They sent her home with a prescription for a multivitamin and a reminder to schedule a routine blood test.</p><p>Three months into her fall routine, Rosa began losing her appetite. Meals that had always been her comfort—fried chicken, cheesy mashed potatoes, and the occasional pizza—fell flat on her plate. The slow weight gain turned into a gain. At 54, she found herself in the weight‑loss clinic for diabetes, where they noted her waist circumference had ballooned to 56 inches. Her glucose levels rose to 158 mg/dL. The clinic recommended that she eat a high‑carbohydrate low‑fat diet, add a 1500‑calorie deficit, and begin walking for 30 minutes a day. She bought a cheap fitness tracker, but it was broken after a month. Her motivation plummeted after her mother’s death the spring, and her depression set in; she began to complain of being “dragged.”</p><p>By late spring of her 55th year, Rosa’s voice had deepened, and her morning stiffness was accompanied by aching shoulder joints. She also noticed that her voice now sounded “thicker.” She told her primary‑care physician, Dr. Patel, she felt as if she were “always tired, and I just can’t get that extra push to get to the gym.” Dr. Patel ran a full CBC and metabolic panel to rule out anemia, iron deficiency, or hypothyroidism, but the lab report only showed a mild anemia (Hb 12.4 g/dL) and a normal serum TSH of 4.0 µU/mL—just at the upper limit of normal for adult women.</p><p>The physician took note of the subtle rise in TSH, but the trend was not striking. “Let’s keep an eye on this. In the meantime, focus on your weight and blood pressure,” he advised. Rosa took the advice to heart—their “eye on it” reassurance served as a gentle push.</p><p>Four months later, Rosa was evaluated in the cardiology office for “increasing fatigue and shortness of breath.” Dr. Sanchez ran an echocardiogram; it appeared that she had a mild dilation of the left ventricle with borderline ejection fraction. He suggested a stress test. The stress test was unremarkable, but Rosa’s blood pressure on the treadmill spiked to 170/100, and a small episode of atrial fibrillation was noted—consistent with her family’s history of rhythm disorders. Her hypertension was upgraded to stage 2, and she was given a second‑line agent: a low‑dose ARB. She was also referred to a dietician.</p><p>In June, a month after the cardiology office’s visit, Rosa fell again. This time, she twisted her ankle, broke the lateral bone, and was taken to the orthopedics clinic. The orthopedic surgeon, recognizing her persistent low‑grade fever, mild anemia, and unplanned weight loss, asked if she had ever gone to the doctor about a “slow‑moving “thyroid issue.” Rosa’s response was a faint nod.</p><p>Throughout that year, Rosa’s routine lab panels had been taken by Dr. Patel, but no comprehensive evaluation had been done to investigate her persistent cold intolerance or her constant, “just tired” mood. The mild rise in TSH (4.0–5.2 µU/mL) had never prompted a repeat. Her fasting glucose had improved slightly (152 mg/dL) with medication, but she had a higher LDL (210 mg/dL) and a normal triglyceride but a low HDL (35 mg/dL). The cardiology team eventually told her, after multiple visits, that there was a risk of heart failure, but they did not mention thyroid disease.</p><p>During the final months of that timeline, Rosa began to experience worsening swelling of her feet and mild edema, which she attributed to her foot injuries. She slept with a small pillow under her left knee to relieve back pain, noticing a slow but steady increase in morning stiffness. In November, after a brief visit for her diabetes medications, Rosa reported a new symptom—difficulty swallowing. The family practice physician, Dr. Patel, mentioned she could do a basic “dysphagia” assessment and ruled out mechanical obstruction. She returned home with reassurance that her “swallowing” would settle with a few adjustments in diet.</p><p>By the time winter rolled around, Rosa’s TSH had risen to 6.6 µU/mL on a repeat lab panel, now beyond normal. Yet, her primary‑care group, heavily focused on her type‑2 diabetes and hypertension, interpreted the result along with her elevated LDL and recommended a statin. No endocrine consultation was referred at that point. Her depression became more evident as she isolated herself from friends, her only comfort left being her old crossword book, which she now left open on the nightstand while she stared at her phone. The mild memory fog that had appeared initially deepened. She would often ask herself whether the “tiredness” was a normal part of getting older, or whether it was &quot;just a part of an old man,&quot; a phrase she heard many times from her neighbors.</p><p>All of this occurred while Rosa, who had never been told about Hashimoto’s thyroiditis, was gradually slipping into a state of metabolic derangement—hypertension, hyperlipidemia, type‑2 diabetes, and depression. She experienced a mild but progressive hypothyroid picture—fatigue, weight gain, cold intolerance, constipation, hair thinning, dry skin, and myalgias—yet all the symptoms were consistently misinterpreted as belonging to her pre‑existing chronic diseases.</p><p>When the family physician finally flagged the rising TSH and suggested a referral to an endocrinologist, Rosa was in the middle of a month of multiple appointments—cardiology, orthopedic, oncology for the possible lung nodules, and a sleep study for daytime somnolence. She felt overwhelmed, her depression intensified, and she missed a month’s worth of visits, including her scheduled endocrine appointment. She would eventually fall through the cracks of the health system: no one followed up on that endocrine referral, and the TSH result became a footnote in an otherwise busy chart that listed only hypertension, diabetes, hyperlipidemia, and depression.</p><p>To this day, Rosa continues to suffer from gradual, insidious decline. Her family says she “doesn’t feel great,” but no one can tell her why she feels this way—except her doctor, who keeps measuring blood pressure, glucose, and lipids, but never a free T4 or antithyroid antibody test. Her disease course remains undiagnosed, a silent, overlooked cause woven into the fabric of her other chronic illnesses.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-09-05</h3><div class="visit-meta">Family Medicine | Reason: Routine check‑up</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Routine annual check‑up.
+
+**History of Present Illness:** 55‑year‑old female presents for routine annual exam. She reports constant fatigue, mild hair thinning, and mild morning stiffness in her shoulders. She denies pain, weight loss, fever, or night sweats. She attributes symptoms to lifestyle factors.
+
+**Past Medical History:** Type 2 Diabetes Mellitus, Hypertension, Hyperlipidemia, Depression, Obesity.
+
+**Current Medications:** None.
+
+**Allergies:** NKDA.
+
+**Vital Signs:** BP 140/88 mmHg, HR 78 bpm, weight 190 lbs, height 5’4”, BMI 32.5.
+
+**Physical Examination:** Well‑appearing female. BMI 32.5, weight stable. Cardiovascular exam normal. Pulmonary exam clear. Musculoskeletal: mild morning stiffness of shoulders, no swelling. Head and neck: scalp soft, no alopecia. Lymph nodes non‑enlarged. Neurologic exam intact.
+
+**Laboratory Review:** Recent labs show fasting glucose 133 mg/dL, LDL 180 mg/dL, TSH 4.0 µU/mL (upper‑limit of normal). Other labs not available.
+
+**Assessment:** 
+1. Poorly controlled type 2 DM (fasting glucose &gt;130 mg/dL). 
+2. Suboptimal lipid profile (LDL 180 mg/dL; on no statin). 
+3. Mild hypertension (BP 140/88). 
+4. Obesity (BMI 32.5) contributing to fatigue, hair thinning, and metabolic derangements. 
+5. Depression (history) may be contributing to fatigue. 
+6. TSH borderline high; possibility of subclinical hypothyroidism.
+
+**Plan:** 
+- **Lifestyle Modification:** 1500‑calorie deficit low‑fat diet, progressive walking program (30 min daily), sleep hygiene, stress reduction. Reinforced importance of weight loss for glycemic and lipid control.
+- **Medications:** Prescribed a daily multivitamin (generic). No current prescription for glucose‑lowering, lipid‑lowering, or antihypertensive agents as per patient’s current state; will re‑evaluate.
+- **Laboratory Tests:** Re‑check fasting glucose and lipids in 3 months; order hemoglobin A1c, complete blood count, ferritin to evaluate anemia and thyroid panel (free T4) to assess for subclinical hypothyroidism.
+- **Referral:** Diabetes clinic visit scheduled next month for formal dietitian counseling. Consider mental health follow‑up if symptoms of depression persist.
+- **Follow‑up:** Return visit in 3 months for repeat labs and weight assessment; earlier if symptoms worsen.
+
+**Signature:**
+Dr. Patel, MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">hair thinning</span><span class="pill">mild morning stiffness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Weight</td><td>190 lbs</td></tr><tr><td>Height</td><td>5’4”</td></tr><tr><td>BMI</td><td>32.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 32.5, BMI 32.5, BP 140/88, HR 78; mild morning stiffness, soft scalp, normal neck and lymph nodes</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 133 mg/dL</li><li>LDL 180 mg/dL</li><li>TSH 4.0 µU/mL</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported feeling hopeful; agreed to follow diet plan and scheduled diabetes clinic visit next month.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Type 2 diabetes mellitus, hypertension, hyperlipidemia, depression, obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Patel welcomed Rosa to the routine annual exam. She listened to Rosa’s concerns about constant fatigue and noted the hair’s slight thinning and a faint evening ache in the shoulders. On examination, the patient was well‑appearing, vital signs within acceptable limits, and a BMI of 32.5. Dr. Patel reviewed recent lab results: fasting glucose 133 mg/dL, LDL 180 mg/dL, TSH 4.0 µU/mL – just at the upper limit of normal. He suggested a modest weight‑loss plan with a 1500‑calorie deficit, low‑fat diet, and walking routine, emphasizing the importance of sleep and stress reduction. Rosa expressed optimism that her symptoms were lifestyle related and left with a prescription for a multivitamin and a recommendation to follow up at the diabetes clinic for diet counseling.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial mild TSH elevation (4.0 µU/mL) noted; no overt hypothyroid symptoms identified. No endocrinology referral made. Hypothyroidism remains undiagnosed.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-09-22</h3><div class="visit-meta">Emergency Medicine | Reason: Faint dizziness after slip</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 55‑year‑old female presents to the ED with a complaint of sudden dizziness and loss of balance after slipping on wet grass.
+
+History of Present Illness: The patient reports that during a brief walk outside, she slipped on wet grass and felt an acute onset of light‑headedness and a sensation of spinning. She denies associated chest pain, palpitations, shortness of breath, headache, vision changes, nausea, vomiting, or loss of consciousness. She notes a prior mild episode of dizziness a few weeks ago while standing up quickly, which resolved spontaneously. No recent head trauma, fever, or medication changes. She denies new headaches or visual disturbances.
+
+Past Medical History: Hypertension, Type 2 Diabetes Mellitus, Hyperlipidemia, Depression, Obesity. No prior cerebrovascular disease or peripheral neuropathy.
+
+Medications: Daily multivitamin (generic).
+
+Allergies: NKDA.
+
+Review of Systems: Negative for chest pain, palpitations, dyspnea, abdominal pain, fever, chills, rash, or recent infections. The only positive finding is reported dizziness.
+
+Physical Examination: Not documented in the chart; however, no focal neurological deficits were noted at the time of triage. The patient was alert, oriented to time, person, and place. No gait abnormalities were observed during a brief walk down the hallway.
+
+Vital Signs: BP 138/85 mmHg, HR 76 bpm, Temperature 98.6°F, SpO2 98% on room air.
+
+Assessment: Acute episodic dizziness following a slip, with no focal neuro findings or significant orthostatic change noted. Differential includes benign positional vertigo, orthostatic hypotension, vestibular neuritis, transient ischemic attack (TIA), metabolic or medication‑related causes, and benign post‑traumatic dizziness.
+
+Plan: 1. Repeat orthostatic vital sign measurement to assess for postural drops. 2. Order basic laboratory panel including CBC, CMP, fasting glucose, HbA1c, and lipid panel to screen for metabolic contributors. 3. Consider urgent brain imaging (CT head without contrast) if any focal neuro deficits develop or dizziness persists beyond 24 hours. 4. Continue current multivitamin; no new medication initiated. 5. Advise patient to avoid rapid position changes, stay hydrated, and maintain BP control with home monitoring. 6. Educated patient on warning signs (loss of consciousness, worsening headache, focal weakness) that warrant immediate return to ED. 7. Follow‑up: PCP visit within 1 week to reassess BP, glucose, lipids, and depression symptoms; schedule orthostatic vitals and possible ENT referral if dizziness persists.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dizziness</span><span class="pill">balance loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Regular heart rate, normal reflexes, intact coordination, no tremor, soft neck, no swelling</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>TSH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP normal</li><li>TSH 4.2 µU/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>High‑dose multivitamin</li><li>Discharge instructions</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Rosa tolerated the visit well, thanked the staff, and planned to follow up with Dr. Patel</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent slip on wet grass</li><li>Previous mild dizziness episode</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Rosa presented to the ER after losing her balance for one minute following a slip. She appeared light‑headed but not in distress. Physical exam was unremarkable: normal neurological examination, no focal deficits, regular heart rhythm. The ER physician ordered a complete metabolic panel, CBC, and a TSH test to rule out endocrine causes of fatigue. Rosa was given a high‑dose multivitamin and advised to keep hydrated. She was discharged with instructions to schedule her routine lab work and to follow up with her primary care provider.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>TSH remains slightly elevated at 4.2 µU/mL; no hypothyroid symptoms detected. The lack of definitive endocrine workup keeps Hashimoto’s hidden.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-10-30</h3><div class="visit-meta">Endocrine &amp; Diabetes Clinic | Reason: Weight gain and appetite loss</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:**\nRosa, a 55‑year‑old female with a history of hypertension, type 2 diabetes mellitus, hyperlipidemia, depression, and obesity, presents to the diabetes clinic for recently identified weight gain and loss of appetite.\n\n**Subjective:**\n- She reports an increase in weight to 192 lb over the past 2 months and a waist circumference of 56 in.\n- Appetite is diminished, especially for high‑fat foods she previously enjoyed.\n- She denies nausea, vomiting, or abdominal pain.\n- Reports fatigue and mild sadness following her mother’s recent death.\n- No changes in medications; currently on a daily multivitamin.\n\n**Review of Systems:**\n- General: weight gain, decreased appetite, fatigue.\n- Cardiovascular: denies chest pain or dyspnea.\n- Respiratory, GI, GU, musculoskeletal: no complaints.\n- Neuropsychiatric: mild depression, grieving.\n\n**Objective:**\n- **Vitals:** BP 145/90 mmHg, HR 80 bpm, weight 192 lb, BMI 32.9 kg/m², waist 56 in.\n- **Inspection/Palpation:** soft abdomen, no organomegaly, thyroid gland non‑tender, no cervical lymphadenopathy.\n- **Labs Ordered:** Fasting glucose, lipid panel, TSH. Results: Fasting glucose 158 mg/dL, LDL 210 mg/dL, HDL 35 mg/dL, TSH 4.5 µU/mL.\n\n**Assessment:**\n1. **Type 2 diabetes mellitus** – fasting glucose 158 mg/dL and history of uncontrolled glucose; patient has not been on pharmacologic therapy.\n2. **Impaired fasting glucose / early diabetes** – requires immediate pharmacologic intervention.\n3. **Hyperlipidemia** – LDL 210 mg/dL (stage III) and HDL 35 mg/dL; statin therapy indicated.\n4. **Hypertension** – BP 145/90 mmHg; consideration for initiation of antihypertensive class.\n5. **Obesity** – BMI 32.9 kg/m²; dietary counseling and exercise prescription essential.\n6. **Subclinical hypothyroidism** – TSH 4.5 µU/mL; repeat TSH and free T4 in 4 weeks to confirm.\n7. **Depression / bereavement** – likely contributing to appetite changes and reduced activity; refer to mental‑health services.\n\n**Plan:**\n- **Medication**\n  * Metformin 500 mg PO BID, titrate to 1000 mg BID as tolerated.\n  * Atorvastatin 20 mg PO QHS (statin for LDL 210 mg/dL).\n  * Enalapril 5 mg PO daily (start low‑dose antihypertensive).\n  * Continue multivitamin.\n- **Diet &amp; Exercise**\n  * High‑carbohydrate, low‑fat diet, target 1500 kcal/day.\n  * 30‑minute brisk walk daily, progressively increase to 45 min.\n  * Provide written nutrition guidelines and refer to dietitian.\n- **Labs**\n  * Repeat fasting glucose, HbA1c, lipid panel, TSH, free T4 in 4 weeks.\n  * Consider CGA if depression persists.\n- **Follow‑up**\n  * Return in 4 weeks for review of labs and medication tolerance.\n  * Continue routine BP and glucose self‑monitoring.\n  * If BP &gt;140/90 after 4 weeks, consider ACE inhibitor titration or add ARB.\n  * Refer to mental‑health clinic for grief counseling.\n- **Patient Education**\n  * Discuss medication side effects, particularly metformin GI upset and statin myopathy.\n  * Emphasize adherence to diet, exercise, and medication.\n  * Encourage communication of any new symptoms (e.g., palpitations, edema).</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">loss of appetite</span><span class="pill">weight gain</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/90</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Weight</td><td>192 lbs</td></tr><tr><td>BMI</td><td>32.9</td></tr><tr><td>Waist</td><td>56 in</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 32.9, waist 56 in, BP 145/90, HR 80, soft abdomen, normal thyroid tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose</li><li>LP</li><li>TSH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 158 mg/dL</li><li>LDL 210 mg/dL</li><li>HDL 35 mg/dL</li><li>TSH 4.5 µU/mL</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>She reported feeling slight sadness about her weight but accepted the plan to gradually change diet and exercise</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Dietary preferences (fried chicken, pizza)</li><li>Reduced physical activity</li><li>Mother&#x27;s recent death (psychosocial stress)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The diabetes clinic physician greeted Rosa, noting a recent increase in weight to 192 lbs and a 56‑inch waist. She reported losing interest in food, especially in high‑fat meals that she had enjoyed in the past. Physical exam disclosed a soft abdomen, no organomegaly, and normal thyroid gland palpation. The clinician ordered fasting glucose, lipid panel, and repeat TSH. She was advised to adopt a high‑carbohydrate, low‑fat diet, restrict calorie intake by 1500 kcal/day, and resume a 30‑minute walk daily. Lifestyle education was reinforced. Rosa agreed to schedule a follow‑up for repeat labs in one month.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Weight trend shifts from stable to increasing. TSH climbs to 4.5 µU/mL; mild anemia still absent. Hashimoto’s status remains unconfirmed.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-12-15</h3><div class="visit-meta">Family Medicine | Reason: Persistent fatigue and voice change</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint**
+Persistent fatigue and voice change.
+
+**History of Present Illness**
+Rosa, 55‑year‑old female, presents for follow‑up. She reports a gradual deepening of her voice over the past months, worsening morning stiffness, and ongoing fatigue. She denies recent infections, fever, or weight loss. She has a history of seasonal allergies but no acute allergic symptoms this visit. She continues her hypertension, diabetes, hyperlipidemia, and depression regimens. She reports following her diet and exercise plan with mild improvement of morning stiffness after walking.
+
+**Review of Systems (selected)**
+- Constitutional: fatigue, no fever, chills or night sweats.
+- ENT: deepening voice, no dysphagia or hoarseness.
+- Musculoskeletal: morning stiffness, muscle aches.
+- Endocrine: no tremor, heat or cold intolerance.
+
+**Past Medical History**
+- Hypertension
+- Type 2 Diabetes Mellitus
+- Hyperlipidemia
+- Depression
+- Obesity (BMI 32.8)
+
+**Medications**
+- Metformin 500 mg PO BID (titrate to 1000 mg BID)
+- Atorvastatin 20 mg PO QHS
+- Enalapril 5 mg PO daily
+- Daily multivitamin
+
+**Allergies**
+- NKDA
+
+**Vitals**
+- Blood Pressure: 140/88 mmHg
+- Heart Rate: 82 bpm
+- Temperature: 98.5°F
+- O₂ Saturation: 98% on room air
+
+**Physical Examination**
+- General: overweight female, alert and oriented.
+- HEENT: voice deepened; trachea slightly deviated; no thyroid swelling; mild cervical lymphadenopathy; mild erythema noted on skin.
+- Cardiovascular: regular rate and rhythm, no murmurs.
+- Respiratory: clear to auscultation bilaterally.
+- Musculoskeletal: mild morning stiffness, no focal deficits.
+- Neurologic: normal gait.
+- Skin: mild erythema, otherwise normal.
+
+**Laboratory Results**
+- CBC: Hb 12.4 g/dL (mild anemia)
+- CMP: normal hepatic and renal profile
+- TSH: 4.0 µU/mL (upper normal for women)
+- Free T4: 1.0 ng/dL (normal)
+
+**Assessment**
+1. Possible early hypothyroidism – TSH at upper limit of normal with normal free T4; may explain voice change and fatigue. A repeat TSH/fT4 in 3‑4 months is warranted.
+2. Mild anemia of chronic disease or iron deficiency – may contribute to fatigue; consider ferritin and iron studies.
+3. Diabetes mellitus – suboptimal control (previous fasting glucose 158 mg/dL, LDL 210 mg/dL). Continue lifestyle modifications and monitor HbA1c.
+4. Depression – chronic symptoms may also contribute to fatigue and stiffness.
+5. Obesity – contributing to morning stiffness and fatigue.
+6. Early parathyroid hyperplasia or pituitary dysfunction – unlikely given normal labs, but voice change noted.
+
+**Plan**
+- Repeat TSH, free T4, ferritin, iron studies in 3 months.
+- Repeat fasting glucose, HbA1c, lipid panel in 4 weeks.
+- Continue current medications and lifestyle regimen.
+- Reinforce weight loss goal (500‑600 kcal deficit), daily brisk walking 30–45 minutes, and sleep hygiene.
+- Schedule follow‑up in 4 weeks; if voice changes persist or worsen, refer to otolaryngology for laryngoscopy.
+- Counsel on medication adherence and side‑effect monitoring.
+- Review mental health status; encourage psychotherapy follow‑up.
+
+**Education**
+- Discussed that a mildly elevated TSH can be benign but may progress; patient reassured.
+- Explained role of anemia and diabetes in fatigue.
+- Advised regular blood pressure and glucose monitoring at home.
+
+**Disposition**
+Patient left with a better understanding of potential contributing factors and a clear care plan; feels relieved but frustrated that no definitive new diagnosis emerged.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">deepening voice</span><span class="pill">morning stiffness</span><span class="pill">muscle aches</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Voice deepened, trachea slightly deviated, no thyroid swelling, mild cervical lymph nodes, mild erythema on skin</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>TSH</li><li>Free T4</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.4 g/dL</li><li>TSH 4.0 µU/mL</li><li>Free T4 1.0 ng/dL</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>She continued following the lifestyle plan; reported mild improvement of stiffness after walking.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>No recent infections</li><li>Gradual onset of voice thickening</li><li>Seasonal allergies</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Rosa returned for a follow‑up after noting that her voice had become deeper and that morning stiffness had worsened. Dr. Patel performed a complete exam including thyroid palpation (no goiter). He ordered a CBC, CMP, and TSH. Results revealed Hb 12.4 g/dL (mild anemia), TSH 4.0 µU/mL (upper normal for women), and a normal free T4. The clinician ruled out anemia as a cause for fatigue and reassured Rosa that her TSH trend was only slightly elevated. He emphasized the need to monitor weight, blood pressure, and blood glucose, and advised her to continue the diet and exercise plan. Rosa left feeling relieved but slightly frustrated that no new diagnosis emerged.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Fatigue and voice changes persist; TSH oscillates between 4.0‑4.5. No hypothyroid diagnosis; subtle autoimmune process likely beginning.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-03-20</h3><div class="visit-meta">Cardiology | Reason: Increasing fatigue and shortness of breath</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 56‑year‑old female presents with increasing fatigue and exertional shortness of breath. She denies chest pain but reports recent episodes of palpitations and orthostatic dizziness.
+
+History of Present Illness: Mrs. Rosa reports progressive fatigue and dyspnea on mild exertion over the past two weeks. She has a history of hypertension, type 2 diabetes mellitus, hyperlipidemia, depression, obesity, and stage 2 hypertension. She has been on losartan 25 mg daily. She described intermittent brief palpitations and an episode of fainting while walking on a wet lawn one month ago.
+
+Review of Systems: Positive for fatigue, dyspnea with exertion, orthostatic dizziness, and palpitations. Denies chest pain, orthopnea, paroxysmal nocturnal dyspnea, edema, fever, chills, night sweats, or recent weight change.
+
+Past Medical History: Hypertension (stage 2), type 2 diabetes mellitus, hyperlipidemia, depression, obesity.
+
+Medications: Losartan 25 mg PO daily.
+
+Allergies: NKDA.
+
+Objective:
+
+Vitals: BP 130/80 mmHg, HR 82 bpm, RR 16 breaths/min, Temp 98.6 °F, SpO2 98% on room air.
+
+Physical Exam: General: overweight female, alert, oriented. Cardiac: mild tachycardia 82 bpm, normal heart sounds, no murmurs, no gallop. Lungs: clear to auscultation bilaterally. Abdomen: soft, non‑tender. Extremities: no edema. Neuro: strength 5/5, reflexes normal. No orthostatic hypotension noted on repeat vitals.
+
+Diagnostic Tests:
+- Echocardiogram: mild left‑ventricular dilation, EF 55%, slight interventricular septal hypertrophy.
+- Treadmill stress test: baseline HR 70, peak HR 170/100 mmHg, brief self‑terminating atrial fibrillation episode.
+- CBC: Hb 12.3 g/dL.
+- CMP: normal.
+- TSH: 5.0 µU/mL (borderline high).
+
+Assessment:
+1. Hypertensive heart disease – evidenced by left ventricular dilation and recent exercise‑induced blood pressure surge.
+2. Paroxysmal atrial fibrillation – short self‑terminating episode during stress test.
+3. Subclinical hypothyroidism – TSH borderline elevated at 5.0 µU/mL.
+4. Anemia of chronic disease – mild anemia with Hb 12.3 g/dL; consider ferritin/iron studies.
+5. Early heart failure with preserved ejection fraction (HFpEF) – dyspnea and left ventricular remodeling.
+
+Plan:
+- Continue losartan 25 mg daily; titrate to 50 mg if BP remains &gt;140/90 mmHg after 4 weeks.
+- Initiate dietary counseling referral for weight loss, sodium restriction, and diabetes control.
+- Repeat TSH and free T4 at next visit to clarify thyroid status.
+- Obtain iron studies (ferritin, serum iron, TIBC) to evaluate for nutritional anemia.
+- Counsel on activity modification; encourage aerobic exercise 30 minutes daily, 5 days per week, with monitoring of symptoms.
+- Schedule cardiology follow‑up in 4 weeks to reassess BP, evaluate HFpEF, and review treadmill stress test data.
+- Consider outpatient rhythm monitoring (Holter) if palpitations recur.
+- Encourage smoking cessation (if applicable) and limit alcohol.
+- Provide education on signs of heart failure (rapid weight gain, edema, worsening dyspnea) and when to call 911.
+
+Disposition: Outpatient cardiology follow‑up. No acute changes requiring admission.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">shortness of breath on exertion</span><span class="pill">orthostatic dizziness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/80</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slightly enlarged left ventricle, normal heart sounds, no gallop</li><li>BP 130/80, HR 82, RR 16</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Echocardiogram</li><li>Treadmill stress test</li><li>CBC</li><li>CMP</li><li>TSH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>LV dilation, EF 55%</li><li>Max BP 170/100, AF episode</li><li>Hb 12.3 g/dL</li><li>TSH 5.0 µU/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Losartan 25 mg</li><li>Dietician referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>She reported feeling more exhausted than before but appreciated the cardiology assessment.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span><span class="pill">Stage 2 hypertension</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 25 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension now on 2nd line</li><li>Recent episodes of palpitations</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Sanchez evaluated Rosa for worsening fatigue and exertional dyspnea. Cardiac exam revealed mild tachycardia, normal heart sounds, and no murmurs. An echocardiogram demonstrated mild dilation of the left ventricle with an ejection fraction of 55% and a slightly thickened interventricular septum. Dr. Sanchez ordered a treadmill stress test which showed a resting heart rate of 70, a rise to 170/100 mmHg with a brief atrial fibrillation episode that resolved spontaneously. These findings prompted upgrading Rosa’s hypertension to stage 2 and starting her on a low‑dose ARB (Losartan 25 mg). A dietary counseling referral was made. The cardiology team noted the patient’s mild anemia and persistent low‑grade fever but did not consider thyroid disease in their differential.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cardiovascular changes appear secondary to systemic hypertension; TSH trend shows a modest rise to 5.0 µU/mL, indicating potential progression of autoimmune thyroiditis.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-04-10</h3><div class="visit-meta">Orthopedics | Reason: Ankle fracture after fall</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Left ankle pain, swelling, difficulty walking after an ankle fall. The patient also reports a low‑grade fever (99.1°F) and recent unexplained weight loss over the past two months.
+
+Subjective: Rosa, a 56‑year‑old female with a history of hypertension, type 2 diabetes, hyperlipidemia, depression, obesity, mild anemia, chronic low‑grade fever, and recent weight loss, presented to the orthopedic clinic after a fall that resulted in a left ankle deformity. She reports acute pain, swelling, and difficulty ambulating. She is concerned about her recovery and frustrated by the lack of a clear cause for her systemic symptoms.
+
+Objective:
+- Vitals: BP 140/90, HR 78, Temp 99.1°F, SpO2 98%.
+- Physical exam: Deformed left ankle with mild pedal edema and mild erythema. No enlarged lymph nodes. Full ROM of contralateral joints. The rest of the exam was otherwise normal.
+- Imaging: X‑ray confirms a lateral bone break (frontal view) consistent with a diaphyseal fracture of the lateral column.
+- Labs: CBC shows Hb 12.2 g/dL. CMP was within normal limits. TSH elevated at 5.2 µU/mL.
+
+Assessment:
+1. Lateral column ankle fracture – acute trauma.
+2. Possible mild anemia related to chronic disease or iron deficiency.
+3. Mild thyrotoxicosis or subclinical hypothyroidism given borderline high TSH.
+4. Low‑grade fever with weight loss – differential includes infectious (osteomyelitis, septic arthritis), endocrinologic (thyroid disease), and neoplastic (metastatic bone disease, lymphoma) processes.
+
+Plan:
+- Orthopedic:
+  • Place a supportive below‑knee cast and advise non‑weight bearing for 6 weeks.
+  • Prescribe acetaminophen 650 mg PO q6–8h PRN for pain.
+  • Educate on cast care, signs of infection (↑ fever, worsening pain, erythema, swelling). If any of these occur, return to ED.
+  • Order follow‑up radiograph in 6 weeks to assess healing.
+- Systemic workup:
+  • Repeat CBC, CMP, iron studies, ferritin, and repeat TSH/free T4 in 4 weeks.
+  • Consider referral to endocrine/hematology if iron deficiency or thyroid disease persists.
+  • Continue losartan 25 mg PO daily; monitor BP and kidney function.
+- Lifestyle:
+  • Reinforce weight‑bearing precautions, activity restrictions, and gentle range‑of‑motion exercises as tolerated.
+  • Encourage adequate hydration and nutrition to support healing.
+- Follow‑up:
+  • Orthopedics clinic in 6 weeks for cast removal and radiograph.
+  • Primary care in 4 weeks for labs review and discussion of anemia/thyroid workup.
+  • Contact promptly if new fevers &gt;100.5°F, rapid weight loss &gt;5 kg, or increasing pain.
+
+Disposition: Patient was educated and discharged with a cast and prescription medication. She was advised to monitor for signs of infection and to keep all appointments.
+
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">pain in left ankle</span><span class="pill">swelling</span><span class="pill">difficulty walking</span><span class="pill">low‑grade fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>99.1°F</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Deformed left ankle, mild pedal edema, mild erythema</li><li>Palpable lymph nodes not enlarged</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>TSH</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hb 12.2 g/dL</li><li>TSH 5.2 µU/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Casting of left ankle</li><li>Analgesic prescribing (acetaminophen)</li><li>Follow‑up radiograph</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>She was concerned about her recovery but expressed frustration at the lack of a clear cause for her symptoms.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span><span class="pill">Mild anemia</span><span class="pill">Low‑grade fever</span><span class="pill">Recent weight loss</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 25 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent ankle fall</li><li>History of chronic low‑grade fever</li><li>Subtle weight loss over past 2 months</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>An orthopedic surgeon examined Rosa after she presented with a left ankle fracture and mild fever. The fracture was classified as a lateral bone break requiring a cast. During the examination, the surgeon noted Rosa’s pallor and a temperature of 99.1°F. The surgeon queried her recent medical history and learned of the low‑grade fever, mild anemia, and recent weight loss. He remarked that these findings could be related to thyroid disease but did not pursue a comprehensive workup at that point. The surgeon ordered a CBC, basic metabolic panel, and a repeat TSH. He placed a supportive splint, advised weight‑bearing precautions, and ordered a follow‑up in 6 weeks with a radiograph.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>TSH rises to 5.2 µU/mL, mild anemia stable, continued weight loss. The orthopedic visit highlights the presence of systemic symptoms but no endocrine referral made.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-07-18</h3><div class="visit-meta">Family Medicine | Reason: Difficulty swallowing, memory fog, and elevated TSH</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: Rosa presented for follow‑up of new‑onset dysphagia of solids, mild memory fog, and generalized fatigue. She reports constant feeling of being drained and intermittent difficulty swallowing. No chest pain, regurgitation, odynophagia, weight loss, or voice change. Past medical history notable for HTN, Type 2 DM, hyperlipidemia, depression, obesity, early HFpEF, AFib, subclinical hypothyroidism, anemia. Review of systems: mild memory changes, daytime fatigue, no dyspnea on exertion, no orthopnea, no edema, no urinary symptoms. Objective: Vital signs BP 138/85 mmHg, HR 80 bpm, Temp 98.4°F, SpO2 98% RA. BMI 33.2. Oropharynx normal, no tongue induration, mild palatal dryness. Thyroid gland smooth, nontender. Cardiac exam normal S1, S2. Lungs clear. No peripheral edema. Labs: TSH 6.6 µU/mL (elevated), free T4 0.8 ng/dL (low‑normal), CBC within normal limits (Hb 12.5 g/dL), CMP normal, esophagram normal. Assessment: 1) Progression of subclinical hypothyroidism → hypothyroidism likely contributing to fatigue, dysphagia, and memory fog. 2) Dysphagia of solids with normal esophagram suggests esophageal motility disorder secondary to thyroid dysfunction; patient may benefit from GI swallow evaluation if symptoms persist. 3) Early HFpEF and A‑fib present, could contribute to fatigue. 4) Depression may also exacerbate perceived fatigue and cognitive blunting. 5) Statin therapy unlikely cause of dysphagia but monitor for myopathy symptoms. Plan: - Initiate levothyroxine 75 µg PO daily. Recheck TSH and free T4 in 6‑8 weeks. Titrate to target TSH 0.5‑2.5 µU/mL. - Continue current medications: Metformin 500 mg BID (titrate to 1000 mg BID as tolerated), Atorvastatin 20 mg QHS (monitor for myopathy), Losartan 25 mg daily (consider uptitration to 50 mg if BP &gt;140/90), Acetaminophen PRN. - Encourage small, frequent meals; soft diet if swallowing discomfort. - Discuss sleep hygiene, stress reduction, and weight‑loss goals to improve overall energy. - Refer to GI for esophageal manometry if dysphagia persists after thyroid therapy. - Endocrinology referral re‑issued; scheduled appointment within the week. - Continue cardiology follow‑up in 4 weeks; repeat echocardiogram if symptomatic. - Repeat CBC, CMP, TSH, free T4, HbA1c in 6 weeks. - Screen for depression via PHQ‑9; consider starting SSRI if scores &gt;10. - Encourage dietary sodium restriction &lt;1500 mg/day due to HFpEF and AFib. - Educate on importance of consistent follow‑up and adherence to medication schedule. Patient verbalized understanding and commitment to attend endocrinology visit. Follow‑up: Endocrinology in 1 week, primary care in 6 weeks for labs, cardiology in 4 weeks, GI if needed.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">difficulty swallowing solids</span><span class="pill">mild memory fog</span><span class="pill">increased fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Oxygen Saturation</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild palatal dryness, no tongue induration, thyroid normal on palpation</li><li>BMI 33.2, BP 138/85</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>TSH</li><li>Free T4</li><li>Esophagram</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TSH 6.6 µU/mL</li><li>Free T4 0.8 ng/dL</li><li>Esophagram normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed levothyroxine 75 µg daily (initiated by referral, but not started yet)</li><li>Referred to endocrinology</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>She was confused but understood the need for an endocrinology consult; she left noting the appointment was later in the week</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span><span class="pill">Stage 2 hypertension</span><span class="pill">Statin therapy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Losartan 25 mg</li><li>Metformin 1000 mg BID</li><li>Atorvastatin 20 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent initiation of statin therapy</li><li>Seasonal allergy flare-ups</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Rosa presented to Dr. Patel complaining of new-onset dysphagia when swallowing solids and a sense of memory fog. She reported feeling constantly drained. On physical exam, the oropharynx was unremarkable, and the thyroid area appeared smooth. Dr. Patel ordered a basic metabolic panel, CBC, TSH, free T4, and an esophagram to assess swallowing. The results showed TSH 6.6 µU/mL (elevated), free T4 0.8 ng/dL (low normal), and a normal esophagram. He explained that her thyroid function was trending upward, explaining the weight gain, fatigue, and dysphagia. While the patient had an endocrine evaluation recommended, she reported missing her scheduled appointment due to overlapping cardiology, orthopedic, and diabetes visits scheduled that week. Dr. Patel re‑issued an endocrinology referral and scheduled a new appointment, emphasizing the importance of consistent follow‑up.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>TSH has crossed 6.0 µU/mL, free T4 low‑normal. Hypothyroidism is now clinically evident but remains untreated as patient missed appointment. Rosa’s metabolic profile remains deranged; depression and fatigue persist.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Type 2 Diabetes Mellitus</span><span class="pill">Hyperlipidemia</span><span class="pill">Depression</span><span class="pill">Obesity</span><span class="pill">Anemia</span><span class="pill">Hypertensive heart disease</span><span class="pill">Paroxysmal atrial fibrillation</span><span class="pill">Subclinical hypothyroidism</span><span class="pill">Early heart failure with preserved ejection fraction</span><span class="pill">Hypothyroidism</span><span class="pill">Dysphagia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Daily multivitamin (generic)</li><li>Metformin 500 mg PO BID (titrate to 1000 mg BID)</li><li>Atorvastatin 20 mg PO QHS</li><li>Losartan 25 mg PO daily</li><li>Acetaminophen 650 mg PO q6–8h PRN for pain</li><li>Levothyroxine 75 mcg daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Routine annual check‑up: patient reports fatigue, mild hair thinning, and mild morning shoulder stiffness. Vital signs: BP 140/88 mmHg, HR 78 bpm, weight 190 lbs, height 5’4’, BMI 32.5. Labs: fasting glucose 133 mg/dL, LDL 180 mg/dL, TSH 4.0 µU/mL. Physical exam: no significant findings except mild shoulder stiffness; scalp normal, no alopecia. Plan: lifestyle modifications (calorie deficit diet, daily walking, sleep hygiene, stress reduction), prescribed daily multivitamin. Labs ordered for follow‑up: HbA1c, complete blood count, ferritin, free T4. Recheck fasting glucose and lipids in 3 months; schedule diabetes clinic visit next month; consider mental health follow‑up if symptoms persist.</li><li>Emergency visit for sudden dizziness after slipping on wet grass; vital signs normal (BP 138/85 mmHg, HR 76 bpm, SpO2 98%); no focal neurological deficits; orthostatic vitals repeated with no significant drop; ordered basic laboratory panel including CBC, CMP, fasting glucose, HbA1c, and lipid panel; advised on home BP and glucose monitoring, avoidance of rapid position changes; no new medications prescribed; PCP follow‑up scheduled within 1 week.</li><li>Diabetes clinic visit: weight increased to 192 lbs, BMI 32.9 kg/m²; decreased appetite, fatigue reported. BP 145/90 mmHg, HR 80 bpm. Labs: fasting glucose 158 mg/dL, LDL 210 mg/dL, HDL 35 mg/dL, TSH 4.5 µU/mL. Medications ordered: metformin 500 mg PO BID (titrate to 1000 mg BID), atorvastatin 20 mg PO QHS, enalapril 5 mg PO daily. Advised high‑carbohydrate low‑fat diet (1500 kcal/day), daily brisk walk, and dietitian referral. Repeat fasting glucose, HbA1c, lipid panel, TSH, free T4 in 4 weeks. Mental‑health referral for grief counseling.</li><li>Visit on 2023-12-15: patient reports persistent fatigue, deepening voice, morning stiffness; physical exam reveals mild tracheal deviation, cervical lymphadenopathy, and mild erythema; laboratory studies show mild anemia (Hb 12.4 g/dL), TSH 4.0 µU/mL, free T4 1.0 ng/dL; patient instructed to repeat TSH, free T4, ferritin, iron studies in 3 months and fasting glucose, HbA1c, lipid panel in 4 weeks; continue current medications (Metformin, Atorvastatin, Enalapril, multivitamin); reinforce weight loss plan, exercise, sleep hygiene, and medication adherence.</li><li>Cardiology consult for progressive fatigue, exertional dyspnea, palpitations, and orthostatic dizziness. Vital signs: BP 130/80 mmHg, HR 82 bpm, RR 16 breaths/min, Temp 98.6°F, SpO2 98% on room air. Echocardiogram revealed mild left‑ventricular dilation and slight interventricular septal hypertrophy, EF 55%. Treadmill stress test noted a brief self‑terminating atrial fibrillation episode. Labs: CBC Hb 12.3 g/dL, CMP normal, TSH 5.0 µU/mL (borderline high). Initiated losartan 25 mg PO daily; continued daily multivitamin, metformin 500 mg PO BID, and atorvastatin 20 mg PO QHS. Advised dietary counseling for sodium restriction, weight loss, and diabetes control. Ordered iron studies and repeat thyroid function tests. Scheduled cardiology follow‑up in 4 weeks and advised monitoring for worsening dyspnea, weight gain, or edema.</li><li>Orthopedic evaluation for left ankle fracture after a fall. Physical exam identified a deformed left ankle with mild pedal edema and mild erythema; X‑ray confirmed a lateral column diaphyseal fracture. A below‑knee cast was applied with instructions for non‑weight bearing for 6 weeks; acetaminophen 650 mg PO q6–8h PRN was prescribed for pain. Labs (CBC, CMP, TSH, iron studies, ferritin, free T4) were ordered for anemia and thyroid workup. Current medications (Losartan, Metformin, Atorvastatin) continued unchanged. Follow‑up appointments scheduled in 6 weeks for cast removal and radiograph and in 4 weeks for lab review.</li><li>Follow‑up for new onset dysphagia of solids, memory fog, fatigue; TSH elevated at 6.6 µU/mL, free T4 low‑normal 0.8 ng/dL, CBC/CMP normal; esophagram normal. Started levothyroxine 75 µg daily, continue existing regimen, plan labs repeat in 6‑8 weeks, referral to endocrinology within week.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

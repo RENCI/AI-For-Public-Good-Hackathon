@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 18718237</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 18718237</h1><div class="subtitle">Prostate Cancer with Extraprostatic Extension into Bladder, Regional Nodal Disease, and Distant Metastasis | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Benign prostatic hyperplasia, Chronic prostatitis, Diabetes mellitus, Hypertension, Metabolic syndrome, Chronic kidney disease</div><div class="meta-line">Risk Factors: African American ethnicity, Family history of prostate cancer, High-fat diet, Obesity, Low physical activity, Exposure to pesticides, Smoking</div></div>
+<details><summary>Narrative <span class="preview-text">**Mr. Jamal Carter: A Clinical Narrative**  *Patient profile*   68‑year‑old African‑American man, retired factory worker...</span></summary><div class="section-body"><p>**Mr. Jamal Carter: A Clinical Narrative**</p><p>*Patient profile*  
+68‑year‑old African‑American man, retired factory worker, former smoker (30 pack‑years, quit 5 years ago), with a 12‑year history of type 2 diabetes mellitus, hypertension, chronic kidney disease Stage 3, benign prostatic hyperplasia (BPH), and chronic prostatitis. Lives with a wife; diet high in saturated fats and processed foods; sedentary lifestyle. Family history positive for prostate cancer in his father (diagnosed at 65). Works in an agricultural setting, with known pesticide exposure.</p><p>---</p><p>### Visit 1: August 5 – “I’m tired and the bathroom trips are never-ending”</p><p>- **Chief complaints**: Persistent lower‑extremity fatigue, increased urinary frequency (approx. 12–15 times/day), nocturia (4–5 times/night), weak stream, occasional “hesitancy” on voiding.  
+- **History**: Symptoms had been gradually worsening over the past 6 months. No hematuria, no fevers. Referred to PCP after a routine check‑up.  
+- **Physical exam**: BMI 32 kg/m². BP 160/95 mmHg. Abdomen flat. Digital rectal exam (DRE) showed a 3‑cm, mildly hard, non‑tender prostate.  
+- **Labs**: PSA 7.8 ng/mL (slightly above normal for age). Hemoglobin A1c 8.2%. Creatinine 2.1 mg/dL (baseline 2.0). CBC normal.  
+- **Imaging**: Urinalysis normal. Trans‑abdominal ultrasound of kidneys: mild cortical scarring.  
+- **Plan**: Initiate finasteride 5 mg daily for BPH, schedule a urology consult. Continue metformin and losartan, counsel on diet, encourage physical activity (walk).</p><p>---</p><p>### Visit 2: September 12 – “The bladder feels full all the time”</p><p>- **Chief complaints**: Intense bladder pressure, new onset of pain while urinating, occasional dribbling.  
+- **History**: Urinary frequency now 15–18 trips/day. Reports a “tightness” sensation that feels as if the bladder is overfull even after voiding. No visible blood.  
+- **Exam**: Unchanged DRE with 3‑cm prostate. No suprapubic tenderness.  
+- **Labs**: PSA increased to 12.4 ng/mL. Fasting glucose 160 mg/dL. Creatinine 2.3 mg/dL.  
+- **Imaging**: Pelvic MRI ordered: shows a 4 cm prostate mass infiltrating the bladder wall (extraprostatic extension) and enlarged right pelvic lymph nodes (approx. 1.5 cm).  
+- **Plan**: Referral to urologist for staging. Discuss possible prostatectomy vs radiotherapy; note renal function may limit imaging contrast.</p><p>---</p><p>### Visit 3: September 28 – Urology Consultation</p><p>- **Assessment**: Clinical stage T3bN1M0 (extraprostatic extension into bladder, regional lymph nodes). PSA 12.4.  
+- **Discussion**: Options: radical retropubic prostatectomy with bladder cuff excision vs definitive external beam radiation ± brachytherapy.  
+- **Considerations**: Chronic kidney disease limits MRI contrast; potential for postoperative complications (ureteral injury).  
+- **Decision**: Based on comorbidities and patient&#x27;s preference for a definitive surgical approach, the plan is robot‑assisted radical prostatectomy with bladder cuff resection and bilateral pelvic lymph node dissection.  
+- **Pre‑op**: Optimize blood pressure (switch losartan + add amlodipine), hold finasteride for 4 weeks. Continue metformin. Renal consultation for perioperative renal-protective strategies.</p><p>---</p><p>### Visit 4: October 6 – Surgery Day</p><p>- **Procedure**: RARP with bladder cuff excision; 12 lymph nodes harvested, 3 positive for metastasis.  
+- **Intra‑op**: Slight difficulty due to prostatitis‐related fibrosis; operative time 4.2 h.  
+- **Post‑op**: Foley catheter in place. Drainage output modest. Hemodynamics stable.  
+- **Adverse event**: Mild postoperative nausea, managed with ondansetron.</p><p>---</p><p>### Visit 5: October 14 – Post‑operative Follow‑up</p><p>- **Status**: No acute complications. Catheter removed on day 7.  
+- **Pathology**: Gleason 4 + 4 = 8, pT3b, margin‑positive on anterior wall. Lymph nodes: 3/12 positive.  
+- **Adjuvant therapy**: Discussed radical retropubic radiation (70 Gy) and androgen blockade. Due to diabetes and CKD, hormonal therapy chosen: leuprolide 3.6 mg SC q3 months, enzalutamide 160 mg PO daily.  
+- **Side effects**: Early signs of fatigue, mild hot flashes.  
+- **Plan**: Initiate radiation 4 weeks post‑op. Continue PSA monitoring monthly.</p><p>---</p><p>### Visit 6: December 10 – First PSA after 4 weeks of radiation</p><p>- **PSA**: 10.1 ng/mL (drop from pre‑op 12.4 but still above baseline).  
+- **Symptoms**: No urinary retention; mild dysuria that improves with analgesia.  
+- **Imaging**: Follow‑up CT chest/abdomen/pelvis shows a new 2.5 cm pulmonary nodule and an enlarged sacral lymph node.  
+- **Diagnosis**: Distant metastatic disease (M1a).</p><p>---</p><p>### Visit 7: January 20 – Multidisciplinary Tumor Board</p><p>- **Discussion**: At stage pT3bN1M1, overall survival improves with systemic therapy.  
+- **Plan**: Transition to systemic chemotherapy plus androgen deprivation. Start docetaxel 75 mg/m² IV q3 weeks + prednisone 5 mg BID + continue leuprolide.  
+- **Kidney**: Nephrology recommends dose adjustment; docetaxel 60 mg/m².  
+- **Supportive care**: Bisphosphonate therapy for bone metastases prophylaxis, vitamin D and calcium.</p><p>---</p><p>### Visit 8: March 15 – Chemotherapy Cycle 2</p><p>- **Symptoms**: Progressive fatigue, dyspnea on exertion.  
+- **Physical exam**: Palpable left upper leg swelling (deep vein thrombosis confirmed).  
+- **Labs**: Platelet count 90 k/µL. INR 1.1.  
+- **Treatment**: Started enoxaparin 1 mg/kg SC daily for DVT.</p><p>---</p><p>### Visit 9: April 28 – Third Cycle, Worsening Course</p><p>- **Symptom progression**: Severe anorexia, weight loss of 12 lb over 3 months. Urinary symptoms recur: frequency, urgency, urinary retention necessitating intermittent catheterization.  
+- **Imaging**: PET/CT shows progression of pulmonary and hepatic metastases. Bladder wall thickening with residual extraprostatic disease.  
+- **Lab**: Creatinine 3.0 mg/dL (CKD Stage 4).  
+- **Plan**: Evaluate for hospice enrollment; however, the patient expresses desire to continue aggressive therapy.</p><p>---</p><p>### Visit 10: May 30 – Final Clinical Decision</p><p>- **Assessment**: Rapid disease progression, metastatic burden high, organ dysfunction (kidneys) limits further chemotherapy.  
+- **Discussion**: Palliative radiation to symptomatic lesions (bone, bladder). Initiate best‑available systemic therapy: palliative docetaxel (dose 45 mg/m²) + steroids.  
+- **Goals of care**: Pain control, maintenance of urinary function, and quality of life.</p><p>---</p><p>*Outcome:*  
+Despite an aggressive multimodal approach—initial surgical resection, adjuvant radiation, androgen deprivation, systemic chemotherapy—the disease progressed rapidly. The patient’s cancer became widespread with extraprostatic and distant metastatic disease, compounded by comorbid diabetes, hypertension, CKD, and chronic prostatitis. By the end of the documented course, his renal function deteriorated, his mobility limited, and his overall prognosis was poor. Care pivoted to palliative measures, aligning with the intended outcome of worsening disease.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-08-05</h3><div class="visit-meta">Primary Care | Reason: Increased urinary frequency and fatigue</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint:
+Mr. Carter presents with increased urinary frequency, nocturia and fatigue.
+
+History of Present Illness:
+68‑year‑old male with known BPH and chronic prostatitis reports urinary frequency 12–15 times/day, nocturia 4–5 times/night, weak stream and hesitancy. He also complains of persistent fatigue. He denies hematuria, flank pain, fever or chills.
+
+Past Medical History:
+• Benign prostatic hyperplasia (BPH)
+• Chronic prostatitis
+• Type 2 diabetes mellitus (12‑year history)
+• Hypertension
+• Chronic kidney disease stage 3 (baseline creatinine &gt;1.5 mg/dL)
+• Metabolic syndrome, obesity (BMI 32)
+
+Social/Family History:
+Father had prostate cancer. He has a history of pesticide exposure, high‑fat diet and sedentary lifestyle.
+
+Current Medications:
+None
+
+Allergies:
+NKDA
+
+Review of Systems:
+- Genitourinary: increased frequency, nocturia, weak stream, hesitancy.
+- General: fatigue.
+- Cardiovascular: no chest pain.
+- Endocrine: no weight loss.
+
+Physical Exam:
+- Vitals: BP 160/95 mmHg, HR 88 bpm, Temp 98.6°F, RR 16/min, Weight 112.5 lb, BMI 32.
+- General: Alert, no distress.
+- Abdominal: soft, no suprapubic tenderness.
+- Genitourinary: DRE shows a mildly hard 3‑cm prostate, normal volume, no nodules.
+- Cardiovascular: nontender, normal heart sounds.
+- Extremities: no edema.
+
+Laboratory/Imaging:
+- PSA: 7.8 ng/mL (elevated).
+- HbA1c: 8.2% (poor control).
+- Serum creatinine: 2.1 mg/dL (CKD stage 3).
+- Urinalysis: normal.
+- Renal ultrasound: mild cortical scarring.
+
+Assessment:
+1. Benign prostatic hyperplasia – symptomatic urinary retention.
+2. Elevated PSA with family history – indeterminate; consider prostate cancer.
+3. Uncontrolled hypertension (160/95).
+4. Poorly controlled diabetes (HbA1c 8.2%).
+5. Chronic kidney disease stage 3, likely diabetic nephropathy.
+6. Metabolic syndrome and obesity.
+
+Plan:
+- Initiate finasteride 5 mg daily for BPH.
+- Counsel patient on dietary sodium restriction, low‑fat diet, weight loss goal 5–10% over 6 months, and increased physical activity.
+- Discuss starting an antihypertensive. Plan to initiate an ACE inhibitor (e.g., lisinopril 10 mg daily) after urology recommendation; monitor renal function and potassium.
+- Continue diabetes education; schedule HbA1c in 3 months, consider referral to endocrinology if inadequate control.
+- Urgent urology referral for evaluation of elevated PSA and progressive LUTS; discuss potential prostate MRI/biopsy.
+- Repeat PSA in 3 months to assess trend.
+- Repeat creatinine and eGFR in 6 weeks to monitor CKD progression.
+- Return visit in 4 weeks for BP check and assessment of finasteride tolerance; sooner if symptoms worsen.
+- Educate on prompt reporting of hematuria, sudden worsening fever or back pain.
+
+Follow‑up Recommendations:
+• Urgent urology appointment.
+• Routine primary care follow‑up in 4 weeks.
+• Monitor BP and HbA1c every 3 months.
+• Repeat PSA in 3 months.
+• Continue dietary and exercise plan, reassess weight and BMI monthly.
+• Monitor creatinine and electrolytes every 6 weeks after starting ACEi.
+
+Signature:
+[Provider Name], MD
+Primary Care Physician</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">fatigue</span><span class="pill">urinary frequency (12-15/day)</span><span class="pill">nocturia (4-5/night)</span><span class="pill">weak stream</span><span class="pill">hesitancy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>160/95</td></tr><tr><td>Heart Rate</td><td>88</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>112.5 lbs</td></tr><tr><td>BMI</td><td>32</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 160/95</li><li>HR 88</li><li>mildly hard 3‑cm prostate on DRE</li><li>no suprapubic tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>HbA1c</li><li>Serum creatinine</li><li>Urinalysis</li><li>Renal ultrasound</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA 7.8 ng/mL</li><li>HbA1c 8.2%</li><li>Serum creatinine 2.1 mg/dL</li><li>UA normal</li><li>Ultrasound mild cortical scarring</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated finasteride 5 mg daily</li><li>Counseling on diet and exercise</li><li>Ordered urology follow‑up</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated finasteride well; reported feeling slightly better with fatigue but no change in urinary symptoms yet.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>finasteride 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Benign prostatic hyperplasia</li><li>chronic prostatitis</li><li>type 2 diabetes mellitus (12‑year history)</li><li>hypertension</li><li>chronic kidney disease Stage 3</li><li>family history of prostate cancer in father</li><li>pesticide exposure</li><li>high‑fat diet</li><li>obesity</li><li>sedentary lifestyle</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Mr. Carter presented to his primary care physician reporting increasing urinary frequency, nocturia, and fatigue. Examination revealed a blood pressure of 160/95 mmHg, a BMI of 32 kg/m², and a mildly hard 3‑cm prostate on digital rectal examination. Laboratory testing showed PSA 7.8 ng/mL, HbA1c 8.2 %, and creatinine 2.1 mg/dL. A trans‑abdominal ultrasound confirmed mild cortical scarring of the kidneys. The clinician initiated finasteride 5 mg daily for BPH, reinforced disease‑aware lifestyle modifications, and scheduled an urgent urology referral for definitive evaluation of the suspected prostatic mass.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline suspicion of early prostate cancer with PSA 7.8 and mild BPH. Monitoring of PSA trend planned.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-09-12</h3><div class="visit-meta">Primary Care | Reason: Bladder feels full at all times; worsening urinary urgency</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient reports bladder feels full at all times with worsening urinary urgency, pain during micturition, and occasional dribbling. 
+
+History of Present Illness: 68‑year‑old male with known BPH, chronic prostatitis, T2DM, HTN, CKD stage 3, metabolic syndrome, and obesity. He reports intense bladder pressure, painful urination, occasional dribbling, increased frequency (15‑18 times per day), and marked urgency that interferes with sleep. No hematuria, fever, or flank pain. Symptoms have progressively worsened since his last visit on 2023‑08‑05.
+
+Past Medical History: BPH diagnosed 2 months ago, chronic prostatitis, uncontrolled diabetes with HbA1c 8.2% previously, HTN, CKD stage 3 (baseline creatinine 2.1 mg/dL), metabolic syndrome, obesity.
+
+Medications: Metformin 1000 mg BID, Losartan 50 mg QD, Finasteride 5 mg QD.
+
+Allergies: NKDA.
+
+Physical Examination:
+- Vitals: BP 155/90 mmHg, HR 90 bpm, Temp 98.7 °F, RR 16 /min, Weight 112.5 lb, BMI 32.
+- Genitourinary: DRE reveals a 3‑cm firm prostate, no suprapubic tenderness, normal external urethral meatus.
+- General: BMI 32, otherwise afebrile, no acute distress.
+
+Assessment:
+1. Benign prostatic hyperplasia with significantly elevated PSA (12.4 ng/mL) raising suspicion for prostate carcinoma.
+2. Chronic prostatitis contributing to urinary urgency and frequency.
+3. Possible overactive bladder secondary to prostate enlargement.
+4. CKD stage 3 with mildly worsening creatinine (2.3 mg/dL). Diabetes poorly controlled.
+
+Plan:
+- Initiate urology referral immediately for evaluation of PSA elevation and prostate mass.
+- Order pelvic MRI (already ordered) to assess prostate morphology and identify possible carcinoma.
+- Continue current regimen of finasteride 5 mg; no changes to antihypertensives or antidiabetic medications due to stable BP and glucose levels.
+- Advise patient to maintain fluid intake, avoid alcohol and caffeine, and use anticholinergic trial only if BPH worsens.
+- Schedule repeat PSA, fasting glucose, and serum creatinine in 3 months or sooner if urology indicates.
+- Consider adding a low‑dose alpha‑blocker (e.g., tamsulosin 0.4 mg QD) if urinary symptoms continue to worsen after urology consultation.
+- Discuss lifestyle modifications for T2DM and HTN: weight loss, exercise, dietary sodium restriction.
+
+Follow‑up: Follow up with PCP in 3 months after urology consultation or sooner if symptoms deteriorate. Monitor blood pressure (&lt;140/90) and serum creatinine trends.
+
+Patient is concerned about PSA rise and urinary symptoms; he is agreeable to urology referral and follow‑up plan. No new medication changes made today.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">intense bladder pressure</span><span class="pill">painful urination</span><span class="pill">occasional dribbling</span><span class="pill">increased frequency (15‑18/day)</span><span class="pill">urinary urgency</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>155/90</td></tr><tr><td>Heart Rate</td><td>90</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>112.5 lbs</td></tr><tr><td>BMI</td><td>32</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 155/90</li><li>HR 90</li><li>3‑cm prostate on DRE</li><li>no suprapubic tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>Fasting glucose</li><li>Serum creatinine</li><li>Pelvic MRI</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA 12.4 ng/mL</li><li>Fasting glucose 160 mg/dL</li><li>Serum creatinine 2.3 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ordered pelvic MRI</li><li>Referred to urology</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed concern over increased PSA and urinary symptoms; agreed to proceed with urology referral and follow‑up.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>finasteride 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Previous PCP visit with BPH diagnosis</li><li>history of high PSA (7.8 ng/mL)</li><li>unchanged DRE findings</li><li>no hematuria</li><li>no fevers</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported worsening bladder pressure and discomfort during urination, now noticing pain and dribbling. Physical examination remained unchanged from the previous visit with a 3‑cm prostate on DRE and no suprapubic tenderness. Blood pressure improved slightly to 155/90 mmHg. Laboratory testing revealed a rising PSA of 12.4 ng/mL, fasting glucose 160 mg/dL, and creatinine 2.3 mg/dL. A pelvic MRI was ordered to evaluate for extraprostatic extension and nodal involvement. The patient was referred to urology for staging and discussion of treatment options. No changes to current medication regimen were made at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>PSA increased to 12.4 ng/mL; MRI ordered to assess for extraprostatic extension and nodal disease. Likely progression to T3b stage.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-09-28</h3><div class="visit-meta">Urology | Reason: Evaluation and staging of prostate cancer</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 68‑year‑old male presenting for evaluation and management of prostate‑related urinary symptoms and a newly identified 4‑cm prostate mass with a right pelvic node.
+
+Subjective:
+The patient reports persistent urinary frequency (12–15/day), urgency, painful urination, occasional dribbling, and hesitancy for the past several weeks. He denies hematuria, fever, or chills. He is compliant with metformin, losartan, and finasteride. He expresses preference for proceeding with further evaluation after discussion of options and acknowledges the need for optimization due to CKD stage 3.
+
+Past Medical History: BPH, chronic prostatitis, type 2 DM, hypertension, CKD stage 3, metabolic syndrome, obesity.
+Allergies: NKDA.
+Medications: Metformin 1000 mg BID, Losartan 50 mg QD, Finasteride 5 mg QD.
+
+Objective:
+Vitals: BP 150/88 mmHg, HR 88 bpm, Temp 98.6°F, RR 16/min, Weight 112.5 lb, BMI 32.
+Physical: DRE reveals a mildly hard, non‑nodular, 3‑cm prostate, no suprapubic tenderness.
+Labs from previous visit: PSA 12.4 ng/mL, Creatinine 2.3 mg/dL.
+Imaging: Pelvic MRI (report attached) shows a 4‑cm prostate mass and a 1.5‑cm right pelvic lymph node.
+
+Assessment:
+1. Suspicious prostatic adenocarcinoma (high‑grade tumor with 1.5‑cm node). 
+2. Benign prostatic hypertrophy – still present.
+3. Chronic prostatitis – ongoing.
+4. CKD stage 3 – ongoing renal function impairment.
+
+Plan:
+- Discussed need for prostate biopsy (TRUS‑guided) prior to surgical planning. Patient consents.
+- Due to CKD, will perform MRI without IV contrast and avoid iodinated contrast; nephrology consulted for peri‑operative renal protection.
+- Antihypertensive adjustment: continue losartan 50 mg, add amlodipine 5 mg daily to better control BP. Discontinue finasteride for 4 weeks pending biopsy.
+- Continue metformin as tolerated.
+- Schedule pelvic MRI with non‑contrast protocol and CT chest/abdomen/pelvis (low‑osmolality, if needed) in 2 weeks.
+- Arrange for urology‑on‑call review of pathology results. If malignancy confirmed, discuss options of radical prostatectomy vs radiation therapy considering renal function.
+- Lifestyle modifications: fluid restriction during evening, weight loss, pelvic floor exercises.
+- Follow up in 2 weeks for MRI results and nephrology consult.
+
+The patient remains optimistic and agrees with the plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">urinary frequency</span><span class="pill">painful urination</span><span class="pill">occasional dribbling</span><span class="pill">urinary hesitancy</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>150/88</td></tr><tr><td>Heart Rate</td><td>88</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>112.5 lbs</td></tr><tr><td>BMI</td><td>32</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 150/88</li><li>HR 88</li><li>3‑cm prostate on DRE</li><li>no suprapubic tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pelvic MRI reports</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>MRI: 4‑cm prostate mass with bladder wall infiltration, right pelvic node 1.5 cm</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated pre‑op antihypertensive adjustment (losartan + amlodipine)</li><li>Hold finasteride 4 weeks</li><li>Advised metformin continuation</li><li>Scheduled nephrology consult</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed preference for a definitive surgical approach despite comorbidities; remained optimistic about postoperative recovery.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>finasteride 5 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior PCP visits with rising PSA</li><li>Pelvic MRI findings of 4‑cm prostate mass infiltrating bladder wall, enlarged right pelvic nodes (~1.5 cm)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urologist reviewed the patient’s recent imaging which showed a 4‑cm prostate mass extending into the bladder wall and a right pelvic lymph node measuring 1.5 cm. The digital rectal examination confirmed a mildly hard 3‑cm prostate. The clinician discussed the likely stage T3bN1M0, potential for radical surgery versus radiation, and the limitation posed by chronic kidney disease on contrast studies. A plan to proceed with robot‑assisted radical prostatectomy with bladder cuff excision and bilateral pelvic lymph node dissection was agreed upon. Pre‑operative optimization included switching losartan to a combination of losartan and amlodipine to better control blood pressure, holding finasteride for 4 weeks, continuing metformin, and scheduling a nephrology consult for peri‑operative renal protection.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed T3bN1 disease; prepared for definitive surgical management with consideration of renal function.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-10-06</h3><div class="visit-meta">Urology (Surgeon) | Reason: Robotic-assisted radical prostatectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+Patient reports post‑operative pain in the perineal area, mild nausea, and discomfort from the Foley catheter. No fever, urinary urgency, or hematuria reported. He is satisfied with the surgical care and inquires about adjuvant therapy.
+
+Objective:
+- Post‑operative status after robotic‑assisted radical prostatectomy (operative time 4.2 h). Mild fibrosis noted intra‑operatively.
+- Foley catheter in place with mild drainage.
+- Vital signs: BP 140/85 mmHg, HR 80 bpm, Temp 98.4°F, RR 16/min, Weight 112.5 lbs, BMI 32.
+- Stable hemodynamics, mild postoperative nausea.
+
+Assessment:
+1. Post‑operative pain (perineal and groin). 2. Post‑operative nausea and vomiting (PONV). 3. Catheter‑associated discomfort. 4. No evidence of urinary tract infection or bleeding.
+
+Plan:
+- Continue ondansetron 4 mg PO q8h PRN for nausea; monitor for effectiveness.
+- Initiate acetaminophen 500 mg PO q6h PRN for pain; avoid NSAIDs due to CKD Stage 3.
+- Monitor Foley output; remove catheter in 7–10 days if output &lt;50 mL/h and no bleeding.
+- Educate patient on catheter care, signs of infection (fever, chills, foul discharge), and when to call the office.
+- Discuss adjuvant therapy options (external beam radiotherapy vs. observation) after pathology review.
+- Schedule follow‑up in urology clinic 2 weeks post‑discharge or sooner if symptoms worsen.
+- Arrange pathology review within the next 2 weeks to guide adjuvant therapy decisions.
+- Continue pre‑operative optimization: metformin, losartan, amlodipine.
+
+Follow‑up recommendations: 
+- Discharge in 1–2 days (if stable). 
+- Remove Foley catheter in 7–10 days. 
+- Urology follow‑up in 2 weeks or sooner if pain or drainage increases.
+- Multidisciplinary tumor board review after pathology results.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">post‑operative pain</span><span class="pill">nausea</span><span class="pill">urinary catheter in place</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/85</td></tr><tr><td>Heart Rate</td><td>80</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>112.5 lbs</td></tr><tr><td>BMI</td><td>32</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Foley catheter in place</li><li>stable hemodynamics</li><li>mild postoperative nausea</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Ondansetron for nausea</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported tolerating postoperative course, satisfied with surgical care, and asked about next steps regarding adjuvant therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pre‑operative optimization, finasteride hold, antihypertensive adjustment</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient underwent a robot‑assisted radical prostatectomy with bladder cuff excision and bilateral pelvic lymph node dissection. Intra‑operatively, the surgeon noted mild fibrosis due to chronic prostatitis that prolonged operative time to 4.2 h. Post‑operatively, the patient was placed on a Foley catheter with mild drainage and developed nausea, which was managed with ondansetron. Vital signs remained stable with SBP 140‑150 mmHg and HR 80‑85. No major complications were observed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Surgery completed with 12 lymph nodes removed, 3 positive for metastasis. Pathology pending.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-10-14</h3><div class="visit-meta">Urology | Reason: Post‑operative follow‑up and review of pathology</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑operative follow‑up and review of pathology findings. The patient is a 68‑year‑old male who underwent robotic‑assisted radical prostatectomy 8 days ago for suspected prostate cancer. He presents for post‑operative evaluation, discussion of pathology results, and initiation of adjuvant hormonal therapy.
+
+S: The patient reports no acute complications such as pain, dysuria, hematuria, or fever. He notes mild fatigue and occasional early hot flashes, which he attributes to the initiated androgen deprivation therapy. He denies urinary incontinence, rectal bleeding, or back pain. He is compliant with all current medications and denies any new adverse events.
+
+O: Vitals: BP 143/88 mmHg, HR 82 bpm, Temp 98.5°F, RR 16, Weight 111 lbs, BMI 31.5. Physical exam: No visible perineal or suprapubic tenderness. Foley catheter removed on POD 7; patient voids adequately with mild hesitancy. No urinary tract infection signs. Skin: mild erythema at surgical site with no drainage. Rectal exam: No masses or tenderness.
+
+Lab: Pathology report reviewed: Gleason score 4+4; margin status unclear (pending). Lymph nodes negative. PSA currently 12.4 ng/mL. Preoperative PSA 12.4 ng/mL; post‑op scheduled to recheck at 3 months.
+
+P: The patient is undergoing androgen deprivation therapy with leuprolide every 3 months and enzalutamide daily. He tolerates therapy with manageable hot flashes and fatigue. No evidence of infection or surgical complications. He remains on chronic disease management: metformin, losartan, amlodipine.
+
+Assessment:
+1) Post‑operative prostate cancer management – low‑grade recurrence;
+2) Successful robotic prostatectomy with adequate recovery;
+3) Initiated adjuvant ADT;
+4) Hormonal therapy side effects: mild fatigue, hot flashes;
+5) Chronic conditions – diabetes, HTN, CKD stage 3, metabolic syndrome.
+
+Plan:
+- Continue leuprolide SC 3.6 mg q3 mo and enzalutamide 160 mg PO daily.
+- Continue metformin 2,000 mg/day, losartan 50 mg daily, amlodipine 5 mg daily.
+- Repeat PSA at 1 month, 3 months, then every 3 months.
+- Follow‑up visit in 4 weeks for clinical assessment and PSA.
+- Monitor for side effects of ADT: bone density – plan DEXA in 6 months; CBC and CMP at 3 months.
+- Encourage regular exercise, weight control, fluid intake.
+- Provide patient education on signs of recurrence or infection: fever, chills, abdominal or back pain, urinary symptoms.
+- If PSA rises &gt;0.5 ng/mL or DRE abnormalities, consider imaging (CT/brain).
+- Counsel regarding hot flashes: OTC antiperspirants, beta‑blockers if needed.
+- Ensure CKD‑appropriate medication dosing.
+
+Disposition: Patient oriented and willing to comply with plan. Re‑evaluated next visit.
+
+Overall, patient is doing well post‑operatively and will remain on ADT until evidence of disease progression or intolerability.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">no acute complications</span><span class="pill">mild fatigue</span><span class="pill">early hot flashes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>143/88</td></tr><tr><td>Heart Rate</td><td>82</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>111 lbs</td></tr><tr><td>BMI</td><td>31.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Catheter removed day 7</li><li>no evidence of infection</li><li>mild fatigue</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pathology report</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Gleason 8 (4+4), pT3b, margin positive, 3/12 nodes positive</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated leuprolide 3.6 mg SC q3 months</li><li>Started enzalutamide 160 mg PO daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient expressed determination to pursue all recommended treatments and reported tolerating hormonal therapy with manageable side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li><li>leuprolide 3.6 mg SC q3 months</li><li>enzalutamide 160 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Robotic prostatectomy on 2023‑10‑06</li><li>discharge with Foley removal on 2023‑10‑13</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The urologist reviewed the pathology report showing Gleason 8 (4+4), pT3b with positive anterior margin, and 3 of 12 lymph nodes containing metastatic disease. The patient agreed to commence adjuvant androgen deprivation therapy with leuprolide and enzalutamide. He was informed that external beam radiotherapy (70 Gy) would be scheduled 4 weeks post‑operatively. The patient reported mild hot flashes and fatigue, which were noted. No further intervention was required at the time of this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑operative stage pT3bN1M0 with positive margins; initiating systemic androgen deprivation prior to radiation.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2023-12-10</h3><div class="visit-meta">Medical Oncology | Reason: PSA monitoring after radiation therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 6
+Date: 2023-12-10
+Chief Complaint: PSA surveillance after post‑operative radiation.
+
+History of Present Illness:
+68‑year‑old male with high‑grade (Gleason 4+4) prostate adenocarcinoma treated with robotic‑assisted radical prostatectomy. Post‑operative pathology showed unclear margins and negative lymph nodes. Adjuvant androgen deprivation therapy was started with leuprolide 3.6 mg SC q3 months and enzalutamide 160 mg PO daily. External‑beam radiation was completed approximately 4 weeks after surgery. Patient reports mild dysuria and mild fatigue; denies urinary retention, hematuria, fever, chest pain or constitutional symptoms.
+
+Past Medical History:
+Benign prostatic hyperplasia, chronic prostatitis, type 2 diabetes mellitus, hypertension, chronic kidney disease Stage 3, metabolic syndrome, obesity.
+
+Medications:
+Metformin, Losartan, Amlodipine, Leuprolide, Enzalutamide.
+
+Allergies:
+NKDA.
+
+Review of Systems:
+- Constitutional: mild fatigue.
+- Genitourinary: mild dysuria, no retention or hematuria.
+- Respiratory: no cough, chest pain, or dyspnea.
+- Cardiovascular: no palpitations.
+- Neurologic: none.
+
+Physical Examination:
+Vitals stable: BP 140/85, HR 80, Temp 98.6°F, RR 16, weight 108 lb, BMI 30.8.
+Mild dysuria noted; no acute pain or tenderness.
+
+Investigations:
+- PSA: 10.1 ng/mL (decline from 12.4 ng/mL pre‑operative, modest decrease post‑radiation).
+- CT chest/abdomen/pelvis: new 2.5 cm pulmonary nodule and enlarged sacral lymph node.
+
+Assessment:
+1. PSA is trending downward but imaging reveals potential metastatic disease (lung and nodal). Differential includes metastatic prostate cancer, benign pulmonary nodule, primary lung cancer, post‑radiation pulmonary changes, and local recurrence.
+2. PSA trend and imaging raise concern for disease progression despite ADT and radiation.
+
+Plan:
+- Continue current ADT (leuprolide) and enzalutamide unchanged.
+- Discuss systemic therapy options (docetaxel, cabazitaxel, PARP inhibitor if BRCA mutated, or clinical trial enrollment) with patient and refer for next‑line therapy planning.
+- Order bone scan and consider PET‑CT to assess occult metastatic disease.
+- Repeat PSA monthly until month 3, then every 3 months.
+- Monitor BP, HbA1c, renal function; adjust antihypertensives/diabetes meds as needed.
+- Evaluate bone health: DEXA in 6 months, calcium/vitamin D supplementation.
+- Instruct patient on early signs of progression and advise return promptly if symptoms worsen.
+- Schedule follow‑up in 4 weeks; sooner if clinical status changes.
+
+Signature: [Clinician Name], M.D.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">no urinary retention</span><span class="pill">mild dysuria managed with analgesics</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>140/85</td></tr><tr><td>Heart Rate</td><td>80</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>108 lbs</td></tr><tr><td>BMI</td><td>30.8</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild dysuria</li><li>stable vital signs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PSA</li><li>CT chest/abdomen/pelvis</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PSA 10.1 ng/mL</li><li>CT: pulmonary nodule 2.5 cm, sacral lymph node enlargement</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continued leuprolide and enzalutamide</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reported mild fatigue but remained optimistic about commencing chemotherapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li><li>leuprolide 3.6 mg SC q3 months</li><li>enzalutamide 160 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Adjuvant radiation scheduled 4 weeks post‑op</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncology visit focused on PSA surveillance following completion of external beam radiation. The patient’s PSA was 10.1 ng/mL, a modest decline from the pre‑operative level of 12.4 ng/mL. A CT chest/abdomen/pelvis revealed a new 2.5 cm pulmonary nodule and an enlarged sacral lymph node. Given the rising tumor markers and imaging findings, the patient was diagnosed with metastatic disease (M1a). The oncology team discussed initiating systemic chemotherapy. No changes to androgen deprivation therapy were made at this visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Emergence of distant metastases; transitioning to systemic treatment. PSA trending downward after radiation but insufficient without systemic control.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-01-20</h3><div class="visit-meta">Multidisciplinary Oncology Team | Reason: Discussion of systemic therapy options</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Multidisciplinary Oncology Team Assessment and Plan – 2024-01-20
+
+Chief Complaint: Discussion of systemic therapy options
+
+History of Present Illness: 68‑year‑old male currently on ADT (leuprolide 3.6 mg SC q3 mo) and enzalutamide 160 mg PO daily presents to tumor board for review of disease status after recent imaging and PSA surveillance. He reports persistent fatigue and mild dyspnea on exertion that have been continuing for the past month. No chest pain, orthopnea, or edema. No new urinary symptoms. He states he is compliant with his medications, including metformin, losartan, amlodipine, and has no known drug allergies.
+
+Past Medical History: Benign prostatic hyperplasia, chronic prostatitis, type 2 diabetes mellitus, hypertension, chronic kidney disease stage 3, metabolic syndrome, obesity (BMI 30.5).
+
+Medications: Metformin, losartan, amlodipine, leuprolide 3.6 mg SC q3 mo, enzalutamide 160 mg PO daily. No recent changes.
+
+Allergies: NKDA.
+
+Physical Examination:
+Blood Pressure 138/84 mmHg, Heart Rate 82 bpm, Temperature 98.5 °F, Respiratory Rate 17/min, Weight 107 lb, BMI 30.5. No acute distress, stable vitals. Cardiopulmonary exam unremarkable; lungs clear bilaterally. Abdomen soft, non‑tender. No peripheral edema. No lymphadenopathy noted.
+
+Laboratory Results:
+CBC: Within normal limits (WBC 7.2 ×10⁹/L, ANC 3.8 ×10⁹/L, Hgb 13.1 g/dL, Hct 39%, Platelets 245 ×10⁹/L).
+Renal Function: Creatinine 2.4 mg/dL (baseline 2.1–2.3 mg/dL).
+Bone Scan: No osteolytic lesions; bone involvement appears minimal.
+
+Imaging: CT chest/abdomen/pelvis (performed 2023‑12‑10) revealed a 2.5 cm pulmonary nodule and enlarged sacral lymph node. Current disease status consistent with metastatic castration‑resistant prostate cancer (mCRPC).
+
+Assessment:
+1. Metastatic castration‑resistant prostate cancer with disease progression after definitive local therapy and ADT. Tumor board consensus: proceed with docetaxel chemotherapy to control systemic disease. 
+2. CKD stage 3: docetaxel dose adjusted to 60 mg/m² IV q3 weeks (renal dosing based on eGFR). 5 mg prednisone BID will be given to mitigate neuropathy and steroid‑related side effects. 3. Continued ADT (leuprolide) due to proven benefit. 4. Bone health prophylaxis with zoledronic acid 4 mg IV q6–12 mo. 5. Monitor for cytopenias, neuropathy, nausea, and renal function.
+
+Differential Diagnosis Considered:
+- Metastatic castration‑resistant prostate cancer (primary). 
+- Potential progression of pulmonary nodule—requires PET‑CT to characterize.
+- Steroid‑induced hyperglycemia or hypertension.
+
+Plan:
+A. Start systemic chemotherapy:
+   - Docetaxel 60 mg/m² IV over 1 hour q3 weeks (adjusted for CKD; monitor creatinine before each cycle).
+   - Prednisone 5 mg PO BID starting one day before docetaxel until day 7 of each cycle.
+   - Dexamethasone 8 mg PO BID as antiemetic prophylaxis on day 1 of each cycle.
+B. Bone health:
+   - Zoledronic acid 4 mg IV infusion on day of docetaxel. Calcium 1,200 mg and vitamin D 800 IU orally daily.
+C. Supportive care:
+   - Antiemetic: ondansetron 4 mg PO q8h PRN.
+   - Antidote for neuropathy: maintain adequate hydration; consider gabapentin 300 mg PO q8h if neuropathic pain develops.
+D. Monitoring:
+   - CBC, CMP (including BUN/Cr) and electrolytes preceding each cycle.
+   - PSA every 3 weeks to assess biochemical response.
+   - Check weight and BMI at each visit.
+E. Follow‑up:
+   - Next chemotherapy infusion in 3 weeks; clinic visit 1 day prior for labs and assessment.
+   - Repeat bone scan in 12 weeks to assess bone disease.
+   - PET‑CT in 4 weeks to evaluate pulmonary nodule and sacral lymph node.
+   - Endocrine consult if bone health concerns arise.
+   - Continue routine diabetes and hypertension monitoring; adjust metformin if creatinine &gt;2.5 mg/dL.
+F. Patient education:
+   - Discuss expected side effects (neuropathy, myelosuppression, alopecia, fatigue). 
+   - Encourage adequate oral intake, hydration, and early reporting of fever, chills, or severe nausea.
+   - Reinforce that continuation of ADT is part of the plan.
+G. Consider clinical trial enrollment or second‑line agents (cabazitaxel, PARP inhibitors) if progression after docetaxel.
+
+The patient reviewed the plan, expressed willingness to proceed, and understands the risks and benefits. Signed informed consent for chemotherapy.
+
+Signature: Multidisciplinary Oncology Team
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent fatigue</span><span class="pill">mild dyspnea on exertion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>138/84</td></tr><tr><td>Heart Rate</td><td>82</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>17</td></tr><tr><td>Weight</td><td>107 lbs</td></tr><tr><td>BMI</td><td>30.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Stable BP and HR</li><li>no acute pain</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC with differential</li><li>Renal function panel</li><li>Bone scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>Creatinine 2.4 mg/dL</li><li>Bone scan: no osteolytic lesions yet</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Initiated docetaxel 60 mg/m² q3 weeks</li><li>Prednisone 5 mg BID</li><li>Started zoledronic acid (bisphosphonate)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient agreed to start chemotherapy, willing to manage side effects to maintain quality of life.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li><li>leuprolide 3.6 mg SC q3 months</li><li>enzalutamide 160 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metastatic disease confirmed on 2023‑12‑10</li><li>ongoing hormonal therapy</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a tumor board meeting, the team evaluated the patient’s disease status. Given pT3bN1M1 disease and limited organ reserve, the consensus was to proceed with systemic chemotherapy consisting of docetaxel 60 mg/m² IV every 3 weeks (dose‑adjusted for CKD), prednisone 5 mg BID, while continuing leuprolide. A bisphosphonate agent was added for bone metastasis prophylaxis. The patient was counselled on potential toxicities, supportive care, and the need for regular blood counts.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transition to systemic therapy; metastatic spread confirmed. Adjusted docetaxel dose to accommodate CKD Stage 3.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-03-15</h3><div class="visit-meta">Medical Oncology | Reason: Second cycle of chemotherapy and DVT management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Progression of fatigue and dyspnea on exertion with new left lower extremity swelling. 
+
+History of Present Illness: 68‑year‑old male with metastatic prostate cancer currently on leuprolide, enzalutamide, and docetaxel (second cycle). Reports increasing fatigue over past week and shortness of breath with exertion. Noted swelling and mild tenderness of left calf. On exam left lower extremity swelling, non‑compressible popliteal vein on duplex. Platelets 90 k/µL, INR 1.1. Enoxaparin 1 mg/kg SC daily initiated; docetaxel 60 mg/m² IV given today. Patient adherent to all oral meds and reports no new symptom beyond fatigue and dyspnea. 
+
+Past Medical History: Benign prostatic hyperplasia, chronic prostatitis, type 2 DM, HTN, CKD Stage 3, metabolic syndrome, obesity. 
+
+Medications: enzalutamide 160 mg PO daily; leuprolide 3.6 mg SC q3 mo; docetaxel 60 mg/m² IV q3 weeks; prednisone 5 mg PO BID; enoxaparin 1 mg/kg SC daily; bisphosphonate (zoledronic acid 4 mg IV q6–12 mo); ondansetron 4 mg PO q8h PRN; dexamethasone 8 mg PO BID; calcium 1 200 mg PO daily; vitamin D 800 IU PO daily. 
+
+Assessment: 
+1. Deep venous thrombosis of left lower extremity – confirmed by duplex. 
+2. Thrombocytopenia (platelet 90 k/µL) likely chemotherapy‑induced bone marrow suppression; monitor closely. 
+3. Progressive fatigue and dyspnea – likely multifactorial: anemia secondary to marrow suppression, potential pulmonary embolism, fluid overload, and steroid‑induced hyperglycemia. 
+4. Continued stable disease status on systemic therapy; no evidence of progression on recent imaging.
+
+Plan: 
+• Continue enoxaparin 1 mg/kg SC daily; repeat CBC and platelet count weekly for first 3 weeks of cycle; consider dose adjustment if platelets fall below 50 k/µL. 
+• Repeat duplex ultrasound in 1 week to assess thrombus resolution; if evidence of extension or pulmonary embolism, transition to therapeutic warfarin or increased LMWH dose. 
+• Monitor CBC, CMP, renal function each chemotherapy cycle; keep platelets &gt;50 k/µL before next docetaxel dose. 
+• Continue current androgen deprivation therapy. 
+• Repeat PSA and bone scan in 12 weeks; consider PET‑CT if clinical suspicion of progression increases. 
+• Assess for pulmonary embolism: obtain chest X‑ray; if symptoms worsen, consider CT angiography. 
+• Encourage exercise within tolerable limits; monitor for dyspnea episodes. 
+• Continue calcium/vitamin D supplementation and bisphosphonate per bone health protocol. 
+• Educate patient on signs of bleeding, worsening dyspnea, and DVT symptoms; advise immediate medical contact if any occur.
+
+Follow‑up: 4 weeks from today for repeat CBC, CMP, review thrombosis status, PSA, and clinical assessment.  If platelets remain stable and no new symptoms, proceed with next docetaxel cycle per schedule.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">progressive fatigue</span><span class="pill">dyspnea on exertion</span><span class="pill">new left leg swelling</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>136/82</td></tr><tr><td>Heart Rate</td><td>86</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Weight</td><td>105 lbs</td></tr><tr><td>BMI</td><td>30.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Left leg swelling with mild tenderness</li><li>no skin changes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Complete blood count</li><li>Platelet count</li><li>INR</li><li>Duplex ultrasound of left leg</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Platelets 90 k/µL</li><li>INR 1.1</li><li>Duplex: non‑compressible left popliteal vein – DVT confirmed</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Docetaxel 60 mg/m²</li><li>Prednisone 5 mg BID</li><li>Enoxaparin 1 mg/kg SC daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient tolerated anticoagulation, continues to experience fatigue but remains committed to therapy.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 3</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li><li>leuprolide 3.6 mg SC q3 months</li><li>enzalutamide 160 mg PO daily</li><li>docetaxel 60 mg/m² q3 weeks (completed 1 cycle)</li><li>bisphosphonate</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>First docetaxel cycle completed</li><li>developed left leg swelling diagnosed as DVT</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist noted continued fatigue and dyspnea, as well as a newly detected left lower‑extremity DVT confirmed by duplex ultrasound. Platelet count was 90 k/µL and INR was 1.1. Enoxaparin 1 mg/kg SC daily was initiated for anticoagulation. The chemotherapy line was continued with the second docetaxel dose. The patient reported adherence to medications and noted increased tiredness but no other new symptoms.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Systemic disease burden persisting; thrombosis risk increased; monitoring of blood counts ongoing.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-04-28</h3><div class="visit-meta">Medical Oncology | Reason: Third cycle and assessment of disease progression</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Third cycle of docetaxel and assessment of disease progression.
+
+History of Present Illness: The patient is a 68‑year‑old male with metastatic castration‑resistant prostate cancer (mCRPC) on ADT (leuprolide, enzalutamide) and second cycle of docetaxel. He presents for the third cycle, reporting marked anorexia, 12‑lb weight loss, urinary frequency, urgency, and acute retention requiring intermittent catheterization. Recent imaging shows new pulmonary, hepatic, and bladder lesions. Creatinine has risen to 3.0 mg/dL indicating worsening CKD stage 4.
+
+Review of Systems: Positive for anorexia, weight loss, urinary urgency/frequency, retention, fatigue. No fever, dyspnea at rest, or chest pain reported.
+
+Physical Examination: Vitals: BP 145/90, HR 86, Temp 98.7°F, RR 18, Weight 90 lb, BMI 27.5. Abdomen soft, no palpable masses. Genitourinary: palpable urinary retention, intermittent catheterization in place. No new external lesions.
+
+Assessment: 1. Progression of mCRPC with new pulmonary, hepatic, bladder involvement. 2. Worsening CKD stage 4 with creatinine 3.0 mg/dL. 3. Acute urinary retention likely urodynamic obstruction secondary to bladder wall thickening. 4. Ongoing DVT risk on enoxaparin.
+
+Plan: 1. Continue docetaxel 60 mg/m² IV q3 weeks (cycle 3) with pre‑adjuvant steroid 5 mg PO BID. 2. Monitor CBC and CMP prior to each cycle; hold chemotherapy if ANC &lt; 1.0 × 10⁹/L or creatinine &gt; 1.5 × baseline. 3. Continue enoxaparin 1 mg/kg SC daily; repeat duplex vein US in 4 weeks. 4. Refer urology for bladder imaging and evaluation of retention; consider intermittent catheterization protocol. 5. Discuss palliative radiation to bladder and pulmonary metastases after cycle 3 if patient remains medically stable. 6. Continue supportive care: calcium 1,200 mg PO daily, vitamin D 800 IU PO daily, dexamethasone 8 mg PO BID, ondansetron 4 mg PO q8h PRN. 7. Nutrition consult; consider enteral feeding if appetite not restored. 8. Discuss hospice referral if progression beyond systemic options.
+
+Disposition: Patient elected to proceed with aggressive therapy. He will return for cycle 3 in 3 weeks. Follow‑up appointments: oncology in 2 weeks, urology at convenience, duplex in 4 weeks.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">severe anorexia</span><span class="pill">12‑lb weight loss over 3 months</span><span class="pill">urinary frequency and urgency</span><span class="pill">retention requiring intermittent catheterization</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>145/90</td></tr><tr><td>Heart Rate</td><td>86</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>Respiratory Rate</td><td>18</td></tr><tr><td>Weight</td><td>90 lbs</td></tr><tr><td>BMI</td><td>27.5</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Weight 90 lb</li><li>palpable urinary retention</li><li>no new lesions on physical exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PET/CT</li><li>Renal function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PET/CT: progressive pulmonary and hepatic metastases, residual bladder involvement</li><li>Creatinine 3.0 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continued docetaxel 60 mg/m²</li><li>Prednisone</li><li>Enoxaparin</li><li>Bisphosphonate</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient remains determined to pursue further treatment; reports ongoing pain and fatigue but hopes for a meaningful extension of life.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 4 (creatinine 3.0 mg/dL)</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li><li>leuprolide 3.6 mg SC q3 months</li><li>enzalutamide 160 mg PO daily</li><li>docetaxel 60 mg/m² q3 weeks (completed 2 cycles)</li><li>bisphosphonate</li><li>enoxaparin 1 mg/kg SC daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Continued androgen deprivation and chemotherapy</li><li>multiple cycles of docetaxel</li><li>recent DVT</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist reviewed recent PET/CT imaging showing progressive pulmonary and hepatic metastases, and bladder wall thickening with residual extraprostatic disease. The patient’s creatinine had risen to 3.0 mg/dL, indicating Stage 4 CKD. Urinary symptoms had worsened—frequency, urgency, and acute retention necessitating intermittent catheterization. The physician discussed the possibility of hospice referral but the patient expressed a desire to continue aggressive therapy. A palliative radiation plan was discussed but postponed pending evaluation of further systemic options. The patient was reassured and asked to focus on comfort measures.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Progressive metastatic disease with renal compromise; ongoing urinary complications. Facing transition to palliative focus.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2024-05-30</h3><div class="visit-meta">Palliative Care | Reason: Initiation of palliative therapy and symptom management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of palliative therapy and symptom management.
+
+History of Present Illness:
+68‑year‑old male with metastatic prostate adenocarcinoma currently undergoing systematic chemotherapy (docetaxel 45 mg/m² q3 weeks with prednisone 5 mg BID), androgen deprivation therapy (leuprolide 3.6 mg SC q3 months and enzalutamide 160 mg PO daily) and palliative radiation to bone lesions (lumbar spine, pelvis) and bladder wall. The patient reports worsening low‑back and hip pain, ongoing urinary retention requiring intermittent catheterization, and progressive fatigue. Renal function is deteriorated (CKD stage 4, creatinine 3.0 mg/dL). He remains on a baseline opioid regimen (oxycodone 5 mg PRN), acetaminophen 650 mg PRN, and enoxaparin 1 mg/kg SC daily.
+
+Past Medical History:
+- Benign prostatic hyperplasia, chronic prostatitis
+- Type 2 diabetes mellitus
+- Hypertension
+- Chronic kidney disease Stage 4
+- Metabolic syndrome, obesity (BMI 27.0)
+- Prior DVT (treated 2 months ago)
+
+Medications:
+- Metformin (dose unchanged)
+- Losartan 50 mg PO daily
+- Amlodipine 5 mg PO daily
+- Leuprolide 3.6 mg SC q3 months
+- Enzalutamide 160 mg PO daily
+- Docetaxel 45 mg/m² IV q3 weeks
+- Prednisone 5 mg PO BID
+- Oxycodone 5 mg PO PRN (now titrated to 10 mg PRN for breakthrough pain)
+- Acetaminophen 650 mg PO PRN
+- Enoxaparin 1 mg/kg SC daily
+- Bisphosphonate (zoledronic acid 4 mg IV q6–12 months)
+- Calcium 1200 mg PO daily, Vitamin D 800 IU PO daily
+
+Allergies: NKDA
+
+Review of Systems:
+- Musculoskeletal: Increasing axial and hip pain
+- Genitourinary: Urinary retention, intermittent catheterization
+- General: Fatigue, 12‑lb weight loss over last month
+
+Physical Exam:
+- Vitals: BP 135/85, HR 80, Temp 98.6 °F, RR 17, Weight 88 lb, BMI 27.0
+- Abdomen: Soft, non‑tender
+- Back: Tender to palpation over lumbar spine
+- Pelvis: No masses palpable
+- Bladder: Urinary retention confirmed by bladder scan
+
+Assessment:
+1. Metastatic prostate cancer – bone and bladder wall involvement causing pain and urinary retention. 2. CKD Stage 4 – warrants dose‑adjusted docetaxel and close monitoring of renal function. 3. Opioid analgesia requiring escalation. 4. Chronic fatigue secondary to disease burden and treatment.
+
+Plan:
+- Continue docetaxel 45 mg/m² IV q3 weeks with prednisone 5 mg BID; hold next cycle if ANC &lt; 1.0 × 10⁹/L or Cr &gt; 1.5 × baseline.
+- Increase oxycodone to 10 mg PRN for breakthrough pain; monitor for sedation and constipation.
+- Continue bisphosphonate therapy; obtain calcium and vitamin D labs.
+- Initiate intermittent catheterization for bladder retention; involve urology for bladder imaging.
+- Maintain enoxaparin 1 mg/kg SC daily; repeat duplex US in 4 weeks.
+- Begin home‑care nursing visits for catheter care, side‑effect monitoring (nausea, anemia), and symptom assessment.
+- Obtain CBC, CMP, and PSA 3 days prior to next chemo cycle.
+- Consider palliative radiation to pulmonary lesions once medically stable after third docetaxel cycle.
+- Encourage oral intake, weight monitoring, and nutritional counseling.
+
+Follow‑up:
+- Oncology clinic in 2 weeks (pre‑docetaxel check).  
+- Home‑care visits as scheduled.  
+- Lab monitoring: CBC and CMP before each chemo cycle, creatinine before each cycle, and PSA every 3 weeks while on docetaxel.  
+- Physical reassessment of pain and urinary function weekly.
+
+Patient and family expressed understanding and relief from a clear care plan focused on quality of life.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">worsening pain in lower back and hips</span><span class="pill">ongoing urinary retention</span><span class="pill">fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Blood Pressure</td><td>135/85</td></tr><tr><td>Heart Rate</td><td>80</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>17</td></tr><tr><td>Weight</td><td>88 lbs</td></tr><tr><td>BMI</td><td>27.0</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>painful lumbar spine on palpation</li><li>urinary retention on bladder scan</li><li>no new systemic signs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Baseline CBC for new chemo dose</li><li>Renal panel</li><li>Bone scan for radiation planning</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: mild anemia (Hb 10.5 g/dL)</li><li>Creatinine 3.0 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Docetaxel 45 mg/m² q3 weeks</li><li>Prednisone 5 mg BID</li><li>Palliative radiation to bone and bladder</li><li>Oxycodone 5 mg PRN for pain</li><li>Enoxaparin 1 mg/kg SC daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient acknowledged the shift toward comfort care, reported mild relief of pain after opioid titration, and appreciated the involvement of home care. He remained hopeful for symptom control.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">chronic prostatitis</span><span class="pill">type 2 diabetes mellitus</span><span class="pill">hypertension</span><span class="pill">chronic kidney disease Stage 4</span><span class="pill">metabolic syndrome</span><span class="pill">obesity</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>metformin</li><li>losartan</li><li>amlodipine</li><li>leuprolide 3.6 mg SC q3 months</li><li>enzalutamide 160 mg PO daily</li><li>docetaxel 45 mg/m² q3 weeks</li><li>prednisone 5 mg BID</li><li>bisphosphonate</li><li>enoxaparin 1 mg/kg SC daily</li><li>acetaminophen 650 mg PRN</li><li>oxycodone 5 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Metastatic disease with CKD Stage 4</li><li>multiple chemotherapy cycles</li><li>development of DVT</li><li>persistent urinary symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In the palliative care setting, the physician explained that due to significant disease burden and renal dysfunction, the chemotherapy dose would be reduced to 45 mg/m² and a steroid regimen added to mitigate side effects. Palliative radiation of symptomatic bone lesions (lumbar spine, pelvis) and the bladder wall was initiated. The patient was advised to use intermittent catheterization for urinary retention and prescribed a higher‑dose opioid for breakthrough pain. A multidisciplinary home‑care team was involved to provide nursing support and manage side‑effects (nausea, anemia). The patient and family expressed relief that a clear care plan was in place and agreed to focus on quality of life rather than aggressive oncologic control.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Advanced metastatic prostate cancer with renal insufficiency; transition to palliative intent. Ongoing systemic therapy adapted for organ dysfunction, coupled with symptom‑focused interventions.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span><span class="pill">Weight: 90 lb</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Benign prostatic hyperplasia</span><span class="pill">Chronic prostatitis</span><span class="pill">Diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Metabolic syndrome</span><span class="pill">Chronic kidney disease</span><span class="pill">Metastatic castration‑resistant prostate cancer</span><span class="pill">Deep venous thrombosis</span><span class="pill">Thrombocytopenia</span><span class="pill">Chronic kidney disease stage 4</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Losartan 50 mg PO daily</li><li>Amlodipine 5 mg PO daily</li><li>Leuprolide 3.6 mg SC q3 months</li><li>Enzalutamide 160 mg PO daily</li><li>Docetaxel 45 mg/m² IV q3 weeks</li><li>Prednisone 5 mg PO BID</li><li>Oxycodone 10 mg PO PRN</li><li>Acetaminophen 650 mg PO PRN</li><li>Enoxaparin 1 mg/kg SC daily</li><li>Ondansetron 4 mg PO q8h PRN</li><li>Dexamethasone 8 mg PO BID</li><li>Zoledronic acid 4 mg IV infusion q6–12 months</li><li>Calcium 1200 mg PO daily</li><li>Vitamin D 800 IU PO daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2023-08-05: 68‑year‑old male reports increased urinary frequency (12–15/day), nocturia (4–5/night), weak stream, hesitancy, and fatigue. Vitals: BP 160/95 mmHg, HR 88 bpm, weight 112.5 lb, BMI 32. DRE: mildly hard 3‑cm prostate. PSA 7.8 ng/mL, HbA1c 8.2%, creatinine 2.1 mg/dL. Urinalysis normal. Ultrasound: mild cortical scarring. Started finasteride 5 mg daily. Plan: initiate lisinopril 10 mg daily pending urology recommendation, urgent urology referral, repeat labs in 3 months or 6 weeks.</li><li>Visit on 2023-09-12: 68‑year‑old male with increased urgency, frequency, dribbling, and bladder pressure. Vitals: BP 155/90 mmHg, HR 90 bpm, weight 112.5 lb, BMI 32. Physical exam: firm 3‑cm prostate, no tenderness. PSA 12.4 ng/mL, creatinine 2.3 mg/dL. Ordered PSA, fasting glucose, serum creatinine, and pelvic MRI. Initiated urology referral. No changes to finasteride, metformin, or losartan. Advised lifestyle modifications. Follow‑up PCP in 3 months.</li><li>Visit on 2023-09-28: 68‑year‑old male presented for evaluation of persistent urinary symptoms and newly identified 4‑cm prostate mass with right pelvic node. Vitals: BP 150/88 mmHg, HR 88 bpm, weight 112.5 lb, BMI 32. DRE showed a mildly hard, non‑nodular 3‑cm prostate. Pelvic MRI (non‑contrast) revealed a 4‑cm prostate mass and a 1.5‑cm right pelvic lymph node. Labs: PSA 12.4 ng/mL, creatinine 2.3 mg/dL. Plan: prostate biopsy planned, finasteride discontinued for 4 weeks, amlodipine 5 mg daily added to losartan 50 mg daily. Metformin continued. MRI without IV contrast and CT chest/abdomen/pelvis (low‑osmolality) ordered. Nephrology consulted for peri‑operative renal protection.</li><li>Visit on 2023-10-06: 68‑year‑old male post‑operative from robotic‑assisted radical prostatectomy reports perineal pain, mild nausea, and Foley catheter in place. Vitals: BP 140/85 mmHg, HR 80 bpm, Temp 98.4°F, weight 112.5 lb, BMI 32. Pain controlled with acetaminophen 500 mg PO q6h PRN; nausea with ondansetron 4 mg PO q8h PRN. Catheter to be removed in 7‑10 days; urology follow‑up scheduled 2 weeks post‑discharge.</li><li>Visit on 2023-10-14: 68‑year‑old male post‑operative follow‑up after robotic‑assisted radical prostatectomy. No acute complications; mild fatigue and early hot flashes. Vitals: BP 143/88 mmHg, HR 82 bpm, weight 111 lb, BMI 31.5. Pathology: Gleason 4+4, margin status unclear, lymph nodes negative, PSA 12.4 ng/mL. Initiated adjuvant androgen deprivation therapy with leuprolide 3.6 mg SC q3 months and enzalutamide 160 mg PO daily. Continued metformin, losartan, amlodipine. Plan: repeat PSA at 1 month, 3 months, then every 3 months; follow‑up in 4 weeks; DEXA in 6 months; monitor for ADT side effects. No new allergies.</li><li>Visit on 2023-12-10: 68‑year‑old male on ongoing ADT (leuprolide q3 months and enzalutamide) presents for PSA surveillance after completion of external‑beam radiation. Reported mild dysuria and mild fatigue; denied retention, hematuria, fever, or chest pain. Vitals: BP 140/85, HR 80, Temp 98.6 °F, weight 108 lb, BMI 30.8. Physical exam unremarkable except mild dysuria. PSA 10.1 ng/mL (down from 12.4). CT chest/abdomen/pelvis revealed a new 2.5 cm pulmonary nodule and enlarged sacral lymph node. Plan: continue current ADT and enzalutamide; discuss next‑line systemic therapy options (docetaxel, cabazitaxel, PARP inhibitor if BRCA mutated, or clinical trial enrollment), order bone scan and consider PET‑CT, repeat PSA monthly until 3 months then q3 months, monitor BP, HbA1c, renal function, schedule bone health assessment (DEXA in 6 months, calcium/vitamin D supplementation), and follow‑up in 4 weeks.</li><li>Visit on 2024-01-20: 68‑year‑old male on ADT (leuprolide) and enzalutamide discussed systemic therapy options; initiated docetaxel 60 mg/m² IV q3 weeks, prednisone 5 mg PO BID, zoledronic acid 4 mg IV infusion q6–12 months, ondansetron 4 mg PO q8h PRN, dexamethasone 8 mg PO BID, calcium 1,200 mg PO daily, vitamin D 800 IU PO daily. Plan: monitor CBC, CMP, PSA every 3 weeks; repeat bone scan at 12 weeks; PET‑CT at 4 weeks; continue diabetes and hypertension management.</li><li>Visit on 2024-03-15: 68‑year‑old male on ADT and docetaxel (second cycle) presented with progressive fatigue, dyspnea on exertion, and new left lower extremity swelling. Duplex ultrasound confirmed non‑compressible popliteal vein, indicating deep venous thrombosis. Initiated enoxaparin 1 mg/kg SC daily. Platelet count 90 k; continued current therapy. Follow‑up labs and duplex ultrasound scheduled.</li><li>Visit on 2024-04-28: 68‑year‑old male on ADT and docetaxel continues for third cycle, reports severe anorexia, 12‑lb weight loss (90 lb), urinary frequency, urgency, and acute retention requiring intermittent catheterization. Imaging shows new pulmonary, hepatic, and bladder lesions; creatinine rose to 3.0 mg/dL indicating worsening CKD stage 4. Plan: continue docetaxel 60 mg/m² IV q3 weeks with prednisone and pre‑adjuvant steroids; monitor CBC/CMP before each cycle and hold if ANC &lt; 1.0 × 10⁹/L or creatinine &gt; 1.5 × baseline; continue enoxaparin 1 mg/kg SC daily; refer urology for bladder imaging and retention management; consider palliative radiation to bladder and pulmonary lesions after cycle 3 if medically stable; supportive care with calcium, vitamin D, dexamethasone, ondansetron; nutrition consult for weight stabilization; follow‑up oncology in 2 weeks, duplex US in 4 weeks.</li><li>Visit on 2024-05-30: 68‑year‑old male on palliative docetaxel and ADT presents with worsening low‑back and hip pain, urinary retention requiring intermittent catheterization, and progressive fatigue. Vitals: BP 135/85, HR 80, Temp 98.6°F, Weight 88 lb, BMI 27.0. Labs ordered: CBC, renal panel, bone scan. Medications updated: docetaxel dose decreased to 45 mg/m² q3 weeks, prednisone 5 mg BID, oxycodone titrated to 10 mg PRN for breakthrough pain, acetaminophen 650 mg PRN. Enoxaparin 1 mg/kg SC daily continued. Plan: continue current therapy, initiate intermittent catheterization, involve urology, schedule home‑care visits, monitor CBC/CMP before each chemo cycle, consider palliative radiation to pulmonary lesions after third cycle. Follow‑up oncology in 2 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 4dbaeed8</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 4dbaeed8</h1><div class="subtitle">Major Depressive Episode | Female, 38</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Generalized Anxiety Disorder, Panic Disorder, Social Anxiety Disorder, Post‑Traumatic Stress Disorder, Substance Use Disorder, Hypertension, Diabetes Mellitus, Obesity, Chronic Pain Conditions</div><div class="meta-line">Risk Factors: Family History of Mood Disorders, Major Life Stressors or Trauma, Chronic Medical Illness, Hormonal Changes (Pregnancy, Menopause), Substance Use, Unemployment or Financial Strain, Sleep Deprivation</div></div>
+<details><summary>Narrative <span class="preview-text">**A Narrative of Maria C.’s Major Depressive Episode and Progress Toward Recovery**  **April 1 – “The First Night of Wak...</span></summary><div class="section-body"><p>**A Narrative of Maria C.’s Major Depressive Episode and Progress Toward Recovery**</p><p>**April 1 – “The First Night of Waking”**</p><p>Maria, a 38‑year‑old woman, came to the urban primary‑care clinic feeling *“constantly drained”* and *“worse than ever”*. She reported that for the last month her appetite had shrunk to a couple of spoonfuls of oatmeal each morning, and she had lost 12 kg (26 lb) in that same period. Her sleep had become a frantic scramble: she could only fall asleep after a full hour of tossing, and when she did, she woke every two to three hours with a racing heart.</p><p>She also described a “thunder in her chest” that began as an odd feeling on weekends then progressed into panic attacks—short‑duration, with sweaty palms and an intense fear of fainting—in the middle of the day. When she tried to talk to anyone about her worries, she felt people would judge her; this, she admitted, had made her isolate in the last month.</p><p>Maria’s chart was dense with chronic medical problems: a 10‑year history of hypertension (currently on lisinopril 20 mg), type 2 diabetes (HbA1c 8.5 % two months ago), obesity (BMI 38), chronic lower back pain radiating to the right leg, and a long‑standing diagnosis of Generalized Anxiety Disorder (GAD), Social Anxiety Disorder, and Post‑Traumatic Stress Disorder (PTSD) stemming from a car accident she had lived with for five years. She was unemployed two months prior (job loss due to company downsizing) and had been drinking light beer one or two times a week—a pattern she reported had “just gotten out of hand.” A family history of depression and bipolar disorder in her parents further clouded her mind with dread.</p><p>**April 3 – “First Psychiatric Evaluation”**</p><p>After a brief physical exam and routine labs—CBC, CMP, fasting glucose, lipid panel—her primary‑care physician, Dr. Patel, referred Maria to a community mental‑health clinic. A psychiatrist, Dr. Nguyen, met her on April 5. She described Maria’s symptoms within DSM‑5 criteria for a Major Depressive Episode: three or more symptoms (depressed mood, anhedonia, poor concentration, feelings of worthlessness, sleep disturbance, appetite change) lasting more than two weeks, with psychosocial impairment (loss of job, strained relationships). An elevated PHQ‑9 score of 22 (severe depression) and GAD‑7 of 17 (severe anxiety) confirmed the clinical picture.</p><p>**April 6 – “Treatment Plan—Medications &amp; Therapy”**</p><p>Dr. Nguyen initiated a dual‑track treatment plan:</p><p>1. **Medication:** Started Sertraline 25 mg daily (a “proven” SSRI with anxiolytic properties), noting that the patient’s chronic pain, hypertension, and diabetes made duloxetine a potential future alternative because of its dual SNRI effect on pain.</p><p>2. **Therapeutic Modalities:**
+   - Cognitive‑Behavioral Therapy (CBT) for depression and anxiety, 12 weekly 60‑minute sessions, starting April 12.
+   - Trauma‑Focused CBT (specific to PTSD) for the car‑accident trauma, concurrently with general CBT, with an additional 8 sessions slated for June.
+   - Substance‑Use Counseling (motivational interviewing), one 45‑minute session initially, then weekly group sessions at the community center.</p><p>3. **Lifestyle &amp; Social Support:** 
+   - Referral to a dietitian for diabetes‑friendly weight‑loss plan.
+   - Enrollment with a local social worker to explore unemployment benefits, small‑business aid, and financial counseling.
+   - Introduction to a chronic pain clinic on April 20 for physical therapy and pain management review.</p><p>**April 12–25 – “First Weeks of Medication”**</p><p>Maria started sertraline on the evening of April 6. Within the first week she noticed a slight, but welcome, reduction in the intensity of her panic attacks – they became brief, lasting only 10–12 minutes instead of an hour. By the second week, she reported sleeping through the night about half of the time and feeling “a little less numb” when she went to the gym for her usual low‑impact cardio. However, her weight remained stable at 122 kg, and she still avoided conversations.</p><p>**May 5 – “Clinical Decision Point–Sertraline Titration”**</p><p>At her first follow‑up visit, Dr. Nguyen noted that Maria’s PHQ‑9 had dropped to 18 and GAD‑7 to 13. She still reported a loss of interest in almost all activities, appetite decreased further (now minimal snacking), and she denied suicidal ideation. Given partial response, sertraline was increased to 50 mg nightly. A follow‑up appointment was set for May 12.</p><p>**May 12 – “Escalation of Therapy &amp; Substance Use Assessment”**</p><p>Dr. Nguyen praised Maria’s engagement and highlighted her improvement in pain management (she was tolerating a new physical therapy regimen focused on lumbar strengthening). She noted Maria’s substance use: the patient had admitted to 2‑3 beers on weekdays and 4 on weekends, but the frequency had decreased from “nearly daily” to “once every other day.” In the interim, Maria had started a short‑term “detox” workshop (24 hours of detox and an after‑care intake) that had helped her become acutely aware of withdrawal symptoms and craving patterns. Dr. Nguyen decided to continue with the 50 mg dosage and maintain the same therapy structure.</p><p>**June 1 – “Duloxetine Trial and Pain Control”**</p><p>In June, Maria’s chronic back pain had become worse after a recent lifting incident at a volunteer event. The pain clinic reviewed her plan: while sertraline was working for mood, it wasn’t addressing neuropathic pain. Dr. Nguyen offered a switch to duloxetine 30 mg nightly—a medication that could address both depression and nerve pain—and informed Maria of potential side effects (nausea, dry mouth) and need for monitoring of blood pressure and glucose levels.</p><p>Maria consented. The week after the switch, her PHQ‑9 dropped to 13, and her back pain rating decreased from 8/10 to 5/10. Her anxiety symptoms lessened; GAD‑7 fell to 9.</p><p>**June 15 – “Stabilization &amp; Lifestyle Gains”**</p><p>During her physical therapy appointment, Maria reported that her energy levels had improved sufficiently that she could hike a 3‑mile trail for the first time in months. She had regained a small amount of appetite and was eating a balanced diet; her dietitian noted a 4 lb weight loss in four weeks (116 kg). Her HbA1c had improved to 7.8 %—a measurable benefit from better control of blood glucose via diet and exercise. Her blood pressure was now a stable 132 / 80 under duloxetine and lisinopril therapy.</p><p>**July 1 – “CBT Success &amp; Social Anxiety Breakthrough”**</p><p>By the seventh CBT session, Maria had successfully identified one negative core belief—“I am useless and will never find work”—and was working to challenge it. She had also begun to “invite” a coworker (at the community center she volunteered) to a coffee break, despite the social anxiety fear. She reported feeling proud and her PHQ‑9 fell to 9. She also noted the “panic spikes” were less frequent (1–2 per week instead of daily).</p><p>**August 3 – “Reaching the ‘Improving’ Milestone”**</p><p>Maria’s PHQ‑9 was now 6 (minimal depression) and GAD‑7 was 5 (mild anxiety). She had returned to part‑time work at a local nonprofit, earning a modest stipend, which reduced her financial strain. Her social worker helped her apply for a small‑business loan to start a freelance web‑design service based on her graphic‑design portfolio—a project that had been a dream for years. She had ceased all alcohol consumption during the past 10 weeks, verified by a negative urine screen during a scheduled group counseling session.</p><p>**August 20 – “Final Clinical Decision‐Point: Medication Tapering”**</p><p>Given the sustained improvement, Dr. Nguyen and Maria discussed tapering duloxetine. Maria agreed to maintain her dose for two more months to ensure stability, with an additional check of her pain scales and blood sugar. Dr. Nguyen emphasized continued engagement in therapy even after medication taper, but Maria felt confident and was planning a modest “maintenance” CBT schedule of one bi‑monthly check‑in.</p><p>**September 15 – “Course of Recovery”**</p><p>One month after the planned duloxetine taper, Maria reported feeling “more like myself than before.” Her PHQ‑9 was 2 (no clinically significant depression), and she had maintained her weight and blood sugar within target ranges. Her anxiety, while still present, had become manageable—she could attend social gatherings with brief, pre‑planned self‑regulation techniques taught in CBT. Her chronic back pain was now only mild, and she had begun taking a 30‑minute walk in the park every morning.</p><p>Her journey, while marked by severe early symptoms and a constellation of comorbid conditions, had progressed through a structured, multi‑modal intervention. Family health history, financial hardship, and hormonal shifts had initially amplified her risk, but a coordinated approach that addressed medication, psychotherapy, substance use, chronic pain, and psychosocial factors fostered a trajectory toward recovery. The story left an outline for a future where Maria could continue to thrive, with periodic clinical checkpoints to forestall relapse and maintain her hard‑earned resilience.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button><button class="">Visit 11</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-04-01</h3><div class="visit-meta">Primary Care | Reason: Severe fatigue, appetite loss, sleep disturbance</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Maria presents with persistent fatigue, loss of appetite, chronic sleep difficulty, and panic attacks that have led to a 12‑kg weight loss over the past few months.
+
+**History of Present Illness:** 38‑year‑old female with known HTN, T2DM, obesity, chronic lower back pain, and multiple anxiety disorders reports constant fatigue and inability to maintain appetite or sleep. She experiences panic episodes and social withdrawal. Unemployed for 2 months and reports light alcohol use. No new medications.
+
+**Past Medical History:** Hypertension – lisinopril 20 mg; Type 2 DM – HbA1c 8.5%; Obesity (BMI 38); Chronic lower back pain radiating to right leg; Generalized anxiety disorder; Social anxiety disorder; PTSD; Substance use disorder (light alcohol). No prior psychiatric medication.
+
+**Review of Systems:** Positive for fatigue, anorexia, insomnia, anxiety, panic attacks, social withdrawal. Denies fever, chills, orthostatic symptoms, palpitations, chest pain, shortness of breath.
+
+**Physical Examination:**
+- Vitals: BP 152/90 mmHg, HR 90/min, T 98.6°F, RR 16/min, Weight 122 kg, BMI 38.0
+- General: Obese female, alert, anxious.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Respiratory: Clear to auscultation bilaterally.
+- Abdomen: Soft, non‑tender, no organomegaly.
+- Extremities: No edema.
+- Back: Mild tenderness over lumbar spine, no neurologic deficits noted.
+
+**Diagnostic Work‑up:** Routine labs ordered – CBC, CMP, fasting glucose, lipid panel.
+
+**Assessment:** Unexplained weight loss, profound fatigue, anorexia, insomnia, and panic attacks in a patient with uncontrolled chronic conditions. Primary differentials:
+1. Major depressive disorder with somatic symptoms
+2. Generalized anxiety disorder / PTSD exacerbation
+3. Chronic fatigue syndrome
+4. Hypothyroidism or other endocrine disorder
+5. Anemia, electrolyte or metabolic derangements (CBC/CMP pending)
+6. Sleep apnea (given obesity and nocturnal symptoms)
+7. Uncontrolled diabetes mellitus contributing to fatigue and weight loss
+
+**Plan:**
+- Await lab results; pending CBC and CMP may reveal anemia or thyroid dysfunction.
+- Initiate referral to community mental‑health clinic for comprehensive psychological assessment and potential initiation of SSRI/SNRIs and CBT.
+- Continue lisinopril 20 mg BID; review BP control after labs. Consider adding a thiazide if HTN remains uncontrolled.
+- Intensify diabetes management: Review diet, encourage exercise, and consider adding a GLP‑1 agonist for weight loss and glycemic control.
+- Encourage sleep hygiene strategies; consider formal sleep study if symptoms persist.
+- Schedule follow‑up in 4 weeks to review lab results, medication changes, and psychiatric referral progress.
+- Provide resources for coping with anxiety (breathing exercises, mindfulness app). Reinforce safe alcohol use.
+- Educate patient on signs of worsening psychiatric status (thoughts of self‑harm) and ensure 24‑hour crisis line contact.
+
+**Disposition:** Patient agreed to psychiatric referral and to await lab results. Referred to clinic for mental health evaluation and scheduled return visit in 4 weeks.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Constant fatigue</span><span class="pill">Loss of appetite</span><span class="pill">Chronic sleep difficulty</span><span class="pill">Panic episodes</span><span class="pill">Social withdrawal</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>152/90</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>122 kg</td></tr><tr><td>BMI</td><td>38</td></tr><tr><td>Fasting Glucose</td><td>180 mg/dL</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 38</li><li>BP 152/90</li><li>Normal heart sounds</li><li>Mild back tenderness</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Fasting glucose</li><li>Lipid panel</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referral to psychiatric clinic</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span><span class="pill">Substance use disorder (light alcohol)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>10-year hypertension on lisinopril 20 mg</li><li>Type 2 diabetes, HbA1c 8.5%</li><li>Obesity (BMI 38)</li><li>Chronic lower back pain radiating to right leg</li><li>Generalized anxiety disorder</li><li>Social anxiety disorder</li><li>Post-traumatic stress disorder</li><li>Unemployment for 2 months</li><li>Light alcohol use (1–2 beers per week)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Maria presented to the urban primary‑care clinic reporting persistent fatigue and severe depressive symptoms. She described a dramatic 12‑kg weight loss, disturbed sleep, and panic attacks. A brief physical exam was performed, and routine labs (CBC, CMP, fasting glucose, lipid panel) were ordered. The physician noted the constellation of symptoms meeting DSM‑5 criteria for a major depressive episode and planned referral to a community mental‑health clinic for psychiatric evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline major depressive episode with somatic comorbidities; no pharmacologic treatment initiated yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-04-05</h3><div class="visit-meta">Psychiatry | Reason: Psychiatric evaluation for mood and anxiety symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 38‑year‑old female with a complex psychiatric history presenting for a psychiatric evaluation.  She reports intense depressive and anxiety symptoms since losing her job a few weeks ago.  Current symptoms include a pervasive depressed mood, anhedonia, poor concentration, a constant sense of worthlessness, insomnia, diminished appetite, recurrent panic attacks triggered by social situations, and social isolation.  She is emotionally tear‑prone but remains alert without evident psychomotor retardation.
+
+She has known medical comorbidities: hypertension (BP 145/85), type 2 diabetes mellitus (HbA1c pending, fasting glucose 180 mg/dL from last visit), obesity (weight 122 kg, BMI 38), chronic lower back pain, and light alcohol use (1–2 beers per week).  Current medications: lisinopril 20 mg daily, metformin 500 mg BID; no adverse reactions reported.
+
+PHQ‑9 total 22 (moderate‑to‑severe depression) and GAD‑7 17 (moderate‑to‑severe general anxiety).  A comprehensive psychiatric interview confirmed major depressive disorder, generalized anxiety disorder, social anxiety disorder, and PTSD related to a car accident five years prior.
+
+Assessment:
+• Major Depressive Disorder, moderate‑to‑severe
+• Generalized Anxiety Disorder
+• Social Anxiety Disorder
+• Post‑Traumatic Stress Disorder
+• Substance Use Disorder (light alcohol)
+• Hypertension uncontrolled (BP 145/85 on lisinopril 20 mg)
+• Type 2 Diabetes Mellitus poorly controlled (glucose 180 mg/dL)
+• Obesity, BMI 38
+
+Plan:
+1. Initiate Sertraline 25 mg orally once daily.  Plan to titrate weekly by 25 mg as tolerated, targeting 100 mg daily over 4–6 weeks.
+2. Enroll patient in weekly CBT for depression and anxiety beginning 12‑Apr‑2024.
+3. Initiate Trauma‑Focused CBT for PTSD.
+4. Refer to substance‑use counseling (motivational interviewing and relapse prevention).
+5. Refer to a dietitian for diabetes/obesity management and to a social worker to address unemployment and financial stress.
+6. Monitor for antidepressant side effects and suicidal ideation: weekly phone/email check‑in until stable and medication titrated.
+7. Repeat fasting glucose, HbA1c, lipid panel, and CMP in 4 weeks; consider adding GLP‑1 agonist if glucose remains &gt;140 mg/dL.
+8. Reassess BP, weight, and medication adherence in 2 weeks.
+9. Encourage sleep hygiene, regular exercise, and stress‑management techniques.
+
+Follow‑up: Patient scheduled for a follow‑up visit in 2 weeks to review medication response, side effects, and lab results; to evaluate the need for dosage adjustment of lisinopril and initiation of a thiazide if hypertension remains uncontrolled.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Depressed mood</span><span class="pill">Anhedonia</span><span class="pill">Poor concentration</span><span class="pill">Worthlessness</span><span class="pill">Sleep disturbance</span><span class="pill">Appetite loss</span><span class="pill">Panic attacks</span><span class="pill">Social isolation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/85</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temperature</td><td>98.7°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>122 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Hearing normal</li><li>Normal speech rate</li><li>No psychomotor retardation</li><li>Energized yet tear‑prone mood</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg daily prescription</li><li>CBT referral</li><li>Trauma CBT referral</li><li>Substance‑use counseling referral</li><li>Dietitian referral</li><li>Social worker referral</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span><span class="pill">Substance use disorder (light alcohol)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Light alcohol use (1–2 beers per week)</li><li>Unemployment</li><li>Recent job loss due to layoffs</li><li>History of panic attacks since car accident five years ago</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Dr. Nguyen conducted a comprehensive psychiatric interview. The PHQ‑9 score was 22 and the GAD‑7 score 17. DSM‑5 criteria for a Major Depressive Episode were met. Sertraline 25 mg daily was prescribed, with a recommendation for weekly dose escalation. Cognitive‑Behavioral Therapy (CBT) for depression and anxiety was arranged starting April 12, along with Trauma‑Focused CBT for PTSD. Substance‑use counseling was ordered, and a dietitian and social worker were referred.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initiated pharmacologic treatment with sertraline; established psychotherapy plan.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-04-06</h3><div class="visit-meta">Psychiatry | Reason: Medication initiation and safety check</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Initiation of sertraline and safety assessment.
+
+History of Present Illness: 38‑year‑old female with known generalized anxiety disorder, social anxiety disorder, PTSD, MDD, hypertension, type 2 diabetes, obesity, chronic lower back pain, and light alcohol use. She reports persistent depressed mood, anhedonia, and brief panic attacks. She has just begun sertraline 25 mg daily on 2024‑04‑05 per prior psychiatric visit.
+
+Past Psychiatric History: Initiated sertraline 25 mg daily on 2024‑04‑05. No prior SSRI use. Baseline depressive and anxiety symptoms documented in previous visits. No suicidality noted.
+
+Past Medical History: HTN, T2DM, obesity BMI 38, chronic low back pain, substance use disorder (light alcohol).
+
+Medication Review: Lisinopril 20 mg daily, Metformin 500 mg BID, Sertraline 25 mg QHS. No changes or additions during this visit.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for depressed mood, anhedonia, brief panic attacks. Denies suicidal ideation, homicidal ideation, recent changes in weight or appetite beyond prior loss. Respiratory, cardiovascular, GI, GU, musculoskeletal review negative for acute complaints.
+
+Physical Examination: General appearance: Well‑appearing, no acute distress. Vitals: BP 140/80 mmHg, HR 85 bpm, Temp 98.6°F, RR 16/min, weight 122 kg. Cardiovascular, pulmonary, abdominal, musculoskeletal exam normal.
+
+Assessment:
+1. Major Depressive Disorder – stable on low‑dose sertraline; continued monitoring of mood, anhedonia, and panic.
+2. Generalized Anxiety Disorder – mild to moderate, continuing with sertraline and CBT.
+3. PTSD, Social Anxiety Disorder – ongoing treatment with trauma‑focused CBT.
+4. Hypertension – BP 140/80, controlled on lisinopril 20 mg QD.
+5. T2DM – fasting glucose 180 mg/dL, stable on metformin 500 mg BID.
+6. Obesity – BMI 38, weight 122 kg.
+
+Plan:
+- Continue sertraline 25 mg nightly; advise to take with food to mitigate nausea, monitor for dry mouth, orthostatic hypotension.
+- Continue lisinopril 20 mg QD and metformin 500 mg BID.
+- Reinforce safety plan: report any severe side‑effects such as dizziness, fainting, or significant nausea.
+- Continue CBT and trauma‑focused CBT sessions; schedule next counseling session in 1 week.
+- Maintain sleep hygiene education; consider sleep diary.
+- Order baseline labs from previous visit: CBC, CMP, fasting glucose, HbA1c, lipid panel in 4 weeks.
+- Telehealth check‑in in 3 days to assess tolerability of sertraline and symptom changes.
+- Schedule next psychiatry follow‑up in 4 weeks.
+- Encourage regular physical activity and dietitian follow‑up for weight management.
+
+No new tests ordered at this time.
+
+Education &amp; Counseling: Reviewed sertraline dosing schedule, potential side‑effects, and safety plan. Patient verbalized understanding and intent to report adverse events.
+
+Signed: [Clinician Name], MD</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Depressed mood</span><span class="pill">Anhedonia</span><span class="pill">Panic attacks (now brief)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/80</td></tr><tr><td>HR</td><td>85</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>122 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 140/80</li><li>Stable vital signs</li><li>No acute distress</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Counseling on sertraline administration</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span><span class="pill">Substance use disorder (light alcohol)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Sertraline 25 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Starting sertraline 25 mg</li><li>Continued baseline medical conditions</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient verified first dose of sertraline. Advised to take before sleep; warned of potential nausea, dry mouth, and orthostatic hypotension. Discussed side‑effect monitoring and safety plan. Reviewed medication schedule and confirmed intent to report any adverse events. Advised to maintain consistent sleep hygiene.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Medication established; first dose tolerated without major adverse events.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-05-05</h3><div class="visit-meta">Psychiatry | Reason: Follow‑up for medication titration</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Date: 2024‑05‑05
+Chief Complaint: Follow‑up for medication titration.
+
+Subjective: 38‑year‑old female with GAD, PTSD, and depressive symptoms reports ongoing low mood, reduced interest in activities, ongoing panic episodes, and minimal snacking. She reports a PHQ‑9 score of 18 and a GAD‑7 score of 13, indicating partial improvement since last visit.
+
+Objective: Vitals: BP 138/78 mmHg, HR 84 bpm, Temp 98.5°F, RR 16/min, Weight 122 kg. Mental status exam: alert, oriented, normal affect, no suicidal ideation. No acute distress.
+
+Assessment: 1) Major Depressive Disorder, current episode, moderate severity – partial response to SSRI. 2) Generalized Anxiety Disorder – moderate severity. 3) PTSD – ongoing symptoms. 4) Substance Use Disorder – light alcohol use, no current impairment. 5) Hypertension, well‑controlled. 6) Diabetes mellitus type 2, controlled but requires ongoing monitoring. 7) Obesity – BMI 38.2. 8) Chronic lower back pain – stable.
+
+Plan: 1) Increase Sertraline from 25 mg nightly to 50 mg nightly to enhance antidepressant and anxiolytic efficacy; monitor for serotonin syndrome, GI upset, insomnia, and weight gain.
+2) Continue Lisinopril 20 mg daily and Metformin 500 mg BID.
+3) Encourage continuation of CBT and trauma‑focused CBT; schedule next weekly session.
+4) Continue substance‑use counseling as per referral.
+5) Advise patient to keep a mood and side‑effect diary; review at next visit.
+6) Order repeat PHQ‑9 and GAD‑7 in 4 weeks; repeat weight and BP in 2‑week intervals.
+7) Reinforce sleep hygiene, regular exercise and dietitian follow‑up for weight management.
+8) If new or worsening side–effects, adjust dosing or consider alternative SSRI.
+
+Follow‑up: Return to psychiatry clinic in 4 weeks (or sooner if emergent side effects). Tele‑health check‑in scheduled 2 weeks from now.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Ongoing low mood</span><span class="pill">Reduced interest in activities</span><span class="pill">Continued panic episodes</span><span class="pill">Minimal snacking</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/78</td></tr><tr><td>HR</td><td>84</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>122 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 138/78</li><li>Normal mental status exam</li><li>No acute distress</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline dose increase to 50 mg nightly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span><span class="pill">Substance use disorder (light alcohol)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Sertraline 25 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 25 mg daily for 3 weeks</li><li>Partial response: PHQ‑9 18, GAD‑7 13</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>PHQ‑9 decreased to 18 and GAD‑7 to 13, indicating partial improvement. Increased sertraline dose to 50 mg nightly to enhance efficacy while monitoring for side effects. Reviewed continuation of CBT and trauma CBT schedules, and substance‑use counseling plan. Advised to track mood and side‑effects in a diary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Dose escalation to 50 mg; monitoring ongoing response.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-05-12</h3><div class="visit-meta">Psychiatry | Reason: Therapy progress and substance use assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 
+	- Therapy progress and substance use assessment
+
+History of Present Illness: 
+	Patient is a 38‑year‑old female with a complex psychiatric and medical history who presents for routine psychiatric follow‑up. She reports ongoing improvement across several domains: mood is slightly improved, panic episodes have reduced in frequency, and alcohol consumption has decreased to 2–3 beers on weekdays and 4 on weekends from nearly daily use. She attributes these gains to continued sertraline therapy, weekly CBT and trauma‑focused sessions, and participation in substance‑use counseling. She denies new or worsening depressive symptoms, suicidal ideation, or thoughts of self‑harm.
+
+Past Psychiatric History: 
+	- Major depressive disorder
+	- Generalized anxiety disorder
+	- Social anxiety disorder
+	- Post‑traumatic stress disorder
+	- Substance use disorder (light alcohol)
+
+Past Medical History: 
+	- Hypertension
+	- Diabetes mellitus type 2
+	- Obesity
+	- Chronic lower back pain
+
+Current Medications: 
+	- Lisinopril 20 mg once daily
+	- Metformin 500 mg twice daily
+	- Sertraline 50 mg nightly
+
+Allergies: None known.
+
+Mental Status Exam: 
+	- Appearance: Well‑appearing, dressed appropriately
+	- Mood: Mildly improved, cooperative
+	- Affect: Calm, congruent
+	- Thought process: Goal‑directed, logical
+	- Thought content: No delusions, no hallucinations, no SI/HI
+	- Cognition: Alert and oriented ×3
+	- Insight: Good
+	- Judgment: Intact
+
+Vitals: 
+	BP 136/76 mmHg, HR 82 bpm, Temp 98.6°F, RR 16/min, Weight 121.5 kg
+
+Assessment: 
+1. Major depressive disorder – partial response, continued improvement but mood still slightly low.
+2. Generalized anxiety disorder – improved panic frequency, anxiety still present.
+3. Post‑traumatic stress disorder – stable.
+4. Substance use disorder (light alcohol) – reduced consumption; patient remains at risk for escalation.
+5. Hypertension – controlled with lisinopril.
+6. Diabetes mellitus type 2 – stable; metabolic control to be reviewed at next visit.
+7. Obesity – weight stable but below goal.
+8. Chronic lower back pain – no noted change.
+
+Plan: 
+	- Continue Sertraline 50 mg nightly.
+	- Maintain current lisinopril and metformin doses.
+	- Continue weekly CBT and trauma‑focused CBT.
+	- Continue substance‑use counseling; encourage use of sobriety logs.
+	- Monitor for potential tapering of alcohol use and watch for withdrawal signs.
+	- Re‑evaluate with PHQ‑9 and GAD‑7 in 4 weeks.
+	- Consider initiating an SNRI (e.g., duloxetine or venlafaxine) if mood and anxiety plateau over next 4‑6 weeks.
+	- Repeat basic metabolic panel and HbA1c in 8 weeks to assess diabetes control.
+	- Encourage weight‑loss dietitian follow‑up.
+
+Follow‑up: 
+	- Psychiatric appointment scheduled in 4 weeks.
+	- Continue lab work as scheduled.
+	- If significant worsening of mood, anxiety, or alcohol use, patient should seek urgent care.
+
+Signature: ____________________
+
+Patient education: Discussed importance of medication compliance, therapy participation, and moderation of alcohol intake. Provided educational handouts on substance‑use coping strategies and alcohol harms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slightly improved mood</span><span class="pill">Reduced panic frequency</span><span class="pill">Lower alcohol consumption</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/76</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temperature</td><td>98.6°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>121.5 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 136/76</li><li>Weight stable</li><li>No psychomotor impairment</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span><span class="pill">Substance use disorder (light alcohol)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Sertraline 50 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly</li><li>Substance use counseling attended weekly</li><li>Detox workshop completed</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Reviewed therapy gains: patient reports decreased panic episodes and better sleep. Substance use: drinks 2–3 beers on weekdays, 4 on weekends, reduced frequency from nearly daily. Advised continuation of sertraline 50 mg, therapy schedule unchanged, and continued participation in substance‑use counseling. Considered future SNRIs if response plateaus.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Partial response maintained; ongoing therapy and medication stable.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-06-01</h3><div class="visit-meta">Psychiatry | Reason: Medication switch to duloxetine for pain control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: Patient reports improved mood since starting duloxetine 30 mg nightly for neuropathic pain; however, she reports persistent back pain rated 8/10 after a recent lifting incident. She also reports reduced anxiety symptoms. She denies new side effects. PHQ‑9 13, GAD‑7 9, pain rating 5/10 after one week of duloxetine per last visit.
+
+Objective: Vital signs BP 133/82, HR 83, temp 98.5 °F, RR 16, weight 121 kg. Physical exam shows lumbar tenderness with no focal neuro deficits. No orthostatic changes.
+
+Assessment: Chronic low back pain likely neuropathic component; duloxetine 30 mg nightly is appropriate SNRI for pain and mood. GAD and PTSD currently mild. Hypertension and T2DM controlled. Weight stable.
+
+Plan: 1. Continue duloxetine 30 mg nightly. 2. Continue lisinopril 20 mg daily, metformin 500 mg BID. 3. Order baseline labs: CBC, CMP, fasting glucose. 4. Monitor BP and fasting glucose at next visit. 5. Repeat PHQ‑9, GAD‑7, pain rating in 4 weeks. 6. Continue CBT, trauma‑focused CBT, and substance‑use counseling. 7. If pain remains &gt;6/10 after 4 weeks, consider dose titration to 60 mg or add neuropathic adjunct (e.g., gabapentinoid). 8. Patient advised to continue gradual weight‑loss plan. 9. Follow‑up appointment scheduled in 4 weeks.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Improved mood</span><span class="pill">Persistent back pain (8/10)</span><span class="pill">Reduced anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>133/82</td></tr><tr><td>HR</td><td>83</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>121 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 133/82</li><li>Weight unchanged</li><li>Back tenderness, no focal neurologic deficits</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Fasting glucose</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 30 mg nightly prescription</li><li>Instructions for monitoring BP and glucose</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span><span class="pill">Substance use disorder (light alcohol)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg nightly ineffective for neuropathic pain</li><li>Recent lifting incident increased back pain</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Discussed duloxetine 30 mg nightly as dual SNRI for depression and neuropathic pain. Reviewed potential side effects and monitoring plan. Discontinued sertraline after 2‑week overlap period. Ordered baseline labs for BP and fasting glucose monitoring at next check‑in. Noted PHQ‑9 13, GAD‑7 9, and pain rating 5/10 after week of duloxetine.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Medication switch to duloxetine improved pain and maintained mood response.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-06-15</h3><div class="visit-meta">Physical Therapy | Reason: Follow‑up for back pain and functional assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up for chronic lower back pain and functional assessment.
+
+History of Present Illness: The patient is a 38‑year‑old female with a history of chronic lower back pain, hypertension, type 2 diabetes mellitus, obesity (BMI &gt;35), generalized anxiety disorder, social anxiety disorder, post‑traumatic stress disorder, substance use disorder, and panic disorder. She has been on duloxetine 30 mg nightly for 6 weeks, lisinopril 20 mg daily, and metformin 500 mg BID. She reports improved pain (5/10 from 8/10) and mobility after hiking a 3‑mile trail. She continues to attend PT sessions since week 2 of duloxetine initiation.
+
+Objective: Vitals – BP 132/80 mmHg, HR 82 bpm, Temp 98.5°F, RR 16/min, Weight 120.5 kg. Laboratory – HbA1c 7.8% obtained by lab call. Examination – lumbar extension improved, full ROM without pain, no radiculopathy, spine stable, no neuro deficits.
+
+Assessment: Current status consistent with mechanical/obesity‑related chronic low back pain. Progress noted in pain reduction and functional mobility. No acute red flags identified.
+
+Plan:
+1. Continue PT program with emphasis on progressive strengthening (lumbar extensors, core) and flexibility (hamstrings, hip flexors). Increase frequency to twice weekly for next 4 weeks. 
+2. Incorporate graded hiking and weight‑bearing ambulation as tolerated.
+3. Reinforce weight‑loss goals: target 0.5–1 kg/week; coordinate with dietitian. 
+4. Continue current medical regimen: lisinopril 20 mg daily, metformin 500 mg BID, duloxetine 30 mg nightly.
+5. Monitor BP and weight at each PT visit; repeat HbA1c in 8 weeks.
+6. Educate on pain coping strategies, proper ergonomics, and body mechanics.
+7. Follow‑up in 2 weeks for reassessment. No new testing ordered at this visit.
+
+Patient education: Discussed the importance of ongoing PT, medication adherence, and lifestyle modification. Patient verbalized understanding and willingness to continue the plan.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Back pain decreased to 5/10</span><span class="pill">Improved mobility</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/80</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>120.5 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Back extension improved</li><li>No radiculopathy signs</li><li>Stability of spine</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Physical therapy prescription continuation</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 30 mg nightly</li><li>Consistent physical therapy sessions since week 2 of duloxetine</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Performed lumbar spine strength and flexibility assessment. Patient reported hiking a 3‑mile trail for the first time. Discussed exercise progression and weight‑loss goals. Recorded weight 120.5 kg and HbA1c 7.8% at lab call. Advised continuation of PT and medication. Reviewed dietitian plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Significant increase in functional activity, slight weight loss, improved glycemic control.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-07-01</h3><div class="visit-meta">Psychology | Reason: CBT session (7th session)</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Psychology CBT Session – 7th Session
+
+Subjective: Patient reports notable improvement in anxiety symptoms: reduced panic spikes and improved coping strategies over recent weeks. She continues to engage actively in CBT exercises and trauma-focused CBT.
+
+Objective: No physical exam performed in this session. Vitals recorded: BP 130/78, HR 81, Temp 98.5°F, RR 16, Weight 119 kg.
+
+Assessment: Patient shows continued progress toward treatment goals. Core beliefs have been identified and challenged, leading to decreased panic frequency and increased adaptive coping. Existing comorbid conditions (GAD, Social Anxiety, PTSD, MDD, chronic back pain) appear stable under current medication regimen.
+
+Plan: Continue duloxetine 30 mg nightly, lisinopril 20 mg daily, metformin 500 mg BID. Maintain weekly CBT and trauma-focused CBT sessions. Schedule next session on 2024-07-08. Encourage sleep hygiene, regular exercise, and continued weight‑loss measures. Monitor BP and weight biweekly; contact medical provider if BP &gt; 140/90 or weight loss/ gain deviates from goals. Repeat PHQ‑9 and GAD‑7 in 4 weeks. Continue substance‑use counseling. Advise patient to call clinic within 24 hrs if she experiences worsening depression, worsening panic attacks, or new suicidal thoughts.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Reduced panic spikes</span><span class="pill">Improved coping skills</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78</td></tr><tr><td>HR</td><td>81</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>119 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No new physical complaints</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CBT 12 weekly sessions started April 12</li><li>Trauma CBT additional 8 sessions June</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Reviewed CBT progress: identified core belief &#x27;I am useless and will never find work&#x27; and challenged it. Discussed social anxiety breakthrough – invited a coworker to coffee break. Advised continued CBT and self‑regulation techniques. No pharmacologic changes.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Cognitive restructuring successful, further therapeutic gains.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-08-03</h3><div class="visit-meta">Psychiatry | Reason: Recovery milestone assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Recovery milestone assessment.
+
+Patient: 38‑year‑old female with hypertension, type 2 diabetes, obesity, chronic lower back pain, GAD, social anxiety disorder, PTSD.
+
+History &amp; Review of Systems: Patient reports minimal depressive symptoms, mild anxiety, and regular social engagement. She has resumed part‑time work, successfully applied for a loan via social work services, and continues duloxetine 30 mg nightly.
+
+Vitals: BP 131/79 mmHg, HR 80 bpm, Temp 98.5 °F, RR 16 /min, Weight 118.5 kg.
+
+Mental Status: Alert, oriented, normal speech. Mood “good,” affect congruent, psychomotor activity normal. Depression screen PHQ‑9 6, anxiety screen GAD‑7 5. No suicidality, no psychosis.
+
+Physical: No new musculoskeletal complaints; stable weight. No orthostatic changes.
+
+Assessment:
+1. Generalized Anxiety Disorder – stable, minimal symptoms.
+2. Social Anxiety Disorder – stable.
+3. Post‑Traumatic Stress Disorder – stable, no acute exacerbation.
+4. Mild Depressive Symptoms – minimal and improving.
+5. Chronic lower back pain – stable, currently managed with duloxetine and PT.
+
+Plan:
+- Continue current pharmacotherapy: Lisinopril 20 mg daily, Metformin 500 mg BID, Duloxetine 30 mg nightly.
+- Continue weekly CBT and trauma‑focused CBT sessions; reinforce coping skills.
+- Monitor BP and glucose at each visit; maintain current target goals.
+- Reassess PHQ‑9 and GAD‑7 in 4 weeks. If PHQ‑9 &lt; 5 and GAD‑7 &lt; 6 for two consecutive visits, begin duloxetine taper (e.g., reduce 5 mg every 2 weeks) under supervision.
+- Encourage continued participation in PT and progressive hiking; maintain weight‑loss goals (0.5‑1 kg/week) with dietitian.
+- Educate patient on sleep hygiene, exercise, and stress management.
+- Follow up in clinic in 4 weeks (2024‑08‑31) for repeat screening, medication review, and to plan duloxetine taper if indicated.
+
+The patient remains stable and engaged; no new concerns identified.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Minimal depressive symptoms</span><span class="pill">Mild anxiety</span><span class="pill">Regular social engagement</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>131/79</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>118.5 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 131/79</li><li>Stable weight</li><li>No new musculoskeletal issues</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Part‑time work resumed</li><li>Successful social worker loan application</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>PHQ‑9 6, GAD‑7 5. Discussed sustained improvement and plan for eventual pharmacologic taper. No new issues. Reinforced CBT and lifestyle modifications. Advised continued monitoring of BP and glucose.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Marked improvement, approaching remission; planning medication taper.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2024-08-20</h3><div class="visit-meta">Psychiatry | Reason: Medication taper planning</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Plan for Duloxetine taper.
+
+History of Present Illness: The patient is a 38‑year‑old female with a history of generalized anxiety disorder, post‑traumatic stress disorder, hypertension, type 2 diabetes mellitus, obesity, and chronic lower back pain. She has been taking Duloxetine 30 mg nightly for 3 months and reports a stable mood with PHQ‑9 of 6 and GAD‑7 of 5. No significant anxiety crises or depressive symptoms during the past month. She has continued CBT with weekly sessions, maintains a mood and anxiety diary, and is engaged in a daily journaling practice to monitor symptoms.
+
+Review of Systems: Psych: No suicidal ideation or homicidal ideation, mood stable, no depressed affect. Anxiety: No panic attacks, no severe anxiety. Musculoskeletal: No new back pain or radiculopathy. No substance use. Sleep: No insomnia.
+
+Past Psychiatric History: Initiated Sertraline 25 mg in early April, titrated to 50 mg nightly by May. Currently on Duloxetine 30 mg nightly for last 3 months. No psychiatric hospitalizations.
+
+Past Medical History: HTN controlled on Lisinopril 20 mg daily; Diabetes controlled on Metformin 500 mg BID; BMI 39; chronic low back pain managed with PT.
+
+Medications: Lisinopril 20 mg daily; Metformin 500 mg BID; Duloxetine 30 mg nightly.
+
+Allergies: NKDA.
+
+Physical Exam: BP 129/77 mmHg, HR 78 bpm, Temp 98.5°F, RR 16/min, weight 117.5 kg.
+
+Assessment: • GAD (current). • PTSD (stable). • Chronic low back pain (stable). • Hypertension (controlled). • Type 2 diabetes (controlled). • Obesity (ongoing management). • Medication: Duloxetine 30 mg nightly.
+
+Plan:
+1. **Duloxetine taper**: Reduce dose by 10 mg every 2 weeks over 8 weeks. Plan: 20 mg nightly week 3, 10 mg nightly week 5, 5 mg nightly week 7, discontinue by week 9. Provide a written taper schedule.
+2. Continue Sertraline 50 mg nightly, Lisinopril 20 mg daily, Metformin 500 mg BID.
+3. Continue CBT and trauma‑focused CBT weekly. Reinforce coping skills.
+4. Maintain daily journaling for mood, anxiety, sleep, and pain.
+5. Continue PT for lower back pain and progressive weight‑loss program with dietitian.
+6. Monitor BP, weight, fasting glucose, HbA1c every 4 weeks.
+7. Reassess PHQ‑9 and GAD‑7 at each visit.
+8. Monthly check‑in (phone/email) to assess taper tolerance and detect emergent anxiety or depression.
+9. Patient education on potential withdrawal symptoms: dizziness, nausea, agitation; sign‑post to return within 24 hrs if worsening.
+10. Follow‑up appointments scheduled: 2024‑08‑31 next appointment, subsequent taper reviews on 2024‑09‑07 and 2024‑09‑28. PT visits continue as per PT schedule.
+
+No emergent or safety concerns noted.
+
+Signature: __________________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Stable mood</span><span class="pill">No severe anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>129/77</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temperature</td><td>98.5°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>117.5 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 129/77</li><li>No emergent symptoms</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 30 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Duloxetine 30 mg nightly for 3 months</li><li>Stable PHQ‑9 6, GAD‑7 5</li><li>No recent substance use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Discussed tapering duloxetine over next eight weeks, with monthly check‑ins. Reinforced CBT as maintenance, advised continuation of mood and anxiety monitoring, and recommended daily journaling. No immediate medication change.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Plan established for gradual taper; patient confident.</p></div></details></div><div class="visit-panel"><h3>Visit 11 &mdash; 2024-09-15</h3><div class="visit-meta">Psychiatry | Reason: Final assessment before medication cessation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #11 – 2024-09-15
+
+Chief Complaint: Final assessment before medication cessation.
+
+History and Past Psychiatric Meds: 38-year-old female with hypertension, type 2 diabetes mellitus, obesity, chronic lower back pain, generalized anxiety disorder (GAD), social anxiety disorder, and post-traumatic stress disorder (PTSD). Current medications: lisinopril 20 mg daily, metformin 500 mg BID, duloxetine 25 mg nightly. Allergies: NKDA.
+
+Subjective: Patient reports feeling more like her baseline, no clinically significant depression, mild anxiety manageable, and no new psychological or physical complaints. She has complied with the duloxetine taper plan, currently at 25 mg nightly after one week at 30 mg. PHQ‑9 score is 2, GAD‑7 score is 5.
+
+Objective: Vitals – BP 128/75 mmHg, HR 77 bpm, Temperature 98.4 °F, Respiratory Rate 16/min, Weight 116.5 kg. Weight steady, no new pain, no neuro deficits noted.
+
+Assessment: Stable GAD, PTSD, and social anxiety. Duloxetine taper has been well tolerated with no exacerbation of symptoms. No indication for continuation of duloxetine; plan to discontinue after completing the taper.
+
+Plan:
+- Continue current pharmacologic regimen: lisinopril 20 mg daily, metformin 500 mg BID.
+- Duloxetine 25 mg nightly will be discontinued upon completion of taper; patient will continue to use provided taper schedule and monitor mood/anxiety symptoms.
+- Maintain CBT and trauma-focused CBT sessions on a maintenance basis.
+- Continue lifestyle management for hypertension, diabetes, and weight reduction.
+- Repeat PHQ‑9 and GAD‑7 at each visit to monitor for recurrence.
+- Routine follow-up appointment scheduled in three months (2025‑02‑15).
+- Educate patient on red‑flag symptoms (worsening mood, suicidal ideation, significant anxiety escalation); advise to contact clinic within 24 hours if any occur.
+
+Signature: ______________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No clinically significant depression</span><span class="pill">Mild anxiety manageable</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/75</td></tr><tr><td>HR</td><td>77</td></tr><tr><td>Temperature</td><td>98.4°F</td></tr><tr><td>Respiratory Rate</td><td>16</td></tr><tr><td>Weight</td><td>116.5 kg</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 128/75</li><li>Weight steady</li><li>No new pain</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Diabetes mellitus type 2</span><span class="pill">Obesity</span><span class="pill">Chronic lower back pain</span><span class="pill">Generalized anxiety disorder</span><span class="pill">Social anxiety disorder</span><span class="pill">Post-traumatic stress disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 25 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>In the process of tapering duloxetine (now 25 mg nightly after one week of 30 mg)</li><li>PHQ‑9 2, GAD‑7 5</li><li>Stable glucose 5.8% HbA1c, BP 128/75</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient reports feeling more like herself; continues low‑dose duloxetine as part of taper strategy. Discusses CBT maintenance plan and plans to stop medication after taper is complete. No new psychiatric concerns. Advised continued lifestyle management and routine follow‑up every three months. No immediate medication change.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Near remission; patient prepared for full medication withdrawal after taper.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 38</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Panic Disorder</span><span class="pill">Social Anxiety Disorder</span><span class="pill">Post‑Traumatic Stress Disorder</span><span class="pill">Substance Use Disorder</span><span class="pill">Hypertension</span><span class="pill">Diabetes Mellitus</span><span class="pill">Obesity</span><span class="pill">Chronic Pain Conditions</span><span class="pill">Major depressive disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 20 mg daily</li><li>Metformin 500 mg BID</li><li>Duloxetine 25 mg nightly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Visit on 2024-04-01: Patient presented with persistent fatigue, loss of appetite, chronic sleep difficulty, and panic attacks, reporting 12‑kg weight loss. Vital signs: BP 152/90 mmHg, HR 90/min, weight 122 kg, BMI 38. Lab work ordered (CBC, CMP, fasting glucose 180 mg/dL, lipid panel). Physical exam notable for obesity, mild lumbar tenderness. Plan: continue lisinopril 20 mg BID, consider thiazide if hypertension uncontrolled; intensify diabetes management with diet, exercise, possible GLP‑1 agonist; refer to community mental‑health clinic for evaluation and possible SSRI/SNRI initiation; encourage sleep hygiene, consider sleep study if symptoms persist; schedule follow‑up in 4 weeks.</li><li>Visit on 2024-04-05 (Psychiatry): Patient presented with depressive and anxiety symptoms after job loss. Symptoms: persistent depressed mood, anhedonia, poor concentration, worthlessness, insomnia, appetite loss, panic attacks, social isolation. Vitals: BP 145/85 mmHg, HR 88/min, weight 122 kg. Plan: initiated Sertraline 25 mg daily with weekly titration; added Metformin 500 mg BID for diabetes; started CBT and trauma‑focused CBT; referred to substance‑use counseling, dietitian, social worker; weekly phone/email check‑in; repeat fasting glucose, HbA1c, lipid panel, CMP in 4 weeks; monitor BP, weight, medication adherence; consider GLP‑1 agonist; consider thiazide if BP uncontrolled. No new allergies noted.</li><li>Visit on 2024-04-06: Patient presented for initiation of SSRI and safety check. Symptoms include depressed mood, anhedonia, brief panic attacks. Vital signs: BP 140/80 mmHg, HR 85 bpm, weight 122 kg. Medication regimen continued: sertraline 25 mg nightly, lisinopril 20 mg daily, metformin 500 mg BID. CBT and trauma‑focused CBT sessions ongoing. Telehealth check‑in scheduled in 3 days. Baseline labs CBC, CMP, fasting glucose, HbA1c, lipid panel to be ordered in 4 weeks.</li><li>Visit on 2024-05-05: Follow‑up for medication titration. Vitals: BP 138/78 mmHg, HR 84 bpm, weight 122 kg. Medication adjustment: Sertraline increased from 25 mg nightly to 50 mg nightly; Lisinopril 20 mg daily and Metformin 500 mg BID continued. Patient remained on CBT and trauma‑focused CBT. Plan: Monitor side‑effects, repeat PHQ‑9 and GAD‑7 in 4 weeks, monitor BP and weight biweekly, keep mood diary, continue substance‑use counseling.</li><li>Visit on 2024-05-12: Psychiatric follow‑up focusing on therapy progress and substance use. Patient reports improved mood, decreased panic episodes, and reduced alcohol consumption. Vital signs: BP 136/76, HR 82, weight 121.5 kg. Medications continued unchanged: lisinopril 20 mg daily, metformin 500 mg BID, sertraline 50 mg nightly. Ongoing weekly CBT, trauma‑focused CBT, and substance‑use counseling. Plan to continue current regimen, monitor for potential taper, repeat PHQ‑9 and GAD‑7 in 4 weeks, repeat basic metabolic panel and HbA1c in 8 weeks, and refer to dietitian for weight management.</li><li>Visit on 2024-06-01: Patient reports improved mood on duloxetine 30 mg nightly and persistent back pain rated 8/10 after a recent lifting incident, with pain rating 5/10 after one week of duloxetine. Vital signs: BP 133/82 mmHg, HR 83 bpm, temperature 98.5°F, RR 16/min, weight 121 kg. Exam: lumbar tenderness, no focal neuro deficits, no orthostatic changes. Ordered baseline labs: CBC, CMP, fasting glucose. Continued duloxetine 30 mg nightly, lisinopril 20 mg daily, metformin 500 mg BID. Ongoing CBT, trauma‑focused CBT, and substance‑use counseling. Plan to reassess mood, pain, BP, and glucose in 4 weeks.</li><li>Visit on 2024-06-15 (Physical Therapy): Follow‑up for chronic lower back pain and functional assessment. Reported pain 5/10 (improved from 8/10) and improved mobility after hiking a 3‑mile trail. Vitals: BP 132/80 mmHg, HR 82 bpm, weight 120.5 kg, Temp 98.5°F, RR 16/min. Lab: HbA1c 7.8%. Exam: lumbar extension improved, full range of motion without pain, no radiculopathy, spine stable, no neuro deficits. Plan: continue PT twice weekly with progressive strengthening and flexibility, progressive hiking and weight‑bearing ambulation, reinforce weight‑loss goals (0.5–1 kg/week with dietitian), continue lisinopril 20 mg daily, metformin 500 mg BID, duloxetine 30 mg nightly, monitor BP and weight at each PT visit, repeat HbA1c in 8 weeks, educate on pain coping strategies and ergonomics, follow‑up in 2 weeks.</li><li>Visit on 2024-07-01: Psychology CBT session – patient reports notable improvement in anxiety symptoms, decreased panic spikes, weight 119 kg, BP 130/78 mmHg. No physical exam performed. Continued duloxetine 30 mg nightly, lisinopril 20 mg daily, metformin 500 mg BID. Weekly CBT and trauma‑focused CBT maintained. Plan: schedule next CBT session on 2024-07-08; continue current medication regimen; monitor BP and weight biweekly; encourage sleep hygiene, exercise, weight‑loss measures; repeat PHQ‑9 and GAD‑7 in 4 weeks; contact clinic within 24 hrs if mood worsens or suicidal ideation.</li><li>Visit on 2024-08-03: Patient reports minimal depressive symptoms, mild anxiety, regular social engagement, and resumed part‑time work. Vitals: BP 131/79 mmHg, HR 80 bpm, weight 118.5 kg, temperature 98.5°F, RR 16/min. PHQ‑9 6, GAD‑7 5. No suicidality. Continued duloxetine 30 mg nightly, lisinopril 20 mg daily, metformin 500 mg BID. Weekly CBT and trauma‑focused CBT ongoing. Plan: monitor BP and glucose, reassess PHQ‑9 and GAD‑7 in 4 weeks, potential duloxetine taper if stable, maintain PT and weight‑loss goals, follow‑up on 2024-08-31.</li><li>Visit on 2024-08-20: Patient presented for duloxetine taper planning. Stable mood, PHQ‑9 6, GAD‑7 5. Initiated 10 mg dose reduction every 2 weeks over 8 weeks, with written schedule. Continued sertraline 50 mg nightly, lisinopril 20 mg daily, metformin 500 mg BID. Ongoing CBT, trauma‑focused CBT, journaling, PT, dietitian. Vitals: BP 129/77 mmHg, HR 78 bpm, weight 117.5 kg. No new symptoms or side effects. Follow‑up scheduled 2024-08-31.</li><li>Visit on 2024-09-15: Patient reviewed final medication taper plan prior to discontinuation. She remains compliant with the duloxetine taper, currently taking 25 mg nightly. Vitals were stable (BP 128/75 mmHg, HR 77 bpm, weight 116.5 kg). No depression or significant anxiety was noted; PHQ‑9 was 2, GAD‑7 5. Physical examination revealed no new pain or neurological deficits. Duloxetine taper was well tolerated; plan to discontinue duloxetine after completion of taper. Current regimen continues with lisinopril 20 mg daily and metformin 500 mg BID. CBT and trauma‑focused CBT were maintained on a maintenance basis. Follow‑up is scheduled in three months (2025-02-15).</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

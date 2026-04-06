@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 7f092667</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: 7f092667</h1><div class="subtitle">Acute Exacerbation of Chronic Obstructive Pulmonary Disease (COPD) | Male, 68</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Coronary artery disease, Heart failure, Diabetes mellitus, Anemia, Osteoporosis, Depression, Rheumatoid arthritis</div><div class="meta-line">Risk Factors: Chronic smoking, Occupational dust or chemical exposure, Indoor/outdoor air pollution, Low socioeconomic status, Inadequate vaccination (influenza, pneumococcal), Current or former smoking</div></div>
+<details><summary>Narrative <span class="preview-text">### A Tale of One Man’s Breathing Battle  **A Quiet Beginning**  On a damp August morning, Harold, a 68‑year‑old former ...</span></summary><div class="section-body"><p>### A Tale of One Man’s Breathing Battle</p><p>**A Quiet Beginning**</p><p>On a damp August morning, Harold, a 68‑year‑old former steel‑sheeting foreman, woke with a new, sharp cough that had lingered for just over a day. The sputum, once straw‑colored and minimal, was now purplish‑brown and much thicker. He felt “tightness” in his chest and a rapid, wheezing breath that seemed louder to him than to anyone else. By evening, his breathing had become noticeably more labored, and he began to notice a faint, constant dizziness that made standing up a challenge.</p><p>He called his wife, Margaret, who urged him to rest and keep his inhalers. The inhalers—an albuterol metered‑dose inhaler and a budesonide/formoterol combination—had given him reliable relief on previous flare‑ups, but the new episode felt different. Harold’s hands shook slightly as he filled his inhaler; the shaking was not new—years of rheumatoid arthritis and his ongoing depression had made these tremors a familiar, if unwelcome, companion.</p><p>**First Visit (Day 2)**</p><p>By the next morning, with breathlessness at its apex, Harold walked into the emergency department (ED). He had a fever of 38.3 °C (100.9 °F), heart rate 108 bpm with an irregular rhythm, and a blood pressure of 140/78 mmHg. Oxygen saturation was 88 % on room air and improved to 94 % after a 2 L/min nasal cannula.  
+A chest x‑ray showed a hyperinflated lung field with a subtle increase in infiltrate in the right lower lobe—suggestive of an emerging infection superimposed on COPD. The ECG showed left ventricular hypertrophy and occasional premature atrial complexes, raising suspicion for his known coronary artery disease (CAD). An arterial blood gas (ABG) performed while he was on 2 L/min revealed a PaO₂ of 52 mmHg and a pH of 7.24, indicative of acute respiratory acidosis.</p><p>Given the clinical picture, the attending physician called in the pulmonology team. A sputum culture was sent, and an empirical antibiotic—amoxicillin‑clavulanate—was started to cover likely bacterial agents. Since Harold’s diabetic (type 2) history had taught us to anticipate glucose spikes during steroid therapy, the endocrinologist was consulted, and a goal of 140–180 mg/dL for glucose control was set.</p><p>**Hospitalization (Days 3–5)**</p><p>By day 3, Harold was admitted to the general medicine floor. His chest pain had worsened slightly—radiating to his left arm, prompting a troponin I that was mildly elevated (0.08 ng/mL, normal &lt; 0.04). An echo revealed preserved ejection fraction at 55 % with moderate diastolic dysfunction; the cardiologist added a low dose of carvedilol for heart failure (HF) management, recognizing the interplay between COPD exacerbations and fluid overload.</p><p>A daily nebulizer regimen with ipratropium bromide and supplemental albuterol was prescribed. The dose of oral prednisone, a common steroid for COPD exacerbations, was initiated at 30 mg/day due to the heightened concern for bacterial infection and impending worsening of airflow obstruction. The rheumatologist noted the increased steroid exposure, warning Harold of potential bone demineralization given his osteoporosis history. A daily dose of vitamin D and calcium was prescribed, along with a reminder to take his bisphosphonate as prescribed.</p><p>On day 4, the sputum culture returned positive for *Streptococcus pneumoniae*. The antibiotic was switched to ceftriaxone 1 g IV once daily for three more days, aligning with the positive culture. Harold’s diabetes management was adjusted: his oral hypoglycemics were held, and insulin was started per sliding scale protocols, especially with the known steroid‑induced hyperglycemia.</p><p>**Clinical Decision Points**</p><p>- **Steroid Management:** The endocrinologist and cardiologist collaborated to monitor Harold’s glucose nightly and adjust prednisone taper to a 10 mg daily by day 5, avoiding abrupt discontinuation that could precipitate a rebound exacerbation.
+  
+- **Fluid Status &amp; HF:** On day 3, a 2 L IV saline bolus was administered, but the HF team cautioned about fluid overload. Harold’s daily weight and jugular venous pressure were monitored, and diuretics (furosemide 40 mg BID) were initiated on day 4 to manage a mild peripheral edema that had appeared.</p><p>- **Mental Health Consideration:** The psychiatric liaison recognized that the stress of hospitalization and the persistent cough could aggravate Harold’s depression. A brief psychotherapeutic intervention was offered, and his selective serotonin reuptake inhibitor (SSRIs) dose was maintained.</p><p>**Improvement and Discharge (Day 6–7)**</p><p>By day 6, Harold&#x27;s fever had resolved, oxygen saturation rested at 96 % with a nasal cannula set at 1 L/min, and his cough decreased dramatically—only a few clear sputum expectorations now. His chest pain had subsided, and his pulse rate was settling into the 90s.</p><p>The multidisciplinary team decided to discharge him on:</p><p>- Oral amoxicillin‑clavulanate 875/125 mg BID for a total of 7 days.
+- Oral prednisone taper: 20 mg/day (Day 7), 15 mg/day (Day 10), 10 mg/day (Day 13), 5 mg/day (Day 16), and off by Day 19.
+- Oral budesonide/formoterol inhaler twice daily, as per pre‑exacerbation regimen.
+- Oral carvedilol 12.5 mg BID.
+- Furosemide 40 mg BID.
+- Insulin sliding scale for the next 48 hours post‑discharge, then conversion to basal‑bolus regimen.
+- Calcium 600 mg and vitamin D 800 IU daily; bisphosphonate to be taken as previously scheduled.
+- Antidepressant maintained on sertraline 50 mg daily.</p><p>**Follow‑up Plan**</p><p>On day 7, a telehealth follow‑up was scheduled with pulmonary medicine to check inhaler technique and assess symptom control. Margaret was instructed on inhaler coordination steps, ensuring that even with Harold&#x27;s tremors, the inhalation remained effective. The endocrinologist set a lab draw date for fasting blood glucose and HbA1c in 6 weeks. The cardiologist scheduled an echocardiogram in 6 months to monitor HF progression.</p><p>**Outcome**</p><p>Three weeks later, Harold reported that his breathing had returned to his baseline “windy‑day” level, and he no longer felt the heaviness in his chest. He was able to walk to the local grocery store without needing to pause for breath—a personal triumph for someone who had never been able to keep up with a young family in the past. Margaret noted that he seemed less irritable, and the weight of depression had lightened, possibly due to the stabilization of his health.</p><p>Despite the complex web of comorbidities—CAD, HF, diabetes, anemia, osteoporosis, depression, and rheumatoid arthritis—the acute exacerbation of COPD was managed successfully through a coordinated, multidisciplinary approach. Harold&#x27;s continued adherence to inhaler therapy, careful monitoring of glycemic control, and management of medications across specialties marked a turning point, moving his trajectory from a potential decline to the hopeful horizon of recovery.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-08-15</h3><div class="visit-meta">Emergency Medicine | Reason: Acute onset cough with wheeze, fever, and dizziness</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute onset cough, wheeze, fever, and dizziness.
+
+History of Present Illness:
+A 68‑year‑old man presented to the ED with a 2‑day history of new persistent cough producing thick purplish sputum, chest tightness, and rapid wheezing. He reports feeling lightheaded. He denies chest pain or palpitations but is aware of an irregular heart rhythm noted on bedside telemetry.
+
+Past Medical History: Coronary artery disease, heart failure NYHA II, type 2 diabetes mellitus, anemia of chronic disease, rheumatoid arthritis, osteoporosis, depression, former smoker (45 pack‑years). No current medications and no known drug allergies.
+
+Physical Examination:
+Vital signs: T 38.3 °C, HR 108 bpm (irregular), BP 140/78 mmHg, RR 24 breaths/min, SpO₂ 88 % RA, 94 % on 2 L NC.
+General: Alert, mildly distressed.
+Cardiovascular: Irregular rhythm with occasional premature atrial complexes; otherwise cardiac exam normal.
+Respiratory: Diminished breath sounds with crackles in right lower lobe; diffuse wheezing bilaterally. No peripheral edema.
+Other systems unremarkable.
+
+Aggravating and relieving factors: None significant; slight relief with nebulizers.
+
+Diagnostic Workup:
+• Chest X‑ray: hyperinflated lungs, subtle right lower lobe infiltrate.
+• Arterial blood gas (on 2 L NC): pH 7.24, PaO₂ 52 mmHg, PaCO₂ 55 mmHg.
+• ECG: left ventricular hypertrophy with occasional PACs.
+• CBC: mild anemia (Hb 11 g/dL).
+• CMP: mild hyperglycemia 110 mg/dL.
+• Blood cultures: pending.
+• Rapid influenza test: negative.
+• Sputum culture: sent.
+
+Assessment:
+1. Community‑acquired pneumonia (right lower lobe) with acute hypoxemic and hypercapnic respiratory failure. Management in the setting of COPD/exacerbation.
+2. Acute exacerbation of chronic bronchospasm (COPD/asthma overlap), evidenced by wheeze and improvement after nebulizers.
+3. Exacerbation‑triggered heart failure considered unlikely (no edema, normal JVP). 
+4. Diabetes controlled within target; no acute complications.
+
+Plan:
+— Continue IV amoxicillin‑clavulanate 1 g q8h.
+— Oral prednisone 30 mg daily for 7 days.
+— Albuterol nebulizer 2.5 mg q8h and ipratropium 0.5 mg q8h.
+— Oxygen 2 L/min via nasal cannula, titrate to SpO₂ ≥ 94 %.
+— Monitor vital signs, ABG, and glucose every 6 h for first 24 h.
+— Repeat CXR in 48–72 h or sooner if clinical status worsens.
+— Continue inhaler technique refresher; prescribe rescue albuterol inhaler.
+— Encourage early mobilization; consider incentive spirometry.
+— Provide education on adherence, recognition of red flags, and importance of vaccinations.
+--- Discharge criteria: stable SpO₂ ≥ 94 % on 2 L, improved respiratory status, tolerating oral intake.
+
+Disposition: Admit to medical floor for 5‑day inpatient course of antibiotics and steroids, with pulmonology consult.
+
+Post‑discharge:
+• Transition to oral amoxicillin‑clavulanate to complete 10‑day course.
+• Taper steroids: 20 mg daily day 4, 10 mg day 5, then discontinue.
+• Follow‑up with PCP within 7 days, cardiology and endocrinology within 10 days.
+• Arrange home health visits if needed for oxygen or medication adjustments.
+• Schedule rheumatology follow‑up in 4 weeks for rheumatoid disease management.
+
+Patient education: Discussed fever, cough, and oxygen use. Instructed patient to contact emergency department if worsening shortness of breath, chest pain, new palpitations, or blood‑tinged sputum.
+
+The patient agrees with the plan and will return for follow‑up.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">New persistent cough</span><span class="pill">Thick purplish sputum</span><span class="pill">Chest tightness</span><span class="pill">Rapid wheezing</span><span class="pill">Lightheadedness/dizziness</span><span class="pill">Fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>38.3°C</td></tr><tr><td>Heart_Rate</td><td>108 bpm</td></tr><tr><td>Blood_Pressure</td><td>140/78 mmHg</td></tr><tr><td>Respiratory_Rate</td><td>24 breaths/min</td></tr><tr><td>Oxygen_Saturation_RA</td><td>88%</td></tr><tr><td>Oxygen_Saturation_NC_2L</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Respiratory rate 24</li><li>Oral temperature 38.3°C</li><li>Blood pressure 140/78 mmHg</li><li>Heart rate 108 irregular</li><li>Oxygen saturation 88% on RA, 94% on 2L NC</li><li>Diminished breath sounds on right lower lobe with crackles</li><li>Wheeze throughout lungs</li><li>Peripheral edema absent</li><li>JVP not distended</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Chest X-ray</li><li>Arterial blood gas</li><li>Sputum culture</li><li>ECG</li><li>CBC</li><li>CMP</li><li>Blood cultures</li><li>Rapid influenza test</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X-ray: hyperinflated lungs, subtle right lower lobe infiltrate</li><li>ABG on 2L NC: pH 7.24, PaO₂ 52 mmHg, PaCO₂ 55 mmHg</li><li>ECG: left ventricular hypertrophy, occasional premature atrial complexes</li><li>CBC: mild anemia (Hb 11 g/dL)</li><li>CMP: mild hyperglycemia 110 mg/dL</li><li>Blood cultures: pending</li><li>Influenza test: negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Oxygen 2L/min via nasal cannula</li><li>Albuterol nebulizer 2.5 mg q8h</li><li>Ipratropium nebulizer 0.5 mg q8h</li><li>IV amoxicillin-clavulanate 1 g q8h</li><li>Oral prednisone 30 mg daily</li><li>Inhaler technique refresher with occupational therapist</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports slight improvement in wheeze after nebulizers, still feels short of breath; tolerates oxygen; denies chest pain.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol MDIs</li><li>Budesonide/Formoterol inhaler</li><li>Metformin 500 mg BID</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Chronic obstructive pulmonary disease (COPD) for 20 years</li><li>Former smoker, 45 pack-years</li><li>Rheumatoid arthritis</li><li>Depression</li><li>Coronary artery disease</li><li>Heart failure (NYHA II)</li><li>Type 2 diabetes mellitus</li><li>Anemia of chronic disease</li><li>Osteoporosis</li><li>Low socioeconomic status</li><li>Inadequate vaccinations</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Harold arrived to the ED with a fever, cough, and worsening wheezing. The physical exam revealed a tachycardic irregular rhythm, mild tachypnea, and decreased breath sounds in the right lower lobe. An oxygen saturation of 88% on room air improved to 94% with 2 L/min nasal cannula. Chest X-ray showed hyperinflated lungs with a subtle infiltrate in the right lower lobe, and an arterial blood gas on 2 L NC demonstrated a pH of 7.24 and PaO₂ of 52 mmHg. A sputum culture was sent, and amoxicillin‑clavulanate was started empirically. Prednisone 30 mg daily was initiated for the COPD exacerbation. The cardiology consult noted mild left ventricular hypertrophy on ECG, and a goal of 140–180 mg/dL glucose control was set by the endocrinology team.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute COPD exacerbation likely precipitated by bacterial pneumonia; systemic steroids started.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-08-16</h3><div class="visit-meta">Internal Medicine | Reason: Inpatient monitoring of COPD exacerbation with possible cardiovascular involvement</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: Harold is a 68‑year‑old male with COPD, coronary artery disease, heart failure, type 2 diabetes, anemia, osteoporosis, depression, and rheumatoid arthritis. He was admitted for community‑acquired pneumonia with subsequent pulmonary exacerbation. On admission day 3 he reports mild chest discomfort, wheezing, productive cough, and shortness of breath on minimal exertion. No fever or chills. He denies palpitations or syncope.
+
+Objective: Vitals: T 37.0 °C, HR 102 bpm irregular, BP 138/80 mmHg, RR 20 /min, SpO₂ 96 % on 2 L NC. Cardiac exam: irregular rhythm, S1 slightly louder, no murmurs, JVP not elevated, no peripheral edema. Pulmonary exam: bilateral expiratory wheezes, mild right lower lobe dullness. Labs: Troponin I 0.08 ng/mL, CBC and CMP normal (Na 140, K 4.2, Cr 1.0), ECG shows LVH. Echo: EF 55 %, moderate diastolic dysfunction, no wall motion abnormality. Pneumonia panel pending.
+
+Assessment: 1) Acute coronary syndrome (unstable angina/non‑STEMI) – mild troponin rise without new wall motion abnormality. 2) Exacerbation of diastolic heart failure – moderate diastolic dysfunction on echo, improved after fluid bolus. 3) COPD exacerbation with community‑acquired pneumonia – persistent wheezing, productive cough, and right lower lobe infiltrate. 4) Possible new atrial fibrillation – irregular rhythm on monitoring.
+
+Plan: • Start carvedilol 3.125 mg PO daily (low‑dose beta‑blocker; titrate as tolerated). • Continue current therapy: amoxicillin‑clavulanate 1 g q8 h IV, prednisone 30 mg daily, nebulized albuterol 2.5 mg q8 h, ipratropium 0.5 mg q8 h, high‑dose steroids maintenance. • Continue IV fluids 2 L bolus and reassess fluid status. • Cardiac telemetry for 48–72 h; repeat troponin at 6 hr intervals. • Repeat ECG in 24 hrs. • Monitor electrolytes, renal function, and potassium daily with carvedilol titration. • Consider loop diuretic if signs of fluid overload develop. • Pulmonary consult for exacerbation management and rehabilitation. • Transition to oral amoxicillin‑clavulanate and prednisone taper after culture results and clinical improvement. • Educate patient on activity, symptom monitoring, and medication adherence.
+
+Follow‑up: • Cardiology telemetry during inpatient stay; cardiology follow‑up within 1 week post‑discharge. • Discharge planning by Day 5–7 with outpatient antibiotic course, carvedilol titration, pulmonary rehab referral, and PCP review. • Rheumatology and endocrinology outpatient appointments as scheduled. • Arrange home health if needed.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Wheezing</span><span class="pill">Cough</span><span class="pill">Slight chest discomfort</span><span class="pill">Shortness of breath on minimal exertion</span><span class="pill">No fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>37.0°C</td></tr><tr><td>Heart_Rate</td><td>102 bpm irregular</td></tr><tr><td>Blood_Pressure</td><td>138/80 mmHg</td></tr><tr><td>Respiratory_Rate</td><td>20 breaths/min</td></tr><tr><td>Oxygen_Saturation_NC_2L</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RR 20, O₂ sat 96% on 2L NC</li><li>Heart rate 102 irregular</li><li>BP 138/80 mmHg</li><li>Lung exam: bilateral expiratory wheezes, mild right lower lobe dullness</li><li>No peripheral edema</li><li>JVP not elevated</li><li>Heart: irregular rhythm, S1 slightly loud, no murmurs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Troponin I</li><li>Transthoracic echocardiography</li><li>Repeat CBC and CMP</li><li>Continuous ECG monitor</li><li>Pneumonia panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Troponin I: 0.08 ng/mL (mildly elevated)</li><li>Echo: EF 55%, moderate diastolic dysfunction, no wall motion abnormality</li><li>CBC: stable</li><li>CMP: sodium 140, potassium 4.2, creatinine 1.0</li><li>ECG: left ventricular hypertrophy</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Start carvedilol 3.125 mg daily</li><li>Continue amoxicillin-clavulanate</li><li>Prednisone 30 mg daily</li><li>Continue nebulizer therapy</li><li>IV fluids 2 L bolus</li><li>Continue inhalers</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports chest discomfort improved, cough productive, able to ambulate short distance with minimal breathlessness.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol MDIs</li><li>Budesonide/Formoterol inhaler</li><li>Metformin 500 mg BID</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li><li>IV amoxicillin-clavulanate 1 g q8h</li><li>Oral prednisone 30 mg daily</li><li>Ipratropium nebulizer 0.5 mg q8h</li><li>Albuterol nebulizer 2.5 mg q8h</li><li>Carvedilol 3.125 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent chest pain radiating to left arm</li><li>Positive sputum culture pending</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On admission day 3, Harold was evaluated for new chest discomfort. Cardiology performed an echocardiogram revealing preserved ejection fraction (55%) and moderate diastolic dysfunction. Troponin I was mildly elevated. A low dose of carvedilol (3.125 mg daily) was started to manage heart failure. Continuation of the antibiotic regimen and high‑dose steroids was maintained. Fluid status was optimized with a 2 L IV saline bolus, and nebulizer therapy was continued.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>COPD exacerbation improving; cardiology instituted carvedilol for HF; infection remains likely bacterial pneumonia; glucose remains moderately controlled.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-08-18</h3><div class="visit-meta">Pulmonology / Infectious Diseases | Reason: Continuation of care during COPD exacerbation; antibiotic adjustment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Continuation of care; antibiotic adjustment.
+
+History of Present Illness: 68‑year‑old male with COPD, CAD, HF, T2DM, anemia, osteoporosis, depression, and RA presents for follow‑up after a 5‑day inpatient course of IV ceftriaxone 1 g daily (switched from amoxicillin‑clavulanate per positive sputum culture for Streptococcus pneumoniae).  Patient reports improvement in cough with clear sputum, reduced chest tightness, mild exertional dyspnea, and slight lower limb edema.  No fever.  Diabetes management was adjusted at the prior visit: metformin discontinued and a sliding‑scale insulin regimen was initiated.  Systemic steroids were continued at 30 mg daily; a taper will commence after completion of antibiotics.
+
+Past Medical History: COPD, coronary artery disease, heart failure with diastolic dysfunction, type 2 diabetes mellitus, anemia, osteoporosis, depression, rheumatoid arthritis.
+
+Medications: Albuterol MDI, Budesonide/Formoterol inhaler, Sertraline 50 mg daily, Bisphosphonate (oral) monthly, Vitamin D 800 IU daily, Calcium 600 mg daily, IV ceftriaxone 1 g daily, Oral prednisone 30 mg daily, Carvedilol 3.125 mg daily, Albuterol nebulizer 2.5 mg q8h, Ipratropium nebulizer 0.5 mg q8h, Furosemide 40 mg BID, Sliding‑scale insulin, Metformin discontinued.
+
+Allergies: NKDA.
+
+Physical Examination:
+- Vital signs: T 36.8°C, HR 98 bpm irregular, BP 136/78 mmHg, RR 18 breaths/min, SpO₂ 93% on 2 L NC.
+- HEENT: No cervical adenopathy.
+- Chest: Bilateral wheeze with right lower‑lobe decreased breath sounds.
+- Cardiovascular: Irregular rhythm, no JVD or PMI displacement.
+- Extremities: Mild ankle edema 1+ bilaterally, no cyanosis.
+- Skin: No rashes.
+
+Laboratory/Imaging Results:
+- Sputum culture: Streptococcus pneumoniae susceptible to ceftriaxone.
+- CBC: WBC 12,000/µL (mild leukocytosis), normal differential.
+- CMP: Electrolytes, renal, and hepatic panels normal (ALT 25, AST 20).
+- ABG on 2 L NC: pH 7.31, PaO₂ 55 mmHg, PaCO₂ 48 mmHg, HCO₃⁻ 22 mEq/L.
+- Glucose: 210 mg/dL (sliding‑scale insulin controls within 110‑180 mg/dL).
+
+Assessment:
+1. Acute bacterial pneumonia due to Streptococcus pneumoniae – clinically improving, currently on appropriate IV ceftriaxone.
+2. COPD exacerbation – improving with inhaler therapy and steroids.
+3. Mild heart‑failure‑related peripheral edema – responsive to furosemide.
+4. Steroid‑induced hyperglycemia secondary to concurrent T2DM – managed with sliding‑scale insulin.
+5. Stable anemia, osteoporosis, depression, and RA – no acute changes.
+
+Plan:
+- Continue IV ceftriaxone 1 g daily until total 5‑day course completed.
+- Start furosemide 40 mg PO BID; monitor weight, edema, and urine output.
+- Maintain oral prednisone 30 mg daily; initiate taper over 7 days after antibiotics finish.
+- Continue nebulizer albuterol 2.5 mg q8h and ipratropium 0.5 mg q8h.
+- Slide‑scale insulin per protocol; check capillary glucose q4–6 hrs; goal 110–180 mg/dL.
+- Monitor vitals daily; repeat ABG in 48 hrs if clinical status changes.
+- Reinforce inhaler technique and medication adherence.
+- Counsel on early recognition of recurrence of SOB or fever.
+
+Disposition: Plan outpatient discharge once patient is afebrile, SpO₂ ≥ 94% on room air, stable vitals, glucose controlled, and edema reduced.
+
+Follow‑Up:
+- Pulmonology clinic visit in 5 days to review lung exam, ABG, and assess need for steroid taper.
+- Endocrinology follow‑up in 7 days to refine diabetes management and consider basal‑bolus insulin.
+- Cardiology review in 10 days for HF optimization.
+- Physical therapy/ pulmonary rehabilitation referral upon discharge.
+- Primary care follow‑up within 2 weeks of discharge for medication reconciliation and vaccination review.
+
+Patient education: Discussed the importance of completing the full antibiotic course, monitoring weight changes, recognizing signs of heart failure flare, maintaining proper inhaler usage, and maintaining glucose control.  Provided printed instructions for sliding‑scale insulin and scheduled follow‑up appointments.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Improved cough with clear sputum</span><span class="pill">Reduced chest tightness</span><span class="pill">Slight lower limb edema</span><span class="pill">Mild exertional dyspnea</span><span class="pill">No fever</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>36.8°C</td></tr><tr><td>Heart_Rate</td><td>98 bpm irregular</td></tr><tr><td>Blood_Pressure</td><td>136/78 mmHg</td></tr><tr><td>Respiratory_Rate</td><td>18 breaths/min</td></tr><tr><td>Oxygen_Saturation_NC_2L</td><td>93%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RR 18, O₂ sat 93% on 2L NC</li><li>Bilateral wheeze, right lower lobe decreased breath sounds</li><li>Mild ankle edema 1+</li><li>No JVP elevation</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Sputum culture results</li><li>Repeat glucose monitoring</li><li>CMP</li><li>CBC</li><li>ABG on 2L</li><li>Liver function tests</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Sputum culture: Streptococcus pneumoniae susceptible to ceftriaxone</li><li>Glucose: 210 mg/dL</li><li>CBC: mild leukocytosis 12,000/µL</li><li>CMP: normal</li><li>ABG: pH 7.31, PaO₂ 55 mmHg</li><li>LFTs: ALT 25, AST 20</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Switch to IV ceftriaxone 1 g daily</li><li>Start furosemide 40 mg BID</li><li>Begin sliding scale insulin</li><li>Maintain prednisone 30 mg</li><li>Continue nebulizer therapy</li><li>Insulin administration per protocol</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports feeling less chest tightness, can ambulate with minimal dyspnea, glucose controlled with insulin.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol MDIs</li><li>Budesonide/Formoterol inhaler</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li><li>IV ceftriaxone 1 g daily</li><li>Oral prednisone 30 mg daily</li><li>Carvedilol 3.125 mg daily</li><li>Albuterol nebulizer 2.5 mg q8h</li><li>Ipratropium nebulizer 0.5 mg q8h</li><li>Furosemide 40 mg BID</li><li>Sliding scale insulin</li><li>Metformin discontinued</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Positive sputum culture for Streptococcus pneumoniae</li><li>Initiation of furosemide</li><li>Diabetes medication change</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Sputum culture returned positive for Streptococcus pneumoniae. The antibiotic was switched from amoxicillin‑clavulanate to ceftriaxone 1 g IV daily. A loop diuretic was started to manage mild peripheral edema and diastolic dysfunction. Slipping glucose levels prompted the endocrinology team to discontinue metformin and initiate a sliding‑scale insulin regimen. Prednisone remained at 30 mg/day while the steroid taper would commence after antibiotics finished.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Streptococcus pneumoniae confirmed; ceftriaxone effective. Diuretics addressing fluid overload; steroid taper pending; blood glucose managed by insulin.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-08-19</h3><div class="visit-meta">Internal Medicine | Reason: Adjustment of steroid taper and follow-up on treatment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Adjustment of oral prednisone taper and follow‑up after completing a 3‑day ceftriaxone course for presumed pneumococcal pneumonia.
+
+Subjective: Patient reports feeling well. No fever, occasional mild cough, mild dyspnea, ankle edema resolved, no chest pain. He has tolerated the current prednisone 10 mg/day without adverse events.
+
+Objective: Vitals: T 36.7°C, HR 94 bpm irregular, BP 135/76 mmHg, RR 17 bpm, SpO₂ 94% on 2 L NC. Physical exam: lungs clear with minimal wheeze, no wheeze, ankle edema resolved. Labs: Glucose 180 mg/dL, CBC normal, CMP stable (Na 139, K 4.1), Lipid panel LDL 95 mg/dL.
+
+Assessment: 68‑year‑old male with COPD, CAD, HF, T2DM, anemia, osteoporosis, depression, RA. Stable COPD with resolved pneumonia, steroid‑induced hyperglycemia, heart failure appears well‑controlled, minimal RA flare.
+
+Plan:
+1. Continue oral prednisone 10 mg daily for 7 days, then taper 5 mg QOD for 3 days.
+2. Complete ceftriaxone 1 g daily (this is the third and final day).
+3. Continue furosemide 40 mg BID.
+4. Adjust sliding‑scale insulin; maintain glucose monitoring every 4 h.
+5. Monitor weight, edema, and BP daily.
+6. Repeat CBC/CMP/lipid panel in 1 month.
+7. Follow‑up pulmonology clinic in 2 weeks.
+8. Coordinate with cardiology and endocrinology for ongoing HF and glucose management.
+9. Discuss pulmonary rehabilitation referral.
+10. Educate patient on steroid taper schedule, infection vigilance, hyperglycemia symptoms, and when to seek emergent care.
+
+Education and counseling provided regarding medication adherence, side‑effect recognition, and lifestyle measures.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No fever</span><span class="pill">Cough only occasional</span><span class="pill">Mild dyspnea</span><span class="pill">Edema mild</span><span class="pill">No chest pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>36.7°C</td></tr><tr><td>Heart_Rate</td><td>94 bpm irregular</td></tr><tr><td>Blood_Pressure</td><td>135/76 mmHg</td></tr><tr><td>Respiratory_Rate</td><td>17 breaths/min</td></tr><tr><td>Oxygen_Saturation_NC_2L</td><td>94%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>O₂ sat 94% on 2L NC</li><li>RR 17</li><li>Lungs clear, minimal wheeze</li><li>Ankle edema resolved</li><li>Vital signs stable</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Glucose monitoring</li><li>CBC</li><li>CMP</li><li>Lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Glucose: 180 mg/dL</li><li>CBC: normal</li><li>CMP: stable, sodium 139, potassium 4.1</li><li>Lipid panel: LDL 95 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Taper prednisone to 10 mg daily</li><li>Continue ceftriaxone</li><li>Continue furosemide</li><li>Adjust insulin sliding scale</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports feeling well, minimal cough, no chest discomfort, tolerating taper.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol MDIs</li><li>Budesonide/Formoterol inhaler</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li><li>IV ceftriaxone 1 g daily</li><li>Oral prednisone 10 mg daily</li><li>Carvedilol 3.125 mg daily</li><li>Albuterol nebulizer 2.5 mg q8h</li><li>Ipratropium nebulizer 0.5 mg q8h</li><li>Furosemide 40 mg BID</li><li>Sliding scale insulin</li><li>Metformin discontinued</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prednisone taper to 10 mg</li><li>Continued ceftriaxone</li><li>Diuresis ongoing</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was assessed for taper of oral prednisone. Prednisone was reduced to 10 mg daily. Antibiotic therapy with ceftriaxone continued for the third and final day of the 3‑day course. Insulin sliding scale was adjusted based on tighter glucose readings. No adverse events noted; the patient tolerated the taper well.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>COPD exacerbation improving; steroid taper commenced; infection remains on ceftriaxone; heart failure controlled; glucose stable.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-08-20</h3><div class="visit-meta">Pulmonology / Primary Care | Reason: Discharge instructions and medication reconciliation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient wishes to review discharge instructions and reconcile medications.
+
+History of Present Illness: Mr. Harold, a 68‑year‑old male with a significant medical history of COPD, coronary artery disease, heart failure, type 2 diabetes mellitus, anemia, osteoporosis, depression, and rheumatoid arthritis, was recently discharged after an inpatient admission for community‑acquired pneumonia superimposed on a COPD exacerbation. Discharge plan included an oral amoxicillin‑clavulanate 875/125 mg BID for 7 days, a prednisone taper (20 mg/day for 3 days, 15 mg/day for 3 days, 10 mg/day for 3 days, 5 mg/day for 3 days, discontinuing by day 19), inhaler coordination to address tremor interference, and initiation of sliding‑scale insulin (starting 48 h post‑discharge). The patient reports no fever, a minor cough, and improved dyspnea. He denies chest pain, orthopnea, or significant leg edema.
+
+Review of Systems:
+- HEENT: No sore throat, headache.
+- Cardiovascular: No chest pain, palpitations.
+- Respiratory: No orthopnea; mild dry cough; dyspnea now improved.
+- GI: No nausea, vomiting.
+- GU: Normal. 
+- Musculoskeletal: No joint pain beyond arthropathy.
+- Endocrine: No polyuria or polydipsia reported.
+- Neurologic: Mild tremor noted interfering with inhaler use.
+
+Physical Examination:
+- General: Alert, oriented, in no acute distress.
+- Vitals: T 36.6°C, HR 92 bpm, BP 132/78 mmHg, RR 16 breaths/min, SpO₂ 96% on 1 L NC.
+- HEENT: Normocephalic, atraumatic.
+- Cardiovascular: S1, S2 normal, no murmurs.
+- Respiratory: Mild expiratory wheeze at bases; otherwise clear; no rales.
+- Extremities: No pedal edema.
+- Skin: No rashes; normal nail beds.
+- Neurologic: Mild bilateral upper‑extremity tremor.
+
+Assessment:
+1. COPD, mild exacerbation – now improved.
+2. Community‑acquired pneumonia, status post‑effective therapy – likely resolved.
+3. Prednisone‑induced hyperglycemia – stabilized with sliding‑scale insulin; fasting glucose 140 mg/dL, HbA1c 7.2%.
+4. Heart failure – stable, no peripheral edema.
+5. Osteoporosis, anemia, depression, rheumatoid arthritis – stable on current regimens.
+
+Plan:
+Medications:
+- Oral amoxicillin‑clavulanate 875/125 mg BID x 7 days (new prescription).
+- Prednisone taper as prescribed.
+- Budesonide/Formoterol inhaler BID.
+- Albuterol inhaler PRN.
+- Sliding‑scale insulin per chart instructions.
+- Carvedilol 12.5 mg BID.
+- Furosemide 40 mg BID.
+- Sertraline 50 mg daily.
+- Bisphosphonate monthly.
+- Vitamin D 800 IU daily.
+- Calcium 600 mg daily.
+
+Education:
+- Inhaler coordination technique demonstrated to accommodate tremor.
+- Insulin sliding‑scale technique reiterated; check glucose before each dose.
+- Continue to monitor weight, check for new edema.
+- Maintain adequate hydration and salt restriction per heart failure guideline.
+
+Monitoring:
+- Check blood glucose every 4 h until stabilized.
+- Monitor weight daily for trend.
+- Monitor for signs of recurrent infection (fever, increased cough, sputum changes).
+- Watch for steroid‑related side effects (hyperglycemia, hypertension, mood changes).
+
+Follow‑up:
+- Telehealth pulmonology consult scheduled for tomorrow, 2024‑08‑21, to assess medication adherence and inhaler technique.
+- Primary care follow‑up in 2 weeks to review glucose trend, cardiac status, and overall functional recovery.
+- Cardiologist and endocrinologist to continue routine appointments (next visits per schedule).
+- Consider pulmonary rehabilitation referral if pulmonary symptoms persist or if functional status declines.
+
+No acute red‑flag findings; patient is discharged with stable vital signs and functional status.
+
+Signature:
+Dr. [Name], MD, Pulmonology &amp; Primary Care</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No fever</span><span class="pill">Minor cough</span><span class="pill">Improved dyspnea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>36.6°C</td></tr><tr><td>Heart_Rate</td><td>92 bpm</td></tr><tr><td>Blood_Pressure</td><td>132/78 mmHg</td></tr><tr><td>Respiratory_Rate</td><td>16 breaths/min</td></tr><tr><td>Oxygen_Saturation_NC_1L</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Vitals stable</li><li>Mild wheeze, lungs clear</li><li>No peripheral edema</li><li>O₂ sat 96% on 1 L NC</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 140 mg/dL</li><li>HbA1c 7.2%</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose: 140 mg/dL</li><li>HbA1c: 7.2%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prescribed oral amoxicillin‑clavulanate 875/125 mg BID</li><li>Prednisone taper schedule</li><li>Inhaler inhalation technique review</li><li>Insulin sliding scale instructions</li><li>Schedule telehealth follow‑up</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient understands plan and feels better; expresses relief after resolving cough.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral amoxicillin-clavulanate 875/125 mg BID (to start 1st dose)</li><li>Oral prednisone 20 mg/day (Day 7)</li><li>Budesonide/Formoterol inhaler BID</li><li>Albuterol inhaler PRN</li><li>Carvedilol 12.5 mg BID</li><li>Furosemide 40 mg BID</li><li>Sliding scale insulin (to start 48h post discharge)</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD exacerbation resolved</li><li>Antibiotic switched to oral</li><li>Prednisone taper ongoing</li><li>Diabetes management changed to sliding scale insulin</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>On discharge, Harold was given a new prescription for oral amoxicillin‑clavulanate 875/125 mg BID for 7 days. A prednisone taper was prescribed: 20 mg/day for 3 days, 15 mg/day for 3 days, 10 mg/day for 3 days, and 5 mg/day for 3 days, stopping by day 19. He was instructed on inhaler coordination to overcome his tremors. Slide‑scale insulin was explained for outpatient use, and he was advised to check blood glucose before each dose. A telehealth follow‑up with pulmonology was scheduled for the next day.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>COPD exacerbation resolved; infection cleared with ceftriaxone; steroid taper ongoing; diuretics controlling fluid balance; diabetes managed with insulin; patient education provided.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-08-21</h3><div class="visit-meta">Pulmonology | Reason: Telehealth follow-up to assess inhaler technique and symptom control</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Telehealth follow‑up to assess inhaler technique and symptom control.\n\nHistory of Present Illness: 68‑year‑old male with confirmed COPD, coronary artery disease, heart failure, type 2 diabetes, anemia, osteoporosis, depression, and rheumatoid arthritis presents via telemedicine for routine follow‑up after recent steroid taper and oral antibiotics for a recent lower‑lobe pneumonia. The patient reports mild occasional cough, minimal breathlessness, and normal daily activity. No dizziness, fever, chest pain, or leg swelling noted. During the visit, the patient successfully demonstrated correct inhaler technique using a spacer with both albuterol PRN and budesonide/formoterol BID. The current prednisone taper (20 mg q24 h for 3 days, 15 mg q24 h for 3 days, 10 mg q24 h for 3 days, 5 mg q24 h for 3 days) is proceeding as planned. \n\nReview of Systems: Positive for occasional cough; negative for dyspnea beyond minimal, chest pain, orthopnea, paroxysmal nocturnal dyspnea, wheezing, ankle swelling, or dizziness.\n\nPast Medical History: Stable COPD, coronary artery disease, heart failure (preserved EF), type 2 DM, anemia, osteoporosis, depression, rheumatoid arthritis. Recent hospitalization for pneumonia and COPD exacerbation. Current medication list includes: Oxygen 1 L/min via nasal cannula, albuterol MDI PRN with spacer, budesonide/formoterol 160/4.5 µg MDI BID, carvedilol 12.5 mg BID, furosemide 40 mg BID, sertraline 50 mg daily, bisphosphonate monthly, vitamin D 800 IU daily, calcium 600 mg daily, sliding‑scale insulin, oral amoxicillin‑clavulanate 875/125 mg BID x 7 days, and the prednisone taper as above. Allergies: No known drug allergy. \n\nPhysical Examination (remote): Well‑appearing, patient speaks clearly, respiratory effort normal, no audible wheeze on voice‑phone assessment. Oxygen saturation on nasal cannula 94‑96%. \n\nAssessment: 1. Stable COPD – controlled with current inhaler regimen; symptoms minimal, inhaler technique correct. 2. No current acute pulmonary infection – resolved pneumonia, afebrile, no cough progression. 3. Controlled heart failure on diuretics – no edema, normal activity tolerance. 4. Prednisone taper ongoing – steroid‑induced hyperglycemia being monitored. \n\nPlan: • Continue oxygen 1 L/min as prescribed. • Maintain albuterol PRN and budesonide/formoterol BID. • Finish prednisone taper as scheduled; monitor for hyperglycemia and adjust sliding‑scale insulin accordingly. • Continue carvedilol, furosemide, sertraline, bisphosphonate, vit D, calcium, and insulin as per current regimen. • Reinforce inhaler technique training; patient demonstrates proficiency. • Order pulmonary function test in 2 weeks to assess baseline lung function. • Advise fasting glucose to be drawn at next in‑person clinic visit. • Monitor capillary glucose every 4 h during steroid course. • Advise patient to keep a log of blood glucose and any symptoms of hypoglycemia. • Continue regular daily activity as tolerated. • Consider referral for pulmonary rehabilitation once PFT results available. • Follow‑up in pulmonology clinic in 2 weeks or sooner if symptoms worsen. \n\nPatient education: Discussed importance of adherence to inhaler technique and medication schedule, the need for monitoring blood glucose, recognizing signs of infection recurrence, and when to seek urgent care (fever, increased dyspnea, cough with purulent sputum). Patient verbalized understanding and agreement to plan. \n\nSignature: Pulmonology – Dr. XYZ</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight occasional cough</span><span class="pill">Breathlessness minimal</span><span class="pill">No dizziness</span><span class="pill">Normal daily activity</span></div></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Patient appears well, normal respiratory effort, no wheeze noted on remote assessment</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Pulmonary function test (in 2 weeks)</li><li>Fasting glucose (next clinic visit)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Re‑educate inhaler technique</li><li>Confirm prednisone taper</li><li>Schedule PFT</li><li>Advise fasting glucose monitoring</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports feeling good, no SOB, continues to use inhalers as taught.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral amoxicillin-clavulanate 875/125 mg BID</li><li>Oral prednisone 20 mg/day (Day 7)</li><li>Budesonide/Formoterol inhaler BID</li><li>Albuterol inhaler PRN</li><li>Carvedilol 12.5 mg BID</li><li>Furosemide 40 mg BID</li><li>Sliding scale insulin</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pulmonary function tests at baseline</li><li>Recent inhaler instruction</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the telehealth visit, Harold demonstrated proper inhaler coordination using a spacer. He reported only mild intermittent cough and no shortness of breath. The clinician verified that the prednisone taper schedule is proceeding as planned. A pulmonary function test was scheduled for two weeks from the visit, and fasting glucose was advised to be drawn in the next clinic visit. Harold was encouraged to maintain the inhalation technique and to monitor blood glucose values.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>COPD stable, no relapse signs; steroid taper proceeding; patient adheres; glycemic control expected to improve with insulin.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-09-18</h3><div class="visit-meta">Primary Care | Reason: Routine follow-up after COPD exacerbation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine follow‑up after recent exacerbation.
+
+History of Present Illness: 68‑year‑old male presents for routine review. Reports no current cough, no dyspnea, occasional mild wheeze at night, and no chest pain. Denies fever, chills, or weight loss. Past 7 days: well‑controlled diabetes with minimal glucose excursions. No new pulmonary infections reported.
+
+Past Medical History: COPD, coronary artery disease, heart failure, type 2 diabetes mellitus, anemia, osteoporosis, depression, rheumatoid arthritis.
+
+Medications: Oral amoxicillin‑clavulanate 875/125 mg BID. Oral prednisone 15 mg/day (Day 10 of taper). Budesonide/formoterol inhaler BID. Albuterol inhaler PRN. Carvedilol 12.5 mg BID. Furosemide 40 mg BID. Sliding‑scale insulin. Sertraline 50 mg daily. Bisphosphonate (oral) once monthly. Vitamin D 800 IU daily. Calcium 600 mg daily.
+
+Allergies: NKDA.
+
+Physical Examination:
+- General: Alert, oriented, no acute distress.
+- Vital Signs: T 36.7°C, HR 90 bpm, BP 130/75 mmHg, RR 14 breaths/min, SpO₂ 97% RA.
+- HEENT: PERRLA, nasal mucosa moist.
+- Cardiovascular: Regular rhythm, normal S1 S2, no murmurs, no JVD.
+- Pulmonary: Clear to auscultation bilaterally, no wheeze or crackles.
+- Abdomen: Soft, non‑tender.
+- Extremities: No edema.
+- Extremities: Reflexes 2+ throughout.
+- Skin: No rashes or lesions.
+
+Investigations:
+- HbA1c: 6.8% (stable).
+- Lipid panel: LDL 90 mg/dL.
+- DEXA: T‑score –1.8 (osteopenia).
+- Chest X‑ray: Clear.
+
+Assessment:
+1. Stable COPD – no acute exacerbation.
+2. Heart failure – clinically stable.
+3. Type 2 diabetes – well controlled.
+4. Osteopenia – continuing bisphosphonate therapy.
+5. Rheumatoid arthritis – no flare.
+6. Depression – on sertraline with no new symptoms.
+
+Plan:
+- Continue current medication regimen.
+- Taper prednisone per schedule (15 mg/day on day 10; adjust accordingly).
+- Schedule influenza and pneumococcal vaccinations today.
+- Arrange rheumatology follow‑up for osteoporosis management next quarter.
+- DEXA scan scheduled for next quarter.
+- No change in pulmonary rehab referral.
+- Educate on inhaler technique—continue spacer use with albuterol PRN.
+- Monitor blood glucose, weight, BP, and signs of fluid overload.
+- Follow‑up appointment in 4 weeks for routine review.
+- Seek urgent care if cough, fever, increased dyspnea, or chest pain develops.
+
+Patient was reviewed for current medications, inhaler technique confirmed, and no concerns expressed. He remains compliant and satisfied with care.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No cough</span><span class="pill">No dyspnea</span><span class="pill">Occasional mild wheeze at night</span><span class="pill">No chest pain</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>Temperature</td><td>36.7°C</td></tr><tr><td>Heart_Rate</td><td>90 bpm</td></tr><tr><td>Blood_Pressure</td><td>130/75 mmHg</td></tr><tr><td>Respiratory_Rate</td><td>14 breaths/min</td></tr><tr><td>Oxygen_Saturation_BedroomAir</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clear lungs, no wheezes</li><li>No bibasilar crackles</li><li>No peripheral edema</li><li>Normal heart sounds</li><li>No JVD</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>Lipid panel</li><li>DEXA scan follow-up</li><li>Chest X-ray (routine)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c: 6.8%</li><li>Lipid panel: LDL 90 mg/dL</li><li>DEXA: T-score -1.8 (osteopenia)</li><li>Chest X-ray: clear</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue current medications</li><li>Schedule influenza/pneumococcal vaccination</li><li>Arrange rheumatology review for osteoporosis</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Patient reports satisfaction and no concerns; continues daily inhaler use.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oral amoxicillin-clavulanate 875/125 mg BID</li><li>Oral prednisone 15 mg/day (Day 10)</li><li>Budesonide/Formoterol inhaler BID</li><li>Albuterol inhaler PRN</li><li>Carvedilol 12.5 mg BID</li><li>Furosemide 40 mg BID</li><li>Sliding scale insulin</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate (oral) once monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD at baseline stable, no new infections</li><li>Diabetes controlled, insulin in place</li><li>Osteoporosis ongoing</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Harold presented for routine medical review. His COPD remained stable at baseline, with no recent exacerbations. Diabetes mellitus was well controlled with minimal glucose excursions. Osteoporosis management continued with monthly bisphosphonate and daily calcium/vitamin D. The medication list remained unchanged from discharge, except prednisone dose had transitioned to 15 mg/day per taper schedule. A DEXA scan was scheduled for the next quarter, and routine influenza and pneumococcal vaccination were advised.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>COPD remains at baseline; diabetes adequately controlled; osteoporosis pending monitoring; patient maintains adherence to inhaler regimen.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 68</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Coronary artery disease</span><span class="pill">Heart failure</span><span class="pill">Diabetes mellitus</span><span class="pill">Anemia</span><span class="pill">Osteoporosis</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span><span class="pill">Chronic obstructive pulmonary disease</span><span class="pill">Osteopenia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Oxygen 1L/min via nasal cannula</li><li>Albuterol inhaler PRN</li><li>Budesonide/Formoterol inhaler BID</li><li>Carvedilol 12.5 mg BID</li><li>Furosemide 40 mg BID</li><li>Sertraline 50 mg daily</li><li>Bisphosphonate monthly</li><li>Vitamin D 800 IU daily</li><li>Calcium 600 mg daily</li><li>Sliding‑scale insulin</li><li>Oral amoxicillin‑clavulanate 875/125 mg BID x 7 days</li><li>Prednisone taper: 20 mg daily for 3 days, 15 mg daily for 3 days, 10 mg daily for 3 days, 5 mg daily for 3 days</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Admitted for acute community‑acquired pneumonia and COPD exacerbation. Vitals: 38.3°C, HR 108 irregular, BP 140/78, RR 24, SpO₂ 88% RA, 94% on 2L NC. Chest X‑ray showed right lower lobe infiltrate. ABG: pH 7.24, PaO₂ 52, PaCO₂ 55. Treated with IV amoxicillin‑clavulanate 1g q8h, IV prednisone 30mg daily, nebulizer albuterol 2.5mg q8h, ipratropium 0.5mg q8h, and oxygen. Discharged after a 5‑day inpatient course with transition to oral amoxicillin‑clavulanate and prednisone taper. Follow‑up scheduled with PCP, cardiology, endocrinology, and rheumatology.</li><li>Admitted for COPD exacerbation with community‑acquired pneumonia. Vitals 37.0°C, HR 102 bpm irregular, BP 138/80 mmHg, RR 20/min, SpO₂ 96% on 2L NC. Labs troponin 0.08 ng/mL, normal CBC/CMP, echo EF 55% moderate diastolic dysfunction, no wall motion change. Started carvedilol 3.125 mg PO daily, continued IV amoxicillin‑clavulanate 1g q8h, prednisone 30mg daily, nebulized albuterol 2.5mg q8h, ipratropium 0.5mg q8h, high‑dose steroids. IV fluids 2L bolus, cardiac telemetry 48–72h, repeat troponin and ECG, monitor electrolytes. Plan pulmonary consult, transition to oral antibiotics and prednisone taper, pulmonary rehab referral. Discharge planning day 5–7.</li><li>Follow‑up after 5‑day IV ceftriaxone therapy for pneumococcal pneumonia, continued oral prednisone 30 mg daily, started furosemide 40 mg BID for mild peripheral edema, and initiated sliding‑scale insulin for steroid‑induced hyperglycemia. Clinical improvement noted with resolving cough, decreased chest tightness, mild exertional dyspnea, and improved edema. Vitals stable, SpO₂ 93% on 2L NC, glucose controlled on sliding‑scale insulin. Plan: complete ceftriaxone course, initiate prednisone taper over 7 days, monitor weight, edema, and glucose; follow‑up in pulmonology, endocrinology, cardiology, and for pulmonary rehabilitation.</li><li>Visit 4 on 2024-08-19: patient reports feeling well, no fever, occasional mild cough, mild dyspnea, resolved ankle edema, no chest pain. Vitals stable (T 36.7°C, HR 94 bpm irregular, BP 135/76 mmHg, RR 17 breaths/min, SpO₂ 94% on 2L NC). Labs: glucose 180 mg/dL, CBC normal, CMP stable (Na 139, K 4.1), lipid panel LDL 95 mg/dL. Continued oral prednisone 10 mg daily for 7 days, completing 3‑day ceftriaxone course. Continue furosemide 40 mg BID, sliding‑scale insulin, monitor weight/edema/BP, repeat CBC/CMP/lipid panel in 1 month, follow‑up pulmonology in 2 weeks. Monitor blood glucose every 4h.</li><li>Visit 5 on 2024-08-20: Patient reviewed discharge instructions and reconciled medications. Reported mild cough, improved dyspnea, no fever. Vitals: T 36.6°C, HR 92, BP 132/78, RR 16, SpO₂ 96% on 1L NC. Prescribed oral amoxicillin‑clavulanate 875/125 mg BID for 7 days, prednisone taper (20 mg daily for 3 days, 15 mg daily for 3 days, 10 mg daily for 3 days, 5 mg daily for 3 days), adjusted carvedilol to 12.5 mg BID, continued bronchodilators and heart failure regimen. Advised inhaler coordination and insulin monitoring.</li><li>Visit 6 on 2024-08-21: Telehealth follow‑up to evaluate inhaler technique and symptom control. Patient reports mild occasional cough, minimal breathlessness, and normal daily activity. Inhaler technique verified correct using spacer with albuterol PRN and budesonide/formoterol BID. No fever, chest pain, or edema. Stable COPD; current prednisone taper ongoing. Oxygen 1 L/min continues. Plan PFT in 2 weeks, monitor blood glucose every 4 h, maintain current medications, and schedule next pulmonology visit in 2 weeks. No new complaints noted.</li><li>Visit 7 on 2024-09-18: Routine follow‑up after recent COPD exacerbation. No acute symptoms, mild nighttime wheeze. Vitals normal, exam unremarkable, labs: HbA1c 6.8%, LDL 90, DEXA osteopenia, chest X‑ray clear. Continue current medications, taper prednisone per schedule, vaccinations administered, rheumatology and DEXA scheduled next quarter, next visit in 4 weeks.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case d8f07bc6</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: d8f07bc6</h1><div class="subtitle">Acute calculous cholecystitis due to gallstones | Female, 55</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Type 2 diabetes mellitus, Obesity (BMI 32), Hypertension</div><div class="meta-line">Risk Factors: Obesity, High‑fat, high‑cholesterol diet, Family history of gallstones, Age &gt; 40, Female sex</div></div>
+<details><summary>Narrative <span class="preview-text">When 55‑year‑old Maria Ramirez first noticed a dull, aching discomfort in the right upper quadrant of her abdomen, she s...</span></summary><div class="section-body"><p>When 55‑year‑old Maria Ramirez first noticed a dull, aching discomfort in the right upper quadrant of her abdomen, she stopped by the pharmacy in the neighborhood for an over‑the‑counter pain reliever. The pain had begun the night before, initially mild and vague, gradually turning into a steady ache that radiated toward her right shoulder blade. She tried a hot compress and two doses of ibuprofen, but the discomfort persisted. Because Maria had never been to a hospital for routine care, she decided to wait until the next day to see a general practitioner.</p><p>**Day 1 – Primary Care Visit**</p><p>Maria’s primary care physician, Dr. Patel, noted her medical history: type 2 diabetes mellitus diagnosed ten years ago, hypertension, and a BMI of 32 kg/m². She reported a habit of eating a high‑fat, high‑cholesterol diet and a family history of gallstones (her mother had a cholecystectomy in her 50s). Dr. Patel performed a basic abdominal exam. The liver span was slightly enlarged; there was mild tenderness in the right upper quadrant, but no guarding or rebound tenderness. The lab work sent—complete blood count, basic metabolic panel, liver function tests, amylase/lipase—revealed a leukocytosis (WBC 13,500/µL), a mild transaminitis (AST 52 U/L, ALT 58 U/L), and an elevated alkaline phosphatase (AP 210 U/L). Her fasting glucose was 162 mg/dL, reflecting poor glycemic control, but her HbA1c was 8.2%.</p><p>Dr. Patel explained that the pattern of right upper quadrant pain, leukocytosis, and liver enzyme elevation suggested acute cholecystitis, most likely due to gallstones. However, because Maria’s pain was not severe, he did not immediately order imaging. He advised her to seek care in the Emergency Department (ED) if the pain worsened, if she experienced fever, vomiting, or jaundice. Maria left with a prescription for acetaminophen and a scheduled follow‑up in four days with a surgical evaluation.</p><p>**Day 4 – Re-Consultation**</p><p>Her pain had become more constant, and she reported mild nausea but could still manage a small meal. In the clinic, Dr. Patel repeated the abdominal exam. Maria now had a faint right shoulder pain and moderate tenderness over the gallbladder fossa. The doctor noted that her pain was now more visceral and less dull. He called the surgeon, Dr. Huang, to obtain a recommendation. Dr. Huang requested urgent imaging. Maria was brought to the ED for a focused evaluation.</p><p>**Day 4 – Emergency Department**</p><p>In the ED, a focused ultrasound was performed. Findings included an inflamed gallbladder with wall thickening (6 mm), positive sonographic Murphy’s sign, and a filling defect consistent with a single calculi measuring 8 mm in the gallbladder neck. No pericholecystic fluid was seen, and the common bile duct was normal in caliber. No gallbladder perforation or abscess was identified. The laboratory values remained similar, with an increasing WBC (15,700/µL). Dr. Huang discussed surgical management with Maria and her family. They agreed on an elective laparoscopic cholecystectomy; however, because Maria’s pain was worsening and her leukocytosis was rising, the team decided to proceed with an urgent laparoscopic cholecystectomy the same day.</p><p>**Day 4 – Operative Course**</p><p>Under general anesthesia, Dr. Huang performed laparoscopic cholecystectomy. There was moderate inflammation, but the gallbladder was dissected safely. A single 8‑mm gallstone was removed. The bile duct was inspected; no stones were visualized. The operation lasted 90 minutes, and the patient tolerated it well. Maria was transferred to the post‑operative recovery unit for monitoring.</p><p>**Postoperative Day 0 – Recovery**</p><p>After surgery, Maria’s abdominal pain was significantly less, and the right shoulder discomfort resolved the next morning. Her nausea improved, and she was able to tolerate clear liquids. She was given a discharge plan: continue acetaminophen for pain control, take a prophylactic 2‑week course of amoxicillin‑clavulanate to cover potential postoperative infections, and manage his diabetes and hypertension with tighter control due to the stress response. Dr. Huang instructed her to follow up in the surgical clinic in two weeks to assess wound healing and to arrange a repeat laboratory panel to confirm resolution of leukocytosis.</p><p>**Postoperative Day 2 – Follow‑up Clinic**</p><p>Maria returned to the surgical clinic. Physical exam showed a clean, well‑healed incision, mild tenderness on palpation that was not concerning. She reported no vomiting, no fever, and only mild intermittent abdominal cramping. Her discharge instructions were reinforced: maintain a low‑fat diet initially, gradually reintroduce carbohydrates, and stay engaged with her primary care provider for glycemic monitoring. Dr. Huang ordered a repeat CBC and CMP. Labs: WBC 8,400/µL, AST 28 U/L, ALT 32 U/L, alkaline phosphatase 115 U/L—markers trending toward normal.</p><p>**Postoperative Day 12 – Second Follow‑up**</p><p>Maria’s wound had fully healed. She was still compliant with her dietary plan but had a few missed doses of her metformin due to the increased appetite after surgery. Dr. Patel adjusted her diabetes regimen, adding a SGLT2 inhibitor to her metformin; this was expected to lower HbA1c and offer cardiovascular benefit. She also received a brief consult from a dietitian to create a sustainable, low‑fat meal plan that would also support weight loss. Additionally, her blood pressure medications were reviewed; there was a mild rise in her readings, so her antihypertensives were titrated upward. Her labs were reassuring: WBC 7,100/µL, liver enzymes within normal limits, and an HbA1c of 7.8%. Maria was grateful to have avoided a more serious complication and was motivated to adhere to her new medication and diet plan.</p><p>**Month 2 – Ongoing Management**</p><p>Three weeks after the second visit, Maria felt fully recovered. No abdominal pain persisted, and her stool habit was normal. She had lost 4 kg over the prior six weeks, mainly from reduced caloric intake. Her diabetes control was improving, with a fasting glucose of 118 mg/dL. She attended a community exercise group—moderate‑intensity walking for 30 minutes, three times a week—to support her weight loss and cardiovascular health. Dr. Patel scheduled a routine follow‑up three months from her initial visit.</p><p>**Month 5 – Maintenance Clinic**</p><p>At her follow‑up appointment, Maria reported no further abdominal complaints. Her BMI had dropped to 29.8 kg/m². She remained compliant with her medication regimen, and her latest HbA1c was 7.7%. She had no residual symptoms of gallstone disease—no biliary colic, no steatorrhea, no jaundice. Her wound from the cholecystectomy site was fully scarred, with no signs of infection or bile duct injury. The surgical team emphasized the importance of ongoing lifestyle changes to maintain the risk reduction achieved after the operation.</p><p>**Outcome Summary**</p><p>Maria’s acute calculous cholecystitis was diagnosed promptly through a combination of primary care assessment, imaging, and surgical evaluation. She underwent an urgent laparoscopic cholecystectomy, resulting in symptom resolution with no intraoperative or postoperative complications. The presence of comorbidities—type 2 diabetes, hypertension, obesity—required careful perioperative management, but no sequelae from these conditions arose. Over the subsequent months, Maria’s disease course improved steadily; she achieved weight loss, better glycemic control, and a stable blood pressure profile. Her surgical episode was the catalyst for a sustained engagement with preventive health, ultimately securing an improving trajectory in her overall health.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-01</h3><div class="visit-meta">Primary Care | Reason: Right upper quadrant abdominal discomfort</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+A 55‑year‑old woman presents with a 12‑hour history of dull, aching right upper quadrant (RUQ) abdominal pain radiating to her right shoulder blade. She reports no fever, nausea, vomiting, or changes in stool or urine. She denies recent medication changes or trauma. Her past medical history is significant for type 2 diabetes mellitus (diagnosed 10 y ago, current HbA1c 8.2 % and fasting glucose 162 mg/dL), hypertension, and obesity (BMI 32 kg/m²). Family history notable for gallstones in her mother. She has no known drug allergies.
+
+Review of systems: Positive for RUQ discomfort; negative for fever, chills, upper respiratory symptoms, lower abdominal pain, diarrhea, constipation, or urinary symptoms.
+
+Objective:
+Vitals: BP 138/84 mmHg, HR 88 bpm, Temp 36.8 °C, RR 16 /min, SpO₂ 98 % on room air.
+Inspection: No scleral icterus; soft, normocephalic. Abdomen: Soft, mild tenderness on palpation of RUQ with no guarding or rebound. Liver edge palpated mildly firm, 1 cm below the costal margin. No palpable masses. Extremities: No edema.
+
+Assessment and Plan:
+1. **Acute biliary colic/early acute cholecystitis** – Pain pattern and RUQ tenderness with mild leukocytosis and cholestatic liver enzyme elevations (AP 210 U/L, ALP 210 U/L) and transaminitis (AST/ALT 50–60 U/L) are highly suggestive of biliary obstruction, most likely gallstone disease.
+2. **Differential diagnoses**: Acute cholangitis, choledocholithiasis, acute viral or alcoholic hepatitis, pancreatitis (though amylase/lipase pending), and hepatic abscess.
+
+Plan:
+- Order RUQ abdominal ultrasound to evaluate for gallstones, gallbladder wall thickening, pericholecystic fluid, and biliary ductal dilation.
+- If ultrasound suggests empyema or perforation, consider early surgical consultation.
+- Continue acetaminophen 650 mg PO every 6 h as needed for pain.
+- Counsel on red‑flag symptoms: worsening pain, fever, chills, jaundice, vomiting, or inability to tolerate oral intake; advise immediate ED transfer if any.
+- Encourage dietary modifications: low‑fat, lower cholesterol, portion control.
+- Reassess diabetes control: repeat fasting glucose and consider adjustment of antihyperglycemic therapy; refer to endocrinology if needed.
+- Follow‑up in 4 days in clinic or sooner if symptoms worsen.
+
+Disposition: Patient educated on warning signs, given acetaminophen PRN, and advised to seek acute care promptly if condition deteriorates.
+
+Education: Discuss healthy weight maintenance, blood pressure control, lipid management, and diabetes management. Reviewed medication safety and over‑the‑counter drug use.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dull aching pain RUQ</span><span class="pill">Pain radiating to right shoulder blade</span><span class="pill">No fever, nausea, or vomiting</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RUQ mild tenderness</li><li>No guarding or rebound</li><li>Firm liver edge</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC with differential</li><li>Basic metabolic panel</li><li>Liver function tests</li><li>Amylase/lipase</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>WBC 13,500/µL</li><li>AST 52 U/L</li><li>ALT 58 U/L</li><li>AP 210 U/L</li><li>Alkaline phosphatase 210 U/L</li><li>Fasting glucose 162 mg/dL</li><li>HbA1c 8.2%</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Acetaminophen 650 mg PO q6h PRN</li><li>Education on red‑flag symptoms</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Type 2 diabetes diagnosed 10 years ago</li><li>Hypertension</li><li>BMI 32 kg/m²</li><li>High‑fat, high‑cholesterol diet</li><li>Family history of gallstones (mother)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with a 12‑hour history of dull, aching RUQ pain radiating to the shoulder. On exam, normal vitals, mild RUQ tenderness. Laboratory panel ordered and performed: CBC with elevated WBC 13,500/µL, LFTs with AST 52 U/L, ALT 58 U/L, AP 210 U/L, fasting glucose 162 mg/dL; HbA1c 8.2%. The pattern suggested acute cholecystitis due to gallstones. No imaging was obtained yet. Patient was advised to seek ED if pain worsened or fever developed. Acetaminophen 650 mg PO q6h PRN was prescribed. Follow‑up scheduled in 4 days.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation consistent with early acute calculous cholecystitis; gallstones presumed culprit; diabetes poorly controlled; no imaging yet.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-01-05</h3><div class="visit-meta">Primary Care | Reason: Re‑consult for worsening RUQ pain and nausea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Re‑consult for worsening right upper quadrant (RUQ) pain and nausea.
+
+**History of Present Illness:**
+The patient is a 55‑year‑old female with a history of type 2 diabetes mellitus, hypertension, and obesity (BMI 32). She reports continuous, colicky RUQ pain that has worsened over the past 4 days. She also experiences mild nausea and a persistent discomfort in the right shoulder blade. She notes decreased appetite and has missed several doses of metformin.
+
+During the previous visit on 2024‑01‑01, the patient had a similar RUQ presentation with mild leukocytosis and cholestatic liver function test (LFT) elevations. At that time, an RUQ ultrasound was ordered, and she was discharged on acetaminophen 650 mg PO q6h PRN for pain, with instructions to seek medical attention for any red‑flag symptoms.
+
+**Review of Systems: **
+- Pain present in RUQ, constant, worsening.
+- Nausea, mild.
+- No vomiting, fever, or chills.
+- No recent weight loss, jaundice, or dark urine.
+- No changes in bowel habits.
+
+**Past Medical History:** 
+- Type 2 diabetes mellitus (currently on metformin 1000 mg BID, doses missed).
+- Hypertension (lisinopril 10 mg daily).
+- Obesity.
+
+**Medications:** 
+- Metformin 1000 mg BID
+- Lisinopril 10 mg daily
+- Acetaminophen 650 mg q6h PRN
+
+**Allergies:** None known.
+
+**Physical Examination:**
+- Vitals: BP 141/88 mmHg, HR 95 bpm, Temp 36.9 °C, RR 18 /min, SpO₂ 98% on room air.
+- General: Alert, mild discomfort from pain.
+- Abdomen: Moderate tenderness in RUQ, positive Murphy’s sign; no rebound or guarding.
+- Lungs: Clear bilaterally.
+- Cardiovascular: Regular rate and rhythm.
+- Extremities: No edema.
+
+**Assessment:**
+The presentation is most consistent with **acute cholecystitis**—progressive RUQ pain with Murphy’s sign, constitutional symptoms, and mild leukocytosis previously noted. Differential diagnoses include biliary colic, acute hepatitis, acute pancreatitis, upper GI ulcer, and abdominal wall strain.
+
+**Plan:**
+1. **Imaging:** Urgent RUQ ultrasound obtained. If findings are inconclusive or suggest gallbladder pathology, proceed to CT abdomen‑pelvis with contrast.
+2. **Laboratory work‑up:** CBC, CMP, LFT panel, serum amylase/lipase, and coagulation profile.
+3. **Referral:** Patient advised to go to the emergency department immediately for full evaluation, potential intravenous hydration, analgesia, and surgical consult.
+4. **Medications:** Continue current metformin and lisinopril. Continue acetaminophen as needed for pain, but with caution to avoid hepatotoxicity given potential biliary disease.
+5. **Follow‑up:** After ED evaluation, arrange surgical follow‑up within 1 week. If imaging confirms acute cholecystitis, plan for laparoscopic cholecystectomy. If alternative diagnosis is identified, modify management accordingly.
+6. **Patient education:** Discuss red‑flag symptoms (fever, worsening pain, persistent vomiting, jaundice) that warrant urgent care. Counsel on maintaining hydration and diet while awaiting definitive diagnosis.
+
+**Disposition:** Patient is instructed to proceed to the ED without delay.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Constant RUQ pain</span><span class="pill">Mild nausea</span><span class="pill">Persistent shoulder discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>141/88</td></tr><tr><td>HR</td><td>95</td></tr><tr><td>Temp</td><td>36.9</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RUQ moderate tenderness</li><li>Positive Murphy&#x27;s sign</li><li>No rebound or guarding</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Urgent RUQ ultrasound</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Patient advised to seek ED</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Suspected acute calculous cholecystitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Pain has been constant for 4 days</li><li>Missed some metformin doses due to decreased appetite</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Patient returned with progressively worsening RUQ pain and mild nausea. Physical exam now shows moderate RUQ tenderness with positive Murphy&#x27;s sign. BP slightly elevated. The physician called the surgeon, who recommended urgent imaging. The patient was instructed to go to the ED immediately for evaluation.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Symptoms have progressed to consistent pain; evidence of worsening inflammation; early surgical consult requested.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-01-05</h3><div class="visit-meta">Emergency Medicine | Reason: Urgent evaluation for acute RUQ pain</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 55‑year‑old female presents to ED with worsening right upper quadrant (RUQ) pain and mild fever, urgently evaluated for acute RUQ pain.
+
+**History of Present Illness:** The patient reports constant RUQ pain radiating to the right shoulder blade that has worsened over the past 24 hours. She also experiences mild nausea but denies vomiting, dysuria, or diarrhea. She has a prior PCP visit four days ago for similar RUQ discomfort, during which a RUQ ultrasound was performed and mild cholestatic liver enzyme elevations noted. At that time she was treated with acetaminophen PRN and advised to return if symptoms worsened.
+
+**Past Medical History:** Type 2 diabetes mellitus, hypertension, obesity (BMI 32).
+
+**Medications:** Metformin 1000 mg BID, Lisinopril 10 mg daily, acetaminophen 650 mg q6h PRN. NKDA.
+
+**Review of Systems:** Positive for RUQ pain, mild nausea, mild fever. Negative for vomiting, bowel changes, hematuria, chest pain.
+
+**Vital Signs:**
+- BP: 158/92
+- HR: 102
+- Temp: 37.4 °C
+- RR: 20
+- SpO2: 97% on room air
+
+**Physical Examination:**
+- General: Alert, in moderate distress from pain.
+- Abdomen: RUQ tenderness with pronounced positive Murphy’s sign. No rebound or guarding.
+- Lungs: Clear to auscultation bilaterally.
+- Extremities: No peripheral edema.
+
+**Diagnostic Workup:**
+- Focused RUQ ultrasound: inflamed gallbladder with wall thickening (6 mm), positive sonographic Murphy’s sign, 8‑mm gallstone in the neck; no pericholecystic fluid or biliary ductal dilation.
+- CBC w/ diff: WBC 15,700/µL.
+- BMP: within normal limits.
+- LFTs: AST 54 U/L, ALT 60 U/L, ALP 215 U/L.
+- Amylase/Lipase: pending.
+
+**Assessment:** Acute calculous cholecystitis, confirmed by clinical presentation, laboratory leukocytosis, imaging findings, and absence of biliary ductal dilation. Differential diagnoses considered include acute pancreatitis (pending lipase/amylase), acute cholangitis (unlikely due to absent ductal dilation), and other causes of RUQ pain such as peptic ulcer disease.
+
+**Plan:**
+1. **Surgical Management:** Urgent laparoscopic cholecystectomy performed same day under Dr. Huang’s supervision.
+2. **Pre‑operative Optimization:** Continue IV fluids (NS 500 mL), administer pain control with hydromorphone 0.5 mg IV q4h PRN. Prophylactic IV cefazolin 1 g given perioperatively.
+3. **Post‑operative Care:** Monitor vitals, pain scores, abdominal exam for any signs of bile leak or hemorrhage. Continue IV fluids, start DVT prophylaxis with enoxaparin 30 mg SC daily (hold after adequate coagulation profile).
+4. **Laboratory Follow‑up:** Order postoperative CBC, BMP, LFTs, amylase/lipase. Consider repeat amylase/lipase in 6 hours if not already obtained.
+5. **Discharge Planning:** Patient will be discharged when hemodynamically stable, pain controlled, able to tolerate liquids, and after 24 h post‑op observation. Provide wound care instructions and pain management regimen (acetaminophen 650 mg q6h PRN, NSAID if not contraindicated).
+6. **Patient Education:** Counsel on signs of surgical complications (fever &gt;38 °C, increasing abdominal pain, nausea/vomiting, drainage from incision), importance of follow‑up with PCP, diabetes and hypertension monitoring, and weight management.
+7. **Follow‑up:** Schedule follow‑up with primary care in 7 days post‑discharge. Arrange for diabetic clinic review and hypertension titration as needed.
+
+**Disposition:** Patient transferred to surgical recovery, observed for 24 hours, stable. Will be discharged with clear instructions and follow‑up appointments.
+
+**Signature:** Dr. [Name]
+
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Constant RUQ pain</span><span class="pill">Mild nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>158/92</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>Temp</td><td>37.4</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>O2Sat</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>RUQ tenderness</li><li>Positive Murphy&#x27;s sign</li><li>Slight fever</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC w/ diff</li><li>BMP</li><li>LFTs</li><li>Amylase/Lipase</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>WBC 15,700/µL</li><li>AST 54 U/L</li><li>ALT 60 U/L</li><li>AP 215 U/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Pain control with hydromorphone 0.5 mg IV q4h PRN</li><li>IV fluids (normal saline 500 mL)</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Suspected acute calculous cholecystitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Prior primary care visit 4 days ago</li><li>Suspected acute cholecystitis</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient arrived with worsening RUQ discomfort and mild fever. A focused RUQ ultrasound was performed revealing an inflamed gallbladder with wall thickening (6 mm), positive sonographic Murphy&#x27;s sign, and an 8‑mm gallstone in the neck. No pericholecystic fluid or bile duct dilatation. Bloodwork showed increased leukocytosis: WBC 15,700/µL. Dr. Huang consulted and discussed urgent laparoscopic cholecystectomy with the patient and family; the team proceeded with surgery the same day.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute calculous cholecystitis confirmed; patient prepared for urgent surgery. Inflammation increased; leukocytosis rising.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-01-05</h3><div class="visit-meta">General Surgery | Reason: Urgent laparoscopic cholecystectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 55‑year‑old female with a history of type 2 diabetes mellitus, hypertension, and obesity (BMI 32) who underwent an urgent laparoscopic cholecystectomy on 2024‑01‑05 under general anesthesia. A standard four‑port approach was performed, with moderate inflammation noted but safe dissection of the gallbladder and removal of an 8‑mm stone. The cystic duct and artery were clipped and transected. Intra‑operative cholangiography was not performed; intra‑operative assessment revealed no ductal stones or injury. The procedure lasted 90 minutes. Immediate post‑operative recovery was uneventful; vital signs remained stable (BP 145/90 mmHg, HR 82 bpm, Temp 37.0 °C, RR 16 / min, O₂ 99%) and pain was effectively managed with acetaminophen 650 mg PO q6h PRN. The patient tolerated clear liquids, had a clean right‑upper‑quadrant incision, and was discharged home on the same day.
+
+Assessment:
+1) Post‑operative recovery from laparoscopic cholecystectomy with no evidence of bile duct injury, bile leak, or wound infection.
+2) Good analgesia with acetaminophen.
+3) Stable glycemic and blood pressure control.
+4) VTE prophylaxis with enoxaparin 30 mg SC daily.
+
+Plan:
+• Continue baseline therapy: Metformin 1000 mg BID, Lisinopril 10 mg daily.
+• Prescribe Amoxicillin‑clavulanate 875/125 mg PO BID for 14 days to cover post‑operative infection risk.
+• Instruct patient on wound care – keep incision clean and dry, monitor for redness, drainage, or discharge.
+• Return precautions: fever &gt;100.4 °F, increasing RUQ pain, jaundice, incision redness, drainage, or signs of infection – go to ED if present.
+• Discontinue hydromorphone; use acetaminophen PRN for pain.
+• Continue VTE prophylaxis with enoxaparin 30 mg SC daily for 5 days or until fully ambulated.
+• Follow‑up: Schedule surgical office visit in 7 days for wound assessment and review labs (CBC, CMP, LFTs) if indicated. Continue diabetes and hypertension management. Gradual diet advancement, avoid alcohol and heavy lifting for 2 weeks.</div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>145/90</td></tr><tr><td>HR</td><td>82</td></tr><tr><td>Temp</td><td>37.0</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Clean, tidy incision in RUQ</li><li>Tolerating clear liquids</li><li>Stable vitals</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>IV fluids post‑op</li><li>Acetaminophen 650 mg PO q6h PRN</li><li>Amoxicillin‑clavulanate 875/125 mg PO BID for 2 weeks</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Acute calculous cholecystitis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li><li>Prophylactic amoxicillin‑clavulanate 875/125 mg PO BID for 2 weeks</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Acute calculous cholecystitis</li><li>Diabetes, hypertension, obesity</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under general anesthesia, a standard four‑port laparoscopic cholecystectomy was performed. Moderate inflammation was noted, but the gallbladder was dissected safely and the 8‑mm stone removed. The cystic duct and artery were clipped and transected. Bile duct inspection revealed no stones. Surgery lasted 90 minutes. Post‑operative recovery showed stable vitals and manageable pain with acetaminophen. The patient was discharged the same day with instructions for postoperative pain control, antibiotics, dietary modifications, and monitoring for infection or bile leak.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Surgery successful; gallbladder removed; infection prophylaxis initiated.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-01-07</h3><div class="visit-meta">Surgical Follow‑up | Reason: Post‑operative wound assessment</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Post‑operative wound assessment.
+
+History of Present Illness:
+The patient is a 55‑year‑old female with a history of type 2 diabetes mellitus, hypertension, obesity (BMI 32) and a recent laparoscopic cholecystectomy performed on 2024-01-05. She presents in clinic on 2024-01-07 for routine post‑operative follow‑up. She reports mild intermittent abdominal cramping since discharge but denies nausea, vomiting, fever, or changes in bowel habits. She has been compliant with the antibiotic course (amoxicillin‑clavulanate 875/125 mg PO BID for 14 days) and acetaminophen PRN. No new medications or allergies have been reported.
+
+Review of Systems:
+- General: No fever, chills, or weight change.
+- Gastrointestinal: Mild intermittent abdominal cramping, no nausea, vomiting, diarrhea, or constipation.
+- Musculoskeletal: No pain at incision site.
+
+Physical Examination:
+Vital signs: stable.
+- BP: 140/86 mmHg
+- HR: 78 bpm
+- Temp: 36.7°C
+- RR: 15/min
+- O₂ Sat: 98% on room air
+
+General: Alert and oriented, in no acute distress.
+Head/Neck: No jugular venous distension.
+Cardiovascular: Regular rate and rhythm, no murmurs.
+Respiratory: Clear bilateral breath sounds.
+Abdomen: Soft, mild RUQ tenderness to light palpation, no rebound or guarding, incision well‑healed with no erythema or drainage.
+Extremities: No edema.
+
+Assessment:
+The patient is in the acute post‑operative period following laparoscopic cholecystectomy. The surgical incision is well‑healed with no signs of infection or dehiscence. Mild, intermittent abdominal cramping is consistent with normal post‑operative recovery or early postoperative ileus. Laboratory results are within normal limits: WBC 8,400/µL, AST 28 U/L, ALT 32 U/L, ALP 115 U/L (borderline elevation). No evidence of leukocytosis, cholestatic pattern, or acute liver injury.
+
+Differential Diagnosis (considered):
+1. Post‑operative abdominal cramping/early ileus – most likely given recent surgery.
+2. Residual inflammation or postoperative pancreatitis—unlikely given normal lipase/amylase (not ordered but clinically stable).
+3. Incisional infection – ruled out by good wound appearance and normal WBC.
+4. Medication side‑effects (e.g., metformin GI upset) – possible but less likely given the timing and severity.
+
+Plan:
+1. Continue current medications: Metformin 1000 mg BID, Lisinopril 10 mg daily, Acetaminophen 650 mg q6h PRN for pain, Amoxicillin‑clavulanate 875/125 mg PO BID (14‑day course completed), Enoxaparin 30 mg SC daily for 5 days (discontinued now – confirm with pharmacy if further prophylaxis needed).
+2. Advise low‑fat diet, adequate hydration, and gradual return to normal activity as tolerated.
+3. Reassure patient; instruct to call clinic if fever &gt;100.4°F, worsening pain, incision redness/ drainage, or any new symptoms.
+4. Order routine CBC and CMP (already obtained) to ensure resolution of leukocytosis and liver enzymes; repeat CMP in 2 weeks if clinically indicated.
+5. Schedule follow‑up visit in 2 weeks (2024-01-21) for wound assessment, review labs, and evaluation of ongoing abdominal cramping.
+6. Educate on signs of surgical infection and VTE prevention; reinforce adherence to discharge instructions.
+
+Patient education: Patient verbalized understanding of plan and scheduled 2‑week follow‑up. All instructions documented.
+
+Signed:
+[Provider Name], MD
+Surgical Follow‑up
+2024‑01‑07</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild intermittent abdominal cramping</span><span class="pill">No nausea or vomiting</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/86</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Incision healed, no erythema</li><li>RUQ tenderness minimal</li><li>No guarding</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>WBC 8,400/µL</li><li>AST 28 U/L</li><li>ALT 32 U/L</li><li>AP 115 U/L</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Post‑cholecystectomy status</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li><li>Amoxicillin‑clavulanate 875/125 mg PO BID for 2 weeks</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Discharged after laparoscopic cholecystectomy</li><li>Adherence to antibiotics and analgesics</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with a clean surgical wound and mild abdominal cramping. Examination showed a well‑healed incision with minimal tenderness. Discharge instructions reinforced low‑fat diet and hydration. A CBC and CMP were ordered to monitor leukocytosis resolution and liver enzymes. The patient was advised to continue metformin and to schedule return visit in 2 weeks.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Post‑operative leukocytosis trending toward normal; liver enzymes decreasing; incision healing well.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-01-19</h3><div class="visit-meta">Primary Care | Reason: Diabetes management adjustment post‑surgery</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Diabetes management adjustment after cholecystectomy.
+
+HPI: 55‑year‑old female presents for routine follow‑up of type 2 diabetes and hypertension. She reports having missed several doses of metformin in the past month. Since surgery she has had increased appetite, resulting in 3‑kg weight loss over past month. Fasting glucose readings occasionally high; recent HbA1c 7.8%. She denies hypoglycemia, polyuria, or urinary symptoms. No new abdominal pain.
+
+Past Medical History: Type 2 diabetes mellitus, hypertension, obesity (BMI 32 at baseline, now 29.8), post‑cholecystectomy status.
+
+Current Medications: Metformin 1000 mg PO BID, Lisinopril 10 mg daily, Acetaminophen 650 mg q6h PRN, Amoxicillin‑clavulanate 875/125 mg PO BID for 2 weeks.
+
+Allergies: None.
+
+Exam: Vitals BP 150/92, HR 80, Temp 36.8°C, RR 16, O₂ sat 98% on room air. Weight 140 lb (BMI 29.8). Wound dry, fully healed. No peripheral edema. Cardio/respiratory exam normal.
+
+Labs: HbA1c 7.8%; fasting glucose 118 mg/dL; CMP pending.
+
+Assessment:
+1) Type 2 diabetes mellitus – suboptimally controlled; poor adherence to metformin.
+2) Hypertension – borderline elevated blood pressure.
+3) Post‑cholecystectomy weight loss – likely due to increased appetite; worth monitoring.
+
+Plan:
+- Add empagliflozin 10 mg PO daily for glycemic control and cardiovascular benefit.
+- Increase lisinopril to 20 mg daily to target BP &lt;130/80.
+- Continue metformin 1000 mg BID; emphasize adherence.
+- Arrange dietitian referral for balanced low‑fat diet; discuss nutritional impact of surgery.
+- Schedule repeat HbA1c and CMP in 6 weeks; monitor for genital tract infections and volume depletion.
+- Counsel patient on signs of hypoglycemia (unlikely with SGLT2), genital infection, and foot care.
+- Follow‑up office visit in 4 weeks or sooner if symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Fasting glucose occasionally high</span><span class="pill">Missed several metformin doses</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>150/92</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.8</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>O2Sat</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 150/92</li><li>Weight 140 lb (BMI 29.8)</li><li>Wound dry, fully healed</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>CMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 7.8%</li><li>Fasting glucose 118 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Empagliflozin 10 mg PO daily</li><li>Lisinopril 20 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Post‑cholecystectomy status</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 10 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li><li>Amoxicillin‑clavulanate 875/125 mg PO BID for 2 weeks</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Worsened appetite after surgery</li><li>Weight loss of 3 kg over past month</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported missed metformin doses and weight loss. HbA1c was 7.8% on recent lab. The physician added empagliflozin 10 mg once daily to improve glycemic control and provide cardiovascular benefit. Blood pressure remained slightly elevated; lisinopril dose increased to 20 mg daily. A dietitian referral was made to reinforce low‑fat, balanced diet.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Adjusted DM regimen; BP improved; weight loss ongoing.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-03-01</h3><div class="visit-meta">Primary Care | Reason: Routine follow‑up after cholecystectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #: 7
+Date: 2024-03-01
+Chief Complaint: Routine follow‑up after cholecystectomy
+
+Subjective:
+The patient is a 55‑year‑old female with a history of type 2 diabetes mellitus, hypertension, obesity (BMI 32), and post‑cholecystectomy status. She reports no abdominal pain and no gastrointestinal upset. She has been compliant with a low‑fat diet and walking 30 minutes, 3 times per week. She notes a 4‑kg weight loss resulting in a BMI of 29.8 and no new symptoms.
+
+Objective:
+Vitals: BP 138/84 mmHg, HR 76 bpm, Temperature 36.7°C, RR 15, SpO2 99%.
+Physical Exam: BMI 29.8. Incision is fully scarred with no erythema, drainage, or tenderness. Abdomen soft, non‑tender, no rebound, guarding, or organomegaly. Cardiovascular exam normal. Respiratory exam normal.
+
+Labs: HbA1c 7.7%, LDL 95 mg/dL, triglycerides 140 mg/dL. BMP pending but within normal limits.
+
+Assessment:
+1. Post‑cholecystectomy status—resolved.
+2. Type 2 diabetes mellitus—controlled (HbA1c 7.7%).
+3. Hypertension—controlled (BP 138/84).
+4. Obesity—improved (BMI 29.8).
+
+Plan:
+1. Continue current medications: Metformin 1000 mg BID, Empagliflozin 10 mg daily, Lisinopril 20 mg daily, Acetaminophen 650 mg q6h PRN.
+2. Maintain low‑fat diet, regular walking, and monitor weight.
+3. Check BMP in clinic; review results next visit.
+4. Schedule routine follow‑up in 3 months for diabetes, hypertension, weight, and overall wellness.
+5. Reinforce medication adherence, especially Metformin.
+6. Educate on signs of hypoglycemia, genital infections (empagliflozin), and fluid volume status.
+
+No acute issues identified. Patient is stable and will return in 3 months.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No abdominal pain</span><span class="pill">No gastrointestinal upset</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/84</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>36.7</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>O2Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BMI 29.8</li><li>No abdominal tenderness</li><li>Incision fully scarred</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>Lipid panel</li><li>BMP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 7.7%</li><li>LDL 95 mg/dL</li><li>Triglycerides 140 mg/dL</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Post‑cholecystectomy status</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Empagliflozin 10 mg daily</li><li>Lisinopril 20 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Completed 2‑week antibiotic course</li><li>Continued low‑fat diet</li><li>Regular walking 30 min 3×/wk</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported no residual symptoms. BP remained stable. HbA1c 7.7% and fasting glucose 118 mg/dL. Weight decreased by 4 kg, BMI now 29.8. The physician reinforced lifestyle changes and scheduled a 3‑month follow‑up. No new issues identified.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Stable postoperative course; diabetes and hypertension improving with medication and lifestyle.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-06-15</h3><div class="visit-meta">Primary Care | Reason: Maintenance check after 5 months</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Maintenance check after 5 months.
+
+History of Present Illness: 55‑year‑old female presents for routine follow‑up. She reports feeling well, no abdominal pain or recent GI symptoms, and is continuing her usual home exercise routine and dietary plan. She has noted weight loss of 4 lb over the last 6 weeks.
+
+Past Medical History: Type 2 diabetes mellitus, hypertension, obesity (BMI 32 initially, currently 29.8), post‑cholecystectomy status. No postoperative complications to date.
+
+Medications: Metformin 1000 mg BID, Empagliflozin 10 mg daily, Lisinopril 20 mg daily, Acetaminophen 650 mg q6h PRN.
+
+Allergies: NKDA.
+
+Review of Systems: Negative for abdominal pain, nausea, vomiting, fever, palpitations, dyspnea, or orthostatic symptoms.
+
+Physical Examination:
+- General: Well‑appearing female, in no acute distress.
+- Vitals: BP 135/82 mmHg, HR 74 bpm, Temp 36.6 °C, RR 15 bpm, O₂Sat 99 % on room air.
+- Cardiovascular: Regular rate and rhythm, normal S1/S2, no murmurs.
+- Pulmonary: Clear to auscultation bilaterally, no wheezes.
+- Abdomen: Soft, non‑tender, well‑healed cholecystectomy incision, no masses.
+- Extremities: No edema; BMI 29.8.
+- Skin: No rash or lesions.
+- Neurologic: Alert and oriented.
+
+Laboratory Results:
+- HbA1c 7.7 % (stable).
+- Lipid panel: LDL 92 mg/dL, triglycerides 138 mg/dL.
+- BMP pending (pre‑emptively ordered).
+
+Assessment:
+1. Type 2 diabetes mellitus – well controlled (HbA1c 7.7 %).
+2. Hypertension – controlled (BP 135/82 mmHg) on Lisinopril 20 mg.
+3. Obesity – currently BMI 29.8; patient lost 4 lb; continuing lifestyle modification.
+4. Post‑cholecystectomy status – incision well‑healed; no complications.
+
+Plan:
+- Continue current medication regimen.
+- Reinforce continued exercise and balanced diet.
+- Monitor weight weekly; aim for 0.5–1 lb/week loss.
+- Repeat BMP, HbA1c, and lipid panel in 3 months.
+- Continue routine follow‑up; patient to return in 3 months or sooner if new symptoms develop.
+- Educate regarding signs of hypoglycemia, genital infections, or volume depletion with SGLT2 inhibitor use.
+- Encourage adherence to Metformin dosing schedule.
+
+Significance: This is a stable maintenance visit with no acute concerns. All systems and labs are satisfactory; patient remains in a controlled state for her chronic conditions.
+
+Prepared by: [Clinician Name], Primary Care Physician.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No abdominal complaints</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/82</td></tr><tr><td>HR</td><td>74</td></tr><tr><td>Temp</td><td>36.6</td></tr><tr><td>RR</td><td>15</td></tr><tr><td>O2Sat</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>BP 135/82</li><li>BMI 29.8</li><li>Well‑healed incision</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>HbA1c</li><li>BMP</li><li>Lipid panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>HbA1c 7.7%</li><li>LDL 92 mg/dL</li><li>Triglycerides 138 mg/dL</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Hypertension</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Post‑cholecystectomy status</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Empagliflozin 10 mg daily</li><li>Lisinopril 20 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Consistent medication use</li><li>Weight 138 lb (BMI 29.8)</li><li>No postoperative complications</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reiterated she was feeling well. BP and glucose well controlled (HbA1c 7.7%). She had lost 4 kg over the past 6 weeks. The physician encouraged continued exercise and dietary adherence. There were no new concerns and no new interventions were added.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Long‑term management stable; no gallbladder recurrence; patient progressing toward healthy weight and metabolic goals.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 55</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Type 2 diabetes mellitus</span><span class="pill">Obesity (BMI 32)</span><span class="pill">Hypertension</span><span class="pill">Acute calculous cholecystitis</span><span class="pill">Post-cholecystectomy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Metformin 1000 mg BID</li><li>Lisinopril 20 mg daily</li><li>Empagliflozin 10 mg daily</li><li>Acetaminophen 650 mg q6h PRN</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2024-01-01: Patient presented with 12‑hour dull aching RUQ pain radiating to right shoulder blade. Mild RUQ tenderness and a firm liver edge were noted. Labs showed mild leukocytosis and cholestatic LFT elevations. RUQ ultrasound ordered. Acetaminophen 650 mg PO q6h PRN prescribed for pain; advised red‑flag symptoms; scheduled follow‑up in 4 days.</li><li>2024-01-05: Patient re‑consulted with worsening RUQ pain and mild nausea. Physical exam showed moderate RUQ tenderness and positive Murphy’s sign. Urgent RUQ ultrasound performed and labs (CBC, CMP, LFTs, amylase/lipase) ordered. Patient advised to go to emergency department for evaluation and management. Medications continued: metformin 1000 mg BID, lisinopril 10 mg daily, acetaminophen 650 mg q6h PRN.</li><li>2024-01-05: Patient presented with worsening RUQ pain, mild fever, leukocytosis, and positive Murphy’s sign. RUQ ultrasound revealed gallstone and gallbladder wall thickening consistent with acute calculous cholecystitis; urgent laparoscopic cholecystectomy performed. Postoperative care included IV fluids, hydromorphone 0.5 mg IV q4h PRN for pain, cefazolin 1 g IV perioperative prophylaxis, and enoxaparin 30 mg SC daily VTE prophylaxis. Discharged after stable 24h observation with instructions for wound care, pain management, and follow‑up.</li><li>2024-01-05: Patient underwent urgent laparoscopic cholecystectomy under general anesthesia; no complications noted. Postoperative course uneventful. Pain managed with acetaminophen. Started amoxicillin‑clavulanate 875/125 mg PO BID for 14 days. Discontinued hydromorphone. Enoxaparin 30 mg SC daily for 5 days. Discharged home the same day.</li><li>2024-01-07: Routine post‑operative wound assessment; incision well‑healed, mild intermittent abdominal cramping; antibiotics course finished, enoxaparin discontinued; continue metformin, lisinopril, acetaminophen PRN; scheduled follow‑up in 2 weeks.</li><li>2024-01-19: Routine follow‑up for diabetes and hypertension. Patient reports missed metformin doses, fasting glucose occasionally high, HbA1c 7.8%. Prescribed empagliflozin 10 mg daily and increased lisinopril to 20 mg daily. Advisement on metformin adherence and scheduled repeat HbA1c and CMP in 6 weeks. Dietitian referral arranged; patient instructed on monitoring for genital infections, volume depletion, and signs of hypoglycemia.</li><li>2024-03-01: Routine follow‑up after cholecystectomy. Patient reports no abdominal pain or gastrointestinal upset. Vitals: BP 138/84 mmHg, HR 76 bpm, BMI 29.8. Incision fully scarred, abdomen soft, cardio and respiratory exams normal. Labs: HbA1c 7.7%, LDL 95 mg/dL, triglycerides 140 mg/dL; BMP pending. Plan: continue Metformin 1000 mg BID, Empagliflozin 10 mg daily, Lisinopril 20 mg daily, Acetaminophen 650 mg q6h PRN; monitor weight, medication adherence, BMP results; schedule routine follow‑up in 3 months.</li><li>2024-06-15: Routine maintenance check. Patient reports feeling well, no abdominal or GI symptoms, and weight loss of 4 lb over 6 weeks. Vitals: BP 135/82 mmHg, HR 74 bpm, Temp 36.6°C, RR 15, O₂Sat 99%. Physical exam normal. Labs: HbA1c 7.7%, lipid panel stable; BMP pending. Continue current medications (Metformin 1000 mg BID, Empagliflozin 10 mg daily, Lisinopril 20 mg daily, Acetaminophen 650 mg q6h PRN). Plan: monitor weight weekly, repeat BMP, HbA1c, lipid panel in 3 months, encourage exercise and diet, advise on medication adherence and signs of hypoglycemia.</li><li></li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

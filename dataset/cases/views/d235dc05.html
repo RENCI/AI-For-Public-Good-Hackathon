@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case d235dc05</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: d235dc05</h1><div class="subtitle">Undiagnosed Celiac Disease | Female, 32</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-chronic">chronic</span><span class="badge badge-undiagnosed">undiagnosed</span></div><div class="meta-line">Comorbidities: Iron deficiency anemia, Vitamin D deficiency, Osteoporosis, Addison’s disease, Type 1 diabetes, Autoimmune thyroid disease, Graves’ disease, Juvenile idiopathic arthritis, Vitiligo</div><div class="meta-line">Risk Factors: Genetic predisposition (HLA‑DQ2/DQ8), Family history of celiac disease, Early childhood gluten introduction, Autoimmune disorders, Ethnicity (higher prevalence in Ashkenazi Jews)</div></div>
+<details><summary>Narrative <span class="preview-text">**The Early Years – A Childhood of “Normal” Anomalies**  Lena was born into a family steeped in the quiet dread that oft...</span></summary><div class="section-body"><p>**The Early Years – A Childhood of “Normal” Anomalies**</p><p>Lena was born into a family steeped in the quiet dread that often accompanies Ashkenazi heritage. Her grandmother had once spoken of “that chronic hunger in the family,” and Lena’s parents, though wary, had insisted that a gentle introduction of wheat would provide the comfort of a familiar taste. At six, when a small bowl of plain pasta was offered, Lena’s mother chalked up the first, fleeting loose stools to “a growing stomach.” The episode passed without comment, and for the next few years the family’s routine remained, as far as Lena could tell, entirely typical.</p><p>Yet, a handful of nights through childhood saw Lena feeling unusually tired after school and waking with a dull ache behind her ribs. Anemia, mild and intermittent, would crop up on her school nurse’s periodic checks, and her mother filled out iron tablets in response—an intervention that made her feel better yet was not explained as anything sinister. The family’s history of celiac disease, hidden behind a vague family legend, was unrecorded, dismissed as a remote “family myth.” Lena’s primary care physician, a busy pediatrician in a suburban clinic, had never ordered a serologic test; the subtle, non‑diarrheal, and sporadic nature of Lena’s symptoms made her a low priority for any deeper investigation.</p><p>**Adolescence – An Unraveling of Symptoms**</p><p>At ten, Lena was in her freshman year of high school, fighting her way through a typical teenage life of algebra and friends. Her fatigue worsened, though she blamed it on late-night studying. A routine visit to the school nurse revealed mild iron deficiency: hemoglobin of 10.9 g/dL, ferritin 12 ng/mL. Her physician ordered a CBC and ferritin; she was prescribed iron sulfate, and Lena, feeling a bit better, continued her busy schedule.</p><p>Between thirteen and fifteen, a new set of complaints arrived: bloated stomach after lunch, persistent loose stools that came and went, a faint rash around her elbows, and a subtle, but growing, awareness of thin, fragile skin. She reported occasional dizziness when she’d stand up too quickly. She also began to notice joint pain, especially in her knees and ankles—a pain that would flare during sports and subside when she rested. Her mother noted that Lena’s hair was becoming less lustrous, and her clothes were sliding up at the shoulders when she reached for a book.</p><p>The first rheumatology visit occurred at fifteen. An ANA test returned positive (1:80 speckled), but the panel stopped there. The rheumatologist diagnosed the joint pain as undifferentiated juvenile idiopathic arthritis (JIA) and prescribed a low dose of naproxen and an early course of oral steroids. She was told to monitor her growth and to return if symptoms progressed. No celiac serology was requested, although a history of “chronic abdominal discomfort” was noted.</p><p>**Emergence of a Multi‑System Autoimmune Landscape**</p><p>At sixteen, Lena’s mother noticed paleness and fatigue that had escalated to the point where Lena could no longer keep up with her classmates. The pediatrician performed an ACTH stimulation test, unmasking adrenal insufficiency. Addison’s disease was diagnosed. With the usual hydrocortisone replacement and fludrocortisone for aldosterone deficiency, Lena’s appetite and weight stabilized, but new complications arose: a borderline low potassium, mild hypocalcemia, and a DEXA scan revealed osteopenia—an unwelcome surprise.</p><p>Addison’s also had an unwelcome side effect on the immune system. Her regular vitamin D supplement and calcium intake were insufficient, and her serum 25‑OH D stayed stubbornly low over the next year—20 ng/mL and still in the deficient range after supplementation adjustments. The pediatric endocrinologist recommended a bone density evaluation, which confirmed the early osteoporosis, and she was started on vitamin D3 50,000 IU weekly and calcium 1200 mg daily.</p><p>At eighteen, Lena’s pancreas rebelled. She developed type 1 diabetes—an abrupt drop in sugar control, a new onset of burning sensation during urination, and nocturnal ketones. She was initiated on insulin, and her diabetes monitoring routines took over the family’s schedule. With each new disease, the physician’s list of comorbidities grew, but still, nothing prompted a test for celiac disease. The subtle, non‑specific GI complaints were brushed off as “diabetes‑related constipation” or “iron deficiency related constipation.”</p><p>By twenty, the thyroid had joined the choir. A check‑up for a persistent, shaky hands and mild anxiety revealed a markedly elevated TSH receptor antibody level and suppressed TSH, confirming Graves’ disease. Methimazole was started, and the hyperthyroid symptoms eased. Her skin, however, began to develop well‑defined depigmented patches—vitiligo. She was referred to a dermatologist, who began a topical steroid regimen. Her new medication list now included hydrocortisone, fludrocortisone, metformin, insulin, methimazole, topical steroids, iron sulfate, vitamin D, calcium, naproxen, and the nascent list of steroidal adjuncts she might need. The subtle, intermittent GI complaints were still being mentioned in passing, but the focus for the physicians was on managing the life‑saving endocrine and autoimmune disorders.</p><p>**Celiac – a Silent, Ongoing Player**</p><p>Even as her immune system launched into a full‑blown symphony of autoimmunity, a silent discord was playing in her gut. The chronic low‑grade diarrhea, bloating, intermittent abdominal discomfort, and malabsorption – the classic celiac presentation – were always considered “extra‑intestinal or secondary to other diagnoses (e.g., iron deficiency, Addison’s)”. In addition, her IgA level was borderline low, a pattern that the physicians linked to selective IgA deficiency, a common finding in those with Addison’s and autoimmune thyroiditis. The thought was that such deficiency might explain her seemingly “negative” serology for celiac disease when tests were later ordered. Consequently, she never received a definitive celiac antibody panel during the years this disease lingered: no HLA‑DQ2/DQ8 typing, no tTG‑IgA, no EMA. In hindsight, each primary care visit that included a CBC and iron studies, or each rheumatology encounter that included an ANA, could have invited a celiac screen.</p><p>At twenty‑two, her vitiligo improved marginally with topical steroids, but new diffuse patches continued to develop, as if the disease were an inexorable tide. Her bone density had worsened; a minor fall in a grocery store hallway resulted in a wrist fracture that demanded weeks of immobilization. The new fracture became a key indicator that her bone health was severely compromised beyond the expected osteopenia for a young woman with Addison’s and type 1 diabetes. Yet the orthopedic surgeon, in his review, noted “low bone density, likely secondary to prolonged glucocorticoid use and vitamin D deficiency” and recommended additional vitamin D, calcium, and bisphosphonate therapy. The celiac angle stayed buried; her persistent bloating was rationalized as “secondary to gut motility changes from steroid use.”</p><p>At twenty‑five, a subtle numbness in the fingertips and toes appeared, a sensation the endocrinologist tied to diabetic neuropathy. An MRI of the spine was arranged to rule out compressive lesions, and the neurologist advised a modest dietary change. Still, Lena’s diet remained high in gluten: she loved pizza, bread, and pastries, and the “healthy” dietitian advised on nutrient diversification rather than elimination.</p><p>By twenty‑seven, Lena’s gut complaints intensified. She now presented with a chronic, often severe, loose stool that would come after meals containing gluten, followed by a sudden bloated feeling that often prompted her to avoid friends’ gatherings. She visited the gastroenterology clinic seeking relief for “constipation and bloating” that had become “unusual in her adult life.” The gastroenterologist conducted a basic workup: CBC, CMP, thyroid panel, and fecal studies. Again, no celiac serology came up to the office’s radar. They concluded that her symptoms were likely “secondary to her endocrine disorders” and recommended a gluten‑free diet trial. Lena found that the trial was difficult given her love of comfort foods; she would reluctantly skip a slice of pizza or a sandwich, but the gluten‑free substitutes were often pricey and less flavorful.</p><p>At twenty‑nine, Lena began to suffer a noticeable, unintentional weight loss of fifteen pounds over ten months. She still had only mild low platelet count and persistent mild anemia (hemoglobin 10.2 g/dL). Iron supplementation had not lifted her ferritin levels. She reported hair thinning, especially at the front hairline, and her hairdresser described “a thin, dry scalp.” Her dermatology visit focused on the vitiligo; no examination of the scalp was requested. She also started to experience intermittent chest discomfort in the evenings after meals. An ECG was normal. A cardiologist shrugged off the chest discomfort as “non‑anginal” and suggested improved diet management.</p><p>At thirty‑one, Lena was brought to the gastroenterology office for a routine check of her “persistent fatigue, mild abdominal pain, and frequent mild diarrhea.” The gastroenterologist asked for a thorough history and noted the patient’s multiple comorbidities. A basic panel was run: CBC, CMP, TSH (within the new normal after methimazole), T4, iron studies. No celiac serology was ordered. The office did request routine stool studies, which returned normal. She was advised to track foods that aggravate her symptoms, and the office offered a referral to a dietitian for further evaluation. Meanwhile, a rheumatology specialist was seeing her for the joint pain – her anti‑CCP antibody was negative, but her ESR remained 22 mm/h.</p><p>Throughout the years following Addison’s diagnosis, her vitamin D remained low despite supplementation; repeat DEXA scans at 31 and 32 showed persistent osteoporosis despite bisphosphonate therapy. Each clinical visit focused on the next autoimmune threat. The patient had built a life around her multiple treatments; the subtle, persistent digestive complaints were labeled “a chronic but manageable part of her complex medical profile.” At thirty‑two she still had a BMI of 22, had sustained a second wrist fracture after a minor fall, and continued to struggle with periodic dizziness and fatigue. No new diagnosis of celiac disease had emerged; it remained an overlooked, silent contributor to her iron deficiency anemia, bone disease, and subtle weight loss.</p><p>**The Unfolding Picture**</p><p>Lena’s disease trajectory over twenty years is marked by a maze of autoimmunity. Her early, chronic GI symptoms, which were subtle and non‑diarrheal, slipped into the background as her clinical picture thickened with Addison’s, type 1 diabetes, Graves’ disease, vitiligo, juvenile idiopathic arthritis, and osteoporosis. With each disease, physicians prioritized immediate threats and treated symptomatically, all while missing the undercurrent of untreated celiac disease. The subtlety of her GI complaints, coupled with a low IgA level that could explain false‑negative serology, and her ongoing gluten consumption, allowed the diagnosis of celiac disease to remain hidden, even as her body endured its cascading effects.</p><p>Had a celiac serology, HLA typing, or small‑bowel biopsy been conducted at any of the rheumatology, endocrinology, or gastroenterology visits—especially during the period of worsening anemia, worsening osteoporosis, or persistent bloating—the disease might have been uncovered. Instead, her disease remains an undiagnosed yet pervasive player, orchestrating her systemic symptoms from the shadows. This narrative, detailed and patient‑centric, provides a roadmap from childhood introduction of gluten, through a multi‑system autoimmune landscape, to a lingering, silent celiac disease that has yet to be recognized.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 1997-05-01</h3><div class="visit-meta">Pediatrics | Reason: Loose stool after first pasta meal</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** Loose stool the night after a small pasta dinner.
+
+**History of Present Illness:** 2‑year‑old female (height 120 cm, weight 20 kg) brought by mother after noticing a loose stool the night following a small pasta meal. Onset was immediately postprandial. Mother reports mild abdominal discomfort but no vomiting, blood in stool, fever, or change in diapers beyond this episode. No prior similar episodes noted. No recent travel, diet changes, or illness.
+
+**Past Medical History:**
+- Iron deficiency anemia
+- Vitamin D deficiency
+- Osteoporosis
+- Addison’s disease
+- Type 1 diabetes
+- Autoimmune thyroid disease / Graves’ disease
+- Juvenile idiopathic arthritis
+- Vitiligo
+
+No current medications; NKDA.
+
+**Review of Systems:** Negative for fever, chills, rash, joint pain, constipation, or nocturnal enuresis. Mild intermittent abdominal discomfort only related to this episode.
+
+**Physical Examination:**
+- Vitals: T = 98.6 °F, BP = 95/60 mmHg, HR = 75 bpm, weight = 20 kg, height = 120 cm
+- General: Well‑appearing, good dentition, no distress
+- HEENT: No mucosal erythema, normal mouth
+- Abdomen: Soft, non‑tender, normal bowel sounds, no masses
+- Extremities: Full ROM, no erythema
+- Skin: No alopecia, mild vitiligo patches
+
+**Assessment:** Acute post‑prandial loose stool in a healthy toddler, likely benign dietary intolerance or functional bowel movement. No red flags for infectious or inflammatory bowel disease.
+
+**Plan:**
+1. Reassure mother about normal stool variation in children.
+2. Advise minimal dietary modification: keep current diet, introduce new foods slowly.
+3. Encourage adequate fluid intake; offer oral rehydration solution if stool remains loose.
+4. Monitor stool frequency and consistency; keep a diary.
+5. Schedule follow‑up in 2 weeks if symptoms recur or if there is any blood, abdominal pain, fever, or dehydration.
+6. Educate mother on signs of infection or malabsorption (persistent diarrhea, weight loss, vomiting, fever). If persistent, consider stool culture, CBC, iron studies, and celiac serology.
+7. Continue routine pediatric care; next well‑child visit in 6 months.
+
+**Signature:** Pediatrician
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Loose stool soon after dinner</span><span class="pill">Mild abdominal discomfort</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.6°F</td></tr><tr><td>blood_pressure</td><td>95/60 mmHg</td></tr><tr><td>heart_rate</td><td>75 bpm</td></tr><tr><td>weight</td><td>20 kg</td></tr><tr><td>height</td><td>120 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No abdominal tenderness</li><li>Normal bowel sounds</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Family history of an unexplained &quot;chronic hunger&quot;</li><li>First introduction of wheat at age 6</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Lena’s mother brought her to the clinic after noticing a loose stool the night after a small pasta dinner. On exam, the child was afebrile, well‑appearing, with no red flags. The pediatrician reassured the mother, advised minimal dietary change, and scheduled a follow‑up in two weeks if symptoms recurred. No labs were ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early gluten exposure with non‑specific GI symptom; no suspicion of celiac.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2001-06-15</h3><div class="visit-meta">Pediatrics | Reason: School nurse check for anemia</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 10‑year‑old female presents for routine school nurse anemia screening. Patient reports mild fatigue after school and occasional dizziness. Past history significant for iron deficiency anemia, vitamin D deficiency, osteoporosis, Addison’s disease, type 1 diabetes, autoimmune thyroid disease, Graves’ disease, juvenile idiopathic arthritis, and vitiligo. She is currently off all medications. She notes intermittent loose stools but denies abdominal pain. No recent fevers or weight changes.
+
+Objective: Vitals: T 98.7°F, BP 100/65 mmHg, HR 80 bpm, weight 30 kg, height 135 cm.
+
+Physical examination: Pale conjunctivae noted; no hepatosplenomegaly; abdomen soft, non‑tender, normal bowel sounds; no lymphadenopathy. Rest of exam unremarkable.
+
+Labs: CBC reveals hemoglobin 10.9 g/dL; ferritin 12 ng/mL, confirming iron deficiency. Other labs pending.
+
+Assessment: The patient most likely has iron deficiency anemia secondary to chronic blood loss or malabsorption, as suggested by low ferritin, low hemoglobin, pale conjunctivae, and a history of intermittent loose stools. No acute Addisonian crisis or thyroid dysfunction evident at present.
+
+Plan:
+1. Prescribe oral iron sulfate 200 mg PO daily, to be taken with vitamin C (e.g., orange juice). Counsel patient and parents on proper timing (avoid with dairy or antacids).
+2. Advise adequate dietary calcium and vitamin C intake to enhance iron absorption.
+3. Educate regarding signs of iron toxicity (nausea, vomiting, dark stools) and to report promptly.
+4. Repeat CBC and ferritin in 2 weeks to assess response.
+5. Continue routine well‑child visit in 6 months.
+6. If anemia persists or stool studies show persistent loose stools, consider GI evaluation (e.g., stool occult blood, stool antigen testing, or referral for gastroenterology).
+7. Monitor for gastrointestinal side effects of iron therapy; provide constipation stool softener if needed.
+
+Disposition: Patient and family understand plan and asked to bring next appointment and any new symptoms.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild fatigue after school</span><span class="pill">Occasional dizziness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.7°F</td></tr><tr><td>blood_pressure</td><td>100/65 mmHg</td></tr><tr><td>heart_rate</td><td>80 bpm</td></tr><tr><td>weight</td><td>30 kg</td></tr><tr><td>height</td><td>135 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Pale conjunctivae</li><li>No hepatosplenomegaly</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Ferritin</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 10.9 g/dL</li><li>Ferritin 12 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Iron sulfate 200 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Intermittent loose stools</li><li>Past mild anemia</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the school nurse visit, a CBC showed hemoglobin 10.9 g/dL and ferritin 12 ng/mL. The pediatrician prescribed oral iron sulfate 200 mg daily and advised adequate calcium and vitamin C intake. A repeat CBC in two weeks was scheduled.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Persistent anemia likely secondary to chronic GI blood loss or malabsorption; celiac considered but not investigated.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2004-07-20</h3><div class="visit-meta">Rheumatology | Reason: Joint pain and rash</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 13‑year‑old female presents with moderate knee pain, an elbow rash, and gastrointestinal complaints.
+
+**History of Present Illness:** Patient reports knee and ankle pain that worsens during sports, bloating after lunch, intermittent loose stools, an erythematous, non‑tender rash around the elbows, and fatigue that has persisted since age 10. Rash has been present for approximately 3 months.
+
+**Past Medical History:** Iron‑deficiency anemia diagnosed in 2001, currently taking iron sulfate 200 mg PO daily. No known drug allergies.
+
+**Review of Systems:** Positive for fatigue, joint pain, rash, bloating, and loose stools. Denies fever, chest pain, shortness of breath, or weight loss.
+
+**Physical Examination:** 
+- Vital signs: T 98.5 °F, BP 102/66 mmHg, HR 78 bpm, weight 45 kg, height 150 cm.
+- Musculoskeletal: Mild effusion of both knees; no swelling or tenderness noted in ankles or elbows. Rash: erythematous, non‑tender exanthem around both elbows.
+- Abdomen: Soft, non‑tender, no organomegaly.
+
+**Lab Results:** ANA 1:80 speckled positive; ESR 18 mm/h (upper‑normal); CRP &lt;0.5 mg/dL.
+
+**Assessment:** The constellation of oligoarticular knee pain, mild rash, low‑grade inflammation, and a low‑titer ANA is most consistent with early oligoarticular juvenile idiopathic arthritis (JIA). Differential considerations include early systemic lupus erythematosus (SLE) and drug‑induced rash, but the absence of multi‑organ involvement and normal inflammatory markers make JIA more likely.
+
+**Plan:**
+1. Initiate NSAID therapy: naproxen 250 mg PO twice daily.
+2. Short course of oral prednisone: 5 mg PO daily for 5 days.
+3. Continue iron sulfate 200 mg PO daily.
+4. Counsel on activity modification: rest, avoid high‑impact sports until flare subsides.
+5. Order full autoimmune panel (anti‑dsDNA, anti‑Smith, complement C3/C4, RF, anti‑CCP, HLA‑B27, and a routine CBC with differential).
+6. Educate parent/patient to monitor for new symptoms such as photosensitivity, mucosal ulcers, or worsening rash and to return if such symptoms occur.
+7. Follow‑up: Return to clinic in 2 weeks for reassessment of joint symptoms, rash, GI complaints, and to review autoimmune panel results.
+
+**Anticipated Response:** Expect reduction in pain and inflammation with NSAID and short prednisone course; rash should improve or resolve; GI symptoms may improve as activity decreases.
+
+**Prognosis:** Early oligoarticular JIA generally has a good prognosis with timely treatment. Ongoing monitoring will determine if disease progresses to a more extensive form or requires escalation of therapy.
+
+**Patient Education:** Discuss importance of medication adherence, rest, proper nutrition, and continued monitoring of iron levels.
+
+**Signature:**
+
+---
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Knee and ankle pain that worsens during sports</span><span class="pill">Bloating after lunch</span><span class="pill">Loose stools intermittently</span><span class="pill">Erythematous rash around elbows</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.5°F</td></tr><tr><td>blood_pressure</td><td>102/66 mmHg</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>weight</td><td>45 kg</td></tr><tr><td>height</td><td>150 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild knee effusion</li><li>Elbow erythema, non‑tender rash</li><li>Normal abdominal exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ANA panel</li><li>ESR</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ANA 1:80 speckled positive</li><li>ESR 18 mm/h</li><li>CRP &lt;0.5 mg/dL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Naproxen 250 mg PO bid</li><li>Prednisone 5 mg PO daily for 5 days</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Iron sulfate 200 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Frequent fatigue since age 10</li><li>Bloating and loose stools during adolescence</li><li>Rash present for 3 months</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The adolescent presents with moderate knee pain, an elbow rash, and GI complaints. Physical exam shows mild swelling of knees, positive ANA 1:80 speckled, normal ESR 18 mm/h. The rheumatologist diagnoses undifferentiated JIA, initiates low‑dose naproxen 250 mg twice daily, and starts oral prednisone 5 mg daily for 5 days. The patient is advised to rest, avoid high‑impact sports, and report any new symptoms. The rheumatologist orders a full autoimmune panel but no celiac serology.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early autoimmune process (JIA) overlapped with chronic GI symptoms; celiac remains untested.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2007-08-05</h3><div class="visit-meta">Endocrinology | Reason: Assessment of fatigue and orthostatic dizziness</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Fatigue and orthostatic dizziness. 
+History of Present Illness: 16‑year‑old female with known iron deficiency anemia presents with increasing fatigue, post‑school exhaustion, and light‑headedness upon standing. Over the past three months she reports a 3‑kg weight loss and persistent paleness. She has a history of mild anemia and had a low potassium level previously. 
+Past Medical History: Iron deficiency anemia. 
+Medications: Iron sulfate 200 mg PO daily. 
+Allergies: NKDA. 
+Review of Systems: Positive for fatigue, dizziness, weight loss; negative for chest pain, palpitations, fever, GI bleeding. 
+Physical Examination: Thin built, mild pallor, dry skin. BP 90/55 mmHg, HR 88 bpm, Temp 98.4 °F, weight 65 kg, height 160 cm. Cutaneous capillary refill slightly delayed. No orthostatic tachycardia noted. 
+Labs &amp; Tests: ACTH stimulation test shows subnormal cortisol rise; DEXA T‑score –2.0 indicating osteopenia likely secondary to glucocorticoid exposure. CBC: Hb 9.8 g/dL, ferritin 8 ng/mL. Potassium low on prior labs. 
+Assessment: Secondary adrenal insufficiency (likely pituitary/hypothalamic), ongoing iron deficiency anemia, glucocorticoid‑induced osteopenia. 
+Plan: 1) Initiate hydrocortisone 15 mg PO at 09:00 and fludrocortisone 0.1 mg PO at bedtime. 2) Continue iron sulfate 200 mg PO daily. 3) Prescribe calcium 500 mg PO twice daily and vitamin D3 2000 IU PO daily. 4) Educate on sick‑day rules—doubling hydrocortisone dose with fever, infection, or trauma—plus monitor symptoms of adrenal crisis. 5) Order electrolytes, CBC, ferritin, and morning cortisol in 4 weeks. 6) Titrate steroids as needed based on clinical response and labs. 7) Schedule endocrine follow‑up in 4 weeks; repeat ACTH stimulation in 3 months; repeat DEXA in 12 months. 8) Encourage balanced diet, adequate hydration, and gradual physical activity as tolerated. 
+Disposition: Patient educated and instructed; no acute emergency noted. 
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Paleness</span><span class="pill">Fatigue after school</span><span class="pill">Orthostatic dizziness</span><span class="pill">Weight loss of 3 kg over 3 months</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.4°F</td></tr><tr><td>blood_pressure</td><td>90/55 mmHg</td></tr><tr><td>heart_rate</td><td>88 bpm</td></tr><tr><td>weight</td><td>65 kg</td></tr><tr><td>height</td><td>160 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Thin build, mild pallor</li><li>Dry skin</li><li>Reduced cutaneous capillary refill</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ACTH stimulation test</li><li>DEXA scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Cortisol response subnormal</li><li>Bone density T‑score -2.0</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Hydrocortisone 15 mg PO</li><li>Fludrocortisone 0.1 mg PO</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Iron sulfate 200 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Recent increase in fatigue</li><li>Iron deficiency anemia persistent</li><li>Low potassium on earlier labs</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>An ACTH stimulation test reveals subnormal cortisol rise confirming primary adrenal insufficiency. The endocrinologist initiates hydrocortisone 15 mg PO daily (9 AM) and fludrocortisone 0.1 mg PO nightly. The patient also receives calcium 500 mg PO BID and vitamin D3 2000 IU daily. An earlier CBC showed hemoglobin 9.8 g/dL and ferritin 8 ng/mL; the patient is advised to continue iron supplements. A DEXA scan demonstrates osteopenia, which is attributed to chronic glucocorticoid exposure.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Addison&#x27;s disease diagnosed; celiac disease still not suspected.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2009-09-10</h3><div class="visit-meta">Endocrinology | Reason: New onset polyuria and glucose irregularities</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 18‑year‑old female presents with new onset polyuria, polydipsia, nocturia, and a 4‑kg weight loss over the past 2 months.
+
+History of Present Illness: She reports increased thirst, frequent nighttime urination, worsening fatigue, and notable weight loss. Dietary history reveals a recent shift to high‑carbohydrate meals. She has a known diagnosis of Addison’s disease and is on chronic hydrocortisone and fludrocortisone. No prior history of glucose abnormalities.
+
+Physical Examination: Thin build with visible thin extremities. Skin turgor is decreased. Blood pressure 95/60 mmHg, heart rate 82 bpm, temperature 98.2°F. BMI approximately 23.2 (61 kg, 161 cm). No abdominal tenderness. Endocrine exam otherwise unremarkable.
+
+Labs: Fasting glucose 145 mg/dL, OGTT 1 hr 180 mg/dL, 2 hr 150 mg/dL, HbA1c 7.8%, low C‑peptide.
+
+Assessment: The constellation of hyperglycemia, low C‑peptide, and strong symptoms is most consistent with newly diagnosed type 1 diabetes mellitus superimposed on chronic Addison’s disease. Secondary causes (glucocorticoid‑induced diabetes) are unlikely given the low endogenous insulin production. We initiate a basal‑bolus insulin regimen with metformin as adjunct therapy per current guidelines.
+
+Plan:
+1. Basal insulin: NPH 20 units at bedtime.
+2. Rapid‑acting insulin before each meal: 8 units.
+3. Metformin 500 mg BID, titrating to 1 g BID as tolerated.
+4. Continue current adrenal replacement: hydrocortisone 15 mg PO daily, fludrocortisone 0.1 mg PO at bedtime.
+5. Reinforce carbohydrate counting and SMBG 4×/day (fasting, pre‑meal, 2 h post‑meal, bedtime). Adjust insulin based on readings.
+6. Educate on hypoglycemia recognition, the use of glucagon kit, and the importance of carrying a medical alert bracelet.
+7. Order anti‑GAD and IA‑2 antibody testing to confirm type 1 autoimmunity and to document baseline.
+8. Monitor blood pressure and weight weekly; review hydration status.
+9. Follow‑up in 2 weeks appointment or sooner if hypoglycemia, hyperglycemia, or Addisonian crisis occurs. Repeat HbA1c and fasting lipid panel in 3 months.
+10. Coordinate with primary care for routine labs and adjust iron sulfate dose if needed.
+
+Follow‑up Recommendations: 2‑week review of insulin doses and SMBG log, 90‑day repeat HbA1c, routine monitoring of adrenal function, and dietitian referral for carbohydrate management.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Increased thirst</span><span class="pill">Frequent nighttime urination</span><span class="pill">Weakness</span><span class="pill">Weight loss 4 kg</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.2°F</td></tr><tr><td>blood_pressure</td><td>95/60 mmHg</td></tr><tr><td>heart_rate</td><td>82 bpm</td></tr><tr><td>weight</td><td>61 kg</td></tr><tr><td>height</td><td>161 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Thin extremities</li><li>Poor skin turgor</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose</li><li>OGTT</li><li>HbA1c</li><li>C‑peptide</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fasting glucose 145 mg/dL</li><li>OGTT 1 hr 180 mg/dL, 2 hr 150 mg/dL</li><li>HbA1c 7.8%</li><li>C‑peptide low</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Basal insulin NPH 20 units qHS</li><li>Rapid‑acting insulin 8 units before meals</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Addison’s disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydrocortisone 15 mg PO</li><li>Fludrocortisone 0.1 mg PO</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO</li><li>Iron sulfate 200 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of Addison&#x27;s disease</li><li>Recent dietary changes with high carbohydrate intake</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The endocrinologist performs fasting glucose (145 mg/dL) and OGTT (180 mg/dL at 1 hour). Diagnosis of type 1 diabetes is confirmed. Insulin therapy is initiated with basal‑bolus plan: NPH 20 units at bedtime, rapid‑acting insulin before meals. Metformin 500 mg BID is added due to insulin resistance concerns. Patient education on blood glucose monitoring and insulin injection technique is conducted. No mention of celiac disease; GI symptoms remain unexplained.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Multiple autoimmune endocrine disorders accumulating; no celiac serology performed.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2011-04-12</h3><div class="visit-meta">Endocrinology | Reason: Evaluation of new weight loss and tremor</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for evaluation of new weight loss and tremor.
+
+History of Present Illness: A 20‑year‑old female with a longstanding history of Addison’s disease and type 1 diabetes mellitus reports a 3 kg unintentional weight loss over the past 2 months. She also notes tremulous hands, palpitations, and persistent fatigue that have progressively worsened. Recent laboratory work revealed a positive TSH‑receptor antibody (150 %), suppressed TSH (&lt; 0.02 mIU/L), and markedly elevated free T4 (5.5 ng/dL). Clinical examination confirms a fine upper‑limb tremor and diffuse tachycardia with a resting heart rate of 110 bpm; no proptosis or eye changes were noted.
+
+Past Medical History: Addison’s disease, type 1 diabetes mellitus, iron deficiency anemia.
+Past Medications: Hydrocortisone 15 mg PO daily, fludrocortisone 0.1 mg PO at bedtime, calcium 500 mg PO BID, vitamin D3 2 000 IU PO daily, iron sulfate 200 mg PO daily, insulin NPH 20 units bedtime, rapid‑acting insulin 8 units before meals, metformin 500 mg BID. 
+
+Physical Examination:
+- Vitals: Temp 98.3°F, BP 90/54 mmHg, HR 110 bpm, Weight 58 kg, Height 162 cm.
+- Cardiovascular: Tachycardia, regular rhythm, no murmur.
+- Neurologic: Fine tremor of the hands.
+- Musculoskeletal: No focal deficits.
+- ENT/Ophthalmology: No ophthalmic signs of Graves.
+
+Assessment:
+1. Hyperthyroidism due to Graves disease – supported by positive TSH‑receptor antibodies, suppressed TSH, elevated free T4, and clinical manifestations (weight loss, tremor, palpitations).
+2. Osteopenia/osteoporosis – DEXA T‑score −2.5.
+3. Adrenal insufficiency - baseline Addison’s disease; careful glucocorticoid balance is required when starting antithyroid therapy.
+4. Diabetes mellitus management remains suboptimally controlled with A1c 7.8 %.
+
+Plan:
+- Initiate methimazole 15 mg PO daily for hyperthyroidism.
+- Continue current endocrine and diabetes regimen; monitor for potential hyperglycemia secondary to increased glucagon during hyperthyroidism.
+- Prescribe alendronate 70 mg PO weekly for bone density; reinforce calcium &amp; vitamin D supplementation.
+- Educate patient on signs of adrenal crisis (severe fatigue, hypotension) and the need for dose adjustment of hydrocortisone during stress.
+- Reinforce regular capillary glucose checks and adjust insulin as needed.
+- Follow up in 6 weeks for repeat TSH, free T4, and clinical assessment; earlier if symptoms worsen.
+- Counsel patient regarding possible GI side effects of methimazole and to monitor for constipation from insulin therapy; no further GI work‑up deemed necessary at this time.
+
+Disposition: Patient instructed to return promptly if she develops worsening fatigue, lethargy, vomiting, hypotension, or severe gastrointestinal symptoms.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Tremulous hands</span><span class="pill">Palpitations</span><span class="pill">Unexplained weight loss 3 kg in 2 months</span><span class="pill">Fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.3°F</td></tr><tr><td>blood_pressure</td><td>90/54 mmHg</td></tr><tr><td>heart_rate</td><td>110 bpm</td></tr><tr><td>weight</td><td>58 kg</td></tr><tr><td>height</td><td>162 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tremor, fine</li><li>Diffuse tachycardia</li><li>No exophthalmos noted</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>TSH receptor antibody</li><li>TSH</li><li>Free T4</li><li>DEXA scan</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>TSH receptor antibody 150%</li><li>TSH &lt;0.02 mIU/L</li><li>Free T4 5.5 ng/dL</li><li>DEXA T‑score -2.5</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Methimazole 15 mg PO daily</li><li>Alendronate 70 mg PO weekly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Addison’s disease</span><span class="pill">Type 1 diabetes</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydrocortisone 15 mg PO</li><li>Fludrocortisone 0.1 mg PO</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO</li><li>Iron sulfate 200 mg PO daily</li><li>Insulin NPH 20 units bedtime, rapid 8 units before meals</li><li>Metformin 500 mg BID</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Addison’s, Type 1 Diabetes</li><li>Recent GI complaints: bloating, loose stool</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Serum TSH receptor antibody positive, TSH suppressed. The endocrinologist diagnoses Graves&#x27; disease and starts methimazole 15 mg daily. A repeat DEXA shows T‑score -2.5; alendronate 70 mg weekly is prescribed. The patient’s GI symptoms are still attributed to insulin‑related constipation; no celiac workup is ordered. The clinician emphasizes regular glucose checks and thyroid monitoring.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Endocrine autoimmunity continues; celiac disease still in background.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2013-03-30</h3><div class="visit-meta">Orthopedics | Reason: Wrist fracture after fall</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Right wrist pain and swelling after a fall. 
+History of Present Illness: The patient is a 32‑year‑old female with a complex medical history (iron deficiency anemia, vitamin D deficiency, osteoporosis, Addison’s disease, type 1 diabetes, autoimmune thyroid disease, juvenile idiopathic arthritis, vitiligo, secondary adrenal insufficiency, and chronic glucocorticoid‑induced osteopenia). She fell onto an outstretched hand 2 days ago. She reports sharp pain in the distal wrist, edema, and limited wrist flexion. 
+Review of Systems: Positive for left‑hand pain, recent weight loss, mild fatigue. No fever, chest pain, shortness of breath, or neurologic deficits noted. 
+Past Medical History: Chronic glucocorticoid use (hydrocortisone 15 mg daily), fludrocortisone 0.1 mg nightly, bone‑protective therapy (alendronate 70 mg weekly), calcium 500 mg BID, vitamin D3 2000 IU daily.  
+Current Medications: Iron sulfate 200 mg daily, naproxen 250 mg BID, hydrocortisone 15 mg daily, fludrocortisone 0.1 mg bedtime, calcium 500 mg BID, vitamin D3 2000 IU daily, NPH insulin 20 units bedtime, rapid‑acting insulin 8 units before meals, metformin 500 mg BID, methimazole 15 mg daily, alendronate 70 mg weekly. 
+Allergies: None known. 
+Physical Examination: Temperature 98.4°F; BP 94/58 mmHg; HR 84 bpm; Weight 63 kg; Height 164 cm. Inspection of the right wrist reveals swelling and tenderness over the distal radius. Palpation elicits pain at the fracture site. Active range of motion: flexion limited to 10°; passive flexion within normal limits but painful. No deformity or neurovascular deficits. 
+Imaging: X‑ray of the right wrist demonstrates a greenstick fracture of the distal radius. 
+Assessment: 1) Greenstick fracture of the distal radius – stable, suitable for non‑operative management. 2) Osteopenia/osteoporosis secondary to chronic glucocorticoid therapy and inadequate vitamin D levels, now confirmed by repeat DEXA T‑score of –2.6. 3) Complex endocrine disease contributing to bone turnover abnormalities. 
+Plan: 1) Immobilization: Short arm cast applied. 2) Pain control: Acetaminophen 500 mg q6h PRN. 3) Continue current bone‑health regimen (alendronate, calcium, vitamin D). 4) Repeat DEXA scan in 6 months. 5) Orthopedic follow‑up in 2 weeks for cast evaluation and fracture healing assessment. 6) Endocrinology consult to review glucocorticoid dosing and possible adjustment of calcium/vitamin D supplementation for optimal bone density. 7) Counsel patient on safe return to activity post‑cast removal; arrange physiotherapy after cast removal. 8) Monitor weight, blood pressure, glycemic control, and anemia status. 9) Educate patient on signs of cast complications (increased pain, decreased sensation) and advise to seek immediate care if occurring.
+
+The patient was reassured, instructed on cast care, and discharged from orthopedics with instructions to contact the office if pain worsens or cast integrity is compromised.
+
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Pain and swelling in right wrist</span><span class="pill">Limited range of motion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.4°F</td></tr><tr><td>blood_pressure</td><td>94/58 mmHg</td></tr><tr><td>heart_rate</td><td>84 bpm</td></tr><tr><td>weight</td><td>63 kg</td></tr><tr><td>height</td><td>164 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Swelling, tenderness over distal radius</li><li>Limited wrist flexion</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>X‑ray wrist</li><li>DEXA scan repeat</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Fracture distal radius</li><li>DEXA T‑score -2.6</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Short arm cast</li><li>Acetaminophen 500 mg q6h PRN</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Addison’s disease</span><span class="pill">Type 1 diabetes</span><span class="pill">Graves&#x27; disease</span><span class="pill">Osteopenia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydrocortisone 15 mg PO</li><li>Fludrocortisone 0.1 mg PO</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO</li><li>Iron sulfate 200 mg PO daily</li><li>Insulin NPH 20 units bedtime</li><li>Rapid‑acting insulin 8 units before meals</li><li>Metformin 500 mg BID</li><li>Methimazole 15 mg PO daily</li><li>Alendronate 70 mg PO weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Osteopenia on prior DEXA</li><li>Long‑term glucocorticoid use</li><li>Recent weight loss</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Radiographs confirm greenstick fracture of the distal radius. The orthopedic surgeon immobilizes the wrist with a short arm cast and orders a repeat DEXA in 6 months. The surgeon notes the low bone density and attributes it to long‑term glucocorticoids and inadequate vitamin D. No celiac-specific labs are pursued. The patient is reassured and discharged with pain management (acetaminophen 500 mg q6h PRN).</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Bone fragility exacerbated by glucocorticoids; celiac disease remains undetected.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2016-10-18</h3><div class="visit-meta">Gastroenterology | Reason: Chronic bloating and diarrhea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Chronic bloating and diarrhea.
+
+History of Present Illness:
+A 27‑year‑old female presents to the GI clinic with a 6‑month history of increasing abdominal bloating, loose stools (3–4 times per day) and occasional mild abdominal discomfort after ingestion of wheat products. She reports a concurrent 5‑kg weight loss. She has known autoimmune disorders (Addison’s disease, Type 1 diabetes, Graves’ disease) and was recently started on high‑dose methylprednisolone for a flare of juvenile idiopathic arthritis. She is on a complex medication regimen (hydrocortisone, fludrocortisone, methylprednisolone, iron, metformin, insulin, methimazole, alendronate, naproxen, calcium, vitamin D) and has a history of mild GI symptoms dating back to childhood. Her current IgA level is known to be low (12 mg/dL). She denies nausea, vomiting, melena, hematochezia, fever, or recent travel.
+
+Review of Systems:
+- GI: Bloating, loose stools after wheat ingestion, occasional abdominal discomfort. No nausea, vomiting, hematochezia.
+- Constitutional: Weight loss, no fever.
+- Others: No new rashes, no joint pain flare.
+
+Past Medical History:
+- Addison’s disease, Type 1 diabetes, Graves’ disease, osteopenia, JIA (on naproxen), iron deficiency anemia.
+
+Medications:
+- Hydrocortisone 15 mg PO daily
+- Fludrocortisone 0.1 mg PO nightly
+- Methylprednisolone 5 mg PO daily
+- Calcium 500 mg PO BID
+- Vitamin D3 2000 IU PO daily
+- Iron sulfate 200 mg PO daily
+- Insulin NPH 20 units bedtime
+- Rapid‑acting insulin 8 units before meals
+- Metformin 500 mg BID
+- Methimazole 15 mg PO daily
+- Alendronate 70 mg PO weekly
+- Naproxen 250 mg PO BID
+
+Allergies: NKDA
+
+Physical Examination:
+- Vitals: T 98.5°F, BP 92/56 mmHg, HR 78 bpm, weight 58 kg, height 165 cm.
+- General: Well‑appearing, thin.
+- Abdominal: Soft, non‑tender, no distension, normal bowel sounds, Murphy sign negative.
+
+Diagnostic Tests Ordered:
+- Stool culture, ova &amp; parasites, C. difficile toxin
+- Fecal calprotectin
+- Serum IgA level
+
+Results:
+- Stool culture negative, no parasites, C. difficile toxin negative.
+- Calprotectin 12 mg/L (normal &lt;50).
+- IgA 12 mg/dL (low).
+
+Assessment:
+The clinical picture is highly suggestive of gluten‑related enteropathy (celiac disease or non‑celiac gluten sensitivity) given the clear temporal relationship between wheat ingestion and GI symptoms, the low IgA level (which can blunt serologic testing), and weight loss. The normal calprotectin essentially rules out active inflammatory bowel disease. Differential diagnoses include:
+1. Celiac disease (potential IgA deficiency)
+2. Non‑celiac gluten sensitivity
+3. Irritable bowel syndrome (IBS‑D subtype)
+4. Lactose intolerance
+5. Microscopic colitis (unlikely given normal calprotectin)
+6. Medication‑induced diarrhea (naproxen, insulin).
+
+Plan:
+1. Initiate a 6‑month gluten‑free diet trial. Provide written instructions and example meal plans; refer patient to a registered dietitian for ongoing support, addressing dietary restrictions and social barriers.
+2. Provide sennosides 8 mg PO nightly for constipation if needed; advise liberal hydration and high‑fiber foods compliant with gluten‑free diet.
+3. Repeat symptom diary and weight assessment in 6 weeks.
+4. Consider IgG‑based gluten antibodies (gliadin, endomysial IgG) at 6 months if symptoms persist or serologic evidence is required.
+5. Manage potential hypoglycemia that may occur with dietary changes; reinforce SMBG charting.
+6. Coordinate with endocrinology to monitor adrenal function during high‑dose methylprednisolone taper.
+7. Address the low serum IgA: schedule repeat IgA in 2 months to assess for recovery; consider measuring total IgG and IgM.
+8. Encourage the patient to maintain continuity of her underlying disease therapies.
+
+Follow‑Up:
+- GI clinic in 6 weeks for symptom review, weight check, and dietitian referral completion.
+- Continue regular endocrinology and rheumatology appointments.
+- If symptoms do not improve after 6 months of gluten‑free diet, proceed with duodenal biopsy to definitively rule out celiac disease.
+- Patient advised to seek urgent care if diarrhea becomes bloody, or if she experiences severe abdominal pain, fever, or signs of adrenal crisis.
+
+Signature: Dr. ________ (Gastroenterology)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe bloating after meals with wheat</span><span class="pill">Loose stool 3–4 times daily after gluten ingestion</span><span class="pill">Occasional abdominal discomfort</span><span class="pill">Weight loss 5 kg over 6 months</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.5°F</td></tr><tr><td>blood_pressure</td><td>92/56 mmHg</td></tr><tr><td>heart_rate</td><td>78 bpm</td></tr><tr><td>weight</td><td>58 kg</td></tr><tr><td>height</td><td>165 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft abdomen, no distension</li><li>No tenderness</li><li>Positive Murphy sign absent</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Stool culture</li><li>Fecal calprotectin</li><li>IgA level</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Stool culture negative</li><li>Calprotectin 12 mg/L (normal &lt;50)</li><li>IgA 12 mg/dL (low, normal 70–400)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Gluten‑free diet instruction</li><li>Sennosides 8 mg PO nightly for constipation if needed</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Addison’s disease</span><span class="pill">Type 1 diabetes</span><span class="pill">Graves&#x27; disease</span><span class="pill">Osteopenia</span><span class="pill">JIA on low dose naproxen</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydrocortisone 15 mg PO</li><li>Fludrocortisone 0.1 mg PO</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO</li><li>Iron sulfate 200 mg PO daily</li><li>Insulin NPH 20 units bedtime</li><li>Rapid‑acting insulin 8 units before meals</li><li>Metformin 500 mg BID</li><li>Methimazole 15 mg PO daily</li><li>Alendronate 70 mg PO weekly</li><li>Naproxen 250 mg PO bid</li><li>Methylprednisolone 5 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Addison&#x27;s, Type 1, Graves&#x27;</li><li>Long history of mild GI complaints</li><li>Recently started high‑dose methylprednisolone for flare of JIA</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The gastroenterologist notes the patient’s long‑standing GI complaints that correlate with gluten ingestion. A comprehensive stool panel (including ova &amp; parasites, C. difficile toxin, culture, fecal calprotectin) is ordered and comes back unremarkable. The clinician prescribes a 6‑month gluten‑free diet trial and repeats the symptom diary. No celiac serology or HLA typing is ordered because the patient’s IgA was previously noted to be borderline low by the labs at age 17. The patient expresses difficulty adhering to the diet due to social factors.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>GI symptoms remain unexplained; lack of celiac serology continues; patient develops compliance challenges.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2020-11-05</h3><div class="visit-meta">Gastroenterology | Reason: Routine check for persistent GI symptoms</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Routine follow‑up for persistent GI symptoms and ongoing anemia.
+History of Present Illness: The patient reports mild post‑prandial abdominal pain, frequent mild diarrhea, fatigue, and worsening hair loss. She has a long history of autoimmune disorders including Addison’s disease, type 1 diabetes, Graves’ disease, juvenile idiopathic arthritis, vitiligo, and osteopenia. Last year she initiated a gluten‑free diet after a prior trial of a gluten‑associated bloating. No recent dietary changes have been noted.
+Past Medical History: Addison’s disease, type 1 diabetes mellitus, Graves’ disease, juvenile idiopathic arthritis, vitiligo, osteopenia, iron deficiency anemia.
+Medications: Hydrocortisone 15 mg PO daily, Fludrocortisone 0.1 mg PO bedtime, Calcium 500 mg PO BID, Vitamin D3 2000 IU PO daily, Iron sulfate 300 mg PO BID, Insulin NPH 20 units bedtime, Rapid‑acting insulin 8 units before meals, Metformin 500 mg BID, Methimazole 15 mg PO daily, Alendronate 70 mg PO weekly, Naproxen 250 mg PO bid, Methylprednisolone 5 mg PO daily.
+Allergies: NKDA.
+Physical Examination: Vitals: T 98.6°F, BP 90/55 mmHg, HR 80 bpm, weight 57 kg, height 166 cm. General: Pale conjunctivae, dry skin. Abdomen: Soft, non‑tender, normal bowel sounds. Extremities: No edema. Skin: Vitiligo patches.
+Labs: CBC shows hemoglobin 10.1 g/dL, MCV 78 fL. Iron panel: serum iron 45 µg/dL, TIBC 320 µg/dL, ferritin 9 ng/mL. Vitamin D 18 ng/mL, IgA 12 mg/dL.
+Assessment: 1. Iron‑deficiency anemia secondary to malabsorption, most consistent with celiac disease in the setting of IgA deficiency. 2. Vitamin D deficiency. 3. Persistent mild GI complaints possibly related to early celiac sprue or NSAID‑induced enteropathy.
+Plan: 1. Increase oral iron sulfate to 300 mg PO BID, counsel on dosing schedule and side‑effect mitigation. 2. Continue gluten‑free diet for an additional 3 months and repeat IgA anti‑tTG, IgG anti‑tTG, and DGP‑IgG at month 3. 3. Order fecal calprotectin to exclude inflammatory bowel disease. 4. Begin vitamin D3 2000 IU PO daily and re‑check 25‑OH‑vitamin D in 3 months. 5. Refer to dietitian for comprehensive nutrition counseling. 6. Continue current corticosteroid and immunosuppressant regimen. 7. Monitor for GI side effects of naproxen; consider switching to an alternate analgesic if symptoms worsen.
+Follow‑Up: Return to GI clinic in 3 months for repeat labs and to assess response to the gluten‑free diet. If symptoms persist beyond 6 months, consider endoscopic evaluation with duodenal biopsy.
+Signature: [Physician Name]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild abdominal pain, especially after meals</span><span class="pill">Frequent mild diarrhea</span><span class="pill">Fatigue</span><span class="pill">Worsening hair loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>temperature</td><td>98.6°F</td></tr><tr><td>blood_pressure</td><td>90/55 mmHg</td></tr><tr><td>heart_rate</td><td>80 bpm</td></tr><tr><td>weight</td><td>57 kg</td></tr><tr><td>height</td><td>166 cm</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Pale conjunctivae</li><li>Dry skin</li><li>Normal abdominal exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>Serum iron</li><li>Ferritin</li><li>Vitamin D</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Hemoglobin 10.1 g/dL</li><li>Ferritin 9 ng/mL</li><li>Serum iron 45 µg/dL</li><li>Total iron binding capacity 320 µg/dL</li><li>Vitamin D 18 ng/mL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Increase iron sulfate to 300 mg PO BID</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Addison’s disease</span><span class="pill">Type 1 diabetes</span><span class="pill">Graves&#x27; disease</span><span class="pill">Osteopenia</span><span class="pill">JIA</span><span class="pill">Vitiligo</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Hydrocortisone 15 mg PO</li><li>Fludrocortisone 0.1 mg PO</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO</li><li>Iron sulfate 200 mg PO daily</li><li>Insulin NPH 20 units bedtime</li><li>Rapid‑acting insulin 8 units before meals</li><li>Metformin 500 mg BID</li><li>Methimazole 15 mg PO daily</li><li>Alendronate 70 mg PO weekly</li><li>Naproxen 250 mg PO bid</li><li>Methylprednisolone 5 mg PO daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Long‑standing Addison’s, T1DM, Graves, JIA</li><li>Previous gluten–associated bloating</li><li>No recent dietary changes</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the routine follow‑up, the gastroenterologist discusses persisting digestive complaints and the patient’s ongoing anemia. CBC shows hemoglobin 10.1 g/dL, ferritin 9 ng/mL. A repeat iron panel is ordered. No celiac serology, HLA typing, or intestinal biopsy is pursued; the patient’s low IgA status continues to be considered a confounder. The physician recommends increasing the iron supplement dose and continuing the gluten‑free trial for another 3 months. Referral to a dietitian for nutrition counseling is provided. No new diagnosis of celiac disease is made.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Anemia persists; GI complaints unchanged; celiac disease remains undetected due to routine omission of appropriate serology.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 32</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Iron deficiency anemia</span><span class="pill">Vitamin D deficiency</span><span class="pill">Osteoporosis</span><span class="pill">Addison’s disease</span><span class="pill">Type 1 diabetes</span><span class="pill">Autoimmune thyroid disease</span><span class="pill">Graves’ disease</span><span class="pill">Juvenile idiopathic arthritis</span><span class="pill">Vitiligo</span><span class="pill">Secondary adrenal insufficiency</span><span class="pill">Glucocorticoid‐induced osteopenia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Iron sulfate 300 mg PO BID</li><li>Hydrocortisone 15 mg PO daily</li><li>Fludrocortisone 0.1 mg PO bedtime</li><li>Calcium 500 mg PO BID</li><li>Vitamin D3 2000 IU PO daily</li><li>Insulin NPH 20 units bedtime</li><li>Rapid‐acting insulin 8 units before meals</li><li>Metformin 500 mg BID</li><li>Methimazole 15 mg PO daily</li><li>Alendronate 70 mg PO weekly</li><li>Naproxen 250 mg PO bid</li><li>Methylprednisolone 5 mg PO daily</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient: 2‑year‑old female presented with a single episode of post‑prandial loose stool after a small pasta meal. Mild abdominal discomfort noted; vitals normal (T 98.6°F, BP 95/60 mmHg, HR 75 bpm, weight 20 kg, height 120 cm). Physical examination was unremarkable with soft, non‑tender abdomen and normal bowel sounds. Mother was reassured; advised minimal dietary changes, adequate fluid intake, and keeping a stool diary. Follow‑up scheduled in 2 weeks if symptoms recur or worsen, and routine well‑child visit in 6 months.</li><li>Visit 2 (2001-06-15): Pediatric anemia screening. Patient reports mild fatigue and occasional dizziness; intermittent loose stools. Physical exam notable for pale conjunctivae; vitals stable. Labs show hemoglobin 10.9 g/dL and ferritin 12 ng/mL indicating iron deficiency. Prescribed oral iron sulfate 200 mg daily, advised vitamin C and calcium intake, and monitoring for GI side effects. Follow‑up: repeat CBC/ferritin in 2 weeks, routine well‑child visit in 6 months.</li><li>Visit 3 (2004-07-20: Rheumatology): 13‑year‑old female presented with knee and ankle pain, bloating after lunch, intermittent loose stools, erythematous rash around elbows, and fatigue. Vitals: T 98.5°F, BP 102/66 mmHg, HR 78 bpm, weight 45 kg, height 150 cm. Physical exam showed mild effusion of both knees, non‑tender erythematous rash on elbows, soft non‑tender abdomen. Laboratory results: ANA speckled 1:80 positive, ESR 18 mm/h, CRP &lt;0.5 mg/dL. Medications initiated: naproxen 250 mg PO twice daily, prednisone 5 mg PO daily for 5 days, continued iron sulfate 200 mg PO daily. Ordered full autoimmune panel and routine CBC. Counselled on activity modification; advised rest and avoidance of high‑impact sports. Follow‑up scheduled in 2 weeks.</li><li>Visit 4 (2007-08-05): Endocrinology evaluation for fatigue, dizziness, and weight loss. Exam: thin built, mild pallor, BP 90/55 mmHg, HR 88 bpm. Labs: Hb 9.8 g/dL, ferritin 8 ng/mL, ACTH stimulation test showed subnormal cortisol rise, DEXA T‑score –2.0. Initiated hydrocortisone 15 mg PO daily, fludrocortisone 0.1 mg PO bedtime, calcium 500 mg PO twice daily, vitamin D3 2000 IU PO daily; continue iron sulfate 200 mg PO daily. Follow‑up in 4 weeks; repeat ACTH stimulation in 3 months; repeat DEXA in 12 months.</li><li>Visit 5 (2009-09-10): Endocrinology evaluation for new onset polyuria, polydipsia, nocturia, and 4‑kg weight loss. Physical exam: thin build, decreased skin turgor, BP 95/60 mmHg, HR 82 bpm, BMI 23.2. Labs: fasting glucose 145 mg/dL, OGTT 1‑hr 180 mg/dL, 2‑hr 150 mg/dL, HbA1c 7.8%, low C‑peptide. Diagnosed with type 1 diabetes mellitus superimposed on chronic Addison’s disease. Treatment initiated: basal NPH insulin 20 units at bedtime, rapid‑acting insulin 8 units before each meal, metformin 500 mg BID, continued hydrocortisone 15 mg daily and fludrocortisone 0.1 mg at bedtime. Plan: self‑monitoring of blood glucose four times daily, education on hypoglycemia and glucagon use, anti‑GAD and IA‑2 antibody testing, weekly BP and weight checks, follow‑up in 2 weeks, repeat HbA1c in 3 months, dietitian referral for carbohydrate management.</li><li>Visit 7 (2013-03-30): Orthopedic assessment of right wrist fracture after fall. X‑ray confirmed a greenstick fracture of the distal radius. Short arm cast applied. Acetaminophen 500 mg q6h PRN prescribed for pain. Repeat DEXA scan scheduled in 6 months. Orthopedic follow‑up in 2 weeks for cast evaluation; endocrinology consult requested to review glucocorticoid dosing and bone health optimization. Physical therapy to be initiated after cast removal. Patient advised on cast care and signs of complications.</li><li>Visit 8 (2016-10-18: Gastroenterology): 27‑year‑old female with 6‑month history of chronic bloating and 3–4 loose stools daily after wheat ingestion, 5‑kg weight loss. Vitals: T 98.5°F, BP 92/56 mmHg, HR 78 bpm, weight 58 kg, height 165 cm. Physical exam: soft abdomen, normal bowel sounds, no distension. Stool culture, ova &amp; parasites, C. difficile toxin negative. Fecal calprotectin 12 mg/L (&lt;50). IgA 12 mg/dL (low). Started gluten‑free diet trial, prescribed sennosides 8 mg PO nightly for constipation, added methylprednisolone 5 mg PO daily. Follow‑up in 6 weeks; repeat IgA and consider IgG gluten antibodies at 6 months. GI clinic and dietitian referral scheduled.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

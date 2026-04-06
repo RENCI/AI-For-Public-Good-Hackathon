@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case cac4bbf5</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: cac4bbf5</h1><div class="subtitle">Acute Psychosis (Schizophrenia) | Male, 24</div><div class="badges"><span class="badge badge-hard">hard</span><span class="badge badge-acute">acute</span><span class="badge badge-worsening">worsening</span></div><div class="meta-line">Comorbidities: Major Depressive Disorder, Cannabis Use Disorder, Anxiety Disorder</div><div class="meta-line">Risk Factors: Family history of schizophrenia, Cannabis use during adolescence, Urban upbringing, Low socioeconomic status, Early life trauma</div></div>
+<details><summary>Narrative <span class="preview-text">Eighteen-year-old Marcus had never felt “normal.”  He grew up on the rough side of the city’s south‑side, a block where ...</span></summary><div class="section-body"><p>Eighteen-year-old Marcus had never felt “normal.”  He grew up on the rough side of the city’s south‑side, a block where alley walk‑out stores were more common than streetlights.  His mother, a single parent who worked two low‑pay jobs, was often absent, leaving Marcus to cope with the echoes of a father who left when he was a toddler and who later resurfaced in a brief, chaotic reunion that ended in violence.  He recalls the night he woke to the sound of a pounding on his bedroom door—his father, a figure of both threat and tenderness in a single silhouette—he felt the world tilt into darkness, then a sudden chill that ran through his spine.  That first trauma would seed a lifetime of insomnia, nightmares, and a constant underlying sense that he was being watched.</p><p>By the time he hit 16, a restless adolescent, Marcus was using cannabis to “calm the ghosts.”  The street‑market in his neighbourhood sold low‑quality joints of “spliff,” and he began to see it as a way to stave off the nagging fear.  As he entered college at 18, the use went from once in a month to almost daily.  He began to skip class, his motivation dipped, and the low grades started to pile up.  He also slipped into a subtle slump: the mornings came late, he would nap at odd hours, and the once‑lively conversation with his roommate became riddled with references to voices that “told him” where to look. Initially, the roommate chalked this up to campus stress and an occasional “psychedelic hangover.”</p><p>At 20, the first sign that things were slipping away was a series of unexplained panic attacks.  He would feel his chest tighten, watch his heart pound, and escape to the courtyard during a scheduled office hour, only to emerge with a red face and an urgent need to avoid crowds. The campus health clinic provided an outpatient psychotherapy referral and prescribed sertraline to address his anxiety and intermittent depressive mood—a decision made in the hope that mood stabilization would also quiet the racing mind.  He started tapering off the cannabis as part of the recommendation, but the lure of the “escape” was too strong. He reported feeling numb, an “empty shell.” The medication offered a brief reprieve: his panic attacks subsided; he was more present in class.  He did not, however, experience the expected improvement in his mood. The therapy sessions were brief and episodic, delivered by a clinician on a tight schedule, and Marcus rarely followed through—often missing appointments and feeling guilty for it.</p><p>By the spring of his junior year (age 22), his depressive symptoms deepened.  He had lost his previous love for music, found it hard to get out of bed, and his sleep became fragmented—shifting between nightmares and lucid, dreamless hours.  His therapist noted an increase in somatic complaints: “I’ve got a sore throat,” “I feel a throbbing in my chest,” and a pattern of irritability when he was asked to do anything that required sustained focus.  The therapist suggested a short trial of a second antidepressant, but the appointment was scheduled on a Thursday night when Marcus had a job shift. He showed up two days late and, by then, he had already slipped back into his cannabis consumption, using the evening “before going to work.”  The therapist expressed concern but continued to monitor.</p><p>Fast forward to May of his senior year (age 23).  Marcus’s roommate, who had been a constant presence, began noticing a distinct change.  He would stare off into the hallway, whisper to himself, mouthing words to an unheard voice.  Once, while walking to a coffee shop, Marcus stopped, looked at a stranger, and shouted an angry accusation that the stranger was “trying to get us.” The stranger was simply waving.  Marcus would later confess that the voice said, “Listen to me,” telling him to keep secrets.</p><p>When Marcus finally decided to seek help the following week, he was at the urgent‑care clinic complaining of “voices in my head.”  He described them as “someone speaking to him from behind him” and felt “that someone was out to get him.”  The nurse, noticing the sudden onset of auditory hallucinations and a recent spike in the use of marijuana, asked about medication adherence and recent mood changes. Marcus admitted to missing his sertraline dose for the past two weeks and having a “big smoke.”  He was given a short‑acting antipsychotic (haloperidol depot) for the momentary agitation and a written plan to see a psychiatrist.  He was discharged with appointments scheduled for the afternoon the next day.  The psychiatrist, Dr. Lee, arrived with a brief history: an adolescent with early trauma, a history of cannabis use, and two months of depressive mood with recent onset of hallucinations.  Dr. Lee offered a rapid‑acting olanzapine regimen (5 mg daily) with a side‑effect warning about sedation.</p><p>Marcus had a difficult decision ahead. He had had enough with his own medication regimen: the side‑effects, the stigma, the money. He decided to leave the clinic on a half‑dose of olanzapine—just enough to feel “not so crazy” for the night. He returned home, started a new job at a convenience store, and continued smoking cannabis every other night to “balance” the medication&#x27;s heaviness. The early attempts to manage his psychosis were marked by inconsistency; he would run out of olanzapine after a week, feeling the voices louder again.</p><p>Over the next month, Marcus’s life became a revolving door of subtle, frightening experiences. He had the sensation that a neighbor’s television was whispering in his ear. He developed a fragile, paranoid suspicion that his coworker was spying on him through the store’s security cameras. Once, after a shift, he tried to leave early because he “felt someone was watching” the parking lot. At home, he began to hide his money in an antique trunk he kept in the attic, convinced that someone would try to steal it. These episodes were short, lasting an hour or two, but they added a layer of anxiety to his already fragile mental state.</p><p>In early July, a breakthrough tragedy happened. Marcus was walking back from work and heard an audible voice, the same as before, urging him to “take a break.” He thought it meant to stop smoking; he turned on a light, sat on the curb, and inhaled a joint he had hidden in his backpack. Moments later, the sudden, sudden urge to “take a break” turned into an urgent, physical sensation: his throat closed, his vision flickered, blood rushed to his face, and he collapsed into an unresponsive state on the sidewalk.  Firefighters and paramedics arrived, he was conscious but disoriented. They found that the voice was likely a manifestation of a psychotic episode, triggered perhaps by the simultaneous medication side‑effects and the strain of cannabis use. He was brought to the nearest emergency department, where his vitals were stable but he was drowsy. The ED doctor ruled a severe psychosis and metabolic imbalance secondary to prolonged cannabis use and introduced a high‑dose intramuscular olanzapine to quell the acute agitation. He was admitted for a short observation stay of 48 hours before being discharged again with a prescription for olanzapine (10 mg daily), a 30‑day supply of benzodiazepines for acute anxiety, and a referral to a community mental health clinic for continued support.</p><p>The return trip to the community clinic was less smooth than anticipated. Marcus’s appointment a week later was canceled due to a staff shortage. He missed several follow‑ups, citing that he could not afford transportation, that he was “on a break,” and that he could not handle the “drugs.” He began to increase his cannabis use as a self‑medication strategy: what he thought was “calming the voices.”  The voices became more frequent, more insulting, sometimes manifesting as instructions to leave his current city, to “start fresh.”  He had a brief period in August wherein he began to suspect that his psychiatrist was “trying to get him,” which led to a short, tense confrontation over the phone. Dr. Lee was forced to call a crisis team to evaluate Marcus for potential medication noncompliance and risk of self‑harm. The team concluded that he had minimal risk of harm but needed more intensive psycho‑education around medication adherence.</p><p>August proved a month of escalation. On the 9th, Marcus, after a heavy evening of consuming a large quantity of cannabis, attempted to leave his apartment alone, claiming he could not tolerate the “voices” inside. He walked toward the subway but, in the middle of the platform, screamed to “stop!” in a panic. By the time emergency services arrived, he was sobbing, shouting that he was being “watched&quot; and that the “voices were telling him everyone was out to get him.”  He was taken to the emergency department, given benzodiazepines, and transferred to the psychiatric inpatient unit with a diagnosis: acute schizophrenia and severe cannabis‑induced psychosis.</p><p>During the weeklong hospitalization, the clinical team worked to stabilize his mental status. He was on a regimen of olanzapine (7 mg daily) and quetiapine (200 mg at bedtime). The psychiatric liaison noted a persistent auditory hallucination of &quot;someone behind me&quot; and a delusional narrative that an unknown group was planning to &quot;take him away.&quot; Despite the medication and a structured daily routine, he remained unable to tolerate the quiet of the ward; he would often stare off into a corridor for hours. He was withdrawn from the group activities due to his agitation, and he had no contact with family. The clinical team suggested low‑dose cognitive-behavioral therapy (CBT), but Marcus declined, citing that the &quot;thoughts were not a part of his life&quot; and he would rather “be on his own” again.</p><p>After the 7‑day stay, he was discharged to a halfway house. That evening the next day, he had a breakthrough: he walked out of the halfway house and left a note on the door: “I don’t want to be here. I have to go somewhere else.” He left with his bag, no money, no ID, and no plan. He was found the next day on the south‑side by a passerby in a hurry, shaking, speaking to himself in a low‑pitched whisper and “shouting” into an empty street. The passerby called the police, and Marcus was taken back to the psychiatric unit.  While in crisis, he made an admission that the “voices were telling him to keep going,” indicating he was experiencing a more profound psychotic ideation and a possible suicidal ideation that was unrecorded. The team flagged a high risk of suicide and re‑introduced a longer medication course, now adding risperidone (4 mg nightly) to the regimen.</p><p>By late September, Marcus was once again on the unit.  The pattern of medication adherence became a recurring battle. The side‑effects of the antipsychotics (weight gain, tremor, sedation) pushed him to skip doses. He kept relapsing into periods of intense paranoia. An accidental overdose of cannabis on a Friday night led to a hospital readmission. His blood test showed acute hepatic enzyme elevation, prompting the medical team to stop all psychotropic medication for 48 hours to test for toxicity.  In that period, his psychosis flared up: the voices were louder, the belief that he was being watched intensified, and he had a brief episode of non‑alcoholic withdrawal from cannabis, manifesting as a tremor and hallucinations for an hour. When the medication was reinstated, his condition improved only briefly before he slipped back into the same pattern.</p><p>The last four months were a tumultuous loop: 1) medication changes—olanzapine, quetiapine, risperidone, haloperidol; 2) episodes of cannabis binge; 3) episodes of hospitalization, each time a week or so, followed by a relapse and a brief respite in a halfway house or an inpatient unit. The clinical data show a progressive worsening of his psychosis, marked by the emergence of a formal delusional belief system that the entire city was a conspiratorial entity trying to “wipe and replace” him. He began to stop using the name of his therapist, saying, “I do not want to talk to the people who keep telling me who to do.” That withdrawal from the structured environment led eventually to a 3‑month gap without any formal psychiatric care.  The family was largely disconnected, unable to visit due to his unstable behavior and the low socioeconomic environment he lived in (no regular transportation, no finances for clinic visits).</p><p>The last clinical encounter with us was in early February (age 24 ½). Marcus was found in his apartment in a frantic state, clutching a syringe he used to self‑inject a half dose of liquid haloperidol—a risky attempt to override the hallucinations. On arrival, he was agitated, but the hallucinations had subsided momentarily. He was admitted, treated with a combination of olanzapine, quetiapine, and a high dose of propranolol for his anxiety. Despite a short-term improvement, he was discharged with a plan for a day‑clinic treatment program. That same morning, he left the apartment, said the voice “told me to get ready,” and walked out onto the sidewalk. He was later found by a police officer after refusing to answer a phone call that was his own number, telling him to ignore the “voices” on the phone. He was brought back to the emergency department and readmitted with acute decompensation: his psychosis had intensified, and the paranoia now involved an entire new delusional system about a &quot;shadow organization&quot; orchestrating his life.  He remained in the psychiatric unit for 12 days; after stabilization, he was discharged, with his final therapy session ending with a statement that he &quot;wanted nothing more than to live a normal life,&quot; but the narrative that he would stay in the current setting was unchanging.</p><p>When he returned to his apartment, he had no medication, no food, and a growing sense that he was being “watched.”  He was found by a passerby in March, shouting at the street that he couldn&#x27;t see any &quot;silently watching&quot; people.  The police, after a tense standoff where he produced an old, cracked gun he had in a locked box, called for help.  He was taken to the emergency department, where he was found to have a massive psychotic episode: auditory hallucinations, delusions that the entire city was a surveillance system, and a plan that he would “escape.”  No immediate intervention was given, as he remained safe and willing to comply with treatment.</p><p>The subsequent course has shown a pattern of gradual worsening: his ability to maintain a routine disintegrated, the medication adherence plummeted, his cannabis use remained frequent and was often used as a self‑medication. Despite repeated attempts by clinicians to offer outpatient services, community resources, and crisis staffing, Marcus often withdrew from care, often for days or weeks, each time re‐admitted with an escalated level of psychosis. His psychotic episodes became more elaborate and vivid, the auditory hallucinations more pervasive, and the content increasingly delusional, culminating in the most recent hospitalization that had an explicit suicidal attempt (attempt to self‑inflict laceration on his forearms). The last therapy session noted an increased focus on building a safety plan, but compliance was low.</p><p>In the month following the last hospitalization, Marcus was again discharged to a low‑cost, group living setting.  The next week, he had a psychotic break in which he was reportedly shouting at a public transportation bus driver, who had called police after &quot;he was threatening him.&quot;  His self‑reported health status was “depressed” and “hopeless.”  He claimed the voices told him that his life was “finished” and that his “future was over.”  The team noted a subtle decline in speech, with decreased speech rate, and increased catatonic posture when speaking about his therapist.  Despite this worsening pattern, Marcus remained on a medication regimen of olanzapine 7 mg daily, quetiapine 200 mg at night, and a short course of benzodiazepine (lormetazepam). He had missed 2 consecutive weeks of appointments at the community clinic because of transportation issues (no car) and a fear of the street where he lived.  His social functioning collapsed; he did not hold a job and had no supportive network, aside from a solitary friend who was no longer visiting.  The narrative ended with an episode of intense anxiety and hallucinations that forced a readmission to a psychiatric unit, where he remained for 11 days. On the last night, he told the mental health workers that he was “going to do the voices’ job” – a reference to the violent narratives he had been hearing. The plan was to re‑intensify his medication and continue to hold him in an inpatient environment.</p><p>Through the entire timeline, despite multiple points of potential intervention—primary care, emergency department, outpatient psychiatry, community mental health, and inpatient units—the patient’s condition continued to worsen. The progression from a subtle depression accompanied by mild anxiety and cannabis use to a full-blown, worsening acute psychotic schizophrenia is clear. Despite medications and therapy attempts, the core psychotic symptoms (auditory hallucinations, persecutory delusions, disorganized thought) continue to intensify, exacerbated by the persistent cannabis use and the lack of stable, consistent support and socio‑economic resources. The outcome is one of worsening, leading to repeated hospitalizations, a fractured therapeutic relationship, and an increased risk of self‑harm and violence toward self and others.  The narrative is a stark reminder of how the combination of early trauma, substance use, inadequate support, and untreated psychosis can create a feedback loop that spirals a patient out of the sphere of hope and into a deepening crisis.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button><button class="">Visit 9</button><button class="">Visit 10</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2024-01-15</h3><div class="visit-meta">Family Medicine | Reason: Panic attacks and depressed mood</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: panic attacks and mood symptoms.
+
+History of Present Illness: Marcus, a 24‑year‑old male, presented to the campus health clinic after a sudden panic attack in a lecture. He reported chest tightness, racing heart, and a sense of impending doom. The attack resolved spontaneously but was followed by persistent low mood and insomnia. He denies recent stressors beyond routine academic demands. He reports daily cannabis use (3‑4 joints/day) and acknowledges it may worsen anxiety.
+
+Past Psychiatric History: Major depressive disorder, anxiety disorder, cannabis use disorder. No current psychotropic medication. Parental divorce, low socioeconomic status, history of childhood trauma (father abandonment).
+
+Review of Systems: Positive for panic attacks, insomnia, low mood, anhedonia, nausea. Negative for chest pain aside from anxiety, fever, weight loss, urinary or bowel changes.
+
+Physical Examination: Vitals stable (BP 120/78 mmHg, HR 94 bpm, Temp 36.7°C, RR 18/min, SpO2 98%). Tense neck musculature noted. Cardiovascular exam normal. No focal neurological deficits.
+
+Assessment: Panic disorder with moderate‑severe depression and ongoing cannabis use, contributing to anxiety and insomnia. No acute medical cause identified.
+
+Plan:
+1. Start sertraline 50 mg PO daily. Titrate up by 25 mg every 2 weeks if tolerated.
+2. Refer to outpatient cognitive behavioral therapy (CBT) with four scheduled sessions.
+3. Counsel on reducing cannabis use; implement a gradual taper plan to minimize rebound anxiety.
+4. Recommend sleep hygiene education (consistent bedtime, limiting screen time, caffeine restriction).
+5. Monitor for SSRI side effects (nausea, insomnia, GI upset). Provide guidance on reporting.
+6. Follow‑up in 4 weeks to assess medication response and psychiatric status.
+7. Encourage daily mood and panic attack diary.
+
+The patient expressed motivation to engage in treatment and reported slight improvement in panic frequency after five days of sertraline.
+
+Plan is aligned with current guidelines for panic disorder and major depressive disorder in young adults.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Panic attacks with chest tightness</span><span class="pill">Insomnia</span><span class="pill">Low mood</span><span class="pill">Anhedonia</span><span class="pill">Nausea</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/78</td></tr><tr><td>HR</td><td>94</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Tense neck musculature</li><li>No focal neuro deficits</li><li>Normal cardiovascular exam</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg PO</li><li>Counseling referral</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement in panic attacks, but persistent sadness and insomnia.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder (current episode)</span><span class="pill">Generalized Anxiety Disorder</span><span class="pill">Cannabis Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily (started 1 week ago)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Daily cannabis use (3-4 joints/day)</li><li>History of panic attacks 6 months ago</li><li>Parental divorce, low SES</li><li>History of childhood trauma (father abandonment)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marcus presented to the campus health clinic after experiencing a sudden panic attack during a lecture. He described chest tightness, a racing heart, and a sense of impending doom. The clinician conducted a focused exam, confirmed no acute medical cause and reviewed his medication history. Sertraline was prescribed (dose titrated to 50 mg daily) and he was referred to outpatient psychotherapy for cognitive behavioral therapy. The counselor was scheduled for 4 weekly sessions. Marcus reported feeling slightly less anxious after 5 days, but his depressive mood remained severe. He was advised to reduce cannabis use to limit rebound anxiety. The provider documented diagnosis of Major Depressive Disorder, GAD, and Cannabis Use Disorder.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Patient with mood and anxiety disorders, escalating cannabis use; initial stabilization pending psychotherapy adherence.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2024-03-02</h3><div class="visit-meta">Psychiatry | Reason: Worsening depression, emerging mood swings</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Worsening mood and behavioral changes.
+
+History of Present Illness: Patient is a 24‑year‑old male with a past psychiatric history of Major Depressive Disorder (MDD), Cannabis Use Disorder (CUD), and Generalized Anxiety Disorder. He presents for a routine follow‑up and reports a continued low mood, increased irritability, poor sleep, and frequent concentration difficulties. He also reports intermittent faint auditory comments (“someone behind me”). A brief symptom questionnaire yielded a score of 18, consistent with moderate depressive symptoms.
+
+Past Psychiatric Treatment: The patient has been on sertraline 50 mg PO daily for MDD. He discontinued due to inadequate response and was partially non‑adherent with counseling appointments. He remains active in cannabis use (≈2 joints/day) and reports a 4‑kg recent weight loss.
+
+Mental Status Examination: Aged 24, male, alert and oriented to person, place, and time. Poor eye contact; speech is slowed and somewhat hesitant. Affect is constricted, mood described as “low.” No suicidal or homicidal ideation reported. No overt psychotic symptoms beyond the occasional auditory comment. Insight is limited; judgment somewhat impaired likely related to cannabis use.
+
+Vital Signs: BP 118/74 mmHg, HR 88 bpm, Temp 36.5°C, RR 16/min, SpO₂ 99% on room air.
+
+Assessment: The patient appears to be experiencing an exacerbation of his MDD with emerging subclinical psychotic symptoms. Possible contributors include: inadequate antidepressant coverage, ongoing cannabis use, and possible medication side effect from sertraline. Differential diagnoses include major depressive disorder, substance‑induced mood disorder (cannabis‑related), acute psychotic episode secondary to substance use, and anxiety disorder.
+
+Plan:
+1. Discontinue sertraline immediately.
+2. Initiate citalopram 20 mg PO once daily. Titrate by 20 mg increments every 2 weeks up to 40 mg as tolerated, monitoring for serotonin syndrome.
+3. Add low‑dose risperidone 0.5 mg PO nightly for emerging auditory phenomena and irritability. Educate patient on sedation, orthostatic hypotension, and extrapyramidal side effects; advise to monitor and report significant sedation.
+4. Counsel on cannabis cessation; discuss risk of psychosis and worsening depression. Encourage gradual taper with support.
+5. Emphasize sleep hygiene: consistent bedtime, limiting caffeine, use of relaxation techniques.
+6. Repeat CBC, CMP, liver enzymes, and urine drug screen in 2 weeks.
+7. Schedule a weekly psychiatric follow‑up via telehealth or office visit; instruct to seek urgent care if symptoms of psychosis, suicidal ideation, or marked agitation occur.
+8. Provide handout on medication adherence and side effect monitoring.
+
+The patient demonstrated insight into medication changes and acknowledges anxiety around side effects. He declined immediate psychotherapy but agreed to engage with CBT in the future. Follow‑up is arranged for next week.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent low mood</span><span class="pill">Increased irritability</span><span class="pill">Sleep disturbance</span><span class="pill">Poor concentration</span><span class="pill">Subtle auditory thoughts (“someone behind me”)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/74</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>36.5°C</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>SpO2</td><td>99%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Oriented x3</li><li>Poor eye contact</li><li>Speech slowed</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver enzymes</li><li>Urine drug screen</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Citalopram 20 mg PO</li><li>Risperidone 0.5 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Acknowledged medication changes; expressed fear of side effects.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">GAD</span><span class="pill">Cannabis Use Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sertraline 50 mg daily</li><li>Citalopram 20 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Missed 2 counseling appointments</li><li>Continued cannabis use (2 joints/day)</li><li>Recent weight loss 4kg</li><li>Family history of psychosis (father)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During a routine follow‑up, Marcus reported worsening depressive symptoms, increased irritability, and occasional faint auditory comments he attributed to a voice behind him. The psychiatrist conducted a mental status exam noting dull affect, psychomotor retardation, and intermittent thought content of voices urging him to listen. A brief symptom questionnaire (PHQ‑9) scored 18. The clinician decided to discontinue sertraline due to inadequate response, initiated citalopram for antidepressant coverage, and added low‑dose risperidone (0.5 mg nightly) for emerging psychotic symptoms, explaining sedation risks. The patient was scheduled for weekly psychiatric follow‑up and an urgent-care visit if symptoms escalated. The session emphasized medication adherence, the risks of cannabis use, and the importance of sleep hygiene.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early signs of auditory hallucinations; medication adjustment to address nascent psychosis; still on depression therapy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2024-04-18</h3><div class="visit-meta">Urgent Care | Reason: Acute auditory hallucinations, agitation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 22-year-old male presents to urgent‑care with acute auditory hallucinations and agitation. He reports hearing voices shouting &#x27;someone behind him&#x27; and is upset with a bus driver. He appears suspicious of staff, tense, and difficult to cooperate.
+
+Objective: Vital signs: BP 140/90, HR 106, Temp 37.2°C, RR 20, SpO2 97%. Physical exam notable for mild hand tremor, tense posture, inappropriate affect. No focal neurologic deficits. Observed for restlessness.
+
+Assessment: Acute exacerbation of emerging psychosis likely triggered by recent heavy cannabis use. Differential includes cannabis‑induced psychosis, major depressive disorder with psychotic features, and early schizophrenia. Labs: CBC normal, urine drug screen positive for THC.
+
+Plan: Administered 20 mg IM haloperidol, observed 45 minutes with mild calming, no resolution of hallucinations. Transferred to ED for further evaluation. Continue current psychiatric medications (citalopram 20 mg PO daily, risperidone 0.5 mg PO nightly). Consider increasing citalopram up to 40 mg pending ED evaluation. Provide safety counseling, encourage cannabis cessation. Arrange follow‑up with psychiatry within 48 hours and urgent‑care PCP within 1 week. Document discharge summary from ED.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Heard voices shouting “someone behind him”</span><span class="pill">Agitation</span><span class="pill">Distrustful behavior</span><span class="pill">Confusion</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/90</td></tr><tr><td>HR</td><td>106</td></tr><tr><td>Temp</td><td>37.2°C</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild tremor of hands</li><li>Tense posture</li><li>Inappropriate affect</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Urine drug screen</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Haloperidol 20 mg IM</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Agitated and uncooperative during assessment.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Emerging Psychosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Citalopram 20 mg daily</li><li>Risperidone 0.5 mg nightly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Heavy cannabis binge the night prior (7+ joints)</li><li>Missed 3 psychiatric visits</li><li>Advised to stop cannabis but non‑compliant</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marcus arrived to urgent‑care after a friend observed him shouting at a bus driver and claiming to hear voices. He was agitated and appeared suspicious of staff. The attending evaluated him, noting auditory hallucinations, impaired reality testing, and mild tachycardia. The clinician gave a single dose of intramuscular haloperidol 20 mg for acute agitation, observed for 45 minutes with no improvement in voices but slight calming. CBC, CMP, and urinalysis for cannabinoids were ordered; CBC returned normal; urinalysis positive for THC metabolites. The patient was transferred to the ED for further assessment. The clinician documented a provisional diagnosis of acute psychosis with cannabis‑induced exacerbation. No additional medications given in urgent‑care.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>First acute psychotic episode with cannabis binge; haloperidol administered; patient transferred to ED for observation.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2024-04-20</h3><div class="visit-meta">Emergency Psychiatry | Reason: Severe psychosis after cannabis binge</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Severe psychosis after cannabis binge.
+
+History of Present Illness:
+
+A 22‑year‑old male with a history of Major Depressive Disorder, Cannabis Use Disorder, and Psychosis presents to the ED with acute auditory hallucinations, paranoid delusions, and motor agitation following a heavy cannabis binge (10+ joints) approximately 48 hours ago.  Patient reports voices instructing him to “get out” and believes strangers are watching him through surveillance cameras.  He appears confused about the time of day and repeatedly asks staff if they are “surveillance cameras.”  He is oriented to person only, exhibits pressured and fluent speech, and is mildly agitated.
+
+Past Psychiatric History:
+- Major Depressive Disorder (MDD) – Current treatment citalopram 20 mg PO daily.
+- Psychotic episodes with auditory hallucinations – Risperidone 0.5 mg PO nightly.
+- Cannabis Use Disorder – 10+ joints binge 48 hrs ago.
+
+Past Medical History:
+- Weight loss 5 kg over 2 months.
+- Missed outpatient appointments.
+
+Medications (current):
+- Citalopram 20 mg PO daily
+- Risperidone 0.5 mg PO nightly
+- Olanzapine 10 mg PO nightly (recently initiated)
+
+Allergies: None
+
+Review of Systems:
+- Positive for auditory hallucinations, paranoid delusions, agitation.
+- Negative for fever, chest pain, shortness of breath, rash, weakness.
+
+Physical Examination:
+- Vitals: BP 110/70 mmHg, HR 112 bpm, Temp 36.9 °C, RR 18 /min, SpO₂ 96%.
+- General: Alert only to person, mildly anxious, agitated.
+- HEENT: Normocephalic, atraumatic.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Respiratory: Clear to auscultation.
+- Neurologic: Oriented to person only, fluent but pressured speech.
+- Psych: Auditory hallucinations present.
+
+Assessments &amp; Plan:
+
+1. Acute cannabis‑induced psychosis (most likely given temporal relationship and positive urinalysis).  The psychosis is likely exacerbated by current antipsychotic levels and may be insufficient.  
+   • Continue olanzapine 10 mg PO nightly, monitor for sedation and weight gain.
+   • Consider increasing olanzapine to 15 mg PO nightly after 48 hrs if symptoms persist.
+   • Continue citalopram 20 mg PO daily; consider titrating to 40 mg after safety evaluation.
+
+2. Substance‑induced mania / psychosis differential, but less likely given the absence of mood elevation.
+
+3. Ongoing cannabis use disorder: Reinforce abstinence counseling, provide referral to substance diversion program.
+
+4. Elevated liver enzymes (AST 55, ALT 78) likely secondary to chronic cannabis use and olanzapine; repeat LFTs in 2 weeks.
+
+5. Inpatient observation unit: admit to inpatient psychiatric unit for 48‑hour observation to monitor mental status and medication response.
+
+6. Safety: Provide secure environment, monitor for self‑harm risk.
+
+7. Follow‑up: 
+   • Discharge to inpatient psychiatric unit with medication adherence education.
+   • Weekly outpatient psychiatry visit after discharge.
+   • Reinforce adherence to risperidone and olanzapine; assess tolerability.
+   • Counsel on cannabis cessation; offer CBT and group support.
+   • Monitor vitals and hepatic panel.
+
+Disposition:
+Admitted to inpatient psychiatric unit for 48‑hour observation with ongoing treatment.
+
+Prepared by: [Emergency Psychiatrist]</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Auditory hallucinations (“voices telling him to get out”)</span><span class="pill">Paranoid delusions (watching)</span><span class="pill">Motor agitation</span><span class="pill">Hypotension after cannabis</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/70</td></tr><tr><td>HR</td><td>112</td></tr><tr><td>Temp</td><td>36.9°C</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Oriented to person only</li><li>Fluent but pressured speech</li><li>Auditory hallucinations</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CT head</li><li>Chest X-ray</li><li>CBC</li><li>CMP</li><li>Liver panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT head: No acute intracranial pathology</li><li>Chest X-ray: No cardiopulmonary abnormality</li><li>CBC: Within normal limits</li><li>CMP: Na 139, K 4.0, AST 55, ALT 78, BUN 16, Cr 0.9, Alb 3.5</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 10 mg IM</li><li>Olanzapine 5 mg IM</li><li>Olanzapine 10 mg PO nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Slight improvement after second IM dose; still hearing voices but calmer.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Psychosis</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Cannabis binge (10+ joints) 48 hrs ago</li><li>Previous haloperidol dose IM</li><li>Weight loss 5 kg</li><li>Missed outpatient appointments</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In the ED, Marcus exhibited severe auditory hallucinations, rapid speech, and a belief that strangers were watching him. He was confused about the time of day and repeatedly asked staff if they were “surveillance cameras.” The emergency psychiatrist performed a full exam, ordered a CT head (no acute findings), chest X-ray (clear), and labs: CBC, CMP (normal), liver enzymes slightly elevated (ALT 78 U/L, AST 55 U/L). He received intramuscular olanzapine 10 mg, which provided some sedation but did not fully resolve hallucinations. The patient remained mildly agitated, so a second IM dose 5 mg was administered. He was admitted to the inpatient psychiatric unit for a 48‑hour observation stay. The diagnosis of early schizophrenia (ICD‑10 F20.2) was recorded; drug toxicity (cannabis) noted as precipitating. The clinician emphasized the need for long‑term antipsychotic therapy and structured psychosocial support. He was given oral olanzapine 10 mg nightly and discharged to the psychiatric unit with a 7‑day plan for medication adherence education.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Onset of schizophrenia with cannabis‑related trigger; initiated olanzapine; continued cannabis use.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2024-05-02</h3><div class="visit-meta">Psychiatry (Inpatient) | Reason: Re‑hospitalization after self‑medication with haloperidol</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Re‑hospitalization following self‑medication with liquid haloperidol. 
+
+History of Present Illness: 23‑year‑old male with a known history of schizophrenia, major depressive disorder, anxiety disorder, cannabis use disorder and ongoing suicidal ideation was brought to the psychiatric unit after an emergency response indicated a possible self‑harm attempt.  He reported injecting a half‑dose (0.5 mL) of liquid haloperidol into his left forearm 12 hours prior to arrival.  He noted subjective improvement after injection but continued to report paranoid thoughts (“watching” by neighbors), self‑injury thoughts, and suicidal ideation.  He had not taken any scheduled medication for five days, was in a halfway house overnight, and had a superficial left forearm laceration from a self‑inflicted injury. 
+
+On presentation he was disoriented, confused, pale, and exhibited mild bilateral tremor.  Vital signs were stable: BP 102/68 mm Hg, HR 98 bpm, Temp 37.0 °C, RR 18 /min, SpO₂ 97 %.  A physical exam revealed a superficial laceration on the left forearm and mild tremor.  Labs showed elevated liver enzymes: AST 105 U/L, ALT 88 U/L, ALP 80 U/L, GGT 45 U/L.  CBC and CMP otherwise normal.  Urine drug screen was positive for THC, negative for benzodiazepines.
+
+Assessment: Acute agitation and psychosis most likely secondary to a combination of uncontrolled schizophrenia, abrupt discontinuation of antipsychotics, cannabis use, and accidental over‑dose of haloperidol.  Co‑existing acute iatrogenic drug toxicity (possible haloperidol toxicity and hepatotoxicity) is considered.  The patient remains at high suicide risk despite initial response to sedation.
+
+Plan:
+1. Medication:
+   - Continue Olanzapine 10 mg PO daily (no change).
+   - Initiate Quetiapine 200 mg PO at bedtime to augment antipsychotic control.
+   - Lorazepam 2 mg PO q6h PRN for agitation.
+   - Continue existing Citalopram 20 mg PO daily; consider titration to 30–40 mg after safety review.
+   - Risperidone 0.5 mg PO nightly remains unchanged.
+   - Discontinue IV propofol; use oral agents moving forward.
+2. Monitoring:
+   - Daily vitals and mental status.
+   - Repeat LFTs in 3 days.
+   - Monitor for extrapyramidal symptoms.
+3. Safety:
+   - Formal suicide risk assessment; safety plan in place.
+   - Continuous observation.
+4. Psychotherapy:
+   - Initiate individual therapy focusing on coping strategies and medication adherence.
+   - Group therapy for substance use education.
+5. Social:
+   - Social work scheduled to discuss housing stability and potential discharge planning.
+6. Follow‑up:
+   - Psychiatric evaluation daily.
+   - Discuss possible dose increase of Olanzapine if psychosis persists.
+   - Review liver function tests and adjust antipsychotic dosing as needed.
+   - Family meeting to reinforce support and safety.
+
+Disposition: Admitted to inpatient psychiatric unit for continued stabilization, medication management, and safety monitoring.
+
+Prognosis: With consistent medication adherence, therapy, and monitoring of liver function, prognosis is guarded but can improve with sustained support and treatment compliance.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Paranoid ideation (“watching” by neighbors), self‑injury thoughts, suicidal ideation</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>102/68</td></tr><tr><td>HR</td><td>98</td></tr><tr><td>Temp</td><td>37.0°C</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Bilateral tremor, mild tremor</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver panel</li><li>Urine drug screen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP: AST 105, ALT 88, ALP 80, GGT 45</li><li>URINE: THC positive, benzodiazepine negative</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 10 mg PO</li><li>Quetiapine 200 mg PO at bedtime</li><li>Lorazepam 2 mg PO q6h PRN</li><li>Intravenous propofol 25 mg</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Initial agitation; later cooperative during assessment; self‑injury discussion limited interest.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Schizophrenia</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Major Depressive Disorder</span><span class="pill">Suicidal Ideation</span></div></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Self‑injection of liquid haloperidol (0.5 mL) 12 hrs prior</li><li>Left halfway house during night</li><li>No medications for 5 days</li><li>History of self‑harm attempts</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marcus was brought to the psychiatric unit after an emergency response indicated a possible self‑harm attempt. On arrival, he was disoriented, confused, and appeared pale. Initial assessment revealed a self‑inflicted superficial left forearm laceration. He reported injecting a half‑dose of liquid haloperidol into his arm and feeling &quot;not crazy&quot; afterward. Vital signs were stable. Labs revealed elevated liver enzymes (AST 105, ALT 88). The psychiatrist consulted the inpatient team; started intravenous propofol 25 mg to sedate for assessment, then transitioned to oral olanzapine 10 mg PO, quetiapine 200 mg at bedtime, and lorazepam 2 mg PO q6h PRN for agitation. A psychiatric evaluation documented acute psychosis, self‑harm ideation, and a safety plan. Family was notified; a social work visit was scheduled to discuss housing stability. The patient consented to continue medication and attend therapy, with emphasis on medication adherence and substance use counseling. He was admitted for further stabilization.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Inpatient stabilization with multi‑antipsychotic regimen; ongoing cannabis use, severe psychiatric symptoms, self‑harm risk.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2024-06-01</h3><div class="visit-meta">Community Mental Health | Reason: Follow‑up after discharge from inpatient unit</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient is a 23‑year‑old male with a complex psychiatric history of schizophrenia, major depressive disorder, anxiety disorder and cannabis use disorder. He was discharged 10 days ago from an inpatient unit on olanzapine 10 mg nightly and quetiapine 200 mg bedtime. At this follow‑up, Marcus reports a resurgence of auditory hallucinations that he describes as louder after a recent cannabis binge. He also complains of constipation, 4 kg weight gain over 2 weeks and nausea. He admitted skipping his olanzapine dose for the past 3 days because of sedation.
+
+Vitals are stable: BP 112/70, HR 88, Temp 36.8°C, RR 16, SpO₂ 98%. Physical exam reveals somnolence and mild tremor.
+
+Labs: CBC and CMP are within normal limits. AST 55, ALT 48 (slightly elevated but not clinically concerning), LFTs normal.
+
+Assessment: 
+- Acute exacerbation of psychosis likely precipitated by cannabis use and recent olanzapine discontinuation. 
+- Medication side effects: sedation, constipation, weight gain, nausea.
+- Possible olanzapine withdrawal contributing to symptom relapse.
+
+Plan: 
+- Adjust antipsychotic regimen: olanzapine reduced to 5 mg nightly; quetiapine increased to 300 mg bedtime. 
+- Continue citalopram 20 mg daily and risperidone 0.5 mg nightly. 
+- Provide ondansetron 4 mg PRN for nausea. 
+- Counsel on cannabis harm‑reduction; referral to local program. 
+- Discuss side‑effect management and set realistic goals for dose titration. 
+- Implement weekly phone check‑in to monitor adherence, side effects and symptom trajectory. 
+- Re‑order CBC, CMP and LFTs in 4 weeks to monitor metabolic and hepatic impact of medication changes.
+
+The patient expressed frustration with side effects but agreed to the cautious taper plan. He is expected to return to clinic in 2 weeks or sooner if symptoms worsen.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Continued auditory hallucinations, irritability, insomnia</span><span class="pill">Skepticism toward medication</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>112/70</td></tr><tr><td>HR</td><td>88</td></tr><tr><td>Temp</td><td>36.8°C</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Somnolence, mild tremor</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver function panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: WBC 5.5, Hgb 13.5, Hct 40; CMP: AST 55, ALT 48; LFT: normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 5 mg PO nightly</li><li>Quetiapine 300 mg PO bedtime</li><li>Ondansetron 4 mg PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Agreed to new dosing schedule; reported mild improvement after last night’s dose.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Schizophrenia</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 10 mg nightly</li><li>Quetiapine 200 mg bedtime</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Discharged 10 days ago with olanzapine 10 mg, quetiapine 200 mg at bedtime</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>In this community clinic visit, Marcus reported that his hallucinations had returned in strength, and he felt the voices were louder after his last cannabis binge. He complained of constipation, weight gain (4 kg in 2 weeks), and nausea. He admitted to skipping his olanzapine dose for the past 3 days because of sedation. The clinician reviewed the side‑effect profile, suggested dose adjustment, and provided a short course of ondansetron 4 mg PRN for nausea. A comprehensive medication reconciliation was performed. The plan was to reduce olanzapine to 5 mg nightly, increase quetiapine to 300 mg bedtime, and set up a weekly phone check‑in to monitor adherence. A referral to a local harm‑reduction program for cannabis use was added. The patient expressed frustration with side effects and offered to remain on a lower dose, to which the clinician agreed with a cautious taper plan.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Adverse effects limited adherence; medication titration planned; cannabis use remains.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2024-06-25</h3><div class="visit-meta">Psychiatry (Inpatient) | Reason: Re‑admission for acute psychosis after self‑injury attempt</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">I/We saw the patient on admission following a police call for a self‑harm attempt. The patient, a 23‑year‑old male with a history of schizophrenia, cannabis use disorder, major depressive disorder, and prior suicidal ideation, presented with disorganized speech, pressured thinking, and delusions that the city council was surveilling him. He stated he was going to do the voices&#x27; job. On exam he was tachycardic (HR 102) with BP 98/60, RR 20, SpO2 97%, and had mild tremor. He was mildly sedated after 25 mg IM haloperidol, which reduced agitation but did not terminate hallucinations.
+
+Work‑up: CBC and CMP were normal except AST 81 U/L and ALT 70 U/L; GGT 49 U/L. CT head was unremarkable. The psychiatric team initiated a safety plan, started Risperidone 4 mg PO daily, increased Olanzapine to 7 mg PO nightly, and introduced Quetiapine 200 mg bedtime. Lorazepam 2 mg PRN was kept for agitation. The patient was placed under observation and began individual therapy focusing on coping with auditory hallucinations. He was counselled on medication adherence and cannabis abstinence.
+
+Assessment: Acute schizophrenic psychosis with severe auditory hallucinations and suicidal ideation likely precipitated by cannabis binge and medication non‑adherence. Risk of future self‑harm; elevated LFTs possibly drug‑related. Patient is currently stable after 11 days of inpatient care and was discharged on Olanzapine 7 mg nightly, Quetiapine 200 mg bedtime, Risperidone 4 mg daily, Lorazepam 2 mg PRN.
+
+Plan: • Continue discharge medication regimen. • Obtain CBC, CMP, LFTs in 4 weeks to monitor hepatic function. • Arrange outpatient psychiatric follow‑up within 5 days, ideally within 1 week. • Maintain safety plan: call crisis line if suicidal thoughts recur, avoid self‑harm tools. • Refer to substance‑use counseling for cannabis use disorder. • Encourage engagement in CBT for psychosis and depression. • Monitor for extrapyramidal side‑effects and weight changes. • Patient to contact the unit immediately if agitation or suicidal ideation increases.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe auditory hallucinations, suicidal thoughts, self‑harm</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>98/60</td></tr><tr><td>HR</td><td>102</td></tr><tr><td>Temp</td><td>37.1°C</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Slowed speech, odd clothing, tremor</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver panel</li><li>CT head</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP: AST 81, ALT 70, GGT 49</li><li>CT head: Normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Haloperidol 25 mg IM</li><li>Olanzapine 7 mg PO nightly</li><li>Quetiapine 200 mg PO bedtime</li><li>Risperidone 4 mg PO daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Initially resisted medication changes but eventually accepted; expressed hopeless feeling but no active plan after crisis line.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Schizophrenia</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Major Depressive Disorder</span><span class="pill">Suicidal Ideation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 5 mg nightly</li><li>Quetiapine 300 mg bedtime</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Attempted self‑harm with a razor; self‑injecting haloperidol</li><li>Skipped medication for 4 days</li><li>Recent large cannabis binge</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient was admitted after a police call for a self‑harm attempt. On evaluation, he exhibited disorganized speech, pressured thoughts, and active delusions that the city council was surveilling him. He reported that he was going to &quot;do the voices’ job&quot;. A rapid assessment revealed vitals within mild tachycardia; CT head negative. Laboratory workup confirmed mild elevation of AST/ALT (81/70). The team administered intramuscular haloperidol 25 mg, resulting in modest sedation. Psychiatrists added risperidone 4 mg PO daily and increased olanzapine to 7 mg PO nightly. A safety plan was created (call crisis line, no contact with self‑harm items). The patient was placed under observation; therapy sessions started focusing on coping with auditory hallucinations. He was encouraged to complete daily medication and to abstain from cannabis. He was discharged after 11 days with a medication regimen of olanzapine 7 mg, quetiapine 200 mg at bedtime, risperidone 4 mg daily, and lorazepam 2 mg PRN.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Escalated antipsychotic regimen: risperidone addition; ongoing suicidality; cannabis use still present.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2024-07-20</h3><div class="visit-meta">Outpatient Psychiatry | Reason: Follow‑up with new regimen, discuss therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up and medication regimen adjustment.
+
+History of Present Illness: 24‑year‑old male with a history of schizophrenia, cannabis use disorder, and major depressive disorder presents for a routine follow‑up. He reports hearing voices loudly, feeling paranoid about a perceived surveillance system, and experiencing a recent episode of believing a “shadow organization” intended to “wipe him out.” He also reports insomnia and irritability. The patient missed his risperidone dose for the past 2 days. He arrives late due to transportation issues and reported recent cannabis use.
+
+Past Psychiatric History: Multiple prior admissions for cannabis‑induced psychosis, self‑harm, and acute agitation. Current medication regimen includes olanzapine 7 mg nightly, quetiapine 200 mg bedtime, risperidone 4 mg daily, and lorazepam 2 mg PRN. He has a history of inconsistent medication adherence and weight gain.
+
+Review of Systems: Positive for auditory hallucinations, insomnia, irritability, weight gain, tremor, slowed speech. Negative for suicidality at this visit.
+
+Physical Examination: Alert, oriented, normal affect but slowed speech. Vital signs stable. Notable findings: alopecia over scalp (olanzapine‑related), mild tremor in upper extremities. No acute distress.
+
+Labs: Lipid panel – LDL 140 mg/dL, HDL 45 mg/dL, TG 250 mg/dL; Thyroid panel – T4 0.7 ng/dL (low); Urine drug screen – THC positive. Weight 85 kg, BMI 29.5.
+
+Assessment: 1) Schizophrenia – relapsing psychotic symptoms likely exacerbated by recent missed risperidone dose and continued cannabis use.
+2) Antipsychotic‑induced metabolic syndrome – significant hyperlipidemia and weight gain.
+3) Antipsychotic‑induced extrapyramidal side effect – mild upper‑extremity tremor.
+4) Possible subclinical hypothyroidism – low free T4.
+5) Cannabis‑related psychosis – positive urine screen.
+
+Plan:
+- Adjust risperidone to 2 mg daily (reduction from 4 mg). 
+- Add aripiprazole 10 mg PO daily to offset sedation and provide partial agonism.
+- Continue olanzapine 7 mg nightly and quetiapine 200 mg bedtime. 
+- Lorazepam 2 mg PO PRN for agitation.
+- Repeat lipid panel and thyroid panel in 2 weeks. If T4 remains low, consider levothyroxine therapy in consultation with endocrinology.
+- Counsel on cannabis cessation; offer nicotine replacement and behavioral strategies.
+- Reinforce CBT psycho‑education; schedule bi‑weekly CBT sessions.
+- Safety plan: Discuss coping strategies, crisis contact number, and when to seek urgent care.
+- Arrange 2‑week telehealth check‑in and in‑person visit in 6 weeks for medication titration review.
+
+Follow‑up Recommendations: 1) Two‑week telehealth appointment to assess symptom control and medication tolerance.
+2) Discuss safety plan and cannabis abstinence progress.
+3) Monitor weight and metabolic parameters at each visit.
+4) Review thyroid results; initiate levothyroxine if indicated.
+5) Continue CBT sessions and psychiatric follow‑up every 4 weeks thereafter.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Auditory hallucinations, insomnia, irritability</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>116/72</td></tr><tr><td>HR</td><td>90</td></tr><tr><td>Temp</td><td>36.6°C</td></tr><tr><td>RR</td><td>17</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Alopecia over scalp (from olanzapine)</li><li>Tremor in upper extremities</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Lipid panel</li><li>Thyroid panel</li><li>Urine drug screen</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Lipid panel: LDL 140, HDL 45, TG 250</li><li>T4: 0.7 (low)</li><li>Urine drug screen: THC positive</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 7 mg PO nightly</li><li>Quetiapine 200 mg PO bedtime</li><li>Risperidone 2 mg PO daily</li><li>Aripiprazole 10 mg PO daily</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Expressed frustration with medications; willing to try new pill schedule.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Schizophrenia</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Major Depressive Disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 7 mg nightly</li><li>Quetiapine 200 mg bedtime</li><li>Risperidone 4 mg daily</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Missed appointment due to transportation issues</li><li>Inconsistent medication adherence</li><li>Recent cannabis use</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marcus arrived late for his appointment after taking the bus. He reported hearing voices loudly, feeling paranoid, and feeling that the city was a surveillance system. He described a recent episode where he felt that a “shadow organization” was planning to “wipe him out.” During the exam, the clinician noted weight gain, mild tremor, and slowed speech. The psychiatrist reviewed medication logs; patients had missed risperidone for 2 days. The plan was to reduce risperidone to 2 mg daily, add aripiprazole 10 mg PO daily as a partial agonist to minimize sedation, and reinforce CBT psycho‑education. The patient was given a 14‑day supply of olanzapine and a new daily pill bottle. The clinician scheduled a follow‑up in 2 weeks with a telehealth check.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Medication adjustment to reduce sedation; continue high cannabis exposure; psychosis persists.</p></div></details></div><div class="visit-panel"><h3>Visit 9 &mdash; 2024-08-10</h3><div class="visit-meta">Community Mental Health | Reason: Missed appointments, increased risk, plan for crisis</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Missed appointments, increased risk, plan for crisis.
+
+Subjective: 24‑year‑old male, Marcus, presented early, fatigued, and reporting a new crisis: he planned to &quot;go to the park&quot; and kill himself because he believes the city is orchestrating his death. He denies intent to act but admits to a plan. Marcus’s baseline history includes schizophrenia, cannabis use disorder, major depressive disorder, and prior self‑harm ideation. He reports severe auditory hallucinations, insomnia, and agitation.
+
+Objective: Vitals – BP 108/68 mmHg, HR 92 bpm, Temp 36.7°C, RR 18/min, SpO₂ 97%. Examination reveals tremor, weight gain (~8 kg since last visit), poor hygiene, and poor insight. He is alert but restless.
+
+Assessment: Acute suicidal ideation with a plan but no current intent; severe psychotic symptoms likely exacerbated by recent cannabis use and medication non‑adherence; elevated liver enzymes (AST 85, ALT 78, GGT 49 U/L) likely related to poly‑antipsychotic regimen; acute agitation managed with IM haloperidol.
+
+Plan: 1) Admit to psychiatric observation unit for 48 h, institute safety plan and short‑term CBT focusing on crisis management.
+2) Medication adjustments: continue Olanzapine 7 mg PO nightly, Quetiapine 300 mg PO QHS (up from 200 mg), Risperidone 2 mg PO daily, add Aripiprazole 10 mg PO daily for augmentation, maintain Lorazepam 2 mg PO PRN for agitation.
+3) Continue IM Haloperidol 10 mg as needed; reassess need for future use.
+4) Monitor labs: CBC, CMP, LFT panel, repeat AST/ALT in 1 week.
+5) Provide a crisis hotline number, ensure transportation assistance for appointments, and arrange daily pill dispensing through a local pharmacy.
+6) Initiate a routine schedule: CBT twice weekly, medication review every 48 h, and a follow‑up outpatient visit in 2 weeks.
+
+Disposition: Patient consented to observation unit, expressed appreciation for support, and agreed to the safety plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Severe auditory hallucinations, self‑harm ideation, insomnia</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>108/68</td></tr><tr><td>HR</td><td>92</td></tr><tr><td>Temp</td><td>36.7°C</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Severe tremor, weight gain, poor hygiene</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>Liver panel</li><li>CT head</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>CMP: AST 85, ALT 78</li><li>CT head: Normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Haloperidol 10 mg IM</li><li>Quetiapine 300 mg PO QHS</li><li>Olanzapine 7 mg PO nightly</li><li>Risperidone 2 mg PO daily</li><li>Aripiprazole 10 mg PO daily</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Agreed to stay in observation unit; expressed gratitude for supportive staff.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Schizophrenia</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Major Depressive Disorder</span><span class="pill">Suicidal Ideation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 7 mg nightly</li><li>Quetiapine 200 mg bedtime</li><li>Risperidone 2 mg daily</li><li>Aripiprazole 10 mg daily</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Skip appointments due to lack of transportation</li><li>Attempted suicide with razor earlier that week</li><li>Cocaine use (first time) reported</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marcus arrived early, exhausted, and reported a new crisis: he was planning to go “to the park” and “kill himself” due to feeling that the city is orchestrating his death. The clinician conducted a formal suicide risk assessment, identified a plan but no intent, and placed a protective order for crisis services. The patient was admitted to a psychiatric observation unit for 48 hours while safety plan was developed. He was given IM haloperidol 10 mg for agitation, and a higher dose of quetiapine 300 mg QHS was added. Additionally, a brief CBT session targeting the safety plan was initiated. At discharge, he agreed to a more rigorous schedule of daily pill dispensing via a local pharmacy, and a crisis hotline was provided.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Heightened suicidality; attempted self‑harm; increased antipsychotic dosing; cannabis continuing.</p></div></details></div><div class="visit-panel"><h3>Visit 10 &mdash; 2024-09-05</h3><div class="visit-meta">Psychiatry (Inpatient) | Reason: Acute deterioration with homicidal ideation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: 24‑year‑old male with acute deterioration and homicidal ideation. Patient was brought to the unit after a police call at an abandoned building. He reported that police were “agents” and that he would “take them down.” He described a city conspiracy and reported auditory hallucinations. He had previously cut his wrists earlier that day. 
+
+History: Known for schizophrenia, cannabis use disorder, major depressive disorder, past self‑harm and homicidal ideation. Current regimen includes olanzapine 7 mg nightly, quetiapine 300 mg bedtime, risperidone 2 mg daily, aripiprazole 10 mg daily, lorazepam 2 mg PO PRN. Has a long history of polypharmacy and multiple recent self‑harm episodes. 
+
+Assessment: The patient exhibited high tremor, rigidity, confusion, sweating, and pronounced agitation, raising concern for neuroleptic malignant syndrome (NMS) after a recent intramuscular haloperidol dose (20 mg) and high‑dose antipsychotics. CK was markedly elevated at 1,800 U/L (normal &lt; 200). MRI brain was normal. Liver enzymes AST 80, ALT 70 suggest mild hepatic stress, possibly from poly‑antipsychotic load. Differential diagnosis includes acute psychosis secondary to schizophrenia, medication‑induced NMS, serotonin syndrome (unlikely clinically), substance‑induced psychosis (cannabis positive), major depressive disorder with psychotic features, and schizoaffective disorder. 
+
+Plan and Management: 
+1. Continue lorazepam 4 mg IV q2h for sedation and NMS control. 
+2. Hold haloperidol IM and consider discontinuing other high‑dose antipsychotics (quetiapine 400 mg QHS, risperidone 2 mg daily, aripiprazole 10 mg daily, olanzapine 7 mg nightly) pending safety reassessment. 
+3. Initiate clozapine once baseline labs (CBC with differential, CMP, LFTs, urine pregnancy) are obtained; monitor for agranulocytosis. 
+4. Daily CK, TSH, CBC, CMP, LFTs; vitals q4h with focus on temperature, HR, BP, RR. 
+5. Engage safety council daily; maintain continuous observation. 
+6. Conduct daily psychiatric evaluation, safety planning, and psychoeducation regarding cannabis cessation. 
+7. Provide antipsychotic taper protocol if NMS resolves; reintroduce low‑dose risperidone or aripiprazole only under close monitoring. 
+8. Coordinate with social work for discharge planning: secure outpatient follow‑up, medication teaching, drug screening, and crisis hotline information. 
+
+Disposition: Admitted for high‑acuity monitoring; patient was cooperative after sedation and expressed feeling “stuck” but no active violence.  
+
+Follow‑up: The patient will be re‑evaluated daily in the unit. After stabilization, discharge planning meeting with patient, family/caregiver, and safety council members will be scheduled. Post‑discharge outpatient follow‑up with psychiatry within 48 h, and weekly visits thereafter for medication titration and monitoring.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Homicidal ideas (“take them down”), auditory hallucinations, disorganized behavior</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/78</td></tr><tr><td>HR</td><td>110</td></tr><tr><td>Temp</td><td>37.3°C</td></tr><tr><td>RR</td><td>22</td></tr><tr><td>SpO2</td><td>95%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>High tremor, rigidity, confusion, sweating</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CK</li><li>MRI brain</li><li>CBC</li><li>CMP</li><li>Liver panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CK 1800 U/L (elevated), MRI normal</li><li>CBC normal</li><li>CMP: AST 80, ALT 70</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Haloperidol 20 mg IM</li><li>Lorazepam 4 mg IV q2h</li><li>Quetiapine 400 mg PO QHS</li><li>Consideration of clozapine</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Cooperative after sedation, later expressed feeling “stuck” but no direct aggression.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Schizophrenia</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Major Depressive Disorder</span><span class="pill">Suicidal / Homicidal Ideation</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 7 mg nightly</li><li>Quetiapine 300 mg bedtime</li><li>Risperidone 2 mg daily</li><li>Aripiprazole 10 mg daily</li><li>Lorazepam 2 mg PO PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Shooting self with a pen; last psychiatric crisis</li><li>Use of multiple antipsychotics concurrently (risking neuroleptic malignant syndrome)</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Marcus was brought to the inpatient unit after a police call at an abandoned building. He was shouting that the police were agents, that he would “take them down,” and that the city was a conspiratorial entity. He had a self‑harm attempt (cutting wrists) earlier that day. The team administered intramuscular haloperidol 20 mg and increased quetiapine to 400 mg QHS. An urgent MRI and CK were ordered; CK elevated at 1800 U/L, concern for neuroleptic malignant syndrome with current high-dose antipsychotics. The team started lorazepam 4 mg IV q2h and considered switching to clozapine after evaluation. He was admitted for high acuity monitoring. A psychiatry consult was obtained; a detailed suicide and homicide risk assessment revealed intention to harm others. A safety council was convened with law enforcement.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>High‑grade psychosis with homicidal ideation, near‑NMS; multi‑antipsychotic regimen causing metabolic and neurological toxicity; escalation of care planned.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 24</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Major Depressive Disorder</span><span class="pill">Cannabis Use Disorder</span><span class="pill">Anxiety Disorder</span><span class="pill">Schizophrenia</span><span class="pill">Suicidal Ideation</span><span class="pill">Subclinical Hypothyroidism</span><span class="pill">Neuroleptic Malignant Syndrome</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Olanzapine 7 mg nightly</li><li>Quetiapine 300 mg bedtime</li><li>Risperidone 2 mg daily</li><li>Aripiprazole 10 mg daily</li><li>Lorazepam 2 mg PO PRN</li><li>Haloperidol 10 mg IM PRN</li><li>Lorazepam 4 mg IV q2h</li><li>Clozapine (baseline labs pending)</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with a panic attack, low mood, insomnia, and chronic cannabis use. Started sertraline 50 mg daily with plan to titrate. Referred to CBT, advised cannabis taper and sleep hygiene. Follow-up in 4 weeks.</li><li>Follow‑up visit: Discontinued sertraline; initiated citalopram 20 mg daily with plan to titrate up to 40 mg; added risperidone 0.5 mg nightly for auditory phenomena and irritability; labs ordered (CBC, CMP, LFTs, UDS); counseling on cannabis cessation and sleep hygiene; scheduled weekly psychiatric follow‑up.</li><li>Patient attended urgent Care for acute auditory hallucinations and agitation. Vitals: BP 140/90, HR 106, mild hand tremor noted. Administered 20 mg IM haloperidol; patient became mildly calm after 45 minutes but hallucinations persisted. Transferred to ED. Labs normal CBC, CMP; urine drug screen positive for THC. Current meds continue: citalopram 20 mg daily, risperidone 0.5 mg nightly. Plan to consider increasing citalopram to 40 mg pending ED evaluation. Encouraged cannabis cessation. Follow‑up psychiatric consult within 48 hours.</li><li>Admitted to inpatient psychiatric unit for acute cannabis‑induced psychosis after heavy cannabis binge. Current medications: citalopram 20 mg daily, risperidone 0.5 mg nightly, olanzapine 10 mg PO nightly. Vitals: BP 110/70, HR 112. Elevated liver enzymes AST 55, ALT 78. Ordered CT head, chest X‑ray, CBC, CMP, liver panel. Plan to maintain olanzapine 10 mg nightly and consider increase to 15 mg after 48 h if symptoms persist. Citalopram to be titrated to 40 mg after safety evaluation. Discharge to inpatient unit for 48‑hour observation with medication adherence education and weekly outpatient psychiatry follow‑up.</li><li>Rehospitalized after self‑injection of liquid haloperidol. Presents with disorientation, paranoia, self‑harm thoughts, agitation, tremor, and mild liver enzyme elevation (AST 105, ALT 88). Labs show normal CBC/CMP, positive THC screen. Maintained olanzapine 10 mg daily, citalopram 20 mg daily, risperidone 0.5 mg nightly; added quetiapine 200 mg bedtime and lorazepam 2 mg q6h PRN for agitation. Daily psychiatric evaluation, monitoring of vitals and liver function, and safety planning conducted.</li><li>Follow‑up after inpatient discharge: recurrence of auditory hallucinations after cannabis binge; constipation, weight gain, nausea, somnolence, tremor. Olanzapine reduced to 5 mg nightly; quetiapine increased to 300 mg bedtime; ondansetron 4 mg PRN for nausea; continued citalopram 20 mg daily, risperidone 0.5 mg nightly; weekly phone check‑ins and labs scheduled in 4 weeks.</li><li>Patient admitted with self‑harm attempt, presenting with disorganized speech, pressured thinking, delusions of surveillance, auditory hallucinations, and suicidal ideation. After 25 mg IM haloperidol, mild sedation achieved; hallucinations persisted. Vitals: HR 102, BP 98/60, mild tremor. Labs: CBC/CMP normal, AST 81 U/L, ALT 70 U/L, GGT 49 U/L; CT head unremarkable. Initiated Risperidone 4 mg daily, increased Olanzapine to 7 mg nightly, introduced Quetiapine 200 mg bedtime; Lorazepam 2 mg PRN. Observation, individual therapy, medication adherence counseling, and cannabis abstinence plan were implemented. Discharged after 11 days on Olanzapine 7 mg nightly, Quetiapine 200 mg bedtime, Risperidone 4 mg daily, Lorazepam 2 mg PRN; outpatient psychiatric follow‑up scheduled within 5 days.</li><li>Follow‑up outpatient psychiatry visit. Patient returned after missing risperidone dose and recent cannabis use; reported auditory hallucinations, insomnia, irritability. Labs: lipid panel LDL 140 mg/dL, HDL 45 mg/dL, TG 250 mg/dL; thyroid T4 0.7 ng/dL low; THC positive. Physical: weight 85 kg, BMI 29.5, alopecia, mild tremor. Risperidone reduced to 2 mg daily, aripiprazole 10 mg daily added, olanzapine and quetiapine continued. Repeat labs ordered in 2 weeks, CBT biweekly, telehealth in 2 weeks.</li><li>Admitted to psychiatric observation unit on 2024-08-10 due to missed appointments and acute suicidal ideation with a plan. Vitals normal; exam revealed tremor, weight gain, poor hygiene, agitation. Treated with IM haloperidol 10 mg. Medications adjusted: continue olanzapine 7 mg nightly, quetiapine 300 mg at bedtime, risperidone 2 mg daily, add aripiprazole 10 mg daily, maintain lorazepam 2 mg PRN, and add haloperidol 10 mg IM as needed. Ordered CBC, CMP, liver panel, and CT head. Safety plan and crisis resources provided. 48‑hour observation and daily pill dispensing arranged.</li><li>Admitted on 2024-09-05 to inpatient psychiatry after police call for homicidal ideation, auditory hallucinations, and self‑cut attempts. Vitals: BP 122/78, HR 110, Temp 37.3°C, RR 22. CK markedly elevated at 1,800 U/L; MRI brain normal; liver enzymes AST 80, ALT 70. Administered single 20 mg IM haloperidol; started Lorazepam 4 mg IV q2h for sedation and NMS control; held high‑dose antipsychotics (quetiapine 400 mg QHS, risperidone 2 mg daily, aripiprazole 10 mg daily, olanzapine 7 mg nightly). Baseline labs (CBC, CMP, LFTs, urinalysis) ordered; planned initiation of clozapine once results available. Daily CK, CBC, CMP, LFT monitoring, vitals q4h, safety council daily, continuous observation, and daily psychiatric evaluation with safety planning performed.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

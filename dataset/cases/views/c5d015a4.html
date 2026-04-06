@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case c5d015a4</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: c5d015a4</h1><div class="subtitle">Non-Small Cell Lung Cancer | Male, 67</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-chronic">chronic</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: COPD, Hypertension, dyslipidemia</div><div class="meta-line">Risk Factors: Former 40 pack-year smoker, Family history of diabetes, High BMI</div></div>
+<details><summary>Narrative <span class="preview-text">When John M. first noticed a persistent cough, he told the nurse his usual chest tightness was just “getting worse,” a s...</span></summary><div class="section-body"><p>When John M. first noticed a persistent cough, he told the nurse his usual chest tightness was just “getting worse,” a subtle change that, in a man with a 40‑pack‑year smoking history and COPD, easily slipped under the radar of his primary‑care chart. He was 67, slightly overweight (BMI ≈ 30 kg/m²), and had long been treated for hypertension and dyslipidemia with lisinopril and atorvastatin. He had never smoked again after quitting two decades earlier, but his family history of diabetes and his own high BMI kept him on the edge of multiple risk scales.</p><p>### Month 1 – The Symptom Emerges</p><p>John’s first visit to the outpatient pulmonary clinic was prompted by a three‑week history of a dry cough that had grown relentless by the second week. Each night his chest felt tighter, and he found himself sitting upright in the bedroom with a plastic tube propping his head up, an old habit from his COPD flare-ups. He reported increased breathlessness on exertion relative to his usual “stair‑racing” routine as a retired factory worker, and a mild weight loss of a few pounds—though he dismissed it as part of his “ageing” body. His vital signs were: BP 138/86 mmHg, HR 78 bpm, RR 18 breaths/min, SpO₂ 97% on room air. Spirometry revealed an FEV1/FVC ratio of 48% predicted, consistent with moderate obstruction, but no significant change from his baseline.</p><p>He was advised to adhere to his inhaler regimen (albuterol and tiotropium) and to schedule a repeat visit if symptoms persisted. The nurse noted his blood pressure, but did not push for immediate imaging given the absence of hemoptysis or chest pain.</p><p>### Month 3 – Persistent Cough Escalates</p><p>Two months later, at his scheduled follow‑up, John’s cough had not improved; in fact, he now reported waking up at night coughing and a faint rust‑colored sputum. The pulmonologist, mindful of his heavy smoking history and COPD, ordered a low‑dose chest CT scan. The scan revealed a 2.2 cm spiculated nodule in the left upper lobe, with a subtle halo of emphysematous change around it. An incidental bilateral ground‑glass opacity suggested ongoing COPD changes.</p><p>The pulmonologist referred John to a thoracic oncologist for further staging. During the interim visit, the primary‑care physician reviewed his medications, noting that the lisinopril dosage had been at 20 mg for years and his atorvastatin 20 mg nightly was adequate for his lipid profile. A fasting glucose was normal, but his hemoglobin A1c was 5.9 %—within prediabetic range, hinting at the metabolic ripple from his family history of diabetes.</p><p>### Month 4 – Diagnostic Confirmation</p><p>John underwent a CT‑guided core needle biopsy of the left upper‑lobe mass. Pathology returned a poorly differentiated adenocarcinoma, 4th‑generation NRG. No driver mutations (EGFR, ALK, ROS1) were detected, and PD‑L1 expression was low (&lt;10 %). A PET‑CT scan demonstrated no distant uptake; the only abnormal FDG activity was within the nodule. The oncology team staged the disease as T2bN0M0 (stage IIA).</p><p>The team faced a conundrum: while the tumor was early enough for surgical resection, John’s moderate COPD and sub‑critical pulmonary reserve raised the risk of postoperative complications. A multidisciplinary meeting involving pulmonology, thoracic surgery, anesthesia, and cardiology was convened to weigh options. John was offered a lobectomy versus a sublobar resection with adjunct therapy; the consensus was that, given his BMI and hypertension, a minimally invasive video‑assisted thoracoscopic lobectomy would reduce operative morbidity.</p><p>### Month 5 – Pre‑operative Optimisation</p><p>In preparation for surgery, John’s anesthesiologist arranged an exercise‑stress test, which revealed an oxygen desaturation to 88 % at a workload of 12 METs—below the safe threshold for major pulmonary surgery. Interventions were instituted: a 4‑week pre‑operative pulmonary rehabilitation program focusing on incentive spirometry, breathing exercises, and gentle walking. His inhaled steroids were increased temporarily, and a low‑dose oral prednisone taper was added to counter the expected postoperative inflammation. Blood pressure was tightened to 130/80 mmHg and his lipid medication increased to atorvastatin 40 mg nightly.</p><p>John’s BMI decreased modestly to 28 kg/m² after a low‑calorie, high‑protein diet and intermittent resistance training. A 1‑week pre‑op course of amoxicillin–clavulanate covered peri‑operative bacterial prophylaxis. On the day of surgery, he was awake and oriented, with SpO₂ at 95 % on 2 L/min oxygen by nasal cannula. Surgery proceeded uneventfully; a left upper‑lobectomy was performed thoracoscopically with preservation of the subsegmental arteries to maintain lung function. The frozen section confirmed clear margins.</p><p>### Month 6 – Post‑operative Recovery</p><p>John’s ICU stay was brief; he was extubated on postoperative day 1. His chest physiotherapist guided him through incentive spirometry, and he quickly regained adequate tidal volumes. He was discharged home on postoperative day 5 with a plan for adjuvant platinum‑based chemotherapy. His oxygen requirement fell to 1 L/min supplemental by day 3. His sputum cultures were negative; the chest X-ray showed a left lower‑lobe atelectasis that resolved with physiotherapy.</p><p>John received a 4‑cycle regimen of doxorubicin and cisplatin, with dose reductions for his known COPD. Weekly evaluations monitored liver function, renal clearance, and blood counts. While occasional fatigue and mild mucositis occurred, his functional status remained near baseline. Blood pressure stayed controlled (110/70 mmHg) with lisinopril 20 mg, and his lipid profile improved; thus, the cardiology team reduced atorvastatin to 20 mg to mitigate hepatic strain.</p><p>### Month 8 – Surveillance and Symptom Re‑evaluation</p><p>Post‑therapy imaging at 8 months showed a normal chest CT without residual mass, and PET‑CT scans were negative for hypermetabolic activity. John’s intermittent cough had largely disappeared; his nocturnal wheezing was minimal, and he could now climb three flights of stairs without dyspnea. Spirometry measured an FEV1 of 1.8 L (70 % predicted), unchanged from baseline, demonstrating that the lobectomy had preserved adequate pulmonary reserve.</p><p>He reported being “more alive” than the last year, attributing the newfound energy to the successful removal of the tumor. His weight stabilized at 165 lb, a modest improvement over his pre‑diagnosis figure of 175 lb. His diabetes risk remained latent, but the family history prompted a referral to a dietitian and a 10‑year screening plan for glucose monitoring.</p><p>### Month 12 – Long‑term Follow‑Up</p><p>John’s yearly surveillance plan includes a low‑dose CT scan in 6 months, then annually for five years, in line with NCCN guidelines for stage IIA NSCLC. He continues his inhaler regimen, with a recent dose adjustment to his tiotropium inhaler due to persistent nocturnal wheeze. Blood work shows a stable lipid panel, and his BP remains well‑controlled on lisinopril 20 mg. His respiratory status is the same or better compared with baseline before his cancer diagnosis.</p><p>At the 12‑month visit, the oncology nurse asked John if any new symptoms had arisen: he said no chest pain, no new weight loss, and a slight increase in fatigue but no functional limitation. The physician noted that his mood had improved, citing the “survivor’s high” from the successful treatment. He left the office with a plan to resume a structured exercise program and continue to monitor his blood pressure at home.</p><p>---</p><p>**Re‑evaluation of outcome:**  
+John’s case progressed from a subtle cough in a patient with advanced COPD to a stage IIA non‑small‑cell lung cancer that was fully resected and treated with platinum‑based chemotherapy. Despite comorbid hypertension, dyslipidemia, and a high BMI at presentation, careful pre‑op optimisation, multidisciplinary decision‑making, and vigilant postoperative follow‑up allowed John to return not only to his baseline functional status but to exceed it in terms of weight control and overall well‑being. The narrative timeline—from initial cough to 12‑month surveillance—highlights each clinical decision, the risk mitigation steps undertaken, and the ultimate improved outcome.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2025-03-01</h3><div class="visit-meta">Pulmonary Medicine | Reason: Persistent dry cough and worsening chest tightness</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent dry cough and worsening chest tightness for 3 weeks.
+
+History of Present Illness: John Doe, a 67‑year‑old male with a 40‑pack‑year smoking history and known COPD, reports a dry cough that began 21 days ago. The cough intensified in the second week and now occurs nightly, with associated chest tightness and exertional dyspnea. He denies fever, sputum production, hemoptysis, chest pain, or recent travel. He also notes mild unintentional weight loss (~5 lb) over the past month.
+
+Past Medical History: COPD, hypertension, dyslipidemia. Former smoker, currently abstinent. No prior exacerbations in the past year.
+
+Medications: None currently listed; patient is on long‑term maintenance inhaler (ICS/LABA) as previously prescribed.
+
+Allergies: NKDA.
+
+Vital Signs: BP 138/86 mmHg, HR 78 bpm, RR 18/min, SpO2 97% on room air.
+
+Physical Examination: Awake, alert, no acute distress. HEENT: nasal congestion; Lungs: bilateral inspiratory wheezes, no crackles, expiratory wheeze in both lung fields. Cardiovascular: normal rate and rhythm, no murmurs. Extremities: no edema. Skin: normal color, no rashes.
+
+Assessment:
+1) COPD Exacerbation – likely non‑infectious based on lack of sputum change, fever, or infiltrate.
+2) Acute bronchitis or viral upper respiratory infection – possible cause of chronic dry cough.
+3) Undifferentiated cough (e.g., GERD, post‑nasal drip) – given nocturnal cough.
+4) Possible underlying lung pathology (e.g., malignancy) – weight loss noted but mild.
+
+Plan:
+- Reinforce maintenance inhaler technique; continue current (ICS/LABA) regimen.
+- Add a short‑acting β2‑agonist (albuterol) PRN for bronchospasm.
+- Encourage adequate hydration, avoid known triggers, and continue smoking cessation support.
+- Re‑evaluate in 48–72 h if cough persists or worsens; consider chest X‑ray at that time if symptoms do not improve or new symptoms develop.
+- Monitor weight; if further &gt;10 lb loss, pursue further evaluation.
+- Educate on red‑flag symptoms (new chest pain, rapid dyspnea, fever, hemoptysis) that warrant immediate ER evaluation.
+- Schedule routine follow‑up in 2 weeks to assess response.
+
+No diagnostic imaging or laboratory studies ordered at this visit.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">dry cough</span><span class="pill">chest tightness</span><span class="pill">shortness of breath on exertion</span><span class="pill">mild weight loss</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/86</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>bilateral wheezes</li><li>normal heart sounds</li><li>no focal lung crackles</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>inhaler education</li><li>reinforced inhaler technique</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>lisinopril</li><li>atorvastatin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>40 pack‑year smoking history</li><li>COPD</li><li>hypertension</li><li>dyslipidemia</li><li>former smoker</li><li>BMI 30</li><li>annual physical</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>John presented to the outpatient pulmonary clinic reporting a three‑week history of a dry cough that had become relentless by the second week. He described nocturnal coughing and a subjective increase in chest tightness. On exam the physician noted bilateral wheezes but no new lung findings. The patient was advised to continue his maintenance inhaler therapy and to return if symptoms worsened. No imaging was ordered at this time.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Baseline visit; no evidence of lung cancer identified. Cough unresolved. Continue routine COPD management.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2025-05-01</h3><div class="visit-meta">Pulmonary Medicine | Reason: Persistent cough with nocturnal symptoms and rust-colored sputum</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Persistent cough with nocturnal symptoms and rust-colored sputum.
+
+History of Present Illness: The patient is a 67‑year‑old male with a known history of COPD, hypertension, and dyslipidemia who presents for a follow‑up of his persistent dry cough and recent emergence of night cough with rust‑colored sputum. He reports that the cough has been ongoing since the initial visit in March, has become more frequent at night, and is not relieved by his usual albuterol rescue inhaler. He denies fever, chest pain, dyspnea beyond his baseline, weight loss, or hemoptysis beyond the rust-colored sputum. He has a significant smoking history (30 pack‑years) and remains a former smoker, with cessation 5 years ago. He continues his current medications unchanged.
+
+Review of Systems: Positive for cough, nocturnal cough, and occasional rust‑colored sputum. Negative for fever, chills, chest pain, dyspnea on exertion, wheeze beyond baseline, night sweats, weight change, or new systemic symptoms.
+
+Physical Examination:
+Vital Signs: BP 140/88 mmHg, HR 80 bpm, RR 20/min, SpO₂ 96% on room air.
+General: Alert, no acute distress.
+HEENT: No lesions, no cervical lymphadenopathy.
+Respiratory: Bilateral inspiratory and expiratory wheezes noted, with increased intensity compared to 2‑month prior. No crackles, wheezes localized to wheeze, no adventitious sounds. Chest is symmetric, no tenderness.
+Cardiovascular: Regular rate and rhythm, no murmurs.
+Extremities: No clubbing, cyanosis, or edema.
+
+Assessment:
+1. COPD – stable but with new nighttime cough and sputum production.
+2. Spiculated 2.2 cm pulmonary nodule in left upper lobe – high suspicion for primary lung malignancy.
+3. Possible infectious etiology (e.g., bacterial bronchitis) given rust-colored sputum.
+
+Plan:
+- Continue current inhaler regimen (albuterol PRN, tiotropium). Reassure the patient regarding medication adherence.
+- Arrange referral to thoracic surgery for evaluation of the nodule; recommend PET‑CT to assess metabolic activity.
+- Discuss option of bronchoscopy with transbronchial biopsy or CT‑guided core needle biopsy based on surgical recommendation.
+- Counsel patient on smoking cessation resources, influenza &amp; pneumococcal vaccination.
+- Patient advised to monitor for worsening cough, new hemoptysis, weight loss, or fatigue; if any of these occur, immediate evaluation is warranted.
+- Schedule pulmonology follow‑up in 4 weeks to review imaging, pathology, and adjust management accordingly.
+
+Disposition: The patient was reassured, instructed to continue his current inhaler therapy, and advised to return if he experiences new or worsening symptoms. He is scheduled for thoracic surgery consultation within the next week.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent dry cough</span><span class="pill">night cough</span><span class="pill">rust-colored sputum</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>140/88</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>RR</td><td>20</td></tr><tr><td>SpO2</td><td>96%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>increased wheeze compared to visit 1</li><li>no focal abnormalities</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>low‑dose chest CT</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT scan: 2.2 cm spiculated nodule in left upper lobe with surrounding emphysematous change; bilateral ground‑glass opacities consistent with COPD.</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Concerned, but agrees to proceed with specialist referral.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>lisinopril</li><li>atorvastatin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>ongoing COPD</li><li>past smoking history</li><li>current medications unchanged</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Due to continuous cough and the emergence of nocturnal sputum, the pulmonologist ordered a low‑dose chest CT scan to rule out a new pulmonary nodule. The patient was reassured, instructed to keep his inhaler, and advised to return if new symptoms developed.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>CT identified a potential lung mass; refer to thoracic oncology for staging and possible biopsy.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2025-06-01</h3><div class="visit-meta">Thoracic Oncology | Reason: Evaluation of pulmonary nodule and staging</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Evaluation of pulmonary nodule and staging.
+
+History of Present Illness: 67‑year‑old male with COPD, HTN, dyslipidemia presents for evaluation of a 2.2 cm spiculated pulmonary nodule noted on low‑dose CT. Mr. X reports a persistent dry cough for 3 months, worse at night, with occasional rust‑colored sputum. He denies hemoptysis, weight loss, fever or night sweats. There is no chest pain or dyspnea beyond baseline COPD symptoms. He is a former heavy smoker (quit 10 years ago) and denies illicit drug use.
+
+Review of Systems: Positive for cough, nocturnal cough, rust‑colored sputum. All other systems negative.
+
+Physical Examination: Vitals: BP 138/85 mmHg; HR 78 bpm; RR 18 / min; SpO2 97% on room air. General: Alert, oriented. HEENT normal. Cardiovascular: Regular rhythm, no murmurs. Pulmonary: Mild hyperinflation, bilateral wheezes, no focal crackles. Abdomen soft, non‑tender. Extremities without edema. Skin normal. Neurologic: CN II‑XII intact, no focal deficit.
+
+Assessment: Spiculated left upper lobe 2.2 cm nodule – high suspicion for primary lung cancer (stage I NSCLC). PET‑CT shows focal uptake only in left upper lobe, no distant metastases. Tumor markers (CEA, CA‑125) normal. Differential includes early‑stage NSCLC, benign granuloma, infection (TB), atypical adenomatous hyperplasia.
+
+Plan:
+1. Obtain percutaneous core‑needle biopsy of left upper lobe nodule (risk/benefit discussed, informed consent obtained).
+2. Continue current COPD regimen (albuterol PRN, tiotropium BID) and HTN medications (lisinopril) and lipid management (atorvastatin).
+3. Await pathology; if malignant, discuss options: surgical lobectomy (if fit), stereotactic body radiotherapy, or systemic therapy depending on staging and molecular profile.
+4. Reinforce smoking cessation counseling, ensure influenza and pneumococcal vaccines up to date.
+5. Consider repeat pulmonary function testing prior to definitive therapy.
+6. Schedule follow‑up in 4 weeks or sooner if biopsy results inconclusive.
+
+Patient Education: Discussed procedure risks (pneumothorax, bleeding), pain management, activity restrictions. Encouraged good inhaler technique and adherence to medications.
+
+Disposition: Biopsy scheduled for tomorrow; follow‑up visit after pathology results.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span><span class="pill">night cough</span><span class="pill">rust-colored sputum</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>mild hyperinflation</li><li>bilateral wheeze</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>PET‑CT</li><li>tumor marker panel (C‑EA, CA‑125)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>PET‑CT negative for distant uptake; only focal uptake in left upper lobe.</li><li>Tumor markers within normal limits.</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>discussed next steps and scheduled biopsy</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Anxious yet hopeful about potential diagnosis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>lisinopril</li><li>atorvastatin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT identified 2.2 cm nodule</li><li>COPD baseline obstruction</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncologist reviewed the low‑dose CT results and discussed the possibility of non‑small cell lung cancer. After a brief review of the patient’s risk factors, the plan was to obtain a tissue diagnosis via percutaneous core‑needle biopsy and perform a PET‑CT for staging. The patient was educated about the procedures and potential risks, and was encouraged to continue COPD medications.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Awaiting histology; staging pending. Likely early localized NSCLC.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2025-06-15</h3><div class="visit-meta">Interventional Radiology | Reason: CT‑guided core‑needle biopsy of left upper‑lobe mass</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">CT‑guided core‑needle biopsy of the 2.2 cm left upper‑lobe spiculated nodule performed on 2025‑06‑15 under sterile conditions. The patient, a 67‑year‑old male with COPD, HTN, and dyslipidemia, tolerated the procedure well at a blood pressure of 137/84 mmHg, heart rate 77 bpm, respiratory rate 18 /min and SpO₂ 97 %. No new respiratory findings were noted post‑procedure. A local tranexamic acid bolus was administered prophylactically. 
+
+Procedure details: 22‑gauge core needle (8 cm) advanced under CT guidance; 4 passes obtained with 12‑mm core fragments sent for histology. No immediate complications (pneumothorax, hemorrhage). The patient remained hemodynamically stable throughout.
+
+Labs: CBC (Hb 13 g/dL, WBC 5,000/µL, Plt 200 000/µL) and CMP within reference ranges. Orders placed for pathology report.
+
+Assessment: Persistent dry cough in COPD patient; spiculated left upper‑lobe lesion with PET positivity raises high suspicion for primary lung carcinoma (e.g., squamous cell or adenocarcinoma). Pending pathology will clarify malignancy vs benign etiology.
+
+Plan:
+1. Await pathology report; if malignant, proceed with multidisciplinary tumor board and staging studies.
+2. Continue current COPD management (albuterol PRN, tiotropium BID), HTN (lisinopril), and dyslipidemia (atorvastatin).
+3. Counsel on smoking cessation; reinforce influenza/pneumococcal vaccination status.
+4. Schedule follow‑up in 2 weeks to review pathology; sooner if symptoms worsen or new complications arise.
+5. If pathology non‑malignant, recommend routine surveillance CT per oncology guidelines.
+
+Patient education: Reviewed procedure details, expected post‑procedure symptoms (minimal chest discomfort), signs of pneumothorax (dyspnea, pleuritic pain) requiring immediate contact. Re‑affirm importance of medication adherence and avoidance of irritants.
+
+Overall, the intervention was uncomplicated and the patient remained stable. Awaiting diagnostic confirmation to guide definitive therapy.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">persistent cough</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>137/84</td></tr><tr><td>HR</td><td>77</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>stable vital signs</li><li>no new chest findings</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>pathology report</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 13 g/dL, WBC 5,000/µL, platelets 200,000/µL</li><li>CMP: all within normal limits</li><li>Pathology: poorly differentiated adenocarcinoma, NRG 4th‑generation</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>local tranexamic acid prophylaxis</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Relieved to have a definitive diagnosis; remains stable.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span><span class="pill">Suspected NSCLC</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>lisinopril</li><li>atorvastatin</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>CT and PET‑CT findings</li><li>baseline COPD</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under sterile conditions, a CT‑guided core needle biopsy of the 2.2 cm left upper lobe nodule was performed. The patient tolerated the procedure well. The specimen was sent to pathology and returned with a diagnosis of poorly differentiated adenocarcinoma. No driver mutations were detected, and PD‑L1 expression was low (&lt;10 %).</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Confirmed NSCLC, stage IIA (T2bN0M0). Further planning for surgical resection.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2025-07-01</h3><div class="visit-meta">Anesthesiology | Reason: Pre‑operative assessment for left upper‑lobectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective:
+Patient is a 67‑year‑old male with COPD, HTN, and dyslipidemia presenting for a pre‑operative anesthetic assessment prior to a scheduled left upper‑lobectomy. He reports mild chronic cough but no new respiratory complaints and is fully motivated to improve pulmonary reserve. He has been participating in a four‑week pulmonary rehabilitation program as recommended and has increased his inhaled steroid dose; a low‑dose oral prednisone taper of 10 mg/day for 7 days has been arranged.
+
+Objective:
+Vitals: BP 135/80, HR 76, RR 18, SpO₂ 98% on room air.
+Physical exam: stable respiratory exam, mild hyperinflation, bilateral wheezes, no crackles, no acute distress.
+Baseline labs (CBC, CMP) within normal limits.
+Exercise‑stress test: desaturation to 88 % at 12 METs; otherwise normal cardiovascular response.
+
+Assessment:
+The exercise‑stress test demonstrates inadequate pulmonary reserve (SpO₂ &lt; 88 % at &gt; 10 METs) which is below the threshold for safe major pulmonary surgery. The patient’s COPD remains moderate with FEV1/FVC 48% and BMI 30. No evidence of cardiac ischemia or pulmonary hypertension. The current desaturation risk may increase peri‑operative complications such as hypoxia, prolonged ventilation, and postoperative pulmonary morbidity.
+
+Plan:
+1. Pulmonary: Continue current COPD regimen. Increase inhaled steroids per pulmonology guidance. Continue 4‑week pulmonary rehab. Repeat PFTs in 2 weeks to assess improvement. Monitor for desaturation; consider supplemental oxygen trial.
+2. Cardiovascular/Metabolic: Adjust antihypertensive regimen to achieve target BP 130/80 with possible addition of a diuretic if needed. Continue atorvastatin 40 mg nightly; consider adding ezetimibe if LDL remains &gt; 70 mg/dL.
+3. Pre‑operative: Schedule a multidisciplinary anesthesia‑Surgery conference in 1 week after pathology review. If PFTs or stress test remain abnormal, reassess timing or consider non‑surgical management or a staged approach. Verify influenza and pneumococcal vaccinations.
+4. Medications: albuterol PRN, tiotropium BID, inhaled steroids BID, lisinopril 10 mg daily, atorvastatin 40 mg nightly, prednisone 10 mg/day for 7 days.
+5. Follow‑up: Return in 2 weeks for pathology results, PFTs, and updated anesthetic plan. Reinforce smoking cessation, hydration, and avoidance of respiratory irritants. Contact anesthesia hotline if acute respiratory symptoms develop.
+
+Overall, the patient is a suitable candidate for surgery pending optimization of pulmonary function and cardiovascular status.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild cough</span><span class="pill">no new respiratory symptoms</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>135/80</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>stable respiratory exam</li><li>no acute distress</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>exercise‑stress test</li><li>baseline labs (CBC, CMP)</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Stress test: desaturation to 88 % at 12 METs; otherwise normal</li><li>CBC and CMP within normal limits</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>pulmonary rehab referral</li><li>increase atorvastatin to 40 mg</li><li>prednisone taper scheduled (7 days)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Motivated to improve pulmonary reserve and reduce surgical risk.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span><span class="pill">NSCLC stage IIA</span><span class="pill">post‑biopsy</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>inhaled steroids</li><li>lisinopril</li><li>atorvastatin</li><li>prednisone taper (day‑by‑day, 10 mg/day for 7 days)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>COPD moderate obstruction (FEV1/FVC 48 %)</li><li>BMI 30</li><li>recent CT‑guided biopsy results</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The anesthesiologist performed a comprehensive assessment, including an exercise‑stress test that demonstrated desaturation to 88 % at 12 METs, below the recommended threshold for major pulmonary surgery. A multidisciplinary team met with the patient to discuss operative risks. Instructed on a four‑week pulmonary rehabilitation program, the patient increased inhaled steroids and received a low‑dose oral prednisone taper to mitigate postoperative inflammation. Lipid therapy was intensified to atorvastatin 40 mg nightly to manage elevated cholesterol, and antihypertensive control was tightened to 130/80 mmHg.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pre‑operative clearance achieved; plan for minimally invasive video‑assisted thoracoscopic lobectomy.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2025-08-01</h3><div class="visit-meta">Thoracic Surgery | Reason: Left upper‑lobectomy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #6 – 2025-08-01
+Chief Complaint: Left upper‑lobectomy postoperative care
+
+---
+Subjective:
+Patient is a 67‑year‑old male who underwent a video‑assisted thoracoscopic left upper‑lobectomy on 2025‑07‑31. Post‑operative day (POD) 0 on outpatient follow-up: reports mild fatigue, denies chest pain, fever, dyspnea, or cough. Maintains 1 L/min nasal cannula oxygen at home, with SpO2 of 98% on room air at rest. No new symptoms beyond normal postoperative soreness.
+
+Past Medical History:
+• Chronic obstructive pulmonary disease (COPD)
+• Hypertension
+• Dyslipidemia
+
+Pre‑operative optimization: inhaled steroids increased, prednisone taper started post‑op, pre‑op pulmonary rehab completed.
+
+Medication list: albuterol, tiotropium, inhaled steroids, lisinopril, atorvastatin, prednisone taper (10 mg/d start POD 1 tapering over 7 days), cefazolin prophylaxis. No known drug allergies.
+
+Objective:
+Vitals: BP 130/78 mmHg, HR 70 bpm, RR 16/min, SpO2 98% on 1 L/min O2.
+General: Patient appears comfortable, oriented, no distress.
+Skin: Thoracic incision healing well, no erythema or drainage.
+Cardiovascular: Regular rate and rhythm, no murmurs.
+Respiratory: Clear breath sounds bilaterally, no wheezes or crackles. No chest wall tenderness. Oxygen saturation stable on 1 L/min.
+
+Labs: CBC and BMP performed on POD 2 – within normal limits.
+Imaging: Post‑operative chest X‑ray on POD 2 shows small right lower lobe atelectasis that has resolved with physiotherapy.
+
+Assessment:
+1. Post‑operative recovery from left upper‑lobectomy – stable, wound healing well.
+2. Transient right lower‑lobe atelectasis – resolved.
+3. No evidence of postoperative infection, pneumothorax, bleeding, or pulmonary embolism.
+
+Differential Diagnosis (post‑operative complications to consider):
+• Post‑operative pneumonia
+• Pulmonary embolism
+• Hemorrhage/bleeding
+• Persistent atelectasis
+• COPD exacerbation
+• Residual malignant lesion (if incomplete resection) – but frozen section margins clear.
+
+Plan:
+1. Continue current medication regimen (inhalers, antihypertensives, statin, prednisone taper, cefazolin prophylaxis). Reinforce inhaler technique and adherence.
+2. Gradual weaning of supplemental oxygen: discontinue 1 L/min on POD 5 when SpO2 ≥ 94% on room air for 30 min.
+3. Chest physiotherapy: maintain twice daily sessions until discharge; encourage incentive spirometry and deep breathing exercises at home.
+4. Educate patient on signs of infection or respiratory compromise (fever, increased cough, dyspnea, tachypnea, SpO2 &lt; 90%) and instruct to seek immediate care.
+5. Schedule follow‑up appointments:
+   - Pulmonology visit in 2 weeks to assess pulmonary function, review imaging, and optimize COPD therapy.
+   - Thoracic surgery clinic in 4 weeks for postoperative assessment and consideration of adjuvant therapy pending pathology.
+6. Continue influenza and pneumococcal vaccination review.
+7. Reinforce smoking cessation counseling, maintain nutrition and activity as tolerated.
+
+The patient is discharged home with stable clinical status. Written discharge instructions provided.
+---</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">post‑operative day 0</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>130/78</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>RR</td><td>16</td></tr><tr><td>SpO2</td><td>98%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>incision healing without erythema</li><li>clear breath sounds bilaterally</li><li>stable oxygenation on 1 L/min</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>post‑operative chest X‑ray</li><li>post‑operative labs</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Chest X‑ray: right lower lobe atelectasis resolving</li><li>Labs: CBC stable, BMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>post‑operative chest physiotherapy</li><li>prophylactic antibiotics</li><li>oxygen supplementation</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Recovered steadily; reported mild fatigue but no shortness of breath.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span><span class="pill">NSCLC stage IIA – resected</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>inhaled steroids</li><li>lisinopril</li><li>atorvastatin</li><li>prednisone taper</li><li>post‑operative prophylactic antibiotics (cefazolin)</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>pre‑operative optimization</li><li>recent pulmonary rehab</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Under general anesthesia, a video‑assisted thoracoscopic left upper‑lobectomy was performed with clear margin achieved on frozen section. The patient was extubated on postoperative day 1, transferred to a step‑down unit, and received chest physiotherapy. A postoperative chest X‑ray on day 2 showed small atelectasis in the right lower lobe, which resolved with physiotherapy. The patient was discharged home on day 5 with supplemental oxygen at 1 L/min by nasal cannula for 3 days, then weaned off.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Pathology: T2bN0M0 with clear margins. Expected early stage resection with favorable prognosis.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2025-08-10</h3><div class="visit-meta">Medical Oncology | Reason: Initiation of adjuvant chemotherapy (doxorubicin + cisplatin)</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: 67‑year‑old male presents for follow‑up of adjuvant chemotherapy initiated after left upper‑lobe lobectomy. He reports mild fatigue (grade 1), occasional mucositis (grade 1), and a cough that has resolved. No dyspnea, chest pain, fever, or new GI symptoms.
+
+Objective: Vital signs stable: BP 128/78 mmHg, HR 72 bpm, RR 18/min, SpO₂ 97% on room air. HEENT: no mucosal ulcerations beyond mild erythema of oropharynx. Pulmonary: well‑appearing, clear breath sounds bilaterally, no wheeze or crackles. Cardiovascular: regular rhythm, no murmurs. Extremities: no edema. Lab results: CBC normal (Hb 13 g/dL, platelets 190,000/µL), CMP normal, creatinine 0.9 mg/dL. No changes from pre‑chemo baseline.
+
+Assessment: The patient tolerated the first cycle of dose‑adjusted doxorubicin 25 mg/m² and cisplatin 50 mg/m² with prednisone 30 mg/day for 5 days without significant toxicity. Mild fatigue and mucositis are consistent with chemotherapeutic side effects. COPD is controlled with current inhaler therapy; no pulmonary complications noted. No evidence of infection or organ dysfunction.
+
+Plan:
+1. Continue adjuvant chemotherapy – second cycle in 3 weeks (days 1–5). Re‑order CBC, CMP, and creatinine 3 days prior to infusion.
+2. Maintain prednisone 30 mg PO daily for 5 days as pre‑medication. Continue prophylactic amoxicillin‑clavulanate for 1 week and cefazolin peri‑operatively.
+3. Hydration: 1 L normal saline IV 30 min prior to cisplatin.
+4. Supportive care: anti‑emetics as needed, analgesics for mucositis, oral rinses, salt‑water mouthwash.
+5. Cardiotoxicity monitoring: baseline echocardiogram performed; repeat after 2 cycles or earlier if symptoms.
+6. Audiology: baseline audiogram now; repeat after cycle 3 to assess cisplatin‑related ototoxicity.
+7. COPD: continue albuterol, tiotropium, inhaled steroid; counsel on rescue use, monitor for exacerbation.
+8. Lifestyle: smoking cessation counseling, maintain vaccinations, continue physiotherapy and incentive spirometry.
+9. Follow‑up: oncology clinic in 3 weeks for chemo; pulmonary clinic in 2 weeks for spirometry; thoracic surgery clinic in 4 weeks. Call immediately if fever &gt;38°C, dyspnea, or signs of neutropenic sepsis.
+
+Patient verbalized understanding and is willing to proceed as planned.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">mild fatigue</span><span class="pill">occasional mucositis</span><span class="pill">cough resolved</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/78</td></tr><tr><td>HR</td><td>72</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>overall well‑appearing</li><li>no new respiratory findings</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>CMP</li><li>renal function</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC: Hb 13 g/dL, platelets 190,000/µL</li><li>CMP: normal liver enzymes, creatinine 0.9 mg/dL</li><li>renal function: baseline unchanged</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>dose‑adjusted doxorubicin 25 mg/m² + cisplatin 50 mg/m² + prednisone 30 mg/day for 5 days</li><li>prophylactic antibiotics</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Tolerated first cycle with mild fatigue; no severe mucositis.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span><span class="pill">NSCLC stage IIA – resected</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>inhaled steroids</li><li>lisinopril</li><li>atorvastatin</li><li>prednisone taper</li><li>prophylactic antibiotics (oral amoxicillin‑clavulanate) for 1 week</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>post‑operative day 5 discharge</li><li>surgery completed 10 days prior</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The oncology team reviewed the patient’s recovery and discussed adjuvant chemotherapy. The plan was a four‑cycle regimen of doxorubicin 30 mg/m² and cisplatin 60 mg/m² with prednisone 30 mg/day for five days for pre‑medication. Baseline labs were drawn: CBC, CMP, renal function. The first cycle was administered on the same day with good tolerance; the patient’s fatigue was mild and managed with supportive care. Dose adjustments were made for subsequent cycles due to COPD, lowering cisplatin to 50 mg/m² and doxorubicin to 25 mg/m².</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Adjuvant chemotherapy initiated; four cycles planned with dose modifications for COPD. Patient remains under close monitoring.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2026-03-01</h3><div class="visit-meta">Oncology Nurse Practitioner | Reason: Year‑long surveillance and follow‑up after adjuvant therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Year‑long surveillance and follow‑up after adjuvant therapy.
+
+History of Present Illness: 67‑year‑old male presents for routine oncology follow‑up. He reports no new chest pain, no new weight loss, but mild fatigue. He has noted increased energy and good tolerance of the structured exercise program initiated in January. No medication adverse effects were reported.
+
+Past Medical History: COPD (moderate, stable), hypertension, dyslipidemia. Post‑operative status: left upper‑lobectomy performed 5 months ago; incision well‑healed, no current oxygen requirement, SpO₂ 98% RA.
+
+Medications: Albuterol PRN, Tiotropium BID, inhaled steroids (fluticasone/salmeterol) as prescribed, Lisinopril 10 mg daily, Atorvastatin 20 mg nightly, completed prednisone taper, amoxicillin‑clavulanate for mucositis resolved.
+
+Allergies: NKDA.
+
+Review of Systems: Negative for chest pain, dyspnea at rest, fever, night sweats. Mild fatigue.
+
+Physical Examination:
+- Vital signs: BP 116/68 mmHg, HR 70 bpm, RR 18/min, SpO₂ 97% RA.
+- HEENT: Normal.
+- Respiratory: Clear lung fields, no wheeze or crackles, normal chest wall and percussion. Abdomen soft, non‑tender. Extremities: No clubbing or cyanosis.
+- Cardiovascular: Regular rate and rhythm, no murmurs.
+- Skin: Well‑healed post‑op incision, no erythema.
+
+Investigations:
+- Low‑dose chest CT: Normal aeration, no residual or new pulmonary nodules.
+- CBC: Hb 13.5 g/dL, WBC 5,200/µL, platelets 190,000/µL.
+
+Assessment:
+1. Post‑operative status stable after left upper‑lobectomy (no recurrence on surveillance CT).
+2. COPD stable (FEV1 1.8 L, 70% predicted, no change from prior spirometry).
+3. Mild fatigue likely related to cancer treatment recovery and physical conditioning.
+
+Differential:
+- Recurrence of primary lung cancer – excluded by CT.
+- New primary lung lesion – unlikely, CT negative.
+- Pulmonary infection – no clinical/radiographic evidence.
+- Exacerbation of COPD – stable PFT and exam.
+- Anemia of chronic disease – hemoglobin normal.
+
+Plan:
+- Continue current inhaler regimen and antihypertensive/lipid therapy.
+- Maintain exercise program; reinforce adherence.
+- Refer to dietitian for diabetic risk monitoring as per prior recommendation.
+- Schedule low‑dose chest CT in 6 months per NCCN surveillance guidelines.
+- Repeat CBC at next annual oncology visit; re‑assess lipid panel.
+- Monitor for symptoms of recurrence: new cough, hemoptysis, weight loss.
+- Encourage routine influenza and pneumococcal vaccination.
+- Patient education: report any new respiratory symptoms, maintain medication adherence.
+
+Follow‑up:
+- Oncology clinic follow‑up in 6 months for imaging review.
+- Pulmonology follow‑up in 1 year to reassess lung function.
+- Dietitian appointment within next 4 weeks.
+- Contact nurse practitioner if symptoms worsen or new concerns arise.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">no new chest pain</span><span class="pill">no new weight loss</span><span class="pill">mild fatigue</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>116/68</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>RR</td><td>18</td></tr><tr><td>SpO2</td><td>97%</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>normal chest examination</li><li>no adventitious breath sounds</li><li>well‑healed incision scar</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>low‑dose CT chest</li><li>CBC</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CT chest: no residual lung mass, normal aeration</li><li>CBC: Hb 13.5 g/dL, WBC 5,200/µL, platelets 190,000/µL</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>continue current medication list</li><li>referral to dietitian for diabetic risk monitoring</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Positive, reports improved stamina and mood, remains compliant with medications.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">Dyslipidemia</span><span class="pill">NSCLC fully resected, no evidence of recurrence</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>albuterol</li><li>tiotropium</li><li>inhaled steroids</li><li>lisinopril</li><li>atorvastatin (20 mg nightly after dose reduction)</li><li>prednisone taper completed</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>completed 4 cycles of adjuvant chemotherapy 5 months ago</li><li>post‑operative day 5 discharge</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the follow‑up, the nurse practitioner reviewed the patient’s recent routine labs and a low‑dose CT chest performed this week. The scan revealed a normal thoracic cage with no residual mass, and spirometry remained stable (FEV1 1.8 L, 70 % predicted). The patient expressed feeling more energetic and appreciated the structured exercise program restarted in January. No adverse effects from medications were reported. The plan is to continue routine imaging every six months for the next five years per NCCN guidelines, maintain current inhaler regimen, and re‑assess lipid levels at the next annual visit.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>No evidence of recurrence after 1 year. COPD stable. Hypertension and dyslipidemia well controlled.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 67</span><span class="pill">Sex: Male</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">COPD</span><span class="pill">Hypertension</span><span class="pill">dyslipidemia</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Albuterol short‑acting β2‑agonist – PRN</li><li>Tiotropium BID</li><li>Fluticasone/salmeterol inhaler</li><li>Lisinopril 10 mg daily</li><li>Atorvastatin 20 mg nightly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>2025-03-01: Pulmonary office visit for persistent dry cough and chest tightness; exam revealed bilateral inspiratory and expiratory wheezes, SpO2 97%; no imaging or labs performed. Reinforced inhaler technique, added albuterol PRN; instructed to monitor weight, return within 48–72h if symptoms worsen, and routine follow‑up in 2 weeks.</li><li>2025-05-01: Follow‑up visit for persistent cough with nocturnal symptoms and rust‑colored sputum. Physical exam noted increased bilateral wheeze; low‑dose chest CT ordered, revealing a spiculated 2.2 cm pulmonary nodule in the left upper lobe. Plan includes continuing inhaler therapy, referral to thoracic surgery for evaluation of the nodule, recommendation for PET‑CT, consideration of bronchoscopy with biopsy, influenza and pneumococcal vaccinations, smoking cessation counseling, and pulmonology follow‑up in 4 weeks.</li><li>2025-06-01: Thoracic oncology visit for evaluation of a 2.2 cm spiculated left upper lobe nodule. PET‑CT showed focal uptake limited to the nodule with no distant disease; normal CEA and CA‑125. Vitals stable: BP 138/85 mmHg, HR 78 bpm, RR 18/min, SpO2 97%. Examination: mild hyperinflation, bilateral wheezes, no crackles. Plan: percutaneous core‑needle biopsy scheduled, continue COPD regimen (albuterol PRN, tiotropium) and HTN/lipid meds, smoking cessation counseling, vaccination review, consider repeat pulmonary function testing before definitive therapy, follow‑up in 4 weeks or sooner if biopsy inconclusive.</li><li>2025-06-15: Interventional radiology performed CT‑guided core‑needle biopsy of the 2.2 cm left upper‑lobe spiculated nodule. Four 12‑mm core samples were obtained with a 22‑gauge needle; no immediate complications such as pneumothorax or hemorrhage were observed. A local tranexamic acid bolus was administered prophylactically. CBC and CMP completed and returned within normal limits. Patient remained hemodynamically stable with no new respiratory findings. Follow‑up scheduled in 2 weeks to review pathology results; continue current COPD, HTN, and dyslipidemia therapy; reinforce smoking cessation and vaccination status.</li><li>2025-07-01: Pre‑operative anesthetic assessment for left upper‑lobectomy. Vitals stable; BP 135/80, HR 76, RR 18, SpO2 98%. Physical exam: mild hyperinflation, bilateral wheezes, no crackles. Baseline labs normal. Exercise‑stress test desaturated to 88% at 12 METs. Plan: continue COPD regimen, increase inhaled steroids, prednisone 10 mg/day for 7 days, repeat PFTs in 2 weeks, consider supplemental oxygen trial, schedule multidisciplinary conference, confirm vaccinations.</li><li>2025-08-01: Thoracic surgery postoperative follow‑up after left upper‑lobectomy; patient on low‑dose nasal cannula (1 L/min), mild fatigue, no chest pain or dyspnea. Incision healing well, clear lung sounds, no wheeze; SpO2 98% on room air. Chest X‑ray shows resolved right lower‑lobe atelectasis. CBC/BMP normal. Continued prednisone taper, inhalers, lisinopril, atorvastatin, cefazolin prophylaxis. Plan to wean oxygen when SpO2 ≥94% on room air for 30 min, maintain physiotherapy and incentive spirometry, educate on infection signs, scheduled pulmonology visit in 2 weeks and thoracic surgery clinic in 4 weeks.</li><li>2025-08-10: Oncology visit for initiation of adjuvant chemotherapy with doxorubicin and cisplatin; patient tolerated first cycle with mild fatigue and mucositis. Labs normal; continued COPD inhaler therapy; prednisone 30 mg PO days 1–5; amoxicillin‑clavulanate for 1 week. Second cycle scheduled in 3 weeks. Routine monitoring labs, cardiology and audiology follow‑ups planned. Follow‑up appointments for pulmonary spirometry in 2 weeks and thoracic surgery in 4 weeks.</li><li>2026-03-01: Oncology follow‑up after adjuvant therapy; patient reports mild fatigue, no chest pain or weight loss. Physical exam normal with clear lung fields, SpO2 97% RA, stable blood pressure. Low‑dose chest CT shows no residual or new nodules. CBC normal. COPD stable with unchanged spirometry. Continued inhaler regimen, antihypertensive, and lipid therapy. Exercise program maintained, dietitian referral scheduled, low‑dose CT scheduled in 6 months, repeat CBC and lipid panel at next annual visit.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

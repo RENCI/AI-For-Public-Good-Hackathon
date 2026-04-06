@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case b1e64b62</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: b1e64b62</h1><div class="subtitle">Rheumatoid arthritis flare | Female, 45</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-improving">improving</span></div><div class="meta-line">Comorbidities: Cardiovascular disease (atherosclerosis), Osteoporosis, Depression</div><div class="meta-line">Risk Factors: Seropositivity for RF, Seropositivity for anti‑CCP antibodies, Smoking, Low socioeconomic status, HLA‑DRB1 shared epitope</div></div>
+<details><summary>Narrative <span class="preview-text">**The Story of Ms. Elena Ramirez**  **July 2019 – The First Whisper of Pain**  Elena Ramirez, a 45‑year‑old Spanish‑Amer...</span></summary><div class="section-body"><p>**The Story of Ms. Elena Ramirez**</p><p>**July 2019 – The First Whisper of Pain**</p><p>Elena Ramirez, a 45‑year‑old Spanish‑American nurse, began to notice a dull ache in the back of her hands and a persistent stiffness that lingered “just after I wake up.” A typical weekday morning began with the familiar routine of brushing her teeth and making coffee, but as soon as she stood, her fingers felt swollen and “fuzzy.” For the first two weeks she assumed it was part of the “old‑age” aches that come with a demanding job, but the stiffness began to last longer—often 90 minutes straight—and the swelling spread to her wrists and knees.</p><p>It was her mother who finally convinced Elena to seek medical help. “You’re always the one taking care of everyone else,” her mother said, “you can’t keep ignoring how this feels to you.” Elena booked an appointment with her primary care physician (PCP) on **July 22**.</p><p>**July 2019 – The PCP’s Lens**</p><p>During the exam, Elena’s PCP noted symmetrical swelling in the second and third metacarpophalangeal (MCP) joints, mild tenderness around the knees, and a fine, painless, “orange‑peel” rash on her hands consistent with rheumatoid nodules. The doctor measured her ESR at 48 mm/hr (normal &lt;20) and CRP at 18 mg/L (normal &lt;5). A rapid antibody screen was ordered, returning highly positive results for rheumatoid factor (RF 78 IU/mL, normal &lt;20) and anti‑cyclic citrullinated peptide (anti‑CCP) antibodies (120 U/mL, normal &lt;15). A subsequent CBC, LFTs, and renal panel were normal.</p><p>Her PCP recommended a referral to a rheumatologist and discussed the possible cardiovascular risk—she had a history of hypertension and a 20‑year smoking habit—and her depressive symptoms (she had been feeling “distant” and “exhausted” for the past month).</p><p>The PCP also noted that Elena’s low socioeconomic status and limited health insurance coverage might affect her access to disease‑modifying antirheumatic drugs (DMARDs), so the PCP proactively drafted a *Patient Assistance Program* letter for a rheumatologist&#x27;s consultation and for her future medications.</p><p>**September 2019 – The Rheumatology Consultation**</p><p>Elena met with Dr. Patel on **September 12**. Dr. Patel confirmed the clinical picture and discussed the HLA‑DRB1 shared epitope (a genetic marker she carries) as an added risk for severe disease. In addition to joint pain, Dr. Patel pointed out the subtle signs of early atherosclerosis on a carotid doppler (intima‑media thickening 0.9 mm, 1.5 mm in the right common carotid) and a bone density scan that showed osteopenia (T‑score −2.0), likely secondary to inactivity and inflammatory cytokines.</p><p>The plan was:</p><p>1. **High‑dose prednisone** (initially 15 mg daily, to be tapered over 12 weeks) for rapid control.
+2. **Methotrexate** (15 mg weekly, with folic acid 1 mg daily) as the cornerstone DMARD.  
+3. **Hydroxychloroquine** 200 mg twice daily for steroid sparing and additional joint protection.  
+4. **Calcium and vitamin D supplementation** (1200 mg Ca and 800 IU calcitriol daily) due to osteoporosis.  
+5. **Statin therapy** (rosuvastatin 20 mg nightly) to further manage atherosclerosis.  
+6. **Sildenafil** for intermittent erectile dysfunction (misapplied; correct medication is not relevant for Elena).  
+7. **Smoking cessation counseling** – referral to a smoking cessation clinic and a week‑long nicotine patch trial.  
+8. **Depression care** – referral to a psychiatrist, start on sertraline 50 mg daily.  
+9. **Aspirin 81 mg** daily for cardiovascular protection, with a plan for a PPI if GI symptoms arise.</p><p>Because of Elena’s limited insurance, Dr. Patel filled out an *Access to Care* application for low‑cost methotrexate and for the rheumatology visits. Dr. Patel also set up a regular email follow‑up system and a community clinic that could provide low‑cost physiotherapy.</p><p>**October 2019 – The First Turn of the Wheel**</p><p>Elena’s first week on prednisone was a relief. Her pain fell from 8/10 to 4/10, and the morning stiffness began to shorten to 30 minutes. The methotrexate was well tolerated—her liver enzymes and CBC remained within normal limits, and the nausea, if any, was managed with a dose of aspirin.</p><p>The 4‑week follow‑up on **October 10** showed a striking drop in inflammatory markers: ESR 25 mm/hr, CRP 5 mg/L. Her joints showed decreased swelling and tenderness on physical exam. The patient expressed excitement: “It feels…better.” She also noted improved mood—she could make coffee and see a friend at a park again.</p><p>Dr. Patel adjusted the prednisone to 12 mg and initiated a slow taper to 10 mg, 8 mg, 6 mg, 4 mg, and then 2 mg over the next 12 weeks. Methotrexate dose was increased to 20 mg at **November 10** (a gradual rise to avoid hepatotoxicity). Hydroxychloroquine remained unchanged. The sertraline dose was increased to 100 mg after a week of adequate tolerability; her depressive mood improved markedly.</p><p>**November‐December 2019 – Complications and Adjustments**</p><p>During the **November 15** appointment, Elena reported mild stomach discomfort and a history of a mild peptic ulcer. Dr. Patel added a proton pump inhibitor (omeprazole 20 mg daily). Elena stopped the nicotine patch after only three weeks because it caused skin irritation; she was, however, in a structured smoking cessation program and had reduced her cigarettes to 10 per day.</p><p>She also brought up concerns about transportation to the rheumatology clinic. Dr. Patel connected her with a nonprofit transportation service, enabling her regular visits.</p><p>Her bone density scan had become a pressing issue: after a fall at her workplace she fractured her left wrist and a right radius—fractures that are typical of osteoporosis. Dr. Patel now added a bisphosphonate (alendronate 70 mg weekly). Elena was taught proper technique for bending and lifting to prevent fractures.</p><p>**January 2020 – The Mid‑Course**</p><p>In the **January 8** check‑in, the laboratory revealed an ESR of 12 mm/hr and CRP of 2 mg/L, essentially normal. Swelling on the MCPs had resolved; she could flex her fingers without pain. Her range of motion had improved from 10–80 degrees to 25–120 degrees in the wrists. The medication side‑effects were light: mild nausea at the start of methotrexate but disappeared.</p><p>The only side‑effect of the prednisone taper became fatigue, which she attributed to her job and the lingering stress of balancing her responsibilities at the hospital and at home. Dr. Patel recommended a brief occupational therapy consult for stress management and provided a structured plan of home exercises to continue joint mobilization.</p><p>Her depression had largely resolved; she returned to the support group for patients with rheumatologic disorders. She also began attending the smoking cessation clinic again, determined to quit completely.</p><p>**March 2020 – The First Year Review**</p><p>Three months into therapy, Elena’s disease activity index (DAS28) was 2.6, which places her in remission. She had a scheduled radiograph of the hands and wrists, which now showed no new erosions, and a slight healing of the previous wrist fractures.</p><p>The patient’s cardiovascular profile was stable: her blood pressure was consistently &lt;120/80 mm Hg on lisinopril 10 mg, and her lipid panel showed LDL 95 mg/dL, HDL 55 mg/dL. The statin therapy was well tolerated.</p><p>The plan was to transition from methotrexate 20 mg to 15 mg if the joint counts remained normal. Dr. Patel had Elena start an extended‑release low‑dose prednisone (5 mg nightly) only if any flare reoccurred. She also scheduled a bi‑annual review with a rheumatologist and a quarterly review with a cardiologist. She remained on sertraline 100 mg; her psychiatrist confirmed a steady improvement in mood.</p><p>**May 2020 – The Second Year**</p><p>Elena&#x27;s rheumatoid arthritis had remained in remission for nearly a year. She still had a low level of morning stiffness (30 minutes) but no significant swelling or pain. Her risk factors remained: she was an active smoker, living at risk for depression, and had a history of cardiovascular disease.</p><p>However, on **May 18**, she had an episode of palpitations, and her cardiology consult revealed an atrial fibrillation episode that was captured on a Holter monitor. Dr. Patel prescribed a low‑dose warfarin therapy, with careful monitoring of INR; she was also advised to cut down on stimulants—in particular, the coffee that she used to drink before morning shifts—a risk for both cardiovascular strain and cortisol-related flare-ups.</p><p>Despite this setback, Elena&#x27;s rheumatology follow‑up on **June 5** continued to show remission. She remained on methotrexate 20 mg and hydroxychloroquine 200 mg. Her bone density had improved to a T‑score of −1.3 thanks to the bisphosphonate and calcium/vitamin D.</p><p>**July 2021 – The Continuing Story**</p><p>On **July 2**, after a slight increase in joint swelling that resolved within weeks, Elena’s therapy was adjusted to reduce systemic steroids to a maintenance level of 2.5 mg, and her methotrexate was held for a week due to a mild elevation in liver enzymes (AST 43 U/L, ALT 38 U/L). This transient hepatic effect disappeared after stopping the drug, and the patient was started on a new DMARD, leflunomide 20 mg daily, once again with monitoring.</p><p>Her depression, while generally controlled, had a minor relapse after the atrial fibrillation episode; sertraline was increased to 200 mg, which was well tolerated. She also began a mindfulness‑based stress reduction program.</p><p>**October 2021 – A Story of Healing**</p><p>Elena’s last rheumatology visit on **October 14** confirmed a clinically well‑controlled, low disease‑activity state. Her DAS28 was 2.2, ESR 8 mm/hr, CRP 1.5 mg/L. She had regained full function in her hands, could raise her arms overhead, and walked without assistance, even after a weekend hike with friends.</p><p>Her cardiovascular and bone health remained optimized: her cholesterol profile stayed stable (LDL 85 mg/dL), her blood pressure was controlled with minimal medication dosing (nifedipine 2.5 mg daily), and her bone mineral density had remained unchanged after the last DEXA – a plateau that suggested her long‑term osteopenia management had averted further progression.</p><p>Elena’s narrative—marked by an acute RA flare that evolved into early–to–mid‑stage disease—was not one of sudden cure, but rather a realistic, patient‑centered journey that combined medication management, careful monitoring of comorbid conditions, and a steady focus on psychosocial well‑being. Through regular rheumatology and cardiology care, access to patient assistance programs, and proactive lifestyle changes (smoking cessation, adequate nutrition, and structured exercise), Elena’s disease has significantly improved, and she continues to manage her arthritis in a state of low disease‑activity while living her daily life with dignity and resilience.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button><button class="">Visit 6</button><button class="">Visit 7</button><button class="">Visit 8</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2019-07-22</h3><div class="visit-meta">Primary Care | Reason: Hand pain, morning stiffness, swelling in wrists and knees</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 45‑year‑old female presents with chronic hand ache, prolonged morning stiffness (&gt;90 minutes), swelling in wrists and knees, and a fine orange‑peel rash on the hands.
+
+**History of Present Illness:** Patient reports dull ache in the dorsum of the hands and swelling of the 2nd‑3rd metacarpophalangeal (MCP) joints. She experiences morning stiffness lasting over 90 minutes and notes swelling of both wrists and mild tenderness over her knees. The rash has been noted for approximately two weeks and appears as fine, painless orange‑peel‑like lesions on the dorsal aspects of the hands.
+
+**Past Medical History:** Atherosclerosis, osteoporosis, hypertension, mild depressive mood for 1 month.
+
+**Medications:** None (currently not on any medications).
+
+**Allergies:** NKDA.
+
+**Social History:** 20‑year smoking history, limited socioeconomic status, limited insurance coverage.
+
+**Review of Systems (positive):** Joint pain, morning stiffness, swelling (wrists, knees, hands), rash.
+
+**Physical Examination:**
+- General: well‑appearing, alert.
+- Vitals: BP 138/85 mmHg, HR 78 bpm, RR 14 /min, Temp 98.6 °F.
+- Musculoskeletal: Symmetrical swelling of 2nd‑3rd MCP joints, fine orange‑peel rash on dorsal hands, mild tenderness over both knees. No swelling of feet. Range of motion of wrists and knees mildly limited by pain.
+- Cardiac/Lung: Normal heart sounds, normal breath sounds.
+
+**Laboratory Results:**
+- ESR 48 mm/hr (elevated), CRP 18 mg/L (elevated)
+- RF 78 IU/mL (positive), anti‑CCP 120 U/mL (positive)
+- CBC, LFTs, renal panel: within normal limits.
+
+**Assessment:** The patient has clinical findings of symmetrical polyarthritis with an associated orange‑peel rash, high inflammatory markers, and strongly positive RF and anti‑CCP antibodies, consistent with early rheumatoid arthritis (RA). Differential diagnoses considered include osteoarthritis, psoriatic arthritis, gout, and other seronegative spondyloarthropathies; however, the laboratory profile and symmetric involvement make RA most likely.
+
+**Plan:**
+1. **Referral:** Immediate referral to rheumatology for confirmatory evaluation and initiation of disease‑modifying anti‑rheumatic therapy (DMARD) when appropriate. A patient‑assistance letter has been drafted for future DMARD coverage.
+2. **Symptomatic Therapy:** Prescribed Ibuprofen 400 mg PO every 6 h as needed for pain and inflammation.
+3. **Monitoring:** Repeat ESR/CRP in 4 weeks to assess response to symptomatic therapy.
+4. **Cardiovascular Risk:** Continue current management of atherosclerosis; counsel on diet, exercise, and smoking cessation. Patient will receive formal smoking cessation counseling during next visit.
+5. **Mental Health:** Referral for psychiatric evaluation for recent mild depressive mood.
+6. **Follow‑up:** Return to primary care in 4 weeks for review of symptoms, lab results, and coordination with rheumatology.
+
+The patient was educated on early RA and the importance of prompt rheumatology referral, adherence to NSAID therapy, cardiovascular risk reduction, and mental health support.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Dull ache in back of hands</span><span class="pill">Morning stiffness &gt;90 minutes</span><span class="pill">Swelling of wrists and knees</span><span class="pill">Fine orange‑peel rash on hands (nodules)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>138/85</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>RR</td><td>14</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Symmetrical swelling of 2nd‑3rd MCP joints</li><li>Fine orange‑peel rash on hands</li><li>Mild tenderness of knees</li><li>Normal cardiac and lung exam</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ESR</li><li>CRP</li><li>RF</li><li>anti‑CCP</li><li>CBC</li><li>LFTs</li><li>Renal panel</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Referred to rheumatology</li><li>Patient assistance program letter prepared</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension</li><li>20‑year smoking history</li><li>Mild depressive mood for 1 month</li><li>Low socioeconomic status, limited insurance coverage</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with chronic hand ache and prolonged morning stiffness. The PCP performed a focused musculoskeletal exam, noting symmetrical swelling of the metacarpophalangeal joints and tenderness over the knees. A fine, painless nodular rash on the hands raised concern for rheumatoid arthritis. The PCP ordered ESR and CRP, a rapid RF/anti‑CCP screen, CBC, LFTs, and renal panel. Values returned ESR 48 mm/hr, CRP 18 mg/L, RF 78 IU/mL, anti‑CCP 120 U/mL, all other labs normal. The PCP counselled the patient on the importance of early referral and drafted a patient‑assistance letter for rheumatology and future DMARD coverage. He also discussed cardiovascular risks and depression, referring the patient for psychiatric evaluation and smoking cessation counseling.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Initial presentation suspicious for early rheumatoid arthritis; elevated inflammatory markers and serology positive.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2019-09-12</h3><div class="visit-meta">Rheumatology | Reason: Evaluation of suspected rheumatoid arthritis flare</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Subjective: The patient, a 45‑year‑old female, presents with persistent symmetrical joint swelling, prolonged morning stiffness (&gt;90 min), and tender joints, including hand swelling and morning stiffness, described as aching and burning. She reports a fine nodular rash on her hands. No erythema or warmth noted. She remains on current medications and completed smoking cessation counseling today. Objective: Vitals: BP 136/80 mmHg, HR 76 bpm, Temp 98.4°F, RR 14/min. Physical exam reveals symmetric swelling of bilateral MCP joints, fine nodular papules on the hands, mild tenderness over the knees, and no erythema. Labs show ESR/CRP elevated, RF +, anti‑CCP ++. Imaging demonstrates early joint space narrowing and erosive changes of the hand joints. Additional labs: CBC and AST/ALT normal. DEXA T‑score −2.0 indicates osteopenia. Carotid Doppler: IMT 0.9 mm right, 1.5 mm left. Assessment: Established seropositive rheumatoid arthritis with active disease (likely DAS28 &gt;5.1), early erosions, and prolonged morning stiffness. Comorbidities include controlled hypertension, osteopenia, atherosclerotic risk, and depression. Differential: RA, systemic lupus erythematosus, psoriatic arthritis, reactive arthritis, osteoarthritis, inflammatory arthritides. Plan: Continue prednisone 15 mg daily with taper: reduce by 2.5 mg every 2 weeks after 4 weeks, target discontinuation over 5–6 months; methotrexate 15 mg weekly, monitor CBC/LFTs monthly; hydroxychloroquine 200 mg BID; calcium 1200 mg daily and vitamin D 800 IU daily; rosuvastatin 20 mg nightly; aspirin 81 mg daily; sertraline 50 mg daily; ibuprofen 400 mg q6h PRN; start physiotherapy and hand therapy; reinforce smoking cessation counseling and offer nicotine patch; educate on MTX toxicity; schedule next rheumatology visit in 6 weeks with ESR/CRP; repeat DEXA in 12 months; monitor BP and lipid profile; review depression status. Follow‑up: Return in 6 weeks for disease activity assessment, ESR/CRP, physiotherapy progress; discuss potential biologic escalation if disease remains active.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Hand swelling</span><span class="pill">Morning stiffness</span><span class="pill">Joint tenderness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>136/80</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>RR</td><td>14</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Symmetric swelling of MCP joints</li><li>Fine nodular rash on hands</li><li>Tenderness over knees</li><li>No erythema on skin</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Serum transaminases and CBC for MTX monitoring</li><li>Baseline bone density (DEXA)</li><li>Carotid Doppler</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>LFTs normal</li><li>CBC normal</li><li>DEXA T‑score –2.0 (osteopenia)</li><li>Carotid IMT 0.9 mm (right), 1.5 mm (left)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Prednisone 15 mg daily</li><li>Methotrexate 15 mg weekly</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Rosuvastatin 20 mg nightly</li><li>Aspirin 81 mg</li><li>Sertraline 50 mg</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Osteopenia</span><span class="pill">Vascular risk - atherosclerosis</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Methotrexate 15 mg weekly</li><li>Prednisone 15 mg daily</li><li>Hydroxychloroquine 200 mg twice daily</li><li>Calcium 1200 mg daily</li><li>Vitamin D 800 IU daily</li><li>Rosuvastatin 20 mg nightly</li><li>Aspirin 81 mg daily</li><li>Sertraline 50 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Positive RF and anti‑CCP</li><li>Hypertension controlled on lisinopril</li><li>History of smoking</li><li>Osteopenia on recent DEXA</li><li>Carotid Doppler shows intima‑media thickening 0.9/1.5 mm</li><li>Recent depression</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The rheumatology consult confirmed a classic presentation of seropositive rheumatoid arthritis with erosive changes on hand radiographs and mild atherosclerotic changes on Doppler. A comprehensive management plan was formulated: high‑dose prednisone 15 mg daily with a 12‑week taper, methotrexate 15 mg weekly with folic acid, hydroxychloroquine 200 mg twice daily, calcium/vit D supplementation, rosuvastatin 20 mg nightly, aspirin 81 mg daily, and sertraline 50 mg daily for depression. A low‑cost access program was started for DMARDs. The patient was advised to begin smoking cessation and to keep appointments with physiotherapy.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Early seropositive RA confirmed. Initial high‑dose steroid and DMARDs begun.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2019-10-10</h3><div class="visit-meta">Rheumatology | Reason: 4‑week follow‑up after initiation of therapy</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 4‑week follow‑up after initiation of therapy.
+
+**Subjective:**
+The patient reports significant reduction in pain (4/10) and morning stiffness (now 30 minutes). She notes improved mood and increased motivation.
+
+**Objective:**
+- Vitals: BP 132/78 mmHg, HR 74 bpm, Temp 98.5 °F, RR 13 breaths/min.
+- Physical exam: Near resolution of MCP joint swelling; minimal tenderness. Cardiac and liver exams normal.
+- Labs: ESR 25 mm/hr, CRP 5 mg/L, CBC normal, LFTs normal.
+
+**Assessment:**
+- Rheumatoid arthritis: Patient exhibits low disease activity (low ESR/CRP, minimal joint tenderness). Prednisone 12 mg daily with taper planned. Methotrexate 15 mg weekly continues. Hydroxychloroquine dose unchanged. Depressive symptoms improved.
+- No evidence of liver toxicity or blood dyscrasia.
+
+**Plan:**
+1. Continue current medication regimen:
+   • Prednisone 12 mg daily with gradual taper.
+   • Methotrexate 15 mg weekly.
+   • Hydroxychloroquine 200 mg BID.
+   • Calcium 1200 mg daily, Vitamin D 800 IU daily.
+   • Rosuvastatin 20 mg nightly, Aspirin 81 mg daily.
+   • Sertraline 50 mg daily.
+   • Lisinopril 10 mg daily.
+2. Repeat ESR/CRP, CBC, LFTs in 6 weeks to monitor disease activity and drug safety.
+3. Continue physiotherapy/hand therapy.
+4. Reinforce smoking cessation, cardiovascular risk management, and exercise.
+5. Schedule next rheumatology visit in 6 weeks.
+6. Re‑evaluate DEXA scan in 12 months.
+
+**Follow‑up:** As above.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Reduced pain to 4/10</span><span class="pill">Morning stiffness now 30 minutes</span><span class="pill">Improved mood</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>132/78</td></tr><tr><td>HR</td><td>74</td></tr><tr><td>Temp</td><td>98.5°F</td></tr><tr><td>RR</td><td>13</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>MCP swelling decreased</li><li>Joint tenderness minimal</li><li>Cardiac exam normal</li><li>Liver exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ESR</li><li>CRP</li><li>CBC</li><li>LFTs</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ESR 25 mm/hr</li><li>CRP 5 mg/L</li><li>CBC normal</li><li>LFTs normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Reduced prednisone to 12 mg daily</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Noted significant improvement; mood better.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Osteopenia</span><span class="pill">Atherosclerosis risk</span><span class="pill">Depressive symptoms</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Methotrexate 15 mg weekly</li><li>Prednisone 12 mg daily</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Rosuvastatin 20 mg nightly</li><li>Aspirin 81 mg</li><li>Sertraline 50 mg</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Started prednisone 15 mg/d; 1 week in</li><li>Methotrexate 15 mg/wk tolerated</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>At the 4‑week review, the patient reported significant pain relief and decreased stiffness. Physical examination showed near resolution of swelling. Labs demonstrated ESR 25 mm/hr and CRP 5 mg/L. The prednisone dose was reduced to 12 mg daily with a planned taper over the next months. LFTs and CBC remained normal. Methotrexate dose was maintained at 15 mg weekly. The patient expressed increased motivation with improved mood.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Rapid improvement; disease activity trending toward remission.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2019-11-15</h3><div class="visit-meta">Rheumatology | Reason: Management of GI side‑effects and bone health following fractures</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">---
+**Chief Complaint**
+Management of GI side‑effects and bone health following fractures.
+
+**History of Present Illness**
+The patient is a 45‑year‑old female with known rheumatoid arthritis (RA) currently on Methotrexate 15 mg weekly, Prednisone 10 mg daily, Hydroxychloroquine 200 mg BID, and supportive bone‑health therapy with Alendronate 70 mg weekly, Calcium 1200 mg, and Vitamin D 800 IU daily. She presents today with mild epigastric discomfort, and she reports a prior history of peptic ulcer disease (PUD) noted after a workplace fall in which she sustained wrist and radius fractures. She also discloses transportation difficulties to the clinic and a reduced smoking habit (approximately 10 cigarettes/day) after discontinuation of a nicotine patch due to skin irritation.
+
+**Medication Review**
+Current therapy remains unchanged except for: 
+• Prednisone tapered continuation at 10 mg daily (plan to taper over next 4 weeks). 
+• Methotrexate increased to 20 mg weekly to achieve disease control (monitor CBC and LFTs every 4 weeks). 
+• Omeprazole 20 mg daily initiated for PUD prophylaxis and symptomatic relief.
+All other medications are held steady.
+
+**Review of Systems**
+- Gastrointestinal: mild epigastric pain, no vomiting, melena, or hematemesis.
+- Musculoskeletal: new wrist/radius fractures; limited ROM due to recent injury; no new effusions.
+- Cardiovascular: none.
+- Psychiatric: depression, stable on Sertraline.
+- Others: no weight changes.
+
+**Physical Examination**
+- Vital signs: BP 128/76 mmHg, HR 72 bpm, Temp 98.4 °F, RR 14 breaths/min.
+- General: alert, oriented, no acute distress.
+- Abdomen: soft, mild epigastric tenderness on palpation, no rebound or guarding.
+- Musculoskeletal: edema over bilateral wrists and forearms; limited ROM due to fractures; minimal joint swelling elsewhere.
+- Skin: no ulceration at fracture sites.
+- Neurologic: normal strength except for fractures.
+
+**Assessment**
+1. Rheumatoid arthritis – Disease activity mild (ESR 18 mm/hr, CRP 4 mg/L); current regimen adequate but requires close monitoring as MTX dose increased.
+2. Peptic ulcer disease – Recent mild epigastric pain; no alarm features; PPI started to reduce GI irritation and prevent potential bisphosphonate‑related mucosal injury.
+3. Osteoporosis/osteopenia – Recent wrist/radius fractures; continuing bisphosphonate therapy; consider DEXA in 12 months.
+4. Secondary concerns – Transportation assistance, smoking cessation support.
+
+**Plan**
+- **Medication**: 
+  - Continue Prednisone 10 mg daily; taper 2 mg/week over 4 weeks.
+  - Methotrexate 20 mg weekly; CBC, LFTs, ESR, CRP in 4 weeks.
+  - Omeprazole 20 mg PO daily.
+  - Alendronate 70 mg PO weekly (continue).
+  - Calcium 1200 mg PO daily; Vitamin D 800 IU daily.
+  - Lisinopril 10 mg daily, Rosuvastatin 20 mg nightly, Sertraline 100 mg daily, Aspirin 81 mg daily remain unchanged.
+- **Imaging**: 
+  - Schedule DEXA scan in 12 months.
+- **Monitoring**: 
+  - CBC, LFTs, ESR, CRP in 4 weeks.
+  - Pain and functional status review at next visit.
+- **Lifestyle**: 
+  - Refer to smoking cessation program; patient already in program.
+  - Provide transportation assistance for next visit.
+- **Follow‑up**: 
+  - Next rheumatology visit in 4 weeks.
+  - If GI symptoms worsen or new abdominal pain develops, schedule evaluation.
+- **Patient Education**: 
+  - Discuss importance of adherence to bisphosphonate, use of a calcium‑rich diet, and weight‑bearing exercise.
+  - Review signs of GI bleeding and advise to seek care immediately.
+
+---
+*Prepared by:* [Rheumatologist name]
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Mild stomach discomfort</span><span class="pill">Recent mild peptic ulcer history</span><span class="pill">Transportation issues to clinic</span><span class="pill">Reduced smoking (10 cigarettes/day)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>128/76</td></tr><tr><td>HR</td><td>72</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>RR</td><td>14</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Soft tissue edema over wrist and forearms</li><li>Limited range of motion in wrists due to fractures</li><li>Joint swelling minimal elsewhere</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CBC</li><li>LFTs</li><li>ESR</li><li>CRP</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CBC normal</li><li>LFTs normal</li><li>ESR 18 mm/hr</li><li>CRP 4 mg/L</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started omeprazole 20 mg daily</li><li>Started alendronate 70 mg weekly</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Osteopenia</span><span class="pill">Atherosclerosis</span><span class="pill">Fractures</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Methotrexate 20 mg weekly</li><li>Prednisone 10 mg daily</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Rosuvastatin 20 mg nightly</li><li>Sertraline 100 mg daily</li><li>Aspirin 81 mg daily</li><li>Omeprazole 20 mg daily</li><li>Alendronate 70 mg weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Peptic ulcer history</li><li>Transportation challenges</li><li>Recent workplace fall with wrist/radius fractures</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported mild epigastric pain and history of a peptic ulcer. A proton‑pump inhibitor was started. She also disclosed recent wrist and radius fractures after a workplace fall, underscoring the need for bone protection; an oral bisphosphonate was added. The prednisone taper was continued; methotrexate was increased to 20 mg weekly to maintain disease control. She received assistance with transportation to the clinic and a referral to a smoking cessation program. She had discontinued the nicotine patch due to skin irritation.</p><p>Laboratory monitoring remained within acceptable ranges: LFTs, CBC, ESR/CRP were all within normal limits.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Continued improvement; fractures managed with bisphosphonate; stable inflammatory markers.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2020-03-20</h3><div class="visit-meta">Rheumatology | Reason: Annual review – assessment of remission status</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief complaint: Annual review – assessment of remission status.
+
+Subjective: The patient reports no joint pain and only mild morning stiffness that rarely lasts longer than 30 minutes. She reports full hand function and no new symptoms.
+
+Past medical history: Hypertension, osteopenia, atherosclerosis, depression. Long-term methotrexate 20 mg weekly, hydroxychloroquine 200 mg BID, low‑dose prednisone 5 mg nightly as needed, lisinopril, rosuvastatin, sertraline, aspirin, omeprazole, alendronate.
+
+Review of systems: Negative for fever, night sweats, weight loss, respiratory symptoms, urinary symptoms, or skin rash. Denies GI bleeding.
+
+Objective:
+Vitals: BP 122/78, HR 70, Temp 98.3°F, RR 14.
+Physical exam: No swelling or tenderness in MCP or wrist joints; full range of motion; no skin rash.
+Laboratory: ESR 12 mm/hr, CRP 2 mg/L. CBC and LFTs within normal limits.
+Imaging: Chest X‑ray normal. DEXA T‑score –1.3 indicating osteopenia.
+
+Assessment:
+1. Rheumatoid arthritis – stable disease, low disease activity/possible remission with current DMARDs.
+2. Osteopenia – stable, no new fractures.
+3. Hypertension – well‑controlled on lisinopril.
+4. Dyslipidemia – controlled on rosuvastatin.
+5. Depression – stable on sertraline.
+
+Plan:
+- Continue methotrexate 20 mg weekly as patient prefers stability and is tolerating well.
+- Continue low‑dose prednisone 5 mg nightly only as needed; avoid long‑term use.
+- Continue hydroxychloroquine 200 mg BID.
+- Continue calcium 1200 mg, vitamin D 800 IU, alendronate 70 mg weekly for bone health.
+- Continue lisinopril, rosuvastatin, sertraline, aspirin, omeprazole.
+- Counsel patient on signs of infection, monitor for cytopenias, liver enzyme elevation – routine CBC and LFTs every 3 months.
+- Schedule DEXA in 12 months; consider starting vitamin D dose adjustment if T‑score worsens.
+- Encourage routine physical activity and hand therapy for maintenance of ROM.
+- Encourage adherence to current hypertension and lipid management plan.
+- No change in aspirin or anticoagulation unless indicated.
+
+Education:
+- Reviewed medication side effects and importance of regular monitoring.
+- Discussed that tapering methotrexate or prednisone could be considered if disease activity remains low; patient decided to maintain current dose.
+
+Follow‑up:
+- Next rheumatology visit in 6 months, or sooner if symptoms recur.
+- Repeat ESR/CRP at each visit, CBC/LFTs every 3 months.
+- Continue routine blood pressure and lipid monitoring with cardiology.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No joint pain</span><span class="pill">Rare morning stiffness (~30 min)</span><span class="pill">Full hand function</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>122/78</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Temp</td><td>98.3°F</td></tr><tr><td>RR</td><td>14</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>MCP and wrist joints: no swelling or tenderness</li><li>Full range of motion</li><li>No skin rashes</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ESR</li><li>CRP</li><li>Chest X‑ray (screen for PTX)</li><li>Lung CT if needed</li><li>DEXA</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ESR 12 mm/hr</li><li>CRP 2 mg/L</li><li>DEXA T‑score –1.3</li><li>Chest X‑ray normal</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Osteopenia</span><span class="pill">Atherosclerosis</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Methotrexate 20 mg weekly</li><li>Prednisone 5 mg nightly RP</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Rosuvastatin 20 mg nightly</li><li>Sertraline 100 mg daily</li><li>Aspirin 81 mg daily</li><li>Omeprazole 20 mg daily</li><li>Alendronate 70 mg weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>High‑dose steroids tapered to low-dose prednisone 5 mg nightly</li><li>Methotrexate 20 mg weekly ongoing</li><li>Hydroxychloroquine 200 mg BID</li><li>Sertraline 100 mg daily</li><li>Alendronate ongoing</li><li>No adverse events</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient reported no pain and a mild stiffness that rarely lasted longer than 30 minutes. Examination revealed no swelling or tenderness; range of motion in wrists and hands was fully recovered. Laboratory results showed ESR 12 mm/hr and CRP 2 mg/L, indicating low disease activity. Radiographs showed no new erosions and mild healing of previous fractures. The patient was in clinical remission (DAS28 2.6). Methotrexate dose was held the possibility of tapering to 15 mg weekly was discussed, but the patient preferred to keep 20 mg for stability. Continue low‑dose prednisone only when flare occurs.</p><p>The patient also confirmed satisfactory blood pressure control on lisinopril and stable lipid panel on rosuvastatin.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Persistent clinical remission; low disease activity, stable osteoporosis management.</p></div></details></div><div class="visit-panel"><h3>Visit 6 &mdash; 2020-05-18</h3><div class="visit-meta">Cardiology | Reason: Palpitations – evaluation for atrial fibrillation</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">SOAP Note:
+
+S: 45‑year‑old female presents with palpitations and mild dizziness. Reports intermittent episodes of rapid, irregular heartbeat lasting up to an hour. She notes a recent increase in caffeine intake. No chest pain, shortness of breath, syncope, or palpitations lasting &gt;10 minutes. Denies recent weight change or orthostatic symptoms.
+
+O: Vitals – BP 118/75 mmHg, HR irregular 67–90 bpm, Temp 98.6°F, RR 18/min. Cardiac exam: irregular rhythm, no murmurs, rubs, or gallops. Lungs clear bilaterally. 48‑hour Holter: intermittent paroxysmal atrial fibrillation lasting approximately 1 hour, with frequent PACs. ECG: irregular rhythm without P‑waves, consistent with AF. INR: 1.2. BMP: within normal limits. No other cardiovascular lesions identified.
+
+A: Primary diagnosis: Paroxysmal atrial fibrillation. Differential: 1) Atrial flutter, 2) supraventricular tachycardia, 3) sinus arrhythmia. Given AF burden and her established hypertension and atherosclerotic disease, we begin therapeutic anticoagulation.
+
+P:
+1. Warfarin 1 mg PO daily with target INR 2.0–3.0; first dose administered today.
+2. Discontinue aspirin 81 mg daily immediately due to anticoagulation.
+3. Counsel on caffeine restriction (limit to &lt;1 cup/day), sleep hygiene, and stress management.
+4. Arrange INR monitoring: check every 3–5 days until therapeutic, then weekly.
+5. Re‑evaluate Holter and rhythm status in 3 months or sooner if symptoms worsen.
+6. Continue current RA and comorbidity medications unchanged: Lisinopril 10 mg QD, Rosuvastatin 20 mg QHS, Sertraline 100 mg QD, Calcium 1200 mg QD, Vitamin D 800 IU QD, Alendronate 70 mg QW, Omeprazole 20 mg QD, Ibuprofen 400 mg PO q6h PRN, Methotrexate 20 mg QW, Prednisone 5 mg nightly PRN, Hydroxychloroquine 200 mg BID.
+7. Educate patient on bleeding warning signs (bruising, hematuria, melena, hematochezia); advise to avoid NSAIDs beyond PRN and to keep warfarin dose modifications for her rheumatology medication changes.
+8. Follow‑up: Cardiology in 4 weeks for INR status and rhythm assessment; rheumatology per scheduled 6‑month review.
+
+Patient verbalized understanding and consented to plan.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Palpitations</span><span class="pill">Light dizziness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>118/75</td></tr><tr><td>HR</td><td>Irregular 67–90</td></tr><tr><td>Temp</td><td>98.6°F</td></tr><tr><td>RR</td><td>18</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Irregular heartbeat</li><li>No murmurs</li><li>Clear Lungs</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>Holter monitor</li><li>ECG</li><li>Baseline INR</li><li>Basic metabolic panel</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>Holter: intermittent AF 1‑hour events</li><li>ECG: AF</li><li>INR 1.2</li><li>BMP normal</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started warfarin 1 mg daily</li><li>Advised to stop aspirin</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Atherosclerosis</span><span class="pill">Atrial fibrillation (new diagnosis)</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Rosuvastatin 20 mg nightly</li><li>Sertraline 100 mg daily</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Alendronate 70 mg weekly</li><li>Omeprazole 20 mg daily</li><li>Alendronate 70 mg weekly</li><li>Aspirin 81 mg daily</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hypertension well‑controlled</li><li>Past depressive symptoms</li><li>Recent increase in caffeine intake</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The patient presented with palpitations and mild dizziness. Holter monitoring for 48 hours captured episodes of paroxysmal atrial fibrillation. An ECG confirmed irregular rhythm with absent P‑waves. INR baseline was 1.2. The cardiologist started warfarin therapy at 1 mg daily with plan for INR monitoring, advised to discontinue aspirin due to anticoagulation, and recommended reduction in caffeine. Lifestyle counseling for sleep hygiene and stress management was provided.</p><p>No other cardiovascular problems were detected. Lungs clear, cardiac exam normal except irregular rhythm.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>New atrial fibrillation detected; initiation of anticoagulation; rheumatologic disease remains in remission.</p></div></details></div><div class="visit-panel"><h3>Visit 7 &mdash; 2021-07-02</h3><div class="visit-meta">Rheumatology | Reason: Maintenance therapy adjustment and addressing mild flare</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Encounter: Follow‑up for maintenance therapy adjustment and mild rheumatoid arthritis (RA) flare with concurrent mild depressive relapse. 
+
+History &amp; Review of Systems: Patient reports a slight increase in swelling of the wrists and a low mood. No new pain, rash, or systemic symptoms. No fever, diarrhea, or new GI symptoms. No shortness of breath or palpitations.
+
+Past Medical History: Hypertension, atherosclerosis, atrial fibrillation on warfarin, osteopenia, depression, RA, peptic ulcer disease. Long‑term medications: lisinopril 10 mg daily, leflunomide 20 mg daily (newly restarted), prednisone 2.5 mg daily, hydroxychloroquine 200 mg BID, calcium 1200 mg, vitamin D 800 IU, rosuvastatin 20 mg nightly, sertraline 200 mg daily (upgraded from 100 mg), warfarin 1 mg daily, omeprazole 20 mg daily, alendronate 70 mg weekly.
+
+Physical Examination:
+- General: Well‑appearing female, alert &amp; oriented. 
+- Musculoskeletal: Mild swelling of wrists bilaterally, no crepitus or erythema. No tenderness in MCPs or knees. Full ROM in all joints, no deformities.
+- Cardiovascular: S3 present, regular rhythm, no murmurs.
+- Other: Skin normal, no rash.
+
+Vitals: 
+- BP 120/70 mmHg
+- HR 70 bpm
+- Temp 98.4°F
+- RR 15 breaths/min
+
+Labs (ordered at visit): LFT panel, CBC, INR. Results: LFTs within normal limits after holding MTX, CBC normal, INR 2.0 (therapeutic for AF). 
+
+Assessment:
+1) RA – mild flare with increased wrist swelling; disease still in low‑activity but requires adjustment.
+2) Depression – mild relapse; mood improved after sertraline dose increase.
+3) Stable on warfarin – INR therapeutic.
+
+Plan:
+- DMARD: Restart leflunomide 20 mg PO daily – monitor CBC and LFTs monthly for first 3 months then every 3 months.
+- Glucocorticoid: Continue prednisone 2.5 mg daily (maintenance).
+- SSRI: Maintain sertraline 200 mg daily; monitor for serotonin syndrome, mood, appetite; consider psychiatric follow‑up.
+- Anticoagulation: Continue warfarin 1 mg daily with INR monitoring every 2–4 weeks initially, then every 6–8 weeks if stable.
+- Continue lisinopril, rosuvastatin, omeprazole, alendronate, calcium, vitamin D as per baseline.
+- Lifestyle: Emphasize hand therapy, exercise, weight control, smoking cessation (already discussed), bone‑protective measures.
+- Monitoring: Monthly CBC/LFTs for 3 months; then every 3 months with clinical review. Disease activity (tender/swollen joint count, CRP/ESR) at each visit.
+- Depression: Schedule psychiatry follow‑up in 2 weeks and monitor mood symptoms.
+- GI: Continue omeprazole for PUD prophylaxis; advise avoidance of NSAIDs and alcohol.
+- Follow‑up: Rheumatology visit in 4 weeks for reassessment of joint swelling, medication tolerability, labs, and adjustment of therapy.
+
+Impression: Low‑activity RA with mild flare; stable anticoagulation; mild depression under improvement. Adjusted pharmacologic plan accordingly.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Slight increase in joint swelling</span><span class="pill">Minor depressive relapse</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>120/70</td></tr><tr><td>HR</td><td>70</td></tr><tr><td>Temp</td><td>98.4°F</td></tr><tr><td>RR</td><td>15</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Mild swelling on wrists</li><li>No synovitis in knees or MCPs</li><li>Normal musculoskeletal exam overall</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>LFT panel</li><li>CBC</li><li>INR</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>LFTs normal after MTX pause</li><li>CBC normal</li><li>INR 2.0</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Started leflunomide 20 mg daily</li><li>Increased sertraline to 200 mg daily</li><li>Reduced prednisone to 2.5 mg daily</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Atherosclerosis</span><span class="pill">Atrial fibrillation</span><span class="pill">Osteopenia</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Leflunomide 20 mg daily</li><li>Prednisone 2.5 mg daily</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Rosuvastatin 20 mg nightly</li><li>Sertraline 200 mg daily</li><li>Warfarin 1 mg daily</li><li>Omeprazole 20 mg daily</li><li>Alendronate 70 mg weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Hold methotrexate for 1 week due to elevated liver enzymes (AST 43 U/L, ALT 38 U/L)</li><li>Reduced prednisone to 2.5 mg daily</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During this visit the patient reported a mild increase in swelling around her wrists and a sense of low mood. Physical exam noted minimal joint tenderness, no new signs of inflammation. Liver enzymes had normalized after withholding methotrexate for a week, and the patient was restarted on a new DMARD: leflunomide 20 mg daily. Prednisone was continued at a maintenance dose of 2.5 mg daily. Sertraline was increased to 200 mg daily to address depressive relapse with monitoring for serotonin syndrome. The warfarin was continued for anticoagulation. Patient education emphasized adherence to bone‑protective therapy and lifestyle modifications.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transitioned from MTX to leflunomide due to mild hepatotoxicity; disease remains controlled; depressive symptoms managed.</p></div></details></div><div class="visit-panel"><h3>Visit 8 &mdash; 2021-10-14</h3><div class="visit-meta">Rheumatology | Reason: Final review – confirmation of low disease activity</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">**Chief Complaint:** 45‑year‑old female presents for final review of rheumatoid arthritis (RA) disease activity; patient reports no pain and normal hand function, with only minor morning stiffness (~30 min).  
+
+**History:**  Chronic RA on leflunomide 20 mg daily, low‑dose prednisone 2.5 mg daily, hydroxychloroquine 200 mg BID, calcium 1200 mg daily, vitamin D 800 IU daily, rosuvastatin 20 mg nightly, sertraline 200 mg daily, warfarin 1 mg daily, lisinopril 10 mg daily, omeprazole 20 mg daily, alendronate 70 mg weekly.  
+
+**Current Medications and Monitoring:**  All DMARDs and supportive meds are continued.  Warfarin INR was 2.1 and within therapeutic range.  DEXA T‑score is –1.3, consistent with stable osteopenia.  
+
+**Exam:**  
+- Vitals: BP 110/70 mmHg, HR 68 bpm, T 98.2 °F, RR 14 rpm.  
+- Musculoskeletal: MCP and wrist joints normal, no swelling or tenderness, full ROM.  
+- Cardiac: Normal heart sounds, no arrhythmias on exam.  
+
+**Labs / Tests:**  
+- ESR 8 mm/hr; CRP 1.5 mg/L.  
+- DAS28 = 2.2 (low disease activity).  
+- DEXA T‑score –1.3.  
+- INR 2.1.  
+
+**Assessment:**  
+1. Rheumatoid arthritis – low disease activity (DAS28 2.2).  
+2. Osteopenia – stable bone density (DEXA T‑score –1.3).  
+3. Well‑controlled hypertension, atrial fibrillation (warfarin therapeutic), and hyperlipidemia.  
+4. No new GI or orthopedic concerns.  
+
+**Plan:**  
+- **Continue** current DMARD regimen (leflunomide 20 mg QD, hydroxychloroquine 200 mg BID, prednisone 2.5 mg daily).  
+- **Maintain** supportive therapy for bone health (alendronate 70 mg weekly, calcium 1200 mg daily, vitamin D 800 IU daily).  
+- **Persist** with antihypertensive (lisinopril 10 mg), statin (rosuvastatin 20 mg), PUD prophylaxis (omeprazole 20 mg).  
+- **Warfarin** dose kept at 1 mg daily, INR monitored q4 weeks (current value 2.1).  
+- **Physical therapy**: Encourage routine hand and upper‑extremity physiotherapy (≥2 sessions/month).  
+- **Lifestyle**: Continue smoking cessation, exercise, balanced diet, weight‑bearing activity.  
+- **Monitoring**: CBC, CMP, ESR, CRP at each rheumatology visit (baseline now 4 weeks).  
+- **Next rheumatology visit**: 6 months from now (2022‑04‑14) or sooner if symptoms flare.  
+- **Cardiology follow‑up**: Continue routine follow‑up for AFib and INR.  
+- **Education**: Discuss signs of disease flare, importance of medication adherence, and when to seek urgent care.  
+
+Patient verbalized understanding of plan and is compliant.  No additional treatments or changes are necessary at this time.
+</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No pain</span><span class="pill">Full joint function</span><span class="pill">Minor morning stiffness (~30 min)</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>BP</td><td>110/70</td></tr><tr><td>HR</td><td>68</td></tr><tr><td>Temp</td><td>98.2°F</td></tr><tr><td>RR</td><td>14</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>MCP and wrist joints: normal</li><li>No swelling or tenderness</li><li>Full range of motion</li><li>Cardiac exam normal</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>ESR</li><li>CRP</li><li>DAS28 calculation</li><li>DEXA</li><li>INR</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>ESR 8 mm/hr</li><li>CRP 1.5 mg/L</li><li>DAS28 2.2</li><li>DEXA T‑score –1.3</li><li>INR 2.1</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Hypertension</span><span class="pill">Atherosclerosis</span><span class="pill">Atrial fibrillation</span><span class="pill">Osteopenia</span><span class="pill">Depression</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Leflunomide 20 mg daily</li><li>Prednisone 2.5 mg daily</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg</li><li>Vitamin D 800 IU</li><li>Rosuvastatin 20 mg nightly</li><li>Sertraline 200 mg daily</li><li>Warfarin 1 mg daily</li><li>Omeprazole 20 mg daily</li><li>Alendronate 70 mg weekly</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Steady leflunomide therapy</li><li>Low-dose prednisone 2.5 mg daily</li><li>Warfarin therapeutic INR</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the October visit the patient reported no pain and normal hand function. The physical exam was unremarkable, with no swelling or tenderness. DAS28 remained low at 2.2, ESR 8 mm/hr, CRP 1.5 mg/L. Radiographs confirmed stable bone density (DEXA T‑score –1.3). Blood pressure was well controlled with lisinopril, and the lipid panel remained within target. Warfarin INR was 2.1, within therapeutic range. The plan was to continue current regimen, encourage routine physiotherapy and lifestyle advice, and schedule the next rheumatology review in six months.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Sustained low disease activity; bone health maintained; anticoagulation stable.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 45</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Cardiovascular disease (atherosclerosis)</span><span class="pill">Osteoporosis</span><span class="pill">Osteopenia</span><span class="pill">Depression</span><span class="pill">Rheumatoid arthritis</span><span class="pill">Hypertension</span><span class="pill">Peptic ulcer disease</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Lisinopril 10 mg daily</li><li>Leflunomide 20 mg daily</li><li>Prednisone 2.5 mg daily</li><li>Hydroxychloroquine 200 mg BID</li><li>Calcium 1200 mg daily</li><li>Vitamin D 800 IU daily</li><li>Rosuvastatin 20 mg nightly</li><li>Sertraline 200 mg daily</li><li>Warfarin 1 mg daily</li><li>Omeprazole 20 mg daily</li><li>Alendronate 70 mg weekly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Patient presented with chronic hand ache, prolonged morning stiffness (&gt;90 min), swelling of wrists and knees, and fine orange‑peel rash on the hands. Laboratory tests revealed elevated ESR and CRP, positive RF and anti‑CCP antibodies. Initiated symptomatic therapy with Ibuprofen 400 mg PO q6h PRN. Referred to rheumatology for definitive diagnosis and possible DMARD treatment. Plan to repeat ESR/CRP in 4 weeks, smoking cessation counseling, psychiatric evaluation, and cardiovascular risk management.</li><li>Patient presented with persistent symmetrical joint swelling, prolonged morning stiffness (&gt;90 minutes), and tender hand joints, with a fine nodular rash. Physical exam showed symmetric swelling of bilateral MCP joints, fine papular lesions on hands, mild knee tenderness, and no erythema. Laboratory tests revealed elevated ESR/CRP, positive RF, and high anti‑CCP antibodies; imaging demonstrated early joint space narrowing and erosive changes of the hand joints. Started prednisone 15 mg daily with taper plan, methotrexate 15 mg weekly (CBC/LFT monitoring), hydroxychloroquine 200 mg BID, calcium 1200 mg daily, vitamin D 800 IU daily, rosuvastatin 20 mg nightly, aspirin 81 mg daily, sertraline 50 mg daily; continued ibuprofen PRN. Initiated physiotherapy and hand therapy. Repeat ESR/CRP and disease activity assessment planned in 6 weeks; repeat DEXA in 12 months; continued smoking cessation counseling. Follow‑up rheumatology visit scheduled in 6 weeks.</li><li>4‑week follow‑up after starting rheumatoid arthritis therapy. Patient reports pain 4/10, morning stiffness 30 min. Physical exam shows near resolution of MCP swelling, minimal tenderness. Labs: ESR 25 mm/hr, CRP 5 mg/L, CBC and LFTs normal. Prednisone 12 mg daily tapered, methotrexate 15 mg weekly, hydroxychloroquine 200 mg BID continued. Repeat ESR/CRP, CBC, LFTs in 6 weeks. Continue physiotherapy, smoking cessation, cardiovascular risk management.</li><li>Patient returns for management of gastrointestinal symptoms and bone health following wrist/radius fractures. Reports mild epigastric discomfort; no vomiting or bleeding. Physical exam reveals mild epigastric tenderness, limited wrist ROM due to fractures, edema over wrists/forearms. Current RA therapy: methotrexate increased to 20 mg weekly, prednisone at 10 mg daily with planned taper of 2 mg/week over 4 weeks. Initiated omeprazole 20 mg daily for PUD prophylaxis. Alendronate 70 mg weekly continued. Labs ordered: CBC, LFTs, ESR, CRP in 4 weeks. Scheduled DEXA in 12 months. Continue smoking cessation program and transportation assistance. Next rheumatology visit in 4 weeks.</li><li>Annual rheumatology review; patient reports no joint pain, mild morning stiffness rarely &gt;30 min, full hand function. Physical exam shows no swelling or tenderness in MCP or wrist joints, full range of motion, no rash. Vitals BP 122/78, HR 70; labs ESR 12 mm/hr, CRP 2 mg/L, CBC and LFTs normal; DEXA T‑score –1.3 indicating osteopenia. Plan: continue methotrexate 20 mg weekly, hydroxychloroquine 200 mg BID, prednisone 5 mg nightly as needed, calcium 1200 mg, vitamin D 800 IU, alendronate 70 mg weekly, lisinopril 10 mg, rosuvastatin 20 mg, sertraline 100 mg, aspirin 81 mg, omeprazole 20 mg. Monitor CBC/LFTs every 3 months, repeat ESR/CRP at each visit, repeat DEXA in 12 months. Encourage physical activity and hand therapy. Next rheumatology visit in 6 months.</li><li>Cardiology visit on 2020‑05‑18 for palpitations and light dizziness. 48‑hour Holter confirmed intermittent paroxysmal atrial fibrillation. Warfarin 1 mg daily initiated, aspirin discontinued. INR monitoring scheduled. All other RA and comorbidity medications continued as before. Cardiology follow‑up planned in 4 weeks for INR and rhythm assessment.</li><li>Follow‑up for mild RA flare and depressive relapse. Slight increase in wrist swelling, no pain or rash. Labs: CBC and LFT normal; INR 2.0 therapeutic. Restarted leflunomide 20 mg daily, continued prednisone 2.5 mg daily, sertraline 200 mg daily, warfarin 1 mg daily, and other baseline medications. Plan: monitor CBC/LFT monthly for 3 months, adjust DMARDs as needed. Scheduled rheumatology visit in 4 weeks.</li><li>Visit 8: Rheumatology review. Patient reports no joint pain, minor morning stiffness (~30 min). Vitals normal. Physical exam shows normal MCP and wrist ROM, no swelling or tenderness. ESR 8 mm/hr, CRP 1.5 mg/L, DAS28 2.2 indicating low disease activity. DEXA –1.3, INR 2.1. Continue current DMARD regimen (leflunomide, hydroxychloroquine, low‑dose prednisone) and supportive therapies (calcium, vitamin D, alendronate, omeprazole, lisinopril, rosuvastatin, warfarin). Encourage routine hand physiotherapy, smoking cessation, exercise, and regular CBC/CMP monitoring. Next rheumatology visit in 6 months (2022‑04‑14).</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

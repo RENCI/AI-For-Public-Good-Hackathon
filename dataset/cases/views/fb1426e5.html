@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case fb1426e5</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  padding: 2rem 1rem;
+}
+.container { max-width: 900px; margin: 0 auto; }
+
+/* Header */
+.case-header {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.case-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+.case-header .subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge-easy { background: #d4edda; color: #155724; }
+.badge-medium { background: #fff3cd; color: #856404; }
+.badge-hard { background: #f8d7da; color: #721c24; }
+.badge-acute { background: #cce5ff; color: #004085; }
+.badge-chronic { background: #e2d5f1; color: #4a235a; }
+.badge-resolved { background: #d4edda; color: #155724; }
+.badge-improving { background: #d1ecf1; color: #0c5460; }
+.badge-worsening { background: #f8d7da; color: #721c24; }
+.badge-undiagnosed { background: #ffeeba; color: #856404; }
+.meta-line {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Collapsible sections */
+details {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+details > summary {
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+details > summary::before {
+  content: "\25B6";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+details > summary::-webkit-details-marker { display: none; }
+details .section-body { padding: 1rem 1.25rem; }
+
+.preview-text {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+details[open] .preview-text { display: none; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-bar button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-bar button:hover { color: #333; }
+.tab-bar button.active {
+  color: #0066cc;
+  border-bottom-color: #0066cc;
+  font-weight: 600;
+}
+
+/* Visit panels */
+.visit-panels {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+.visit-panel {
+  display: none;
+  padding: 1.25rem;
+}
+.visit-panel.active { display: block; }
+.visit-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.visit-panel .visit-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Clinical note */
+.clinical-note {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+/* Visit sub-sections */
+.visit-panel details {
+  box-shadow: none;
+  border: 1px solid #eee;
+  margin-bottom: 0.75rem;
+}
+.visit-panel details > summary {
+  background: #f9f9f9;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Tables */
+.vitals-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.vitals-table td {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+.vitals-table td:first-child {
+  font-weight: 600;
+  width: 40%;
+  color: #555;
+}
+
+/* Lists */
+.item-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+}
+.item-list li { margin-bottom: 0.25rem; }
+.pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pill {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a3e72;
+  padding: 0.15rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+/* Summary list in final history */
+.summary-list {
+  list-style: none;
+  padding: 0;
+}
+.summary-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.summary-list li:last-child { border-bottom: none; }
+
+.na { color: #aaa; font-style: italic; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="case-header"><h1>Case: fb1426e5</h1><div class="subtitle">Migraine (acute episode) | Female, 35</div><div class="badges"><span class="badge badge-medium">medium</span><span class="badge badge-acute">acute</span><span class="badge badge-resolved">resolved</span></div><div class="meta-line">Comorbidities: Anxiety, Depression, Tension‑type headache, Sleep disorders</div><div class="meta-line">Risk Factors: Family history of migraine, Hormonal fluctuations (menstrual cycle, oral contraceptive use), Stress and emotional distress, Irregular sleep patterns, High caffeine intake</div></div>
+<details><summary>Narrative <span class="preview-text">**Patient Narrative – A 35‑year‑old Female With an Acute Migraine Episode**  ---  ### Background  Lena, a 35‑year‑old gr...</span></summary><div class="section-body"><p>**Patient Narrative – A 35‑year‑old Female With an Acute Migraine Episode**</p><p>---</p><p>### Background</p><p>Lena, a 35‑year‑old graphic designer, has a long‑standing family history of migraine—her mother and two aunts suffer from episodic attacks. Lena’s life is punctuated by the usual stresses of a demanding job, intermittent depressive mood swings, and a chronic tendency toward anxiety. She experiences tension‑type headaches at least twice a month and has a history of difficulty falling and staying asleep. Her caffeine intake is high (about 4–5 cups of coffee a day), and she is currently on a combined oral contraceptive pill. Her menstrual cycle is fairly regular; the last period began exactly three weeks ago.</p><p>---</p><p>### Day 0 – The Inciting Moment</p><p>**5:30 p.m.** – After a long day at the studio, Lena’s left temporal region tingles with a low, dull ache. She attributes it to the hours she spent in front of the monitor and to her restless sleep the previous night.</p><p>**6:30 p.m.** – The ache intensifies into a throbbing pain, now involving the right orbital area. A mild visual aura (fleeting bright spots in her peripheral vision) flashes across the room. The aura lasts roughly **10 minutes** before the headache fully envelops her.</p><p>**7:00 p.m.** – She decides to stay home to finish a client presentation. Before bed, she drinks a **240 mL** cup of coffee, hoping the caffeine will keep her alert for a few more hours and also “mask” the headache flare. She then attempts to sleep in a 7‑hour interval, but her mind races, and she wakes repeatedly.</p><p>**Night** – Sleep is fragmented. The headache does not subside. Her anxiety rises as she feels the pressure to meet an upcoming deadline. She starts taking “tension‑type headache” analgesics (a 200 mg ibuprofen with a cup of tea), but the effect is minimal.</p><p>---</p><p>### Day 1 – Awakening to the Attack</p><p>**7:30 a.m.** – Lena wakes up to the sound of her phone vibrating. The headache is now **8/10** on the pain scale, throbbing with each heartbeat. The pain localizes to the right orbital region and spreads to her jaw and lower temples. She has nausea, but no vomiting. Her vision is clear except for occasional shimmering lights.</p><p>**8:30 a.m.** – She has a coffee to try to alleviate the pain, but the **caffeine withdrawal** from the previous night and the lingering headache diminish its effect. She tries a 600 mg dose of acetaminophen, with no relief. She also begins to feel dizzy, a sign of migraine progression.</p><p>**9:30 a.m.** – She feels the migraine start to “lock in” and realizes her work will be compromised. She leaves her office and calls her primary care provider (PCP).</p><p>---</p><p>### Day 1 – Clinical Decision Point 1: PCP Tele‑Visit</p><p>**10:00 a.m. (Tele‑visit)** – On the call, Lena describes her aura, throbbing pain, nausea, and lack of response to OTC analgesics. She mentions that the headache started **overnight** from her usual pattern of a tension headache that typically resolves within a few hours. She is also aware of multiple risk factors: familial migraine, hormonal fluctuations (she is mid‑cycle and on oral contraceptives), stress, irregular sleep, anxiety, high caffeine intake.</p><p>The PCP asks the standard red‑flag questions:</p><p>- Any visual loss, weakness, or speech difficulty? **No.**
+- Any preceding vomiting? **No.** 
+- Recent head trauma? **No.**
+- Any neurological deficit? **No.**</p><p>All answers are reassuring. The PCP confirms that this is most likely an acute migraine episode.</p><p>**Prescription** – The PCP writes a **sumatriptan 6 mg oral tablet** (taken on a single dose) and a **diphenhydramine 25 mg** as an anti‑nausea adjunct. She is also given a rescue prescription for ibuprofen 600 mg to take if the triptan fails.</p><p>The PCP urges Lena to:</p><p>- **Hydrate** with water or electrolyte drinks.
+- **Sleep** as soon as possible (she is told not to stay awake further for the day).
+- **Limit caffeine** to the next day to avoid withdrawal‑induced flare.
+- **Use cold compress** or a pillow under the head.
+- **Reduce ambient light** and stay in a quiet room.
+- **Keep a headache diary** so she can see patterns for the future.</p><p>---</p><p>### Day 1 – Response to Acute Therapy</p><p>**10:45 a.m.** – Lena takes the sumatriptan, having followed instructions to have a light snack first. About **30 minutes later** (i.e., 11:15 a.m.), the throbbing pain starts to fade; the pressure lessens, and the nausea subsides. By **12:30 p.m.** (70 minutes after dosing), her pain rating falls to **2/10** and the aura has completely resolved. She feels relieved; the medication worked.</p><p>She notes in her diary: *“Triptan took about 30 minutes to start, total relief at 90 minutes. No side‑effects.”*</p><p>She also acknowledges that the **sleep interruption** might have contributed to the severity. She decides to adjust her habits.</p><p>---</p><p>### Day 1–2 – Post‑Acute Evaluation</p><p>**1:00 p.m.** – Lena calls her PCP again, requesting a follow‑up visit to discuss possible preventive measures. The PCP schedules her for an **in‑person appointment on Day 2** (Wednesday).</p><p>---</p><p>### Day 2 – In‑Person Visit</p><p>During this meeting, Lena reports:</p><p>- **One acute migraine** this month that resolved with triptan.
+- **Tension‑type headaches** monthly.
+- **Difficulty sleeping** after caffeine use.
+- **Cyclic mood changes** from mild depression to heightened anxiety.
+- **Regular use of caffeine** (4–5 cups per day).
+- **High levels of stress** at work.</p><p>The PCP performs a physical exam: normal neurological exam, blood pressure 118/72 mm Hg, heart rate 78 bpm. No neurological deficits. The PCP acknowledges the need for a preventive strategy due to the frequent occurrence of migraines exacerbated by hormonal fluctuation.</p><p>**Preventive Recommendation** – The PCP prescribes **topiramate 25 mg nightly** at first, with gradual titration to **100 mg nightly** over two weeks. She advises:</p><p>- **Caffeine reduction**: switch to half‑size cups, use non‑caffeinated tea later in the afternoon.
+- **Regular sleep schedule**: maintain a consistent bedtime and wake time.
+- **Stress management**: short breathing exercises, brief meditations, and a “worry period” scheduled each evening.
+- **Hydration**: 2–3 L water daily.
+- **Dietary adjustments**: avoid known migraine triggers such as chocolate, aged cheese, and alcohol.</p><p>She also receives a **brief CBT‑based anxiety coping plan** and is referred to a therapist specializing in chronic pain and anxiety.</p><p>---</p><p>### Day 3–7 – Implementation Phase</p><p>**Day 3** – Lena begins the topiramate and sees the first side effect: a mild tingling in her fingers. She notes this in her diary.</p><p>**Day 4–5** – She reduces caffeine to **2 cups per day** (morning). She uses a blue‑light blocking filter on her computer screen and takes breaks every 45 minutes—improving focus and reducing tension headaches.</p><p>**Day 6** – In her diary, Lena reports no new migraine attacks, but one tension‑type headache over the right frontal bone lasting **2 hours**, manageable with a 200 mg ibuprofen dose. She feels that the anxiety‑induced tension is less prominent.</p><p>**Day 7** – She attends a counseling session. The therapist introduces a weekly mood‑tracking sheet. She also receives resources on mindful breathing and progressive muscle relaxation.</p><p>---</p><p>### Day 8 – Follow‑Up Appointment</p><p>The PCP reviews her diary: One acute migraine with triptan resolved in 90 minutes, one tension headache, no new seizures. The topiramate serum level is satisfactory; the side effect of tingling persists but is mild. She feels that her migraines are well controlled.</p><p>**Decision** – Continue topiramate at 100 mg nightly. The PCP orders a blood work panel to check electrolytes, uric acid, and vitamin A levels in a few weeks.</p><p>---</p><p>### Aftermath – Disease Course Summary</p><p>- **Initial acute migraine**: started with aura, throbbing pain, nausea; resolved with sumatriptan by 90 minutes.
+- **Risk factor evaluation**: family history, hormonal status, caffeine use, stress, anxiety, sleep disorder.
+- **Acute management**: sumatriptan + diphenhydramine + hydration, sleep, avoidance of caffeine escalation.
+- **Preventive management**: topiramate, caffeine reduction, sleep hygiene, CBT for anxiety, stress‑management techniques.
+- **Outcome**: the acute episode resolved fully within 90 minutes; subsequent headache burden reduced; mood and sleep improved. The patient remains monitored with preventive therapy and supportive counseling.</p><p>---</p><p>### Key Clinical Decision Points</p><p>1. **Recognition of red flags** – No neurologic deficits, normal exam; no imaging needed.
+2. **Choice of acute medication** – Sumatriptan chosen due to aura; rescue NSAID available.
+3. **Transition to preventive therapy** – Topiramate initiated after one acute episode with risk factors.
+4. **Addressing comorbidities** – Anxiety/depression addressed with CBT and therapy referral; sleep hygiene taught.
+5. **Lifestyle modifications** – Caffeine reduction, stress coping, regular sleep schedule.</p><p>This narrative reflects a realistic, medically accurate journey through an acute migraine episode in a woman with multiple comorbidities and risk factors, culminating in successful resolution of the acute event and a proactive plan for long‑term management.</p></div></details>
+<div class="tab-bar"><button class=" active">Visit 1</button><button class="">Visit 2</button><button class="">Visit 3</button><button class="">Visit 4</button><button class="">Visit 5</button></div><div class="keyboard-hint">Use left/right arrow keys to navigate visits</div>
+<div class="visit-panels"><div class="visit-panel active"><h3>Visit 1 &mdash; 2023-04-12</h3><div class="visit-meta">Primary Care Physician | Reason: Acute headache with aura and nausea</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Acute headache with aura and nausea.\n\nHistory: 35‑year‑old female with a history of anxiety, depression, tension‑type headaches and sleep disturbances. No current medications. Reports sudden onset at 10:00 a.m. of right orbital throbbing pain, brief visual aura (bright spots), nausea and mild dizziness. She currently takes oral contraceptive pills, consumes 4‑5 cups of coffee daily, and has a stressful work schedule. Family history of headaches noted.\n\nTele‑visit Physical: No focal neurological deficits observed. Speech and gait normal. \n\nAssessment: The presentation is consistent with a primary migraine with aura. No red flag features suggestive of secondary causes (no vomiting, no neurological deficits, normal vitals).\n\nPlan:\n1. Prescribe sumatriptan 6 mg orally at onset of headache.\n2. Prescribe diphenhydramine 25 mg orally for nausea.\n3. Prescribe ibuprofen 600 mg PO at 6‑h intervals if triptan ineffective.\n4. Educate on trigger modification: hydration, reduced caffeine, rest, dim lighting, cold compress, headache diary.\n5. Advise against routine overuse of triptans or NSAIDs.\n6. Monitor response; if &gt;2 migraine days per month or triptan fails, consider referral to a headache specialist.\n\nFollow‑up: Telehealth review in 1 week or sooner if symptoms worsen or new deficits appear. Encourage return for in‑person evaluation if headaches persist &gt;3 weeks or increase in frequency/ intensity.\n</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Right orbital throbbing headache</span><span class="pill">Aura with brief bright spots</span><span class="pill">Nausea</span><span class="pill">Mild dizziness</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>SBP</td><td>120</td></tr><tr><td>DBP</td><td>75</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.8 C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>No neuro‑deficit identified (tele‑visit)</li><li>Normal speech and gait reported by patient</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Sumatriptan 6 mg oral tablet prescribed</li><li>Diphenhydramine 25 mg prescription</li><li>Ibuprofen 600 mg prescription</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Suspected migraine</span><span class="pill">Tension‑type headaches</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Sleep disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Ibuprofen 200 mg PRN for tension headaches</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Family history of migraine</li><li>Hormonal cycle mid‑phase, on oral contraceptive pill</li><li>High caffeine intake (4‑5 cups/day)</li><li>Stressful work schedule</li><li>Intermittent depression and anxiety</li><li>Sleep disturbances with irregular patterns</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Lena called her PCP via telehealth at 10:00 a.m. She described the sudden onset of right‑side throbbing pain, a brief visual aura, nausea and dizziness. The clinician took a focused history, ruled out red‑flag neurological symptoms, and confirmed the episode was most compatible with an acute migraine. After reassurance, the clinician prescribed a 6‑mg oral sumatriptan tablet (take as needed), a 25‑mg dose of diphenhydramine for nausea, and a rescue prescription for ibuprofen 600 mg if the triptan failed. The patient was advised to hydrate, rest, limit caffeine on the following day, use a cold compress or pillow, dim lights, and maintain a headache diary.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Acute migraine episode with aura, no red flag signs. Initiated triptan therapy. Awaited response.</p></div></details></div><div class="visit-panel"><h3>Visit 2 &mdash; 2023-04-13</h3><div class="visit-meta">Primary Care Physician | Reason: Discussion of preventive therapy after first acute migraine</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Patient presents for discussion of preventive therapy after her first acute migraine episode. 
+
+History of Present Illness: 35‑year‑old female reports a single acute migraine that resolved with sumatriptan and occasional monthly tension‑type headaches lasting 1–2 hours. She experiences difficulty sleeping after caffeine consumption and reports elevated anxiety. The acute episode was characterized by throbbing right orbital pain with aura, nausea, and mild dizziness, successfully managed with sumatriptan 6 mg, diphenhydramine 25 mg, and ibuprofen 600 mg. No recurrence has occurred since that episode. 
+
+Past Medical History: Migraine, tension‑type headaches, anxiety, depression, sleep disorder. Current medications include sumatriptan 6 mg PRN, diphenhydramine 25 mg PRN, ibuprofen 200 mg PRN. NKDA. Regular oral contraceptive use. 
+
+Review of Systems: Positive for tension in cervical and temporal regions, caffeine‑induced insomnia, and anxiety. Negative for focal neurological deficits, vision changes, or other systemic symptoms. 
+
+Vital Signs: SBP 118 mmHg, DBP 72 mmHg, HR 78 bpm, Temp 36.8°C. 
+
+Physical Examination: Neurologic exam normal; no cranial nerve deficits; gait normal. Tension noted at cervical and temporal musculature. No papilledema or other focal signs. 
+
+Assessment: 1) Episodic migraine likely. 2) Comorbid tension‑type headache. 3) Anxiety disorder contributing to headache frequency. 4) Insomnia secondary to caffeine intake. 
+
+Plan: 1) Initiate preventive therapy: Topiramate 25 mg nightly with titration target of 100 mg nightly over 2 weeks, monitoring for side effects. 2) Reinforce lifestyle modifications: reduce caffeine to 2 half‑size cups/day, improve sleep hygiene, incorporate stress‑management exercises, maintain adequate hydration. 3) Provide brief CBT‑based anxiety coping plan. 4) Refer to chronic pain/anxiety therapist for specialized treatment. 5) Continue PRN use of sumatriptan 6 mg for acute episodes, diphenhydramine, and ibuprofen as needed for pain. 
+
+Follow‑up: Return for evaluation in 4–6 weeks to assess headache frequency, intensity, and medication tolerability. Consider adjustment of topiramate dose or alternative preventive agents if migraines persist. Continue monitoring mood and sleep. Urgent care referral if headaches become refractory or severe side effects develop.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">One resolved acute migraine</span><span class="pill">Monthly tension headaches</span><span class="pill">Difficulty sleeping after caffeine</span><span class="pill">Elevated anxiety</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>SBP</td><td>118</td></tr><tr><td>DBP</td><td>72</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.8 C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neuro exam normal</li><li>No cranial nerve deficits</li><li>Normal gait</li><li>Headache triggers noted by patient (caffeine, stress)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Topiramate 25 mg nightly prescription</li><li>Provision of CBT coping plan</li><li>Referral to therapist</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Tension‑type headaches</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Sleep disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Sumatriptan 6 mg PRN</li><li>Diphenhydramine 25 mg PRN</li><li>Ibuprofen 200 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Successful relief with sumatriptan 90 minutes post‑dose</li><li>Tension headaches lasting 1–2 hours monthly</li><li>High caffeine intake (4‑5 cups/day)</li><li>Regular use of oral contraceptive pill</li><li>Reported insomnia and anxiety symptoms</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>During the in‑person visit, Lena reported one migraine that resolved with triptan and occasional tension headaches. The clinician performed a normal neurological exam and noted mild tension at the cervical and temporal regions. A decision to start preventive therapy was made. Topiramate was prescribed starting at 25 mg nightly with plans for titration to 100 mg nightly over two weeks. Lifestyle modifications were emphasized: caffeine reduction (half‑size cups up to 2 per day), sleep hygiene, stress‑management exercises, and hydration. She was also given a brief CBT‑based anxiety coping plan and referred to a therapist specialized in chronic pain and anxiety.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Transitioned from acute to preventive management. Initiated topiramate low dose with titration plan. Emphasized lifestyle changes.</p></div></details></div><div class="visit-panel"><h3>Visit 3 &mdash; 2023-04-18</h3><div class="visit-meta">Psychiatric Therapist | Reason: Anxiety and stress management</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Patient: 35‑year‑old female
+Date: 2023‑04‑18
+
+Chief Complaint: Persistent mild anxiety and difficulty concentrating at work.
+
+History of Present Illness:
+Patient reports ongoing mild anxiety that interferes with work concentration. She has been using the mood‑tracking sheet introduced in the previous session and reports slight improvement in nighttime relaxation. Headache diary shows improvement in tension‑type headaches.
+
+Past Psychiatric History: Generalized anxiety disorder, major depressive disorder (current episode), sleep disorder.
+
+Medications: Topiramate 25 mg nightly, Sumatriptan 6 mg PRN, Ibuprofen 200 mg PRN.
+
+Allergies: NKDA.
+
+Physical Exam: Vitals normal: SBP 120 mmHg, DBP 70 mmHg, HR 80 bpm, Temp 36.7 °C.
+
+Assessment:
+1. Generalized anxiety disorder – ongoing mild symptoms.
+2. Major depressive disorder – current episode, mild to moderate.
+3. Migraine / tension‑type headache – improved.
+4. Sleep‑related issues – chronic insomnia.
+
+Plan:
+- Continue CBT‑based anxiety coping plan.
+- Initiate a structured “worry period” each evening.
+- Practice mindful breathing and progressive muscle relaxation.
+- Maintain consistent sleep routine.
+- Review caffeine intake and continue reduction.
+- Continue mood‑tracking sheet; review data next session.
+- No medications adjusted at this visit.
+- Schedule next therapy session in one month.
+
+Follow‑up Recommendations:
+- Attend next therapy session in 1 month.
+- Continue current medication regimen.
+- Keep headache and mood diary.
+- Note any worsening anxiety, depression, or headaches; call if urgent.
+- Practice sleep hygiene (consistent bedtime, limited screens 30 min before bed).
+- Consider adding a low‑dose SSRI if symptoms persist beyond next month.</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">Persistent mild anxiety</span><span class="pill">Difficulty concentrating at work</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>SBP</td><td>120</td></tr><tr><td>DBP</td><td>70</td></tr><tr><td>HR</td><td>80</td></tr><tr><td>Temp</td><td>36.7 C</td></tr></table></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>CBT-based anxiety coping plan</li><li>Mood‑tracking sheet introduction</li><li>Referral to chronic pain‑focused therapist (next session)</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Engaged in exercises; reported small improvement in nighttime relaxation.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Tension‑type headaches</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Sleep disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Topiramate 25 mg nightly</li><li>Sumatriptan 6 mg PRN</li><li>Ibuprofen 200 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>History of depression and anxiety</li><li>Sleep disturbances</li><li>Recent headache diary showing reduction in migraine frequency</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Lena met with a therapist specializing in chronic pain and anxiety. The session focused on establishing a weekly mood‑tracking sheet, practicing mindful breathing and progressive muscle relaxation, and developing a scheduled &#x27;worry period&#x27; each evening. The therapist reinforced the importance of consistent sleep routines and reviewed caffeine reduction progress. A follow‑up session was scheduled for the next month.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Positive engagement in CBT, potential decline in tension headaches, supportive for preventive migraine regimen.</p></div></details></div><div class="visit-panel"><h3>Visit 4 &mdash; 2023-04-19</h3><div class="visit-meta">Primary Care Physician | Reason: Follow‑up on preventive therapy and laboratory review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Chief Complaint: Follow‑up on preventive therapy and laboratory review.
+
+History of Present Illness: 35‑year‑old female presents for routine follow‑up on migraine prophylaxis. She reports no new acute headache episodes; her migraine diary shows zero acute events and only one tension headache managed with ibuprofen. She notes mild tingling in her fingers that she attributes to her nightly topiramate, which she reports as a tolerable side effect. Sleep quality has improved and she maintains a consistent sleep schedule.
+
+Past Medical History: Migraine, tension‑type headaches, anxiety, depression, sleep disorder.
+
+Medications: Topiramate 25 mg nightly, Sumatriptan 6 mg PRN for acute attacks, Ibuprofen 200 mg PRN.
+
+Allergies: NKDA.
+
+Review of Systems: Positive for mild paresthesias in the fingertips; negative for other neurological symptoms. No weight change, no joint pain.
+
+Physical Examination:
+- Vitals: SBP 117 mmHg, DBP 70 mmHg, HR 78 /min, Temp 36.7 °C.
+- HEENT: Normocephalic, atraumatic. Neurologic exam normal; light touch slightly diminished in fingertips, consistent with topiramate side effect.
+- Cardiovascular: Regular rhythm, no murmurs.
+- Respiratory: Clear to auscultation.
+- General: Well‑appearing, not distressed.
+
+Laboratory Results: CMP within normal limits. Serum uric acid 8.0 mg/dL (upper‑normal). Vitamin A 4.2 mg/dL (within reference range).
+
+Assessment and Plan:
+1. Migraine – on topiramate 25 mg nightly; stable with no acute events. Mild paresthesia likely drug side effect; monitor.
+2. Tension-type headache – no acute episodes; maintained on NSAID PRN.
+3. Anxiety/Depression – continued CBT; no pharmacologic changes.
+4. Sleep disorder – improved; continue sleep hygiene.
+
+Plan: 
+- Continue topiramate 25 mg nightly.
+- Reinforce lifestyle modifications: sleep hygiene, caffeine reduction, stress management.
+- Educate on signs of worsening paresthesia or potential gout symptoms due to elevated uric acid, although current level is only upper‑normal.
+- Repeat uric acid and CMP in 6 months or sooner if symptoms develop.
+- Schedule next preventive check‑in in 1 month.
+- If tingling worsens or new symptoms appear, consider dose adjustment or alternate prophylactic.
+
+Follow‑up: 1‑month PCP visit.
+
+Patient education: Discussed importance of medication adherence and monitoring for side effects. Reviewed headache diary and endorsed its use.
+
+Signature: _______________________
+
+
+(Note: All patient-provided information was documented accurately and discussed accordingly.)</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No new migraines</span><span class="pill">Mild tingling in fingers (topiramate side effect)</span><span class="pill">Improved sleep quality</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>SBP</td><td>117</td></tr><tr><td>DBP</td><td>70</td></tr><tr><td>HR</td><td>78</td></tr><tr><td>Temp</td><td>36.7 C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Neurologically normal</li><li>No focal deficits</li><li>Light touch slightly diminished in fingertips (consistent with side effect)</li></ul></div></details><details><summary>Tests Ordered</summary><div class="section-body"><ul class="item-list"><li>CMP</li><li>Serum uric acid</li><li>Vitamin A level</li></ul></div></details><details><summary>Test Results</summary><div class="section-body"><ul class="item-list"><li>CMP: All parameters within normal limits</li><li>Serum uric acid: 8.0 mg/dL (upper‑normal)</li><li>Vitamin A: 4.2 mg/dL (within reference range)</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue topiramate 25 mg nightly</li><li>Reinforce lifestyle modifications</li></ul></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Tension‑type headaches</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Sleep disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Topiramate 25 mg nightly</li><li>Sumatriptan 6 mg PRN</li><li>Ibuprofen 200 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Topiramate titrated to 25 mg nightly</li><li>Reported numbness/tingling in hands</li><li>No new acute attacks</li><li>Consistent sleep schedule</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>The provider reviewed headache diary entries: zero acute migraines, one tension headache managed with ibuprofen. Discussed continued topiramate therapy; side‑effect tingling noted but tolerable. Ordered a standard comprehensive metabolic panel, serum uric acid, and vitamin A level to monitor for topiramate‑related metabolic changes. Advised continuation of low‑dose topiramate pending lab results. Scheduled next preventive check‑in in one month.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Preventive therapy stable with manageable side effect. Labs unremarkable aside from mild uric acid elevation; monitoring advised.</p></div></details></div><div class="visit-panel"><h3>Visit 5 &mdash; 2023-07-10</h3><div class="visit-meta">Primary Care Physician | Reason: Three‑month preventive therapy review</div><details open><summary>Clinical Note</summary><div class="section-body"><div class="clinical-note">Visit #5 – 2023‑07‑10
+Chief Complaint: Three‑month preventive therapy review.
+
+History of Present Illness: 
+Lena presents for a routine review after three months of topiramate prophylaxis. She reports no acute migraine episodes in the past month and only one mild tension‑type headache that resolved with ibuprofen. Her headache diary shows a sustained reduction in frequency and intensity. She reports improved sleep quality, reduced anxiety, and continued use of cognitive‑behavioral coping strategies. She has decreased caffeine intake to 1–2 cups/day and maintains a regular sleep routine.
+
+Review of Systems: 
+- Headache: intermittent tension‑type, &lt; 2 episodes/month.
+- Neurologic: no focal deficits, no vertigo or nausea.
+- Sleep: regular circadian pattern, no insomnia.
+- Psychiatric: mild anxiety, no current mood swings.
+- Endocrine/Metabolic: denies dizziness or palpitations.
+
+Past Medical History: Migraine, tension‑type headache, anxiety, depression, sleep disorder. No known drug allergies.
+
+Previous Interventions: Topiramate titrated to 100 mg nightly over 2 weeks; sumatriptan 6 mg PRN; ibuprofen 200 mg PRN; diphenhydramine 25 mg PRN. CBT coping strategies instituted.
+
+Physical Examination: 
+Vital signs: 
+- SBP 115 mmHg, DBP 68 mmHg, HR 76 bpm, Temp 36.6°C.
+General: Well‑appearing, alert, oriented x3.
+Head: Atraumatic, normocephalic. 
+Neurologic: Normal neuro exam. No cranial nerve, motor, or sensory deficits.
+
+Assessment: 
+1. Migraine – well‑controlled on current prophylaxis. 
+2. Tension‑type headache – decreased frequency. 
+3. Anxiety/Depression – stable, mild symptoms. 
+4. Sleep disorder – improved with sleep hygiene. 
+5. Possible mild topiramate paresthesia – resolved with dose adjustment.
+
+Plan: 
+- Continue topiramate 100 mg nightly. 
+- PRN sumatriptan 6 mg for breakthrough headache; ibuprofen 200 mg for mild tension. 
+- Diphenhydramine 25 mg PRN for insomnia, if needed. 
+- Encourage ongoing CBT, mindfulness, and progressive muscle relaxation. 
+- Maintain caffeine restriction and sleep routine. 
+- No new labs ordered; prior CMP and uric acid remain stable. 
+- Schedule yearly preventive follow‑up (2024‑07‑10). 
+- If new acute headaches, paresthesia, or anxiety worsens, consider initiating low‑dose SSRI and schedule earlier visit.
+
+Disposition: Patient educated on medication adherence and lifestyle measures. No acute issues. Will return for routine annual review.
+
+Signature: ____________________</div></div></details><details><summary>Symptoms</summary><div class="section-body"><div class="pill-list"><span class="pill">No acute migraine in past month</span><span class="pill">Minimal tension headache, 1–2 episodes</span></div></div></details><details><summary>Vitals</summary><div class="section-body"><table class="vitals-table"><tr><td>SBP</td><td>115</td></tr><tr><td>DBP</td><td>68</td></tr><tr><td>HR</td><td>76</td></tr><tr><td>Temp</td><td>36.6 C</td></tr></table></div></details><details><summary>Examination Findings</summary><div class="section-body"><ul class="item-list"><li>Normal neuro exam</li><li>No cranial nerve, motor, or sensory deficits</li></ul></div></details><details><summary>Treatments</summary><div class="section-body"><ul class="item-list"><li>Continue topiramate 100 mg nightly</li></ul></div></details><details><summary>Patient Response</summary><div class="section-body"><p>Says she feels calmer, sleeps better, no migraine headaches for three months.</p></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Migraine</span><span class="pill">Tension‑type headaches</span><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Sleep disorder</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>Topiramate 100 mg nightly</li><li>Sumatriptan 6 mg PRN</li><li>Ibuprofen 200 mg PRN</li></ul></div></details><details><summary>Relevant History</summary><div class="section-body"><ul class="item-list"><li>Topiramate titrated to 100 mg nightly over 2 weeks</li><li>Consistent use of psycho‑cognitive coping strategies</li><li>Reduced caffeine to 1–2 cups/day</li><li>Regular sleep routine</li></ul></div></details><details><summary>Visit Scenario</summary><div class="section-body"><p>Lena presented after three months of preventive therapy. She reported no acute migraines and one mild tension headache. The provider reviewed headache diary, confirmed reduced frequency, and noted sustained improvement in sleep and anxiety. Neurologic exam remained normal. Topiramate dose was maintained at 100 mg nightly. The patient was encouraged to continue current lifestyle measures and scheduled yearly preventive follow‑up. Bloodwork from prior visits remained stable; no new labs ordered.</p></div></details><details><summary>Disease Progression</summary><div class="section-body"><p>Preventive therapy effective, reduced headache burden, stable medication tolerance. Continue current regimen.</p></div></details></div></div>
+<details><summary>Final Medical History</summary><div class="section-body"><details><summary>Demographics</summary><div class="section-body"><div class="pill-list"><span class="pill">Age: 35</span><span class="pill">Sex: Female</span></div></div></details><details><summary>Known Conditions</summary><div class="section-body"><div class="pill-list"><span class="pill">Anxiety</span><span class="pill">Depression</span><span class="pill">Caffeine‑induced insomnia</span><span class="pill">Migraine with aura</span><span class="pill">Sleep disorders</span><span class="pill">Tension‑type headache</span></div></div></details><details><summary>Current Medications</summary><div class="section-body"><ul class="item-list"><li>sumatriptan 6 mg PRN</li><li>diphenhydramine 25 mg PRN</li><li>ibuprofen 200 mg PRN</li><li>topiramate 100 mg nightly</li></ul></div></details><details><summary>Visit Summaries</summary><div class="section-body"><ul class="summary-list"><li>Acute right orbital throbbing headache with aura, nausea, mild dizziness; no focal deficits; prescribed sumatriptan 6 mg, diphenhydramine 25 mg, and ibuprofen 600 mg as needed; advised on trigger modification and monitoring; follow‑up telehealth in 1 week.</li><li>Discussion of preventive migraine therapy; normal neuro exam, tension noted at cervical/temporal regions; started topiramate 25 mg nightly with titration to 100 mg over 2 weeks; continued PRN sumatriptan 6 mg, diphenhydramine 25 mg, ibuprofen 200 mg; advised caffeine reduction, sleep hygiene, stress management; brief CBT plan; referred to therapist; follow‑up in 4‑6 weeks.</li><li>Psychotherapy session focused on mild anxiety with concentration difficulties; headache diary shows improvement; continued topiramate 25 mg nightly, sumatriptan 6 mg PRN, ibuprofen 200 mg PRN; no medication changes; CBT coping plan, structured worry period, mindfulness, progressive muscle relaxation; sleep hygiene reinforced; next session scheduled in one month; consider low‑dose SSRI if symptoms persist.</li><li>Follow‑up for preventive migraine therapy: patient reports no acute migraine events, one tension headache resolved with ibuprofen; mild finger paresthesia attributed to topiramate; sleep quality improved. Labs: CMP normal, serum uric acid 8.0 mg/dL upper‑normal. Continue topiramate 25 mg nightly, sumatriptan 6 mg PRN, ibuprofen 200 mg PRN; monitor paresthesia, repeat uric acid/CMP in 6 months; next PCP visit in 1 month.</li><li>Visit #5 – 2023‑07‑10: Review of preventive migraine therapy after three months on topiramate 100 mg nightly; no acute migraine episodes, one mild tension headache resolved with ibuprofen; sleep quality and anxiety improved; continued use of PRN sumatriptan 6 mg, ibuprofen 200 mg, diphenhydramine 25 mg; CBT coping strategies maintained; scheduled yearly preventive follow‑up in July 2024.</li></ul></div></details></div></details>
+</div>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.tab-bar button');
+  var panels = document.querySelectorAll('.visit-panel');
+  var active = 0;
+  function show(i) {
+    if (i < 0 || i >= tabs.length) return;
+    tabs[active].classList.remove('active');
+    panels[active].classList.remove('active');
+    active = i;
+    tabs[active].classList.add('active');
+    panels[active].classList.add('active');
+    tabs[active].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { show(i); });
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') show(active + 1);
+    else if (e.key === 'ArrowLeft') show(active - 1);
+  });
+})();
+</script>
+</body>
+</html>

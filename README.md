@@ -92,6 +92,91 @@ Each tool has different strengths. Experiment and find what works best for your 
 - [NCI SEER Site-Specific Coding Rules](https://seer.cancer.gov/manuals/2026/appendixc.html)
 - [OpenAI Responses API Documentation](https://platform.openai.com/docs/api-reference/responses)
 
+---
+
+## Contributing Your Work
+
+Follow these steps to fork the repo, reconnect your local copy, and open a pull request — without losing any work. (**GitHub account required**)
+
+### 1. Create a Fork (GitHub Web UI)
+
+1. Navigate to the **original repository** on GitHub: https://github.com/RENCI/AI-For-Public-Good-Hackathon
+2. Click the **Fork** button in the top-right corner, above the "About" section
+3. Select your account as the destination
+4. Click **Create fork** — GitHub will redirect you to your fork at `https://github.com/<YOUR_USERNAME>/AI-For-Public-Good-Hackathon`
+
+---
+
+### 2. Update Your Local Remote to Point to the Fork (CLI)
+
+In the AI-Sandbox, open or launch a `Terminal`.
+
+If necessary, navigate to your home directory:
+
+```bash
+cd ~/
+```
+
+Check your current remotes:
+
+```bash
+git remote -v
+```
+
+Rename the original `origin` to `upstream` to preserve a reference to the source repo:
+
+```bash
+git remote rename origin upstream
+```
+
+Add your fork as the new `origin`:
+
+```bash
+git remote add origin https://github.com/<YOUR_USERNAME>/AI-For-Public-Good-Hackathon.git
+```
+
+Verify the result:
+
+```bash
+git remote -v
+# origin    https://github.com/<YOUR_USERNAME>/AI-For-Public-Good-Hackathon.git (fetch)
+# origin    https://github.com/<YOUR_USERNAME>/AI-For-Public-Good-Hackathon.git (push)
+# upstream  https://github.com/RENCI/AI-For-Public-Good-Hackathon (fetch)
+# upstream  https://github.com/RENCI/AI-For-Public-Good-Hackathon (push)
+```
+
+---
+
+### 3. Push Your Branch to the Fork via HTTPS (CLI)
+
+Switch to your working branch if you aren't already on it:
+
+```bash
+git checkout <YOUR_BRANCH_NAME> # Your Onyen
+```
+
+Push the branch to your fork. The `-u` flag sets `origin` as the default upstream for this branch going forward:
+
+```bash
+git push -u origin <YOUR_BRANCH_NAME> # Your Onyen
+```
+
+When prompted, enter your GitHub username and a **Personal Access Token (PAT)** as the password — GitHub no longer accepts plain passwords over HTTPS.
+
+> **No PAT yet?** Go to GitHub → **Settings** → **Developer Settings** → **Personal access tokens** → **Generate new token**. Grant it `repo` scope.
+
+---
+
+### Remote Reference Summary
+
+| Remote | Points to | Purpose |
+|---|---|---|
+| `origin` | Your fork | Push your changes here |
+| `upstream` | Original repo | Pull in future updates from the source |
+
+Once your branch is pushed, GitHub will show a prompt to **Open a pull request** from your fork's branch into the original repository.
+
+
 ## License
 
 See [LICENSE](LICENSE) for details.

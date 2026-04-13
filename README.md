@@ -69,6 +69,17 @@ The following models are available via the OpenAI API (see `config.yaml`):
 
 Try different models and compare their performance on extraction tasks — you may be surprised by the differences.
 
+### **Note about using GPT-5 with the JupyterAI Chat UI**
+
+You may get better outputs if you start any chats with GPT-5 using a prompt like this:
+```
+Here are some guidelines for writing code. You should follow these unless otherwise specified.
+- You don't need to read the notebook file
+- Return a code block with the output code
+- Function calls should be runnable in a notebook cell
+- Do not use script formatting (e.g. `if __name__ == "__main__"`)
+```
+
 ## Try Different Tools
 
 Part of the experience is exploring the ecosystem of AI-powered development tools. Consider trying:
